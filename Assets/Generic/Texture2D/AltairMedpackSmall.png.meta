@@ -1,0 +1,166 @@
+fileFormatVersion: 2
+guid: 2b10d38c4d19b2a44b819e53a2aa6930
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: AltairMedpackSmall
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: AltairMedpackSmall
+      rect:
+        serializedVersion: 2
+        x: 207.07613
+        y: 10.07612
+        width: 104.84776
+        height: 263.84778
+      alignment: 9
+      pivot: {x: 0.4638998, y: 0.5189503}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 36.214973, y: -132.00002}
+        - {x: -52.785027, y: -132.00002}
+        - {x: -52.785027, y: 108.999985}
+        - {x: -49.785027, y: 124.999985}
+        - {x: -26.785027, y: 131.99997}
+        - {x: 40.214973, y: 131.99997}
+        - {x: 45.214973, y: 124.999985}
+        - {x: 52.214973, y: 23.999985}
+        - {x: 52.214973, y: -124.000015}
+      physicsShape:
+      - - {x: 28.214973, y: -63.000015}
+        - {x: 15.214973, y: -53.00002}
+        - {x: 9.214974, y: -56.00002}
+        - {x: 9.214974, y: -19.000017}
+        - {x: 17.214973, y: 0.99998474}
+        - {x: 18.214973, y: 28.999987}
+        - {x: 16.214973, y: 45.999985}
+        - {x: 23.214975, y: 67.999985}
+        - {x: 21.214975, y: 104.99999}
+        - {x: 14.214973, y: 109.99999}
+        - {x: -4.7850266, y: 109.99999}
+        - {x: -12.785027, y: 106.99999}
+        - {x: -30.785028, y: 52.99999}
+        - {x: -29.785028, y: 20.999985}
+        - {x: -26.785027, y: -34.000015}
+        - {x: -24.785027, y: -78.000015}
+        - {x: -26.785027, y: -79.000015}
+        - {x: -31.785028, y: -86.000015}
+        - {x: -31.785028, y: -100.00002}
+        - {x: -22.785027, y: -109.00002}
+        - {x: -9.785027, y: -110.00002}
+        - {x: 14.214973, y: -110.00002}
+        - {x: 22.214975, y: -106.00002}
+        - {x: 31.214973, y: -96.00002}
+        - {x: 31.214973, y: -86.000015}
+      tessellationDetail: 0
+      bones: []
+      spriteID: d39cfe671dbe4f8d985619feb45590ca
+      internalID: 21300000
+      vertices:
+      - {x: 304.71497, y: 267}
+      - {x: 311.71497, y: 18}
+      - {x: 311.71497, y: 166}
+      - {x: 299.71497, y: 274}
+      - {x: 295.71497, y: 10}
+      - {x: 232.71498, y: 274}
+      - {x: 209.71498, y: 267}
+      - {x: 206.71498, y: 251}
+      - {x: 206.71498, y: 10}
+      indices: 080000000700000004000000060000000400000007000000050000000400000006000000030000000400000005000000010000000400000003000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      AltairMedpackSmall: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,181 @@
+fileFormatVersion: 2
+guid: 0695610df08393144a8cda4da9d2ad19
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: Askatar
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 12
+  maxTextureSize: 256
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Askatar
+      rect:
+        serializedVersion: 2
+        x: 30.07612
+        y: 34.076122
+        width: 195.84775
+        height: 196.84775
+      alignment: 9
+      pivot: {x: 0.50000006, y: 0.47713968}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -56.999985, y: -97.5}
+        - {x: -97.999985, y: -43.5}
+        - {x: -97.999985, y: 37.5}
+        - {x: -67.999985, y: 78.5}
+        - {x: -35.999985, y: 98.5}
+        - {x: 37.000015, y: 98.5}
+        - {x: 87.000015, y: 59.5}
+        - {x: 98.000015, y: 25.500002}
+        - {x: 98.000015, y: -24.5}
+        - {x: 96.000015, y: -36.5}
+        - {x: 87.000015, y: -61.5}
+        - {x: 42.000015, y: -98.5}
+        - {x: -46.999985, y: -98.5}
+      physicsShape:
+      - - {x: 79.000015, y: -58.499996}
+        - {x: 85.000015, y: -49.5}
+        - {x: 94.000015, y: -28.5}
+        - {x: 96.000015, y: -15.5}
+        - {x: 96.000015, y: 13.5}
+        - {x: 95.000015, y: 24.5}
+        - {x: 85.000015, y: 49.499996}
+        - {x: 78.000015, y: 58.5}
+        - {x: 61.000015, y: 75.49999}
+        - {x: 54.00001, y: 81.49999}
+        - {x: 34.000015, y: 92.5}
+        - {x: 14.000015, y: 97.5}
+        - {x: -9.999984, y: 97.5}
+        - {x: -24.999985, y: 95.5}
+        - {x: -53.99998, y: 82.5}
+        - {x: -61.999985, y: 76.5}
+        - {x: -78.999985, y: 58.5}
+        - {x: -89.999985, y: 39.5}
+        - {x: -94.999985, y: 24.5}
+        - {x: -95.999985, y: 14.5}
+        - {x: -95.999985, y: -13.5}
+        - {x: -93.999985, y: -28.5}
+        - {x: -84.999985, y: -49.5}
+        - {x: -77.999985, y: -58.499996}
+        - {x: -61.999985, y: -75.5}
+        - {x: -50.999985, y: -83.5}
+        - {x: -31.999985, y: -93.5}
+        - {x: -14.999984, y: -97.5}
+        - {x: 9.000015, y: -97.5}
+        - {x: 29.000015, y: -94.5}
+        - {x: 51.000015, y: -83.5}
+        - {x: 62.000015, y: -75.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b0e805ede934c438873f63a84965d20
+      internalID: 21300000
+      vertices:
+      - {x: 226, y: 158}
+      - {x: 224, y: 96}
+      - {x: 226, y: 108}
+      - {x: 215, y: 192}
+      - {x: 215, y: 71}
+      - {x: 170, y: 34}
+      - {x: 165, y: 231}
+      - {x: 92, y: 231}
+      - {x: 81, y: 34}
+      - {x: 71, y: 35}
+      - {x: 60, y: 211}
+      - {x: 30, y: 170}
+      - {x: 30, y: 89}
+      indices: 0c0000000b000000090000000a000000090000000b00000007000000090000000a000000080000000900000007000000050000000800000007000000060000000500000007000000030000000500000006000000040000000500000003000000010000000400000003000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Askatar: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

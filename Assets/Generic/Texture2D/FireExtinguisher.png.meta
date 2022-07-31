@@ -1,0 +1,233 @@
+fileFormatVersion: 2
+guid: 9833ea92f3ecb324baf452a5fe3d3328
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: FireExtinguisher
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: FireExtinguisher
+      rect:
+        serializedVersion: 2
+        x: 156.07613
+        y: 0
+        width: 209.84776
+        height: 294
+      alignment: 9
+      pivot: {x: 0.47481495, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -99.28503, y: -147}
+        - {x: -105.28503, y: -126.99999}
+        - {x: -105.28503, y: -72}
+        - {x: -82.28503, y: 2}
+        - {x: -79.28503, y: 65}
+        - {x: -53.285027, y: 91}
+        - {x: -41.285027, y: 139}
+        - {x: -36.285027, y: 147}
+        - {x: 47.714973, y: 147}
+        - {x: 68.71497, y: 138}
+        - {x: 100.71497, y: 112}
+        - {x: 104.71497, y: 97}
+        - {x: 104.71497, y: 52}
+        - {x: 83.71497, y: -23}
+        - {x: 72.71497, y: -76}
+        - {x: 49.714973, y: -135}
+        - {x: 35.714973, y: -147}
+      physicsShape:
+      - - {x: 25.714975, y: -93}
+        - {x: 31.714973, y: -90}
+        - {x: 34.714973, y: -85}
+        - {x: 39.714973, y: -65}
+        - {x: 40.714973, y: -60.000004}
+        - {x: 37.714973, y: -47}
+        - {x: 44.714977, y: -18}
+        - {x: 53.714977, y: -6.0000005}
+        - {x: 56.714977, y: 2}
+        - {x: 64.71497, y: 34}
+        - {x: 65.71497, y: 42}
+        - {x: 71.71497, y: 65}
+        - {x: 76.71497, y: 88}
+        - {x: 76.71497, y: 91}
+        - {x: 71.71497, y: 94}
+        - {x: 59.714973, y: 99.00001}
+        - {x: 60.714973, y: 104.00001}
+        - {x: 48.714977, y: 112.00001}
+        - {x: 28.714973, y: 118.00001}
+        - {x: 14.714973, y: 134}
+        - {x: 7.7149744, y: 138}
+        - {x: -7.2850266, y: 138}
+        - {x: -9.285027, y: 134}
+        - {x: -15.285027, y: 103.00001}
+        - {x: -13.285027, y: 100.00001}
+        - {x: -3.2850266, y: 96.00001}
+        - {x: -6.2850266, y: 87}
+        - {x: -11.285027, y: 82}
+        - {x: -20.285027, y: 82}
+        - {x: -24.285027, y: 78}
+        - {x: -28.285027, y: 61.000004}
+        - {x: -38.285027, y: 60.000004}
+        - {x: -51.285027, y: 50.000004}
+        - {x: -56.28503, y: 46}
+        - {x: -53.28503, y: 39}
+        - {x: -46.285027, y: 41}
+        - {x: -50.285027, y: 10}
+        - {x: -46.285027, y: 5}
+        - {x: -48.285027, y: -6.0000005}
+        - {x: -53.28503, y: -35}
+        - {x: -60.28503, y: -49.000004}
+        - {x: -62.28503, y: -56.000004}
+        - {x: -68.285034, y: -89}
+        - {x: -74.28503, y: -95}
+        - {x: -78.28503, y: -110.00001}
+        - {x: -78.28503, y: -119.00001}
+        - {x: -75.28503, y: -123.00001}
+        - {x: -71.28503, y: -122.00001}
+        - {x: -61.28503, y: -119.00001}
+        - {x: -54.28503, y: -126.00001}
+        - {x: -36.285027, y: -134}
+        - {x: -30.285028, y: -136}
+        - {x: -13.285027, y: -136}
+        - {x: -6.2850266, y: -135}
+        - {x: 5.7149734, y: -131}
+        - {x: 20.714975, y: -114.00001}
+        - {x: 24.714975, y: -105.00001}
+      - - {x: -70.28503, y: -113.00001}
+        - {x: -70.28503, y: -109.00001}
+        - {x: -68.285034, y: -105.00001}
+        - {x: -67.285034, y: -110.00001}
+        - {x: -71.28503, y: -114.00001}
+      - - {x: 47.714977, y: 43}
+        - {x: 50.714977, y: 54.000004}
+        - {x: 52.714977, y: 62.000004}
+        - {x: 45.714977, y: 71}
+        - {x: 17.714973, y: 78}
+        - {x: 13.714973, y: 85}
+        - {x: 19.714975, y: 88}
+        - {x: 24.714975, y: 92}
+        - {x: 36.714973, y: 89}
+        - {x: 47.714977, y: 84}
+        - {x: 52.714977, y: 84}
+        - {x: 59.714973, y: 86}
+        - {x: 52.714977, y: 53.000004}
+        - {x: 49.714977, y: 41}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49d0d3405a98456c9320b54ffe21b3b3
+      internalID: 21300000
+      vertices:
+      - {x: 361.71497, y: 259}
+      - {x: 365.71497, y: 199}
+      - {x: 365.71497, y: 244}
+      - {x: 344.71497, y: 124}
+      - {x: 333.71497, y: 71}
+      - {x: 329.71497, y: 285}
+      - {x: 310.71497, y: 12}
+      - {x: 308.71497, y: 294}
+      - {x: 296.71497, y: 0}
+      - {x: 224.71498, y: 294}
+      - {x: 219.71498, y: 286}
+      - {x: 207.71498, y: 238}
+      - {x: 181.71498, y: 212}
+      - {x: 178.71498, y: 149}
+      - {x: 161.71498, y: 0}
+      - {x: 155.71498, y: 75}
+      - {x: 155.71498, y: 20.000008}
+      indices: 100000000f0000000e0000000d0000000e0000000f000000080000000e0000000d0000000c000000080000000d0000000b000000080000000c0000000a000000080000000b00000009000000080000000a000000070000000800000009000000060000000800000007000000050000000600000007000000040000000600000005000000000000000400000005000000030000000400000000000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      FireExtinguisher: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

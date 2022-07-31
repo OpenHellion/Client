@@ -1,0 +1,190 @@
+fileFormatVersion: 2
+guid: b68890a9847ae5a40af1609dabeefc15
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: AltairHandheldAsteroidScanningTool
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: AltairHandheldAsteroidScanningTool
+      rect:
+        serializedVersion: 2
+        x: 109.07612
+        y: 36.076122
+        width: 311.84778
+        height: 181.84775
+      alignment: 9
+      pivot: {x: 0.47022575, y: 0.60998213}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -129.28503, y: -91}
+        - {x: -152.28503, y: -68}
+        - {x: -150.28503, y: -2}
+        - {x: -156.28503, y: 21}
+        - {x: -156.28503, y: 58}
+        - {x: -155.28503, y: 70}
+        - {x: -144.28503, y: 80}
+        - {x: -119.285034, y: 88}
+        - {x: 28.714966, y: 91}
+        - {x: 136.71497, y: 91}
+        - {x: 155.71497, y: 74}
+        - {x: 155.71497, y: -5}
+        - {x: 154.71497, y: -35}
+        - {x: 147.71497, y: -47}
+        - {x: 124.714966, y: -60}
+        - {x: 45.714966, y: -56}
+        - {x: -47.285034, y: -69}
+        - {x: -89.285034, y: -91}
+      physicsShape:
+      - - {x: -5.285034, y: -39.000004}
+        - {x: 47.71497, y: -31.000004}
+        - {x: 120.714966, y: -37.000004}
+        - {x: 129.71497, y: -28.000004}
+        - {x: 130.71497, y: -22}
+        - {x: 131.71497, y: 7.999999}
+        - {x: 132.71497, y: 42}
+        - {x: 132.71497, y: 60}
+        - {x: 128.71497, y: 65}
+        - {x: 126.714966, y: 68}
+        - {x: 47.71497, y: 68}
+        - {x: 26.714966, y: 67}
+        - {x: -14.285034, y: 66}
+        - {x: -104.285034, y: 65}
+        - {x: -126.28504, y: 64}
+        - {x: -134.28503, y: 54}
+        - {x: -134.28503, y: 43}
+        - {x: -133.28503, y: 35}
+        - {x: -128.28503, y: 25}
+        - {x: -123.28504, y: -43.000004}
+        - {x: -126.28504, y: -46}
+        - {x: -126.28504, y: -61}
+        - {x: -117.28504, y: -69}
+        - {x: -99.285034, y: -69}
+        - {x: -79.285034, y: -59}
+        - {x: -56.285034, y: -45}
+        - {x: -35.285034, y: -43.000004}
+      - - {x: 103.71497, y: 34}
+        - {x: 108.71497, y: 46}
+        - {x: 107.71497, y: 16}
+        - {x: 107.71497, y: -13}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e095e3b60c74f46ba33c7bcb69a26a8
+      internalID: 21300000
+      vertices:
+      - {x: 109.71498, y: 197}
+      - {x: 114.71498, y: 125}
+      - {x: 120.71498, y: 207}
+      - {x: 108.71498, y: 185}
+      - {x: 108.71498, y: 148}
+      - {x: 420.71497, y: 201}
+      - {x: 419.71497, y: 92}
+      - {x: 420.71497, y: 122}
+      - {x: 412.71497, y: 80}
+      - {x: 401.71497, y: 218}
+      - {x: 389.71497, y: 67}
+      - {x: 310.71497, y: 71}
+      - {x: 293.71497, y: 218}
+      - {x: 217.71498, y: 58}
+      - {x: 175.71498, y: 36}
+      - {x: 145.71498, y: 215}
+      - {x: 135.71498, y: 36}
+      - {x: 112.71498, y: 59}
+      indices: 1100000001000000100000000200000010000000010000000f00000010000000020000000e000000100000000f0000000c0000000e0000000f0000000d0000000e0000000c0000000b0000000d0000000c000000090000000b0000000c0000000a0000000b00000009000000080000000a00000009000000050000000800000009000000060000000800000005000000070000000600000005000000040000000300000001000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      AltairHandheldAsteroidScanningTool: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,239 @@
+fileFormatVersion: 2
+guid: 53f933ac1f3a45f49a4db7e0f9c11011
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: CorridorIntersectionModule
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 380
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: CorridorIntersectionModule
+      rect:
+        serializedVersion: 2
+        x: 16.02675
+        y: 0.026750982
+        width: 347.89713
+        height: 216.89713
+      alignment: 9
+      pivot: {x: 0.500071, y: 0.50241905}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -172.9753, y: -22.475311}
+        - {x: -173.9753, y: -17.475311}
+        - {x: -173.9753, y: 23.524689}
+        - {x: -170.9753, y: 53.524685}
+        - {x: -159.9753, y: 82.52469}
+        - {x: -130.9753, y: 98.52469}
+        - {x: -105.97529, y: 91.52469}
+        - {x: -44.975296, y: 108.5247}
+        - {x: 45.024704, y: 108.5247}
+        - {x: 64.024704, y: 80.52469}
+        - {x: 106.0247, y: 70.52469}
+        - {x: 166.0247, y: 68.52469}
+        - {x: 174.0247, y: 49.52469}
+        - {x: 174.0247, y: -28.475311}
+        - {x: 146.0247, y: -108.47531}
+        - {x: 127.024704, y: -108.47531}
+        - {x: 45.024704, y: -83.47531}
+        - {x: 35.024704, y: -108.47531}
+        - {x: 10.024704, y: -108.47531}
+        - {x: -9.975296, y: -104.4753}
+        - {x: -37.975296, y: -96.47531}
+        - {x: -124.975296, y: -72.47531}
+        - {x: -147.9753, y: -31.475311}
+      physicsShape:
+      - - {x: 112.024704, y: -98.4753}
+        - {x: 139.0247, y: -105.4753}
+        - {x: 142.0247, y: -100.47531}
+        - {x: 151.0247, y: -77.47531}
+        - {x: 149.0247, y: -57.47531}
+        - {x: 156.0247, y: -44.47531}
+        - {x: 164.0247, y: -24.475311}
+        - {x: 165.0247, y: -11.475311}
+        - {x: 170.0247, y: -4.475311}
+        - {x: 173.0247, y: 22.524689}
+        - {x: 173.0247, y: 29.524689}
+        - {x: 170.0247, y: 31.524689}
+        - {x: 172.02469, y: 43.524685}
+        - {x: 170.0247, y: 53.524685}
+        - {x: 163.0247, y: 60.524685}
+        - {x: 140.0247, y: 59.524685}
+        - {x: 126.024704, y: 58.52469}
+        - {x: 122.024704, y: 64.52469}
+        - {x: 112.024704, y: 67.52468}
+        - {x: 90.024704, y: 69.52469}
+        - {x: 74.024704, y: 68.52469}
+        - {x: 54.0247, y: 70.52469}
+        - {x: 53.0247, y: 85.52469}
+        - {x: 50.024704, y: 94.52469}
+        - {x: 46.0247, y: 98.52468}
+        - {x: 34.024704, y: 102.52469}
+        - {x: 27.024702, y: 104.52469}
+        - {x: 21.024704, y: 105.52468}
+        - {x: -3.975296, y: 107.52468}
+        - {x: -25.975296, y: 107.52468}
+        - {x: -40.975296, y: 105.52468}
+        - {x: -75.975296, y: 88.52469}
+        - {x: -78.975296, y: 85.52469}
+        - {x: -100.975296, y: 87.52469}
+        - {x: -108.975296, y: 90.52469}
+        - {x: -118.97529, y: 93.52469}
+        - {x: -130.9753, y: 93.52469}
+        - {x: -143.9753, y: 87.52469}
+        - {x: -152.9753, y: 80.52468}
+        - {x: -159.97528, y: 77.52469}
+        - {x: -167.9753, y: 58.52469}
+        - {x: -163.9753, y: 48.52469}
+        - {x: -164.9753, y: 42.52469}
+        - {x: -163.9753, y: 32.52469}
+        - {x: -158.97528, y: 21.524689}
+        - {x: -155.9753, y: 17.524689}
+        - {x: -169.9753, y: 9.524689}
+        - {x: -172.9753, y: 5.5246882}
+        - {x: -172.9753, y: -4.475311}
+        - {x: -165.9753, y: -21.475311}
+        - {x: -162.9753, y: -25.475311}
+        - {x: -147.9753, y: -25.475311}
+        - {x: -131.9753, y: -29.47531}
+        - {x: -131.9753, y: -34.47531}
+        - {x: -126.975296, y: -55.47531}
+        - {x: -115.975296, y: -64.47531}
+        - {x: -96.975296, y: -69.47531}
+        - {x: -90.975296, y: -70.47531}
+        - {x: -83.975296, y: -59.475307}
+        - {x: -68.975296, y: -73.47531}
+        - {x: -63.975296, y: -77.47531}
+        - {x: -50.975296, y: -81.47531}
+        - {x: -39.975292, y: -84.47531}
+        - {x: -24.975296, y: -78.47531}
+        - {x: -6.975296, y: -99.47531}
+        - {x: 20.024702, y: -107.4753}
+        - {x: 33.024704, y: -107.4753}
+        - {x: 37.024704, y: -101.47531}
+        - {x: 37.024704, y: -84.47531}
+        - {x: 45.024704, y: -79.4753}
+      tessellationDetail: 0
+      bones: []
+      spriteID: dda77629a3ca41f985bb44a3d94837d5
+      internalID: 21300000
+      vertices:
+      - {x: 356, y: 177}
+      - {x: 364, y: 80}
+      - {x: 364, y: 158}
+      - {x: 336, y: 0}
+      - {x: 317, y: 0}
+      - {x: 296, y: 179}
+      - {x: 254, y: 189}
+      - {x: 235, y: 217}
+      - {x: 235, y: 25}
+      - {x: 225, y: 0}
+      - {x: 200, y: 0}
+      - {x: 180, y: 4.0000076}
+      - {x: 152, y: 12}
+      - {x: 145, y: 217}
+      - {x: 84.00001, y: 200}
+      - {x: 65, y: 36}
+      - {x: 59, y: 207}
+      - {x: 42, y: 77}
+      - {x: 30, y: 191}
+      - {x: 19, y: 162}
+      - {x: 17, y: 86}
+      - {x: 16, y: 132}
+      - {x: 16, y: 91}
+      indices: 1600000015000000140000001300000014000000150000001100000014000000130000001200000011000000130000001000000011000000120000000f00000011000000100000000e0000000f000000100000000c0000000f0000000e0000000d0000000c0000000e000000070000000c0000000d0000000b0000000c000000070000000a0000000b00000007000000090000000a00000007000000080000000900000007000000040000000800000007000000060000000400000007000000050000000400000006000000000000000400000005000000030000000400000000000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      CorridorIntersectionModule: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

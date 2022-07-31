@@ -1,0 +1,240 @@
+fileFormatVersion: 2
+guid: b78e536fcfc468441bf4e834bc1b8afa
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: door_backgorund
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 12
+  maxTextureSize: 540
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: door_backgorund
+      rect:
+        serializedVersion: 2
+        x: 80.07612
+        y: 123.07612
+        width: 337.84778
+        height: 315.84778
+      alignment: 9
+      pivot: {x: 0.5029599, y: 0.4651731}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 149, y: -10}
+        - {x: 77, y: 114}
+        - {x: 77, y: 119}
+        - {x: 78, y: 121}
+        - {x: 93, y: 121}
+        - {x: 96, y: 119}
+        - {x: 122, y: 74}
+        - {x: 163, y: 2}
+        - {x: 163, y: -3}
+        - {x: 156, y: -12}
+        - {x: 153, y: -12}
+      - - {x: -169, y: -63}
+        - {x: -169, y: 158}
+        - {x: 0, y: 158}
+        - {x: 47, y: 158}
+        - {x: 169, y: -51}
+        - {x: 169, y: -65}
+        - {x: 126, y: -135}
+        - {x: 2, y: -135}
+        - {x: 0, y: -133}
+        - {x: -2, y: -135}
+        - {x: -124, y: -135}
+      - - {x: -70, y: -158}
+        - {x: -76, y: -146}
+        - {x: -76, y: -141}
+        - {x: 77, y: -141}
+        - {x: 77, y: -149}
+        - {x: 70, y: -158}
+      physicsShape:
+      - - {x: -57.999996, y: -114}
+        - {x: -57.999996, y: -121}
+        - {x: -57, y: -124}
+        - {x: -18.999998, y: -124}
+        - {x: -18.999998, y: -114}
+      - - {x: 48, y: -124}
+        - {x: 49.999996, y: -123}
+        - {x: 49.999996, y: -120}
+        - {x: 46.999996, y: -115}
+        - {x: 43.999996, y: -114}
+        - {x: 40.999996, y: -115}
+        - {x: 39, y: -114}
+        - {x: -15, y: -114}
+        - {x: -17, y: -115.99999}
+        - {x: -17, y: -123}
+        - {x: -15, y: -124}
+      - - {x: 49, y: -114}
+        - {x: 48, y: -115.99999}
+        - {x: 48, y: -120}
+        - {x: 53, y: -124}
+        - {x: 56, y: -123}
+        - {x: 59, y: -116.99999}
+        - {x: 59, y: -115.99999}
+        - {x: 57, y: -114}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2785e3cb6c754e2c8563d0e52dc962be
+      internalID: 21300000
+      vertices:
+      - {x: 326, y: 140}
+      - {x: 319, y: 123}
+      - {x: 326, y: 132}
+      - {x: 179, y: 123}
+      - {x: 173, y: 140}
+      - {x: 173, y: 135}
+      - {x: 249, y: 156}
+      - {x: 247, y: 146}
+      - {x: 249, y: 148}
+      - {x: 231, y: 156}
+      - {x: 191, y: 156}
+      - {x: 125, y: 146}
+      - {x: 158, y: 177}
+      - {x: 127, y: 224}
+      - {x: 249, y: 177}
+      - {x: 231, y: 168}
+      - {x: 249, y: 168}
+      - {x: 192, y: 168}
+      - {x: 191, y: 165}
+      - {x: 310, y: 168}
+      - {x: 342, y: 177}
+      - {x: 418, y: 230}
+      - {x: 375, y: 146}
+      - {x: 418, y: 216}
+      - {x: 372, y: 244}
+      - {x: 296, y: 439}
+      - {x: 284, y: 390}
+      - {x: 249, y: 439}
+      - {x: 249, y: 390}
+      - {x: 372, y: 227}
+      - {x: 310, y: 163}
+      - {x: 305, y: 156}
+      - {x: 251, y: 146}
+      - {x: 212, y: 390}
+      - {x: 171, y: 402}
+      - {x: 153, y: 402}
+      - {x: 86, y: 297}
+      - {x: 80, y: 439}
+      - {x: 86, y: 276}
+      - {x: 170, y: 190}
+      - {x: 249, y: 190}
+      - {x: 146, y: 236}
+      - {x: 127, y: 242}
+      - {x: 219, y: 369}
+      - {x: 249, y: 369}
+      - {x: 146, y: 243}
+      - {x: 352, y: 251}
+      - {x: 278, y: 369}
+      - {x: 352, y: 230}
+      - {x: 330, y: 190}
+      - {x: 171, y: 394}
+      - {x: 102, y: 269}
+      - {x: 88, y: 269}
+      - {x: 80, y: 218}
+      - {x: 412, y: 283}
+      - {x: 405, y: 269}
+      - {x: 412, y: 278}
+      - {x: 402, y: 269}
+      - {x: 398, y: 271}
+      - {x: 371, y: 355}
+      - {x: 345, y: 400}
+      - {x: 342, y: 402}
+      - {x: 327, y: 402}
+      - {x: 326, y: 400}
+      - {x: 326, y: 395}
+      indices: 400000003f0000003a0000003e0000003a0000003f0000003d0000003a0000003e0000003c0000003a0000003d0000003b0000003a0000003c000000360000003a0000003b000000390000003a000000360000003700000039000000360000003800000037000000360000002600000024000000340000002300000034000000240000003300000034000000230000003200000033000000230000002200000032000000230000002500000026000000350000003400000035000000260000000b0000003500000034000000330000000b000000340000002a0000000b00000033000000320000002a000000330000000d0000000b0000002a000000210000002a00000032000000220000002100000032000000280000002c000000310000002f000000310000002c0000002e000000310000002f00000030000000310000002e000000290000002d000000270000002b000000270000002d00000028000000270000002b0000002c000000280000002b0000000e00000028000000140000003100000014000000280000003000000014000000310000001d00000014000000300000002e0000001d000000300000002c0000001c0000002f0000001a0000002f0000001c0000002e0000002f0000001a000000180000002e0000001a0000001d0000002e00000018000000210000002d0000002a000000290000002a0000002d0000002b0000002d000000210000001c0000002b000000210000002c0000002b0000001c0000000d0000002a0000000c000000290000000c0000002a000000270000000c000000290000000e0000000c00000027000000280000000e000000270000000a00000012000000090000001100000009000000120000000f000000090000001100000006000000100000001f000000130000001f000000100000001e0000001f00000013000000090000000f0000000600000010000000060000000f0000001b000000230000002500000024000000250000002300000026000000250000002400000022000000230000001b00000021000000220000001b0000001c000000210000001b0000000800000006000000200000001f000000200000000600000016000000200000001f0000001e000000160000001f00000013000000160000001e0000001400000016000000130000001d000000160000001400000018000000160000001d0000001c0000001b0000001a000000190000001a0000001b000000180000001a00000019000000150000001800000019000000160000001800000015000000170000001600000015000000100000000e0000001300000014000000130000000e0000000e000000110000000c000000120000000c000000110000000a0000000c000000120000000f000000110000000e000000100000000f0000000e0000000d0000000c0000000b0000000a0000000b0000000c000000070000000b0000000a00000009000000070000000a000000060000000700000009000000080000000700000006000000050000000400000003000000000000000300000004000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      door_backgorund: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

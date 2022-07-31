@@ -1,0 +1,190 @@
+fileFormatVersion: 2
+guid: 7e9f1abf76c8cc04796929fb935d27e7
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: CanisterIcon
+  - first:
+      213: 21300002
+    second: PowerIcon
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 12
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 2
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: CanisterIcon
+      rect:
+        serializedVersion: 2
+        x: 228
+        y: 370
+        width: 42
+        height: 59
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 21, y: -29.499998}
+        - {x: -21, y: -29.499998}
+        - {x: -21, y: 29.499998}
+        - {x: 21, y: 29.499998}
+      physicsShape:
+      - - {x: -14, y: 29.499998}
+        - {x: -17, y: 9.5}
+        - {x: -17, y: -10.5}
+        - {x: -14.999999, y: -22.5}
+        - {x: -14, y: -25.5}
+        - {x: -13, y: -29.499998}
+        - {x: 13, y: -29.499998}
+        - {x: 17, y: -28.5}
+        - {x: 17, y: 10.5}
+        - {x: 11, y: 29.499998}
+      - - {x: -4, y: 22.5}
+        - {x: 4, y: 23.5}
+        - {x: 4, y: 21.499998}
+        - {x: -4.9999995, y: 21.499998}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67d8686a4e7f436c95d1f1e5ac8af0a9
+      internalID: 21300000
+      vertices:
+      - {x: 0, y: 59}
+      - {x: 42, y: 0.0000019073486}
+      - {x: 42, y: 59}
+      - {x: 0, y: 0.0000019073486}
+      indices: 030000000000000001000000020000000100000000000000
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PowerIcon
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 370
+        width: 45
+        height: 59
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 22.5, y: -29.499998}
+        - {x: -22.5, y: -29.499998}
+        - {x: -22.5, y: 29.499998}
+        - {x: 22.5, y: 29.499998}
+      physicsShape:
+      - - {x: 16.5, y: 28.5}
+        - {x: 15.5, y: 29.499998}
+        - {x: -12.5, y: 29.499998}
+        - {x: -22.5, y: 9.5}
+        - {x: -22.5, y: -5.5}
+        - {x: -10.5, y: -7.4999995}
+        - {x: -17.5, y: -25.5}
+        - {x: -18.5, y: -27.5}
+        - {x: -15.5, y: -28.5}
+        - {x: -12.5, y: -28.5}
+        - {x: 22.5, y: 6.5}
+        - {x: 22.5, y: 12.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21dde788f867422c980b53b5d5c0ae44
+      internalID: 21300002
+      vertices:
+      - {x: 0, y: 59}
+      - {x: 45, y: 0.0000019073486}
+      - {x: 45, y: 59}
+      - {x: 0, y: 0.0000019073486}
+      indices: 030000000000000001000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      CanisterIcon: 21300000
+      PowerIcon: 21300002
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

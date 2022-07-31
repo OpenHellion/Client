@@ -1,0 +1,205 @@
+fileFormatVersion: 2
+guid: 43c79bfa415b2104da46fa52c63b0787
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: EMPGrenade
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EMPGrenade
+      rect:
+        serializedVersion: 2
+        x: 144.07613
+        y: 23.07612
+        width: 220.84776
+        height: 245.84776
+      alignment: 9
+      pivot: {x: 0.5055014, y: 0.50406754}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -108.785034, y: -59.000008}
+        - {x: -110.785034, y: -23.000008}
+        - {x: -110.785034, y: 22.999992}
+        - {x: -93.785034, y: 62.99999}
+        - {x: -28.785034, y: 122.99999}
+        - {x: 20.214966, y: 122.99999}
+        - {x: 75.214966, y: 86.99999}
+        - {x: 106.214966, y: 38.999992}
+        - {x: 110.214966, y: 36.999992}
+        - {x: 110.214966, y: -45.000008}
+        - {x: 100.214966, y: -92.00001}
+        - {x: 45.214966, y: -117.00001}
+        - {x: 2.2149658, y: -123}
+        - {x: -23.785034, y: -123}
+        - {x: -29.785032, y: -122.00001}
+        - {x: -69.785034, y: -109.00001}
+      physicsShape:
+      - - {x: 39.214966, y: -92.00001}
+        - {x: 51.21497, y: -77.00001}
+        - {x: 61.21497, y: -76.00001}
+        - {x: 74.214966, y: -61.00001}
+        - {x: 74.214966, y: -49.00001}
+        - {x: 86.214966, y: -37.000008}
+        - {x: 89.214966, y: -24.00001}
+        - {x: 89.214966, y: -17.000008}
+        - {x: 84.214966, y: -10.000008}
+        - {x: 89.214966, y: 3.9999926}
+        - {x: 89.214966, y: 12.999993}
+        - {x: 88.214966, y: 22.999992}
+        - {x: 74.214966, y: 44.999992}
+        - {x: 49.21497, y: 67.99999}
+        - {x: 32.214966, y: 78.99999}
+        - {x: 33.214966, y: 84.99999}
+        - {x: 28.214968, y: 95.99999}
+        - {x: 6.214966, y: 103}
+        - {x: -4.7850347, y: 103}
+        - {x: -12.785035, y: 101}
+        - {x: -25.785036, y: 93.99999}
+        - {x: -26.785036, y: 90.99999}
+        - {x: -27.785036, y: 86.99999}
+        - {x: -28.785036, y: 78.99999}
+        - {x: -43.785034, y: 67.99999}
+        - {x: -75.785034, y: 33.999992}
+        - {x: -75.785034, y: 21.999992}
+        - {x: -86.785034, y: 17.999992}
+        - {x: -89.785034, y: 2.9999924}
+        - {x: -89.785034, y: -5.000008}
+        - {x: -80.785034, y: -13.000009}
+        - {x: -89.785034, y: -31.000008}
+        - {x: -89.785034, y: -33.000008}
+        - {x: -79.785034, y: -57.00001}
+        - {x: -66.785034, y: -67.00001}
+        - {x: -64.785034, y: -78.00001}
+        - {x: -49.785038, y: -91.00001}
+        - {x: -29.785036, y: -92.00001}
+        - {x: -21.785034, y: -102.000015}
+        - {x: -1.7850344, y: -102.000015}
+        - {x: 12.214966, y: -94.00001}
+        - {x: 20.214966, y: -99.000015}
+        - {x: 33.214966, y: -96.000015}
+      - - {x: -8.785034, y: 78.99999}
+        - {x: -18.785034, y: 86.99999}
+        - {x: -1.7850344, y: 93.99999}
+        - {x: 21.214966, y: 86.99999}
+        - {x: 13.214967, y: 76.99999}
+        - {x: 5.214966, y: 68.99999}
+        - {x: -5.7850347, y: 68.99999}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6651ae17c307491ba873f4caea98ee1e
+      internalID: 21300000
+      vertices:
+      - {x: 360.71497, y: 185}
+      - {x: 364.71497, y: 101}
+      - {x: 364.71497, y: 183}
+      - {x: 354.71497, y: 54}
+      - {x: 329.71497, y: 233}
+      - {x: 299.71497, y: 29}
+      - {x: 274.71497, y: 269}
+      - {x: 256.71497, y: 23.000008}
+      - {x: 230.71498, y: 23.000008}
+      - {x: 225.71498, y: 269}
+      - {x: 224.71498, y: 24}
+      - {x: 184.71498, y: 37}
+      - {x: 160.71498, y: 209}
+      - {x: 145.71498, y: 87}
+      - {x: 143.71498, y: 169}
+      - {x: 143.71498, y: 123}
+      indices: 0f0000000e0000000d0000000c0000000d0000000e0000000b0000000d0000000c000000090000000b0000000c0000000a0000000b00000009000000080000000a00000009000000060000000800000009000000070000000800000006000000050000000700000006000000040000000500000006000000030000000500000004000000000000000300000004000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      EMPGrenade: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

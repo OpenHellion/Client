@@ -1,0 +1,153 @@
+fileFormatVersion: 2
+guid: 3f328406011d3164a945f01ac3b1253c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: searchIcon
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 12
+  maxTextureSize: 64
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: searchIcon
+      rect:
+        serializedVersion: 2
+        x: 2.026751
+        y: 1.0761205
+        width: 59.897125
+        height: 61.897125
+      alignment: 9
+      pivot: {x: 0.50041217, y: 0.49960122}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 19.024687, y: -31.024683}
+        - {x: -29.975315, y: -18.024683}
+        - {x: -29.975315, y: 30.975317}
+        - {x: 24.024687, y: 30.975317}
+        - {x: 30.024689, y: -10.024683}
+        - {x: 30.024689, y: -27.024685}
+        - {x: 23.024687, y: -31.024683}
+      physicsShape:
+      - - {x: 7.024687, y: 30.975317}
+        - {x: -22.975311, y: 30.975317}
+        - {x: -29.975311, y: 28.975317}
+        - {x: -29.975311, y: -11.024683}
+        - {x: -17.975313, y: -15.024682}
+        - {x: 5.0246863, y: -17.024683}
+        - {x: 20.024685, y: -31.024683}
+        - {x: 24.024687, y: -31.024683}
+        - {x: 29.024687, y: -24.024683}
+        - {x: 29.024687, y: -12.024683}
+        - {x: 20.024685, y: 10.975317}
+      - - {x: -13.975313, y: -5.0246825}
+        - {x: -17.975313, y: 15.975317}
+        - {x: 5.0246863, y: 15.975317}
+        - {x: 7.024687, y: 3.975317}
+        - {x: 1.0246868, y: -5.0246825}
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc18ca42db204f46b0dddc92823fdc62
+      internalID: 21300000
+      vertices:
+      - {x: 56, y: 63}
+      - {x: 62, y: 4.999998}
+      - {x: 62, y: 22}
+      - {x: 55, y: 1}
+      - {x: 51, y: 1}
+      - {x: 1.9999981, y: 63}
+      - {x: 1.9999981, y: 14}
+      indices: 060000000500000004000000000000000400000005000000030000000400000000000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      searchIcon: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

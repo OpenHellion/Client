@@ -1,0 +1,214 @@
+fileFormatVersion: 2
+guid: b5eb8660fc38ab645bdd711150ae0ee9
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: AltairHandDrill
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: AltairHandDrill
+      rect:
+        serializedVersion: 2
+        x: 54.076122
+        y: 82.07612
+        width: 397.84778
+        height: 149.89713
+      alignment: 9
+      pivot: {x: 0.50682414, y: 0.43312293}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -172.28503, y: -75.02468}
+        - {x: -199.28503, y: -60.02468}
+        - {x: -199.28503, y: -6.024681}
+        - {x: -186.28503, y: 11.975319}
+        - {x: -103.285034, y: 23.975319}
+        - {x: -42.285034, y: 30.975319}
+        - {x: 29.714966, y: 51.975315}
+        - {x: 50.714966, y: 74.97532}
+        - {x: 91.714966, y: 74.97532}
+        - {x: 93.714966, y: 73.97532}
+        - {x: 188.71497, y: 31.975319}
+        - {x: 198.71497, y: 22.975319}
+        - {x: 198.71497, y: -58.02468}
+        - {x: 170.71497, y: -75.02468}
+        - {x: -2.2850342, y: -75.02468}
+        - {x: -53.285034, y: -73.02467}
+        - {x: -117.285034, y: -75.02468}
+      physicsShape:
+      - - {x: 173.71497, y: -40.02468}
+        - {x: 176.71497, y: -38.02468}
+        - {x: 177.71497, y: -24.024681}
+        - {x: 175.71497, y: -18.024681}
+        - {x: 177.71497, y: -5.024681}
+        - {x: 177.71497, y: 7.975319}
+        - {x: 172.71497, y: 11.975319}
+        - {x: 155.71497, y: 18.97532}
+        - {x: 150.71497, y: 18.97532}
+        - {x: 119.71497, y: 17.97532}
+        - {x: 114.71497, y: 31.975319}
+        - {x: 111.71497, y: 37.975323}
+        - {x: 83.714966, y: 47.975323}
+        - {x: 73.714966, y: 54.97532}
+        - {x: 71.714966, y: 56.97532}
+        - {x: 65.714966, y: 56.97532}
+        - {x: 60.71497, y: 54.97532}
+        - {x: 56.71497, y: 21.975319}
+        - {x: 26.714968, y: 20.97532}
+        - {x: 18.714966, y: 18.97532}
+        - {x: -16.285034, y: 9.975319}
+        - {x: -22.285036, y: 4.97532}
+        - {x: -66.285034, y: 3.9753199}
+        - {x: -94.28504, y: 2.9753199}
+        - {x: -99.28504, y: -6.024681}
+        - {x: -133.28503, y: -10.024681}
+        - {x: -162.28503, y: -8.024681}
+        - {x: -173.28503, y: -9.024681}
+        - {x: -176.28503, y: -13.024681}
+        - {x: -177.28503, y: -21.024681}
+        - {x: -177.28503, y: -41.02468}
+        - {x: -170.28503, y: -54.02468}
+        - {x: -158.28503, y: -51.02468}
+        - {x: -149.28503, y: -47.02468}
+        - {x: -99.28504, y: -43.02468}
+        - {x: -91.285034, y: -52.02468}
+        - {x: -68.285034, y: -51.02468}
+        - {x: 18.714966, y: -41.02468}
+        - {x: 40.714966, y: -45.02468}
+        - {x: 56.71497, y: -53.02468}
+        - {x: 60.71497, y: -53.02468}
+        - {x: 63.71497, y: -51.02468}
+        - {x: 67.714966, y: -40.02468}
+        - {x: 82.714966, y: -46.02468}
+        - {x: 90.714966, y: -54.02468}
+        - {x: 114.71497, y: -54.02468}
+        - {x: 132.71497, y: -51.02468}
+        - {x: 154.71497, y: -52.02468}
+        - {x: 169.71497, y: -43.02468}
+      - - {x: 101.71497, y: 17.97532}
+        - {x: 102.71497, y: 19.97532}
+        - {x: 105.71497, y: 23.975319}
+        - {x: 105.71497, y: 16.97532}
+      - - {x: 92.714966, y: 28.975319}
+        - {x: 95.714966, y: 25.975319}
+        - {x: 95.714966, y: 26.975319}
+        - {x: 93.714966, y: 24.975319}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7439966f7445453e960909bb2ea40c6a
+      internalID: 21300000
+      vertices:
+      - {x: 441.71497, y: 189}
+      - {x: 451.71497, y: 99}
+      - {x: 451.71497, y: 180}
+      - {x: 423.71497, y: 82}
+      - {x: 346.71497, y: 231}
+      - {x: 344.71497, y: 232}
+      - {x: 303.71497, y: 232}
+      - {x: 282.71497, y: 209}
+      - {x: 250.71498, y: 82}
+      - {x: 210.71498, y: 188}
+      - {x: 199.71498, y: 84}
+      - {x: 149.71498, y: 181}
+      - {x: 135.71498, y: 82}
+      - {x: 80.71498, y: 82}
+      - {x: 66.71498, y: 169}
+      - {x: 53.71498, y: 151}
+      - {x: 53.71498, y: 97}
+      indices: 100000000f0000000d0000000e0000000d0000000f0000000b0000000d0000000e0000000c0000000d0000000b0000000a0000000c0000000b000000090000000a0000000b000000080000000a00000009000000070000000800000009000000030000000800000007000000060000000300000007000000050000000300000006000000040000000300000005000000000000000300000004000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      AltairHandDrill: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

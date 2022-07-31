@@ -1,0 +1,180 @@
+fileFormatVersion: 2
+guid: ce1c6492d37b7ac4cb2e18e168c71b54
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: SingularityCellDetonator
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SingularityCellDetonator
+      rect:
+        serializedVersion: 2
+        x: 161.07613
+        y: 15.07612
+        width: 165.84776
+        height: 278.9239
+      alignment: 9
+      pivot: {x: 0.5706369, y: 0.47297445}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -82.28503, y: 51.46193}
+        - {x: -83.28503, y: 59.46193}
+        - {x: -83.28503, y: 117.46192}
+        - {x: -64.28503, y: 134.46193}
+        - {x: -5.2850266, y: 139.46193}
+        - {x: 66.71497, y: 139.46193}
+        - {x: 82.71497, y: 127.46193}
+        - {x: 82.71497, y: -90.53807}
+        - {x: 80.71497, y: -109.53807}
+        - {x: 23.714973, y: -139.53807}
+        - {x: -18.285027, y: -139.53807}
+        - {x: -21.285027, y: -138.53807}
+        - {x: -37.285027, y: -126.53807}
+        - {x: -53.285027, y: -83.53807}
+        - {x: -57.285027, y: 22.46193}
+      physicsShape:
+      - - {x: 58.714973, y: -46.53807}
+        - {x: 57.714973, y: 66.46193}
+        - {x: 60.714977, y: 69.46193}
+        - {x: 60.714977, y: 116.46194}
+        - {x: 57.714973, y: 119.46194}
+        - {x: 41.714973, y: 119.46194}
+        - {x: 1.7149734, y: 109.46194}
+        - {x: -60.285027, y: 113.46194}
+        - {x: -60.285027, y: 61.46193}
+        - {x: -58.285027, y: 59.46193}
+        - {x: -34.285027, y: 49.461933}
+        - {x: -32.285027, y: 2.4619293}
+        - {x: -28.285027, y: -88.53807}
+        - {x: -21.285027, y: -115.53808}
+        - {x: -11.285027, y: -117.53808}
+        - {x: 19.714973, y: -117.53808}
+        - {x: 39.714973, y: -98.53807}
+        - {x: 54.714973, y: -96.53807}
+        - {x: 58.714973, y: -92.53807}
+      - - {x: -44.28503, y: 91.46194}
+        - {x: 1.7149734, y: 89.46194}
+        - {x: 6.7149734, y: 81.46193}
+        - {x: -20.285027, y: 80.46193}
+      - - {x: 26.714973, y: 92.46194}
+        - {x: 36.714973, y: 94.46194}
+        - {x: 42.714973, y: 79.46193}
+        - {x: 29.714973, y: 79.46193}
+      tessellationDetail: 0
+      bones: []
+      spriteID: a16f7c8039e349508be61b82c7d3be15
+      internalID: 21300000
+      vertices:
+      - {x: 326.71497, y: 282}
+      - {x: 324.71497, y: 45}
+      - {x: 326.71497, y: 64}
+      - {x: 310.71497, y: 294}
+      - {x: 267.71497, y: 15}
+      - {x: 238.71498, y: 294}
+      - {x: 225.71498, y: 15}
+      - {x: 222.71498, y: 16}
+      - {x: 206.71498, y: 28}
+      - {x: 190.71498, y: 71}
+      - {x: 186.71498, y: 177}
+      - {x: 179.71498, y: 289}
+      - {x: 161.71498, y: 206}
+      - {x: 160.71498, y: 272}
+      - {x: 160.71498, y: 214}
+      indices: 0e0000000d0000000c0000000b0000000c0000000d0000000a0000000c0000000b000000050000000a0000000b000000090000000a00000005000000080000000900000005000000070000000800000005000000060000000700000005000000040000000600000005000000030000000400000005000000010000000400000003000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      SingularityCellDetonator: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,233 @@
+fileFormatVersion: 2
+guid: 043475de05abaa64dbc131dd9d6bd94d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: AltairPressurisedHelmet
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: AltairPressurisedHelmet
+      rect:
+        serializedVersion: 2
+        x: 118.07612
+        y: 0
+        width: 274.84778
+        height: 294
+      alignment: 9
+      pivot: {x: 0.50078213, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -133.78503, y: -53}
+        - {x: -137.78503, y: -35}
+        - {x: -137.78503, y: 11}
+        - {x: -136.78503, y: 59}
+        - {x: -137.78503, y: 74}
+        - {x: -137.78503, y: 98}
+        - {x: -117.785034, y: 119}
+        - {x: -100.785034, y: 130}
+        - {x: -66.785034, y: 145}
+        - {x: -57.785034, y: 147}
+        - {x: 52.214966, y: 147}
+        - {x: 79.214966, y: 130}
+        - {x: 101.214966, y: 111}
+        - {x: 110.214966, y: 97}
+        - {x: 133.21497, y: 76}
+        - {x: 137.21497, y: 64}
+        - {x: 137.21497, y: 35}
+        - {x: 133.21497, y: 15}
+        - {x: 131.21497, y: -54}
+        - {x: 117.214966, y: -74}
+        - {x: 80.214966, y: -99}
+        - {x: -7.785034, y: -140}
+        - {x: -32.785034, y: -147}
+        - {x: -117.785034, y: -147}
+        - {x: -126.78503, y: -129}
+        - {x: -130.78503, y: -117}
+        - {x: -130.78503, y: -65}
+      physicsShape:
+      - - {x: -20.785034, y: -119.00001}
+        - {x: 22.214966, y: -97.00001}
+        - {x: 28.214968, y: -96.00001}
+        - {x: 38.214966, y: -93}
+        - {x: 73.214966, y: -74}
+        - {x: 87.214966, y: -63.000004}
+        - {x: 99.21497, y: -57.000004}
+        - {x: 109.21497, y: -45}
+        - {x: 109.21497, y: -35}
+        - {x: 105.21497, y: -13.000001}
+        - {x: 108.21497, y: -5}
+        - {x: 112.21497, y: 10}
+        - {x: 111.21497, y: 20}
+        - {x: 108.21497, y: 34}
+        - {x: 110.21497, y: 35}
+        - {x: 116.21497, y: 42}
+        - {x: 116.21497, y: 55.000004}
+        - {x: 113.21497, y: 64}
+        - {x: 104.21497, y: 71}
+        - {x: 95.214966, y: 73}
+        - {x: 88.214966, y: 87}
+        - {x: 84.214966, y: 93}
+        - {x: 69.214966, y: 108.00001}
+        - {x: 64.214966, y: 110.00001}
+        - {x: 49.21497, y: 118.00001}
+        - {x: 36.214966, y: 123.00001}
+        - {x: 37.214966, y: 129}
+        - {x: 33.214966, y: 137}
+        - {x: 18.214966, y: 138}
+        - {x: 9.214966, y: 139}
+        - {x: -6.7850347, y: 139}
+        - {x: -26.785036, y: 130}
+        - {x: -47.785038, y: 127.00001}
+        - {x: -75.785034, y: 116.00001}
+        - {x: -95.78504, y: 105.00001}
+        - {x: -112.78504, y: 91}
+        - {x: -116.78504, y: 87}
+        - {x: -116.78504, y: 77}
+        - {x: -115.78504, y: 69}
+        - {x: -107.78504, y: 67}
+        - {x: -102.78504, y: 59.000004}
+        - {x: -105.78504, y: 44}
+        - {x: -114.78504, y: -4}
+        - {x: -116.78504, y: -11}
+        - {x: -114.78504, y: -33}
+        - {x: -111.78504, y: -41}
+        - {x: -103.78504, y: -74}
+        - {x: -109.78504, y: -90}
+        - {x: -108.78504, y: -97.00001}
+        - {x: -102.78504, y: -127.00001}
+        - {x: -94.785034, y: -140}
+        - {x: -88.785034, y: -140}
+        - {x: -82.785034, y: -138}
+        - {x: -71.785034, y: -130}
+        - {x: -58.785038, y: -129}
+        - {x: -43.785034, y: -126.00001}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0261031e5a074db2950f10a53db68499
+      internalID: 21300000
+      vertices:
+      - {x: 388.71497, y: 223}
+      - {x: 392.71497, y: 182}
+      - {x: 392.71497, y: 211}
+      - {x: 388.71497, y: 162}
+      - {x: 386.71497, y: 93}
+      - {x: 372.71497, y: 73}
+      - {x: 365.71497, y: 244}
+      - {x: 356.71497, y: 258}
+      - {x: 335.71497, y: 48}
+      - {x: 334.71497, y: 277}
+      - {x: 307.71497, y: 294}
+      - {x: 247.71498, y: 7}
+      - {x: 222.71498, y: 0}
+      - {x: 197.71498, y: 294}
+      - {x: 188.71498, y: 292}
+      - {x: 154.71498, y: 277}
+      - {x: 137.71498, y: 266}
+      - {x: 137.71498, y: 0}
+      - {x: 128.715, y: 18}
+      - {x: 124.71498, y: 82}
+      - {x: 121.71498, y: 94}
+      - {x: 118.71498, y: 206}
+      - {x: 117.71498, y: 245}
+      - {x: 117.71498, y: 221}
+      - {x: 124.71498, y: 30}
+      - {x: 117.71498, y: 158}
+      - {x: 117.71498, y: 112}
+      indices: 1a00000019000000140000001500000014000000190000001800000013000000120000001700000016000000150000001000000015000000160000001400000015000000100000001300000014000000100000001200000013000000100000001100000012000000100000000c00000011000000100000000f0000000c000000100000000e0000000c0000000f0000000d0000000c0000000e0000000a0000000c0000000d0000000b0000000c0000000a000000080000000b0000000a00000009000000080000000a000000070000000800000009000000050000000800000007000000060000000500000007000000000000000500000006000000040000000500000000000000030000000400000000000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      AltairPressurisedHelmet: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,170 @@
+fileFormatVersion: 2
+guid: 1b63d2a3bcb67e94596adeca16d04353
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: ArmorPiercingGrenade
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ArmorPiercingGrenade
+      rect:
+        serializedVersion: 2
+        x: 205.07613
+        y: 15.07612
+        width: 111.84776
+        height: 256.84778
+      alignment: 9
+      pivot: {x: 0.45274803, y: 0.5136267}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -55.285027, y: -121.50001}
+        - {x: -56.285027, y: -88.500015}
+        - {x: -56.285027, y: 99.499985}
+        - {x: -9.285027, y: 128.49997}
+        - {x: 39.714973, y: 128.49997}
+        - {x: 43.714973, y: 125.499985}
+        - {x: 55.714973, y: 110.499985}
+        - {x: 55.714973, y: -100.500015}
+        - {x: 39.714973, y: -127.500015}
+        - {x: 38.714973, y: -128.50002}
+        - {x: -29.285027, y: -128.50002}
+      physicsShape:
+      - - {x: 33.714973, y: 70.499985}
+        - {x: 31.714973, y: 79.499985}
+        - {x: 31.714973, y: 102.49999}
+        - {x: 29.714973, y: 107.49999}
+        - {x: 20.714975, y: 107.49999}
+        - {x: -6.2850266, y: 103.49999}
+        - {x: -11.285027, y: 98.499985}
+        - {x: -19.285027, y: 79.499985}
+        - {x: -34.285027, y: 75.499985}
+        - {x: -34.285027, y: 25.499985}
+        - {x: -29.285028, y: -73.500015}
+        - {x: -28.285027, y: -78.500015}
+        - {x: -26.285027, y: -96.50002}
+        - {x: -16.285027, y: -105.50002}
+        - {x: -3.2850266, y: -107.50002}
+        - {x: 11.714973, y: -107.50002}
+        - {x: 19.714975, y: -105.50002}
+        - {x: 30.714973, y: -96.50002}
+        - {x: 33.714973, y: -78.500015}
+      - - {x: 16.714973, y: 87.499985}
+        - {x: 11.714973, y: 89.499985}
+        - {x: 1.7149739, y: 88.499985}
+        - {x: -3.2850266, y: 86.499985}
+        - {x: 2.7149734, y: 94.499985}
+        - {x: 18.714975, y: 97.499985}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ac775f359844f65be1e11bfd0ae6e79
+      internalID: 21300000
+      vertices:
+      - {x: 304.71497, y: 269}
+      - {x: 316.71497, y: 43}
+      - {x: 316.71497, y: 254}
+      - {x: 300.71497, y: 272}
+      - {x: 300.71497, y: 16}
+      - {x: 299.71497, y: 15}
+      - {x: 251.71498, y: 272}
+      - {x: 231.71498, y: 15}
+      - {x: 205.71498, y: 22.000008}
+      - {x: 204.71498, y: 243}
+      - {x: 204.71498, y: 55}
+      indices: 0a0000000900000008000000060000000800000009000000070000000800000006000000050000000700000006000000030000000500000006000000040000000500000003000000010000000400000003000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      ArmorPiercingGrenade: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

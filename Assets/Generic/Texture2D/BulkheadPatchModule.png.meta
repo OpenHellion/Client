@@ -1,0 +1,219 @@
+fileFormatVersion: 2
+guid: 5e507b8feb0c0014982e302ace3585d4
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: BulkheadPatchModule
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 380
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: BulkheadPatchModule
+      rect:
+        serializedVersion: 2
+        x: 74.07612
+        y: 0.036285102
+        width: 217.84778
+        height: 216.88759
+      alignment: 9
+      pivot: {x: 0.5321325, y: 0.5023972}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -105.00001, y: 63.51992}
+        - {x: -106.00001, y: 66.51992}
+        - {x: -106.00001, y: 69.51992}
+        - {x: -104.00001, y: 70.51992}
+        - {x: -100.000015, y: 70.51992}
+        - {x: -99, y: 67.51992}
+        - {x: -99, y: 64.51992}
+        - {x: -101.000015, y: 63.51992}
+      - - {x: -107.00001, y: 57.51992}
+        - {x: -109.00001, y: 59.519917}
+        - {x: -109.00001, y: 62.51992}
+        - {x: -106.00001, y: 63.51992}
+        - {x: -104.00001, y: 61.51992}
+        - {x: -104.00001, y: 58.51992}
+      - - {x: -93.00001, y: -37.48008}
+        - {x: -107.00001, y: 12.51992}
+        - {x: -107.00001, y: 48.51992}
+        - {x: -68.00001, y: 98.51992}
+        - {x: -52.000004, y: 107.51993}
+        - {x: -37.000008, y: 108.51993}
+        - {x: 45.999992, y: 108.51993}
+        - {x: 68.99999, y: 101.51992}
+        - {x: 104.99999, y: 58.51992}
+        - {x: 108.99999, y: 47.51992}
+        - {x: 108.99999, y: -48.48008}
+        - {x: 21.999992, y: -108.48008}
+        - {x: -7.0000076, y: -108.48008}
+        - {x: -52.000004, y: -87.48008}
+        - {x: -76.00001, y: -62.48008}
+      physicsShape:
+      - - {x: 92.999985, y: -42.480076}
+        - {x: 100.99999, y: -38.48008}
+        - {x: 106.99999, y: -31.48008}
+        - {x: 106.99999, y: -11.48008}
+        - {x: 107.99999, y: 5.51992}
+        - {x: 107.99999, y: 20.519918}
+        - {x: 104.999985, y: 23.519918}
+        - {x: 96.99999, y: 37.51992}
+        - {x: 102.99999, y: 53.519917}
+        - {x: 100.99999, y: 59.519917}
+        - {x: 76.99999, y: 89.51992}
+        - {x: 66.999985, y: 99.51991}
+        - {x: 61.999992, y: 98.51991}
+        - {x: 51.999992, y: 94.51992}
+        - {x: 45.999992, y: 99.51991}
+        - {x: 34.999992, y: 106.51991}
+        - {x: 19.999992, y: 105.51991}
+        - {x: -2.0000076, y: 105.51991}
+        - {x: -6.0000076, y: 107.51991}
+        - {x: -26.000008, y: 107.51991}
+        - {x: -50.000008, y: 102.51992}
+        - {x: -57.000008, y: 99.51991}
+        - {x: -68.00001, y: 96.51992}
+        - {x: -74.00001, y: 88.51992}
+        - {x: -95.00001, y: 52.51992}
+        - {x: -99, y: 43.519917}
+        - {x: -91, y: -16.48008}
+        - {x: -88.00001, y: -22.480078}
+        - {x: -82.00001, y: -37.48008}
+        - {x: -54.000008, y: -79.48007}
+        - {x: -41.000008, y: -87.48008}
+        - {x: -22.000008, y: -95.48008}
+        - {x: 4.9999924, y: -108.48008}
+        - {x: 6.9999924, y: -108.48008}
+        - {x: 19.999992, y: -101.48008}
+        - {x: 41.999992, y: -88.48008}
+        - {x: 62.999992, y: -74.48008}
+        - {x: 90.99999, y: -50.48008}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62f41ea8fcd741259eaad9737d8910b8
+      internalID: 21300000
+      vertices:
+      - {x: 288, y: 167}
+      - {x: 292, y: 60}
+      - {x: 292, y: 156}
+      - {x: 252, y: 210}
+      - {x: 229, y: 217}
+      - {x: 205, y: 0}
+      - {x: 176, y: 0}
+      - {x: 146, y: 217}
+      - {x: 131, y: 216}
+      - {x: 131, y: 21}
+      - {x: 115, y: 207}
+      - {x: 107, y: 46}
+      - {x: 90, y: 71}
+      - {x: 76, y: 157}
+      - {x: 76, y: 121}
+      - {x: 77, y: 172}
+      - {x: 79, y: 167}
+      - {x: 79, y: 170}
+      - {x: 76, y: 166}
+      - {x: 74, y: 171}
+      - {x: 74, y: 168}
+      - {x: 82.99999, y: 179}
+      - {x: 84.00001, y: 173}
+      - {x: 84.00001, y: 176}
+      - {x: 81.99999, y: 172}
+      - {x: 79, y: 179}
+      - {x: 78, y: 172}
+      - {x: 77, y: 178}
+      - {x: 77, y: 175}
+      indices: 1c0000001b0000001a000000190000001a0000001b000000180000001a000000190000001500000018000000190000001600000018000000150000001700000016000000150000001400000013000000120000000f000000120000001300000010000000120000000f00000011000000100000000f0000000e0000000d0000000c0000000a0000000c0000000d0000000b0000000c0000000a000000090000000b0000000a00000008000000090000000a000000060000000900000008000000070000000600000008000000040000000600000007000000050000000600000004000000010000000500000004000000030000000100000004000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      BulkheadPatchModule: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

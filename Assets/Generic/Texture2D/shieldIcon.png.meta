@@ -1,0 +1,156 @@
+fileFormatVersion: 2
+guid: 4bfd484921be18042936e7ab70e7bb3b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: shieldIcon
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 12
+  maxTextureSize: 100
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: shieldIcon
+      rect:
+        serializedVersion: 2
+        x: 10.07612
+        y: 2.026751
+        width: 80.84776
+        height: 94.9465
+      alignment: 9
+      pivot: {x: 0.49381554, y: 0.5052661}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -20.5, y: -47.500004}
+        - {x: -40.5, y: -14.500005}
+        - {x: -40.5, y: 36.499996}
+        - {x: -6.5, y: 47.499996}
+        - {x: 15.5, y: 47.499996}
+        - {x: 40.5, y: 39.499996}
+        - {x: 40.5, y: -6.500004}
+        - {x: 28.5, y: -47.500004}
+      physicsShape:
+      - - {x: 39.499996, y: -1.5000038}
+        - {x: 40.5, y: 14.499996}
+        - {x: 40.5, y: 28.499996}
+        - {x: 36.5, y: 31.499996}
+        - {x: 3.5, y: 47.499996}
+        - {x: -4.5, y: 47.499996}
+        - {x: -36.5, y: 31.499996}
+        - {x: -40.499996, y: 28.499996}
+        - {x: -40.499996, y: 4.499996}
+        - {x: -35.5, y: -10.500004}
+        - {x: -25.5, y: -27.500004}
+        - {x: -6.5, y: -46.500004}
+        - {x: -3.5, y: -47.500004}
+        - {x: 4.4999995, y: -47.500004}
+        - {x: 9.499999, y: -44.500004}
+        - {x: 25.5, y: -27.500004}
+        - {x: 31.5, y: -17.500004}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1eb5684a1917488d9bbe4f237a5a7d3a
+      internalID: 21300000
+      vertices:
+      - {x: 91, y: 89}
+      - {x: 79, y: 2}
+      - {x: 91, y: 43}
+      - {x: 66, y: 97}
+      - {x: 44, y: 97}
+      - {x: 30, y: 2}
+      - {x: 10, y: 86}
+      - {x: 10, y: 35}
+      indices: 070000000600000005000000040000000500000006000000010000000500000004000000030000000100000004000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      shieldIcon: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

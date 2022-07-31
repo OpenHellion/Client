@@ -1,0 +1,182 @@
+fileFormatVersion: 2
+guid: 28b5c79c89f5c7e4f9753c9f8aaec4b0
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: ALT_Assault_Ammo
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ALT_Assault_Ammo
+      rect:
+        serializedVersion: 2
+        x: 163.07613
+        y: 0
+        width: 180.84776
+        height: 294
+      alignment: 9
+      pivot: {x: 0.51224774, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -89.78503, y: 20}
+        - {x: -90.78503, y: 54}
+        - {x: -90.78503, y: 109}
+        - {x: -89.78503, y: 115}
+        - {x: -76.78503, y: 137}
+        - {x: -65.78503, y: 147}
+        - {x: 46.214973, y: 147}
+        - {x: 58.214973, y: 146}
+        - {x: 73.21497, y: 141}
+        - {x: 77.21497, y: 137}
+        - {x: 85.21497, y: 126.99999}
+        - {x: 88.21497, y: 111}
+        - {x: 90.21497, y: 28}
+        - {x: 90.21497, y: -110}
+        - {x: 68.21497, y: -136}
+        - {x: 58.214973, y: -141}
+        - {x: 28.214973, y: -147}
+        - {x: -66.78503, y: -147}
+        - {x: -72.78503, y: -143}
+        - {x: -83.78503, y: -120}
+      physicsShape:
+      - - {x: 63.214977, y: -4}
+        - {x: 62.214977, y: 83}
+        - {x: 61.214977, y: 118.00001}
+        - {x: 60.214977, y: 121.00001}
+        - {x: -13.785027, y: 120.00001}
+        - {x: -19.785027, y: 125.00001}
+        - {x: -25.785028, y: 126.00001}
+        - {x: -44.785027, y: 126.00001}
+        - {x: -55.78503, y: 119.00001}
+        - {x: -64.78503, y: 106.00001}
+        - {x: -64.78503, y: 56.000004}
+        - {x: -56.78503, y: -114.00001}
+        - {x: -54.78503, y: -119.00001}
+        - {x: -46.78503, y: -130}
+        - {x: -42.785027, y: -130}
+        - {x: -22.785028, y: -127.00001}
+        - {x: 47.214973, y: -117.00001}
+        - {x: 64.21498, y: -97.00001}
+        - {x: 64.21498, y: -82}
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2a28561af2b4e04a233940ab73e64d7
+      internalID: 21300000
+      vertices:
+      - {x: 341.71497, y: 258}
+      - {x: 343.71497, y: 37}
+      - {x: 343.71497, y: 175}
+      - {x: 338.71497, y: 274}
+      - {x: 330.71497, y: 284}
+      - {x: 326.71497, y: 288}
+      - {x: 321.71497, y: 11}
+      - {x: 311.71497, y: 293}
+      - {x: 311.71497, y: 6}
+      - {x: 299.71497, y: 294}
+      - {x: 281.71497, y: 0}
+      - {x: 187.71498, y: 294}
+      - {x: 186.71498, y: 0}
+      - {x: 180.71498, y: 4}
+      - {x: 176.71498, y: 284}
+      - {x: 169.71498, y: 27}
+      - {x: 163.71498, y: 262}
+      - {x: 163.71498, y: 167}
+      - {x: 162.71498, y: 256}
+      - {x: 162.71498, y: 201}
+      indices: 1300000012000000110000001000000011000000120000000f00000011000000100000000e0000000f000000100000000d0000000f0000000e0000000b0000000d0000000e0000000c0000000d0000000b0000000a0000000c0000000b000000090000000a0000000b000000080000000a00000009000000070000000800000009000000060000000800000007000000050000000600000007000000010000000600000005000000040000000100000005000000030000000100000004000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      ALT_Assault_Ammo: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

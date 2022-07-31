@@ -1,0 +1,153 @@
+fileFormatVersion: 2
+guid: 3fc68765582e04a4a8d5564d2eadda05
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: recyclingSlot
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 95
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: recyclingSlot
+      rect:
+        serializedVersion: 2
+        x: 11.026751
+        y: 15.026751
+        width: 72.9465
+        height: 66.89713
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4779465}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -24.5, y: -33.47532}
+        - {x: -36.5, y: -11.475317}
+        - {x: -36.5, y: 18.524683}
+        - {x: -24.5, y: 33.52468}
+        - {x: 24.5, y: 33.52468}
+        - {x: 31.5, y: 32.52468}
+        - {x: 36.5, y: 10.524683}
+        - {x: 36.5, y: -15.475317}
+        - {x: 29.499998, y: -31.475319}
+        - {x: 22.5, y: -33.47532}
+      physicsShape:
+      - - {x: 22.5, y: 28.524681}
+        - {x: 16.5, y: 33.52468}
+        - {x: -18.5, y: 33.52468}
+        - {x: -35.5, y: 6.524683}
+        - {x: -35.5, y: -9.475317}
+        - {x: -19.5, y: -32.47532}
+        - {x: 18.5, y: -32.47532}
+        - {x: 28.5, y: -22.475317}
+        - {x: 36.499996, y: -4.475317}
+        - {x: 36.499996, y: 6.524683}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49922794cb4a44668c1d94b926e01192
+      internalID: 21300000
+      vertices:
+      - {x: 79, y: 81}
+      - {x: 84, y: 33}
+      - {x: 84, y: 59}
+      - {x: 77, y: 16.999998}
+      - {x: 72, y: 82}
+      - {x: 70, y: 15}
+      - {x: 23, y: 82}
+      - {x: 23, y: 15}
+      - {x: 11, y: 67}
+      - {x: 11, y: 37}
+      indices: 090000000800000007000000060000000700000008000000050000000700000006000000040000000500000006000000030000000500000004000000000000000300000004000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      recyclingSlot: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,163 @@
+fileFormatVersion: 2
+guid: c5f130bdd10c08f45a9af14e46b28a88
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: AltairResourceContainer
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: AltairResourceContainer
+      rect:
+        serializedVersion: 2
+        x: 207.07613
+        y: 7.0761204
+        width: 124.84776
+        height: 263.84778
+      alignment: 9
+      pivot: {x: 0.38958532, y: 0.53032047}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -26.785027, y: -132.00002}
+        - {x: -62.785027, y: -107.000015}
+        - {x: -62.785027, y: 95.999985}
+        - {x: -48.785027, y: 115.999985}
+        - {x: -16.785027, y: 131.99997}
+        - {x: 30.214973, y: 131.99997}
+        - {x: 62.214973, y: 115.999985}
+        - {x: 62.214973, y: -102.000015}
+        - {x: 48.21497, y: -125.000015}
+        - {x: 28.214973, y: -132.00002}
+      physicsShape:
+      - - {x: 35.214977, y: 17.999985}
+        - {x: 35.214977, y: 55.99999}
+        - {x: 40.214977, y: 61.99999}
+        - {x: 40.214977, y: 76.999985}
+        - {x: 38.214977, y: 94.999985}
+        - {x: 18.214973, y: 111.99999}
+        - {x: 8.214973, y: 111.99999}
+        - {x: -3.7850266, y: 101.999985}
+        - {x: -24.785027, y: 98.999985}
+        - {x: -40.785027, y: 95.999985}
+        - {x: -40.785027, y: 47.999985}
+        - {x: -34.785027, y: 31.999987}
+        - {x: -31.785027, y: -54.00002}
+        - {x: -36.785027, y: -68.000015}
+        - {x: -35.785027, y: -97.00002}
+        - {x: -14.785027, y: -109.00002}
+        - {x: 19.214973, y: -109.00002}
+        - {x: 27.214973, y: -108.00002}
+        - {x: 40.214977, y: -94.00002}
+        - {x: 40.214977, y: -49.00002}
+      tessellationDetail: 0
+      bones: []
+      spriteID: e81c9cadf5b34359bec4862597d4fefb
+      internalID: 21300000
+      vertices:
+      - {x: 331.71497, y: 255}
+      - {x: 317.71497, y: 14}
+      - {x: 331.71497, y: 37}
+      - {x: 299.71497, y: 271}
+      - {x: 297.71497, y: 7}
+      - {x: 252.71498, y: 271}
+      - {x: 242.71498, y: 7}
+      - {x: 220.71498, y: 255}
+      - {x: 206.71498, y: 235}
+      - {x: 206.71498, y: 32}
+      indices: 090000000800000006000000070000000600000008000000050000000600000007000000040000000600000005000000030000000400000005000000010000000400000003000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      AltairResourceContainer: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

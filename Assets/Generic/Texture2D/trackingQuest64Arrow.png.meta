@@ -1,0 +1,177 @@
+fileFormatVersion: 2
+guid: edeae183ce16b5a41a6040a1a20ec300
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: trackingQuest64Arrow
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 12
+  maxTextureSize: 80
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: trackingQuest64Arrow
+      rect:
+        serializedVersion: 2
+        x: 6.0761204
+        y: 0.076120496
+        width: 66.84776
+        height: 79.92388
+      alignment: 9
+      pivot: {x: 0.50747967, y: 0.49952376}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -13.5, y: -25.038063}
+        - {x: -33.5, y: -5.038063}
+        - {x: -33.5, y: 32.961937}
+        - {x: -31.5, y: 35.961937}
+        - {x: -17.5, y: 39.961937}
+        - {x: 33.5, y: 39.961937}
+        - {x: 33.5, y: -16.038063}
+        - {x: 27.500002, y: -25.038063}
+      - - {x: -1.5, y: -40.038063}
+        - {x: -10.5, y: -31.038063}
+        - {x: -10.5, y: -28.038063}
+        - {x: -8.5, y: -26.038063}
+        - {x: 11.5, y: -26.038063}
+        - {x: 12.5, y: -29.038063}
+        - {x: 12.5, y: -32.038063}
+        - {x: 2.5, y: -40.038063}
+      physicsShape:
+      - - {x: -8.5, y: -30.038061}
+        - {x: 0.5, y: -39.038063}
+        - {x: 1.5, y: -39.038063}
+        - {x: 10.499999, y: -30.038061}
+        - {x: 9.5, y: -27.038061}
+        - {x: -7.5, y: -27.038061}
+      - - {x: 27.499998, y: 39.961933}
+        - {x: -3.5, y: 39.961933}
+        - {x: -23.5, y: 25.961937}
+        - {x: -30.5, y: 13.961937}
+        - {x: -32.5, y: 10.961937}
+        - {x: -32.5, y: 1.961937}
+        - {x: -26.499998, y: -15.038062}
+        - {x: -1.5, y: -24.038063}
+        - {x: 29.5, y: -24.038063}
+        - {x: 32.5, y: -10.038062}
+        - {x: 32.5, y: 28.961937}
+        - {x: 30.499998, y: 38.961937}
+      - - {x: 9.5, y: -0.03806305}
+        - {x: 18.5, y: -0.03806305}
+        - {x: 18.5, y: -15.038062}
+        - {x: 9.5, y: -15.038062}
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac2e94d232e7404f8e7ff69b32ce9d6a
+      internalID: 21300000
+      vertices:
+      - {x: 51, y: 14}
+      - {x: 52, y: 8}
+      - {x: 52, y: 11}
+      - {x: 42, y: 0}
+      - {x: 38, y: 0}
+      - {x: 31, y: 14}
+      - {x: 29, y: 12}
+      - {x: 29, y: 9}
+      - {x: 73, y: 80}
+      - {x: 67, y: 15}
+      - {x: 73, y: 24}
+      - {x: 26, y: 15}
+      - {x: 22, y: 80}
+      - {x: 8, y: 76}
+      - {x: 6, y: 73}
+      - {x: 6, y: 35}
+      indices: 0f0000000e0000000b0000000d0000000b0000000e0000000c0000000b0000000d000000080000000b0000000c000000090000000b000000080000000a0000000900000008000000070000000600000004000000050000000400000006000000000000000400000005000000030000000400000000000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      trackingQuest64Arrow: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

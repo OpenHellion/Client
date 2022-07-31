@@ -1,0 +1,224 @@
+fileFormatVersion: 2
+guid: 42380954aac1de949b551a164f76dd79
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: AltairEVAJetpack
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: AltairEVAJetpack
+      rect:
+        serializedVersion: 2
+        x: 151.07613
+        y: 0
+        width: 209.84776
+        height: 294
+      alignment: 9
+      pivot: {x: 0.49864176, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -102.28503, y: -120}
+        - {x: -105.28503, y: -79}
+        - {x: -105.28503, y: -36}
+        - {x: -97.28503, y: -11}
+        - {x: -97.28503, y: 38}
+        - {x: -99.28503, y: 102}
+        - {x: -89.28503, y: 125.99999}
+        - {x: -66.28503, y: 145}
+        - {x: -55.285027, y: 147}
+        - {x: 51.714973, y: 147}
+        - {x: 83.71497, y: 119}
+        - {x: 87.71497, y: 112}
+        - {x: 91.71497, y: 83}
+        - {x: 101.71497, y: 66}
+        - {x: 104.71497, y: 45}
+        - {x: 104.71497, y: -67}
+        - {x: 102.71497, y: -94}
+        - {x: 92.71497, y: -112}
+        - {x: 50.714973, y: -147}
+        - {x: -61.285027, y: -147}
+        - {x: -91.28503, y: -132}
+      physicsShape:
+      - - {x: 73.71497, y: -94}
+        - {x: 79.71497, y: -81}
+        - {x: 82.71497, y: -59.000004}
+        - {x: 82.71497, y: -55.000004}
+        - {x: 78.71497, y: -30.000002}
+        - {x: 81.71497, y: -16}
+        - {x: 82.71497, y: 10}
+        - {x: 82.71497, y: 25.000002}
+        - {x: 80.71497, y: 59.000004}
+        - {x: 78.71497, y: 61.000004}
+        - {x: 65.71497, y: 61.000004}
+        - {x: 66.71497, y: 77}
+        - {x: 62.714977, y: 80}
+        - {x: 72.71497, y: 92}
+        - {x: 68.71497, y: 100.00001}
+        - {x: 51.714977, y: 117.00001}
+        - {x: 38.714973, y: 123.00001}
+        - {x: 40.714973, y: 132}
+        - {x: 20.714973, y: 138}
+        - {x: 9.714973, y: 138}
+        - {x: 0.71497345, y: 136}
+        - {x: -10.285027, y: 138}
+        - {x: -23.285027, y: 138}
+        - {x: -30.285028, y: 137}
+        - {x: -35.285027, y: 134}
+        - {x: -41.285027, y: 125.00001}
+        - {x: -57.28503, y: 123.00001}
+        - {x: -76.28503, y: 105.00001}
+        - {x: -80.28503, y: 87}
+        - {x: -75.28503, y: 87}
+        - {x: -71.28503, y: 91}
+        - {x: -64.28503, y: 102.00001}
+        - {x: -76.28503, y: 75}
+        - {x: -75.28503, y: 45}
+        - {x: -71.28503, y: 39}
+        - {x: -72.28503, y: 1}
+        - {x: -76.28503, y: -28.000002}
+        - {x: -82.28503, y: -43}
+        - {x: -84.28503, y: -54.000004}
+        - {x: -84.28503, y: -71}
+        - {x: -79.28503, y: -78}
+        - {x: -82.28503, y: -111.00001}
+        - {x: -69.28503, y: -120.00001}
+        - {x: -61.28503, y: -111.00001}
+        - {x: -54.28503, y: -128}
+        - {x: -33.285027, y: -130}
+        - {x: -25.285028, y: -138}
+        - {x: -21.285027, y: -137}
+        - {x: -2.2850266, y: -134}
+        - {x: 10.714973, y: -140}
+        - {x: 16.714973, y: -140}
+        - {x: 28.714975, y: -137}
+        - {x: 49.714977, y: -120.00001}
+        - {x: 47.714977, y: -113.00001}
+        - {x: 60.714977, y: -106.00001}
+      - - {x: 27.714975, y: 127.00001}
+        - {x: 27.714975, y: 126.00001}
+        - {x: 31.714973, y: 123.00001}
+        - {x: 31.714973, y: 124.00001}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f5537de2920437ca5136c4ff555ac91
+      internalID: 21300000
+      vertices:
+      - {x: 360.71497, y: 192}
+      - {x: 358.71497, y: 53}
+      - {x: 360.71497, y: 80}
+      - {x: 357.71497, y: 213}
+      - {x: 348.71497, y: 35}
+      - {x: 347.71497, y: 230}
+      - {x: 343.71497, y: 259}
+      - {x: 339.71497, y: 266}
+      - {x: 307.71497, y: 294}
+      - {x: 306.71497, y: 0}
+      - {x: 200.71498, y: 294}
+      - {x: 194.71498, y: 0}
+      - {x: 189.71498, y: 292}
+      - {x: 166.71498, y: 273}
+      - {x: 164.71498, y: 15}
+      - {x: 158.71498, y: 185}
+      - {x: 156.71498, y: 249}
+      - {x: 158.71498, y: 136}
+      - {x: 153.71498, y: 27}
+      - {x: 150.71498, y: 111}
+      - {x: 150.71498, y: 68}
+      indices: 1400000013000000120000001100000012000000130000000e00000012000000110000000f0000000e00000011000000100000000d0000000f0000000e0000000f0000000d0000000b0000000e0000000d0000000c0000000b0000000d0000000a0000000b0000000c000000090000000b0000000a00000008000000090000000a000000040000000900000008000000070000000400000008000000060000000400000007000000050000000400000006000000030000000400000005000000010000000400000003000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      AltairEVAJetpack: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

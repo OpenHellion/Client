@@ -1,0 +1,185 @@
+fileFormatVersion: 2
+guid: 199071cb8a7838847a69a1944b656aff
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: AltairRefinedResourceCanister
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: AltairRefinedResourceCanister
+      rect:
+        serializedVersion: 2
+        x: 190.07613
+        y: 0
+        width: 152.84776
+        height: 278.9239
+      alignment: 9
+      pivot: {x: 0.42943943, y: 0.5270255}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -72.78502, y: -92.46193}
+        - {x: -76.78503, y: -3.4619293}
+        - {x: -76.78503, y: 25.53807}
+        - {x: -57.785027, y: 120.53807}
+        - {x: -40.785027, y: 139.53807}
+        - {x: 30.214973, y: 139.53807}
+        - {x: 50.214973, y: 120.53807}
+        - {x: 76.21497, y: 36.53807}
+        - {x: 76.21497, y: -93.46193}
+        - {x: 75.21497, y: -107.46193}
+        - {x: 60.214973, y: -137.46193}
+        - {x: 41.214973, y: -139.46193}
+        - {x: -38.785027, y: -139.46193}
+        - {x: -55.785027, y: -130.46193}
+        - {x: -64.78503, y: -117.46192}
+      physicsShape:
+      - - {x: 54.214973, y: -93.46194}
+        - {x: 53.214973, y: -92.46194}
+        - {x: 54.214973, y: -58.46193}
+        - {x: 54.214973, y: 29.53807}
+        - {x: 47.214977, y: 50.53807}
+        - {x: 39.214977, y: 75.53807}
+        - {x: 30.214973, y: 97.53807}
+        - {x: 26.214973, y: 113.53808}
+        - {x: 25.214973, y: 115.53808}
+        - {x: -21.785027, y: 119.53808}
+        - {x: -29.785027, y: 119.53808}
+        - {x: -33.785027, y: 117.53808}
+        - {x: -32.785027, y: 92.53807}
+        - {x: -35.785027, y: 89.53807}
+        - {x: -43.785027, y: 65.53807}
+        - {x: -49.785027, y: 37.53807}
+        - {x: -54.785027, y: 27.53807}
+        - {x: -54.785027, y: 15.538071}
+        - {x: -51.785027, y: -28.46193}
+        - {x: -47.785027, y: -97.46194}
+        - {x: -44.785027, y: -106.46194}
+        - {x: -28.785027, y: -115.46194}
+        - {x: -15.785027, y: -116.46194}
+        - {x: -8.785027, y: -121.46193}
+        - {x: 10.214973, y: -121.46193}
+        - {x: 26.214973, y: -119.46194}
+        - {x: 43.214977, y: -111.46194}
+        - {x: 51.214977, y: -101.46194}
+      - - {x: -23.785027, y: 100.53807}
+        - {x: -21.785027, y: 112.53808}
+        - {x: 17.214975, y: 109.53808}
+        - {x: 17.214975, y: 97.53807}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c9f0ceaaeff43adad1b158d0f473eb1
+      internalID: 21300000
+      vertices:
+      - {x: 342.71497, y: 176}
+      - {x: 341.71497, y: 32}
+      - {x: 342.71497, y: 46}
+      - {x: 326.71497, y: 2}
+      - {x: 316.71497, y: 260}
+      - {x: 307.71497, y: 0}
+      - {x: 296.71497, y: 279}
+      - {x: 227.71498, y: 0}
+      - {x: 225.71498, y: 279}
+      - {x: 210.71498, y: 9}
+      - {x: 208.71498, y: 260}
+      - {x: 201.71498, y: 22.000008}
+      - {x: 193.71498, y: 47}
+      - {x: 189.71498, y: 165}
+      - {x: 189.71498, y: 136}
+      indices: 0e0000000d0000000c0000000a0000000c0000000d0000000b0000000c0000000a000000090000000b0000000a00000008000000090000000a000000070000000900000008000000060000000700000008000000050000000700000006000000040000000500000006000000030000000500000004000000000000000300000004000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      AltairRefinedResourceCanister: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,172 @@
+fileFormatVersion: 2
+guid: 6ae759a90b7c40b41928a8668ff8a04a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: SoeHelmet
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 380
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SoeHelmet
+      rect:
+        serializedVersion: 2
+        x: 126.02675
+        y: 11.026751
+        width: 138.94649
+        height: 188.89713
+      alignment: 9
+      pivot: {x: 0.46041647, y: 0.5186593}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -60.499992, y: -94.47531}
+        - {x: -69.49999, y: -71.47531}
+        - {x: -69.49999, y: 55.52469}
+        - {x: -43.499992, y: 94.52469}
+        - {x: 38.500008, y: 94.52469}
+        - {x: 69.50001, y: 75.52469}
+        - {x: 69.50001, y: -20.475311}
+        - {x: 30.500008, y: -94.47531}
+      physicsShape:
+      - - {x: 56.500008, y: -28.475311}
+        - {x: 63.500008, y: -20.475311}
+        - {x: 62.500008, y: -9.475311}
+        - {x: 59.500008, y: -1.4753108}
+        - {x: 66.50001, y: 10.524689}
+        - {x: 68.50001, y: 22.524689}
+        - {x: 68.50001, y: 41.52469}
+        - {x: 63.500008, y: 51.52469}
+        - {x: 57.500008, y: 55.52469}
+        - {x: 43.500004, y: 75.52469}
+        - {x: 35.500008, y: 80.52469}
+        - {x: 29.500008, y: 90.52469}
+        - {x: 22.500008, y: 93.52469}
+        - {x: -24.499992, y: 93.52469}
+        - {x: -47.499992, y: 74.52469}
+        - {x: -62.499992, y: 59.52469}
+        - {x: -65.499985, y: 43.524685}
+        - {x: -62.499992, y: 30.524687}
+        - {x: -68.49999, y: 9.524689}
+        - {x: -69.49999, y: 3.5246887}
+        - {x: -69.49999, y: -3.4753113}
+        - {x: -67.49999, y: -16.47531}
+        - {x: -59.49999, y: -43.47531}
+        - {x: -65.499985, y: -56.475307}
+        - {x: -57.499992, y: -65.47531}
+        - {x: -54.49999, y: -82.4753}
+        - {x: -48.49999, y: -91.47531}
+        - {x: -44.499992, y: -93.47531}
+        - {x: -39.499992, y: -93.47531}
+        - {x: -36.499992, y: -92.47531}
+        - {x: -15.499991, y: -80.47531}
+        - {x: -4.4999924, y: -74.47531}
+        - {x: 36.500008, y: -46.47531}
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1333912b943477f8ac0d1d216d97a32
+      internalID: 21300000
+      vertices:
+      - {x: 234, y: 200}
+      - {x: 265, y: 85}
+      - {x: 265, y: 181}
+      - {x: 226, y: 11}
+      - {x: 152, y: 200}
+      - {x: 135, y: 11}
+      - {x: 126, y: 161}
+      - {x: 126, y: 34}
+      indices: 070000000600000005000000040000000500000006000000030000000500000004000000000000000300000004000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      SoeHelmet: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

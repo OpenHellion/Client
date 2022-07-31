@@ -1,0 +1,201 @@
+fileFormatVersion: 2
+guid: e44a9803d7823934eb6194630bd48125
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: ThermonuclearCatalyst
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ThermonuclearCatalyst
+      rect:
+        serializedVersion: 2
+        x: 124.07612
+        y: 18.07612
+        width: 258.84778
+        height: 262.84778
+      alignment: 9
+      pivot: {x: 0.508557, y: 0.49048874}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -127.785034, y: 5.4999847}
+        - {x: -129.78503, y: 43.499985}
+        - {x: -129.78503, y: 113.499985}
+        - {x: -119.785034, y: 127.499985}
+        - {x: -110.785034, y: 131.49998}
+        - {x: -6.785034, y: 131.49998}
+        - {x: 23.214966, y: 115.499985}
+        - {x: 62.214966, y: 123.49998}
+        - {x: 92.214966, y: 128.49998}
+        - {x: 122.214966, y: 112.499985}
+        - {x: 129.21497, y: 99.499985}
+        - {x: 129.21497, y: 32.499985}
+        - {x: 128.21497, y: 16.499985}
+        - {x: 109.214966, y: 0.49998474}
+        - {x: 97.214966, y: -42.500015}
+        - {x: 101.214966, y: -75.500015}
+        - {x: 84.214966, y: -111.500015}
+        - {x: -33.785034, y: -131.50002}
+        - {x: -77.785034, y: -131.50002}
+        - {x: -89.785034, y: -121.500015}
+        - {x: -96.785034, y: -93.500015}
+        - {x: -100.785034, y: -24.500015}
+      physicsShape:
+      - - {x: 71.214966, y: -85.500015}
+        - {x: 74.214966, y: -46.500015}
+        - {x: 74.214966, y: -15.500016}
+        - {x: 79.214966, y: 4.499985}
+        - {x: 101.21497, y: 23.499987}
+        - {x: 105.21497, y: 36.499985}
+        - {x: 107.21497, y: 50.49999}
+        - {x: 107.21497, y: 93.49999}
+        - {x: 83.214966, y: 106.49999}
+        - {x: 72.214966, y: 105.49999}
+        - {x: 62.21497, y: 90.499985}
+        - {x: -2.7850342, y: 89.499985}
+        - {x: -3.7850347, y: 97.49999}
+        - {x: -10.785035, y: 108.49999}
+        - {x: -31.785034, y: 109.49999}
+        - {x: -45.785038, y: 109.49999}
+        - {x: -49.785038, y: 105.49999}
+        - {x: -51.785038, y: 91.499985}
+        - {x: -77.785034, y: 105.49999}
+        - {x: -78.785034, y: 111.49999}
+        - {x: -93.78504, y: 111.49999}
+        - {x: -105.78504, y: 110.49999}
+        - {x: -107.78504, y: 105.49999}
+        - {x: -107.78504, y: 88.499985}
+        - {x: -105.78504, y: 39.499985}
+        - {x: -102.78504, y: 16.499985}
+        - {x: -99.78504, y: 11.499986}
+        - {x: -76.785034, y: -2.5000153}
+        - {x: -70.785034, y: -108.50002}
+        - {x: -69.785034, y: -110.50002}
+        - {x: -57.785038, y: -110.50002}
+        - {x: 8.214966, y: -99.50002}
+        - {x: 15.214967, y: -99.50002}
+        - {x: 69.214966, y: -91.500015}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d0de56d440144c6b7ca6e70ca448079
+      internalID: 21300000
+      vertices:
+      - {x: 382.71497, y: 249}
+      - {x: 381.71497, y: 166}
+      - {x: 382.71497, y: 182}
+      - {x: 375.71497, y: 262}
+      - {x: 362.71497, y: 150}
+      - {x: 350.71497, y: 107}
+      - {x: 345.71497, y: 278}
+      - {x: 337.71497, y: 38}
+      - {x: 354.71497, y: 74}
+      - {x: 315.71497, y: 273}
+      - {x: 276.71497, y: 265}
+      - {x: 246.71498, y: 281}
+      - {x: 219.71498, y: 18}
+      - {x: 175.71498, y: 18}
+      - {x: 163.71498, y: 28}
+      - {x: 156.71498, y: 56}
+      - {x: 152.71498, y: 125}
+      - {x: 142.71498, y: 281}
+      - {x: 133.71498, y: 277}
+      - {x: 125.71498, y: 155}
+      - {x: 123.71498, y: 263}
+      - {x: 123.71498, y: 193}
+      indices: 1500000014000000130000001200000013000000140000001000000013000000120000001100000010000000120000000b00000010000000110000000f000000100000000b0000000e0000000f0000000b0000000d0000000e0000000b0000000c0000000d0000000b000000070000000c0000000b0000000a000000070000000b00000009000000070000000a000000060000000700000009000000050000000700000006000000080000000700000005000000060000000300000005000000040000000500000003000000010000000400000003000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      ThermonuclearCatalyst: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,165 @@
+fileFormatVersion: 2
+guid: 6380775210c44784d8610aa5f109b38c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: turretSlot
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 12
+  maxTextureSize: 100
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: turretSlot
+      rect:
+        serializedVersion: 2
+        x: 13.07612
+        y: 17.07612
+        width: 71.84776
+        height: 68.84776
+      alignment: 9
+      pivot: {x: 0.51391834, y: 0.4782128}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -35, y: 6.5}
+        - {x: -36, y: 8.5}
+        - {x: -36, y: 32.5}
+        - {x: -35, y: 34.5}
+        - {x: 31.000002, y: 34.5}
+        - {x: 36, y: 33.5}
+        - {x: 36, y: -34.5}
+        - {x: -10, y: -34.5}
+        - {x: -16, y: -33.5}
+      physicsShape:
+      - - {x: 34, y: 13.499999}
+        - {x: 36, y: 21.499998}
+        - {x: 36, y: 25.499998}
+        - {x: 35, y: 31.5}
+        - {x: 0, y: 34.5}
+        - {x: -34, y: 34.5}
+        - {x: -35, y: 29.5}
+        - {x: -35, y: 10.5}
+        - {x: -28, y: 6.5}
+        - {x: -3, y: 8.499999}
+        - {x: -6, y: 2.5}
+        - {x: -6, y: 0.5}
+        - {x: -1, y: -4.5}
+        - {x: 2, y: -19.5}
+        - {x: -10, y: -22.5}
+        - {x: -13, y: -26.5}
+        - {x: -12, y: -34.5}
+        - {x: 36, y: -34.5}
+        - {x: 36, y: -31.499998}
+        - {x: 35, y: -9.5}
+        - {x: 23.999998, y: 6.5}
+      - - {x: 22, y: -9.5}
+        - {x: 23, y: -10.5}
+        - {x: 23, y: -9.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c9ec286397642368a0de507b0b682fd
+      internalID: 21300000
+      vertices:
+      - {x: 80, y: 86}
+      - {x: 85, y: 17}
+      - {x: 85, y: 85}
+      - {x: 39, y: 17}
+      - {x: 33, y: 18}
+      - {x: 14, y: 86}
+      - {x: 14, y: 58}
+      - {x: 13, y: 84}
+      - {x: 13, y: 60}
+      indices: 080000000700000006000000050000000600000007000000040000000600000005000000000000000400000005000000030000000400000000000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      turretSlot: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

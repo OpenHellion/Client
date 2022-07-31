@@ -1,0 +1,180 @@
+fileFormatVersion: 2
+guid: e47c056f3844138418a1d1da0c62631f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: rifleui_bkg_alert
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: rifleui_bkg_alert
+      rect:
+        serializedVersion: 2
+        x: 106.051315
+        y: 104.07612
+        width: 298.92194
+        height: 259.84778
+      alignment: 9
+      pivot: {x: 0.50163156, y: 0.44227386}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -114.5123, y: -124.00001}
+        - {x: -134.5123, y: -91.00001}
+        - {x: -149.5123, y: -63.000008}
+        - {x: -149.5123, y: -58.000008}
+        - {x: -124.5123, y: -13.000008}
+        - {x: -104.51229, y: 19.999992}
+        - {x: -88.5123, y: 47.999992}
+        - {x: -62.5123, y: 93}
+        - {x: -42.5123, y: 127.99999}
+        - {x: -39.5123, y: 130}
+        - {x: 39.4877, y: 130}
+        - {x: 44.4877, y: 124.99999}
+        - {x: 52.4877, y: 110.99999}
+        - {x: 86.4877, y: 51.999992}
+        - {x: 148.4877, y: -54.000008}
+        - {x: 149.4877, y: -59.000008}
+        - {x: 149.4877, y: -64.00001}
+        - {x: 111.4877, y: -129}
+        - {x: 109.4877, y: -130}
+        - {x: -110.5123, y: -130}
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a2bd86948fc4a33bef3632654b99caf
+      internalID: 21300000
+      vertices:
+      - {x: 404, y: 180}
+      - {x: 365, y: 210}
+      - {x: 381, y: 183}
+      - {x: 342, y: 286}
+      - {x: 331, y: 269}
+      - {x: 308, y: 345}
+      - {x: 300, y: 359}
+      - {x: 295, y: 364}
+      - {x: 293, y: 335}
+      - {x: 289, y: 339}
+      - {x: 222, y: 339}
+      - {x: 216, y: 364}
+      - {x: 220, y: 338}
+      - {x: 213, y: 362}
+      - {x: 193, y: 327}
+      - {x: 182, y: 272}
+      - {x: 174, y: 258}
+      - {x: 167, y: 282}
+      - {x: 151, y: 254}
+      - {x: 135, y: 192}
+      - {x: 131, y: 221}
+      - {x: 130, y: 181}
+      - {x: 121, y: 143}
+      - {x: 130, y: 175}
+      - {x: 106, y: 176}
+      - {x: 106, y: 171}
+      - {x: 405, y: 170}
+      - {x: 405, y: 175}
+      - {x: 381, y: 174}
+      - {x: 367, y: 105}
+      - {x: 365, y: 104}
+      - {x: 350, y: 122}
+      - {x: 347, y: 120}
+      - {x: 163, y: 120}
+      - {x: 145, y: 104}
+      - {x: 159, y: 126}
+      - {x: 141, y: 110}
+      indices: 1700000015000000230000001300000023000000150000001000000023000000130000002100000023000000100000002000000021000000100000000f00000020000000100000000c000000200000000f0000000a000000200000000c00000009000000200000000a0000000800000020000000090000000400000020000000080000000100000020000000040000001f00000020000000010000001c0000001f00000001000000020000001c000000010000001600000017000000240000002300000024000000170000002200000024000000230000002100000022000000230000001e0000002200000021000000200000001e000000210000001f0000001e000000200000001c0000001e0000001f0000001d0000001e0000001c0000001a0000001d0000001c000000020000001a0000001c000000000000001a000000020000001b0000001a000000000000001900000018000000160000001400000016000000180000001500000016000000140000001700000016000000150000001300000015000000140000001200000013000000140000001000000013000000120000001100000010000000120000000e00000010000000110000000f000000100000000e0000000c0000000f0000000e0000000d0000000c0000000e0000000b0000000c0000000d0000000a0000000c0000000b000000070000000a0000000b000000090000000a00000007000000080000000900000007000000040000000800000007000000060000000400000007000000050000000400000006000000030000000400000005000000010000000400000003000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      rifleui_bkg_alert: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

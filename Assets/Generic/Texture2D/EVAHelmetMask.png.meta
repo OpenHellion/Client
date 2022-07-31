@@ -1,0 +1,285 @@
+fileFormatVersion: 2
+guid: 9b30cb6e6d97d2b43873868181424564
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: EVAHelmetMask_0
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 12
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 50
+  spriteBorder: {x: 792.5, y: 321, z: 814, w: 266.5}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EVAHelmetMask_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 2048
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 792.5, y: 321, z: 814, w: 266.5}
+      outline:
+      - - {x: -1024, y: -512}
+        - {x: -1024, y: 512}
+        - {x: 1024, y: 512}
+        - {x: 1024, y: -512}
+      physicsShape:
+      - - {x: -1024, y: 512}
+        - {x: -1024, y: -512}
+        - {x: 1024, y: -512}
+        - {x: 1024, y: 512}
+      - - {x: -346, y: -315}
+        - {x: -363, y: -310}
+        - {x: -373, y: -307}
+        - {x: -386, y: -300}
+        - {x: -402, y: -290}
+        - {x: -415, y: -281}
+        - {x: -421, y: -276}
+        - {x: -421.99997, y: -276}
+        - {x: -441, y: -256}
+        - {x: -456, y: -235.99998}
+        - {x: -467.99997, y: -216.99998}
+        - {x: -477.99997, y: -200}
+        - {x: -477.99997, y: -197.99998}
+        - {x: -485, y: -178}
+        - {x: -491, y: -148}
+        - {x: -494.99997, y: -118.99999}
+        - {x: -498.99997, y: -83}
+        - {x: -500.99997, y: -63}
+        - {x: -502.99997, y: -41}
+        - {x: -504, y: -29}
+        - {x: -506, y: -3}
+        - {x: -508, y: 28}
+        - {x: -508.99997, y: 45}
+        - {x: -510, y: 66}
+        - {x: -510.99997, y: 91}
+        - {x: -512, y: 91.99999}
+        - {x: -512, y: 192}
+        - {x: -510.99997, y: 193}
+        - {x: -510, y: 208.99998}
+        - {x: -504.99997, y: 246}
+        - {x: -502, y: 259}
+        - {x: -496.99997, y: 266.99997}
+        - {x: -483.99997, y: 280}
+        - {x: -466, y: 291}
+        - {x: -444.99997, y: 303}
+        - {x: -442.99997, y: 303}
+        - {x: -436, y: 306}
+        - {x: -423, y: 311}
+        - {x: -390, y: 322}
+        - {x: -383, y: 324}
+        - {x: -341.99997, y: 334}
+        - {x: -332, y: 336}
+        - {x: -305, y: 341}
+        - {x: -272, y: 344.99997}
+        - {x: -257, y: 346}
+        - {x: -232, y: 347}
+        - {x: -231, y: 346}
+        - {x: -206, y: 341.99997}
+        - {x: -195.99998, y: 337}
+        - {x: -187, y: 333}
+        - {x: -154, y: 317.99997}
+        - {x: -136, y: 310}
+        - {x: -116.99999, y: 302}
+        - {x: -107.99999, y: 298}
+        - {x: -89, y: 290}
+        - {x: -55, y: 281}
+        - {x: -36, y: 277}
+        - {x: -29, y: 276}
+        - {x: -19.999998, y: 275}
+        - {x: 14, y: 275}
+        - {x: 41, y: 278}
+        - {x: 48.999996, y: 280}
+        - {x: 68, y: 286}
+        - {x: 74, y: 288}
+        - {x: 101, y: 298}
+        - {x: 130, y: 310}
+        - {x: 170, y: 328}
+        - {x: 202, y: 341.99997}
+        - {x: 214.99998, y: 344.99997}
+        - {x: 225, y: 346}
+        - {x: 250, y: 347}
+        - {x: 251, y: 346}
+        - {x: 276, y: 343.99997}
+        - {x: 299, y: 341}
+        - {x: 327, y: 336}
+        - {x: 374, y: 325}
+        - {x: 400, y: 316.99997}
+        - {x: 417, y: 311}
+        - {x: 437, y: 303}
+        - {x: 439, y: 303}
+        - {x: 460, y: 291}
+        - {x: 477.99997, y: 280}
+        - {x: 491, y: 266.99997}
+        - {x: 496, y: 256}
+        - {x: 498, y: 246}
+        - {x: 502, y: 230}
+        - {x: 502.99997, y: 221}
+        - {x: 504, y: 209.99998}
+        - {x: 504.99997, y: 195}
+        - {x: 506, y: 194}
+        - {x: 506.99997, y: 131}
+        - {x: 506, y: 130}
+        - {x: 506, y: 89}
+        - {x: 504.99997, y: 88}
+        - {x: 504, y: 64}
+        - {x: 502.99997, y: 44}
+        - {x: 502, y: 26}
+        - {x: 500.99997, y: 9.999999}
+        - {x: 500, y: -4}
+        - {x: 498, y: -29.999998}
+        - {x: 492.99997, y: -84}
+        - {x: 491, y: -103}
+        - {x: 489, y: -118.99999}
+        - {x: 485, y: -148}
+        - {x: 481, y: -170.99998}
+        - {x: 475, y: -193}
+        - {x: 471.99997, y: -197.99998}
+        - {x: 471.99997, y: -200}
+        - {x: 461, y: -219}
+        - {x: 454.99997, y: -230}
+        - {x: 436, y: -255}
+        - {x: 436, y: -256}
+        - {x: 415, y: -276}
+        - {x: 388, y: -296}
+        - {x: 369.99997, y: -304}
+        - {x: 351, y: -313}
+        - {x: 330, y: -317.99997}
+        - {x: 319.99997, y: -318.99997}
+        - {x: 304, y: -318.99997}
+        - {x: 273, y: -314}
+        - {x: 262, y: -312}
+        - {x: 250, y: -310}
+        - {x: 208, y: -304}
+        - {x: 191, y: -302}
+        - {x: 152, y: -298}
+        - {x: 116.99999, y: -295}
+        - {x: 103, y: -293.99997}
+        - {x: 87, y: -292.99997}
+        - {x: 52, y: -279}
+        - {x: 48.999996, y: -278}
+        - {x: -51, y: -278}
+        - {x: -64, y: -291.99997}
+        - {x: -76, y: -291.99997}
+        - {x: -94, y: -292.99997}
+        - {x: -123, y: -295}
+        - {x: -136, y: -296}
+        - {x: -158.99998, y: -298}
+        - {x: -188, y: -301}
+        - {x: -213.99998, y: -304}
+        - {x: -235.99998, y: -307}
+        - {x: -257, y: -309}
+        - {x: -269, y: -311}
+        - {x: -286, y: -315}
+        - {x: -296, y: -316.99997}
+        - {x: -310, y: -318.99997}
+        - {x: -326, y: -318.99997}
+      tessellationDetail: 0
+      bones: []
+      spriteID: b23fab3ff6f240e08733c05e778ec44f
+      internalID: 21300000
+      vertices:
+      - {x: 2048, y: 1024}
+      - {x: 1519, y: 548}
+      - {x: 2048, y: 0}
+      - {x: 1272, y: 800}
+      - {x: 911, y: 730}
+      - {x: 0, y: 1024}
+      - {x: 1084, y: 261}
+      - {x: 0, y: 0}
+      indices: 050000000600000007000000020000000700000006000000040000000600000005000000010000000200000006000000050000000000000004000000030000000400000000000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      EVAHelmetMask_0: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
