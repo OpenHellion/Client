@@ -1,0 +1,210 @@
+fileFormatVersion: 2
+guid: 73b30a566b5e07e448d41b9918169218
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: Mail
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 12
+  maxTextureSize: 300
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Mail
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 22.07612
+        width: 300
+        height: 256.84778
+      alignment: 9
+      pivot: {x: 0.5, y: 0.49805328}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -142, y: -113.50001}
+        - {x: -150, y: -104.50001}
+        - {x: -150, y: 103.49999}
+        - {x: -148, y: 107.5}
+        - {x: -136, y: 118.5}
+        - {x: -125, y: 123.49999}
+        - {x: -119.00001, y: 125.49999}
+        - {x: -107.00001, y: 127.49999}
+        - {x: -90, y: 128.5}
+        - {x: 90, y: 128.5}
+        - {x: 107.00001, y: 127.49999}
+        - {x: 114, y: 126.49999}
+        - {x: 119.00001, y: 125.49999}
+        - {x: 125, y: 123.49999}
+        - {x: 136, y: 118.5}
+        - {x: 147, y: 108.49999}
+        - {x: 150, y: 104.499985}
+        - {x: 150, y: -104.50001}
+        - {x: 149, y: -105.5}
+        - {x: 138, y: -117.5}
+        - {x: 127, y: -124.50001}
+        - {x: 116, y: -126.50001}
+        - {x: 109, y: -127.50001}
+        - {x: 96, y: -128.5}
+        - {x: -96, y: -128.5}
+        - {x: -109, y: -127.50001}
+        - {x: -116, y: -126.50001}
+        - {x: -120.00001, y: -126.50001}
+        - {x: -135, y: -119.500015}
+      physicsShape:
+      - - {x: 113, y: 93.49999}
+        - {x: 96, y: 97.499985}
+        - {x: -96, y: 97.499985}
+        - {x: -113, y: 93.49999}
+        - {x: -129, y: 73.49999}
+        - {x: -130, y: 69.49999}
+        - {x: -130, y: -71.50001}
+        - {x: -124, y: -83.50001}
+        - {x: -104.99999, y: -96.50001}
+        - {x: -97, y: -97.50001}
+        - {x: 109, y: -97.50001}
+        - {x: 130, y: -77.50001}
+        - {x: 130, y: 73.49999}
+      - - {x: 3, y: -55.500008}
+        - {x: 37, y: -26.500008}
+        - {x: 66.99999, y: -66.50001}
+        - {x: -68, y: -66.50001}
+      - - {x: -98.99999, y: -31.500008}
+        - {x: -98.99999, y: 31.499992}
+        - {x: -58.999996, y: -2.5000076}
+        - {x: -72, y: -15.500007}
+      - - {x: 58.999996, y: -2.5000076}
+        - {x: 89, y: 31.499992}
+        - {x: 98.99999, y: 30.499992}
+        - {x: 98.99999, y: -31.500008}
+      - - {x: -68, y: 66.499985}
+        - {x: 68, y: 66.499985}
+        - {x: 39.999996, y: 29.49999}
+        - {x: -2, y: -11.500008}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b39eacdb07f411e954842391c1c0dfb
+      internalID: 21300000
+      vertices:
+      - {x: 300, y: 255}
+      - {x: 299, y: 45.000008}
+      - {x: 300, y: 46}
+      - {x: 297, y: 259}
+      - {x: 288, y: 33.000008}
+      - {x: 286, y: 269}
+      - {x: 277, y: 26}
+      - {x: 275, y: 274}
+      - {x: 269, y: 276}
+      - {x: 266, y: 24}
+      - {x: 264, y: 277}
+      - {x: 259, y: 23}
+      - {x: 257, y: 278}
+      - {x: 246, y: 22}
+      - {x: 240, y: 279}
+      - {x: 60, y: 279}
+      - {x: 54, y: 22}
+      - {x: 42.999992, y: 278}
+      - {x: 41, y: 23}
+      - {x: 34, y: 24}
+      - {x: 30.999992, y: 276}
+      - {x: 29.999992, y: 24}
+      - {x: 25, y: 274}
+      - {x: 15, y: 30.999992}
+      - {x: 14, y: 269}
+      - {x: 8, y: 37}
+      - {x: 2, y: 258}
+      - {x: 0, y: 254}
+      - {x: 0, y: 46}
+      indices: 1c0000001b000000190000001a000000190000001b00000018000000190000001a0000001700000019000000180000001600000017000000180000001500000017000000160000001400000015000000160000001300000015000000140000001100000013000000140000001200000013000000110000001000000012000000110000000f00000010000000110000000d000000100000000f0000000e0000000d0000000f0000000c0000000d0000000e0000000b0000000d0000000c0000000a0000000b0000000c000000090000000b0000000a00000008000000090000000a000000060000000900000008000000070000000600000008000000050000000600000007000000040000000600000005000000030000000400000005000000010000000400000003000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Mail: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

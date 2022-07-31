@@ -1,0 +1,312 @@
+fileFormatVersion: 2
+guid: 06be21b8e34084b4298947d29876d3e4
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: ls_volume_icon
+  - first:
+      213: 21300002
+    second: ls_gravity_icon
+  - first:
+      213: 21300004
+    second: ls_pressure_icon
+  - first:
+      213: 21300006
+    second: ls_airquality_icon
+  - first:
+      213: 21300008
+    second: ls_temperature_icon
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 80
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ls_volume_icon
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 16
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -8, y: -8}
+        - {x: -8, y: 8}
+        - {x: 8, y: 8}
+        - {x: 8, y: -8}
+      physicsShape:
+      - - {x: 2, y: 8}
+        - {x: -4, y: 8}
+        - {x: -8, y: 4.9999995}
+        - {x: -8, y: -6}
+        - {x: -4.9999995, y: -8}
+        - {x: 7, y: -8}
+        - {x: 8, y: -6}
+        - {x: 8, y: 6}
+        - {x: 7, y: 7}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40adeae15232414b8c5482d2267b8e21
+      internalID: 21300000
+      vertices:
+      - {x: 0, y: 16}
+      - {x: 16, y: 16}
+      - {x: 0, y: 0}
+      - {x: 16, y: 0}
+      indices: 000000000100000002000000020000000100000003000000
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ls_gravity_icon
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 16
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -8, y: -8}
+        - {x: -8, y: 8}
+        - {x: 8, y: 8}
+        - {x: 8, y: -8}
+      physicsShape:
+      - - {x: 1, y: 2}
+        - {x: -1, y: 0}
+        - {x: -1, y: -2}
+        - {x: -2, y: 0}
+        - {x: 0, y: 3}
+        - {x: 4, y: 3}
+        - {x: 6, y: 4.9999995}
+        - {x: 4.9999995, y: 8}
+        - {x: -3, y: 8}
+        - {x: -7, y: 3}
+        - {x: -7, y: -4}
+        - {x: -4, y: -8}
+        - {x: 4.9999995, y: -8}
+        - {x: 6, y: -7}
+        - {x: 6, y: 0}
+        - {x: 4, y: 2}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98d9b6696edb4edebe3435b41012c08e
+      internalID: 21300002
+      vertices:
+      - {x: 0, y: 16}
+      - {x: 16, y: 16}
+      - {x: 0, y: 0}
+      - {x: 16, y: 0}
+      indices: 000000000100000002000000020000000100000003000000
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ls_pressure_icon
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -8, y: -8}
+        - {x: -8, y: 8}
+        - {x: 8, y: 8}
+        - {x: 8, y: -8}
+      physicsShape:
+      - - {x: -4.9999995, y: 8}
+        - {x: -8, y: 6}
+        - {x: -8, y: -7}
+        - {x: -7, y: -8}
+        - {x: 6, y: -8}
+        - {x: 8, y: -7}
+        - {x: 8, y: 4.9999995}
+        - {x: 4.9999995, y: 8}
+      - - {x: 2, y: 2}
+        - {x: -1, y: 4}
+        - {x: -3, y: 2}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d4cdb31431e49aeabf1fb428c841183
+      internalID: 21300004
+      vertices:
+      - {x: 0, y: 16}
+      - {x: 16, y: 16}
+      - {x: 0, y: 0}
+      - {x: 16, y: 0}
+      indices: 000000000100000002000000020000000100000003000000
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ls_airquality_icon
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 16
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -8, y: -8}
+        - {x: -8, y: 8}
+        - {x: 8, y: 8}
+        - {x: 8, y: -8}
+      physicsShape:
+      - - {x: -4.9999995, y: 7}
+        - {x: -8, y: 4}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: 7}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 963ae160b99e465a99be941a16f9f7f1
+      internalID: 21300006
+      vertices:
+      - {x: 0, y: 16}
+      - {x: 16, y: 16}
+      - {x: 0, y: 0}
+      - {x: 16, y: 0}
+      indices: 000000000100000002000000020000000100000003000000
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ls_temperature_icon
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 16
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -8, y: -8}
+        - {x: -8, y: 8}
+        - {x: 8, y: 8}
+        - {x: 8, y: -8}
+      physicsShape:
+      - - {x: 3, y: 8}
+        - {x: -3, y: 8}
+        - {x: -4, y: 6}
+        - {x: -4, y: -6}
+        - {x: -2, y: -8}
+        - {x: 3, y: -8}
+        - {x: 4, y: -7}
+        - {x: 4, y: 7}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62a6f5cc668c41cd8bc01806b13251cd
+      internalID: 21300008
+      vertices:
+      - {x: 0, y: 16}
+      - {x: 16, y: 16}
+      - {x: 0, y: 0}
+      - {x: 16, y: 0}
+      indices: 000000000100000002000000020000000100000003000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      ls_temperature_icon: 21300008
+      ls_airquality_icon: 21300006
+      ls_volume_icon: 21300000
+      ls_pressure_icon: 21300004
+      ls_gravity_icon: 21300002
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,155 @@
+fileFormatVersion: 2
+guid: a640f1cf566f26248a96fb852b576897
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: patchModuleIcon
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 12
+  maxTextureSize: 96
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: patchModuleIcon
+      rect:
+        serializedVersion: 2
+        x: 5.0513167
+        y: 4.026751
+        width: 85.87257
+        height: 87.9465
+      alignment: 9
+      pivot: {x: 0.5001444, y: 0.49999997}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -14.987599, y: -44.000004}
+        - {x: -42.9876, y: -24.000004}
+        - {x: -42.9876, y: 25.999996}
+        - {x: -26.9876, y: 43.999996}
+        - {x: 39.0124, y: 43.999996}
+        - {x: 43.0124, y: 30.999996}
+        - {x: 43.0124, y: -33.000004}
+        - {x: 27.012403, y: -44.000004}
+      physicsShape:
+      - - {x: 43.012398, y: 6.999996}
+        - {x: 39.0124, y: 15.999996}
+        - {x: 41.0124, y: 23.999996}
+        - {x: 27.0124, y: 40.999996}
+        - {x: 20.0124, y: 42.999992}
+        - {x: -21.987598, y: 42.999992}
+        - {x: -28.987598, y: 39.999992}
+        - {x: -41.9876, y: 20.999996}
+        - {x: -41.9876, y: 6.999996}
+        - {x: -40.9876, y: -7.000004}
+        - {x: -23.987598, y: -35.000004}
+        - {x: -2.9875984, y: -43}
+        - {x: 5.012401, y: -43}
+        - {x: 15.012401, y: -38.000004}
+        - {x: 42.0124, y: -15.000003}
+        - {x: 43.012398, y: 5.999996}
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9aa685ff7724cc4a81d461a40f644fd
+      internalID: 21300000
+      vertices:
+      - {x: 87, y: 92}
+      - {x: 91, y: 15}
+      - {x: 91, y: 79}
+      - {x: 75, y: 4}
+      - {x: 33, y: 4}
+      - {x: 20.999998, y: 92}
+      - {x: 5, y: 74}
+      - {x: 5, y: 24}
+      indices: 070000000600000004000000050000000400000006000000000000000400000005000000030000000400000000000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      patchModuleIcon: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

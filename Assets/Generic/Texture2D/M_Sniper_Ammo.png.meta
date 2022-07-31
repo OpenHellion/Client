@@ -1,0 +1,183 @@
+fileFormatVersion: 2
+guid: 5b23b900697b23a48ab267329c069b0f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: M_Sniper_Ammo
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: M_Sniper_Ammo
+      rect:
+        serializedVersion: 2
+        x: 138.07613
+        y: 26.07612
+        width: 227.89711
+        height: 244.84776
+      alignment: 9
+      pivot: {x: 0.51619285, y: 0.49387375}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -113.30969, y: 23.5}
+        - {x: -114.30969, y: 37.5}
+        - {x: -114.30969, y: 83.5}
+        - {x: -110.30969, y: 102.5}
+        - {x: -100.30969, y: 116.5}
+        - {x: -88.30969, y: 122.49999}
+        - {x: 72.69031, y: 122.49999}
+        - {x: 95.69031, y: 113.5}
+        - {x: 113.69031, y: 85.5}
+        - {x: 113.69031, y: -42.5}
+        - {x: 112.69031, y: -64.5}
+        - {x: 108.69031, y: -77.5}
+        - {x: 94.69031, y: -96.5}
+        - {x: 65.69031, y: -105.5}
+        - {x: -44.309692, y: -122.5}
+        - {x: -89.30969, y: -122.5}
+        - {x: -110.30969, y: -101.5}
+        - {x: -112.30969, y: -75.5}
+      physicsShape:
+      - - {x: 77.69031, y: -80.5}
+        - {x: 89.69031, y: -62.500004}
+        - {x: 90.69031, y: -12.5}
+        - {x: 91.69031, y: 64.5}
+        - {x: 91.69031, y: 78.5}
+        - {x: 88.69031, y: 81.5}
+        - {x: 76.69031, y: 81.5}
+        - {x: 76.69031, y: 95.50001}
+        - {x: 73.69031, y: 98.50001}
+        - {x: -63.309692, y: 98.50001}
+        - {x: -74.30969, y: 99.50001}
+        - {x: -86.30969, y: 99.50001}
+        - {x: -88.30969, y: 96.50001}
+        - {x: -92.3097, y: 80.5}
+        - {x: -92.3097, y: 43.5}
+        - {x: -86.30969, y: -45.5}
+        - {x: -89.30969, y: -51.500004}
+        - {x: -89.30969, y: -57.500004}
+        - {x: -88.30969, y: -90.5}
+        - {x: -76.30969, y: -101.50001}
+        - {x: -62.309692, y: -101.50001}
+        - {x: 25.690308, y: -86.5}
+        - {x: 59.69031, y: -82.5}
+        - {x: 62.69031, y: -79.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0cfbb5e018ff4f57b388f8e0a50afc09
+      internalID: 21300000
+      vertices:
+      - {x: 365.71497, y: 234}
+      - {x: 364.71497, y: 84}
+      - {x: 365.71497, y: 106}
+      - {x: 360.71497, y: 71}
+      - {x: 347.71497, y: 262}
+      - {x: 346.71497, y: 52}
+      - {x: 324.71497, y: 271}
+      - {x: 317.71497, y: 43}
+      - {x: 207.71498, y: 26}
+      - {x: 163.71498, y: 271}
+      - {x: 162.71498, y: 26}
+      - {x: 151.71498, y: 265}
+      - {x: 141.71498, y: 251}
+      - {x: 141.71498, y: 47}
+      - {x: 139.71498, y: 73}
+      - {x: 138.71498, y: 172}
+      - {x: 137.71498, y: 232}
+      - {x: 137.71498, y: 186}
+      indices: 11000000100000000f0000000c0000000f000000100000000e0000000f0000000c0000000d0000000e0000000c0000000a0000000d0000000c0000000b0000000a0000000c000000090000000a0000000b000000080000000a00000009000000060000000800000009000000070000000800000006000000050000000700000006000000040000000500000006000000030000000500000004000000000000000300000004000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      M_Sniper_Ammo: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

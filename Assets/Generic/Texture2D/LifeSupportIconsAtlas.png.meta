@@ -1,0 +1,418 @@
+fileFormatVersion: 2
+guid: 72612221c4e246a42b4b845aa8f36894
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: depressurize_icon
+  - first:
+      213: 21300002
+    second: volume_icon
+  - first:
+      213: 21300004
+    second: vent_icon
+  - first:
+      213: 21300006
+    second: airquality_icon
+  - first:
+      213: 21300008
+    second: temperature_icon
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 25
+  maxTextureSize: 1024
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: depressurize_icon
+      rect:
+        serializedVersion: 2
+        x: 918
+        y: 928
+        width: 84
+        height: 62
+      alignment: 9
+      pivot: {x: 0, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 42, y: -31}
+        - {x: -42, y: -31}
+        - {x: -42, y: 31}
+        - {x: 42, y: 31}
+      physicsShape:
+      - - {x: -42, y: 31}
+        - {x: -42, y: -31}
+        - {x: 42, y: -31}
+        - {x: 42, y: 30}
+        - {x: 40, y: 31}
+      - - {x: -36, y: 24}
+        - {x: 36, y: 24}
+        - {x: 36, y: -25}
+        - {x: -36, y: -25}
+      - - {x: -24, y: 10}
+        - {x: -25, y: 8.000002}
+        - {x: -25, y: 6}
+        - {x: -1, y: -17}
+        - {x: 2, y: -17}
+        - {x: 26, y: 6}
+        - {x: 26, y: 8.000002}
+        - {x: 24.999992, y: 10}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93a583745d7046299d594773b7a10729
+      internalID: 21300000
+      vertices:
+      - {x: 42, y: 31}
+      - {x: 126, y: -31}
+      - {x: 126, y: 31}
+      - {x: 42, y: -31}
+      indices: 030000000000000001000000020000000100000000000000
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: volume_icon
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 768
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 64, y: -64}
+        - {x: -64, y: -64}
+        - {x: -64, y: 47}
+        - {x: -45, y: 64}
+        - {x: 56.000008, y: 64}
+        - {x: 64, y: 52}
+      physicsShape:
+      - - {x: 31, y: 44}
+        - {x: 2, y: 56}
+        - {x: -2, y: 56}
+        - {x: -51, y: 34}
+        - {x: -51, y: -37}
+        - {x: -4.000004, y: -55.999992}
+        - {x: 2.9999924, y: -55.999992}
+        - {x: 14, y: -52}
+        - {x: 52, y: -36}
+        - {x: 52, y: 37}
+      - - {x: 8, y: 4.000004}
+        - {x: 20, y: 8}
+        - {x: 25, y: -30}
+        - {x: 8, y: -39}
+      - - {x: -25, y: -27.999992}
+        - {x: -36, y: 17}
+        - {x: -9, y: 3}
+        - {x: -8, y: -37}
+      - - {x: -10.000004, y: 22}
+        - {x: -21.000004, y: 27}
+        - {x: 7, y: 38}
+        - {x: 18, y: 33}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d597bae8f55402ba3a15010d1906aba
+      internalID: 21300002
+      vertices:
+      - {x: 184, y: 64}
+      - {x: 192, y: -64}
+      - {x: 192, y: 52}
+      - {x: 83, y: 64}
+      - {x: 64, y: 47}
+      - {x: 64, y: -64}
+      indices: 050000000400000001000000030000000100000004000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vent_icon
+      rect:
+        serializedVersion: 2
+        x: 918
+        y: 802
+        width: 84
+        height: 62
+      alignment: 9
+      pivot: {x: 0, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 42, y: -31}
+        - {x: -42, y: -31}
+        - {x: -42, y: 31}
+        - {x: 42, y: 31}
+      physicsShape:
+      - - {x: -42, y: 31}
+        - {x: -42, y: -31}
+        - {x: 42, y: -31}
+        - {x: 42, y: 30}
+        - {x: 40, y: 31}
+      - - {x: -36, y: 24}
+        - {x: 36, y: 24}
+        - {x: 36, y: -25}
+        - {x: -36, y: -25}
+      - - {x: 27, y: 13}
+        - {x: 27, y: 17}
+        - {x: 5, y: 17}
+        - {x: -1, y: 15}
+        - {x: -8, y: 17}
+        - {x: -26, y: 17}
+        - {x: -26, y: 12}
+        - {x: -19.000002, y: -1}
+        - {x: -26, y: -16}
+        - {x: -26, y: -20}
+        - {x: 24.999992, y: -20}
+        - {x: 27, y: -17}
+        - {x: 21, y: -3}
+      tessellationDetail: 0
+      bones: []
+      spriteID: eeb32e12c2d245229d69b177ee07644f
+      internalID: 21300004
+      vertices:
+      - {x: 42, y: 31}
+      - {x: 126, y: -31}
+      - {x: 126, y: 31}
+      - {x: 42, y: -31}
+      indices: 030000000000000001000000020000000100000000000000
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: airquality_icon
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 897.0761
+        width: 128
+        height: 124.84776
+      alignment: 9
+      pivot: {x: 0, y: 1.0166292}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -32, y: -62.5}
+        - {x: -64, y: -58.5}
+        - {x: -64, y: 59.5}
+        - {x: -49, y: 62.5}
+        - {x: 57, y: 62.5}
+        - {x: 64, y: 61.5}
+        - {x: 64, y: -54.500008}
+        - {x: 47, y: -62.5}
+      physicsShape:
+      - - {x: 45, y: -18.5}
+        - {x: 29, y: -28.5}
+        - {x: -3, y: -14.5}
+        - {x: -39, y: -14.5}
+        - {x: -55, y: -26.5}
+        - {x: -55, y: -37.5}
+        - {x: -53, y: -43.499992}
+        - {x: -45, y: -40.499992}
+        - {x: -12, y: -32.5}
+        - {x: 7, y: -44.5}
+        - {x: 36, y: -44.5}
+        - {x: 52.999992, y: -39.5}
+        - {x: 54.999992, y: -34.499992}
+        - {x: 54.999992, y: -23.5}
+        - {x: 52.999992, y: -16.5}
+      - - {x: 26, y: 0.5}
+        - {x: 0, y: 10.500004}
+        - {x: -14, y: 15.500004}
+        - {x: -36, y: 15.500004}
+        - {x: -55, y: 4.500004}
+        - {x: -55, y: -8.499992}
+        - {x: -54, y: -11.5}
+        - {x: -43, y: -10.5}
+        - {x: -28, y: 0.5}
+        - {x: 8, y: -13.5}
+        - {x: 39, y: -13.5}
+        - {x: 54.999992, y: -0.5}
+        - {x: 54.999992, y: 10.500004}
+        - {x: 45, y: 15.500004}
+      - - {x: 40.999992, y: 41.5}
+        - {x: 27, y: 32.5}
+        - {x: -9, y: 46.5}
+        - {x: -46, y: 46.5}
+        - {x: -55, y: 31.5}
+        - {x: -55, y: 19.5}
+        - {x: -44, y: 17.5}
+        - {x: -31, y: 29.5}
+        - {x: 2, y: 16.5}
+        - {x: 36, y: 16.5}
+        - {x: 52.999992, y: 21.500004}
+        - {x: 54.999992, y: 26.5}
+        - {x: 54.999992, y: 38.5}
+        - {x: 52.999992, y: 45.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: e170199133bf42debf711842fddf0156
+      internalID: 21300006
+      vertices:
+      - {x: 185, y: 62}
+      - {x: 192, y: -55.000008}
+      - {x: 192, y: 61}
+      - {x: 175, y: -63}
+      - {x: 96, y: -63}
+      - {x: 79, y: 62}
+      - {x: 64, y: 59}
+      - {x: 64, y: -59}
+      indices: 070000000600000004000000050000000400000006000000000000000400000005000000030000000400000000000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: temperature_icon
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 896
+        width: 100.92388
+        height: 128
+      alignment: 9
+      pivot: {x: 0, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -43.46194, y: -48}
+        - {x: -50.46194, y: -48}
+        - {x: -50.46194, y: 54}
+        - {x: -48.46194, y: 54}
+        - {x: -43.46194, y: 49}
+      - - {x: -26.46194, y: -64}
+        - {x: -27.46194, y: -53.999992}
+        - {x: -27.46194, y: 5.000004}
+        - {x: -22.46194, y: 64}
+        - {x: 37.53806, y: 64}
+        - {x: 40.53806, y: 53}
+        - {x: 50.53806, y: -7}
+        - {x: 50.53806, y: -62}
+        - {x: 49.53806, y: -64}
+      physicsShape:
+      - - {x: 24.53806, y: 49}
+        - {x: 16.538052, y: 56}
+        - {x: 2.5380554, y: 56}
+        - {x: -2.4619408, y: 39}
+        - {x: -11.461941, y: -1}
+        - {x: -11.461941, y: -45}
+        - {x: -1.4619446, y: -55.999992}
+        - {x: 24.53806, y: -55.999992}
+        - {x: 34.53806, y: -51}
+        - {x: 34.53806, y: -23}
+      - - {x: 4.538059, y: -17}
+        - {x: -3.4619408, y: -30}
+        - {x: -2.4619408, y: -38}
+        - {x: -1.4619446, y: -39}
+        - {x: 3.5380554, y: -37}
+      - - {x: 9.538055, y: 44}
+        - {x: 13.538059, y: 44}
+        - {x: 13.538059, y: 30}
+        - {x: 9.538055, y: 30}
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa8e7558b8c54abfb898bf20a0ac0d90
+      internalID: 21300008
+      vertices:
+      - {x: 165, y: -7}
+      - {x: 164, y: -64}
+      - {x: 165, y: -62}
+      - {x: 155, y: 53}
+      - {x: 152, y: 64}
+      - {x: 92, y: 64}
+      - {x: 88, y: -64}
+      - {x: 87, y: 5.000004}
+      - {x: 87, y: -53.999992}
+      - {x: 66, y: 54}
+      - {x: 71, y: -48}
+      - {x: 71, y: 49}
+      - {x: 64, y: 54}
+      - {x: 64, y: -48}
+      indices: 0d0000000c0000000a000000090000000a0000000c0000000b0000000a00000009000000080000000700000006000000050000000600000007000000010000000600000005000000040000000100000005000000030000000100000004000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      temperature_icon: 21300008
+      airquality_icon: 21300006
+      vent_icon: 21300004
+      depressurize_icon: 21300000
+      volume_icon: 21300002
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

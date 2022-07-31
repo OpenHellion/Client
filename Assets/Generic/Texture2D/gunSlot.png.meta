@@ -1,0 +1,155 @@
+fileFormatVersion: 2
+guid: b4d3ed32f42a11644ab9c6725c0c2c88
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: gunSlot
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 12
+  maxTextureSize: 100
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: gunSlot
+      rect:
+        serializedVersion: 2
+        x: 5.0761204
+        y: 23.051317
+        width: 88.87257
+        height: 53.921936
+      alignment: 9
+      pivot: {x: 0.5054865, y: 0.49977216}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 24.487598, y: -27.012287}
+        - {x: -44.5124, y: -6.012285}
+        - {x: -44.5124, y: 25.987715}
+        - {x: -42.5124, y: 26.987717}
+        - {x: 44.4876, y: 26.987717}
+        - {x: 44.4876, y: -26.012285}
+        - {x: 41.4876, y: -27.012287}
+      physicsShape:
+      - - {x: -37.5124, y: 25.987715}
+        - {x: -43.5124, y: 23.987715}
+        - {x: -44.5124, y: 22.987713}
+        - {x: -44.5124, y: 1.9877148}
+        - {x: -43.5124, y: -2.0122852}
+        - {x: -36.5124, y: -4.012285}
+        - {x: 7.4875984, y: -7.012285}
+        - {x: 18.487598, y: -7.012285}
+        - {x: 24.487598, y: -26.012285}
+        - {x: 35.4876, y: -26.012285}
+        - {x: 42.4876, y: -24.012285}
+        - {x: 44.4876, y: -16.012285}
+        - {x: 44.4876, y: 9.987714}
+        - {x: 35.4876, y: 25.987715}
+      - - {x: 9.487598, y: 3.9877148}
+        - {x: 13.487598, y: 2.9877148}
+        - {x: 12.487598, y: 0.98771477}
+        - {x: 11.487598, y: 0.98771477}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e36910c4c9549be999788d6934fc085
+      internalID: 21300000
+      vertices:
+      - {x: 94, y: 77}
+      - {x: 91, y: 22.999998}
+      - {x: 94, y: 24}
+      - {x: 74, y: 22.999998}
+      - {x: 7, y: 77}
+      - {x: 5, y: 76}
+      - {x: 5, y: 44}
+      indices: 060000000500000003000000040000000300000005000000000000000300000004000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      gunSlot: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

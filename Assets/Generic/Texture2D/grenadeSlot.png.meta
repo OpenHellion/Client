@@ -1,0 +1,162 @@
+fileFormatVersion: 2
+guid: ea25b520fe5061248a988b41e985852a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: grenadeSlot
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 12
+  maxTextureSize: 100
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: grenadeSlot
+      rect:
+        serializedVersion: 2
+        x: 21.07612
+        y: 17.02675
+        width: 58.847763
+        height: 65.9465
+      alignment: 9
+      pivot: {x: 0.49150348, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -28.500002, y: -33}
+        - {x: -29.500002, y: -29}
+        - {x: -29.500002, y: 16}
+        - {x: -14.500002, y: 28}
+        - {x: -0.5000019, y: 33}
+        - {x: 18.499998, y: 33}
+        - {x: 23.499998, y: 28}
+        - {x: 29.5, y: 3}
+        - {x: 29.5, y: -16}
+        - {x: 8.499998, y: -33}
+      physicsShape:
+      - - {x: 25.499998, y: 9}
+        - {x: 23.499998, y: 25}
+        - {x: 14.499997, y: 32}
+        - {x: 1.4999981, y: 32}
+        - {x: -11.500002, y: 24}
+        - {x: -25.500002, y: 6}
+        - {x: -28.500002, y: 0}
+        - {x: -28.500002, y: -18}
+        - {x: -18.500002, y: -29.999998}
+        - {x: -11.500002, y: -33}
+        - {x: 2.499998, y: -33}
+        - {x: 6.499998, y: -32}
+        - {x: 20.499998, y: -19}
+        - {x: 29.499996, y: -12}
+        - {x: 29.499996, y: -4.9999995}
+      - - {x: 7.499998, y: 25}
+        - {x: 3.499998, y: 24}
+        - {x: 10.499998, y: 25}
+        - {x: 15.499998, y: 19}
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb8e51c0b0d94c9eab840d5985fa330e
+      internalID: 21300000
+      vertices:
+      - {x: 74, y: 78}
+      - {x: 80, y: 34}
+      - {x: 80, y: 53}
+      - {x: 69, y: 83}
+      - {x: 59, y: 17}
+      - {x: 50, y: 83}
+      - {x: 36, y: 78}
+      - {x: 22, y: 17}
+      - {x: 21, y: 66}
+      - {x: 21, y: 21}
+      indices: 090000000800000007000000060000000700000008000000040000000700000006000000050000000400000006000000030000000400000005000000010000000400000003000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      grenadeSlot: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

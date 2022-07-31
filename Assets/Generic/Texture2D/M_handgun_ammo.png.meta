@@ -1,0 +1,168 @@
+fileFormatVersion: 2
+guid: 26f795a0edc5c7047a90ad00be664028
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: M_handgun_ammo
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: M_handgun_ammo
+      rect:
+        serializedVersion: 2
+        x: 170.07613
+        y: 16.02675
+        width: 187.84776
+        height: 260.93695
+      alignment: 9
+      pivot: {x: 0.455895, y: 0.50193447}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -27.285027, y: -115.495224}
+        - {x: -94.28503, y: 59.504776}
+        - {x: -94.28503, y: 104.504776}
+        - {x: -64.28503, y: 130.50478}
+        - {x: -16.285027, y: 130.50478}
+        - {x: -6.2850266, y: 119.504776}
+        - {x: 93.71497, y: -69.495224}
+        - {x: 93.71497, y: -106.495224}
+        - {x: 81.71497, y: -124.49522}
+        - {x: 46.714973, y: -130.49522}
+        - {x: -8.285027, y: -130.49522}
+      physicsShape:
+      - - {x: 69.71497, y: -76.495224}
+        - {x: 62.714973, y: -67.495224}
+        - {x: 12.714973, y: 31.504778}
+        - {x: -9.285027, y: 74.504776}
+        - {x: -26.285027, y: 106.50478}
+        - {x: -34.285027, y: 110.50478}
+        - {x: -39.285027, y: 110.50478}
+        - {x: -44.285027, y: 109.50478}
+        - {x: -73.28503, y: 91.504776}
+        - {x: -73.28503, y: 79.504776}
+        - {x: -62.28503, y: 57.50478}
+        - {x: -59.28503, y: 48.50478}
+        - {x: -48.285027, y: 31.504778}
+        - {x: -46.285027, y: 2.504776}
+        - {x: -29.285027, y: -30.495226}
+        - {x: 1.7149734, y: -87.495224}
+        - {x: -2.285026, y: -97.49523}
+        - {x: 11.714973, y: -111.49523}
+        - {x: 19.714975, y: -111.49523}
+        - {x: 58.714973, y: -104.49523}
+        - {x: 70.71497, y: -96.49523}
+        - {x: 73.71497, y: -92.495224}
+        - {x: 73.71497, y: -86.495224}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60914847076a495e80eb28d6c7e51c8c
+      internalID: 21300000
+      vertices:
+      - {x: 357.71497, y: 77}
+      - {x: 345.71497, y: 22.000008}
+      - {x: 357.71497, y: 40}
+      - {x: 310.71497, y: 16}
+      - {x: 257.71497, y: 266}
+      - {x: 255.71498, y: 16}
+      - {x: 247.71498, y: 277}
+      - {x: 236.71498, y: 31}
+      - {x: 199.71498, y: 277}
+      - {x: 169.71498, y: 251}
+      - {x: 169.71498, y: 206}
+      indices: 0a0000000900000007000000080000000700000009000000060000000700000008000000050000000700000006000000040000000500000006000000030000000500000004000000000000000300000004000000010000000300000000000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      M_handgun_ammo: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

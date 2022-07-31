@@ -1,0 +1,159 @@
+fileFormatVersion: 2
+guid: a436726065a52074db49692442f39f90
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: helmetBattery
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 12
+  maxTextureSize: 64
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: helmetBattery
+      rect:
+        serializedVersion: 2
+        x: 13.07612
+        y: 0.076120496
+        width: 37.847755
+        height: 62.847755
+      alignment: 9
+      pivot: {x: 0.50000006, y: 0.5079558}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 19.000002, y: -31.499996}
+        - {x: -18.999998, y: -31.499996}
+        - {x: -18.999998, y: 29.500004}
+        - {x: -14.999999, y: 31.500004}
+        - {x: 12.000002, y: 31.500004}
+        - {x: 19.000002, y: 30.500006}
+      physicsShape:
+      - - {x: -11.999998, y: 31.500004}
+        - {x: -18.999998, y: 30.500002}
+        - {x: -18.999998, y: -31.499996}
+        - {x: 19.000002, y: -31.499996}
+        - {x: 19.000002, y: 26.500004}
+        - {x: 13.000002, y: 31.500004}
+      - - {x: -2.999998, y: -15.499996}
+        - {x: -3.999998, y: -14.499995}
+        - {x: -3.999998, y: -11.499996}
+        - {x: -4.9999976, y: -10.499996}
+        - {x: -3.999998, y: -11.499996}
+        - {x: 0.0000019073486, y: -9.499995}
+        - {x: 2.000002, y: -0.4999962}
+        - {x: -1.9999981, y: 1.5000038}
+        - {x: -0.9999981, y: 14.500004}
+        - {x: 2.000002, y: 15.500003}
+        - {x: 1.0000019, y: 14.500004}
+        - {x: -0.9999981, y: 6.500004}
+        - {x: 2.000002, y: 3.5000038}
+        - {x: 5.0000014, y: 2.5000038}
+        - {x: -0.9999981, y: -12.499996}
+        - {x: 3.000002, y: -13.499996}
+        - {x: -3.999998, y: -18.499996}
+        - {x: -2.999998, y: -18.499996}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ca3725bc4704a5bb7905f345e68391a
+      internalID: 21300000
+      vertices:
+      - {x: 44, y: 63}
+      - {x: 51, y: 0}
+      - {x: 51, y: 62}
+      - {x: 17, y: 63}
+      - {x: 13, y: 61}
+      - {x: 13, y: 0}
+      indices: 050000000400000001000000030000000100000004000000000000000100000003000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      helmetBattery: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

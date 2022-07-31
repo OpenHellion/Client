@@ -1,0 +1,242 @@
+fileFormatVersion: 2
+guid: bb9145f2c5ed56448893f1d676188220
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: M_Handgun_02
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 512
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 72.23587
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: M_Handgun_02
+      rect:
+        serializedVersion: 2
+        x: 41.076122
+        y: 16.02675
+        width: 420.84778
+        height: 240.89714
+      alignment: 9
+      pivot: {x: 0.5100154, y: 0.54368955}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -209.78503, y: 20.524681}
+        - {x: -210.78503, y: 32.52468}
+        - {x: -210.78503, y: 84.52468}
+        - {x: -200.78503, y: 99.52468}
+        - {x: -165.78503, y: 116.52468}
+        - {x: -126.785034, y: 118.52468}
+        - {x: -90.785034, y: 107.52468}
+        - {x: -46.785034, y: 116.52468}
+        - {x: 26.214966, y: 120.52468}
+        - {x: 74.214966, y: 120.52468}
+        - {x: 107.214966, y: 110.52468}
+        - {x: 166.21497, y: 108.52468}
+        - {x: 182.21497, y: 97.52468}
+        - {x: 204.21497, y: 57.52468}
+        - {x: 210.21497, y: 40.52468}
+        - {x: 210.21497, y: 32.52468}
+        - {x: 205.21497, y: -23.475319}
+        - {x: 210.21497, y: -30.475319}
+        - {x: 210.21497, y: -80.47532}
+        - {x: 207.21497, y: -86.47532}
+        - {x: 174.21497, y: -115.47531}
+        - {x: 165.21497, y: -120.47532}
+        - {x: 107.214966, y: -120.47532}
+        - {x: 100.214966, y: -105.47532}
+        - {x: 97.214966, y: -94.47532}
+        - {x: 87.214966, y: -55.47532}
+        - {x: 43.214966, y: -64.47532}
+        - {x: -18.785034, y: -66.47532}
+        - {x: -140.78503, y: -67.47532}
+        - {x: -176.78503, y: -60.47532}
+        - {x: -195.78503, y: -31.475319}
+      physicsShape:
+      - - {x: 189.21497, y: -58.47532}
+        - {x: 187.21497, y: -48.475323}
+        - {x: 182.21497, y: -35.47532}
+        - {x: 177.21497, y: -21.475319}
+        - {x: 161.21497, y: 0.5246811}
+        - {x: 163.21497, y: 11.524681}
+        - {x: 179.21497, y: 15.524681}
+        - {x: 188.21497, y: 21.524681}
+        - {x: 188.21497, y: 29.524681}
+        - {x: 183.21497, y: 50.52468}
+        - {x: 168.21497, y: 68.52469}
+        - {x: 167.21497, y: 79.52468}
+        - {x: 156.21497, y: 87.52468}
+        - {x: 121.21497, y: 86.52468}
+        - {x: 98.214966, y: 86.52468}
+        - {x: 71.214966, y: 97.52468}
+        - {x: 40.214966, y: 97.52468}
+        - {x: 36.214966, y: 93.52468}
+        - {x: -47.785038, y: 93.52468}
+        - {x: -63.785034, y: 79.52468}
+        - {x: -98.78504, y: 79.52468}
+        - {x: -113.78504, y: 91.52468}
+        - {x: -129.78503, y: 94.52468}
+        - {x: -160.78503, y: 94.52468}
+        - {x: -164.78503, y: 89.52468}
+        - {x: -165.78503, y: 81.52468}
+        - {x: -183.78503, y: 81.52468}
+        - {x: -188.78505, y: 78.52468}
+        - {x: -188.78505, y: 52.52468}
+        - {x: -186.78503, y: 27.524681}
+        - {x: -182.78503, y: 13.524681}
+        - {x: -170.78503, y: 6.524681}
+        - {x: -167.78503, y: -31.475319}
+        - {x: -160.78503, y: -40.475323}
+        - {x: -144.78503, y: -38.475323}
+        - {x: -140.78503, y: -46.475323}
+        - {x: -124.785034, y: -45.475323}
+        - {x: -68.785034, y: -38.475323}
+        - {x: -38.785034, y: -36.47532}
+        - {x: -6.785034, y: -43.475323}
+        - {x: 8.214966, y: -43.475323}
+        - {x: 55.21497, y: -36.47532}
+        - {x: 62.21497, y: -30.475319}
+        - {x: 70.214966, y: -31.475319}
+        - {x: 99.214966, y: -29.475319}
+        - {x: 112.21497, y: -50.475323}
+        - {x: 118.21497, y: -72.47532}
+        - {x: 119.21497, y: -94.47533}
+        - {x: 131.21497, y: -105.47533}
+        - {x: 138.21497, y: -105.47533}
+        - {x: 143.21497, y: -104.47533}
+        - {x: 169.21497, y: -87.47533}
+        - {x: 187.21497, y: -68.47532}
+        - {x: 189.21497, y: -64.47532}
+      - - {x: 79.214966, y: -10.475319}
+        - {x: 81.214966, y: -12.475319}
+        - {x: 77.214966, y: -12.475319}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 410eb5f5f523472c8e7284846e703709
+      internalID: 21300000
+      vertices:
+      - {x: 461.71497, y: 177}
+      - {x: 456.71497, y: 113}
+      - {x: 461.71497, y: 169}
+      - {x: 455.71497, y: 194}
+      - {x: 461.71497, y: 106}
+      - {x: 458.71497, y: 50}
+      - {x: 461.71497, y: 56}
+      - {x: 433.71497, y: 234}
+      - {x: 425.71497, y: 21.000008}
+      - {x: 417.71497, y: 245}
+      - {x: 416.71497, y: 16}
+      - {x: 358.71497, y: 247}
+      - {x: 358.71497, y: 16}
+      - {x: 351.71497, y: 31}
+      - {x: 348.71497, y: 42}
+      - {x: 338.71497, y: 81}
+      - {x: 325.71497, y: 257}
+      - {x: 294.71497, y: 72}
+      - {x: 277.71497, y: 257}
+      - {x: 232.71498, y: 70}
+      - {x: 204.71498, y: 253}
+      - {x: 160.71498, y: 244}
+      - {x: 124.71498, y: 255}
+      - {x: 110.71498, y: 69}
+      - {x: 85.71498, y: 253}
+      - {x: 74.71498, y: 76}
+      - {x: 55.71498, y: 105}
+      - {x: 50.71498, y: 236}
+      - {x: 41.71498, y: 157}
+      - {x: 40.71498, y: 221}
+      - {x: 40.71498, y: 169}
+      indices: 1e0000001d0000001c0000001b0000001c0000001d0000001a0000001c0000001b000000180000001a0000001b000000190000001a000000180000001700000019000000180000001600000017000000180000001300000017000000160000001500000013000000160000001400000013000000150000001200000013000000140000001100000013000000120000001000000011000000120000000f00000011000000100000000b0000000f000000100000000e0000000f0000000b0000000d0000000e0000000b0000000c0000000d0000000b0000000a0000000c0000000b000000090000000a0000000b000000080000000a00000009000000070000000800000009000000050000000800000007000000010000000500000007000000030000000100000007000000040000000500000001000000060000000500000004000000030000000000000001000000020000000100000000000000
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      M_Handgun_02: 21300000
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
