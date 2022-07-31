@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0870357c3027a34ab5e8bd2c40ca98c, type: 3}
+  m_Name: DimbeSandiMails
+  m_EditorClassIdentifier:
+  Title: Dealing with Sons
+  Character: {fileID: 11400000, guid: 2c10c6cb19e0656449bd998f013e9683, type: 2}
+  LogText: 'From: A.Sandi@skyline.hsn
+
+	To: H.Dimbe@altaircorporation.hsn
+
+	
+
+	Greetings Old man,.
+
+	How are you holding up?
+
+	I got your message and will be joining you shortly. As it will take awhile for me to get there, I ordered Claudia to provide you with updated clearance.
+
+	
+
+	From: H.Dimbe@AltairCorporation.hsn
+
+	To: A.Sandi@Skyline.hsn
+
+	
+
+	Claudia came to see me this morning with the codes. She’s much nicer than your last assistant. How you got her to work for you is beyond me.
+
+	But I digress, we need a plan of action Sandi, you know just as well as I that we cannot afford to play the waiting game. We need to do something before the politicians wake up.
+
+	
+
+	From: A.Sandi@Skyline.hsn
+
+	To: H.Dimbe@AltairCorporation.hsn
+
+	
+
+	My thoughts exactly. 
+
+	I’ve gone over reports from Burner and Knossos. Sons found a way to evade SDS sensors and we still can’t figure out how. But at Knossos, your ships managed to spot them, so I’m guessing that’s why they needed to sabotage the main array at Knossos itself.
+
+	Going over the data, guys at Intelligence believe they can bridge the incompatibility and install updated HERMES equipment on AltCorp sensors. Should give us a wider sensor net, but use your tracking algorithms.
+
+	Anyways, I’ll be at Bellerophon shortly so we can talk in person.
+
+	
+
+	From: H.Dimbe@AltairCorporation.hsn
+
+	To: A.Sandi@Skyline.hsn
+
+	
+
+	Sounds interesting. I’ll run it by my crew and see what they have to say. With everything that’s been happening they’ll be glad for any chance at payback.'
+  LogDate: 2409.11.21

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1744d85744d626643a71cf496a26f948, type: 3}
+  m_Name: NewtonSkidmore
+  m_EditorClassIdentifier:
+  CharacterName: Newton Skidmore
+  CharacterImage: {fileID: 21300000, guid: efd6879f19e03be4a8655e7a040cdde2, type: 3}
+  CharacterInfo: 'Name: Newton Skidmore
+
+	Affiliation: Skyline Defense Solutions
+
+	Age: 36
+
+	Assignment: Stage 1, Acheron Outpost	
+
+	Rank: Sargeant'

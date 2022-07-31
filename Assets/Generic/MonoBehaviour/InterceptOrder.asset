@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0870357c3027a34ab5e8bd2c40ca98c, type: 3}
+  m_Name: InterceptOrder
+  m_EditorClassIdentifier:
+  Title: Intercept order for ships at 2.16
+  Character: {fileID: 11400000, guid: 2c10c6cb19e0656449bd998f013e9683, type: 2}
+  LogText: 'Attention all ships in sector 2.1.6
+
+	
+
+	ACS Terminus just confirmed a massive object on a collision course with Knossos. Judging by the signature, we are looking at 30, maybe 40 docked modules. Probably boobytrapped, it’s the Sons of Earth we are dealing with.
+
+	
+
+	As you know Knossos is dead in the water atm, so evasive action is out of the question!
+
+	
+
+	There isn’t enough time to redirect that station, so we are going to break it apart and pray that Knossos can survive long enough until we finish evacuating. I know what this means, but there is no other way.
+
+	
+
+	I want all EVA teams prepped and ready in 2 minutes. Bring any explosive charges you have onboard, we’re gonna need them. Now move people, we have less than 35 minutes!
+
+	
+
+	Godspeed!'
+  LogDate: 2409.10.16

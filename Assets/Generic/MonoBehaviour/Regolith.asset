@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e11eac0ff2e5f474ca644692bd284655, type: 3}
+  m_Name: Regolith
+  m_EditorClassIdentifier:
+  ResourceType: 2
+  DecalMaterial: {fileID: 2100000, guid: 9f05ee66a17670044a7a8cbddb9c26e5, type: 2}
+  Rock1Material: {fileID: 2100000, guid: 5d6bae5c348d30e4081a61133b00a169, type: 2}
+  Rock2Material: {fileID: 2100000, guid: c3eb1eea426628c49ba90342f8f3eae1, type: 2}
+  Rock3Material: {fileID: 2100000, guid: d74bf3de898d2c140b379628cb3a7c21, type: 2}
+  LightColor: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 0}

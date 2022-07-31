@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0870357c3027a34ab5e8bd2c40ca98c, type: 3}
+  m_Name: HNNLiveInOrbit
+  m_EditorClassIdentifier:
+  Title: HNN Live in Orbit
+  Character: {fileID: 0}
+  LogText: 'Zerostring Project will be holding a live concert in Burner’s orbit from ACS Rummelsberg to commemorate two decades of the colonization effort.
+
+	
+
+	Spokesman for the Altair Corporation Christian Pell, gave a statement earlier today to HNN reporter explaining AltCorp’s decision to ignore terrorist threats and Expedition Command’s security concerns regarding large gatherings. Pell stated that Altair Corporation isn’t concerned about “empty threats”, or “so called” terrorists and that proper security measures have been taken for an event of this size.He also had this to add:
+
+	
+
+	“Security is one of our primary concerns and all members of the AltCorp Engineering Core risk their lives daily to bring Hellion’s infrastructure up to speed. They deserve some RnR every once in awhile.”
+
+	
+
+	HNN also wants to remind you all that earlier this year a terrorist organization calling themselves Sons of Earth claimed responsibility for a number of sabotage attacks throughout the Hellion system.'
+  LogDate: 2409.06.09

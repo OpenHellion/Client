@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4100b041523c0624c87765598d71eac5, type: 3}
+  m_Name: PlayerEntersShip
+  m_EditorClassIdentifier:
+  QuestID: 2
+  QuestTriggerID: 15
+  Elements:
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: '...|Alright…|So you have to check the Power Supply and 
+
+	Warp Drive.|Oh wait,|but to gain access,|you''ll have
+
+	to register first.|'
+    PlaySound: 1
+    DialogueSound: Theona_Log_5_PlayerEntersAShip
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'There’s a|Security Panel on the Bridge.|'
+    PlaySound: 0
+    DialogueSound:
+    SkipInJournal: 0
+    TaskDependencyList: []
+  QuestName: A Rude Awakening
+  Delay: 0

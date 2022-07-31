@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e11eac0ff2e5f474ca644692bd284655, type: 3}
+  m_Name: Ferrite
+  m_EditorClassIdentifier:
+  ResourceType: 6
+  DecalMaterial: {fileID: 2100000, guid: 2a05693c67dd55947b48a5031283d0fc, type: 2}
+  Rock1Material: {fileID: 2100000, guid: da1d5e91c68d68046a964414a3c37d2a, type: 2}
+  Rock2Material: {fileID: 2100000, guid: e4b4746b8969fb247bfa39a1787af26a, type: 2}
+  Rock3Material: {fileID: 2100000, guid: d4776bbfaa1a81741a2961cb0571b39f, type: 2}
+  LightColor: {r: 0.6037736, g: 0.026027497, b: 0.0085439505, a: 0}

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e11eac0ff2e5f474ca644692bd284655, type: 3}
+  m_Name: MaficRock
+  m_EditorClassIdentifier:
+  ResourceType: 7
+  DecalMaterial: {fileID: 2100000, guid: 8bc0a8457b35c544ab51d91f6240e3c6, type: 2}
+  Rock1Material: {fileID: 2100000, guid: 5804f1ade3a7b164bb08f55bd1484453, type: 2}
+  Rock2Material: {fileID: 2100000, guid: 4cd693ed109e9554e9078a0f1083fcb6, type: 2}
+  Rock3Material: {fileID: 2100000, guid: a1b00bf3da4802f4d894453bf86753e5, type: 2}
+  LightColor: {r: 0.1714133, g: 0.33962262, b: 0.17742506, a: 0}

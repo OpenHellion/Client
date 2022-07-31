@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: DamagePeelPaint4x1_MAT
+  m_Shader: {fileID: 4800000, guid: 874cf16730c74e144915ec7eb7dd5e6a, type: 3}
+  m_ShaderKeywords: _EMISSION
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 9fec6a569e818444ea2d1352f957bd1d, type: 3}
+        m_Scale: {x: 2, y: 0.3}
+        m_Offset: {x: 0.11, y: 0.17}
+    - _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalTex:
+        m_Texture: {fileID: 2800000, guid: 33d878dabe6ea2240aa67d9164b511d0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SmoothnessTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecularTex:
+        m_Texture: {fileID: 2800000, guid: 35249766a0b9d5842b0242c7c95a2656, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AngleLimit: 0.5
+    - _BumpScale: 1
+    - _Cutoff: 0.5
+    - _DecalBlendMode: 0
+    - _DecalDstBlend: 10
+    - _DecalSrcBlend: 1
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _EmissionMultiplier: 0
+    - _Glossiness: 0.5
+    - _LimitTo: 0
+    - _MaskClip: 1
+    - _MaskMultiplier: 1
+    - _MaskNormals: 0
+    - _Metallic: 0
+    - _Mode: 0
+    - _NormalBlendMode: 1
+    - _NormalMultiplier: 0.1
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _SmoothnessMultiplier: 0.479
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _ZWrite: 1
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 0.65}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SpecularMultiplier: {r: 0.17647058, g: 0.17647058, b: 0.17647058, a: 1}

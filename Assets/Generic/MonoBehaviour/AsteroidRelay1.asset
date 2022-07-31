@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fcc81f2658f04641aaf1ee5408cec1f, type: 3}
+  m_Name: AsteroidRelay1
+  m_EditorClassIdentifier:
+  Location: {fileID: 11400000, guid: b53f4575c63ce7641bd336de6d6e2245, type: 2}
+  Tags:
+  - {fileID: 11400000, guid: 9523c79546692304b97d17f8c3eca520, type: 2}
+  Celestial: 0
+  NameTag: Activate Pan IV Asteroid Relay
+  NameOnIndicator: Pull Lever
+  DescriptionTag: Activate Pan IV to find Sons of Earth hideout.
+  CutScene: {fileID: 0}
+  SceneID: -1
+  QuestID: 11
+  QuestTriggerID: 4
+  LastTask: 0

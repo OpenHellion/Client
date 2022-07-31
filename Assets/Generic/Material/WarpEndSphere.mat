@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: WarpEndSphere
+  m_Shader: {fileID: 4800000, guid: 9ecff65d11db77f42a4a6bb709a48cac, type: 3}
+  m_ShaderKeywords: _ALPHAPREMULTIPLY_ON _EMISSION _FADING_ON _GLOSSYREFLECTIONS_OFF _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A _SPECULARHIGHLIGHTS_OFF
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
+  disabledShaderPasses:
+  - ALWAYS
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTexture:
+        m_Texture: {fileID: 2800000, guid: 5069a0ec61ddcd24ea8759ba2c43647c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask:
+        m_Texture: {fileID: 2800000, guid: ba1fb0da64af287499b436208f44da0f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PannerTexture:
+        m_Texture: {fileID: 2800000, guid: 3e56e3205df7f484aa5f1e01c76a56b7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Appear: 1
+    - _BlendOp: 0
+    - _BlurAmount: 0.15
+    - _BumpScale: 1
+    - _CameraFadingEnabled: 1
+    - _CameraFarFadeDistance: 2
+    - _CameraNearFadeDistance: 1
+    - _ColorMode: 0
+    - _Cull: 0
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DistortionBlend: 0.5
+    - _DistortionEnabled: 0
+    - _DistortionStrength: 1
+    - _DistortionStrengthScaled: 0
+    - _DstBlend: 10
+    - _EmissionEnabled: 0
+    - _Fade: 1
+    - _FlipbookMode: 0
+    - _Float0: 30
+    - _Float1: 2
+    - _Float2: 1
+    - _FresnelPower: 5
+    - _FresnelScale: 8
+    - _GeneralOpacity: 1
+    - _GeneralOpacity059: 1
+    - _GlossMapScale: 1
+    - _Glossiness: 1
+    - _GlossyReflections: 0
+    - _InvFade: 1.39
+    - _LensDirtAmount: 1
+    - _LightingEnabled: 0
+    - _MainTextureIntensity: 0.5
+    - _MainTexturePanningSpeed: 0.03
+    - _MainTextureTiling: 1
+    - _MaskClipValue: 0.5
+    - _MaskOffset: 0.5
+    - _MaskTile: 0
+    - _Metallic: 0
+    - _Mode: 3
+    - _OcclusionStrength: 1
+    - _PannerTextureTiling: 0.9
+    - _PanningSpeed: 0.2
+    - _Parallax: 0.02
+    - _SmoothnessTextureChannel: 1
+    - _SoftParticlesEnabled: 0
+    - _SoftParticlesFarFadeDistance: 1
+    - _SoftParticlesNearFadeDistance: 0
+    - _SpecularHighlights: 0
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _ZWrite: 0
+    - __dirty: 0
+    - _test: 1
+    m_Colors:
+    - _CameraFadeParams: {r: 1, g: 1, b: 0, a: 0}
+    - _Color: {r: 0.6226415, g: 0.16153437, b: 0.40929344, a: 0.038}
+    - _Color0: {r: 0.6117647, g: 0.2, b: 0.5204996, a: 0}
+    - _Color1: {r: 0.10672542, g: 0.20721236, b: 0.34558785, a: 0}
+    - _Color2: {r: 0.51858425, g: 0.18382876, b: 0.764151, a: 0}
+    - _Color3: {r: 1.3455882, g: 1.6308321, b: 3, a: 0}
+    - _ColorAddSubDiff: {r: 1, g: 0, b: 0, a: 0}
+    - _EmissionColor: {r: 0.97608465, g: 0.49358827, b: 0.74315536, a: 1}
+    - _FresnelColor: {r: 0.002941177, g: 0.01397059, b: 0.04901961, a: 0}
+    - _MainTextureColor: {r: 0, g: 0, b: 0.3137255, a: 0}
+    - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
+    - _TintColor: {r: 1, g: 0.08088237, b: 0.08088237, a: 0.5}
+    - _WireColor: {r: 1, g: 0, b: 0, a: 1}

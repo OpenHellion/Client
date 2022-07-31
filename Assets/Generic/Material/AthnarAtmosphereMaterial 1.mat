@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: AthnarAtmosphereMaterial 1
+  m_Shader: {fileID: 4800000, guid: 5b5c57e7c60c7e241a91634f687814c2, type: 3}
+  m_ShaderKeywords:
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3001
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AtmosphereNoise:
+        m_Texture: {fileID: 2800000, guid: d487f70cb847c2a4daed153cc6cafae5, type: 3}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AtmosphereLightPower: 12
+    - _AtmospherePower: 1.45
+    - _BumpScale: 1
+    - _ColorPower: 8.73
+    - _ColorSlide: 0.144
+    - _Cutoff: 0.5
+    - _DarkHigh: 0
+    - _DarkLow: 0.5
+    - _DarkTransparency: 0.7
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _FresnelPower: 11.13
+    - _GlobalTransparency: 0.67
+    - _Glossiness: 0.5
+    - _LightHigh: 0
+    - _LightLow: 0.24
+    - _LightTransparency: 1
+    - _Metallic: 0
+    - _MidColorSlide: 0.42
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _Opacity: 45.5
+    - _Parallax: 0.02
+    - _ScatterPower: 0.86
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _ZWrite: 1
+    - _fresnel: 3.6
+    - _node_2239: 0.87
+    - _node_2411: 0.2
+    - _node_5836: 0.1
+    - _node_649: 0.59
+    - _node_694: 0.21
+    - _node_7171: 2.17
+    - _node_7267: 1.34
+    m_Colors:
+    - _AtmosphereColor: {r: 0.58431375, g: 0.9450981, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color3: {r: 0.9852941, g: 0, b: 0, a: 1}
+    - _DarkColor: {r: 0.17275195, g: 0.29801863, b: 0.472, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _LightColor: {r: 0.59099996, g: 0.6872352, b: 1, a: 1}
+    - _color1: {r: 0.09344961, g: 0.095150135, b: 0.18867922, a: 1}
+    - _color2: {r: 0.2924528, g: 0.2924528, b: 0.2924528, a: 1}
+    - _node_3720: {r: 0.5294118, g: 0.8745099, b: 1, a: 1}
+    - _node_7476: {r: 1, g: 1, b: 1, a: 1}

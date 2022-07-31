@@ -1,0 +1,197 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: AltCorp_AltairRifle01_Rifle01_MAT2
+  m_Shader: {fileID: 4800000, guid: a37f65c25f2781b498c9f937674ce11f, type: 3}
+  m_ShaderKeywords: _EMISSION _METALLICGLOSSMAP _NORMALMAP
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2450
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DifuseMap:
+        m_Texture: {fileID: 2800000, guid: a28bfa9bbebd6a94cba7d67a03e91eb6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DirtNormal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FrostNormal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _IdMask:
+        m_Texture: {fileID: 2800000, guid: 1e1ac58f0068f4c4ebc0eb219ff3ae65, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Masks:
+        m_Texture: {fileID: 2800000, guid: 8ba6c8ff8023bc044aaf96aacfe02030, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mat1Normal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mat2Normal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mat3Normal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mat4Normal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mat5Normal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mat6Normal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalEmision:
+        m_Texture: {fileID: 2800000, guid: 024ea2bf1871d7741a7b0083868183dd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RustNormal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _BumpScale: 1
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DirtAmount: 0
+    - _DirtColorVariationAdj: 0
+    - _DirtMetalic: 0
+    - _DstBlend: 0
+    - _EmissionAmount: 0
+    - _FrostAmount: 0
+    - _FrostColorVariationAdj: 0
+    - _FrostMetalic: 0
+    - _Glossiness: 0.5
+    - _Glow: 0
+    - _IdDebug: 0
+    - _Mat1BaseMetalic: 0.1038745
+    - _Mat1ColorVariationAdj: 0
+    - _Mat1DirtRoughness: 0
+    - _Mat1DmgMetalic: 0
+    - _Mat1DmgRoughnes: 0
+    - _Mat1Tile: 1
+    - _Mat1UseMatAlbedo: 0
+    - _Mat1UseRust: 0
+    - _Mat1UseWear: 0
+    - _Mat1WearNormalInt: 0
+    - _Mat2BaseMetalic: 0
+    - _Mat2ColorVariationAdj: 0
+    - _Mat2DirtRoughness: 0
+    - _Mat2DmgMetalic: 0
+    - _Mat2DmgRoughness: 0
+    - _Mat2Tile: 1
+    - _Mat2UseMatAlbedo: 0
+    - _Mat2UseRust: 0
+    - _Mat2UseWear: 0
+    - _Mat2WearNormalInt: 0
+    - _Mat3BaseMetalic: 0
+    - _Mat3ColorVariationAdj: 0
+    - _Mat3DirtRoughness: 0
+    - _Mat3DmgMetalic: 0
+    - _Mat3DmgRoughness: 0
+    - _Mat3Tile: 1
+    - _Mat3UseMatAlbedo: 0
+    - _Mat3UseRust: 0
+    - _Mat3UseWear: 0
+    - _Mat3WearNormalInt: 0
+    - _Mat4BaseMetalic: 0
+    - _Mat4ColorVariationAdj: 0
+    - _Mat4DirtRouthness: 0
+    - _Mat4DmgMetalic: 0
+    - _Mat4DmgRoughness: 0
+    - _Mat4Tile: 1
+    - _Mat4UseMatAlbedo: 0
+    - _Mat4UseRust: 0
+    - _Mat4UseWear: 0
+    - _Mat4WearNormalInt: 0
+    - _Mat5BaseMetalic: 0
+    - _Mat5ColorVariationAdj: 0
+    - _Mat5DirtRoughness: 0
+    - _Mat5DmgMetalic: 0
+    - _Mat5DmgRoughness: 0
+    - _Mat5Tile: 1
+    - _Mat5UseMatAlbedo: 0
+    - _Mat5UseRust: 0
+    - _Mat5UseWear: 0
+    - _Mat5WearNormalInt: 0
+    - _Mat6BaseMetalic: 0
+    - _Mat6ColorVariationAdj: 0
+    - _Mat6DirtRoughness: 0
+    - _Mat6DmgMetalic: 0
+    - _Mat6DmgRoughness: 0
+    - _Mat6Tile: 1
+    - _Mat6UseMatAlbedo: 0
+    - _Mat6UseRust: 0
+    - _Mat6UseWear: 0
+    - _Mat6WearNormalInt: 0
+    - _Metallic: 0
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _RustAmount: 0
+    - _RustColorVariationAdj: 0
+    - _RustMetaic: 0
+    - _SoftDrtAmount: 0
+    - _SpecualVariationAdj: -0.06
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _WearAmount: 0
+    - _ZWrite: 1
+    - _node_4205: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DirtColor1: {r: 0, g: 0, b: 0, a: 1}
+    - _DirtColor2: {r: 0, g: 0, b: 0, a: 1}
+    - _EmColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FrostColor1: {r: 1, g: 1, b: 1, a: 1}
+    - _FrostColor2: {r: 0.6, g: 0.9, b: 0.9, a: 1}
+    - _GlowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat1Color1: {r: 0, g: 0, b: 0, a: 1}
+    - _Mat1Color2: {r: 0, g: 0, b: 0, a: 1}
+    - _Mat1DirtTint: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat1DmgTint: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat2Color1: {r: 0, g: 0, b: 0, a: 1}
+    - _Mat2Color2: {r: 0, g: 0, b: 0, a: 1}
+    - _Mat2DirtTint: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat2DmgTint: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat3Color1: {r: 0, g: 0, b: 0, a: 1}
+    - _Mat3Color2: {r: 0, g: 0, b: 0, a: 1}
+    - _Mat3DirtTint: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat3DmgTint: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat4Color1: {r: 0, g: 0, b: 0, a: 1}
+    - _Mat4Color2: {r: 0, g: 0, b: 0, a: 1}
+    - _Mat4DirtTint: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat4DmgTint: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat5Color1: {r: 0, g: 0, b: 0, a: 1}
+    - _Mat5Color2: {r: 0, g: 0, b: 0, a: 1}
+    - _Mat5DirtTint: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat5DmgTint: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat6Color1: {r: 0, g: 0, b: 0, a: 1}
+    - _Mat6Color2: {r: 0, g: 0, b: 0, a: 1}
+    - _Mat6DirtColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat6DmgTint: {r: 1, g: 1, b: 1, a: 1}
+    - _RustColor1: {r: 0, g: 0, b: 0, a: 1}
+    - _RustColor2: {r: 0, g: 0, b: 0, a: 1}
+    - _node_4748: {r: 1, g: 1, b: 0, a: 1}

@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4100b041523c0624c87765598d71eac5, type: 3}
+  m_Name: AegisLog
+  m_EditorClassIdentifier:
+  QuestID: 12
+  QuestTriggerID: 3
+  Elements:
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: '...|These are all special issue weapons…|Task Force Aegis…|
+
+	Sandi’s personal unit…|he came down himself...|'
+    PlaySound: 1
+    DialogueSound: Log
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'Oh I wish I was here to see the moment the Admiral
+
+	made Deadwolf pay for every life he took,|for every
+
+	drop of blood spilled…|Serves them right…|all of them!|'
+    PlaySound: 0
+    DialogueSound:
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'I must see what else the Admiral found…|
+
+	I have to know who that bastard really is.|'
+    PlaySound: 0
+    DialogueSound:
+    SkipInJournal: 0
+    TaskDependencyList: []
+  QuestName: Heart of Stone
+  Delay: 0

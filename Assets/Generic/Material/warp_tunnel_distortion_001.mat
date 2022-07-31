@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: warp_tunnel_distortion_001
+  m_Shader: {fileID: 4800000, guid: 5bfcf84042134084386582cc02198210, type: 3}
+  m_ShaderKeywords:
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Refraction:
+        m_Texture: {fileID: 2800000, guid: cd07cae58f1938e4ab3355874e0a604f, type: 3}
+        m_Scale: {x: -13.59, y: 7.37}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Cutoff: 0.5
+    - _Dist: 24.8
+    - _InvFade: 3
+    - _MaxFadeEnd: 372.71
+    - _MaxFadeStart: 0
+    - _Offset: 0.52
+    - _Opacity: 0
+    - _RefractionFactor: 0.05
+    - _RefractionIntensity: 1
+    - _Shininess: 0.7
+    - _Speed: -15
+    - _U_TileAnimFactor: -0.08
+    - _V_TileAnimFactor: -0.23
+    - _Wiggle: 105.76
+    - _WiggleDist: 6.39
+    - _WiggleMult: 1
+    - _WiggleX: 0
+    - _WiggleY: 0
+    - _node_1054: 0.934
+    - _node_1054_copy: 3.99
+    - _node_5192: 0.786
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Emission: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TintColor: {r: 1, g: 1, b: 1, a: 1}

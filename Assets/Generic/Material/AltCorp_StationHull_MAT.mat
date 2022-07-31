@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: AltCorp_StationHull_MAT
+  m_Shader: {fileID: 4800000, guid: 58534abb6344a9e4faf303ec8ffc1043, type: 3}
+  m_ShaderKeywords: _ALWAYSEMIT_ON
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: e1e190dc4ea5a6a41963e8aec4c388f4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Lightmap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 60b33ce080160064290f5f03da9cd3c8, type: 3}
+        m_Scale: {x: 20, y: 20}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 2800000, guid: e098e4575d369f346aa40f68732c2480, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord4:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AlwaysEmit: 1
+    - _BumpScale: 1
+    - _Clip: 1
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DirtAmount: 0
+    - _DstBlend: 0
+    - _EmissionControl: 1
+    - _EmissionState: 0
+    - _Gloss: 0.8
+    - _GlossMapScale: 1
+    - _Glossiness: 0.5
+    - _Metallic: 0
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _OffsetU: 0
+    - _OffsetV: 0
+    - _Parallax: 0.02
+    - _RandomSeed: 2
+    - _Smoothness: 0
+    - _SrcBlend: 1
+    - _TileDiversity: 0.467
+    - _TileU: 20
+    - _TileV: 20
+    - _UVSec: 0
+    - _ZWrite: 1
+    - __dirty: 0
+    m_Colors:
+    - _AlbedoColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.64705884, g: 0.5803922, b: 0.5568628, a: 1}
+    - _Color1: {r: 0.60294116, g: 0.5332299, b: 0.46993944, a: 1}
+    - _Color2: {r: 0.7794118, g: 0.6979924, b: 0.6647924, a: 1}
+    - _DirtColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _LowPressureColor: {r: 2, g: 0, b: 0, a: 0}
+    - _ToxicColor: {r: 2, g: 1.034483, b: 0, a: 0}

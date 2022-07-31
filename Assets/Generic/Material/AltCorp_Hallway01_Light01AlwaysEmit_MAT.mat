@@ -1,0 +1,199 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: AltCorp_Hallway01_Light01AlwaysEmit_MAT
+  m_Shader: {fileID: 4800000, guid: 58534abb6344a9e4faf303ec8ffc1043, type: 3}
+  m_ShaderKeywords: _ALPHATEST_ON _ALWAYSEMIT_ON _EMISSION _MAT1USERUST_ON _METALLICGLOSSMAP _NORMALMAP
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: f130239f1a1212145b70a1cba4d5fe94, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 2800000, guid: d57df9768a099984db114bd1a74ea82c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Lightmap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 14f17015e8c73e64290838001ca04efc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 2800000, guid: e252f052442ae9b4b9599b52d6c8228f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 2800000, guid: b7bd6b8b50c849d40b814ee96ac2aab3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord4:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AlwaysEmit: 1
+    - _BumpScale: 1
+    - _Color2Amount: 0
+    - _Cutoff: 0.169
+    - _DetailNormalMapScale: 1
+    - _DirtAmount: 1
+    - _DirtColorVariationAdj: 0.466
+    - _DirtMetalic: 1
+    - _DirtOn: 0
+    - _DirtRoughness: 0
+    - _DmgMetalic: 0
+    - _DmgOn: 0
+    - _DmgRoughness: 0
+    - _DstBlend: 0
+    - _EmissionAmount: 17.97
+    - _EmissionControl: 1
+    - _EmissionState: 0
+    - _FrostAmount: 0
+    - _FrostColorVariationAdj: 0.693
+    - _FrostMetalic: 0
+    - _GlossMapScale: 1
+    - _Glossiness: 0.5
+    - _GlossyReflections: 1
+    - _Glow: 0
+    - _IdDebug: 0
+    - _Mat1BaseMetalic: 0
+    - _Mat1ColorVariationAdj: 0.783
+    - _Mat1DirtRoughness: 1
+    - _Mat1DmgMetalic: 1
+    - _Mat1DmgRoughnes: 0
+    - _Mat1Tile: 1
+    - _Mat1UseMatAlbedo: 0
+    - _Mat1UseRust: 1
+    - _Mat1UseWear: 1
+    - _Mat1WearNormalInt: 0
+    - _Mat2BaseMetalic: 1
+    - _Mat2ColorVariationAdj: 0.513
+    - _Mat2DirtRoughness: 1
+    - _Mat2DmgMetalic: 0
+    - _Mat2DmgRoughness: 0
+    - _Mat2Tile: 0.56
+    - _Mat2UseMatAlbedo: 0
+    - _Mat2UseRust: 0
+    - _Mat2UseWear: 1
+    - _Mat2WearNormalInt: 0
+    - _Mat3BaseMetalic: 0
+    - _Mat3ColorVariationAdj: 0.114
+    - _Mat3DirtRoughness: 0.995
+    - _Mat3DmgMetalic: 0
+    - _Mat3DmgRoughness: 0.763
+    - _Mat3Tile: 6.86
+    - _Mat3UseMatAlbedo: 0
+    - _Mat3UseRust: 0
+    - _Mat3UseWear: 0
+    - _Mat3WearNormalInt: 0.047
+    - _Mat4BaseMetalic: 0
+    - _Mat4ColorVariationAdj: 0.999
+    - _Mat4DirtRouthness: 0
+    - _Mat4DmgMetalic: 1
+    - _Mat4DmgRoughness: 1
+    - _Mat4Tile: 0.92
+    - _Mat4UseMatAlbedo: 0
+    - _Mat4UseRust: 0
+    - _Mat4UseWear: 0
+    - _Mat4WearNormalInt: 0
+    - _Mat5BaseMetalic: 0
+    - _Mat5ColorVariationAdj: 0.63
+    - _Mat5DirtRoughness: 0
+    - _Mat5DmgMetalic: 0
+    - _Mat5DmgRoughness: 0
+    - _Mat5Tile: 5.87
+    - _Mat5UseMatAlbedo: -14.08
+    - _Mat5UseRust: 0
+    - _Mat5UseWear: 0
+    - _Mat5WearNormalInt: 0
+    - _Mat6BaseMetalic: 1
+    - _Mat6ColorVariationAdj: 0.343
+    - _Mat6DirtRoughness: 0
+    - _Mat6DmgMetalic: 1
+    - _Mat6DmgRoughness: 1
+    - _Mat6Tile: 0.74
+    - _Mat6UseMatAlbedo: 0
+    - _Mat6UseRust: 1
+    - _Mat6UseWear: 1
+    - _Mat6WearNormalInt: 0
+    - _Metallic: 0
+    - _Mode: 1
+    - _NoiseTile: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _RustAmount: 0.02
+    - _RustColorVariationAdj: 0.864
+    - _RustMetaic: 0
+    - _SmoothnessTextureChannel: 0
+    - _SoftDrtAmount: 0.662
+    - _SpecualVariationAdj: -0.13
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _WearAmount: 0.67
+    - _ZWrite: 1
+    - __dirty: 0
+    - _node_4205: 0
+    - _node_4540: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color1: {r: 1, g: 0, b: 0, a: 1}
+    - _Color2: {r: 0, g: 0, b: 1, a: 1}
+    - _DirtColor1: {r: 0.125, g: 0.11445233, b: 0.10110294, a: 1}
+    - _DirtColor2: {r: 0.36764705, g: 0.33319414, b: 0.310878, a: 1}
+    - _DirtTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _DmgTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _EmColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 3, g: 3, b: 3, a: 1}
+    - _FrostColor1: {r: 1, g: 1, b: 1, a: 1}
+    - _FrostColor2: {r: 0.5437392, g: 0.7477099, b: 0.8308824, a: 1}
+    - _GlowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _LowPressureColor: {r: 2, g: 0, b: 0, a: 0}
+    - _Mat1Color1: {r: 0.6838235, g: 0.6838235, b: 0.6838235, a: 1}
+    - _Mat1Color2: {r: 0.7379974, g: 0.76783055, b: 0.77205884, a: 1}
+    - _Mat1DirtTint: {r: 0.29411763, g: 0.2586505, b: 0.20544982, a: 1}
+    - _Mat1DmgTint: {r: 0.33823532, g: 0.33823532, b: 0.33823532, a: 1}
+    - _Mat2Color1: {r: 0.73529416, g: 0.6838385, b: 0.5730969, a: 1}
+    - _Mat2Color2: {r: 0.22058818, g: 0.18121335, b: 0.07785464, a: 1}
+    - _Mat2DirtTint: {r: 0.24264705, g: 0.18560284, b: 0.13381271, a: 1}
+    - _Mat2DmgTint: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat3Color1: {r: 0.23529407, g: 0.23529407, b: 0.23529407, a: 1}
+    - _Mat3Color2: {r: 0.44852942, g: 0.44852942, b: 0.44852942, a: 1}
+    - _Mat3DirtTint: {r: 0.20588237, g: 0.1953168, b: 0.17257787, a: 1}
+    - _Mat3DmgTint: {r: 0.88235295, g: 0.8789524, b: 0.75908303, a: 1}
+    - _Mat4Color1: {r: 0.7205882, g: 0.48453337, b: 0.27022055, a: 1}
+    - _Mat4Color2: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat4DirtTint: {r: 0, g: 0, b: 0, a: 1}
+    - _Mat4DmgTint: {r: 0.8088235, g: 0.8088235, b: 0.8088235, a: 1}
+    - _Mat5Color1: {r: 0.875, g: 0.875, b: 0.875, a: 1}
+    - _Mat5Color2: {r: 0.9338235, g: 0.9338235, b: 0.9338235, a: 1}
+    - _Mat5DirtTint: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat5DmgTint: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat6Color1: {r: 0.61764705, g: 0.61764705, b: 0.61764705, a: 1}
+    - _Mat6Color2: {r: 0.30925605, g: 0.34000713, b: 0.38235295, a: 1}
+    - _Mat6DirtColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Mat6DmgTint: {r: 0.77205884, g: 0.6812284, b: 0.6812284, a: 1}
+    - _RustColor1: {r: 0.35294116, g: 0.19386701, b: 0.090830445, a: 1}
+    - _RustColor2: {r: 0.18382353, g: 0.0405493, b: 0.0405493, a: 1}
+    - _ToxicColor: {r: 2, g: 1.034483, b: 0, a: 0}
+    - _node_4748: {r: 1, g: 1, b: 0.04411763, a: 1}

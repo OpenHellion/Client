@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: BethyrBelt01_MAT
+  m_Shader: {fileID: 4800000, guid: 9815ebeadcba15844a93ea73fcf65dfa, type: 3}
+  m_ShaderKeywords: _FLIPFLOW_ON
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2000
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DispMap:
+        m_Texture: {fileID: 2800000, guid: 7966069a9b3c2564ea043ee7ea26555c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FlowMap:
+        m_Texture: {fileID: 2800000, guid: 3452a8118cc886f4db5a91a9c50ffc87, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LightRamp:
+        m_Texture: {fileID: 2800000, guid: bbaad0b03aa55394d93e69e48bc56f05, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: f75d8c749677830459de8d4d659aed84, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalDetail:
+        m_Texture: {fileID: 2800000, guid: ab65a0c57e2138f41b972f8e7374aee0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 2800000, guid: 20728799d5be4e3489a15558f0341c1c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _BumpScale: 1
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DispAmount: 0
+    - _DstBlend: 0
+    - _FlipFlow: 1
+    - _FlowAmount: 0.2
+    - _FlowSpeed: 2
+    - _Glossiness: 0.5
+    - _MaxDist: 101.89
+    - _Metallic: 0
+    - _MinDist: 89.73
+    - _Mode: 0
+    - _NormalTile: 1
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _SrcBlend: 1
+    - _Tess: 32
+    - _TessPhong: 0.5
+    - _Test: 0
+    - _UVSec: 0
+    - _VignetteMax: 0.1
+    - _VignetteMin: 0
+    - _ZWrite: 1
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _MidColor: {r: 0.6985294, g: 0, b: 0.62144995, a: 1}
+    - _RimColor: {r: 0.427451, g: 0.38431376, b: 0.91372555, a: 1}

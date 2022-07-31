@@ -1,0 +1,188 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d29d0d9a5066435488a3bbcdc60a217a, type: 3}
+  m_Name: Military_AssaultRailgun01
+  m_EditorClassIdentifier:
+  FPS:
+    Passive_Idle: {fileID: 7400000, guid: 7110ad3571aab2c4cb00e0f04eec86de, type: 2}
+    Passive_WalkForward: {fileID: 7400000, guid: 9a33ac874a65e8946a2a14f4ce0013a7, type: 2}
+    Passive_WalkBackward: {fileID: 7400000, guid: a84dab6e7e6c42b4894b3b4ea19e215d, type: 2}
+    Passive_WalkRight: {fileID: 7400000, guid: 074ee3cd93ad327488108ef4785aad4d, type: 2}
+    Passive_WalkLeft: {fileID: 7400000, guid: 710436e73507a36479a1bcee73ab41ff, type: 2}
+    Passive_Run: {fileID: 7400000, guid: d071f65fac017ca4dade902af6901d47, type: 2}
+    Active_Idle: {fileID: 7400000, guid: 74bba4e31b3edd242ae1ad0bfccf2fd9, type: 2}
+    Active_WalkForward: {fileID: 7400000, guid: 259a8358c54e5e1489ba939bd29a810a, type: 2}
+    Active_WalkBackward: {fileID: 7400000, guid: 34a30b77d248c63448282310eac03630, type: 2}
+    Active_WalkRight: {fileID: 7400000, guid: 8e621b310d0171741bf6f3a21108057f, type: 2}
+    Active_WalkLeft: {fileID: 7400000, guid: 15692a0659df40049bd2cf6c018dc447, type: 2}
+    Active_Run: {fileID: 7400000, guid: 4250609462ce0824687775e5042a47f5, type: 2}
+    Special_Idle: {fileID: 7400000, guid: da77ea31cf1b5a547a0a5747e3204cb4, type: 2}
+    Special_WalkForward: {fileID: 7400000, guid: 9176874982aaec34e8b2d79377323474, type: 2}
+    Stance1ToStance2: {fileID: 7400000, guid: 3ece5f1bc1649044f9fa84d2b3b2aa5d, type: 2}
+    Stance1ToStance3: {fileID: 7400000, guid: 2664218a883b0cd459da317531a3e9e3, type: 2}
+    Stance2ToStance1: {fileID: 7400000, guid: f910eaa6e520f5d4db3c10efb11d6195, type: 2}
+    Stance2ToStance3: {fileID: 7400000, guid: 3bc16f17aebdb8648ac66a3ac4778e42, type: 2}
+    Stance3ToStance1: {fileID: 7400000, guid: 2c0804afc4dad9347b6dbec6d6bdd1b6, type: 2}
+    Stance3ToStance2: {fileID: 7400000, guid: f3f262047fc36af4eba2a258a7d08cb6, type: 2}
+    Passive_Jump: {fileID: 7400000, guid: 665d18460c44e5742812d677d8eb06ca, type: 2}
+    Passive_Land: {fileID: 7400000, guid: 00cb06dbf53df9346831c6c77e29dc1f, type: 2}
+    Active_Jump: {fileID: 7400000, guid: c36de10daf2f94645bb1f8fc8d020c55, type: 2}
+    Active_Land: {fileID: 7400000, guid: a9045653b30db9f45bd456605db0ac9a, type: 2}
+    Special_Jump: {fileID: 7400000, guid: e44a69d68fdeef24292083b1cc4455d7, type: 2}
+    Special_Land: {fileID: 7400000, guid: b5d7f43defb479646b53130fa836d67c, type: 2}
+    Sway_Left: {fileID: 7400000, guid: ba291ef0796ed244a9dd83bbc91fa05f, type: 2}
+    Sway_Right: {fileID: 7400000, guid: 1876ce368611391429258a4638dba585, type: 2}
+    Sway_Up: {fileID: 7400000, guid: 3c53f66de7695f14b830588b2e01ff53, type: 2}
+    Sway_Down: {fileID: 7400000, guid: a3b9d868ada4e1f4c8bb3986bdc82dea, type: 2}
+    Sway_Idle: {fileID: 7400000, guid: b2b7e58829dcb0e48b73f4b44750fa09, type: 2}
+    WeaponCheck_Idle: {fileID: 7400000, guid: 2fb0b4d7888179c4cb1b9141dbd1b6e2, type: 2}
+    Stance1_WeaponCheck_IdleToCheck: {fileID: 7400000, guid: 32b9ac0ee977050418c8e413f6312d0b, type: 2}
+    Stance1_WeaponCheck_CheckToIdle: {fileID: 7400000, guid: 1ab9ce321330422468dc1cdcfb0725ac, type: 2}
+    Stance2_WeaponCheck_IdleToCheck: {fileID: 7400000, guid: 31e0e4e074a0bd741a594bac95fe080c, type: 2}
+    Stance2_WeaponCheck_CheckToIdle: {fileID: 7400000, guid: bbc9e2caf82c8884890e795e90b16e98, type: 2}
+    Stance2_Shooting_Standard: {fileID: 7400000, guid: 03fd1a15191287e4db0b76b51ccedfa2, type: 2}
+    Stance2_Shooting_PowerShot: {fileID: 0}
+    Stance3_Shooting_Standard: {fileID: 7400000, guid: db8e7f695791e9a49bfc723044d4d426, type: 2}
+    Stance3_Shooting_PowerShot: {fileID: 0}
+    Consumable_Use: {fileID: 0}
+    Stance1_Load: {fileID: 7400000, guid: 547033256c49d174f8c6e0c33f644c52, type: 2}
+    Stance1_Reload: {fileID: 7400000, guid: a64320bcdfb749c4a872557da8da744c, type: 2}
+    Stance1_Unload: {fileID: 7400000, guid: 071199477656f294ca7d398bf016bbfd, type: 2}
+    Stance2_Load: {fileID: 7400000, guid: 289d3f4293375f94c805433bbef39c6d, type: 2}
+    Stance2_Reload: {fileID: 7400000, guid: db431527207209343a1fbb8440b542d2, type: 2}
+    Stance2_Unload: {fileID: 7400000, guid: 6dfbd61f12d17564a9eea22cb4ccefec, type: 2}
+    Pickup_ToHands: {fileID: 7400000, guid: 97c272812e2b6804c9962c17b3c2fc43, type: 2}
+    Pickup_ToInventory: {fileID: 7400000, guid: 5cc1d8cfe2a0bcf4a9708d3f7a693c10, type: 2}
+    Drop_Stance1: {fileID: 7400000, guid: 05cfbfbe49aff9c47b1e4fac1f97d5da, type: 2}
+    Drop_Stance2: {fileID: 7400000, guid: 64a125925ec761245a01f4ddede1a3a3, type: 2}
+    Item_Equip: {fileID: 0}
+    Item_DeEquip: {fileID: 0}
+    Weapon_Activation: {fileID: 0}
+    Weapon_ActivatedIdle: {fileID: 0}
+    Weapon_ActivationCancel: {fileID: 0}
+    Melee_Passive: {fileID: 0}
+    Melee_Passive2: {fileID: 0}
+    Melee_Active: {fileID: 0}
+  TPS:
+    Passive_Idle: {fileID: 7400000, guid: a1634ea9fdf6d9341b04a94b0ddc55ab, type: 2}
+    Passive_WalkForward: {fileID: 7400000, guid: ebed9c039449eca4f99aa434d357190b, type: 2}
+    Passive_WalkBackward: {fileID: 7400000, guid: 959c4a39167c92f4f99d31df562872ad, type: 2}
+    Passive_WalkRight: {fileID: 7400000, guid: 521be3f28db59964a95183d141844970, type: 2}
+    Passive_WalkLeft: {fileID: 7400000, guid: d77e48eba5679504eaf2279b6be8d937, type: 2}
+    Passive_Run: {fileID: 7400000, guid: fda73cb2cbe9a454a970a02b7204cebb, type: 2}
+    Active_Idle: {fileID: 7400000, guid: e85b5722358731a40aa1cbc1951a4771, type: 2}
+    Active_WalkForward: {fileID: 7400000, guid: 2b6c0f04f2d91d849b216cf7977949d4, type: 2}
+    Active_WalkBackward: {fileID: 7400000, guid: 76a938a1986677244905c0a87504cc23, type: 2}
+    Active_WalkRight: {fileID: 7400000, guid: c26d4c36f825c9c4f8416ae343e99705, type: 2}
+    Active_WalkLeft: {fileID: 7400000, guid: aa7d37f5ab912ea40bda028924dc01a0, type: 2}
+    Active_Run: {fileID: 7400000, guid: e4aad4e1e5e21c849a8e330c72c10e1a, type: 2}
+    Special_Idle: {fileID: 7400000, guid: 802e78f52156ec947a11053aad21399d, type: 2}
+    Special_WalkForward: {fileID: 7400000, guid: 8e0f037199d2ed44da72bf093ddeba45, type: 2}
+    Stance1ToStance2: {fileID: 0}
+    Stance1ToStance3: {fileID: 0}
+    Stance2ToStance1: {fileID: 0}
+    Stance2ToStance3: {fileID: 0}
+    Stance3ToStance1: {fileID: 0}
+    Stance3ToStance2: {fileID: 0}
+    Passive_Jump: {fileID: 0}
+    Passive_Land: {fileID: 0}
+    Active_Jump: {fileID: 0}
+    Active_Land: {fileID: 0}
+    Special_Jump: {fileID: 0}
+    Special_Land: {fileID: 0}
+    Sway_Left: {fileID: 0}
+    Sway_Right: {fileID: 0}
+    Sway_Up: {fileID: 0}
+    Sway_Down: {fileID: 0}
+    Sway_Idle: {fileID: 0}
+    WeaponCheck_Idle: {fileID: 0}
+    Stance1_WeaponCheck_IdleToCheck: {fileID: 0}
+    Stance1_WeaponCheck_CheckToIdle: {fileID: 0}
+    Stance2_WeaponCheck_IdleToCheck: {fileID: 0}
+    Stance2_WeaponCheck_CheckToIdle: {fileID: 0}
+    Stance2_Shooting_Standard: {fileID: 7400000, guid: d9d811020c2caf7449c43cf9fc10fcbc, type: 2}
+    Stance2_Shooting_PowerShot: {fileID: 0}
+    Stance3_Shooting_Standard: {fileID: 7400000, guid: 9e829dbb95b8b97459a1e5383ab7a9f0, type: 2}
+    Stance3_Shooting_PowerShot: {fileID: 0}
+    Consumable_Use: {fileID: 0}
+    Stance1_Load: {fileID: 7400000, guid: 515757794ba193e41ba4af887e65bda5, type: 2}
+    Stance1_Reload: {fileID: 7400000, guid: 14e0e75df12c97343b0d66b81570e4e3, type: 2}
+    Stance1_Unload: {fileID: 7400000, guid: 7d528e71113106f4da9290f43c7b03e6, type: 2}
+    Stance2_Load: {fileID: 7400000, guid: b8e9b5c352e4aaf4da6aa333f95aee59, type: 2}
+    Stance2_Reload: {fileID: 7400000, guid: a4fcdd49440f59447bf98f6fb9bda376, type: 2}
+    Stance2_Unload: {fileID: 7400000, guid: d6648560d6f948a4aa0d09f83b09dd84, type: 2}
+    Pickup_ToHands: {fileID: 0}
+    Pickup_ToInventory: {fileID: 0}
+    Drop_Stance1: {fileID: 0}
+    Drop_Stance2: {fileID: 0}
+    Item_Equip: {fileID: 0}
+    Item_DeEquip: {fileID: 0}
+    Weapon_Activation: {fileID: 0}
+    Weapon_ActivatedIdle: {fileID: 0}
+    Weapon_ActivationCancel: {fileID: 0}
+    Melee_Passive: {fileID: 0}
+    Melee_Passive2: {fileID: 0}
+    Melee_Active: {fileID: 0}
+    Passive_Walk_Forward_Right: {fileID: 7400000, guid: 89ed24690eb87524ba08866ada89d5ed, type: 2}
+    Passive_Walk_Forward_Left: {fileID: 7400000, guid: 6c6251c210934e848be197da7d34570f, type: 2}
+    Passive_Walk_Backward_Right: {fileID: 7400000, guid: 9cebb85ceef3c5d4396f00406e0b5121, type: 2}
+    Passive_Walk_Backward_Left: {fileID: 7400000, guid: f2f062fbc9b65de4cb68e7f73b67ebfa, type: 2}
+    Passive_Run_Forward_Right: {fileID: 7400000, guid: e1eeeb8d870cbdf47a89d1a8dda76142, type: 2}
+    Passive_Run_Forward_Left: {fileID: 7400000, guid: 1b0daaf169ed1ff41bc32a3bfee463c2, type: 2}
+    Passive_Run_Right: {fileID: 7400000, guid: 4a2d22f9177e3954da09bd54296e67bd, type: 2}
+    Passive_Run_Left: {fileID: 7400000, guid: 85110e2c172aba1489d1cc9b9b8777bf, type: 2}
+    Passive_0G_Idle: {fileID: 7400000, guid: 02e4ff059d86fd34bafe88f32ea92308, type: 2}
+    Passive_InAir: {fileID: 7400000, guid: 5f9a903da7409044da0aa4c78e4e2a38, type: 2}
+    Active_Walk_Forward_Right: {fileID: 7400000, guid: 0e3de7b3cdeb3b94d86e37fca9c539cb, type: 2}
+    Active_Walk_Forward_Left: {fileID: 7400000, guid: 268699778068523429aa5b93b13fcdce, type: 2}
+    Active_Walk_Backward_Right: {fileID: 7400000, guid: b37878b9d1b9c9c438059c4067894d00, type: 2}
+    Active_Walk_Backward_Left: {fileID: 7400000, guid: 653d98e1d1967ce49847a3903cdac3f8, type: 2}
+    Active_Run_Forward_Right: {fileID: 7400000, guid: d0f7948a6de1c2f40821630eac4a4b9b, type: 2}
+    Active_Run_Forward_Left: {fileID: 7400000, guid: 49cbfd416c1758d4abb59800121fbb73, type: 2}
+    Active_Run_Right: {fileID: 7400000, guid: 13d6ba9dfb26d144ab84a8349af5c437, type: 2}
+    Active_Run_Left: {fileID: 7400000, guid: ff0c5e5c452634446ae50357e2c9a6d2, type: 2}
+    Active_0G_Idle: {fileID: 7400000, guid: bb130022261050c4ba197312a42a5090, type: 2}
+    Active_InAir: {fileID: 7400000, guid: cc90cba950499714e80f771659ed3f71, type: 2}
+    Special_Walk_Backward: {fileID: 7400000, guid: 141351eefd58a6c498a86812f21d6a82, type: 2}
+    Special_Walk_Right: {fileID: 7400000, guid: 7c73559f5c3767343a54a08646457226, type: 2}
+    Special_Walk_Left: {fileID: 7400000, guid: be48fee5bc2fde34db50df1806a6723b, type: 2}
+    Special_Walk_Forward_Right: {fileID: 7400000, guid: d8ade9133c06ea54eb2da26030829bb5, type: 2}
+    Special_Walk_Forward_Left: {fileID: 7400000, guid: d7b0996b5be98c340bdbc0ddaddd9d84, type: 2}
+    Special_Walk_Backward_Right: {fileID: 7400000, guid: d0fbad53dd58f7a4f95af0df39d86b1f, type: 2}
+    Special_Walk_Backward_Left: {fileID: 7400000, guid: 06438a377d596c9418d263237c2bf2b7, type: 2}
+    Special_0G_Idle: {fileID: 7400000, guid: 53a3a803ecbed5446938899665b7895f, type: 2}
+    Stance1_CrouchWalk_Forward: {fileID: 7400000, guid: a028f13cfc3f6a942b2aa3eabb0c85ff, type: 2}
+    Stance1_CrouchWalk_Backward: {fileID: 7400000, guid: dc6eb9e311f904a4cbbbcd21df94d162, type: 2}
+    Stance1_CrouchWalk_Right: {fileID: 7400000, guid: da6f95b873af69247a8efcd6e3678faf, type: 2}
+    Stance1_CrouchWalk_Left: {fileID: 7400000, guid: 605a7ff5ed4f7e341a780fdfeb915d3b, type: 2}
+    Stance1_CrouchWalk_Forward_Right: {fileID: 7400000, guid: c408086b717fd6048b94f54d2755b067, type: 2}
+    Stance1_CrouchWalk_Forward_Left: {fileID: 7400000, guid: 11df1e46b7060c246b6479bca87dbfed, type: 2}
+    Stance1_CrouchWalk_Backward_Right: {fileID: 7400000, guid: 4601468d6acf2d045afdfbd7a2d62441, type: 2}
+    Stance1_CrouchWalk_Backward_Left: {fileID: 7400000, guid: c090943f29ade124299eccdff86e6f34, type: 2}
+    Stance1_CrouchWalk_Idle: {fileID: 7400000, guid: 56e56dae64211eb49826ff20d2189859, type: 2}
+    Stance2_CrouchWalk_Forward: {fileID: 7400000, guid: 64ab825c081fd894b930fe534a73f640, type: 2}
+    Stance2_CrouchWalk_Backward: {fileID: 7400000, guid: 04f6ac9620e098549a70a704b0cbb40d, type: 2}
+    Stance2_CrouchWalk_Right: {fileID: 7400000, guid: 01cbfca3399f1be42b6d80d2f92e547f, type: 2}
+    Stance2_CrouchWalk_Left: {fileID: 7400000, guid: e7a28bdda2f021a4e8692b7ab6ba3f40, type: 2}
+    Stance2_CrouchWalk_Forward_Right: {fileID: 7400000, guid: 10a7e56f7b0e2c4439faaad2cb6eab74, type: 2}
+    Stance2_CrouchWalk_Forward_Left: {fileID: 7400000, guid: cf8f146f98eca354bbe14059e4fe0aeb, type: 2}
+    Stance2_CrouchWalk_Backward_Right: {fileID: 7400000, guid: c09cd528cfb05004a921a4ab5208edcb, type: 2}
+    Stance2_CrouchWalk_Backward_Left: {fileID: 7400000, guid: 9b06d29110cf4ca47bf9e9f360c980da, type: 2}
+    Stance2_CrouchWalk_Idle: {fileID: 7400000, guid: 4c635a86f00da5641854e31dec2f75d5, type: 2}
+    Stance3_CrouchWalk_Forward: {fileID: 7400000, guid: 9295cf0ee2c29a843898f169e325f86f, type: 2}
+    Stance3_CrouchWalk_Backward: {fileID: 7400000, guid: 9a6690ec690142a43835925d20a33778, type: 2}
+    Stance3_CrouchWalk_Right: {fileID: 7400000, guid: a02b93faeeb11ff4bb1d84c159c16f7f, type: 2}
+    Stance3_CrouchWalk_Left: {fileID: 7400000, guid: df0224b2824dea846904391a963f6e91, type: 2}
+    Stance3_CrouchWalk_Forward_Right: {fileID: 7400000, guid: 3b481571d30d73d4283d84dc2282b126, type: 2}
+    Stance3_CrouchWalk_Forward_Left: {fileID: 7400000, guid: 45113a122649abf4985663482186ae2f, type: 2}
+    Stance3_CrouchWalk_Backward_Right: {fileID: 7400000, guid: 5e90e4fbc20b5954887799e3467fff32, type: 2}
+    Stance3_CrouchWalk_Backward_Left: {fileID: 7400000, guid: 327cc09f991703b4fa84da3c7afcdbb4, type: 2}
+    Stance3_CrouchWalk_Idle: {fileID: 7400000, guid: d7b31b99f6074e9459823143ea9d0e1e, type: 2}

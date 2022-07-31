@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4100b041523c0624c87765598d71eac5, type: 3}
+  m_Name: ASAltCorpLog
+  m_EditorClassIdentifier:
+  QuestID: 7
+  QuestTriggerID: 5
+  Elements:
+  - Character: {fileID: 11400000, guid: cab2899de0e23a04496671704c2c2a4d, type: 2}
+    Dialogue: '(gunfire)This is checkpoint 2, we’re under attack...(static)
+
+	...wolf’s Lancers (static)... can’t hold th… Arrgghhh!
+
+	'
+    PlaySound: 1
+    DialogueSound: gerryLog
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: cab2899de0e23a04496671704c2c2a4d, type: 2}
+    Dialogue: 'Fall back! Fall ba... (static)...'
+    PlaySound: 0
+    DialogueSound: gerryLog
+    SkipInJournal: 0
+    TaskDependencyList: []
+  QuestName: Burned Ruins
+  Delay: 0

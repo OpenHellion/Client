@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: RepairPoint_MAT
+  m_Shader: {fileID: 4800000, guid: d88951dbd2483084fb9d7f41e4fe2fcc, type: 3}
+  m_ShaderKeywords: _EMISSION
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Crack:
+        m_Texture: {fileID: 2800000, guid: 72d149382c6a64a40bc28019788abcba, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Lightning:
+        m_Texture: {fileID: 2800000, guid: 1a912b27cd03afa42b8c7b5bd0adc9fa, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Noise:
+        m_Texture: {fileID: 2800000, guid: 832bf1edb3bc2ce48bbe31bc150720c2, type: 3}
+        m_Scale: {x: 0.1, y: 0.1}
+        m_Offset: {x: 0.67, y: 0}
+    - _Texture1:
+        m_Texture: {fileID: 2800000, guid: 7624cb9a8efcc984c911e8129e2cde57, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture1EmissionMask:
+        m_Texture: {fileID: 2800000, guid: c55b63afa59c3a94c9fed9dbb8afd468, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture1Normal:
+        m_Texture: {fileID: 2800000, guid: 05f7581b5d3c80b4cbb5cd042a00a08e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2:
+        m_Texture: {fileID: 2800000, guid: d4679fef2555e194c9c64748ad399ad8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2Normal:
+        m_Texture: {fileID: 2800000, guid: 821711541fbd93042926432adfc136c6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _BumpScale: 1
+    - _Cutoff: 0.5
+    - _Damage: 1
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _EdgeEmission: 0
+    - _Emission: 7.32
+    - _Float0: 0.7
+    - _Float1: 1
+    - _Float2: 0
+    - _Float3: 1
+    - _Float4: 0.8
+    - _Glossiness: 0.5
+    - _Health: 0
+    - _LightningBrightness: 10
+    - _MaskClipValue: 0.5
+    - _Metallic: 1
+    - _Mode: 0
+    - _NoiseMax: 0.75
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _Smoothness: 0.574
+    - _SrcBlend: 1
+    - _SystemDamage: 0
+    - _Texture1Emission: 100
+    - _Texture1Height: 0.7
+    - _Texture2Height: 0.8
+    - _TransAmbient: 0.2
+    - _TransDirect: 1
+    - _TransNormalDistortion: 0.1
+    - _TransScattering: 2
+    - _TransShadow: 0.9
+    - _Translucency: 1
+    - _UVSec: 0
+    - _ZWrite: 1
+    - __dirty: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color0: {r: 0.74264705, g: 0.74264705, b: 0.74264705, a: 1}
+    - _Color1: {r: 0, g: 0, b: 0, a: 1}
+    - _EdgeColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0.98529404, g: 0.6591277, b: 0.24632293, a: 0}
+    - _Texture1EmissionColor: {r: 1, g: 0.84827584, b: 0.35294116, a: 1}
