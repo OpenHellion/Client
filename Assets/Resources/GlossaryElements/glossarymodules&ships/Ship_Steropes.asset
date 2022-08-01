@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c320b2da15cadc04b8f7d6e32871b4c4, type: 3}
+  m_Name: Ship_Steropes
+  m_EditorClassIdentifier:
+  Name:
+  Description: 'Steropes is the first AltCorp vessel designed specifically for the Expedition project. 
+
+	
+
+	The early Altair Corporation analysis of Hellion’s survey data concluded that using Arges would prove risky during the initial colonization effort. Arges’ high fuel consumption and overall complexity made it ill suited as a workhorse in a completely alien system with no prior infrastructure.
+
+	
+
+	Hence the Steropes project was put forth with a goal of designing a smaller vessel that could be assembled and retrofitted in the field with minimal effort, while still retaining its construction and transportation capabilities. Steropes Class entered mass production in March 2278.
+
+	
+
+	Steropes features minimal self-sustain in the field, relying instead on constant resupply from nearby stations. It is equiped with a singe Solar Panel for power generation and a massive capacitor bank for operations in areas with low solar exposure.
+
+	
+
+	Steropes can only be refuel and resupplied with fresh air when docked to a station.
+
+	
+
+	Systems:
+
+	- Security
+
+	- Air Filter
+
+	- Nanite Diffuser
+
+	- Capacitor
+
+	- Solar Panels
+
+	- Warp Drive
+
+	- RCS'
+  Image: {fileID: 21300000, guid: 1aa7f22bb8cb7fc478b4955315f65133, type: 3}
+  Module: 27

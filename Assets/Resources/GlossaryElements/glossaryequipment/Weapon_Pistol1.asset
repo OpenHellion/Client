@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eddb29b7834f52943ad7229eeebd39af, type: 3}
+  m_Name: Weapon_Pistol1
+  m_EditorClassIdentifier:
+  Name: S22 'Rapier' - 8.15
+  Description: Standard gear for all SDS security personnel, primarily designed for peacekeeping operations. Its Compact design, exceptional handling and high fire rate are ideal for police duty, but comes at a price of low lower stopping power, compared to other magnetic weapons.
+  Image: {fileID: 21300000, guid: bb9145f2c5ed56448893f1d676188220, type: 3}
+  CompoundType:
+    Type: 104
+    SubType: 0
+    PartType: 0
+    Tier: 1
+  Tiers: 1
+  Tier1: 'Single: Dmg - 16, RPM - 180
+
+	Auto: Dmg - 14, RPM - 480'
+  Tier2:
+  Tier3:
+  Tier4:

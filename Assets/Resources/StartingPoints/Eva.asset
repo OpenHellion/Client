@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00262923ba0c6aa4bae56a61da0fe0e6, type: 3}
+  m_Name: Eva
+  m_EditorClassIdentifier:
+  Type: 7
+  Background: {fileID: 21300000, guid: 2baa5a6d00368414c8e12bc746425c7b, type: 3}
+  Title: Jailbreak
+  Description: You wake up inside an unknown Crew Quarters Module with no recollection of how or why you ended up there. Something doesn't feel right and the sound of debris on the outer hull or the turret noise coming form the next room do little to quell your uneasines.
+  DisabledDescription: Get 'Shattered Dreams' achievement to unlock this start point

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eddb29b7834f52943ad7229eeebd39af, type: 3}
+  m_Name: Outfit_Altair_EVA_Suit
+  m_EditorClassIdentifier:
+  Name: AC Proteus-h - EVA suit
+  Description: 'Reinforced pressure suit, designed for prolonged EVA sessions and modified for use in Hellion system.
+
+	
+
+	Proteus suit was initially developed to speed up the construction of the Expedition’s flagship, Daedalus. The scope of the construction project meant that all assembly work had to be done on site, requiring a massive workforce. The new suit had to be reliable, cost effective and simple to use, even by untrained personnel. Proteus prototype satisfied all conditions and entered mass production three months before actual construction work started.
+
+	
+
+	Proteus-H version of the suit was modified for unique conditions found in the Hellion system, namely high heat and unstable EM emissions coming from the red giant. The suit offers exceptional heat and radiation protection as well as built in CO2 filters, making it ideal for lengthy EVA operations, like mining or construction. As with most AltCorp designs the suit relies entirely on the Jetpack for oxygen and fuel.
+
+	
+
+	Proteus’ advantages in EVA length, heat and radiation protection come at a cost of reduced mobility and lower ballistic protection compared to Mk9.'
+  Image: {fileID: 21300000, guid: 6a799dfb1ae03cb4fb13c2cd9f2c2015, type: 3}
+  CompoundType:
+    Type: 301
+    SubType: 0
+    PartType: 0
+    Tier: 1
+  Tiers: 1
+  Tier1: 'Protection: 3'
+  Tier2: 'Protection: 4'
+  Tier3: 'Protection: 5'
+  Tier4: 'Protection: 6'

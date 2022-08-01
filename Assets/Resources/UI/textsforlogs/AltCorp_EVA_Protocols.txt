@@ -1,0 +1,20 @@
+This manual covers basic procedures for all EVA activities according to Altair Corporation safety regulations.
+
+<color="#C38300FF">Safety Procedures:</color>
+
+1. Put on standard EVA equipment
+a. AC - 'Proteus-h' EVA suit
+b. AC - 'Proteus-h' Maneuvering pack
+c. AC - 'Proteus-h' Helmet
+
+2. Inspect AC - 'Proteus-h' Maneuvering Pack oxygen, fuel and battery levels and recharge as needed
+
+<color="#C38300FF">EVA Protocols:</color>
+
+1. Always conduct tests in zero-g prep chamber, prior to leaving the airlock
+2. Bring up the HUD Navigation and contact interface
+3. Activate and test RCS
+4. Test RCS stabilization
+5. Always leave using the airlock to prevent atmosphere loss
+6. When moving over long distances remember to conserve fuel and control acceleration
+7. Avoid approaching hard surfaces with relative velocity exceeding 5m/s to avoid injury

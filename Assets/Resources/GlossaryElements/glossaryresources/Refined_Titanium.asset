@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 151e22dd5cbcaef40be05e866f7f3d21, type: 3}
+  m_Name: Refined_Titanium
+  m_EditorClassIdentifier:
+  Name: Titanium
+  Description: 'Titanium (Ti) possesses exceptional strength-to-density ratio making it invaluable in the construction of many high end Expedition components. It is often alloyed with other metals during fabrication in order to enhance their natural properties.
+
+	
+
+	Sourcee:
+
+	- Titanite'
+  Image: {fileID: 21300000, guid: b584cbfe0073af2439f7eeba28c43661, type: 3}
+  ResourceType: 107

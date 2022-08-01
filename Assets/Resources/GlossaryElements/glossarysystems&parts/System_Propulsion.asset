@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb2a63a9244e3f7439c70632b9759cae, type: 3}
+  m_Name: System_Propulsion
+  m_EditorClassIdentifier:
+  Name: Propulsion
+  Description: 'All Expedition vessels in Hellion use one or more different propulsion systems . These include RCS, Hydrogen Engine and Warp Drive.
+
+	
+
+	Reaction Control System (RCS)
+
+	
+
+	Reaction Control Systems or RCS for short, have been used by space vehicles for over three centuries. While the propulsion technology may have advanced to allow for faster than light travel, RCS remained largely unchanged. Its main purpose is to provide fine maneuvering control during docking maneuvers and short distance travel. 
+
+	
+
+	RCS uses monopropellant fuel in the form of nitrous oxide, also known as Nitro. Since Nitrates are easy to obtain in Hellion, it is a cheap and plentiful fuel source. 
+
+	
+
+	Due to its innate properties like self-pressurization and low toxicity (compared to its predecessors) it is used in both ship and suit systems.
+
+	
+
+	Most vessels feature an external RCS control panel that allows manual docking or undocking in case of emergency.
+
+	
+
+	Hydrogen Engine
+
+	
+
+	Hydrogen engines are frequently used to provide quick bursts of acceleration over short distances or during rescue operations to stabilize the orbit of objects whose size and mass exceed the ship’s warp capabilities.
+
+	
+
+	Expedition engines utilize the basic particle accelerator operating principle. Hydrogen fuel is superheated and then exposed to a strong electric field turning it into plasma. Plasma is then accelerated by powerful magnetic fields and ejected from the ship at extremely high velocities propelling the ship.
+
+	
+
+	Use of plasma accelerators requires a powerful energy source and is therefore limited only to vessels equipped with a fusion reactor.
+
+	
+
+	Warp Drive
+
+	
+
+	Loosely based on the works of 21st century scientists, warp drive creates a bubble of warped space time that extends behind the vessel and contracts in front, using this anomaly to propel the ship. One of the largest obstacles was the sheer quantity of “exotic matter” also known as negative energy, required to generate the field large enough even for small objects.
+
+	
+
+	The solution came in the form of Casimir effect, but application of the technology had to wait for advancements in nano engineering. First warp drives relied on using massive and extremely bulky “Casimir spheres” that contained millions of concentric layers made out of super-conductive materials and separated by only a few micrometers. When a powerful electrical charge was delivered the layers would shrink and negative pressure would start building between the plates. If a vessel was very close to a powerful gravitational field that already curved space-time, like that of a massive planet, negative energy was sufficient to propel a small ship into warp. This method however, only worked reliably on small vessels and could not be used for massive ships.
+
+	
+
+	To solve this problem “Daedalus”, the Expedition flagship, was designed to house a massive “Kugelblitz” drive. Millions of high energy lasers were used to focus 65 years worth of fusion energy into a single point, creating energy density sufficient to create a micro-singularity. Combination of singularity and warp drive was sufficient to soften the local fabric of space-time enough to propel Daedalus into warp, albeit at lower speeds.
+
+	
+
+	This principle also allows nearby ships to use much smaller Casimir spheres also known as Warp Cells to easily achieve warp within a several AU radius from the ship.
+
+	
+
+	Parts:
+
+	Singularity Cell Detonator
+
+	Warp Cell'
+  Image: {fileID: 21300000, guid: 653c8ce513268c541b9b529d67582a68, type: 3}
+  _Icon: {fileID: 0}

@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb2a63a9244e3f7439c70632b9759cae, type: 3}
+  m_Name: System_Life_Support
+  m_EditorClassIdentifier:
+  Name: Life Support System
+  Description: 'Life Support system regulates everything from atmospheric pressure and air quality to room temperature and humidity. 
+
+	
+
+	It comes equipped with an Air Tank that serves as compressed air storage for pressurizing/depressurizing rooms as well as two dedicated system tanks for storing Oxygen and Nitrogen.
+
+	
+
+	Air Generator
+
+	
+
+	Air Generator is an essential component of the Life Support system. It consumes Oxygen and Nitrogen to generate air for the systems Air Tank.
+
+	
+
+	Parts:
+
+	Servomotor
+
+	Resource Injector
+
+	
+
+	Air Filter
+
+	
+
+	Air Filter is a complex system designed to remove and process CO2 and hazardous trace contaminants from the atmosphere. It uses regenerative absorbers to collect CO2 from the atmosphere which is then routed through the Bosh reactor which separates it into O2 and elemental carbon.
+
+	
+
+	In situations where CO2 filters are unavailable, the system will remove CO2 from the atmosphere and use Oxygen from the system tank to improve air quality.
+
+	
+
+	Parts:
+
+	Servomotor
+
+	Carbon Filter'
+  Image: {fileID: 21300000, guid: c551cabf539cfcd46bd663614e47b2b3, type: 3}
+  _Icon: {fileID: 21300000, guid: 61598cddcbbfd9345b0eb38dd9beab6a, type: 3}

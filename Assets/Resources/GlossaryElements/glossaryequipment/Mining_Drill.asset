@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eddb29b7834f52943ad7229eeebd39af, type: 3}
+  m_Name: Mining_Drill
+  m_EditorClassIdentifier:
+  Name: AC - G5p Drilling System
+  Description: AltCorp 5th generation portable  drilling system designed for zero-g field work. Often used for small scale mining or in preparation for large scale excavation.
+  Image: {fileID: 21300000, guid: b5eb8660fc38ab645bdd711150ae0ee9, type: 3}
+  CompoundType:
+    Type: 700
+    SubType: 0
+    PartType: 0
+    Tier: 1
+  Tiers: 1
+  Tier1: 'Mining Speed: 100%'
+  Tier2: 'Mining Speed: 130%'
+  Tier3: 'Mining Speed: 200%'
+  Tier4: 'Mining Speed: 300%'

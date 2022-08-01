@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Picture_Actaeon01_MAT
+  m_Shader: {fileID: 4800000, guid: 527ba444938e7e144a3ad29138c3d4c8, type: 3}
+  m_ShaderKeywords: _EMISSION
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Level1:
+        m_Texture: {fileID: 2800000, guid: 3cfd38aba50fb384da8493d9d20bb924, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0.04}
+    - _Level2:
+        m_Texture: {fileID: 2800000, guid: 2566e44d6b3d68b49871ded4f23bcd4f, type: 3}
+        m_Scale: {x: 0.65, y: 0.8}
+        m_Offset: {x: 0.23, y: 0.15}
+    - _Level3:
+        m_Texture: {fileID: 2800000, guid: 38251f81fedb247449f6407c1a32ce3e, type: 3}
+        m_Scale: {x: 0.42, y: 0.6}
+        m_Offset: {x: 0.32, y: 0.11}
+    - _Level4:
+        m_Texture: {fileID: 2800000, guid: 4cce45b41e67a354ea2335dace4716c9, type: 3}
+        m_Scale: {x: 0.3, y: 0.5}
+        m_Offset: {x: 0.36, y: 0.25}
+    - _Normal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Roughness:
+        m_Texture: {fileID: 2800000, guid: 4410adcfcac4aea48bc2224a52bbc883, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _level5:
+        m_Texture: {fileID: 2800000, guid: 6fb58fe3e23f4fe459e100a6412bce7a, type: 3}
+        m_Scale: {x: 0.2, y: 0.2}
+        m_Offset: {x: 0.4, y: 0.4}
+    m_Floats:
+    - _BumpScale: 1
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _Gloss: 0.512
+    - _Glossiness: 0.5
+    - _Level1Height: -2.69
+    - _Level2Height: -10
+    - _Level3Height: -15
+    - _Level4Height: -20
+    - _Level5Height: -50
+    - _Metallic: 0
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _ZWrite: 1
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

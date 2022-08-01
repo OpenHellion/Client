@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Headlight
+  m_Controller: {fileID: 9100000, guid: 903b5d1b6cc216346af9e631e2f819e9, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: ccc12c947593be1408bb62c1e007dc90, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 9af397bda54076b4eaa996687e09d0f0, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: aa986b085c9f8934b9561c2d50626620, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c8fdcae279385054b849b5351a57838d, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 0f05bb4be84440f41826d4ffed27ad89, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 3b42629165e9a244c9f2bfaf71e5cebe, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 51da7d5d7f085cc4ca0de0a285c51be3, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 6135e788faf0af44dab773fe39dc0b49, type: 2}

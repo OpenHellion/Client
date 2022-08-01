@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c320b2da15cadc04b8f7d6e32871b4c4, type: 3}
+  m_Name: Ship_Arges
+  m_EditorClassIdentifier:
+  Name: Arges MkII
+  Description: 'Originally designed as a Skyline drop-ship/troop transport, Arges never saw much use in SDS military operations. Oversized engines, high fuel consumption and large frame led to SDS only producing a handful of these vessels, before abandoning the project in favor of new and more flexible designs. Eventually the design and several models were sold to Altair Corporation that was at the time looking for a new workhorse for their industrial fleet.
+
+	
+
+	Altair engineers repurposed the ship and turned it into a multi-role utility vehicle. Ship’s mechanized infantry bay was turned into storage space. Drop pod launchers were removed making room for a state of the art drilling system. Rear countermeasure launcher was replaced with a grappling system, capitalizing on the power of the ship''s twin engine system. Finally existing weapons were stripped in favor of atmospheric harvesters and a basic warp drive was added in place of the now obsolete gunnery control. The design finally entered AltCorp service as "Arges MkII"
+
+	
+
+	Since its first debut, Arges has gone through multiple changes and improvements over the course of its long service, making it the most heavily modified and upgraded design in AltCorp''s history. Its current iteration dubbed MkII H was specifically modified for the needs of the Expedition project and makes up the bulk of Altair Corporation''s industrial fleet in Hellion.
+
+	
+
+	Systems:
+
+	- Security
+
+	- Air Filter
+
+	- Air Genrator
+
+	- Nanite Diffuser x2
+
+	- Fusion Reactor
+
+	- Capacitor
+
+	- Cargo Bay
+
+	- Solar Panels x2
+
+	- Warp Drive
+
+	- Hydrogen Engine
+
+	- RCS'
+  Image: {fileID: 21300000, guid: ffa19d84b14fa424eab096c9887d07f4, type: 3}
+  Module: 6

@@ -1,0 +1,23 @@
+This manual covers basic procedures for all EVA docking and undocking activities according to Altair Corporation safety regulations.
+
+<color="#C38300FF">Docking Protocols</color>
+
+1. Locate the module’s external RCS console (indicated by glowing blue LEDs)
+2. Inspect fuel levels and part status
+3. Access the interface and select a docking port
+4. Select docking target and correct docking collar
+5. Maneuver the module into position and align it with the docking collar
+
+<color="#C38300FF">Undocking Protocols</color>
+
+1. Locate docking clamp controls from inside the module
+2. Disengage docking clamps
+3. Always leave using the airlock to prevent atmosphere loss
+4. Access the module’s RCS console
+5. Maneuver the module into desired position
+
+<color="#C38300FF">Station Assembly Protocols</color>
+
+1. Ensure that station’s power grid and life support systems can withstand additional load
+2. Always ensure there is sufficient space for safe placement
+3. When there is insufficient space to dock a new module attach a correct corridor module first

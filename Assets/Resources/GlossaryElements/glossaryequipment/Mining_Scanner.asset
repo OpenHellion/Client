@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eddb29b7834f52943ad7229eeebd39af, type: 3}
+  m_Name: Mining_Scanner
+  m_EditorClassIdentifier:
+  Name: AC - ASAT Scanner
+  Description: ‘ASAT’, Asteroid Scanning Assistance Tools was developed by HADES Foundation scientists per Altair Corporation specifications. It offers EVA operatives complete asteroid scanning capability in the field.
+  Image: {fileID: 21300000, guid: b68890a9847ae5a40af1609dabeefc15, type: 3}
+  CompoundType:
+    Type: 1500
+    SubType: 0
+    PartType: 0
+    Tier: 2
+  Tiers: 1
+  Tier1: Shows resource composition
+  Tier2: Shows resource composition and quanity
+  Tier3:
+  Tier4:

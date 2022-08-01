@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eddb29b7834f52943ad7229eeebd39af, type: 3}
+  m_Name: Ammo_Military_Sniper
+  m_EditorClassIdentifier:
+  Name: 12.5/Helix
+  Description: '12mm sniper ammo
+
+	
+
+	Solid tungsten alloy core encased in a discarding, low friction and highly conductive armature. The helical design of the armature works in unison with the twin brushes sliding along the rails to provide continuous acceleration.
+
+	
+
+	Due to the extreme forces involved, the armature either completely vaporizes in the process or shatters upon exiting the barrel, leaving only the armor-piercing projectile.'
+  Image: {fileID: 21300000, guid: 5b23b900697b23a48ab267329c069b0f, type: 3}
+  CompoundType:
+    Type: 202
+    SubType: 0
+    PartType: 0
+    Tier: 1
+  Tiers: 0
+  Tier1:
+  Tier2:
+  Tier3:
+  Tier4:

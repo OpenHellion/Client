@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 151e22dd5cbcaef40be05e866f7f3d21, type: 3}
+  m_Name: Industrial_Supercond
+  m_EditorClassIdentifier:
+  Name: Superconductors
+  Description: 'Industrial grade superconductors are impossible to manufacture without a large support infrastructure. Due to their production costs they are exclusively used in the construction of highest quality components and cutting edge military systems.
+
+	
+
+	Source:
+
+	- Burned PDU
+
+	- Damaged Transmitter'
+  Image: {fileID: 21300000, guid: 0b371d442020e2e4db1de980f79ee531, type: 3}
+  ResourceType: 203

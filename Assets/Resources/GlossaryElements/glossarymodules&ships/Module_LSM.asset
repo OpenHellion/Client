@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c320b2da15cadc04b8f7d6e32871b4c4, type: 3}
+  m_Name: Module_LSM
+  m_EditorClassIdentifier:
+  Name: Life Support Module [LSM-AC]
+  Description: 'he Altair Corporation Life Support Module is a dedicate atmosphere generation and purification system. It is fully capable of supporting up to 9 active personnel and comes equipped with 4 cryochambers in case of emergency.
+
+	
+
+	Design first entered AltCorp service during the construction of “Daedalus”, the Expedition flagship. Standard systems designed for large orbital habitats or small ships, proved too inflexible for a project of this magnitude. Small “dedicated” systems that could be deployed and reconfigured in the field significantly improved responsiveness of AltCorp personnel allowing them to finish multiple projects ahead of schedule.
+
+	
+
+	Systems:
+
+	- Air Generator
+
+	- Air Filter
+
+	- Cryopods x4'
+  Image: {fileID: 21300000, guid: 97fd199fd8105c1429977ec519fd15cc, type: 3}
+  Module: 8

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c320b2da15cadc04b8f7d6e32871b4c4, type: 3}
+  m_Name: Module_IndustrialCont
+  m_EditorClassIdentifier:
+  Name: Industrial Container [IC-AC]
+  Description: 'Altair Corporation Industrial Containers are dedicated storage units that can be attached to the Cargo Bay Modules via external docking ports.
+
+	
+
+	Systems:
+
+	- none'
+  Image: {fileID: 21300000, guid: 63fb8284733ee404e8e8c96d82132f0d, type: 3}
+  Module: 19

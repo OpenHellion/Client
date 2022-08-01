@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: CustomOrbitAngles
+  m_Controller: {fileID: 9100000, guid: f8598275fa2f2e544ad62150d64999e7, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: cc8f14e789a1cd1469df498bdda92c83, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: fb47510e73fc85a4abc5100b9d753f3d, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 43b0320aaa474db4cae8d406770a5413, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 3705cbfb4eac5764ab85a87d58d233f3, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 20c759da146fd9841bec90f242d611ba, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 9b4cf749313e58742b894f4021dfdf59, type: 2}

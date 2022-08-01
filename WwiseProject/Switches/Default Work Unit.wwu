@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{C436E4A2-B696-4919-8FBF-CE0FDEB7B0FA}" SchemaVersion="103">
+	<Switches>
+		<WorkUnit Name="Default Work Unit" ID="{C436E4A2-B696-4919-8FBF-CE0FDEB7B0FA}" PersistMode="Standalone">
+			<ChildrenList>
+				<SwitchGroup Name="Ambience" ID="{0343ED8B-98B7-4152-A235-6DFECE9E23D3}">
+					<ChildrenList>
+						<Switch Name="Space_ambience" ID="{3CCD68E0-621E-4778-808C-AA84EC3B0D63}"/>
+						<Switch Name="CQM_ambience" ID="{E80B0345-D079-4786-B45C-EF57BD875929}"/>
+						<Switch Name="Outpost_ambience" ID="{4B97376B-369C-497C-9788-451386609BA3}"/>
+						<Switch Name="Corridor_ambience" ID="{6257552D-F398-4DBD-B089-F2F1C38169E9}"/>
+						<Switch Name="MainMenu" ID="{CB78F9B6-4FBC-4841-9C95-F6D5A83A248D}"/>
+					</ChildrenList>
+				</SwitchGroup>
+			</ChildrenList>
+		</WorkUnit>
+	</Switches>
+</WwiseDocument>

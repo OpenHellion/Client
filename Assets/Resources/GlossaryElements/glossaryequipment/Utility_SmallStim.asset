@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eddb29b7834f52943ad7229eeebd39af, type: 3}
+  m_Name: Utility_SmallStim
+  m_EditorClassIdentifier:
+  Name: Small StimPack
+  Description: 'Standard healing stim pack manufactured by HADES Foundation. Packed inside is a cocktail of painkillers and a small contingent of medical nanites that enhance blood coagulation.
+
+	
+
+	Although expensive and difficult to produce, stimpacks are often used by field personnel to treat more severe cases of lacerations, cuts and bruises.'
+  Image: {fileID: 21300000, guid: 2b10d38c4d19b2a44b819e53a2aa6930, type: 3}
+  CompoundType:
+    Type: 1300
+    SubType: 0
+    PartType: 0
+    Tier: 1
+  Tiers: 1
+  Tier1: 'Recovery: 10HP/s
+
+	Duration: 3s'
+  Tier2:
+  Tier3:
+  Tier4:

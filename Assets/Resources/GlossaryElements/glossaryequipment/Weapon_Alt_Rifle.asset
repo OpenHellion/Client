@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eddb29b7834f52943ad7229eeebd39af, type: 3}
+  m_Name: Weapon_Alt_Rifle
+  m_EditorClassIdentifier:
+  Name: B-45 Compound -Mod.06
+  Description: 'Following the UNE’s announcement of the Expedition Project, Altair Corporation began working on a new weapon prototype in close collaboration with Skyline Defense Solutions. The main goal of the project was to create a design that could be manufactured using limited resources during the early stages of the colonization effort. 
+
+	
+
+	The end result was the B-45 Compound railgun carabine, a light and versatile weapon that required minimal resources to produce.
+
+	
+
+	One of the main concerns during the early prototype stage was the lack of penetrating power. This was circumvented by placing additional capacitors along the barrel’s conducting rails, allowing B-45 to trade firing speed for added penetration in “single shot” mode.
+
+	
+
+	Due to its low manufacturing cost, reliability and compact design, B-45 quickly became standard equipment for all AltCorp security personnel.'
+  Image: {fileID: 21300000, guid: d6f86642c9115db4ba3ba96bff44f33f, type: 3}
+  CompoundType:
+    Type: 100
+    SubType: 0
+    PartType: 0
+    Tier: 1
+  Tiers: 1
+  Tier1: 'Single: Dmg - 20, RPM - 150
+
+	Auto: Dmg - 18, RPM - 300'
+  Tier2:
+  Tier3:
+  Tier4:

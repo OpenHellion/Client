@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eddb29b7834f52943ad7229eeebd39af, type: 3}
+  m_Name: Outfit_SoE_Suit
+  m_EditorClassIdentifier:
+  Name: SoE - Mk9 Pressure Suit
+  Description: 'At a glance the SoE suit looks like a makeshift customization of the Altair Corporation’s standard variant. In the field however, it outperforms every commercially available Mk9 model due to superior radiation shielding and ballistic protection. 
+
+	
+
+	This performance comes at a price as the design relies on a number of high end components that are very difficult to obtain and manufacture. How or where the Sons of Earth managed to obtain this equipment remains unclear.'
+  Image: {fileID: 21300000, guid: 544396a04f873ac4db6bda876f6f7bee, type: 3}
+  CompoundType:
+    Type: 302
+    SubType: 0
+    PartType: 0
+    Tier: 1
+  Tiers: 0
+  Tier1: 'Protection: 5
+
+	Ballistic: 4'
+  Tier2:
+  Tier3:
+  Tier4:

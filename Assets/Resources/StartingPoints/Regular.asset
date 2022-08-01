@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00262923ba0c6aa4bae56a61da0fe0e6, type: 3}
+  m_Name: Regular
+  m_EditorClassIdentifier:
+  Type: 0
+  Background: {fileID: 21300000, guid: 2095ddff5d9fc1d4fbe4ea8e9ed6e74e, type: 3}
+  Title: Standard mode
+  Description: Brave the dangers of vacuum in this standard single player mode.
+  DisabledDescription:

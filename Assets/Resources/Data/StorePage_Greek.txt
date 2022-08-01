@@ -1,0 +1,294 @@
+"Το Hellion είναι ένα παιχνίδι επιβίωσης πρώτου προσώπου στο διάστημα.
+
+Είναι ένας συνδυασμός επιβίωσης και εξομοιωτή διαστήματος που τοποθετεί τους παίκτες αντιμέτωπους με το θανάσιμο περιβάλλον και μεταξύ τους. Ζήσε στις σκληρές συνθήκες του διαστήματος και ψάξε για αέρα και άλλα απαραίτητα αντικείμενα για την επιβίωσή σου. Αλλά να έχεις πάντα στο μυαλό σου ότι δεν είσαι ο μόνος εκεί έξω. Υπάρχουν άλλοι που είτε θα σε βοηθήσουν, είτε θα σε πετάξουν στο κενό χωρίς δεύτερη σκέψη. Να θυμάσαι όμως, όσο και αδυσώπητες μπορεί να φαίνονται οι συνθήκες του διαστήματος, ο άνθρωπος πάντα θα υπερτερεί.","Hellion is a first person multiplayer space survival game.
+
+It is a fusion of survival and space simulation genres that pits players against the deadly environment and one another. Survive in the harsh conditions of space and scavenge for air, fuel and other items necessary for survival. But keep in mind, you are not the only one out there. There are others, but will they help, or will they throw you to the void without a second thought? Remember, no matter how brutal space may seem, it cannot hold a candle to man."
+"Το Hellion είναι ένα ηλιακό σύστημα αρκετές χιλιάδες έτη φωτός μακρυά από τη Γη. Παρά την απόστασή του, είναι ο προορισμός της πρώτης διαστρικής αποστολής αποικισμού κατά τον 23ο αιώνα. Σχεδόν ένα εκατομμύριο άποικοι, αδρανοποιημένοι σε κρυογονική νάρκη, φεύγουν από τον Sol σε ένα ταξίδι για το οποίο θα χρειαστούν πολλές δεκαετίες.
+
+Όμως, όταν ξυπνάνε, σχεδόν έναν αιώνα αργότερα, βρίσκονται παγιδευμένοι μέσα σε έναν εφιάλτη. Αντί να ζουν σε έναν ανθρωπογενή παράδεισο, αναγκάζονται να μάχονται για την επιβίωσή τους περικυκλωμένοι από εγκαταλελειμμένους σταθμούς, ημιτελή τροχιακά περιβάλλοντα, και αστρόπλοια φαντάσματα.
+
+Με την κοντινότερη αποστολή διάσωσης δεκαετίες μακριά, την τροχιακή οικονομία διαλυμένη και χωρίς καμία αστυνόμευση, πολλοί στρέφονται σε κυνήγι θησαυρών, κλοπές, και στυγνή βία. Κάποιοι άλλοι προσπαθούν να ζήσουν πιο πολιτισμένα και ξεκινούν να ανακαλύπτουν την αλήθεια πίσω από τη μεγαλύτερη καταστροφή στην ανθρώπινη ιστορία.
+","Hellion is a solar system several thousand lightyears from Earth. Despite its distance, it is the target of the first interstellar colonization mission during the 23rd century. Almost a million colonists, suspended in cryogenic hibernation, leave Sol on a journey that would take many decades.
+
+However, when they wake up, almost a century later, they find themselves trapped inside a nightmare. Instead of living in a manmade paradise, they are forced to fight for survival surrounded by deserted stations, incomplete orbital habitats and derelict warships.
+
+With the closest rescue operation decades away, orbital economy in disarray and no authorities in sight, many turn to scavenging, stealing and outright violence. Few others try to live more civilized and begin uncovering the truth behind the largest disaster in human history.
+"
+"Το Hellion είναι ένα φιλόδοξο έργο. Είναι ένας επιβλητικός κόσμος σε ένα ηλιακό σύστημα πολλά έτη φωτός από τις ανέσεις της Γης και είναι εξολοκλήρου βασισμένο στους νόμους της Νευτώνειας φυσικής.
+
+Το Hellion θα κάνει το ντεμπούτο του σαν Early Access παιχνίδι. Η EA έκδοση αντικατοπτρίζει τα βασικά του οράματος πίσω από αυτόν τον σκοτεινό κόσμο. Καθώς η κοινότητάς μας μεγαλώνει, και η βάση των παικτών μας επεκτείνεται, το παιχνίδι θα εξελιχθεί πέρα από αυτά τα όρια και θα γίνει πραγματική επιβίωση στο διάστημα για όλους. Η ανοιχτή και ειλικρινής επικοινωνία μεταξύ των προγραμματιστών και της κοινότητας είναι ο ακρογωνιαίος λίθος αυτής της ιδέας. Είμαστε πάντα ανοιχτοί για συζήτηση με τους παίκτες μας καθώς πιστεύουμε ότι ο κάθε ένας από εμάς μπορεί να προσθέσει κάτι σε αυτό το έργο. Ελάτε μαζί μας σε αυτό το δυστοπικό μέλλον του Hellion, και ας φτιάξουμε αυτόν τον κόσμο μαζί!
+
+Παρακάτω είναι μία λίστα από χαρακτηριστικά που έχουμε σχεδιάσει για το Early Access του Hellion. Τα περισσότερα από αυτά βρίσκονται ήδη στο παιχνίδι, κάποια από αυτά θα υποστούν τροποποιήσεις και βελτιώσεις, ενώ άλλα θα υλοποιηθούν κατά τη διάρκεια του Early Access (tα χαρακτηριστικά που είναι σημειωμένα ως ολοκληρωμένα είναι αυτά που θα υπάρχουν από την αρχή και πιθανότατα θα τροποποιηθούν και θα βελτιωθούν, βασιζόμενα στα σχόλια της κοινότητας)…
+","Hellion is an ambitious project. It is an immersive world set in a solar system many lightyears from the comforts of Earth and is entirely based on the laws of Newtonian physics. 
+
+Hellion will make its debut as an Early Access game. EA version represents the basics of the vision behind this dark world. As our community grows and the player base expands, the game will evolve beyond these confines and become a true space survival that we can all enjoy. Open and honest communication between developers and community is the cornerstone of this idea. We are always open for discussion with our players as we believe that each and every one of us can add something to this project. Join us in the dystopian future that is Hellion and let’s build this world together! 
+
+Below is a comprehensive list of features planned for Hellion’s early access. Most of these are already in the game, some of them will undergo modification and improvement while others will be implemented during the course of Early Access (features marked as completed are the ones that will be present from the start and possibly modified and improved upon, based on community feedback)…
+"
+"[h2]Διάστημα βασισμένο σε πραγματική φυσική[/h2]
+
+
+Εξερεύνησε ένα μόνιμο ηλιακό σύστημα όπου όλα τα αντικείμενα του παιχνιδιού, από πλανήτες και φεγγάρια μέχρι αστρόπλοια και σταθμοί συμμορφώνονται στη Νευτώνεια Φυσική και στην πλήρη Τροχιακή Μηχανική. Ένας αδιάλειπτος κόσμος στον οποίο μπορείς να βουτήξεις χωρίς διακοπές. Χωρίς instances και χωρίς οθόνες φόρτωσης.
+
+[list][*]Ρεαλιστικής κλίμακας ηλιακό σύστημα (ολοκληρωμένο)[/list]
+[list][*]Νευτώνεια Φυσική (ολοκληρωμένο)[/list]
+[list][*]Τροχιακή μηχανική (ολοκληρωμένο)[/list]
+[list][*]Αδιάλειπτες μεταβάσεις (ολοκληρωμένο)[/list]
+[list][*]Μόνιμο σύμπαν (ολοκληρωμένο)[/list]
+
+[h2]Εμβυθιστικός ήχος[/h2] (ολοκληρωμένο)
+
+
+Νιώσε την εμπειρία του ήχου που αλλάζει ανάλογα με το περιβάλλον σου, από την παγερή σιωπή του κενού, μέχρι τον εκκωφαντικό βρυχηθμό του μηχανοστάσιου του αστρόπλοιου.
+","[h2]Space based on real physics[/h2]
+
+
+Explore a persistent solar system where all in-game objects from planets and moons to ships and stations abide by Newtonian Physics and full Orbital Mechanics. A seamless world you can immerse yourself in without interruptions. No instances or loading screens.
+
+[list][*]Realistic scale solar system (completed)[/list]
+[list][*]Newtonian Physics (completed)[/list]
+[list][*]Orbital mechanics (completed)[/list]
+[list][*]Seamless transitions (completed)[/list]
+[list][*]Persistent universe (completed)[/list]
+
+[h2]Immersive sound[/h2] (completed)
+
+
+Experience sound that changes according to your environment, from the deathly silence of hard vacuum to the deafening roar of the ship’s engine room.
+"
+"Βρες τρόπους να επιβιώσεις στο εχθρικότερο περιβάλλον που γνωρίζει ο άνθρωπος, και μάθε πως να προστατέψεις τον εαυτό σου από το κενό του διαστήματος, την αποσυμπίεση, ακραίες θερμοκρασίες και ακτινοβολία.
+
+[list][*]Κενό και αποσυμπίεση (ολοκληρωμένο)[/list]
+[list][*]Θερμοκρασία (υπό ανάπτυξη)[/list]
+[list][*]Ακτινοβολία (υπό ανάπτυξη)[/list]
+
+[h2]Περισυλλογή[/h2]
+
+
+Βρες εγκαταλελειμμένες μονάδες σταθμών και αστρόπλοια, και επαναχρησιμοποίησέ τα προς όφελός σου, ή απογύμνωσέ τα για ανταλλακτικά ώστε να διορθώσεις ή να αναβαθμίσεις τον υπάρχον εξοπλισμό σου.
+
+[list][*]Ανταλλακτικά (ολοκληρωμένο)[/list]
+[list][*]Πόροι (ολοκληρωμένο)[/list]
+[list][*]Μονάδες σταθμού (ολοκληρωμένο)[/list]
+[list][*]Αστρόπλοια (υπό ανάπτυξη)[/list]","Find a way to survive in the most hostile environment known to man and learn how to protect yourself from vacuum, decompression, extreme temperatures and radiation.
+
+[list][*]Vacuum and decompression (completed)[/list]
+[list][*]Temperature (work in progress)[/list]
+[list][*]Radiation (work in progress)[/list]
+
+[h2]Salvaging[/h2]
+
+
+Find and repurpose abandoned station modules and ships for personal use, or strip them for parts to fix and upgrade your existing equipment.
+
+[list][*]Parts (completed)[/list]
+[list][*]Resources (completed)[/list]
+[list][*]Station modules (completed)[/list]
+[list][*]Ships (work in progress)[/list]"
+"[h2]Συγκέντρωση πόρων[/h2]
+
+
+Φόρα τη στολή σου και τον εξοπλισμό εξόρυξης και κάνε EVA στον κοντινότερο αστεροειδή ή πέτα το αστρόπλοιό σου στα υψηλά στρώματα ενός γίγαντα αερίων ώστε να συλλέξεις πρώτες ύλες τις οποίες μπορείς να διυλίσεις σε καύσιμα, αέρα, ή εξαρτήματα για κατασκευές.
+
+[list][*]EVA εξόρυξη αστεροειδών (ολοκληρωμένο)[/list]
+[list][*]Διύλιση (ολοκληρωμένο)[/list]
+[list][*]Εξόρυξη αστεροειδών από το αστρόπλοιο (υπό υλοποίηση)[/list]
+[list][*]Εξόρυξη γιγάντων αερίων (υπό υλοποίηση)[/list]
+
+[h2]Λεπτομερές σύστημα κατασκευών[/h2]
+
+
+Σταμάτα να βασίζεσαι στο τι ανταλλακτικά βρίσκεις εκεί έξω και φτιάξε τις δικές σου εγκαταστάσεις κατασκευών. Φτιάξε προσαρμοσμένα ανταλλακτικά, όπλα και εξοπλισμό για να σε βοηθήσει να επιβιώσεις στον εχθρικό κόσμο του Hellion.
+
+[list][*]Ανταλλακτικά (υπό υλοποίηση)[/list]
+[list][*]Όπλα (υπό υλοποίηση)[/list]
+[list][*]Εξοπλισμός (υπό υλοποίηση)[/list]","[h2]Resource gathering[/h2]
+
+
+Grab a suit and your mining gear and EVA over to the nearby asteroid or fly your ship into the upper layers of a gas giant in order to harvest raw resources that can be refined into fuel, air and crafting components.
+
+[list][*]Asteroid EVA mining (completed)[/list]
+[list][*]Refining (completed)[/list]
+[list][*]Asteroid Ship mining (work in progress)[/list]
+[list][*]Gas giant harvesting (work in progress)[/list]
+
+[h2]Detailed crafting system[/h2]
+
+
+Stop relying on salvage and set up your own crafting facility. Create custom parts, weapons and other equipment to help you better survive in the hostile world of Hellion.
+
+[list][*]Parts (work in progress)[/list]
+[list][*]Weapons (work in progress)[/list]
+[list][*]Equipment (work in progress)[/list]"
+"[img]{STEAM_APP_IMAGE}/extras/simulation.png[/img]
+
+
+[h2]Πλοήγηση[/h2]
+
+
+Μπες στο αστρόπλοιό σου και εξερεύνησε τα εγκαταλελειμμένα συστήματα του Hellion, χρησιμοποιώντας ρεαλιστική πλοήγηση και μηχανισμούς σάρωσης. Μάθε πως να εκμεταλλεύεσαι την τροχιακή μηχανική και την ισορροπία μεταξύ RCS, κύριων προωθητήρων και στρέβλωσης.
+
+[list][*]Πλοήγηση και χαρτογράφηση (ολοκληρωμένο)[/list]
+[list][*]Σάρωση (ολοκληρωμένο)[/list]
+[list][*]Διαφορετικά συστήματα πρόωσης (ολοκληρωμένο)[/list]
+
+[h2]EVA[/h2] (ολοκληρωμένο)
+
+
+Αντάλλαξε την ασφάλεια του πλοίου σου για μία συγκινητική εμπειρία EVA καθώς εξερευνάς τα ερείπια της πρώτης διαστρικής αποικίας της ανθρωπότητας προς αναζήτηση πληροφοριών, πόρων και εξοπλισμού. Ζήσε την μοναδική εμπειρία της κίνησης σε μηδενική βαρύτητα χωρίς περιορισμούς και τιθάσευσε την αδράνεια για μέγιστα αποτελέσματα.","[img]{STEAM_APP_IMAGE}/extras/simulation.png[/img]
+
+
+[h2]Piloting[/h2]
+
+
+Take command of your ship and explore the deserted system of Hellion using realistic navigation and scanning mechanics. Learn how to exploit orbital mechanics and balance using RCS, main thrusters and warp.
+
+[list][*]Piloting and Navigation (completed)[/list]
+[list][*]Scanning (completed)[/list]
+[list][*]Different propulsion systems (completed)[/list]
+
+[h2]EVA[/h2] (completed)
+
+
+Exchange the safety of your ship for a thrilling EVA experience as you explore the ruins of mankind’s first interstellar colony in search of intel, resources and equipment. Experience the unique feel of zero gravity movement without restrictions and master the use of inertia for maximum benefits."
+"[img]{STEAM_APP_IMAGE}/extras/shipssystemmaintenace.png[/img]
+
+[h2]Αρθρωτά αστρόπλοια, σταθμοί και εξοπλισμός[/h2]
+
+
+Πλήρως αρθρωτά και προσαρμόσιμα αστρόπλοια, σταθμοί και εξοπλισμός. Φτιάξε μία βάση από περισυνελεγμένες μονάδες και προσάρμοσέ την όπως σου αρέσει. Fully modular and customizable ships, stations and equipment. Build a base from salvaged modules and customize it to your liking. Αναβάθμισε ένα περισυνελεγμένο σκάφος με επιπλέον μονάδες και εξοπλισμό σύμφωνα με τον τρόπο του παιχνιδιού σου.
+
+[list][*]Χτίσιμο βάσης (ολοκληρωμένο)[/list]
+[list][*]Τροποποιήσεις αστρόπλοιων (υπό υλοποίηση)[/list]
+[list][*]Εξοπλισμός (υπό υλοποίηση)[/list]
+
+
+[h2]Σύνθετη μάχη αστρόπλοιου με αστρόπλοιο[/h2]
+
+
+Λεπτομερής μάχη στο διάστημα με στόχευση υποσυστημάτων, σύνθετη διάδοση βλαβών, και επιδιορθώσεις της τελευταίας στιγμής.","[img]{STEAM_APP_IMAGE}/extras/shipssystemmaintenace.png[/img]
+
+[h2]Modular ships, stations and gear[/h2]
+
+
+Fully modular and customizable ships, stations and equipment. Build a base from salvaged modules and customize it to your liking. Refit a salvaged vessel with additional modules and equipment according to your playstyle.
+
+[list][*]Base building (completed)[/list]
+[list][*]Ship modification (work in progress)[/list]
+[list][*]Equipment (work in progress)[/list]
+
+
+[h2]Complex ship to ship combat[/h2]
+
+
+Detailed space combat with subsystem targeting, complex damage propagation and last second repairs."
+"[list][*]Μάχη αστρόπλοιου με αστρόπλοιο (υπό υλοποίηση)[/list]
+[list][*]Στόχευση και καταστροφή υποσυστημάτων (υπό υλοποίηση)[/list]
+[list][*]Διάδοση βλαβών (υπό υλοποίηση)[/list]
+[list][*]Μηχανισμοί ελέγχου βλαβών (υπό υλοποίηση)[/list]
+[list][*]Ηλεκτρονικός πόλεμος (υπό υλοποίηση)[/list]
+
+[h2]Σύνθετη συντήρηση[/h2]
+
+
+Μάθε να συντηρείς και να ανεφοδιάζεις το αστρόπλοιό, το σταθμό και τον εξοπλισμό σου, αλλιώς θα δεις όλα όσα έχεις δουλέψει σκληρά να χτίσεις να διαλύονται γύρω σου.
+
+[list][*]Σύνθετη διαχείριση πόρων (ολοκληρωμένο)[/list]
+[list][*]Σταθμοί (ολοκληρωμένο)[/list]
+[list][*]Αστρόπλοια (ολοκληρωμένο)[/list]
+[list][*]Εξοπλισμός (υπό υλοποίηση)[/list]
+
+
+[img]{STEAM_APP_IMAGE}/extras/multiplayer.png[/img]","[list][*]Ship to ship combat (work in progress)[/list]
+[list][*]Subsystem targeting and destruction (work in progress)[/list]
+[list][*]Damage propagation (work in progress)[/list]
+[list][*]Damage control mechanics (work in progress)[/list]
+[list][*]Electronic warfare (work in progress)[/list]
+
+[h2]Complex maintenance[/h2]
+
+
+Learn to maintain and resupply your ship, station and equipment or watch as everything you’ve worked hard to build falls apart around you.
+
+[list][*]Complex resource management (completed)[/list]
+[list][*]Stations (completed)[/list]
+[list][*]Ships (completed)[/list]
+[list][*]Equipment (work in progress)[/list]
+
+
+[img]{STEAM_APP_IMAGE}/extras/multiplayer.png[/img]"
+"[h2]PvP[/h2]
+
+
+Μπες σε συναρπαστική μάχη σώμα με σώμα με άλλους επιζώντες και χρησιμοποίησε το περιβάλλον για να αποκτήσεις πλεονέκτημα. Μπες σε ομάδα με άλλους παίκτες για προστασία ή φτιάξε ένα πλήρωμα πειρατών και λεηλάτησε άλλους παίκτες.
+
+[list][*]Μάχη σώμα με σώμα (ολοκληρωμένο)[/list]
+[list][*]Επιβίβαση (ολοκληρωμένο)[/list]
+[list][*]Hacking και ασφάλεια (υπό υλοποίηση)[/list]
+[list][*]Ρεαλιστικός μηχανισμός πληγών (υπό υλοποίηση)[/list]
+[list][*]Βλάβη και αποικοδόμηση στολής (υπό υλοποίηση)[/list]
+
+[h2]Απεριόριστη διάδραση μεταξύ παικτών[/h2] (ολοκληρωμένο)
+
+
+Παίξε μοναχικά ή σε ομάδα με άλλους ή μαχαίρωσέ τους πισώπλατα για προσωπικό όφελος. Η επιλογή είναι δικά σου.","[h2]PvP[/h2]
+
+
+Engage in a thrilling close quarters combat with other survivors and use environment to your advantage. Team up with other players for protection or build a crew of cutthroats and lead a boarding party to raid others.
+
+[list][*]Close quarters combat (completed)[/list]
+[list][*]Boarding (completed)[/list]
+[list][*]Hacking and security (work in progress)[/list]
+[list][*]Realistic wound mechanics (work in progress)[/list]
+[list][*]Suite damage and degradation (work in progress)[/list]
+
+[h2]Unrestricted multiplayer interaction[/h2] (completed)
+
+
+Play as a lone wolf, team up with others or stab them in the back for personal gain. The choice is yours."
+"[h2]Αστρόπλοια με πλήρωμα πολλών παικτών[/h2] (ολοκληρωμένο)
+
+
+Πάρε μαζί σου τους φίλους σου, αναλάβετε ρόλους και φτιάξτε ένα ικανό πλήρωμα.
+
+[h2]Ρεαλιστική επικοινωνία[/h2]
+
+
+Κοντινή συνομιλία, ραδιομετάδοση κοντινής και μακρινής εμβέλειας και μηχανισμός επικοινωνίας FTL. Κάλεσε άλλα πλοία, εξέπεμψε σήματα κινδύνου και υπόκλεψε συνομιλίες σε μη ασφαλή κανάλια.
+
+[list][*]Φωνητικό Chat (υπό υλοποίηση)[/list]
+[list][*]Ραδιομετάδοση (υπό υλοποίηση)[/list]
+[list][*]FTL επικοινωνία (υπό υλοποίηση)[/list]","[h2]Multi-crew ships[/h2] (completed)
+
+
+Bring your friends along for the ride, divide roles and form a competent crew.
+
+[h2]Realistic communications[/h2]
+
+
+Proximity chat, short and long range radio transmissions and FTL communication mechanics. Hail other ships, broadcast distress calls and eavesdrop on unsecure channels.
+
+[list][*]Voice chat (work in progress)[/list]
+[list][*]Radio mechanics (work in progress)[/list]
+[list][*]FTL communications (work in progress)[/list]"
+"Μετά από έναν αιώνα σε κρυογονικό ύπνο, βρίσκεσαι απομονωμένος ανάμεσα στα ερείπια της πρώτης διαστρικής αποικίας της ανθρωπότητας. Εξερεύνησε εγκαταλελειμμένα αστρόπλοια και σταθμός, συγκέντρωσε πρώτες ύλες σε αναζήτηση αέρα, καυσίμων και εξοπλισμού. Ή κλέψε και λεηλάτησε αυτά που χρειάζεσαι από άλλους επιζώντες. Η επιλογή είναι δική σου!","After a century in cryosleep you find yourself stranded amidst the ruins of mankind’s first interstellar colony. Explore derelict ships and stations and harvest raw resources in search of air, fuel and other equipment. Or loot and pillage what you need from other survivors. The choice is yours!"
+"Το Hellion είναι ένα φιλόδοξο παιχνίδι το οποίο βρίσκεται υπό υλοποίηση εδώ και σχεδόν δύο χρόνια. Έχοντας ολοκληρώσει τον πυρήνα των χαρακτηριστικών πιστεύουμε ότι ήρθε η ώρα να μοιραστούμε το παιχνίδι με τους παίκτες πριν προχωρήσουμε παρακάτω στην υλοποίησή του. Ένας από τους κύριος λόγους για αυτή την απόφαση είναι η άποψη της κοινότητας. Θεωρούμε ότι με το να συμπεριλάβουμε την κοινότητα τόσο νωρίς στην υλοποίηση μόνο πλεονεκτήματα έχει να δώσει για το έργο. Άποψή μας είναι ότι το Early Access δίνει μία φανταστική ευκαιρία στην κοινότητα να συμβάλλει στο παιχνίδι που τους αρέσει και θέλει να παίξει. Βελτιώσεις, νέοι μηχανισμοί και ανάπτυξη των κεντρικών χαρακτηριστικών είναι δυνατά μόνο μέσω ανοιχτών και ειλικρινών συζητήσεων μεταξύ των παικτών και των προγραμματιστών.","Hellion is an ambitious game that has been in development for almost two years now. Having completed the core gameplay features, we believe it is time to share the game with players before proceeding further with the development. One of the main reasons behind this decision is feedback. We expect that involving community this early in the development can only benefit the project. It is our opinion that Early Access provides an amazing opportunity for the community to contribute to the game that they like and want to play. Gameplay improvements, new mechanics and evolution of core features are only possible through open and honest discussion between players and the developers."
+"Το Early Access θα κρατήσει τουλάχιστον ένα χρόνο. Αυτή τη στιγμή είναι δύσκολο να εκτιμήσουμε πόσο ακριβώς θα κρατήσει. Θα εξαρτηθεί πολύ από τα σχόλια της κοινότητας καθώς το πεδίο εφαρμογής της υλοποίησης μπορεί να αλλάξει βασιζόμενο σε αυτά. Ένα πράγμα όμως είναι σίγουρο, αυτοί που θα μπουν νωρίς έχουν μία μοναδική ευκαιρία να παρακολουθήσουν ένα ολόκληρο ηλιακό σύστημα να αναπτύσσεται μπροστά στα μάτια τους.","Early Access will last for at least a year. At this time it is hard to estimate how long exactly. It will depend a lot on feedback as the scope of the development may change based on that. One thing is certain, early adopters will have a unique opportunity to watch as an entire solar system evolves before their eyes."
+"Η πλήρης έκδοση του παιχνιδιού θα έχει όλα τα χαρακτηριστικά τα οποία βρίσκονται στον χάρτη πορείας και τον οποίο μπορείς να δεις [url=https://www.playhellion.com/features]εδώ[/url]. 
+Τρεις εταιρίες για να διαλέξεις, μεγάλος στόλος από λειτουργικά διαφορετικά αστρόπλοια, περισσότεροι πλανήτες και άλλα ουράνια αντικείμενα, λεπτομερές σύστημα κατασκευής και τεράστιος αριθμός αντικειμένων - αυτά είναι όλα στα σχέδια για την πλήρη έκδοση. Αυτά θα υλοποιηθούν μεταξύ συχνών ενημερώσεων κατά τη διάρκεια του EA. Επίσης, θα συνεχίζουμε να δουλεύουμε σε βελτιστοποιήσεις και διορθώσεις bugs, ώστε να παρέχουμε στους παίκτες μας εξαιρετική εμπειρία παιχνιδιού.","Full version of the game will have all the features found in our roadmap that can be seen [url=https://www.playhellion.com/features]here[/url]. 
+Three corporations to choose from, large fleet of functionally different ships, more planets and other celestial objects, detailed crafting system and a huge number of items – these are all planned for the full release. These will be implemented through regular updates over the course of EA. Also, we will constantly work on optimization and bug fixes in order to offer our players an exceptional gaming experience."
+"Το Hellion βρίσκεται σε μία κατάσταση που ξεκάθαρα αντιπροσωπεύει την ιδέα πίσω από αυτό - εμβυθιστικό gameplay με ρεαλιστική φυσική και σύνθετα συστήματα αστρόπλοιων και σταθμών τα οποία χρειάζονται τακτική συντήρηση ώστε οι παίκτες να μείνουν ζωντανοί. Πιστεύουμε ότι ένα εργοστασιακό αστρόπλοιο πολλαπλών χρήσεων και το χαρακτηριστικό χτισίματος σταθμών είναι αρκετά ώστε οι παίκτες να ξεκινήσουν την περιπέτειά τους στο διάστημα, ενώ εκατοντάδες παίκτες ανά διακομιστή θα εγγυηθούν διασκεδαστική και ενδιαφέρουσα εμπειρία πολλαπλών παικτών. Υπάρχει πολύ περιεχόμενο το οποίο δεν έχει προστεθεί ακόμα, ακολουθούμενο από γυάλισμα και περισσότερες βελτιστοποιήσεις. Επίσης σχεδιάζουμε να μεταφράσουμε το παιχνίδι σε διάφορες γλώσσες στο κοντινό μέλλον.","Hellion is in a state that clearly represents the idea behind it- an immersive gameplay with realistic physics and complex ship and station systems that require regular maintenance in order for players to stay alive. We believe one multipurpose industrial ship and the station building feature are enough for players to kick off their space adventure, while hundred players per server will guarantee a fun and interesting multiplayer experience. A lot of content has yet to be added, followed by polishing and more optimization. Also, we plan localization of the game to various languages in the near future."
+"Καθώς το μέγεθος του περιεχομένου αυξάνεται, η τιμή πιθανότατα θα αλλάξει.","As the amount of content increases the price will probably change."
+"Ο στόχος μας είναι να δουλέψουμε μαζί με τα μέλη της κοινότητας του Hellion. Θα κρατάμε τους παίκτες μας ενήμερους για τα σχέδιά μας και την πρόοδό μας μέσω των καναλιών επικοινωνίας μας: Το Forum στο Steam, το website μας, τη σελίδα μας στο Facebook, το Twitter και το Reddit. Θα ακούμε τη φωνή της κοινότητας και αναμένουμε εποικοδομητικές συζητήσεις με στόχο τη δημιουργία μιας εμπειρίας παιχνιδιού που θα την ευχαριστηθούμε όλοι.
+Παρακάτω θα βρείτε τους συνδέσμους για τα κανάλια επικοινωνίας μας, και σας προσκαλούμε όλους να αφήσετε τα σχόλια σας καθώς τα εκτιμάμε δεόντως:
+
+Ιστολόγιο: [url]https://www.playhellion.com/blog/[/url]
+Facebook: [url]https://www.facebook.com/playhellion/[/url]
+Twitter: [url]https://twitter.com/playhellion[/url]
+Reddit: [url]https://www.reddit.com/r/Hellion/[/url]","Our goal is to work together with the members of Hellion’s community. We will keep our players informed of our plans and progress through our communication channels: Steam forum, our website, Facebook page, Twitter and Reddit. We will be listening to the voice of the community and are looking forward to constructive discussions aimed at creating the gameplay experience that we will all enjoy. 
+Here are the links for our communication channels and you are all invited to leave a comment because it is much appreciated:
+
+Blog: [url]https://www.playhellion.com/blog/[/url]
+Facebook: [url]https://www.facebook.com/playhellion/[/url]
+Twitter: [url]https://twitter.com/playhellion[/url]
+Reddit: [url]https://www.reddit.com/r/Hellion/[/url]"

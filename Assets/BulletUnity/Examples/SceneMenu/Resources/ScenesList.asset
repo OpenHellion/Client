@@ -1,0 +1,187 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f32fb9b6c4cdae244bd6cdec4e896e58, type: 3}
+  m_Name: ScenesList
+  m_EditorClassIdentifier: 
+  Scenes:
+  - Name: InitializingScene
+    Path: Assets/Scene/Scene/InitializingScene.unity
+    isLocked: 0
+    Index: 0
+  - Name: Client
+    Path: Assets/Scene/Scene/Client.unity
+    isLocked: 0
+    Index: 1
+  - Name: SolarSystemSetup
+    Path: Assets/Scene/Scene/SolarSystemSetup.unity
+    isLocked: 0
+    Index: 2
+  - Name: AltCorp_CorridorModule
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/AltCorp_CorridorModule/AltCorp_CorridorModule.unity
+    isLocked: 0
+    Index: 3
+  - Name: AltCorp_CorridorIntersectionModule
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/AltCorp_CorridorIntersectionModule/AltCorp_CorridorIntersectionModule.unity
+    isLocked: 0
+    Index: 4
+  - Name: AltCorp_Corridor45TurnModule
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/Altcorp_Corridor45TurnModule/AltCorp_Corridor45TurnModule.unity
+    isLocked: 0
+    Index: 5
+  - Name: AltCorp_Shuttle_SARA
+    Path: Assets/Scene/Scene/Environment/Ship/AltCorp_Shuttle_SARA/AltCorp_Shuttle_SARA.unity
+    isLocked: 0
+    Index: 6
+  - Name: ALtCorp_PowerSupply_Module
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/ALtCorp_PowerSupply_Module/ALtCorp_PowerSupply_Module.unity
+    isLocked: 0
+    Index: 7
+  - Name: AltCorp_LifeSupportModule
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/AltCorp_LifeSupportModule/AltCorp_LifeSupportModule.unity
+    isLocked: 0
+    Index: 8
+  - Name: AltCorp_Cargo_Module
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/AltCorp_Cargo_Module/AltCorp_Cargo_Module.unity
+    isLocked: 0
+    Index: 9
+  - Name: AltCorp_CorridorVertical
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/AltCorp_CorridorVertical/AltCorp_CorridorVertical.unity
+    isLocked: 0
+    Index: 10
+  - Name: AltCorp_Command_Module
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/AltCorp_Command_Module/AltCorp_Command_Module.unity
+    isLocked: 0
+    Index: 11
+  - Name: AltCorp_Corridor45TurnRightModule
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/AltCorp_Corridor45TurnRightModule/AltCorp_Corridor45TurnRightModule.unity
+    isLocked: 0
+    Index: 12
+  - Name: AltCorp_StartingModule
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/AltCorp_StartingModule/AltCorp_StartingModule.unity
+    isLocked: 0
+    Index: 13
+  - Name: Generic_Debris_Module_JuncRoom001
+    Path: Assets/Scene/Scene/Environment/Station/Module/Generic/Generic_Debris_Module_JuncRoom001/Generic_Debris_Module_JuncRoom001.unity
+    isLocked: 0
+    Index: 14
+  - Name: Generic_Debris_Module_JuncRoom002
+    Path: Assets/Scene/Scene/Environment/Station/Module/Generic/Generic_Debris_Module_JuncRoom002/Generic_Debris_Module_JuncRoom002.unity
+    isLocked: 0
+    Index: 15
+  - Name: Generic_Debris_Module_Corridor001
+    Path: Assets/Scene/Scene/Environment/Station/Module/Generic/Generic_Debris_Module_Corridor001/Generic_Debris_Module_Corridor001.unity
+    isLocked: 0
+    Index: 16
+  - Name: Generic_Debris_Module_Corridor002
+    Path: Assets/Scene/Scene/Environment/Station/Module/Generic/Generic_Debris_Module_Corridor002/Generic_Debris_Module_Corridor002.unity
+    isLocked: 0
+    Index: 17
+  - Name: AltCorp_Airlock_Module
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/AltCorp_Airlock_Module/AltCorp_Airlock_Module.unity
+    isLocked: 0
+    Index: 18
+  - Name: AltCorp_DockableContainer
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/AltCorp_DockableContainer/AltCorp_DockableContainer.unity
+    isLocked: 0
+    Index: 19
+  - Name: Generic_Debris_Outpost001
+    Path: Assets/Scene/Scene/Environment/Station/Module/Generic/Generic_Debris_Outpost001/Generic_Debris_Outpost001.unity
+    isLocked: 0
+    Index: 20
+  - Name: AltCorp_CrewQuarters_Module
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/AltCorp_CrewQuarters_Module/AltCorp_CrewQuarters_Module.unity
+    isLocked: 0
+    Index: 21
+  - Name: Generic_Debris_Spawn1
+    Path: Assets/Scene/Scene/Environment/Station/Module/Generic/Generic_Debris_Spawn1/Generic_Debris_Spawn1.unity
+    isLocked: 0
+    Index: 22
+  - Name: Generic_Debris_Spawn2
+    Path: Assets/Scene/Scene/Environment/Station/Module/Generic/Generic_Debris_Spawn2/Generic_Debris_Spawn2.unity
+    isLocked: 0
+    Index: 23
+  - Name: Generic_Debris_Spawn3
+    Path: Assets/Scene/Scene/Environment/Station/Module/Generic/Generic_Debris_Spawn3/Generic_Debris_Spawn3.unity
+    isLocked: 0
+    Index: 24
+  - Name: AltCorp_SolarPowerModule
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/AltCorp_SolarPowerModule/AltCorp_SolarPowerModule.unity
+    isLocked: 0
+    Index: 25
+  - Name: AltCorp_Shuttle_CECA
+    Path: Assets/Scene/Scene/Environment/Ship/AltCorp_Shuttle_CECA/AltCorp_Shuttle_CECA.unity
+    isLocked: 0
+    Index: 26
+  - Name: AltCorp_FabricatorModule
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/AltCorp_FabricatorModule/AltCorp_FabricatorModule.unity
+    isLocked: 0
+    Index: 27
+  - Name: AltCorp_PatchModule
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp/AltCorp_PatchModule/AltCorp_PatchModule.unity
+    isLocked: 0
+    Index: 28
+  - Name: SOE_Location002
+    Path: Assets/Scene/Scene/Environment/Other/SOE/SOE_Location002/SOE_Location002.unity
+    isLocked: 0
+    Index: 29
+  - Name: AltCorp_Secure_Module
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp_V02/AltCorp_Secure_Module/AltCorp_Secure_Module.unity
+    isLocked: 0
+    Index: 30
+  - Name: AltCorp_Destroyed_Shuttle_CECA
+    Path: Assets/Scene/Scene/Environment/Ship/AltCorp_Shuttle_CECA/AltCorp_Destroyed_Shuttle_CECA.unity
+    isLocked: 0
+    Index: 31
+  - Name: AltCorp_CorridorIntersection_MKII
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp_V02/AltCorp_CorridorIntersection_Module/AltCorp_CorridorIntersection_MKII.unity
+    isLocked: 0
+    Index: 32
+  - Name: AlrCorp_Corridor_MKII
+    Path: Assets/Scene/Scene/Environment/Station/Module/AltCorp_V02/AltCorp_Corridor_Module/AlrCorp_Corridor_MKII.unity
+    isLocked: 0
+    Index: 33
+  - Name: FlatShipTest
+    Path: Assets/Scene/Test/FlatShipTest.unity
+    isLocked: 0
+    Index: 34
+  - Name: Asteroid01
+    Path: Assets/Scene/Scene/Environment/SolarSystem/Asteroids/Asteroid01/Asteroid01.unity
+    isLocked: 0
+    Index: 35
+  - Name: Asteroid02
+    Path: Assets/Scene/Scene/Environment/SolarSystem/Asteroids/Asteroid02/Asteroid02.unity
+    isLocked: 0
+    Index: 36
+  - Name: Asteroid03
+    Path: Assets/Scene/Scene/Environment/SolarSystem/Asteroids/Asteroid03/Asteroid03.unity
+    isLocked: 0
+    Index: 37
+  - Name: Asteroid04
+    Path: Assets/Scene/Scene/Environment/SolarSystem/Asteroids/Asteroid04/Asteroid04.unity
+    isLocked: 0
+    Index: 38
+  - Name: Asteroid05
+    Path: Assets/Scene/Scene/Environment/SolarSystem/Asteroids/Asteroid05/Asteroid05.unity
+    isLocked: 0
+    Index: 39
+  - Name: Asteroid06
+    Path: Assets/Scene/Scene/Environment/SolarSystem/Asteroids/Asteroid06/Asteroid06.unity
+    isLocked: 0
+    Index: 40
+  - Name: Asteroid07
+    Path: Assets/Scene/Scene/Environment/SolarSystem/Asteroids/Asteroid07/Asteroid07.unity
+    isLocked: 0
+    Index: 41
+  - Name: Asteroid08
+    Path: Assets/Scene/Scene/Environment/SolarSystem/Asteroids/Asteroid08/Asteroid08.unity
+    isLocked: 0
+    Index: 42

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" SchemaVersion="103">
+	<Events>
+		<WorkUnit Name="Default Work Unit" ID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" PersistMode="Standalone">
+			<ChildrenList>
+				<Folder Name="Intro" ID="{E78804A3-DF0A-47A2-9BE4-3DBBDD517DC5}" ShortID="1039844603">
+					<ChildrenList>
+						<Event Name="PlayFreshStart" ID="{30B2579D-E891-4967-B980-40FA29D2B192}">
+							<ChildrenList>
+								<Action Name="" ID="{1C9FB2EF-390B-4631-9206-AEE2FF25D87F}" ShortID="1042181196">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Hellion_Trailer_Nov_2018_v1_7_FB2C5546" ID="{C8C28FA1-AAC0-4A5F-A8F6-FD064ADF211B}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="PlayIntro" ID="{B24AC516-998F-46BD-B776-DC01E9295F85}">
+							<ChildrenList>
+								<Action Name="" ID="{4FC9EF64-A698-4158-9F11-24EB81E9DE0D}" ShortID="304968617">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="EAT_Final Audio_2_56D34C19" ID="{6ABAAC49-4F69-4E92-B84B-388150780EB3}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="StopFreshStart" ID="{B8256E92-A268-464A-AD38-A6587DCD8448}">
+							<ChildrenList>
+								<Action Name="" ID="{0D1A8D36-D186-4281-BB9E-D54F2DDBB047}" ShortID="192847189">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Hellion_Trailer_Nov_2018_v1_7_FB2C5546" ID="{C8C28FA1-AAC0-4A5F-A8F6-FD064ADF211B}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="StopIntro" ID="{9E1D73BE-9AA6-42AF-82E1-3DC01F7013A2}">
+							<ChildrenList>
+								<Action Name="" ID="{E70DC00D-008C-4B9A-B954-832AECF88D94}" ShortID="934884875">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="EAT_Final Audio_2_56D34C19" ID="{6ABAAC49-4F69-4E92-B84B-388150780EB3}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="UI" ID="{545DB06A-AAE8-4141-B011-FCABCEC2D6D5}" ShortID="792613968">
+					<ChildrenList>
+						<Event Name="Click" ID="{966D9A62-5C29-42ED-9941-993725ECEBFB}">
+							<ChildrenList>
+								<Action Name="" ID="{CB17846A-E3DB-4EF4-8636-F311A5D9ACAB}" ShortID="1053320959">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Click5" ID="{99974F21-4A4F-4ADD-B76A-37DF323F6C34}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="CutSceneChangeCharacter" ID="{977AA8C0-D658-4A77-855B-2BDBA7D4ED36}">
+							<ChildrenList>
+								<Action Name="" ID="{99CB61B6-4D38-4298-B666-90583C3CBEA8}" ShortID="377933687">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="CutSceneChangeCharacter" ID="{26E03986-7A63-421E-B645-5A9BFDF2168C}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="CutSceneEnd" ID="{EDFFBE0A-2E31-4466-8839-8F82A6D97AF3}">
+							<ChildrenList>
+								<Action Name="" ID="{D52AC0FC-45D7-4BFB-8A77-A0E5A43FB82D}" ShortID="996275478">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="CutSceneEnd" ID="{CE4694C5-1034-4CB1-A61D-CD5EB629384F}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="CutSceneStart" ID="{9D7433F1-C9A3-4232-82BA-E97D67FB2B06}">
+							<ChildrenList>
+								<Action Name="" ID="{67112F69-0EC9-4E09-AA51-FE43F48D04DB}" ShortID="486308462">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="CutSceneStart" ID="{4A7D247E-E956-4A26-A91E-EF3E42A73327}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="Hover" ID="{11A7655D-DF14-4FAA-992E-8501A40C096E}">
+							<ChildrenList>
+								<Action Name="" ID="{8613FD13-1782-464A-8E09-608EBCA046F0}" ShortID="404791685">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="ClickSelect1" ID="{01BA7E16-6AFA-45CC-963A-F53165ADDB72}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="NotificationEnd" ID="{03578E4F-E899-44F8-A4E7-338DAB10E58F}">
+							<ChildrenList>
+								<Action Name="" ID="{229F6569-E070-448E-A181-A29FF7F4416E}" ShortID="16356715">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="NotificationUIEnd" ID="{ABA9323D-97C8-40A6-9A9D-24315D514F9C}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="NotificationStart" ID="{ED301BE8-D016-4ACA-8E42-6A5992EC5301}">
+							<ChildrenList>
+								<Action Name="" ID="{E7086CD0-8D57-43B0-BDB9-69AE72321CA9}" ShortID="848466492">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="NotificationUIStart" ID="{D7991CD2-6EBE-4615-817C-39D54F98AED0}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="QuestTitleActivated" ID="{321ABE2A-0BDC-43B2-9BEB-DE12F303E615}">
+							<ChildrenList>
+								<Action Name="" ID="{B52C5175-2E2C-482C-BF39-46CB33B70BEF}" ShortID="583095106">
+									<PropertyList>
+										<Property Name="Delay" Type="Real64" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="QuestTitle" ID="{594BCA6F-834C-43FF-81B2-01020A1D9CA3}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="QuestTitleCompleted" ID="{A3D013AB-D672-4E2E-B02E-CEFB7290A069}"/>
+						<Event Name="QuestTitleUI" ID="{36A65ABC-1F6B-4605-940A-8CCB3222FB06}"/>
+						<Event Name="TrackedQuestCompleted" ID="{2C0F5361-F7C8-4085-A712-033E337401C0}">
+							<ChildrenList>
+								<Action Name="" ID="{ECC41431-99A5-44EA-93F9-572BC3236968}" ShortID="125494053">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="TrackedQuestCompleted" ID="{5C76600B-F15D-4E1F-8D6D-AA364CC1ACAD}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="TrackedQuestEnd" ID="{54605995-A957-4AD3-AB80-802498384839}">
+							<ChildrenList>
+								<Action Name="" ID="{428EC1F8-A7BF-41D4-987D-2468D7279E20}" ShortID="628285613">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="TrackedQuestEnd" ID="{04A767E6-31FD-466D-90BE-3C7C6ADE42CB}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="TrackedQuestStart" ID="{F024F3FD-97A7-4F1A-9EBD-DC3956F8029B}">
+							<ChildrenList>
+								<Action Name="" ID="{427D1EE7-230F-4EF6-A07A-131B9A1A3925}" ShortID="497978995">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="TrackedQuestStart" ID="{5C6D99FC-B0BB-4267-A450-8000C8F85816}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="TrackerEnd" ID="{762DA908-998E-46F1-BE8B-7C0099DF605C}">
+							<ChildrenList>
+								<Action Name="" ID="{1AEAAB43-3C0A-41F9-883A-A73A120F70FA}" ShortID="337481707">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="TrackerEnd" ID="{A6403FD1-B0F8-4429-A519-8503000A9D3C}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="TrackerStart" ID="{590CCA3A-CFB6-4101-A8D4-ED647C84D143}">
+							<ChildrenList>
+								<Action Name="" ID="{1B3C3167-29F0-49DC-ABFC-411E3819ACF1}" ShortID="786820529">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="TrackerStart" ID="{85AD2945-1C2B-4097-91BB-8785145FF256}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="TrackerSwitch" ID="{D5CEE609-3ED3-4686-A516-418CBA939554}">
+							<ChildrenList>
+								<Action Name="" ID="{0F823A8D-B14F-4D46-91D8-8C9EE665D9B3}" ShortID="361788615">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="TrackerSwitch" ID="{97881403-EA41-419C-84A7-799685E73F53}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Ambience" ID="{4B735E94-2D5F-4E58-A8B3-243B9C01BF81}" ShortID="207065854">
+					<ChildrenList>
+						<Event Name="Ambience" ID="{9A8BAFB3-9F34-45C0-933B-FA4055077B4A}">
+							<ChildrenList>
+								<Action Name="" ID="{33124002-794B-4594-A655-B2F0241E8B87}" ShortID="518782289">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="RoomAmbiences" ID="{2F996E2B-B22E-43BA-A8A2-18B1BACC7F62}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+					</ChildrenList>
+				</Folder>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>

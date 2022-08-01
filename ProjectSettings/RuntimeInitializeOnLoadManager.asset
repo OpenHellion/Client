@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!300 &1
+RuntimeInitializeOnLoadManager:
+  m_ObjectHideFlags: 0
+  m_AssemblyNames:
+  - Assembly-CSharp
+  - UnityEditor.Advertisements
+  - Cinemachine
+  - Unity.Analytics.DataPrivacy
+  m_NamespaceNames:
+  - Cinemachine.PostFX
+  - UnityEditor.Advertisements
+  - Cinemachine
+  - UnityEngine.Analytics
+  m_ClassInfos:
+  - m_AssemblyNameIndex: 0
+    m_NamespaceIndex: 0
+    m_ClassName: CinemachinePostProcessing
+    m_NumOfMethods: 1
+    m_MethodIndex: 0
+    m_IsUnityClass: 0
+  - m_AssemblyNameIndex: 1
+    m_NamespaceIndex: 1
+    m_ClassName: UnityAdsEditor
+    m_NumOfMethods: 1
+    m_MethodIndex: 1
+    m_IsUnityClass: 0
+  - m_AssemblyNameIndex: 2
+    m_NamespaceIndex: 2
+    m_ClassName: UpdateTracker
+    m_NumOfMethods: 1
+    m_MethodIndex: 2
+    m_IsUnityClass: 0
+  - m_AssemblyNameIndex: 2
+    m_NamespaceIndex: 2
+    m_ClassName: CinemachineCore
+    m_NumOfMethods: 1
+    m_MethodIndex: 3
+    m_IsUnityClass: 0
+  - m_AssemblyNameIndex: 2
+    m_NamespaceIndex: 2
+    m_ClassName: CinemachineStoryboard
+    m_NumOfMethods: 1
+    m_MethodIndex: 4
+    m_IsUnityClass: 0
+  - m_AssemblyNameIndex: 3
+    m_NamespaceIndex: 3
+    m_ClassName: DataPrivacy
+    m_NumOfMethods: 1
+    m_MethodIndex: 5
+    m_IsUnityClass: 0
+  m_ClassMethodInfos:
+  - m_ClassIndex: 0
+    m_MethodName: InitializeModule
+    m_OrderNumber: 0
+  - m_ClassIndex: 1
+    m_MethodName: EditorOnLoad
+    m_OrderNumber: 0
+  - m_ClassIndex: 2
+    m_MethodName: InitializeModule
+    m_OrderNumber: 0
+  - m_ClassIndex: 3
+    m_MethodName: InitializeModule
+    m_OrderNumber: 0
+  - m_ClassIndex: 4
+    m_MethodName: InitializeModule
+    m_OrderNumber: 0
+  - m_ClassIndex: 5
+    m_MethodName: Initialize
+    m_OrderNumber: 0
+  m_BeforeUnityMethodExecutionOrders:
+  - 1
+  - 5
+  m_AfterUnityMethodExecutionOrders: []
+  m_BeforeMethodExecutionOrders: []
+  m_AfterMethodExecutionOrders:
+  - 0
+  - 2
+  - 3
+  - 4
+  m_FullClassNames: []

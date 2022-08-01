@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00262923ba0c6aa4bae56a61da0fe0e6, type: 3}
+  m_Name: Soe
+  m_EditorClassIdentifier:
+  Type: 9
+  Background: {fileID: 21300000, guid: 4e21be145e1aba94b88b26c6b082ff6b, type: 3}
+  Title: Son Of Earth
+  Description: 'You wake up to a cacophony of voices calling you a murderer, soldier, comrade, brother... As the voices quiet down and you open your eyes, all that''s left is a gaping hole in your memory and the eerie silence of the void. '
+  DisabledDescription: Get 'Heart of Stone' achievement to unlock this start point

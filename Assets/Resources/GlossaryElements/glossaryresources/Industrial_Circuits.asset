@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 151e22dd5cbcaef40be05e866f7f3d21, type: 3}
+  m_Name: Industrial_Circuits
+  m_EditorClassIdentifier:
+  Name: Circuits
+  Description: 'Printed circuits are a common component of any electronic equipment. Circuit is a general term referring to anything from a simple circuit board to a high-end microprocessor. These components are essential in the construction of high end equipment.
+
+	
+
+	Source:
+
+	- Fried Electronics
+
+	- Damaged Transmitter'
+  Image: {fileID: 21300000, guid: 35b9424fb9bb1494c8e3930d41b931b8, type: 3}
+  ResourceType: 202

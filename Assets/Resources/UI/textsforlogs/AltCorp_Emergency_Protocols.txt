@@ -1,0 +1,23 @@
+This manual is intended for emergency situations where the superior officer is unavailable. It contains basic safety instructions and latest protocols for operating mk2 Hibernation module, according to Altair Corporation safety regulations.
+
+<color="#C38300FF">Safety Procedures:</color>
+
+1. Check pressure and air quality and put on safety equipment:
+a. AC Mk9 – Pressure Suit 
+b. AC Mk9 – Helmet
+c. AC Mk9 – Maneuvering Pack
+
+2. Inspect AC Mk9 – Maneuvering Pack oxygen, fuel and power levels and recharge as needed
+
+3. Inspect power grid status 
+a. Check for defective parts and replace as needed
+b. Deploy Solar Panels
+c. Activate capacitor
+
+4. Inspect life support system 
+a. Activate Air Generator
+b. Activate Air Filtration system
+c. Check for defective parts and replace as needed
+d. Check available resources
+
+5. Always leave using airlock to prevent atmosphere loss

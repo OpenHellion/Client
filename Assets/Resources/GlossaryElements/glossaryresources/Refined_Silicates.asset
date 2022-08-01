@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 151e22dd5cbcaef40be05e866f7f3d21, type: 3}
+  m_Name: Refined_Silicates
+  m_EditorClassIdentifier:
+  Name: Silicates
+  Description: 'Silicates (Si) are natural semiconductors and essential in the construction of electronic components used by the more advanced Expedition equipment.
+
+	
+
+	Source:
+
+	- Mafic Rock'
+  Image: {fileID: 21300000, guid: f5e65cd6fe19d964c8fe739df4bd9bec, type: 3}
+  ResourceType: 106

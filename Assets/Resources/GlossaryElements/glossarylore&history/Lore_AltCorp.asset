@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df8541371d5e16343aef584c7095fbd8, type: 3}
+  m_Name: Lore_AltCorp
+  m_EditorClassIdentifier:
+  Name: Altair Corporation
+  Description: 'One of the first major factions to call space home, Altair Corporation is a political conglomerate comprised of many smaller entities. It has its own set of rules, laws and political agendas. AltCorp''s major defining feature is heavy duty space engineering and their ships, stations and equipment reflect this. All members of AltCorp know that space is dangerous, therefore their equipment is purposefully made and built to last with very little concern for aesthetics in all departments except recreation. Their crew quarters and recreational facilities stand in sharp contrast to the rest of their design philosophy, conveying a sense of ease, belonging and comfort. 
+
+	
+
+	Members of the AltCorp regardless of their expertise take much pride in their work and always prefer to live life to the fullest, consuming everything space has to offer which is often mistaken by outsiders as reckless or outright suicidal. This attitude and wide spread disregard for regulations gave them the reputation of "daredevils" and "thrill seekers" by other factions and UNE officials.'
+  Image: {fileID: 21300000, guid: e13c79e959e008a4b96813e8f3d5a3f2, type: 3}
+  _Icon: {fileID: 21300000, guid: 8de267f2e7c192f4da7fc80f11748854, type: 3}
