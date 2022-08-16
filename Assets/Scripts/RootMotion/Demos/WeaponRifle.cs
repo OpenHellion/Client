@@ -43,7 +43,7 @@ namespace RootMotion.Demos
 			smokeEmission = Mathf.Max(smokeEmission - Time.deltaTime * smokeFadeOutSpeed, 0f);
 			ParticleSystem.EmissionModule emission = muzzleSmoke.emission;
 			emission.enabled = smokeEmission > 0f;
-			emission.rate = new ParticleSystem.MinMaxCurve(smokeEmission);
+			emission.rateOverTime = new ParticleSystem.MinMaxCurve(smokeEmission);
 		}
 	}
 }

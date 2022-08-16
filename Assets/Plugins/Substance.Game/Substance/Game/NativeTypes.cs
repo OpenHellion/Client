@@ -10,31 +10,31 @@ namespace Substance.Game
 		public enum UnityInputType
 		{
 			Invalid = -1,
-			Boolean = 0,
-			Float = 1,
-			Vector2 = 2,
-			Vector3 = 3,
-			Vector4 = 4,
-			Color = 5,
-			Enum = 6,
-			Texture = 7,
-			String = 8
+			Boolean,
+			Float,
+			Vector2,
+			Vector3,
+			Vector4,
+			Color,
+			Enum,
+			Texture,
+			String
 		}
 
 		public enum UnityWidgetType
 		{
 			Invalid = -1,
-			Label = 0,
-			Button = 1,
-			Toggle = 2,
-			Slider = 3,
-			Vector2Field = 4,
-			Vector3Field = 5,
-			Vector4Field = 6,
-			ColorField = 7,
-			TextField = 8,
-			ComboBox = 9,
-			Image = 10
+			Label,
+			Button,
+			Toggle,
+			Slider,
+			Vector2Field,
+			Vector3Field,
+			Vector4Field,
+			ColorField,
+			TextField,
+			ComboBox,
+			Image
 		}
 
 		public struct SubstanceTexture
@@ -100,21 +100,7 @@ namespace Substance.Game
 
 		public class Value
 		{
-			[Serializable]
-			[CompilerGenerated]
-			private sealed class _003C_003Ec
-			{
-				public static readonly _003C_003Ec _003C_003E9 = new _003C_003Ec();
-
-				public static Converter<float, float> _003C_003E9__3_0;
-
-				internal float _003C_002Ector_003Eb__3_0(float v)
-				{
-					return 0f;
-				}
-			}
-
-			public float[] scalar = Array.ConvertAll(new float[4], _003C_003Ec._003C_003E9__3_0 ?? (_003C_003Ec._003C_003E9__3_0 = _003C_003Ec._003C_003E9._003C_002Ector_003Eb__3_0));
+			public float[] scalar = Array.ConvertAll(new float[4], (float v) => 0f);
 
 			public SerializeMe texture;
 
@@ -212,7 +198,6 @@ namespace Substance.Game
 
 		public static UnityInputType GetUnityDataType(int pSubstanceDataType, int pSubstanceWidgetType)
 		{
-			UnityInputType unityInputType = UnityInputType.Invalid;
 			switch (pSubstanceDataType)
 			{
 			case 0:
@@ -236,15 +221,12 @@ namespace Substance.Game
 				}
 				return UnityInputType.Vector4;
 			case 4:
-				switch (pSubstanceWidgetType)
+				return pSubstanceWidgetType switch
 				{
-				case 4:
-					return UnityInputType.Boolean;
-				case 5:
-					return UnityInputType.Enum;
-				default:
-					return UnityInputType.Float;
-				}
+					4 => UnityInputType.Boolean,
+					5 => UnityInputType.Enum,
+					_ => UnityInputType.Float,
+				};
 			case 8:
 				return UnityInputType.Vector2;
 			case 9:
@@ -270,30 +252,19 @@ namespace Substance.Game
 
 		public static UnityWidgetType GetUnityWidgetType(UnityInputType pUnityInputType)
 		{
-			UnityWidgetType unityWidgetType = UnityWidgetType.Invalid;
-			switch (pUnityInputType)
+			return pUnityInputType switch
 			{
-			case UnityInputType.Boolean:
-				return UnityWidgetType.Toggle;
-			case UnityInputType.Float:
-				return UnityWidgetType.Slider;
-			case UnityInputType.Vector2:
-				return UnityWidgetType.Vector2Field;
-			case UnityInputType.Vector3:
-				return UnityWidgetType.Vector3Field;
-			case UnityInputType.Vector4:
-				return UnityWidgetType.Vector4Field;
-			case UnityInputType.Color:
-				return UnityWidgetType.ColorField;
-			case UnityInputType.String:
-				return UnityWidgetType.TextField;
-			case UnityInputType.Enum:
-				return UnityWidgetType.ComboBox;
-			case UnityInputType.Texture:
-				return UnityWidgetType.Image;
-			default:
-				return UnityWidgetType.Invalid;
-			}
+				UnityInputType.Boolean => UnityWidgetType.Toggle,
+				UnityInputType.Float => UnityWidgetType.Slider,
+				UnityInputType.Vector2 => UnityWidgetType.Vector2Field,
+				UnityInputType.Vector3 => UnityWidgetType.Vector3Field,
+				UnityInputType.Vector4 => UnityWidgetType.Vector4Field,
+				UnityInputType.Color => UnityWidgetType.ColorField,
+				UnityInputType.String => UnityWidgetType.TextField,
+				UnityInputType.Enum => UnityWidgetType.ComboBox,
+				UnityInputType.Texture => UnityWidgetType.Image,
+				_ => UnityWidgetType.Invalid,
+			};
 		}
 
 		public static string GetShaderTextureName(string pShaderName, string pOutputName)

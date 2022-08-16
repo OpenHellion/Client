@@ -19,11 +19,6 @@ namespace UnityStandardAssets.CinematicEffects
 				Debug.LogWarningFormat("Missing shader for image effect {0}", effect);
 				return false;
 			}
-			if (!SystemInfo.supportsImageEffects || !SystemInfo.supportsRenderTextures)
-			{
-				Debug.LogWarningFormat("Image effects aren't supported on this device ({0})", effect);
-				return false;
-			}
 			if (needDepth && !SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.Depth))
 			{
 				Debug.LogWarningFormat("Depth textures aren't supported on this device ({0})", effect);

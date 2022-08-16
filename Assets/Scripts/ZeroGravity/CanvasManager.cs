@@ -244,6 +244,7 @@ namespace ZeroGravity
 				SplashScreen.gameObject.Activate(value: false);
 				Client.Instance.SceneLoader.InitializeScenes();
 				Client.Instance.AmbientSounds.SwitchAmbience("MainMenu");
+				Client.Instance.AmbientSounds.Play(0);
 			}
 			CanvasUI.gameObject.Activate(value: false);
 			ScreenShootMod.Activate(value: false);
@@ -302,6 +303,8 @@ namespace ZeroGravity
 					Client.Instance.ConnectToServer(currentlySelectedServer);
 				}
 			}
+
+			// If esc is clicked.
 			if (InputManager.GetKeyDown(KeyCode.Escape))
 			{
 				if (IsConfirmBoxActive || ReportServerBox.gameObject.activeInHierarchy || InGameMenuCanvas.activeInHierarchy || CanvasMessageBox.activeInHierarchy)
@@ -385,6 +388,7 @@ namespace ZeroGravity
 			ShowDisclamer = false;
 			Disclamer.SetActive(ShowDisclamer);
 			Client.Instance.AmbientSounds.SwitchAmbience("MainMenu");
+			Client.Instance.AmbientSounds.Play(0);
 		}
 
 		public void SelectGameMode(int mode)
@@ -416,7 +420,7 @@ namespace ZeroGravity
 				spawnPointOptionUI2.CreateSaveGameButton();
 				flag = false;
 			}
-			
+
 			if (flag)
 			{
 				Client.Instance.PlayNewSPGame();
@@ -770,8 +774,12 @@ namespace ZeroGravity
 			SelectSpawnPointScreen.SetActive(value: false);
 		}
 
-		// Multiplayer button
-		
+		public void PlayMP()
+		{
+			
+			Client.Instance.SignInButton();
+		}
+
 		public void SettingsButton()
 		{
 			ToggleInGameMenuCanvas(val: true);

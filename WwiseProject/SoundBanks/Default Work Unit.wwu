@@ -55,8 +55,8 @@
 				</SoundBank>
 				<SoundBank Name="Ambience" ID="{EB053646-EFD4-4AAC-8C93-F36186212B95}">
 					<ObjectInclusionList>
-						<ObjectRef Name="RoomAmbiences" ID="{2F996E2B-B22E-43BA-A8A2-18B1BACC7F62}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Ambience" ID="{9A8BAFB3-9F34-45C0-933B-FA4055077B4A}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Ambience" ID="{F492F15B-8340-4C8F-8DAC-270FC237C64C}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Ambience" ID="{4B735E94-2D5F-4E58-A8B3-243B9C01BF81}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>

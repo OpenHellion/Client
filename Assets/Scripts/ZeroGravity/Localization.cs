@@ -499,7 +499,7 @@ namespace ZeroGravity
 
 		public static string DuplicateControlMessage;
 
-		public static string VersionErorr;
+		public static string VersionError;
 
 		public static string VersionErorrMessage;
 
@@ -2454,7 +2454,7 @@ namespace ZeroGravity
 			DeleteCharacter = "Delete character";
 			DuplicatedControl = "Duplicated Control";
 			DuplicateControlMessage = "This key is already in use for the {0} action, do you want to overwrite it ?";
-			VersionErorr = "Wrong client version";
+			VersionError = "Wrong client version";
 			VersionErorrMessage = "Please update your client";
 			AreYouSureLogout = "Are you sure you want to logout?";
 			AreYouSureExitGame = "Are you sure you want to exit?";

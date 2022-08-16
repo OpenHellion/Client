@@ -495,6 +495,9 @@
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
 								</Reference>
+								<Reference Name="DefaultSwitchOrState">
+									<ObjectRef Name="MainMenu" ID="{CB78F9B6-4FBC-4841-9C95-F6D5A83A248D}" WorkUnitID="{C436E4A2-B696-4919-8FBF-CE0FDEB7B0FA}"/>
+								</Reference>
 								<Reference Name="OutputBus">
 									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
 								</Reference>
@@ -507,6 +510,11 @@
 									<PropertyList>
 										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
 										<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-3</Value>
+											</ValueList>
+										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -521,6 +529,11 @@
 											<PropertyList>
 												<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
 												<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>-5</Value>
+													</ValueList>
+												</Property>
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
@@ -678,7 +691,6 @@
 								<RandomSequenceContainer Name="Outpost" ID="{34299A59-FA79-4DEE-97A7-912A0FACD160}" ShortID="601965045">
 									<PropertyList>
 										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
-										<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -690,6 +702,14 @@
 									</ReferenceList>
 									<ChildrenList>
 										<Sound Name="AltCorp_Loop_Ambience_Medium Room 1_Less Bass" ID="{D7458C61-7B0C-47DE-97CD-32E8EF4194AC}" ShortID="16384571">
+											<PropertyList>
+												<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>-10</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
@@ -703,7 +723,7 @@
 													<Language>SFX</Language>
 													<AudioFile>Ambience\AltCorp_Loop_Ambience_Medium Room 1_Less Bass.wav</AudioFile>
 													<MediaIDList>
-														<MediaID ID="63756390"/>
+														<MediaID ID="919959386"/>
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
@@ -718,7 +738,6 @@
 								<RandomSequenceContainer Name="Space" ID="{4A08C6E9-6935-4042-ADF2-FBA741780F65}" ShortID="514447690">
 									<PropertyList>
 										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
-										<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -730,6 +749,9 @@
 									</ReferenceList>
 									<ChildrenList>
 										<Sound Name="Background_Vacuum_A" ID="{2095461D-8590-49A0-AAA9-B86BCE86060D}" ShortID="833535256">
+											<PropertyList>
+												<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
@@ -743,7 +765,7 @@
 													<Language>SFX</Language>
 													<AudioFile>Ambience\Background_Vacuum_A.wav</AudioFile>
 													<MediaIDList>
-														<MediaID ID="287518139"/>
+														<MediaID ID="550205693"/>
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
@@ -772,7 +794,7 @@
 											<PropertyList>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
-														<Value>-3</Value>
+														<Value>-13</Value>
 													</ValueList>
 												</Property>
 											</PropertyList>

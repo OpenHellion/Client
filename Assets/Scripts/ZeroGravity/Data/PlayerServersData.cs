@@ -6,6 +6,6 @@ namespace ZeroGravity.Data
 	{
 		public List<long> FavoriteServers = new List<long>();
 
-		public Client.ServerFilters PreviousFilter;
+		public Client.ServerCategories PreviousFilter;
 	}
 }

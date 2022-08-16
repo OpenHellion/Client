@@ -35,7 +35,7 @@ namespace ZeroGravity
 			Sandbox
 		}
 
-		public enum ServerFilters
+		public enum ServerCategories
 		{
 			Official,
 			Community,
@@ -94,7 +94,7 @@ namespace ZeroGravity
 		public ConcurrentBag<GameServerUI> serverListForUi = new ConcurrentBag<GameServerUI>();
 
 		[Space(10f)]
-		public ServerFilters CurrentServerFilter;
+		public ServerCategories CurrentServerFilter;
 
 		private PlayerServersData playerServersData;
 
@@ -487,7 +487,7 @@ namespace ZeroGravity
 			}
 		}
 
-		
+
 		private void Awake()
 		{
 			SteamStats = GetComponent<SteamStats>();
@@ -613,12 +613,12 @@ namespace ZeroGravity
 			if (playerServersData == null)
 			{
 				playerServersData = new PlayerServersData();
-				playerServersData.PreviousFilter = ServerFilters.Official;
+				playerServersData.PreviousFilter = ServerCategories.Official;
 				playerServersData.FavoriteServers = new List<long>();
 			}
-			OfficialActive.SetActive(CurrentServerFilter == ServerFilters.Official);
-			CommunityActive.SetActive(CurrentServerFilter == ServerFilters.Community);
-			FavoritesActive.SetActive(CurrentServerFilter == ServerFilters.Favorites);
+			OfficialActive.SetActive(CurrentServerFilter == ServerCategories.Official);
+			CommunityActive.SetActive(CurrentServerFilter == ServerCategories.Community);
+			FavoritesActive.SetActive(CurrentServerFilter == ServerCategories.Favorites);
 			collisionLayerMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("PlayerCollision"));
 			NetworkController.EventSystem.AddListener(typeof(KillPlayerMessage), KillPlayerMessageListener);
 			NetworkController.EventSystem.AddListener(typeof(LogOutResponse), LogOutResponseListener);
@@ -1417,7 +1417,7 @@ namespace ZeroGravity
 			{
 				CanvasManager.DeadMsgText.text = killPlayerMessage.CauseOfDeath.ToLocalizedString().ToUpper();
 			}
-			LogCustomEvent("death", new Dictionary<string, object> { 
+			LogCustomEvent("death", new Dictionary<string, object> {
 			{
 				"cause_of_death",
 				killPlayerMessage.CauseOfDeath.ToString()
@@ -2223,6 +2223,8 @@ namespace ZeroGravity
 		{
 			GameObject gameObject = UnityEngine.Object.Instantiate(sampleServerButton, ServerListContentPanel);
 			GameServerUI server = gameObject.GetComponent<GameServerUI>();
+
+			// Assign variables.
 			server.Id = serverData.Id;
 			server.Name = serverData.Name;
 			server.IPAddress = serverData.IPAddress;
@@ -2235,16 +2237,24 @@ namespace ZeroGravity
 			server.Hash = serverData.Hash;
 			server.NameText.text = serverData.Name;
 			server.PingText.text = Localization.UpdatingStatus;
+
+			// Whether to show that the server is locked or not.
 			server.Private.SetActive(serverData.Locked);
+
+			// Add button to list.
 			serverListForUi.Add(server);
+
+			// Add button to correct server catergory.
 			if (serverData.Tag == ServerTag.Official)
 			{
-				server.FilterType = ServerFilters.Official;
+				server.FilterType = ServerCategories.Official;
 			}
 			else
 			{
-				server.FilterType = ServerFilters.Community;
+				server.FilterType = ServerCategories.Community;
 			}
+
+			// Check if the server hash matches our local hash.
 			if (server.Hash != CombinedHash)
 			{
 				server.NameText.color = Colors.Gray;
@@ -2254,27 +2264,22 @@ namespace ZeroGravity
 				server.PingText.text = Localization.Disabled.ToUpper();
 				server.PingText.color = Colors.Gray;
 			}
-			server.FavoritButton.onClick.AddListener(delegate
+
+			// Add a click action to the favourite button.
+			server.FavouriteButton.onClick.AddListener(delegate
 			{
 				ToggleFavouriteServer(server);
 			});
-			if (playerServersData.FavoriteServers.Contains(serverData.Id))
-			{
-				server.IsFavoriteServer.Activate(value: true);
-				server.IsFavourite = true;
-			}
-			else
-			{
-				server.IsFavoriteServer.Activate(value: false);
-				server.IsFavourite = false;
-			}
-			bool flag = false;
-			if (CurrentServerFilter == server.FilterType || (CurrentServerFilter == ServerFilters.Favorites && server.IsFavourite))
-			{
-				flag = true;
-			}
-			gameObject.SetActive(flag);
-			server.IsVisible = flag;
+
+			// Make the button visibly show as a favourite.
+			bool existsInFavouriteServers = playerServersData.FavoriteServers.Contains(serverData.Id);
+			server.IsFavoriteServer.Activate(existsInFavouriteServers);
+			server.IsFavourite = existsInFavouriteServers;
+
+			// Whether to show the button.
+			bool shouldShow = CurrentServerFilter == server.FilterType || (CurrentServerFilter == ServerCategories.Favorites && server.IsFavourite);
+			gameObject.SetActive(shouldShow);
+			server.IsVisible = shouldShow;
 		}
 
 		public void ClearServerList()
@@ -2299,24 +2304,28 @@ namespace ZeroGravity
 				CanvasManager.SelectScreen(CanvasManager.Screen.OnLoad);
 				ShowMessageBox(Localization.ConnectionError, Localization.LogInError);
 			}
-			else if (signInResponse.Response == ResponseResult.OwnershipIssue)
+			/*else if (signInResponse.Response == ResponseResult.OwnershipIssue)
 			{
+				// Anti-piracy stuff.
 				Application.OpenURL("http://store.steampowered.com/app/588210/");
 				ExitGame();
-			}
+			}*/
 			else if (signInResponse.Response == ResponseResult.ClientVersionError)
 			{
-				ShowMessageBox(Localization.VersionErorr, Localization.VersionErorrMessage);
+				ShowMessageBox(Localization.VersionError, Localization.VersionErorrMessage);
 			}
 			else
 			{
 				currentResponse = signInResponse;
 				CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
 				ClearServerList();
+
+				Dbg.Log("Found " + signInResponse.Servers.Count + " servers.");
 				foreach (ServerData value in signInResponse.Servers.Values)
 				{
 					CreateServerButton(value);
 				}
+				// Set order buttons by name.
 				OrderByButton(0);
 				UpdateServers = true;
 			}
@@ -2408,6 +2417,8 @@ namespace ZeroGravity
 				try
 				{
 					NetworkController.SendToMainServer(signInRequest);
+
+					// Response will be handled by the SignInResponseListener method.
 				}
 				catch (Exception)
 				{
@@ -2425,6 +2436,8 @@ namespace ZeroGravity
 		{
 			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.Loading);
 			yield return null;
+
+			// Make sure that no single player games are running.
 			KillAllSPProcesses();
 			if (SteamManager.Initialized)
 			{
@@ -2434,12 +2447,12 @@ namespace ZeroGravity
 			}
 		}
 
-		public void ServerFilterButton(int filter)
+		public void ServerCategoryButton(int filter)
 		{
 			switch (filter)
 			{
 			case 0:
-				CurrentServerFilter = ServerFilters.Official;
+				CurrentServerFilter = ServerCategories.Official;
 				foreach (GameServerUI item in serverListForUi)
 				{
 					bool flag2 = item.FilterType == CurrentServerFilter;
@@ -2448,7 +2461,7 @@ namespace ZeroGravity
 				}
 				break;
 			case 1:
-				CurrentServerFilter = ServerFilters.Community;
+				CurrentServerFilter = ServerCategories.Community;
 				foreach (GameServerUI item2 in serverListForUi)
 				{
 					bool flag = item2.FilterType == CurrentServerFilter;
@@ -2457,7 +2470,7 @@ namespace ZeroGravity
 				}
 				break;
 			default:
-				CurrentServerFilter = ServerFilters.Favorites;
+				CurrentServerFilter = ServerCategories.Favorites;
 				foreach (GameServerUI item3 in serverListForUi)
 				{
 					item3.Panel.SetActive(item3.IsFavourite);
@@ -2465,9 +2478,9 @@ namespace ZeroGravity
 				}
 				break;
 			}
-			OfficialActive.SetActive(CurrentServerFilter == ServerFilters.Official);
-			CommunityActive.SetActive(CurrentServerFilter == ServerFilters.Community);
-			FavoritesActive.SetActive(CurrentServerFilter == ServerFilters.Favorites);
+			OfficialActive.SetActive(CurrentServerFilter == ServerCategories.Official);
+			CommunityActive.SetActive(CurrentServerFilter == ServerCategories.Community);
+			FavoritesActive.SetActive(CurrentServerFilter == ServerCategories.Favorites);
 			SaveServerData();
 		}
 
@@ -2491,7 +2504,7 @@ namespace ZeroGravity
 				playerServersData.FavoriteServers.Remove(server.Id);
 			}
 			SaveServerData();
-			if (CurrentServerFilter == ServerFilters.Favorites)
+			if (CurrentServerFilter == ServerCategories.Favorites)
 			{
 				server.Panel.SetActive(server.IsFavourite);
 			}
@@ -2513,43 +2526,53 @@ namespace ZeroGravity
 			PasswordEnterPanel.SetActive(value: false);
 		}
 
+		/// <summary>
+		/// 	Orders the server list by the specified sort mode.<br />
+		/// 	1 sorts by ping.<br />
+		/// 	2 sorts by ?.<br />
+		/// 	3 sorts by name.<br />
+		/// 	4 sorts by player count.<br />
+		/// 	5 sorts by whether it is locked.<br />
+		/// 	Everything else sorts by name.
+		/// </summary>
 		public void OrderByButton(int sortMode)
 		{
+			// If clicked again, reverse the sort order.
 			if (prevSortMode == sortMode)
 			{
 				sortOrder *= -1;
 			}
-			/*else
-			{
-				sortOrder = sortOrder;
-			}*/
+
+			// Assemble the list.
 			List<GameServerUI> list = sortMode switch
 			{
 				1 => (from m in ServerListContentPanel.GetComponentsInChildren<GameServerUI>()
 					where !m.Disabled
 					orderby !m.OnLine, m.PingTime, !m.IsFavourite
-					select m).ToList(), 
+					select m).ToList(),
 				2 => (from m in ServerListContentPanel.GetComponentsInChildren<GameServerUI>()
 					where !m.Disabled
 					orderby m.CharacterData == null, !m.IsFavourite, m.name
-					select m).ToList(), 
+					select m).ToList(),
 				3 => (from m in ServerListContentPanel.GetComponentsInChildren<GameServerUI>()
 					where !m.Disabled
 					orderby !m.IsFavourite, m.name
-					select m).ToList(), 
+					select m).ToList(),
 				4 => (from m in ServerListContentPanel.GetComponentsInChildren<GameServerUI>()
 					where !m.Disabled
 					orderby m.CurrentPlayers, !m.IsFavourite, m.name
-					select m).ToList(), 
+					select m).ToList(),
 				5 => (from m in ServerListContentPanel.GetComponentsInChildren<GameServerUI>()
 					where !m.Disabled
 					orderby m.Locked, !m.IsFavourite, m.name
-					select m).ToList(), 
+					select m).ToList(),
 				_ => (from m in ServerListContentPanel.GetComponentsInChildren<GameServerUI>()
 					where !m.Disabled
 					orderby !m.IsFavourite, m.name
-					select m).ToList(), 
+					select m).ToList(),
 			};
+
+			// Reverse the order if sort order is supposed to be reversed.
 			if (sortOrder == -1)
 			{
 				list = Enumerable.Reverse(list).ToList();
@@ -2595,7 +2618,7 @@ namespace ZeroGravity
 		{
 			foreach (GameServerUI item in serverListForUi)
 			{
-				if (item.NameText.text.ToLower().Contains(ServerSearchInputField.text.ToLower()) && (item.FilterType == CurrentServerFilter || (item.IsFavourite && CurrentServerFilter == ServerFilters.Favorites)))
+				if (item.NameText.text.ToLower().Contains(ServerSearchInputField.text.ToLower()) && (item.FilterType == CurrentServerFilter || (item.IsFavourite && CurrentServerFilter == ServerCategories.Favorites)))
 				{
 					item.Panel.SetActive(value: true);
 				}
@@ -2649,7 +2672,7 @@ namespace ZeroGravity
 			InvitedToServerSpawnPointId = inviteMessage.SpawnPointId;
 			OpenMainScreen();
 		}
-		
+
 		public static AnalyticsResult LogCustomEvent(string customEventName, bool flush = false)
 		{
 			AnalyticsResult result = Analytics.CustomEvent(customEventName);

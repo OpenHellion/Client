@@ -18,15 +18,15 @@ namespace ZeroGravity
 
 		public VideoPlayer VideoPlayer;
 
-		public SoundEffect SoundEffect;
+		private SoundEffect _soundEffect;
 
-		private bool soundPlaying;
+		private bool _soundPlaying;
 
 		public GameObject PressAnyToContinue;
 
 		public List<VideoObject> VideoClips;
 
-		private Task runAfterVideo;
+		private Task _videoEndTask;
 
 		private void EndReached(VideoPlayer vp)
 		{
@@ -35,23 +35,23 @@ namespace ZeroGravity
 
 		private void Started(VideoPlayer vp)
 		{
-			if (!soundPlaying)
+			if (!_soundPlaying)
 			{
-				SoundEffect.Play(0);
-				soundPlaying = true;
+				_soundEffect.Play(0);
+				_soundPlaying = true;
 			}
 		}
 
 		private void Update()
 		{
-			if (Input.anyKeyDown && PressAnyToContinue.activeInHierarchy)
+			if (Input.anyKeyDown && !PressAnyToContinue.activeInHierarchy)
+			{
+				PressAnyToContinue.Activate(true);
+			}
+			else if (Input.anyKeyDown && PressAnyToContinue.activeInHierarchy)
 			{
 				//StopVideo();
 				VideoEnd();
-			}
-			else if (Input.anyKeyDown && !PressAnyToContinue.activeInHierarchy)
-			{
-				PressAnyToContinue.Activate(true);
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace ZeroGravity
 			{
 				if (VideoClips[clip].Sound != null)
 				{
-					SoundEffect = VideoClips[clip].Sound;
+					_soundEffect = VideoClips[clip].Sound;
 				}
 				VideoPlayer.loopPointReached += EndReached;
 				VideoPlayer.started += Started;
@@ -82,7 +82,7 @@ namespace ZeroGravity
 
 		public void FreshStart(Task tsk)
 		{
-			runAfterVideo = tsk;
+			_videoEndTask = tsk;
 			StartVideo(1);
 		}
 
@@ -92,19 +92,25 @@ namespace ZeroGravity
 			{
 				Client.Instance.SceneLoader.InitializeScenes();
 			}
-			if (runAfterVideo != null)
+
+			// Run video end task.
+			if (_videoEndTask != null)
 			{
-				runAfterVideo.RunSynchronously();
-				runAfterVideo = null;
+				_videoEndTask.RunSynchronously();
+				_videoEndTask = null;
 			}
+
+			// Hide the text.
 			PressAnyToContinue.Activate(false);
-			if (SoundEffect != null)
+			if (_soundEffect != null)
 			{
-				SoundEffect.Play(1);
+				_soundEffect.Play(1);
 			}
+
+			// Stop playing.
 			VideoPlayer.Stop();
 			VideoPlayer.clip = null;
-			soundPlaying = false;
+			_soundPlaying = false;
 			base.gameObject.Activate(false);
 		}
 	}

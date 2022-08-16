@@ -39,11 +39,7 @@ namespace UnityStandardAssets.ImageEffects
 
 		protected void Start()
 		{
-			if (!SystemInfo.supportsImageEffects)
-			{
-				base.enabled = false;
-			}
-			else if (!blurShader || !material.shader.isSupported)
+			if (!blurShader || !material.shader.isSupported)
 			{
 				base.enabled = false;
 			}

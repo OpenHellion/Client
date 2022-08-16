@@ -28,8 +28,8 @@ public class BDynamicsWorldEditor : Editor
         BPhysicsWorld pw = (BPhysicsWorld) target;
 //pw.doCollisionCallbacks = EditorGUILayout.Toggle("Do Collision Callbacks", pw.doCollisionCallbacks);
         pw.DoDebugDraw = EditorGUILayout.Toggle(gcDoDebugDraw, pw.DoDebugDraw);
-        pw.DebugDrawMode = (BulletSharp.DebugDrawModes) EditorGUILayout.EnumMaskPopup(DebugDrawMode, pw.DebugDrawMode);
-        
+        pw.DebugDrawMode = (BulletSharp.DebugDrawModes) EditorGUILayout.EnumFlagsField(DebugDrawMode, pw.DebugDrawMode);
+
         pw.worldType = (BPhysicsWorld.WorldType)EditorGUILayout.EnumPopup("World Type", pw.worldType);
         EditorGUILayout.Separator();
         pw.gravity = EditorGUILayout.Vector3Field("Gravity", pw.gravity);

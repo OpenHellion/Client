@@ -38,7 +38,7 @@ public class GameServerUI : MonoBehaviour
 
 	private uint _Hash;
 
-	public Client.ServerFilters FilterType;
+	public Client.ServerCategories FilterType;
 
 	public bool IsVisible;
 
@@ -66,7 +66,7 @@ public class GameServerUI : MonoBehaviour
 
 	public GameObject Private;
 
-	public Button FavoritButton;
+	public Button FavouriteButton;
 
 	public GameObject IsFavoriteServer;
 
@@ -260,7 +260,7 @@ public class GameServerUI : MonoBehaviour
 			{
 				DeleteCharacter.gameObject.SetActive(true);
 			}
-			if (FilterType == Client.ServerFilters.Official)
+			if (FilterType == Client.ServerCategories.Official)
 			{
 				ReportServer.gameObject.SetActive(true);
 			}

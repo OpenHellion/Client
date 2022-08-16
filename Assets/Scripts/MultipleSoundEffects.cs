@@ -19,7 +19,7 @@ public class MultipleSoundEffects : MonoBehaviour
 	{
 		if (AmbientList.Count > index)
 		{
-			AkSoundEngine.PostEvent((uint)AmbientList[index].eventID, SoundSourceObject);
+			AkSoundEngine.PostEvent((uint)AmbientList[index].GetInstanceID(), SoundSourceObject);
 		}
 	}
 }

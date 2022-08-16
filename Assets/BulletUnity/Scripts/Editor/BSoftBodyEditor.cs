@@ -67,7 +67,7 @@ namespace BulletUnity
             }
 
             DrawPropertiesExcluding(serializedObject, hideMe); //Draw settings after the default inspector
-            
+
             if (target is BSoftBodyPartOnSkinnedMesh)
             {
                 BSoftBodyPartOnSkinnedMesh sb = (BSoftBodyPartOnSkinnedMesh)target;
@@ -96,7 +96,7 @@ namespace BulletUnity
             EditorGUILayout.Space();
 
             //bitmask field for collisions
-            bSoftBodyTarget.SoftBodySettings.config.Collisions = (BulletSharp.SoftBody.CollisionFlags) EditorGUILayout.EnumMaskField(gcCollisionTooltip, bSoftBodyTarget.SoftBodySettings.config.Collisions);
+            bSoftBodyTarget.SoftBodySettings.config.Collisions = (BulletSharp.SoftBody.CollisionFlags) EditorGUILayout.EnumFlagsField(gcCollisionTooltip, bSoftBodyTarget.SoftBodySettings.config.Collisions);
 
             EditorGUILayout.PropertyField(softBodySettings, gcSoftBodySettings, true);
 
@@ -142,7 +142,7 @@ namespace BulletUnity
 
         #endregion
 
-        
+
         //Hackish method to get past Unity serialization
         void DrawCustomMeshSettingsOptions()
         {

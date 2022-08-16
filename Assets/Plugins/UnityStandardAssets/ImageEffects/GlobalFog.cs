@@ -101,7 +101,6 @@ namespace UnityStandardAssets.ImageEffects
 			value.w = ((!flag) ? 0f : (fogEndDistance * num5));
 			fogMaterial.SetVector("_SceneFogParams", value);
 			fogMaterial.SetVector("_SceneFogMode", new Vector4((float)fogMode, useRadialDistance ? 1 : 0, 0f, 0f));
-			int num6 = 0;
 			CustomGraphicsBlit(passNr: (!distanceFog || !heightFog) ? (distanceFog ? 1 : 2) : 0, source: source, dest: destination, fxMaterial: fogMaterial);
 		}
 

@@ -7,7 +7,7 @@ using BulletUnity;
 [CustomEditor(typeof(BCollisionObject))]
 public class BCollisionObjectEditor : Editor
 {
-    //BulletSharp has a class for CollisionFilterGroups but the Editor EnumMaskField doesn't like the None=0 
+    //BulletSharp has a class for CollisionFilterGroups but the Editor EnumMaskField doesn't like the None=0
     [Flags]
     public enum GUICollisionFlags
     {
@@ -90,21 +90,21 @@ public class BCollisionObjectEditor : Editor
         {
             vout = (int)GUICollisionFilterGroups.DefaultFilter;
         }
-        
+
         return (GUICollisionFilterGroups) vout;
     }
 
     public static BulletSharp.CollisionFlags RenderEnumMaskCollisionFlagsField(GUIContent guiContent, BulletSharp.CollisionFlags enumVal)
     {
         GUICollisionFlags g = (GUICollisionFlags) enumVal;
-        g = (GUICollisionFlags)EditorGUILayout.EnumMaskField(guiContent, g);
+        g = (GUICollisionFlags)EditorGUILayout.EnumFlagsField(guiContent, g);
         return (BulletSharp.CollisionFlags) g;
     }
 
     public static BulletSharp.CollisionFilterGroups RenderEnumMaskCollisionFilterGroupsField(GUIContent guiContent, BulletSharp.CollisionFilterGroups enumVal)
     {
         GUICollisionFilterGroups g = ConvertBulletSharpEnumToGUIEnum_CollisionFilterGroups(enumVal);
-        g = (GUICollisionFilterGroups)EditorGUILayout.EnumMaskField(guiContent, g);
+        g = (GUICollisionFilterGroups)EditorGUILayout.EnumFlagsField(guiContent, g);
         return ConvertGUIEnumToBulletSharpEnum_CollisionFilterGroups(g);
     }
 

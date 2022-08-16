@@ -63,9 +63,9 @@ namespace Substance.Game
 			RuntimePlatform.WindowsEditor,
 			RuntimePlatform.LinuxPlayer,
 			RuntimePlatform.LinuxEditor,
-			RuntimePlatform.MetroPlayerX86,
-			RuntimePlatform.MetroPlayerX64,
-			RuntimePlatform.MetroPlayerARM
+			RuntimePlatform.WSAPlayerX86,
+			RuntimePlatform.WSAPlayerX64,
+			RuntimePlatform.WSAPlayerARM
 		};
 
 		private static RuntimePlatform[] iOSFields = new RuntimePlatform[2]
