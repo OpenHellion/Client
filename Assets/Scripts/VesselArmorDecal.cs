@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using ThreeEyedGames;
 using UnityEngine;
 using ZeroGravity;
@@ -23,27 +21,19 @@ public class VesselArmorDecal : MonoBehaviour
 	[ColorUsage(false, true)]
 	public Color MilitaryNaniteCoreColor = Color.red;
 
-	[CompilerGenerated]
-	private static Func<SceneMachineryPartSlot, bool> _003C_003Ef__am_0024cache0;
-
 	private void Start()
 	{
 		Decalicious[] componentsInChildren = GetComponentsInChildren<Decalicious>();
 		foreach (Decalicious decalicious in componentsInChildren)
 		{
-			decalicious.Material = UnityEngine.Object.Instantiate(decalicious.Material);
+			decalicious.Material = Object.Instantiate(decalicious.Material);
 			Decals.Add(decalicious);
 		}
 		if (Client.IsGameBuild)
 		{
 			ParentVessel = GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
 		}
-		SceneMachineryPartSlot[] machineryPartSlots = ParentVessel.VesselBaseSystem.MachineryPartSlots;
-		if (_003C_003Ef__am_0024cache0 == null)
-		{
-			_003C_003Ef__am_0024cache0 = _003CStart_003Em__0;
-		}
-		ArmorSlot = machineryPartSlots.Where(_003C_003Ef__am_0024cache0).FirstOrDefault();
+		ArmorSlot = ParentVessel.VesselBaseSystem.MachineryPartSlots.Where((SceneMachineryPartSlot m) => m.Scope == MachineryPartSlotScope.Armor).FirstOrDefault();
 	}
 
 	public void UpdateDecals()
@@ -67,11 +57,5 @@ public class VesselArmorDecal : MonoBehaviour
 			decal.Fade = fade;
 			decal.Material.SetColor("_EmissionColor", value);
 		}
-	}
-
-	[CompilerGenerated]
-	private static bool _003CStart_003Em__0(SceneMachineryPartSlot m)
-	{
-		return m.Scope == MachineryPartSlotScope.Armor;
 	}
 }
