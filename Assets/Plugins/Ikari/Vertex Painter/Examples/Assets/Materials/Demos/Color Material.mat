@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Color Material
+  m_Shader: {fileID: 4800000, guid: 10c308ba4b48f2c4c8ad5a5af0669e0f, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 5dce6c8959e99234e9df7a5573b6fa78, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RedTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _node_2:
+        m_Texture: {fileID: 2800000, guid: 1dad3694cda9b9c44ba64f0d77d84f8a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _node_844:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Brightness: 0
+    - _node_1009: 2
+    - _node_114: 2
+    - _node_1232: 2
+    - _node_1856: 0
+    - _node_205: 0.125
+    - _node_2058: 2
+    - _node_222: 1.5
+    - _node_519: 0
+    - _node_525: 0.42857143
+    - _node_530: 1
+    - _node_596: 246.61
+    - _node_728: 0
+    - _node_841: -30.31
+    - _node_853: 0
+    - _node_866: 0.1
+    m_Colors:
+    - _AmbientOcclusionColor: {r: 0.22794116, g: 0.22794116, b: 0.22794116, a: 1}
+    - _BlueChannel: {r: 1, g: 1, b: 1, a: 1}
+    - _BlueChannelColor: {r: 0, g: 0.62758636, b: 1, a: 1}
+    - _BlueChannelColor_copy: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color_copy: {r: 0.7941176, g: 0.7824394, b: 0.7824394, a: 1}
+    - _GreenChannel: {r: 1, g: 1, b: 1, a: 1}
+    - _GreenChannelColor: {r: 0.4068966, g: 1, b: 0, a: 1}
+    - _MainTexColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _PaintColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RedChannel: {r: 1, g: 1, b: 1, a: 1}
+    - _RedChannelColor: {r: 1, g: 0.4758621, b: 0, a: 1}
+    - _RedChannelColor_copy: {r: 1, g: 0, b: 0, a: 1}
+    - _RedChannelColor_copy_copy: {r: 0, g: 0.66896534, b: 1, a: 1}
+    - _RedTexColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _node_1017: {r: 0, g: 0.21379304, b: 1, a: 1}
+    - _node_1131: {r: 1, g: 0, b: 0, a: 1}
+    - _node_1884: {r: 0.4068966, g: 0, b: 1, a: 1}
+    - _node_2271: {r: 1, g: 1, b: 1, a: 1}
+    - _node_526: {r: 1, g: 0.58823526, b: 0.58823526, a: 1}
+    - _node_623: {r: 1, g: 1, b: 1, a: 1}
+    - _node_802: {r: 3.03, g: 2.04, b: 1.36, a: 1.92}
+    - _node_843: {r: 1, g: 1, b: 1, a: 1}
+    - _node_889: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []

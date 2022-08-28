@@ -1,0 +1,63 @@
+2.1
+-Fixed paint downwards (Thanks to Romain Renault the report)
+-Added Skin Mesh Render paint (Thanks to Romain Renault for the report)
+-Added Multimaterial show vertex (Thanks to Romain Renault for the report)
+-Some more fixes.
+
+2.0
+-Changed the way the editor script get the path, now it's more safe.
+-Changed organization of the folders and added a new one called InternalResources, this one contains all the editor need for work.
+-Changed the way the colors are used in Ikari Vertex Painter, now it have a primary and secondary color instead of paint and erase colors.
+-Deleted the ability to select between primary and secondary colors because the swap function is the same.
+-Optimized shaders and updated to the last version of Shader Forge
+-Optimized a lot of code from the editor.
+-Fixed shaders errors
+-No shadows for unlit shaders
+-Fixed layout issues related to the editor scroll
+-Tweaked paint, now you can't paint when looking around (3DS Max Style)
+-Tweaked interface sliders.
+-Deleted background from the title (still need to improve this part..)
+-Fixed graphics from the editor window
+-Fixed alpha textures not rendering properly
+-Now all the graphics are taken in the initialization.
+-More i can't remember right now, enjoy!
+
+1.41
+-Fixed Playmode being subscribing everytime
+
+1.4
+-Improved editor performance.
+-Optimized Shaders for Mobile and for Desktop
+-Fixed issues with the shaders (Hopefully!)
+-Changed asset store art
+
+1.3
+-Changed art of the pack
+-Apologies for the previous art.
+
+1.26
+-Fixed Null reference error happening when a vertex has no data.
+
+1.25
+-Improved the slowdowns of the painting.
+-Improved the performance with high vertex count.
+-Added water shader.
+
+1.2
+-Critical bugfix for builds.
+-Optimized and cleaned all the shaders.
+-Fixed demo scene for Unity 5.
+-Added new vertexlit shader.
+
+1.1
+-Fixes on some shaders.
+-Fixed save asset on lost focus.
+-New shaders optimized for mobile.
+-Some bugfixes.
+
+1.0a
+-Fixed critical slowdown
+-Fixes on main scene.
+
+1.0
+Initial Release

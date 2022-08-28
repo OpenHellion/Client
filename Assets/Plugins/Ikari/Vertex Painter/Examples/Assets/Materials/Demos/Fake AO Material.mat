@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Fake AO Material
+  m_Shader: {fileID: 4800000, guid: 3cf21a2f681069d4d9469ece507e742a, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: fe9e0d4e8e5036c45b21abe33b074273, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _node_1393:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _node_1393_copy:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _node_2:
+        m_Texture: {fileID: 2800000, guid: 1dad3694cda9b9c44ba64f0d77d84f8a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _node_5197:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _node_9527:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _node_114: 2
+    - _node_1232: 1.162394
+    - _node_205: 0.125
+    - _node_8213: 0.3540342
+    m_Colors:
+    - _AmbientOcclusionColor: {r: 0.22794116, g: 0.22794116, b: 0.22794116, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color_copy: {r: 0.7941176, g: 0.7824394, b: 0.7824394, a: 1}
+    - _RedChannelColor: {r: 1, g: 1, b: 1, a: 1}
+    - _node_2006: {r: 0.3455882, g: 0.3455882, b: 0.3455882, a: 1}
+  m_BuildTextureStacks: []
