@@ -501,7 +501,7 @@ namespace ZeroGravity
 
 		public static string VersionError;
 
-		public static string VersionErorrMessage;
+		public static string VersionErrorMessage;
 
 		public static string AreYouSureLogout;
 
@@ -2455,7 +2455,7 @@ namespace ZeroGravity
 			DuplicatedControl = "Duplicated Control";
 			DuplicateControlMessage = "This key is already in use for the {0} action, do you want to overwrite it ?";
 			VersionError = "Wrong client version";
-			VersionErorrMessage = "Please update your client";
+			VersionErrorMessage = "Please update your client";
 			AreYouSureLogout = "Are you sure you want to logout?";
 			AreYouSureExitGame = "Are you sure you want to exit?";
 			AreYouSureDeleteCharacter = "Are you sure you want to delete this character?\nAll active quests progress will be lost!";

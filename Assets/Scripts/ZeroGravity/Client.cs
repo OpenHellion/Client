@@ -572,6 +572,7 @@ namespace ZeroGravity
 				string fileName = "localization_default.txt";
 				Localization.SaveToFile(fileName);
 			}
+
 			if (Localization.LocalizationFiles.TryGetValue(CurrentLanguageIndex, out var value))
 			{
 				try
@@ -2312,7 +2313,7 @@ namespace ZeroGravity
 			}*/
 			else if (signInResponse.Response == ResponseResult.ClientVersionError)
 			{
-				ShowMessageBox(Localization.VersionError, Localization.VersionErorrMessage);
+				ShowMessageBox(Localization.VersionError, Localization.VersionErrorMessage);
 			}
 			else
 			{
@@ -2424,6 +2425,10 @@ namespace ZeroGravity
 				{
 					ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
 				}
+			}
+			else
+			{
+				ShowMessageBox(Localization.ConnectionError, "Could not connect to Steam.");
 			}
 		}
 
