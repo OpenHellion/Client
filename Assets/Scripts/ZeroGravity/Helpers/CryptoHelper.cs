@@ -64,6 +64,9 @@ namespace ZeroGravity.Helpers
 			return array2;
 		}
 
+		/// <summary>
+		/// 	Gets the public key of the supplied connection.
+		/// </summary>
 		public static string ExchangePublicKeys(NetworkStream stream, string publicKey)
 		{
 			byte[] bytes = Encoding.UTF8.GetBytes(publicKey);
