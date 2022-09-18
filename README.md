@@ -1,10 +1,10 @@
-# Hellion Client
-This is the client for the Hellion game. It is the main part of the game, with the server always accompanying the client in every release.
+# Hellion Revived Client
+This is the client for the Hellion Revived game. It is the main part of the game, with the server always accompanying the client in every release.
 In the basegame, the server is located in the HELLION_SP folder, and contains data such as world saves.
 A [separate repository](https://github.com/Hellion-Revived/Hellion_SP) for the development of the single player server also exists.
 
 ## About Hellion
-Hellion is a multiplayer game set in space. You're apart of a mission-gone-wrong to colonise the nearest star. The goal is to survive in space, and to do such you need to follow the quests. The game has some sandbox features, that allows you to build and manage your own space stations and ships.
+Hellion Revived is a multiplayer game set in space. You're apart of a mission-gone-wrong to colonise the nearest star. The goal is to survive in space, and to do such you need to follow the quests. The game has some sandbox features, that allows you to build and manage your own space stations and ships.
 
 ## Info
 The game is developed with `Unity 2021.3 LTS` and `Wwise 2021.1 LTS`. I'm not very sure to which extent the game is cross-platform,
@@ -27,7 +27,7 @@ You will now have the whole project at your hands.
 ### Minimum requirements
 * 30 GB of disk space
 * 6 GB of RAM
-* 16 GB of RAM to build (a bit unsure since I only have 8 GB)
+* 16 GB of RAM to build
 
 Processor and graphics card shouldn't matter much, but it has to at least run Unity; Settings can be modified to increase performance.
 
