@@ -26,8 +26,8 @@ You will now have the whole project at your hands.
 
 ### Minimum requirements
 * 30 GB of disk space
-* 6 GB of RAM
-* 16 GB of RAM to build (a bit unsure since I only have 8 GB)
+* 8 GB of RAM
+* 16 GB of RAM to build
 
 Processor and graphics card shouldn't matter much, but it has to at least run Unity; Settings can be modified to increase performance.
 
