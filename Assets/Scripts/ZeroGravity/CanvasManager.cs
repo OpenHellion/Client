@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Steamworks;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Network;
@@ -776,7 +777,7 @@ namespace ZeroGravity
 
 		public void PlayMP()
 		{
-			
+
 			Client.Instance.SignInButton();
 		}
 
@@ -789,6 +790,12 @@ namespace ZeroGravity
 		public void QuitButton()
 		{
 			Client.Instance.ExitGame();
+
+#if UNITY_EDITOR
+			// Exit play mode if we are in the editor.
+			Dbg.Log("Exiting play mode...");
+			EditorApplication.isPlaying = false;
+#endif
 		}
 
 		public void BackButton()

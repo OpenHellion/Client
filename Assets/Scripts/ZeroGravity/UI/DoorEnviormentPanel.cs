@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -74,9 +73,6 @@ namespace ZeroGravity.UI
 
 		public GameObject DistressCallActive;
 
-		[CompilerGenerated]
-		private static Func<SceneMachineryPartSlot, bool> _003C_003Ef__am_0024cache0;
-
 		public Ship ParentShip
 		{
 			get
@@ -89,13 +85,7 @@ namespace ZeroGravity.UI
 			}
 		}
 
-		public float Degradation
-		{
-			get
-			{
-				return (float)((double)ParentShip.ExposureDamage * SpaceObjectVessel.VesselDecayRateMultiplier);
-			}
-		}
+		public float Degradation => (float)((double)ParentShip.ExposureDamage * SpaceObjectVessel.VesselDecayRateMultiplier);
 
 		private void Start()
 		{
@@ -103,17 +93,12 @@ namespace ZeroGravity.UI
 			{
 				Room.AddBehaviourScript(this);
 				DoorEnviormentUpdateUI();
-				SceneMachineryPartSlot[] machineryPartSlots = Room.ParentVessel.VesselBaseSystem.MachineryPartSlots;
-				if (_003C_003Ef__am_0024cache0 == null)
-				{
-					_003C_003Ef__am_0024cache0 = _003CStart_003Em__0;
-				}
-				foreach (SceneMachineryPartSlot item in machineryPartSlots.Where(_003C_003Ef__am_0024cache0))
+				foreach (SceneMachineryPartSlot item in Room.ParentVessel.VesselBaseSystem.MachineryPartSlots.Where((SceneMachineryPartSlot m) => m.Scope == MachineryPartSlotScope.Armor))
 				{
 					ArmorSlots.Add(item);
 				}
 			}
-			Text[] componentsInChildren = GetComponentsInChildren<Text>(true);
+			Text[] componentsInChildren = GetComponentsInChildren<Text>(includeInactive: true);
 			foreach (Text text in componentsInChildren)
 			{
 				string value = null;
@@ -160,11 +145,11 @@ namespace ZeroGravity.UI
 			DebrisField.SetActive(MyPlayer.Instance.InDebrisField != null);
 			if (Room.ParentVessel.MainVessel.IsDistressSignalActive && !DistressCallActive.activeInHierarchy)
 			{
-				DistressCallActive.SetActive(true);
+				DistressCallActive.SetActive(value: true);
 			}
 			else if (!Room.ParentVessel.MainVessel.IsDistressSignalActive && DistressCallActive.activeInHierarchy)
 			{
-				DistressCallActive.SetActive(false);
+				DistressCallActive.SetActive(value: false);
 			}
 			VesselHealth.fillAmount = Room.ParentVessel.Health / Room.ParentVessel.MaxHealth;
 			VesselHealthText.text = FormatHelper.CurrentMax(Room.ParentVessel.Health, Room.ParentVessel.MaxHealth);
@@ -181,13 +166,13 @@ namespace ZeroGravity.UI
 			if (selfDestructTimer.HasValue)
 			{
 				TimeSpan timeSpan = TimeSpan.FromSeconds(Room.ParentVessel.SelfDestructTimer.Value);
-				string text = string.Format("{0:n0} : {1:n0} : {2:n0}", timeSpan.TotalHours, timeSpan.Minutes, timeSpan.Seconds);
-				SelfDestructActive.SetActive(true);
+				string text = $"{timeSpan.TotalHours:n0} : {timeSpan.Minutes:n0} : {timeSpan.Seconds:n0}";
+				SelfDestructActive.SetActive(value: true);
 				SelfDestructTime.text = text;
 			}
 			else
 			{
-				SelfDestructActive.SetActive(false);
+				SelfDestructActive.SetActive(value: false);
 				SelfDestructTime.text = string.Empty;
 			}
 			AirQualityValue.text = (Room.AirQuality * 100f).ToString("f0");
@@ -219,12 +204,12 @@ namespace ZeroGravity.UI
 			{
 				if (ParentShip != null && ParentShip.EndWarpTime > 0.0 && ParentShip.IsWarpOnline)
 				{
-					ManeuverActive.SetActive(true);
+					ManeuverActive.SetActive(value: true);
 					ManeuverEta.text = Localization.ETA + " " + FormatHelper.PeriodFormat(ParentShip.EndWarpTime - Client.Instance.SolarSystem.CurrentTime);
 				}
 				else
 				{
-					ManeuverActive.SetActive(false);
+					ManeuverActive.SetActive(value: false);
 				}
 			}
 			DegradationRate.text = Degradation.ToString("0.0") + " HP/s";
@@ -232,14 +217,14 @@ namespace ZeroGravity.UI
 			if (Degradation > Room.ParentVessel.Armor)
 			{
 				ArmorValue.color = Colors.FormatedRed;
-				RadiationWarning.Activate(true);
-				HPDecay.Activate(true);
+				RadiationWarning.Activate(value: true);
+				HPDecay.Activate(value: true);
 			}
 			else
 			{
 				ArmorValue.color = Colors.White;
-				RadiationWarning.Activate(false);
-				HPDecay.Activate(false);
+				RadiationWarning.Activate(value: false);
+				HPDecay.Activate(value: false);
 			}
 		}
 
@@ -295,12 +280,12 @@ namespace ZeroGravity.UI
 			}
 			if (flag)
 			{
-				SystemFail.Activate(true);
+				SystemFail.Activate(value: true);
 			}
 			else
 			{
 				SystemFailLog.text = string.Empty;
-				SystemFail.Activate(false);
+				SystemFail.Activate(value: false);
 			}
 			if (DebrisField.activeSelf)
 			{
@@ -346,12 +331,6 @@ namespace ZeroGravity.UI
 				NaniteHealthValue.text = "0";
 				SafeTime.text = Localization.Armor.ToUpper() + " " + Localization.Missing.ToUpper();
 			}
-		}
-
-		[CompilerGenerated]
-		private static bool _003CStart_003Em__0(SceneMachineryPartSlot m)
-		{
-			return m.Scope == MachineryPartSlotScope.Armor;
 		}
 	}
 }

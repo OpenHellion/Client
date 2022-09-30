@@ -9,7 +9,7 @@ namespace ZeroGravity.LevelDesign
 	public abstract class SceneTriggerPanels : BaseSceneTrigger, IVesselSystemAccessory
 	{
 		[SerializeField]
-		private VesselSystem _BaseVesselSystem;
+		private VesselSystem _baseVesselSystem;
 
 		public override bool ExclusivePlayerLocking
 		{
@@ -23,22 +23,22 @@ namespace ZeroGravity.LevelDesign
 		{
 			get
 			{
-				return _BaseVesselSystem;
+				return _baseVesselSystem;
 			}
 			set
 			{
-				_BaseVesselSystem = value;
+				_baseVesselSystem = value;
 			}
 		}
 
 		protected override void Start()
 		{
 			base.Start();
-			if (_BaseVesselSystem == null)
+			if (_baseVesselSystem == null)
 			{
-				_BaseVesselSystem = GetComponentInParent<SpaceObjectVessel>().VesselBaseSystem;
+				_baseVesselSystem = GetComponentInParent<SpaceObjectVessel>().VesselBaseSystem;
 			}
-			_BaseVesselSystem.Accessories.Add(this);
+			_baseVesselSystem.Accessories.Add(this);
 			BaseVesselSystemUpdated();
 		}
 

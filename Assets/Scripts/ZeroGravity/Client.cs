@@ -53,8 +53,6 @@ namespace ZeroGravity
 
 		private string spServerFileName = "HELLION_SP.exe";
 
-		private bool newCharacter;
-
 		private CharacterData newCharacterData;
 
 		private GameServerUI deleteChararacterFromServer;
@@ -2101,7 +2099,6 @@ namespace ZeroGravity
 			}
 			if (server.CharacterData == null && newCharacterData == null)
 			{
-				newCharacter = true;
 				CreateCharacterPanel.SetActive(value: true);
 				CurrentGenderText.text = CurrentGender.ToLocalizedString();
 				InventoryCharacterPreview.instance.ResetPosition();
@@ -2342,7 +2339,6 @@ namespace ZeroGravity
 			{
 				ReconnectAutomatically = false;
 			}
-			newCharacter = false;
 			if (logInResponse.Response == ResponseResult.Success)
 			{
 				deleteChararacterFromServer = null;
@@ -2387,7 +2383,7 @@ namespace ZeroGravity
 			}
 			else
 			{
-				Dbg.Info("Server droped connection");
+				Dbg.Info("Server dropped connection.");
 				CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
 				ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
 			}

@@ -1,6 +1,6 @@
 {
 	"search.exclude": {
-		"Assets/Plugins": true,
+		"Assets/Plugins": false,
 		"Packages": true
 	},
     "files.exclude":
@@ -28,10 +28,11 @@
 		"Assets/Environment":true,
 		"Assets/Generic":true,
 		"Assets/Photon":true,
-		"Assets/Plugins":true,
+		"Assets/Plugins":false,
 		"Assets/Prefabs":true,
 		"Assets/Resources":true,
 		"Assets/Fonts":true,
+		"Assets/FontsTMPro":true,
 		"Assets/**/*.meta":true,
 		"Packages":true,
 		"UserSettings":true,

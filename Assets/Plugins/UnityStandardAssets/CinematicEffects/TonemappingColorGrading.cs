@@ -861,7 +861,6 @@ namespace UnityStandardAssets.CinematicEffects
 					Graphics.Blit(array[j], array[j + 1]);
 					source2 = array[j + 1];
 				}
-				m_SmallAdaptiveRt.MarkRestoreExpected();
 				material.SetFloat("_AdaptationSpeed", Mathf.Max(eyeAdaptation.speed, 0.001f));
 				Graphics.Blit(source2, m_SmallAdaptiveRt, material, (!flag) ? 2 : 3);
 				material.SetFloat("_MiddleGrey", eyeAdaptation.middleGrey);
@@ -931,7 +930,6 @@ namespace UnityStandardAssets.CinematicEffects
 					material.SetVector("_ChannelMixerGreen", colorGrading.channelMixer.channels[1]);
 					material.SetVector("_ChannelMixerBlue", colorGrading.channelMixer.channels[2]);
 					material.SetTexture("_CurveTex", curveTexture);
-					internalLutRt.MarkRestoreExpected();
 					Graphics.Blit(identityLut, internalLutRt, material, 0);
 					m_Dirty = false;
 				}

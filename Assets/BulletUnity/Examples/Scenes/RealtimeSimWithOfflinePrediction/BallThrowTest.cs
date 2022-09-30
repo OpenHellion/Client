@@ -20,7 +20,6 @@ public class BallThrowTest : MonoBehaviour
     bool simulationStarted = false;
     public int startFrame = 0;
     float fixedTimeStep = 1f / 60f;
-    int maxSubsteps = 3;
     List<Vector3> ballPositionsRealtime = new List<Vector3>();
     List<Vector3> ballPositionsOfflineSim = new List<Vector3>();
 
@@ -48,7 +47,7 @@ public class BallThrowTest : MonoBehaviour
 
             //Second simulation =====================
             ballRigidbody.AddImpulse(ballThrowImpulse);
-            
+
             for (int i = 0; i < ballPositionsOfflineSim.Count; i++)
             {
                 Instantiate<GameObject>(ballGhostPrefab).transform.position = ballPositionsOfflineSim[i];

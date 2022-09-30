@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using RootMotion.FinalIK;
 using UnityEngine;
 using UnityEngine.XR;
@@ -244,7 +246,16 @@ namespace RootMotion.Demos
 
 		private Vector3 TargetsCameraPosition()
 		{
-			float num = (InputTracking.GetLocalPosition(XRNode.LeftEye) - InputTracking.GetLocalPosition(XRNode.RightEye)).magnitude * 0.5f;
+			// Get nodes.
+			List<XRNodeState> nodeStates = new List<XRNodeState>();
+			InputTracking.GetNodeStates(nodeStates);
+
+			// Get position.
+			nodeStates.FirstOrDefault(node => node.nodeType == XRNode.LeftEye).TryGetPosition(out Vector3 left);
+			nodeStates.FirstOrDefault(node => node.nodeType == XRNode.RightEye).TryGetPosition(out Vector3 right);
+
+			// Calculate difference.
+			float num = (left - right).magnitude * 0.5f;
 			Vector3 vector = Vector3.right * num;
 			if (handedness == Handedness.Left)
 			{

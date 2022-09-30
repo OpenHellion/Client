@@ -76185,7 +76185,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'By the time you receive this message “Old man”, my body will be dead. Taken by that deceiving monster you call “a friend”. I will entrust my truth to you and leave our fates in your hands. 
+  m_Text: 'By the time you receive this message “Old man”, my body will be dead. Taken by that deceiving monster you call “a friend”.
+ I will entrust my truth to you and leave our fates in your hands. 
 
 	
 
@@ -76970,7 +76971,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 449}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d81f4e1587aa6a44dac43ee14a1db56c, type: 3}
+  m_Script: {fileID: 11500000, guid: 051d06300da25a64dac75b551574255e, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   _entityType: 0
@@ -76982,7 +76983,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 449}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2c8d4d486ee19f49af30be21589606a, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d3f656a91fdb0945a01d2dc19100de3, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   _quads:
@@ -78358,7 +78359,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 449}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d81f4e1587aa6a44dac43ee14a1db56c, type: 3}
+  m_Script: {fileID: 11500000, guid: 051d06300da25a64dac75b551574255e, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   _entityType: 0
@@ -78414,7 +78415,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 461}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d81f4e1587aa6a44dac43ee14a1db56c, type: 3}
+  m_Script: {fileID: 11500000, guid: 051d06300da25a64dac75b551574255e, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   _entityType: 0
@@ -78426,7 +78427,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 461}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2c8d4d486ee19f49af30be21589606a, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d3f656a91fdb0945a01d2dc19100de3, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   _quads:
@@ -79802,7 +79803,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 461}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d81f4e1587aa6a44dac43ee14a1db56c, type: 3}
+  m_Script: {fileID: 11500000, guid: 051d06300da25a64dac75b551574255e, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   _entityType: 0
@@ -80116,7 +80117,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 484}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d81f4e1587aa6a44dac43ee14a1db56c, type: 3}
+  m_Script: {fileID: 11500000, guid: 051d06300da25a64dac75b551574255e, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   _entityType: 0
@@ -80128,7 +80129,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 484}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2c8d4d486ee19f49af30be21589606a, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d3f656a91fdb0945a01d2dc19100de3, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   _quads:
@@ -81504,7 +81505,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 484}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d81f4e1587aa6a44dac43ee14a1db56c, type: 3}
+  m_Script: {fileID: 11500000, guid: 051d06300da25a64dac75b551574255e, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   _entityType: 0

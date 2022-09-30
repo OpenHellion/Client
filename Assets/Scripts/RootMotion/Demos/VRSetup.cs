@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
+using UnityEngine.XR.Provider;
 
 namespace RootMotion.Demos
 {
@@ -54,7 +55,11 @@ namespace RootMotion.Demos
 			{
 				gameObject.SetActive(true);
 			}
-			InputTracking.Recenter();
+
+			// Recenter headset.
+			XRInputSubsystem inputSystem = new();
+			inputSystem.TryRecenter();
+
 			text.gameObject.SetActive(false);
 			if (characterController != null)
 			{

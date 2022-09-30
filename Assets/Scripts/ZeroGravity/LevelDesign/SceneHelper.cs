@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Effects;
@@ -13,163 +12,6 @@ namespace ZeroGravity.LevelDesign
 {
 	public static class SceneHelper
 	{
-		[CompilerGenerated]
-		private sealed class _003CFillSubSystems_003Ec__AnonStorey0
-		{
-			internal SubSystem subSys;
-
-			internal bool _003C_003Em__0(SubSystemDetails m)
-			{
-				return m.InSceneID == subSys.InSceneID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillGenerators_003Ec__AnonStorey1
-		{
-			internal Generator generator;
-
-			internal bool _003C_003Em__0(GeneratorDetails m)
-			{
-				return m.InSceneID == generator.InSceneID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillRoomTriggers_003Ec__AnonStorey2
-		{
-			internal SceneTriggerRoom str;
-
-			internal bool _003C_003Em__0(RoomDetails m)
-			{
-				return m.InSceneID == str.InSceneID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillNameTags_003Ec__AnonStorey3
-		{
-			internal SceneNameTag obj;
-
-			internal bool _003C_003Em__0(NameTagData m)
-			{
-				return m.InSceneID == obj.InSceneID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillRepairPoints_003Ec__AnonStorey4
-		{
-			internal VesselRepairPoint obj;
-
-			internal bool _003C_003Em__0(VesselRepairPointDetails m)
-			{
-				return m.InSceneID == obj.InSceneID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillMiningPoints_003Ec__AnonStorey5
-		{
-			internal AsteroidMiningPoint obj;
-
-			internal bool _003C_003Em__0(AsteroidMiningPointDetails m)
-			{
-				return m.InSceneID == obj.InSceneID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillResourceContainers_003Ec__AnonStorey6
-		{
-			internal ResourceContainer rc;
-
-			internal bool _003C_003Em__0(ResourceContainerDetails m)
-			{
-				return m.InSceneID == rc.InSceneID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillDoors_003Ec__AnonStorey7
-		{
-			internal SceneDoor sd;
-
-			internal bool _003C_003Em__0(DoorDetails m)
-			{
-				return m.InSceneID == sd.InSceneID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillSceneTriggerExecuters_003Ec__AnonStorey8
-		{
-			internal SceneTriggerExecuter ste;
-
-			internal bool _003C_003Em__0(SceneTriggerExecuterDetails m)
-			{
-				return m.InSceneID == ste.InSceneID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillAttachPoints_003Ec__AnonStorey9
-		{
-			internal BaseSceneAttachPoint bsap;
-
-			internal bool _003C_003Em__0(AttachPointDetails m)
-			{
-				return m.InSceneID == bsap.InSceneID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillSceneDockingPorts_003Ec__AnonStoreyA
-		{
-			internal SceneDockingPort obj;
-
-			internal bool _003C_003Em__0(SceneDockingPortDetails m)
-			{
-				return m.ID.InSceneID == obj.InSceneID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillSpawnWithChanceData_003Ec__AnonStoreyB
-		{
-			internal SpawnObjectsWithChanceScene sow;
-
-			internal bool _003C_003Em__0(SpawnObjectsWithChanceDetails m)
-			{
-				return m.InSceneID == sow.InSceneID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillCargoBays_003Ec__AnonStoreyC
-		{
-			internal SceneCargoBay cargoBay;
-
-			internal bool _003C_003Em__0(CargoBayDetails m)
-			{
-				return m.InSceneID == cargoBay.InSceneID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillSpawnPoints_003Ec__AnonStoreyD
-		{
-			internal SceneSpawnPoint obj;
-
-			internal bool _003C_003Em__0(SpawnPointStats m)
-			{
-				return m.InSceneID == obj.InSceneID;
-			}
-		}
-
-		[CompilerGenerated]
-		private static Func<GameObject, bool> _003C_003Ef__am_0024cache0;
-
 		public static List<StructureSceneConnectionData> GetStructureConnectionData(GameObject rootObject)
 		{
 			return new List<StructureSceneConnectionData>();
@@ -290,7 +132,7 @@ namespace ZeroGravity.LevelDesign
 			return Mathf.Abs(num);
 		}
 
-		private static AirDoorParticleToggler CreateDoorAirParticles(SceneDoor door, SceneTriggerRoom room, UnityEngine.Object prefabObject)
+		private static AirDoorParticleToggler CreateDoorAirParticles(SceneDoor door, SceneTriggerRoom room, GameObject prefabObject)
 		{
 			return null;
 		}
@@ -321,18 +163,16 @@ namespace ZeroGravity.LevelDesign
 		public static void FillSubSystems(GameObject sceneRoot, Dictionary<int, SubSystem> subSystemsDict, List<SubSystemDetails> subSystemsDetails)
 		{
 			SubSystem[] componentsInChildren = sceneRoot.GetComponentsInChildren<SubSystem>();
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			foreach (SubSystem subSys in componentsInChildren)
 			{
-				_003CFillSubSystems_003Ec__AnonStorey0 _003CFillSubSystems_003Ec__AnonStorey = new _003CFillSubSystems_003Ec__AnonStorey0();
-				_003CFillSubSystems_003Ec__AnonStorey.subSys = componentsInChildren[i];
-				subSystemsDict[_003CFillSubSystems_003Ec__AnonStorey.subSys.InSceneID] = _003CFillSubSystems_003Ec__AnonStorey.subSys;
-				_003CFillSubSystems_003Ec__AnonStorey.subSys.SetParentVessel(sceneRoot.GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel);
+				subSystemsDict[subSys.InSceneID] = subSys;
+				subSys.SetParentVessel(sceneRoot.GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel);
 				if (subSystemsDetails != null)
 				{
-					SubSystemDetails subSystemDetails = subSystemsDetails.Find(_003CFillSubSystems_003Ec__AnonStorey._003C_003Em__0);
+					SubSystemDetails subSystemDetails = subSystemsDetails.Find((SubSystemDetails m) => m.InSceneID == subSys.InSceneID);
 					if (subSystemDetails != null)
 					{
-						_003CFillSubSystems_003Ec__AnonStorey.subSys.SetDetails(subSystemDetails, true);
+						subSys.SetDetails(subSystemDetails, instant: true);
 					}
 				}
 			}
@@ -341,18 +181,16 @@ namespace ZeroGravity.LevelDesign
 		public static void FillGenerators(GameObject sceneRoot, Dictionary<int, Generator> generatorsDict, List<GeneratorDetails> generatorsDetails)
 		{
 			Generator[] componentsInChildren = sceneRoot.GetComponentsInChildren<Generator>();
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			foreach (Generator generator in componentsInChildren)
 			{
-				_003CFillGenerators_003Ec__AnonStorey1 _003CFillGenerators_003Ec__AnonStorey = new _003CFillGenerators_003Ec__AnonStorey1();
-				_003CFillGenerators_003Ec__AnonStorey.generator = componentsInChildren[i];
-				generatorsDict[_003CFillGenerators_003Ec__AnonStorey.generator.InSceneID] = _003CFillGenerators_003Ec__AnonStorey.generator;
-				_003CFillGenerators_003Ec__AnonStorey.generator.SetParentVessel(sceneRoot.GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel);
+				generatorsDict[generator.InSceneID] = generator;
+				generator.SetParentVessel(sceneRoot.GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel);
 				if (generatorsDetails != null)
 				{
-					GeneratorDetails generatorDetails = generatorsDetails.Find(_003CFillGenerators_003Ec__AnonStorey._003C_003Em__0);
+					GeneratorDetails generatorDetails = generatorsDetails.Find((GeneratorDetails m) => m.InSceneID == generator.InSceneID);
 					if (generatorDetails != null)
 					{
-						_003CFillGenerators_003Ec__AnonStorey.generator.SetDetails(generatorDetails);
+						generator.SetDetails(generatorDetails);
 					}
 				}
 			}
@@ -361,20 +199,18 @@ namespace ZeroGravity.LevelDesign
 		public static void FillRoomTriggers(SpaceObjectVessel vessel, GameObject sceneRoot, Dictionary<int, SceneTriggerRoom> roomTriggersDict, List<RoomDetails> roomTriggersDetails)
 		{
 			SceneTriggerRoom[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneTriggerRoom>();
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			foreach (SceneTriggerRoom str in componentsInChildren)
 			{
-				_003CFillRoomTriggers_003Ec__AnonStorey2 _003CFillRoomTriggers_003Ec__AnonStorey = new _003CFillRoomTriggers_003Ec__AnonStorey2();
-				_003CFillRoomTriggers_003Ec__AnonStorey.str = componentsInChildren[i];
-				roomTriggersDict[_003CFillRoomTriggers_003Ec__AnonStorey.str.InSceneID] = _003CFillRoomTriggers_003Ec__AnonStorey.str;
-				_003CFillRoomTriggers_003Ec__AnonStorey.str.ParentVessel = vessel;
+				roomTriggersDict[str.InSceneID] = str;
+				str.ParentVessel = vessel;
 				if (roomTriggersDetails != null)
 				{
-					RoomDetails roomDetails = roomTriggersDetails.Find(_003CFillRoomTriggers_003Ec__AnonStorey._003C_003Em__0);
+					RoomDetails roomDetails = roomTriggersDetails.Find((RoomDetails m) => m.InSceneID == str.InSceneID);
 					if (roomDetails != null)
 					{
-						_003CFillRoomTriggers_003Ec__AnonStorey.str.UseGravity = roomDetails.UseGravity;
-						_003CFillRoomTriggers_003Ec__AnonStorey.str.AirPressure = roomDetails.AirPressure;
-						_003CFillRoomTriggers_003Ec__AnonStorey.str.AirQuality = roomDetails.AirQuality;
+						str.UseGravity = roomDetails.UseGravity;
+						str.AirPressure = roomDetails.AirPressure;
+						str.AirQuality = roomDetails.AirQuality;
 					}
 				}
 			}
@@ -382,23 +218,21 @@ namespace ZeroGravity.LevelDesign
 
 		public static void FillNameTags(Ship ship, GameObject sceneRoot, Dictionary<int, SceneNameTag> nameTags, List<NameTagData> nameTagDetails)
 		{
-			SceneNameTag[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneNameTag>(true);
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			SceneNameTag[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneNameTag>(includeInactive: true);
+			foreach (SceneNameTag obj in componentsInChildren)
 			{
-				_003CFillNameTags_003Ec__AnonStorey3 _003CFillNameTags_003Ec__AnonStorey = new _003CFillNameTags_003Ec__AnonStorey3();
-				_003CFillNameTags_003Ec__AnonStorey.obj = componentsInChildren[i];
-				if (_003CFillNameTags_003Ec__AnonStorey.obj.Local)
+				if (obj.Local)
 				{
 					continue;
 				}
-				nameTags[_003CFillNameTags_003Ec__AnonStorey.obj.InSceneID] = _003CFillNameTags_003Ec__AnonStorey.obj;
-				_003CFillNameTags_003Ec__AnonStorey.obj.ParentVessel = ship;
+				nameTags[obj.InSceneID] = obj;
+				obj.ParentVessel = ship;
 				if (nameTagDetails != null)
 				{
-					NameTagData nameTagData = nameTagDetails.Find(_003CFillNameTags_003Ec__AnonStorey._003C_003Em__0);
+					NameTagData nameTagData = nameTagDetails.Find((NameTagData m) => m.InSceneID == obj.InSceneID);
 					if (nameTagData != null)
 					{
-						_003CFillNameTags_003Ec__AnonStorey.obj.NameTagText = nameTagData.NameTagText;
+						obj.NameTagText = nameTagData.NameTagText;
 					}
 				}
 			}
@@ -406,21 +240,19 @@ namespace ZeroGravity.LevelDesign
 
 		public static void FillRepairPoints(Ship ship, GameObject sceneRoot, Dictionary<int, VesselRepairPoint> repairPoints, List<VesselRepairPointDetails> repairPointsDetails)
 		{
-			VesselRepairPoint[] componentsInChildren = sceneRoot.GetComponentsInChildren<VesselRepairPoint>(true);
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			VesselRepairPoint[] componentsInChildren = sceneRoot.GetComponentsInChildren<VesselRepairPoint>(includeInactive: true);
+			foreach (VesselRepairPoint obj in componentsInChildren)
 			{
-				_003CFillRepairPoints_003Ec__AnonStorey4 _003CFillRepairPoints_003Ec__AnonStorey = new _003CFillRepairPoints_003Ec__AnonStorey4();
-				_003CFillRepairPoints_003Ec__AnonStorey.obj = componentsInChildren[i];
-				repairPoints[_003CFillRepairPoints_003Ec__AnonStorey.obj.InSceneID] = _003CFillRepairPoints_003Ec__AnonStorey.obj;
-				_003CFillRepairPoints_003Ec__AnonStorey.obj.ParentVessel = ship;
+				repairPoints[obj.InSceneID] = obj;
+				obj.ParentVessel = ship;
 				if (repairPointsDetails != null)
 				{
-					VesselRepairPointDetails vesselRepairPointDetails = repairPointsDetails.Find(_003CFillRepairPoints_003Ec__AnonStorey._003C_003Em__0);
+					VesselRepairPointDetails vesselRepairPointDetails = repairPointsDetails.Find((VesselRepairPointDetails m) => m.InSceneID == obj.InSceneID);
 					if (vesselRepairPointDetails != null)
 					{
-						_003CFillRepairPoints_003Ec__AnonStorey.obj.MaxHealth = vesselRepairPointDetails.MaxHealth;
-						_003CFillRepairPoints_003Ec__AnonStorey.obj.Health = vesselRepairPointDetails.Health;
-						_003CFillRepairPoints_003Ec__AnonStorey.obj.SecondaryDamageActive = vesselRepairPointDetails.SecondaryDamageActive;
+						obj.MaxHealth = vesselRepairPointDetails.MaxHealth;
+						obj.Health = vesselRepairPointDetails.Health;
+						obj.SecondaryDamageActive = vesselRepairPointDetails.SecondaryDamageActive;
 					}
 				}
 			}
@@ -428,19 +260,17 @@ namespace ZeroGravity.LevelDesign
 
 		public static void FillMiningPoints(Asteroid asteroid, GameObject sceneRoot, Dictionary<int, AsteroidMiningPoint> repairPoints, List<AsteroidMiningPointDetails> miningPointsDetails)
 		{
-			AsteroidMiningPoint[] componentsInChildren = sceneRoot.GetComponentsInChildren<AsteroidMiningPoint>(true);
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			AsteroidMiningPoint[] componentsInChildren = sceneRoot.GetComponentsInChildren<AsteroidMiningPoint>(includeInactive: true);
+			foreach (AsteroidMiningPoint obj in componentsInChildren)
 			{
-				_003CFillMiningPoints_003Ec__AnonStorey5 _003CFillMiningPoints_003Ec__AnonStorey = new _003CFillMiningPoints_003Ec__AnonStorey5();
-				_003CFillMiningPoints_003Ec__AnonStorey.obj = componentsInChildren[i];
-				repairPoints[_003CFillMiningPoints_003Ec__AnonStorey.obj.InSceneID] = _003CFillMiningPoints_003Ec__AnonStorey.obj;
-				_003CFillMiningPoints_003Ec__AnonStorey.obj.ParentVessel = asteroid;
+				repairPoints[obj.InSceneID] = obj;
+				obj.ParentVessel = asteroid;
 				if (miningPointsDetails != null)
 				{
-					AsteroidMiningPointDetails asteroidMiningPointDetails = miningPointsDetails.Find(_003CFillMiningPoints_003Ec__AnonStorey._003C_003Em__0);
+					AsteroidMiningPointDetails asteroidMiningPointDetails = miningPointsDetails.Find((AsteroidMiningPointDetails m) => m.InSceneID == obj.InSceneID);
 					if (asteroidMiningPointDetails != null)
 					{
-						_003CFillMiningPoints_003Ec__AnonStorey.obj.SetDetails(asteroidMiningPointDetails);
+						obj.SetDetails(asteroidMiningPointDetails);
 					}
 				}
 			}
@@ -449,17 +279,15 @@ namespace ZeroGravity.LevelDesign
 		public static void FillResourceContainers(GameObject sceneRoot, Dictionary<int, ResourceContainer> resourceContainersDict, List<ResourceContainerDetails> resourceContainersDetails)
 		{
 			ResourceContainer[] componentsInChildren = sceneRoot.GetComponentsInChildren<ResourceContainer>();
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			foreach (ResourceContainer rc in componentsInChildren)
 			{
-				_003CFillResourceContainers_003Ec__AnonStorey6 _003CFillResourceContainers_003Ec__AnonStorey = new _003CFillResourceContainers_003Ec__AnonStorey6();
-				_003CFillResourceContainers_003Ec__AnonStorey.rc = componentsInChildren[i];
-				resourceContainersDict[_003CFillResourceContainers_003Ec__AnonStorey.rc.InSceneID] = _003CFillResourceContainers_003Ec__AnonStorey.rc;
+				resourceContainersDict[rc.InSceneID] = rc;
 				if (resourceContainersDetails != null)
 				{
-					ResourceContainerDetails resourceContainerDetails = resourceContainersDetails.Find(_003CFillResourceContainers_003Ec__AnonStorey._003C_003Em__0);
+					ResourceContainerDetails resourceContainerDetails = resourceContainersDetails.Find((ResourceContainerDetails m) => m.InSceneID == rc.InSceneID);
 					if (resourceContainerDetails != null)
 					{
-						_003CFillResourceContainers_003Ec__AnonStorey.rc.SetDetails(resourceContainerDetails);
+						rc.SetDetails(resourceContainerDetails);
 					}
 				}
 			}
@@ -468,18 +296,16 @@ namespace ZeroGravity.LevelDesign
 		public static void FillDoors(SpaceObjectVessel vessel, GameObject sceneRoot, Dictionary<int, SceneDoor> doorsDict, List<DoorDetails> doorsDetails)
 		{
 			SceneDoor[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneDoor>();
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			foreach (SceneDoor sd in componentsInChildren)
 			{
-				_003CFillDoors_003Ec__AnonStorey7 _003CFillDoors_003Ec__AnonStorey = new _003CFillDoors_003Ec__AnonStorey7();
-				_003CFillDoors_003Ec__AnonStorey.sd = componentsInChildren[i];
-				doorsDict[_003CFillDoors_003Ec__AnonStorey.sd.InSceneID] = _003CFillDoors_003Ec__AnonStorey.sd;
-				_003CFillDoors_003Ec__AnonStorey.sd.ParentVessel = vessel;
+				doorsDict[sd.InSceneID] = sd;
+				sd.ParentVessel = vessel;
 				if (doorsDetails != null)
 				{
-					DoorDetails doorDetails = doorsDetails.Find(_003CFillDoors_003Ec__AnonStorey._003C_003Em__0);
+					DoorDetails doorDetails = doorsDetails.Find((DoorDetails m) => m.InSceneID == sd.InSceneID);
 					if (doorDetails != null)
 					{
-						_003CFillDoors_003Ec__AnonStorey.sd.SetDoorDetails(doorDetails, true);
+						sd.SetDoorDetails(doorDetails, isInstant: true);
 					}
 				}
 			}
@@ -487,19 +313,17 @@ namespace ZeroGravity.LevelDesign
 
 		public static void FillSceneTriggerExecuters(SpaceObjectVessel vessel, GameObject sceneRoot, Dictionary<int, SceneTriggerExecuter> sceneTriggerExecuters, List<SceneTriggerExecuterDetails> sceneTriggersExecuterDetails)
 		{
-			SceneTriggerExecuter[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneTriggerExecuter>(true);
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			SceneTriggerExecuter[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneTriggerExecuter>(includeInactive: true);
+			foreach (SceneTriggerExecuter ste in componentsInChildren)
 			{
-				_003CFillSceneTriggerExecuters_003Ec__AnonStorey8 _003CFillSceneTriggerExecuters_003Ec__AnonStorey = new _003CFillSceneTriggerExecuters_003Ec__AnonStorey8();
-				_003CFillSceneTriggerExecuters_003Ec__AnonStorey.ste = componentsInChildren[i];
-				sceneTriggerExecuters[_003CFillSceneTriggerExecuters_003Ec__AnonStorey.ste.InSceneID] = _003CFillSceneTriggerExecuters_003Ec__AnonStorey.ste;
-				_003CFillSceneTriggerExecuters_003Ec__AnonStorey.ste.ParentVessel = vessel;
+				sceneTriggerExecuters[ste.InSceneID] = ste;
+				ste.ParentVessel = vessel;
 				if (sceneTriggersExecuterDetails != null)
 				{
-					SceneTriggerExecuterDetails sceneTriggerExecuterDetails = sceneTriggersExecuterDetails.Find(_003CFillSceneTriggerExecuters_003Ec__AnonStorey._003C_003Em__0);
+					SceneTriggerExecuterDetails sceneTriggerExecuterDetails = sceneTriggersExecuterDetails.Find((SceneTriggerExecuterDetails m) => m.InSceneID == ste.InSceneID);
 					if (sceneTriggerExecuterDetails != null)
 					{
-						_003CFillSceneTriggerExecuters_003Ec__AnonStorey.ste.SetExecuterDetails(sceneTriggerExecuterDetails, true);
+						ste.SetExecuterDetails(sceneTriggerExecuterDetails, isInstant: true);
 					}
 				}
 			}
@@ -508,18 +332,16 @@ namespace ZeroGravity.LevelDesign
 		public static void FillAttachPoints(SpaceObjectVessel vessel, GameObject sceneRoot, Dictionary<int, BaseSceneAttachPoint> attachPointDict, List<AttachPointDetails> AttachPointsDetails)
 		{
 			BaseSceneAttachPoint[] componentsInChildren = sceneRoot.GetComponentsInChildren<BaseSceneAttachPoint>();
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			foreach (BaseSceneAttachPoint bsap in componentsInChildren)
 			{
-				_003CFillAttachPoints_003Ec__AnonStorey9 _003CFillAttachPoints_003Ec__AnonStorey = new _003CFillAttachPoints_003Ec__AnonStorey9();
-				_003CFillAttachPoints_003Ec__AnonStorey.bsap = componentsInChildren[i];
-				attachPointDict[_003CFillAttachPoints_003Ec__AnonStorey.bsap.InSceneID] = _003CFillAttachPoints_003Ec__AnonStorey.bsap;
-				_003CFillAttachPoints_003Ec__AnonStorey.bsap.ParentVessel = vessel;
-				if (AttachPointsDetails != null && _003CFillAttachPoints_003Ec__AnonStorey.bsap is SceneMachineryPartSlot)
+				attachPointDict[bsap.InSceneID] = bsap;
+				bsap.ParentVessel = vessel;
+				if (AttachPointsDetails != null && bsap is SceneMachineryPartSlot)
 				{
-					AttachPointDetails attachPointDetails = AttachPointsDetails.Find(_003CFillAttachPoints_003Ec__AnonStorey._003C_003Em__0);
+					AttachPointDetails attachPointDetails = AttachPointsDetails.Find((AttachPointDetails m) => m.InSceneID == bsap.InSceneID);
 					if (attachPointDetails != null && attachPointDetails.AuxDetails != null)
 					{
-						(_003CFillAttachPoints_003Ec__AnonStorey.bsap as SceneMachineryPartSlot).SetActive((attachPointDetails.AuxDetails as MachineryPartSlotAuxDetails).IsActive, false);
+						(bsap as SceneMachineryPartSlot).SetActive((attachPointDetails.AuxDetails as MachineryPartSlotAuxDetails).IsActive, changeStats: false);
 					}
 				}
 			}
@@ -527,19 +349,17 @@ namespace ZeroGravity.LevelDesign
 
 		public static void FillSceneDockingPorts(Ship ship, GameObject sceneRoot, Dictionary<int, SceneDockingPort> sceneDockingPorts, List<SceneDockingPortDetails> sceneDockingPortDetails)
 		{
-			SceneDockingPort[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneDockingPort>(true);
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			SceneDockingPort[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneDockingPort>(includeInactive: true);
+			foreach (SceneDockingPort obj in componentsInChildren)
 			{
-				_003CFillSceneDockingPorts_003Ec__AnonStoreyA _003CFillSceneDockingPorts_003Ec__AnonStoreyA = new _003CFillSceneDockingPorts_003Ec__AnonStoreyA();
-				_003CFillSceneDockingPorts_003Ec__AnonStoreyA.obj = componentsInChildren[i];
-				sceneDockingPorts[_003CFillSceneDockingPorts_003Ec__AnonStoreyA.obj.InSceneID] = _003CFillSceneDockingPorts_003Ec__AnonStoreyA.obj;
-				_003CFillSceneDockingPorts_003Ec__AnonStoreyA.obj.ParentShip = ship;
+				sceneDockingPorts[obj.InSceneID] = obj;
+				obj.ParentShip = ship;
 				if (sceneDockingPortDetails != null)
 				{
-					SceneDockingPortDetails sceneDockingPortDetails2 = sceneDockingPortDetails.Find(_003CFillSceneDockingPorts_003Ec__AnonStoreyA._003C_003Em__0);
+					SceneDockingPortDetails sceneDockingPortDetails2 = sceneDockingPortDetails.Find((SceneDockingPortDetails m) => m.ID.InSceneID == obj.InSceneID);
 					if (sceneDockingPortDetails2 != null)
 					{
-						_003CFillSceneDockingPorts_003Ec__AnonStoreyA.obj.SetDetails(sceneDockingPortDetails2, true);
+						obj.SetDetails(sceneDockingPortDetails2, isInitialize: true);
 					}
 				}
 			}
@@ -548,14 +368,12 @@ namespace ZeroGravity.LevelDesign
 		public static void FillSpawnWithChanceData(GameObject sceneRoot, List<SpawnObjectsWithChanceDetails> SpawnChanceDetails)
 		{
 			SpawnObjectsWithChanceScene[] componentsInChildren = sceneRoot.GetComponentsInChildren<SpawnObjectsWithChanceScene>();
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			foreach (SpawnObjectsWithChanceScene sow in componentsInChildren)
 			{
-				_003CFillSpawnWithChanceData_003Ec__AnonStoreyB _003CFillSpawnWithChanceData_003Ec__AnonStoreyB = new _003CFillSpawnWithChanceData_003Ec__AnonStoreyB();
-				_003CFillSpawnWithChanceData_003Ec__AnonStoreyB.sow = componentsInChildren[i];
-				SpawnObjectsWithChanceDetails spawnObjectsWithChanceDetails = SpawnChanceDetails.Find(_003CFillSpawnWithChanceData_003Ec__AnonStoreyB._003C_003Em__0);
+				SpawnObjectsWithChanceDetails spawnObjectsWithChanceDetails = SpawnChanceDetails.Find((SpawnObjectsWithChanceDetails m) => m.InSceneID == sow.InSceneID);
 				if (spawnObjectsWithChanceDetails != null)
 				{
-					_003CFillSpawnWithChanceData_003Ec__AnonStoreyB.sow.SetDetails(spawnObjectsWithChanceDetails);
+					sow.SetDetails(spawnObjectsWithChanceDetails);
 				}
 			}
 		}
@@ -563,17 +381,15 @@ namespace ZeroGravity.LevelDesign
 		public static void FillCargoBays(GameObject sceneRoot, Dictionary<int, SceneCargoBay> cargoBaysDict, List<CargoBayDetails> cargoBaysDetails)
 		{
 			SceneCargoBay[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneCargoBay>();
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			foreach (SceneCargoBay cargoBay in componentsInChildren)
 			{
-				_003CFillCargoBays_003Ec__AnonStoreyC _003CFillCargoBays_003Ec__AnonStoreyC = new _003CFillCargoBays_003Ec__AnonStoreyC();
-				_003CFillCargoBays_003Ec__AnonStoreyC.cargoBay = componentsInChildren[i];
-				cargoBaysDict[_003CFillCargoBays_003Ec__AnonStoreyC.cargoBay.InSceneID] = _003CFillCargoBays_003Ec__AnonStoreyC.cargoBay;
+				cargoBaysDict[cargoBay.InSceneID] = cargoBay;
 				if (cargoBaysDetails != null)
 				{
-					CargoBayDetails cargoBayDetails = cargoBaysDetails.Find(_003CFillCargoBays_003Ec__AnonStoreyC._003C_003Em__0);
+					CargoBayDetails cargoBayDetails = cargoBaysDetails.Find((CargoBayDetails m) => m.InSceneID == cargoBay.InSceneID);
 					if (cargoBayDetails != null)
 					{
-						_003CFillCargoBays_003Ec__AnonStoreyC.cargoBay.SetDetails(cargoBayDetails);
+						cargoBay.SetDetails(cargoBayDetails);
 					}
 				}
 			}
@@ -581,19 +397,17 @@ namespace ZeroGravity.LevelDesign
 
 		public static void FillSpawnPoints(Ship sh, GameObject sceneRoot, Dictionary<int, SceneSpawnPoint> sceneSpawnPoints, List<SpawnPointStats> sceneSpawnPointStats)
 		{
-			SceneSpawnPoint[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneSpawnPoint>(true);
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			SceneSpawnPoint[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneSpawnPoint>(includeInactive: true);
+			foreach (SceneSpawnPoint obj in componentsInChildren)
 			{
-				_003CFillSpawnPoints_003Ec__AnonStoreyD _003CFillSpawnPoints_003Ec__AnonStoreyD = new _003CFillSpawnPoints_003Ec__AnonStoreyD();
-				_003CFillSpawnPoints_003Ec__AnonStoreyD.obj = componentsInChildren[i];
-				sceneSpawnPoints[_003CFillSpawnPoints_003Ec__AnonStoreyD.obj.InSceneID] = _003CFillSpawnPoints_003Ec__AnonStoreyD.obj;
-				_003CFillSpawnPoints_003Ec__AnonStoreyD.obj.ParentVessel = sh;
+				sceneSpawnPoints[obj.InSceneID] = obj;
+				obj.ParentVessel = sh;
 				if (sceneSpawnPointStats != null)
 				{
-					SpawnPointStats spawnPointStats = sceneSpawnPointStats.Find(_003CFillSpawnPoints_003Ec__AnonStoreyD._003C_003Em__0);
+					SpawnPointStats spawnPointStats = sceneSpawnPointStats.Find((SpawnPointStats m) => m.InSceneID == obj.InSceneID);
 					if (spawnPointStats != null)
 					{
-						_003CFillSpawnPoints_003Ec__AnonStoreyD.obj.SetStats(spawnPointStats);
+						obj.SetStats(spawnPointStats);
 					}
 				}
 			}
@@ -619,7 +433,7 @@ namespace ZeroGravity.LevelDesign
 
 		public static void SerializeOcclusionObjects(GameObject sceneRoot)
 		{
-			ZeroOccluder[] componentsInChildren = sceneRoot.GetComponentsInChildren<ZeroOccluder>(true);
+			ZeroOccluder[] componentsInChildren = sceneRoot.GetComponentsInChildren<ZeroOccluder>(includeInactive: true);
 			foreach (ZeroOccluder zeroOccluder in componentsInChildren)
 			{
 				zeroOccluder.SerializeOcclusionObjects();
@@ -658,7 +472,7 @@ namespace ZeroGravity.LevelDesign
 
 		public static void FillEmblems(GameObject sceneRoot, SpaceObjectVessel vessel)
 		{
-			SceneVesselEmblem[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneVesselEmblem>(true);
+			SceneVesselEmblem[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneVesselEmblem>(includeInactive: true);
 			foreach (SceneVesselEmblem item in componentsInChildren)
 			{
 				vessel.Emblems.Add(item);
@@ -668,18 +482,13 @@ namespace ZeroGravity.LevelDesign
 		public static void FillDamagePoints(GameObject sceneRoot, SpaceObjectVessel vessel)
 		{
 			vessel.DamagePoints = new List<DamagePointData>();
-			SceneDamagePoint[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneDamagePoint>(true);
+			SceneDamagePoint[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneDamagePoint>(includeInactive: true);
 			foreach (SceneDamagePoint sceneDamagePoint in componentsInChildren)
 			{
-				List<GameObject> effects = sceneDamagePoint.Effects;
-				if (_003C_003Ef__am_0024cache0 == null)
-				{
-					_003C_003Ef__am_0024cache0 = _003CFillDamagePoints_003Em__0;
-				}
-				sceneDamagePoint.Effects = effects.Where(_003C_003Ef__am_0024cache0).ToList();
+				sceneDamagePoint.Effects = sceneDamagePoint.Effects.Where((GameObject m) => m != null).ToList();
 				if (sceneDamagePoint.Effects.Count > 0)
 				{
-					sceneDamagePoint.transform.parent.gameObject.Activate(true);
+					sceneDamagePoint.transform.parent.gameObject.Activate(value: true);
 					vessel.DamagePoints.Add(new DamagePointData
 					{
 						VisibilityThreshold = sceneDamagePoint.VisibilityThreshold,
@@ -691,13 +500,13 @@ namespace ZeroGravity.LevelDesign
 						Effects = sceneDamagePoint.Effects
 					});
 				}
-				UnityEngine.Object.Destroy(sceneDamagePoint.gameObject);
+				GameObject.Destroy(sceneDamagePoint.gameObject);
 			}
 		}
 
 		public static void CheckTags(GameObject sceneRoot, string sceneTags)
 		{
-			SceneObjectTag[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneObjectTag>(true);
+			SceneObjectTag[] componentsInChildren = sceneRoot.GetComponentsInChildren<SceneObjectTag>(includeInactive: true);
 			foreach (SceneObjectTag sceneObjectTag in componentsInChildren)
 			{
 				if (sceneObjectTag.TagAction != 0)
@@ -706,7 +515,7 @@ namespace ZeroGravity.LevelDesign
 					sceneObjectTag.gameObject.SetActive((sceneObjectTag.TagAction == TagAction.DisableIfTagIs && !flag) || (sceneObjectTag.TagAction == TagAction.EnableIfTagIs && flag));
 				}
 			}
-			SceneTriggerExecuter[] componentsInChildren2 = sceneRoot.GetComponentsInChildren<SceneTriggerExecuter>(true);
+			SceneTriggerExecuter[] componentsInChildren2 = sceneRoot.GetComponentsInChildren<SceneTriggerExecuter>(includeInactive: true);
 			foreach (SceneTriggerExecuter sceneTriggerExecuter in componentsInChildren2)
 			{
 				if (sceneTriggerExecuter.TagAction == TagAction.None)
@@ -715,7 +524,7 @@ namespace ZeroGravity.LevelDesign
 				}
 				bool flag2 = CompareTags(sceneTags, sceneTriggerExecuter.Tags);
 				sceneTriggerExecuter.enabled = (sceneTriggerExecuter.TagAction == TagAction.DisableIfTagIs && !flag2) || (sceneTriggerExecuter.TagAction == TagAction.EnableIfTagIs && flag2);
-				SceneTrigger[] componentsInChildren3 = sceneRoot.GetComponentsInChildren<SceneTrigger>(true);
+				SceneTrigger[] componentsInChildren3 = sceneRoot.GetComponentsInChildren<SceneTrigger>(includeInactive: true);
 				foreach (SceneTrigger sceneTrigger in componentsInChildren3)
 				{
 					if (sceneTrigger.Executer == sceneTriggerExecuter)
@@ -729,7 +538,7 @@ namespace ZeroGravity.LevelDesign
 					}
 				}
 			}
-			SceneSpawnPoint[] componentsInChildren4 = sceneRoot.GetComponentsInChildren<SceneSpawnPoint>(true);
+			SceneSpawnPoint[] componentsInChildren4 = sceneRoot.GetComponentsInChildren<SceneSpawnPoint>(includeInactive: true);
 			foreach (SceneSpawnPoint sceneSpawnPoint in componentsInChildren4)
 			{
 				if (sceneSpawnPoint.TagAction != 0)
@@ -738,12 +547,6 @@ namespace ZeroGravity.LevelDesign
 					sceneSpawnPoint.enabled = (sceneSpawnPoint.TagAction == TagAction.DisableIfTagIs && !flag3) || (sceneSpawnPoint.TagAction == TagAction.EnableIfTagIs && flag3);
 				}
 			}
-		}
-
-		[CompilerGenerated]
-		private static bool _003CFillDamagePoints_003Em__0(GameObject m)
-		{
-			return m != null;
 		}
 	}
 }
