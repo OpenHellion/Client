@@ -53,10 +53,6 @@ namespace ZeroGravity.Audio
 
 		private int closeIndex;
 
-		private bool isRunning;
-
-		private bool isWalking = true;
-
 		private void Awake()
 		{
 			if ((bool)CloseSound)

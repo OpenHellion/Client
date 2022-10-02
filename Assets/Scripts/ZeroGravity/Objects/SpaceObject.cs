@@ -48,10 +48,6 @@ namespace ZeroGravity.Objects
 
 		public Vector3D RotationVec = Vector3D.Zero;
 
-		private float minAttenuation = 0.55f;
-
-		private float maxAttenuation = 1f;
-
 		public long GUID { get; set; }
 
 		public virtual SpaceObjectType Type => SpaceObjectType.None;

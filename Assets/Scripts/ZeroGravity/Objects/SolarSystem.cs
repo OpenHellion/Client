@@ -46,8 +46,6 @@ namespace ZeroGravity.Objects
 
 		private double planetsToDestroyDistance = 11000000000.0;
 
-		private double planetsToDestroyDistanceSqared = 1.21E+20;
-
 		private List<CelestialBody> celesitalBodies = new List<CelestialBody>();
 
 		[NonSerialized]

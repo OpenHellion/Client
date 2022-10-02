@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using ZeroGravity.Effects;
 using ZeroGravity.Network;
@@ -92,16 +91,6 @@ namespace ZeroGravity.LevelDesign
 
 		private bool overridSafety;
 
-		private float minAttenuation = 0.55f;
-
-		private float maxAttenuation = 1f;
-
-		[CompilerGenerated]
-		private static Func<Corpse, bool> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<DynamicObject, bool> _003C_003Ef__am_0024cache1;
-
 		public int InSceneID
 		{
 			get
@@ -114,37 +103,13 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public bool IsSealable
-		{
-			get
-			{
-				return _isSealable;
-			}
-		}
+		public bool IsSealable => _isSealable;
 
-		public bool HasPower
-		{
-			get
-			{
-				return _hasPower;
-			}
-		}
+		public bool HasPower => _hasPower;
 
-		public bool IsLocked
-		{
-			get
-			{
-				return _isLocked;
-			}
-		}
+		public bool IsLocked => _isLocked;
 
-		public bool IsOpen
-		{
-			get
-			{
-				return _isOpen;
-			}
-		}
+		public bool IsOpen => _isOpen;
 
 		private void Awake()
 		{
@@ -311,12 +276,7 @@ namespace ZeroGravity.LevelDesign
 
 		private void AffectOutsideCorpses(float fIntensity)
 		{
-			Dictionary<long, Corpse>.ValueCollection values = Client.Instance.Corpses.Values;
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CAffectOutsideCorpses_003Em__0;
-			}
-			foreach (Corpse item in values.Where(_003C_003Ef__am_0024cache0))
+			foreach (Corpse item in Client.Instance.Corpses.Values.Where((Corpse m) => m.Parent is Pivot))
 			{
 				if (!item.IsKinematic)
 				{
@@ -364,12 +324,7 @@ namespace ZeroGravity.LevelDesign
 
 		private void AffectOutsideDynamicObjects(float fIntensity)
 		{
-			Dictionary<long, DynamicObject>.ValueCollection values = Client.Instance.DynamicObjects.Values;
-			if (_003C_003Ef__am_0024cache1 == null)
-			{
-				_003C_003Ef__am_0024cache1 = _003CAffectOutsideDynamicObjects_003Em__1;
-			}
-			foreach (DynamicObject item in values.Where(_003C_003Ef__am_0024cache1))
+			foreach (DynamicObject item in Client.Instance.DynamicObjects.Values.Where((DynamicObject m) => m.Parent is Pivot))
 			{
 				if (!item.IsKinematic)
 				{
@@ -475,7 +430,7 @@ namespace ZeroGravity.LevelDesign
 
 		public bool IsSafeToOpenWithoutOverride()
 		{
-			float num = System.Math.Abs(((!(Room1 == null)) ? Room1.AirPressure : 0f) - ((!(Room2 == null)) ? Room2.AirPressure : 0f));
+			float num = Mathf.Abs(((!(Room1 == null)) ? Room1.AirPressure : 0f) - ((!(Room2 == null)) ? Room2.AirPressure : 0f));
 			if (num > 0.1f)
 			{
 				return false;
@@ -518,18 +473,6 @@ namespace ZeroGravity.LevelDesign
 					Hazard.SetActive(!IsSafeToOpenWithoutOverride());
 				}
 			}
-		}
-
-		[CompilerGenerated]
-		private static bool _003CAffectOutsideCorpses_003Em__0(Corpse m)
-		{
-			return m.Parent is Pivot;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CAffectOutsideDynamicObjects_003Em__1(DynamicObject m)
-		{
-			return m.Parent is Pivot;
 		}
 	}
 }

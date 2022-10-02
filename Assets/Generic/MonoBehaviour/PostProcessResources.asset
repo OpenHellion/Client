@@ -112,15 +112,15 @@ MonoBehaviour:
     multiScaleAO: {fileID: 4800000, guid: f16a3e9e6b3c4d84c940eefd1661d183, type: 3}
     screenSpaceReflections: {fileID: 4800000, guid: ebe5eca097b27d640b227de26bd8fd3f, type: 3}
   computeShaders:
-    autoExposure: {fileID: 7200000, guid: 71d45045878c6a24aa0a310caf0ac100, type: 2}
-    exposureHistogram: {fileID: 7200000, guid: d225055bb897bff42956d44fdcaa0711, type: 2}
-    lut3DBaker: {fileID: 7200000, guid: 298d2ea2aeda0394dabb214c62366510, type: 2}
-    texture3dLerp: {fileID: 7200000, guid: 5c1dec1c161be9d4f80fcfcd0971f332, type: 2}
-    gammaHistogram: {fileID: 7200000, guid: 7aee9ec97f1f9144fbad3f18e9849f1f, type: 2}
-    waveform: {fileID: 7200000, guid: a2fc5c74b6781884da4a687b4e2f9245, type: 2}
-    vectorscope: {fileID: 7200000, guid: f60198a5fd6d7e646931e9653ec69cbd, type: 2}
-    multiScaleAODownsample1: {fileID: 7200000, guid: 4ca5c5dc8e45b8049a6094198bf2de6a, type: 2}
-    multiScaleAODownsample2: {fileID: 7200000, guid: 55fff943ccf7bc24a846f7d5c4e6b298, type: 2}
-    multiScaleAORender: {fileID: 7200000, guid: bf463538db5deb649a9b9d685e1fab26, type: 2}
-    multiScaleAOUpsample: {fileID: 7200000, guid: 898689073e7ac1e468018c27fa7d7023, type: 2}
-    gaussianDownsample: {fileID: 7200000, guid: c6e57bc60ac183a4ebf45e117e364920, type: 2}
+    autoExposure: {fileID: 7200000, guid: 34845e0ca016b7448842e965db5890a5, type: 2}
+    exposureHistogram: {fileID: 7200000, guid: 8c2fcbdf9bc58664f89917f7b9d79501, type: 2}
+    lut3DBaker: {fileID: 7200000, guid: 42496b74c071f5749950ca1abe33e945, type: 2}
+    texture3dLerp: {fileID: 7200000, guid: 31e9175024adfd44aba2530ff9b77494, type: 2}
+    gammaHistogram: {fileID: 7200000, guid: 18183ebfeeab97749b43e38b928604a7, type: 2}
+    waveform: {fileID: 7200000, guid: 92c63830cd50c0b4fbb8233613839958, type: 2}
+    vectorscope: {fileID: 7200000, guid: e1efca7c36fd01840aae0dd10378de5c, type: 2}
+    multiScaleAODownsample1: {fileID: 7200000, guid: 4c63bc487e6c29a4a99f85a6c47b292b, type: 2}
+    multiScaleAODownsample2: {fileID: 7200000, guid: e4d3e4779e48a374f91d48d4c0aedb7b, type: 2}
+    multiScaleAORender: {fileID: 7200000, guid: 34a460e8a2e66c243a9c12024e5a798d, type: 2}
+    multiScaleAOUpsample: {fileID: 7200000, guid: 600d6212b59bb40409d19d750b5fd1e9, type: 2}
+    gaussianDownsample: {fileID: 7200000, guid: 6dba4103d23a7904fbc49099355aff3e, type: 2}

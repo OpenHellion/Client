@@ -147,10 +147,6 @@ namespace ZeroGravity
 		public SoundEffect SoundEffect;
 
 		[Header("My player")]
-		public MyPlayer mp;
-
-		public Image test;
-
 		public PlayerOverview PlayerOverview;
 
 		private float hitCanvasTime;
@@ -213,8 +209,9 @@ namespace ZeroGravity
 		private void Start()
 		{
 			Canvas = GetComponent<Canvas>();
-			Text[] componentsInChildren = GetComponentsInChildren<Text>(includeInactive: true);
-			foreach (Text text in componentsInChildren)
+
+			// Localize text in child objects.
+			foreach (Text text in GetComponentsInChildren<Text>(true))
 			{
 				string value = null;
 				if (Localization.CanvasManagerLocalization.TryGetValue(text.name, out value))
@@ -222,6 +219,7 @@ namespace ZeroGravity
 					text.text = value;
 				}
 			}
+
 			if (Client.IsLogout || Client.IsDisconected)
 			{
 				SelectScreen(Screen.CharacterSelect);
@@ -234,6 +232,7 @@ namespace ZeroGravity
 			{
 				SelectScreen(Screen.OnLoad);
 			}
+
 			Cursor.visible = true;
 			Disclamer.SetActive(ShowDisclamer);
 			if (ShowDisclamer)
@@ -766,7 +765,9 @@ namespace ZeroGravity
 			}
 		}
 
-		// Buttons
+		/// <summary>
+		/// 	The singleplayer button in the main menu.
+		/// </summary>
 		public void PlaySP()
 		{
 			SinglePlayerModeScreen.SetActive(value: true);
@@ -775,34 +776,43 @@ namespace ZeroGravity
 			SelectSpawnPointScreen.SetActive(value: false);
 		}
 
+		/// <summary>
+		/// 	The multiplayer button in the main menu.
+		/// </summary>
 		public void PlayMP()
 		{
 
 			Client.Instance.SignInButton();
 		}
 
+		/// <summary>
+		/// 	The settings button in the main menu.
+		/// </summary>
 		public void SettingsButton()
 		{
 			ToggleInGameMenuCanvas(val: true);
 			GetGameMenu().SettingsMenu(isUp: true);
 		}
 
+		/// <summary>
+		/// 	The quit button in the main menu.
+		/// </summary>
 		public void QuitButton()
 		{
 			Client.Instance.ExitGame();
 
-#if UNITY_EDITOR
+		#if UNITY_EDITOR
 			// Exit play mode if we are in the editor.
-			Dbg.Log("Exiting play mode...");
+			Dbg.Info("Exiting play mode...");
 			EditorApplication.isPlaying = false;
-#endif
+		#endif
 		}
 
 		public void BackButton()
 		{
 			Client.Instance.ClearServerList();
 			Client.Instance.UpdateServers = false;
-			SelectScreen(CanvasManager.Screen.OnLoad);
+			SelectScreen(Screen.OnLoad);
 			Client.Instance.NetworkController.Disconnect();
 		}
 

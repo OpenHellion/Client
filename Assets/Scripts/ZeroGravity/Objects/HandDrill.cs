@@ -74,8 +74,6 @@ namespace ZeroGravity.Objects
 
 		private bool isPlayingDrilling;
 
-		private bool isMining;
-
 		private float miningTime;
 
 		private AsteroidMiningPoint miningPoint;
@@ -239,7 +237,6 @@ namespace ZeroGravity.Objects
 						effectScript.ToggleEffect(false);
 						playerDrillingMessage.dontPlayEffect = true;
 					}
-					isMining = true;
 					miningTime += Time.deltaTime;
 					miningPoint = asteroidMiningPoint;
 					if (DynamicObj.Parent is MyPlayer)
@@ -265,7 +262,6 @@ namespace ZeroGravity.Objects
 					{
 						Client.Instance.NetworkController.SendToGameServer(playerDrillingMessage);
 					}
-					isMining = false;
 					miningTime = 0f;
 					miningPoint = null;
 					playerDrillingMessage.dontPlayEffect = true;
@@ -497,7 +493,6 @@ namespace ZeroGravity.Objects
 		public override void PrimaryReleased()
 		{
 			IsDrilling = false;
-			isMining = false;
 			miningTime = 0f;
 			drillAnimator.SetBool("Drilling", IsDrilling);
 			if (isPlayingSpin)

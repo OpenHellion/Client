@@ -87,8 +87,6 @@ namespace ZeroGravity
 
 		private int prevSortMode = -1;
 
-		private bool isAscending = true;
-
 		public ConcurrentBag<GameServerUI> serverListForUi = new ConcurrentBag<GameServerUI>();
 
 		[Space(10f)]
@@ -1004,6 +1002,9 @@ namespace ZeroGravity
 			}
 		}
 
+		/// <summary>
+		/// 	Listen for connection drops and attempt to reconnect.
+		/// </summary>
 		public void ReconnectAutoListener(EventSystem.InternalEventData data)
 		{
 			try
@@ -2081,14 +2082,20 @@ namespace ZeroGravity
 			StartCoroutine(_connectToServerCoroutine);
 		}
 
+		/// <summary>
+		/// 	Connect to a remote server.
+		/// </summary>
 		public IEnumerator ConnectToServerCoroutine(GameServerUI server, string serverPassword = null)
 		{
+			// Cancel if server is offline.
 			if (!server.OnLine)
 			{
 				ShowMessageBox(Localization.ConnectionError, Localization.ServerOffline);
 				_connectToServerCoroutine = null;
 				yield break;
 			}
+
+			// Get user input for password to server if it is locked.
 			if (server.Locked && serverPassword == null)
 			{
 				PasswordEnterPanel.SetActive(value: true);
@@ -2097,6 +2104,8 @@ namespace ZeroGravity
 				yield return new WaitWhile(() => PasswordEnterPanel.activeInHierarchy);
 				serverPassword = PasswordInputField.text;
 			}
+
+			// Create new character if you don't have it from before.
 			if (server.CharacterData == null && newCharacterData == null)
 			{
 				CreateCharacterPanel.SetActive(value: true);
@@ -2123,12 +2132,16 @@ namespace ZeroGravity
 					newCharacterData.HairType = 1;
 				}
 			}
+
+			// Check if server is still online.
 			if (!server.OnLine)
 			{
 				ShowMessageBox(Localization.ConnectionError, Localization.ServerOffline);
 				_connectToServerCoroutine = null;
 				yield break;
 			}
+
+			// Prepare for connection.
 			LastGameServersData = serverListForUi;
 			LastConnectedServer = server;
 			CanvasManager.LoadingTips.text = ShuffledTexts.GetNextInLoop();
@@ -2139,7 +2152,11 @@ namespace ZeroGravity
 				userName = LastSignInRequest.SteamId;
 			}
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
+
+			// Connect to server.
 			NetworkController.ConnectToGame(server, (!SteamManager.Initialized) ? userName : SteamUser.GetSteamID().m_SteamID.ToString(), newCharacterData, serverPassword);
+
+			// Cleanup data.
 			newCharacterData = null;
 			UpdateServers = false;
 			_invitedToServer = null;
@@ -2147,6 +2164,9 @@ namespace ZeroGravity
 			_connectToServerCoroutine = null;
 		}
 
+		/// <summary>
+		/// 	Cancel connecting to server.
+		/// </summary>
 		public void StopConnectToServerCoroutine()
 		{
 			if (_connectToServerCoroutine != null)
@@ -2207,6 +2227,9 @@ namespace ZeroGravity
 			}
 		}
 
+		/// <summary>
+		/// 	Reconnect after we have been disconnected.
+		/// </summary>
 		public void Reconnect()
 		{
 			if (userName == string.Empty && LastSignInRequest != null)
@@ -2719,6 +2742,9 @@ namespace ZeroGravity
 			StartCoroutine(PlaySPCoroutine());
 		}
 
+		/// <summary>
+		/// 	Start singleplayer server, and connect to it.
+		/// </summary>
 		public IEnumerator PlaySPCoroutine(string filename = null)
 		{
 			// Another anti-piracy check.

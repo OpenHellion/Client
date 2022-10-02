@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using TeamUtility.IO;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Rendering;
@@ -78,12 +77,7 @@ namespace ZeroGravity.Objects
 
 		public bool SittingOnPilotSeat;
 
-		[SerializeField]
-		private float AirPressureChangeIncrement = 0.003f;
-
 		public float MeleeRange;
-
-		public const int MaxBulletPenetration = 3;
 
 		[HideInInspector]
 		public EventSystem EventSystem;
@@ -93,8 +87,6 @@ namespace ZeroGravity.Objects
 
 		[SerializeField]
 		private MyCharacterController characterController;
-
-		private float switchVesselRequestTime;
 
 		public bool PlayerReady;
 
@@ -207,8 +199,6 @@ namespace ZeroGravity.Objects
 
 		private Dictionary<ResourceType, float> ResDbg;
 
-		private short[] index;
-
 		private bool reloadCalled;
 
 		private float reloadButtonPressedTime;
@@ -239,25 +229,13 @@ namespace ZeroGravity.Objects
 		private List<AudioMixerSnapshot> NearSnapshots;
 
 		[SerializeField]
-		private float NearTransitionTime = 1f;
-
-		[SerializeField]
 		private List<AudioMixerSnapshot> FarSnapshots;
-
-		[SerializeField]
-		private float FarTransitionTime = 1f;
 
 		public Transform HelmetPlacementTransform;
 
 		public Transform MuzzleFlashTransform;
 
 		public GameObject BulletHoleEffect;
-
-		private float shipStabTimer;
-
-		private float shipStabTreshold = 0.45f;
-
-		private bool isShipStab;
 
 		private int sunRaycastLayerMask;
 
@@ -340,10 +318,6 @@ namespace ZeroGravity.Objects
 		private bool itemToDropIsResetStance;
 
 		public Queue<string> ShotDebugList = new Queue<string>();
-
-		private float lastMovementMessageTime = -1f;
-
-		private volatile bool isInLerpHelthCorutine;
 
 		private float healthLerpHelper;
 
@@ -982,7 +956,6 @@ namespace ZeroGravity.Objects
 				healthLerpHelper += Time.deltaTime;
 				yield return new WaitForEndOfFrame();
 			}
-			isInLerpHelthCorutine = false;
 			yield return null;
 		}
 

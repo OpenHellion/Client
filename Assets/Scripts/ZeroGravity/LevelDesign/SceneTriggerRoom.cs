@@ -74,14 +74,9 @@ namespace ZeroGravity.LevelDesign
 		[NonSerialized]
 		public RoomPressurizationStatus PressurizationStatus;
 
-		private float currentLightShaftAirPressure = -1f;
-
 		private bool isApplicationQuitting;
 
 		public PressureAmbientGameObjects PressureGOsp;
-
-		[Space(10f)]
-		private bool playEndEvent;
 
 		[Space(10f)]
 		[Header("EFFECTS")]
@@ -268,7 +263,6 @@ namespace ZeroGravity.LevelDesign
 						}
 					}
 				}
-				playEndEvent = true;
 				{
 					foreach (SoundEffect pressurizationSound in PressurizationSounds)
 					{
@@ -302,7 +296,6 @@ namespace ZeroGravity.LevelDesign
 						}
 					}
 				}
-				playEndEvent = true;
 				{
 					foreach (SoundEffect pressurizationSound2 in PressurizationSounds)
 					{

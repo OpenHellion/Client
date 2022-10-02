@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using ZeroGravity.CharacterMovement;
 using ZeroGravity.Data;
@@ -36,10 +35,6 @@ namespace ZeroGravity.Objects
 
 		public MuzzleActivator currentMuzzle;
 
-		private float maxHorizontalBullet = 0.1f;
-
-		private float maxVerticalBullet = 0.2f;
-
 		[Header("Mods")]
 		public List<WeaponMod> Mods;
 
@@ -57,72 +52,19 @@ namespace ZeroGravity.Objects
 
 		private AnimatorHelper animHelper;
 
-		private float lastShotAttemptTime;
+		public override EquipType EquipTo => EquipType.Hands;
 
-		[CompilerGenerated]
-		private static Func<ItemType, bool> _003C_003Ef__mg_0024cache0;
+		public override Transform TipOfItem => (!IsSpecialStance) ? NormalTipOfTheGun : SpecialTipOfTheGun;
 
-		[CompilerGenerated]
-		private static Func<KeyValuePair<short, ItemSlot>, bool> _003C_003Ef__am_0024cache0;
+		public Vector2 CurrentRecoil => (!IsSpecialStance) ? CurrentWeaponMod.NormalRecoil : CurrentWeaponMod.SpecialRecoil;
 
-		[CompilerGenerated]
-		private static Func<Magazine, float> _003C_003Ef__am_0024cache1;
+		public float Range => CurrentWeaponMod.Range;
 
-		public override EquipType EquipTo
-		{
-			get
-			{
-				return EquipType.Hands;
-			}
-		}
+		public override float Quantity => (!(Magazine != null)) ? 0f : Magazine.Quantity;
 
-		public override Transform TipOfItem
-		{
-			get
-			{
-				return (!IsSpecialStance) ? NormalTipOfTheGun : SpecialTipOfTheGun;
-			}
-		}
+		public override float MaxQuantity => (!(Magazine != null)) ? 0f : Magazine.MaxQuantity;
 
-		public Vector2 CurrentRecoil
-		{
-			get
-			{
-				return (!IsSpecialStance) ? CurrentWeaponMod.NormalRecoil : CurrentWeaponMod.SpecialRecoil;
-			}
-		}
-
-		public float Range
-		{
-			get
-			{
-				return CurrentWeaponMod.Range;
-			}
-		}
-
-		public override float Quantity
-		{
-			get
-			{
-				return (!(Magazine != null)) ? 0f : Magazine.Quantity;
-			}
-		}
-
-		public override float MaxQuantity
-		{
-			get
-			{
-				return (!(Magazine != null)) ? 0f : Magazine.MaxQuantity;
-			}
-		}
-
-		public Magazine Magazine
-		{
-			get
-			{
-				return (!(magazineSlot != null)) ? null : (magazineSlot.Item as Magazine);
-			}
-		}
+		public Magazine Magazine => (!(magazineSlot != null)) ? null : (magazineSlot.Item as Magazine);
 
 		public bool IsSpecialStance
 		{
@@ -149,12 +91,7 @@ namespace ZeroGravity.Objects
 			}
 			CurrentWeaponMod = Mods[0];
 			shootingLayerMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("FirstPerson"));
-			Dictionary<short, ItemSlot> slots = Slots;
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CAwake_003Em__0;
-			}
-			magazineSlot = slots.FirstOrDefault(_003C_003Ef__am_0024cache0).Value;
+			magazineSlot = Slots.FirstOrDefault((KeyValuePair<short, ItemSlot> m) => m.Value.ItemTypes.FirstOrDefault(ItemTypeRange.IsAmmo) != ItemType.None).Value;
 		}
 
 		public override void UpdateUI()
@@ -209,11 +146,7 @@ namespace ZeroGravity.Objects
 			}
 			if (list.Count > 0)
 			{
-				if (_003C_003Ef__am_0024cache1 == null)
-				{
-					_003C_003Ef__am_0024cache1 = _003CReloadFromInventory_003Em__1;
-				}
-				list.OrderBy(_003C_003Ef__am_0024cache1).Reverse();
+				list.OrderBy((Magazine x) => x.Quantity).Reverse();
 				Reload(list[0]);
 			}
 		}
@@ -227,7 +160,7 @@ namespace ZeroGravity.Objects
 				{
 					MyPlayer.Instance.ChangeCamerasFov(Client.DefaultCameraFov);
 					MyPlayer.Instance.ReloadItem(newReloadingItem, Magazine, (!(Magazine != null)) ? AnimatorHelper.ReloadType.JustLoad : AnimatorHelper.ReloadType.FullReload, Type);
-					ToggleZoomCamera(false);
+					ToggleZoomCamera(status: false);
 				}
 			}
 		}
@@ -311,13 +244,13 @@ namespace ZeroGravity.Objects
 					forward = hitInfo.normal;
 					break;
 				}
-				BulletImpact component = UnityEngine.Object.Instantiate(bulletImpact.gameObject).GetComponent<BulletImpact>();
+				BulletImpact component = GameObject.Instantiate(bulletImpact.gameObject).GetComponent<BulletImpact>();
 				component.transform.position = hitInfo.point + hitInfo.normal * 0.1f;
 				component.transform.forward = forward;
 				if (bulletImpact.Decal != null)
 				{
-					MeshRenderer componentInChildren = component.Decal.GetComponentInChildren<MeshRenderer>(true);
-					MeshRenderer componentInChildren2 = bulletImpact.Decal.GetComponentInChildren<MeshRenderer>(true);
+					MeshRenderer componentInChildren = component.Decal.GetComponentInChildren<MeshRenderer>(includeInactive: true);
+					MeshRenderer componentInChildren2 = bulletImpact.Decal.GetComponentInChildren<MeshRenderer>(includeInactive: true);
 					componentInChildren.sharedMaterial = componentInChildren2.sharedMaterial;
 					component.Decal.transform.SetParent(hitInfo.transform);
 				}
@@ -364,9 +297,9 @@ namespace ZeroGravity.Objects
 		{
 			if (MyPlayer.Instance.MuzzleFlashTransform.childCount != 0)
 			{
-				UnityEngine.Object.Destroy(MyPlayer.Instance.MuzzleFlashTransform.GetChild(0).gameObject);
+				GameObject.Destroy(MyPlayer.Instance.MuzzleFlashTransform.GetChild(0).gameObject);
 			}
-			currentMuzzle = UnityEngine.Object.Instantiate(MuzzleFlash, NormalTipOfTheGun.position, NormalTipOfTheGun.rotation).GetComponent<MuzzleActivator>();
+			currentMuzzle = GameObject.Instantiate(MuzzleFlash, NormalTipOfTheGun.position, NormalTipOfTheGun.rotation).GetComponent<MuzzleActivator>();
 			currentMuzzle.transform.SetParent(MyPlayer.Instance.MuzzleFlashTransform);
 		}
 
@@ -402,11 +335,11 @@ namespace ZeroGravity.Objects
 				(pl as OtherPlayer).CurrentWeapon = ((type != EquipTo) ? null : this);
 				if (NormalTipOfTheGun.childCount != 0)
 				{
-					UnityEngine.Object.Destroy(NormalTipOfTheGun.GetChild(0).gameObject);
+					GameObject.Destroy(NormalTipOfTheGun.GetChild(0).gameObject);
 				}
-				currentMuzzle = UnityEngine.Object.Instantiate(MuzzleFlash, NormalTipOfTheGun.position, NormalTipOfTheGun.rotation).GetComponent<MuzzleActivator>();
+				currentMuzzle = GameObject.Instantiate(MuzzleFlash, NormalTipOfTheGun.position, NormalTipOfTheGun.rotation).GetComponent<MuzzleActivator>();
 				currentMuzzle.transform.SetParent(NormalTipOfTheGun);
-				currentMuzzle.currentSmoke.SetActive(false);
+				currentMuzzle.currentSmoke.SetActive(value: false);
 			}
 			else if (pl is MyPlayer)
 			{
@@ -416,7 +349,7 @@ namespace ZeroGravity.Objects
 				}
 				else
 				{
-					ToggleZoomCamera(false);
+					ToggleZoomCamera(status: false);
 				}
 			}
 		}
@@ -437,7 +370,7 @@ namespace ZeroGravity.Objects
 			WeaponStats weaponStats = dos as WeaponStats;
 			if (weaponStats.CurrentMod.HasValue && weaponStats.CurrentMod.Value != Mods.IndexOf(CurrentWeaponMod))
 			{
-				ChangeMod(weaponStats.CurrentMod.Value, false);
+				ChangeMod(weaponStats.CurrentMod.Value, send: false);
 			}
 			UpdateUI();
 		}
@@ -512,7 +445,7 @@ namespace ZeroGravity.Objects
 				newReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.LeftInteractBone);
 				if (currentReloadItem != null)
 				{
-					currentReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.Hips, false);
+					currentReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.Hips, resetTransform: false);
 				}
 				break;
 			case AnimatorHelper.ReloadStepType.ReloadEnd:
@@ -525,7 +458,7 @@ namespace ZeroGravity.Objects
 			}
 			if (IsSpecialStance && CanZoom && (reloadStepType == AnimatorHelper.ReloadStepType.ReloadEnd || reloadStepType == AnimatorHelper.ReloadStepType.UnloadEnd))
 			{
-				ToggleZoomCamera(true);
+				ToggleZoomCamera(status: true);
 			}
 		}
 
@@ -542,23 +475,6 @@ namespace ZeroGravity.Objects
 
 		public virtual void ToggleZoomCamera(bool status)
 		{
-		}
-
-		[CompilerGenerated]
-		private static bool _003CAwake_003Em__0(KeyValuePair<short, ItemSlot> m)
-		{
-			List<ItemType> itemTypes = m.Value.ItemTypes;
-			if (_003C_003Ef__mg_0024cache0 == null)
-			{
-				_003C_003Ef__mg_0024cache0 = ItemTypeRange.IsAmmo;
-			}
-			return itemTypes.FirstOrDefault(_003C_003Ef__mg_0024cache0) != ItemType.None;
-		}
-
-		[CompilerGenerated]
-		private static float _003CReloadFromInventory_003Em__1(Magazine x)
-		{
-			return x.Quantity;
 		}
 	}
 }

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using ZeroGravity.Math;
 
@@ -9,8 +8,6 @@ namespace ZeroGravity.UI
 		public Transform TargetTrans;
 
 		public Transform ParentTrans;
-
-		private float R = 75f;
 
 		public float r1 = 37f;
 

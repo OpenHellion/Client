@@ -105,12 +105,6 @@ namespace ZeroGravity.CharacterMovement
 		[SerializeField]
 		private float freeLookMaxDownAngle = 40f;
 
-		private float locked_maxUpAngle = 45f;
-
-		private float locked_maxDownAngle = 45f;
-
-		private float locked_maxRightAngle = 45f;
-
 		private Vector3 freeLookYTransformPos = new Vector3(0f, 0.36f, 0f);
 
 		private bool animatorIsTurning = true;

@@ -12,6 +12,98 @@
 						<Switch Name="MainMenu" ID="{CB78F9B6-4FBC-4841-9C95-F6D5A83A248D}"/>
 					</ChildrenList>
 				</SwitchGroup>
+				<SwitchGroup Name="WalkRun" ID="{4CA28A6E-3AE3-40E6-96FB-FE37DC8A8C34}">
+					<ChildrenList>
+						<Switch Name="Run" ID="{C87F4BB5-1189-4D33-849B-80E0D2D7BA73}"/>
+						<Switch Name="Walk" ID="{F7ED7D2A-9520-47E7-9100-0BE957D268F3}"/>
+					</ChildrenList>
+				</SwitchGroup>
+				<SwitchGroup Name="ImpactVelocity" ID="{AD4A13BE-0471-4EB5-B257-8EA4C760E939}">
+					<PropertyList>
+						<Property Name="UseGameParameter" Type="bool" Value="True"/>
+					</PropertyList>
+					<ChildrenList>
+						<Switch Name="Soft" ID="{FBB36FCB-3314-42B0-BC13-2184CC40B4A6}"/>
+						<Switch Name="Stop" ID="{E7F3E144-C759-4713-802E-8C9D1CB7D79D}"/>
+						<Switch Name="Medium" ID="{BAF7AC16-0373-4728-90C0-22ADDB220268}"/>
+						<Switch Name="Hard" ID="{781B8598-FDC0-4664-8F93-19F0F47DC0B1}"/>
+					</ChildrenList>
+					<SwitchOnRTPC>
+						<GameParameterRef Name="ImpactVelocity" ID="{5CD2E4AC-2FE8-4211-90CD-D6BBAD0215B0}"/>
+						<Curve Name="" ID="{CB1A54FE-A7A2-4C98-A14C-12B836782A91}">
+							<PropertyList>
+								<Property Name="Flags" Type="int32" Value="65537"/>
+							</PropertyList>
+							<PointList>
+								<Point>
+									<XPos>0</XPos>
+									<YPos>2</YPos>
+									<Flags>5</Flags>
+								</Point>
+								<Point>
+									<XPos>9.98594</XPos>
+									<YPos>1</YPos>
+									<Flags>0</Flags>
+								</Point>
+								<Point>
+									<XPos>33.19268</XPos>
+									<YPos>3</YPos>
+									<Flags>0</Flags>
+								</Point>
+								<Point>
+									<XPos>71.72996</XPos>
+									<YPos>4</YPos>
+									<Flags>0</Flags>
+								</Point>
+								<Point>
+									<XPos>100</XPos>
+									<YPos>4</YPos>
+									<Flags>37</Flags>
+								</Point>
+							</PointList>
+						</Curve>
+					</SwitchOnRTPC>
+				</SwitchGroup>
+				<SwitchGroup Name="Health" ID="{A4FFB310-5E2E-4306-9EEF-42132F45A236}">
+					<PropertyList>
+						<Property Name="UseGameParameter" Type="bool" Value="True"/>
+					</PropertyList>
+					<ChildrenList>
+						<Switch Name="Full" ID="{AC28C600-CF76-408D-AFF2-BB0C2E0F4AC6}"/>
+						<Switch Name="Half" ID="{972D020F-86BD-47BC-A629-645A3F6EBF34}"/>
+						<Switch Name="Low" ID="{A3F3FD24-1600-4B35-ACD3-61707832C5A9}"/>
+					</ChildrenList>
+					<SwitchOnRTPC>
+						<GameParameterRef Name="Health" ID="{59D18841-B85C-4FBB-81AD-8FB0AF823C0E}"/>
+						<Curve Name="" ID="{4CFB8D09-B045-4823-9132-ACAC331120B2}">
+							<PropertyList>
+								<Property Name="Flags" Type="int32" Value="65537"/>
+							</PropertyList>
+							<PointList>
+								<Point>
+									<XPos>0</XPos>
+									<YPos>3</YPos>
+									<Flags>5</Flags>
+								</Point>
+								<Point>
+									<XPos>21.65963</XPos>
+									<YPos>2</YPos>
+									<Flags>0</Flags>
+								</Point>
+								<Point>
+									<XPos>55.9775</XPos>
+									<YPos>1</YPos>
+									<Flags>0</Flags>
+								</Point>
+								<Point>
+									<XPos>100</XPos>
+									<YPos>1</YPos>
+									<Flags>37</Flags>
+								</Point>
+							</PointList>
+						</Curve>
+					</SwitchOnRTPC>
+				</SwitchGroup>
 			</ChildrenList>
 		</WorkUnit>
 	</Switches>

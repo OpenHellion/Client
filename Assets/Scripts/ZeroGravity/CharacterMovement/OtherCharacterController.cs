@@ -64,8 +64,6 @@ namespace ZeroGravity.CharacterMovement
 
 		private float syncTime;
 
-		private float syncDelay;
-
 		private float syncLastTime = -1f;
 
 		public float LerpFreeLookUpAnimationRate = 5f;
@@ -112,8 +110,6 @@ namespace ZeroGravity.CharacterMovement
 		public SoundEffect HealthSounds;
 
 		private float lastImpactTime;
-
-		private bool isPlatfrmLerp;
 
 		private Dictionary<byte, RagdollItemData> ragdollTargetData;
 
@@ -314,20 +310,14 @@ namespace ZeroGravity.CharacterMovement
 			CharacterTransformData transformData = cmm.TransformData;
 			animHelper.ParseData(cmm.AnimationData);
 			syncTime = 0f;
-			float num = ((!(syncLastTime < 0f)) ? 0.1f : (Time.realtimeSinceStartup - syncLastTime));
-			if (num < 0.08f || num > 1.2f)
-			{
-				syncDelay = 1.2f;
-			}
+
 			syncLastTime = Time.realtimeSinceStartup;
 			if (syncLastTime < lastInstantPositionSetTime)
 			{
 				return;
 			}
-			isPlatfrmLerp = false;
 			if (transformData.PlatformRelativePos != null && player.OnPlatform != null)
 			{
-				isPlatfrmLerp = true;
 				SetTargetPositionAndRotation(null, transformData.LocalRotation.ToQuaternion());
 			}
 			else if (cmm.RagdollData == null)

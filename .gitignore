@@ -78,6 +78,9 @@ WwiseProject/*_WwiseProject.*.validationcache
 WwiseProject/*_WwiseProject.*.wsettings
 WwiseProject/**/*.akd
 
+# Ignore changes to the project. Important changes has to be done manually.
+WwiseProject/*_WwiseProject.wproj
+
 # WWise Picker (editor)
 Assets/Wwise/Editor/ProjectData/AkWwiseProjectData.asset*
 
@@ -85,7 +88,7 @@ Assets/Wwise/Editor/ProjectData/AkWwiseProjectData.asset*
 # 1) if any other files go in Assets/Wwise/Editor/ProjectData/ besides AkWwiseProjectData.asset*,
 #    then don't ignore Assets/Wwise/Editor/ProjectData.meta. If AkWwiseProjectData.asset is the only item in there,
 #    then, it's OK to ignore this file.
-# 
+#
 # Assets/Wwise/Editor/ProjectData.meta
 
 ## --------------- ##

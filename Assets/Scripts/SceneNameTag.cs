@@ -18,8 +18,6 @@ public class SceneNameTag : BaseSceneTrigger, ISceneObject
 	[NonSerialized]
 	public SpaceObjectVessel ParentVessel;
 
-	public int TextureHeight = 200;
-
 	private Component comp;
 
 	[SerializeField]
@@ -150,7 +148,9 @@ public class SceneNameTag : BaseSceneTrigger, ISceneObject
 		texture2D.LoadImage(data);
 		matInstance.mainTexture = texture2D;*/
 
-		TMP_Text textObject = new CustomTMPText(text);
+		// Broken
+		// TODO: Fix this.
+		/*TMP_Text textObject = new CustomTMPText(text);
 
 		textObject.font = Client.Instance.GetLocalFont(fontName);
 		textObject.fontStyle = FontStyles.Bold;
@@ -159,7 +159,7 @@ public class SceneNameTag : BaseSceneTrigger, ISceneObject
 		textObject.autoSizeTextContainer = true;
 		textObject.enableWordWrapping = false;
 
-		matInstance.mainTexture = textObject.mainTexture;
+		matInstance.mainTexture = textObject.mainTexture;*/
 	}
 
 	public void SetNameTagText(string text)

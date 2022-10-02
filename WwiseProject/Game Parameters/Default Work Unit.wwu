@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{28BF7696-FAE4-4797-A245-1672504B32F1}" SchemaVersion="103">
 	<GameParameters>
-		<WorkUnit Name="Default Work Unit" ID="{28BF7696-FAE4-4797-A245-1672504B32F1}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{28BF7696-FAE4-4797-A245-1672504B32F1}" PersistMode="Standalone">
+			<ChildrenList>
+				<GameParameter Name="ImpactVelocity" ID="{5CD2E4AC-2FE8-4211-90CD-D6BBAD0215B0}"/>
+				<GameParameter Name="HealthDuck" ID="{B3493126-5499-4E37-B199-2E50109B1967}"/>
+				<GameParameter Name="Pressure" ID="{B08908FD-62E9-40DD-84DA-99A17D4A67B2}"/>
+				<GameParameter Name="Health" ID="{59D18841-B85C-4FBB-81AD-8FB0AF823C0E}"/>
+				<GameParameter Name="HelmetOn" ID="{6E3A4360-D150-4923-AFC2-95A32C91D34F}"/>
+				<GameParameter Name="RepairPointIntensity" ID="{A3EA5262-F1DA-428D-94DA-DA9F66AD1288}"/>
+			</ChildrenList>
+		</WorkUnit>
 	</GameParameters>
 </WwiseDocument>

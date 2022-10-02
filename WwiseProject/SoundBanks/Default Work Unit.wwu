@@ -61,6 +61,28 @@
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
 				</SoundBank>
+				<SoundBank Name="Character" ID="{795E6858-F231-4F3D-B032-2DC56C43F37F}">
+					<ObjectInclusionList>
+						<ObjectRef Name="Character" ID="{848A6F73-0D8C-40EA-9F04-FB0DD88767F2}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Footsteps_run" ID="{CE8E4AE0-D792-4124-AFAD-65A2AB4DA7D9}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Health" ID="{30FDEC54-DB60-4158-82F9-0383C6A797ED}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Footsteps_walk" ID="{2EEEB9A8-D600-4533-9629-C125F2AB731F}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Footsteps_walkBackwards" ID="{FA88FD2D-B7DB-49FD-A57D-B7D3087965BC}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Impact" ID="{2075A810-D435-4F7A-B403-72EFF17DC71A}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
+				<SoundBank Name="Environment" ID="{088A76F7-7ABD-47B9-9BCD-AEAEAF4CF3D2}">
+					<ObjectInclusionList>
+						<ObjectRef Name="Helmet" ID="{0EAE99D6-65FB-41FC-BE7C-36E387D6BD18}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Environment" ID="{BC87A919-9F9F-446C-9CD1-B5A74C75F4CE}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Effects" ID="{9C0E6CE7-FD19-48A5-A423-47BC00349F8B}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Props" ID="{A0C3B9AD-5032-4AC0-8122-412073CC3970}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
 			</ChildrenList>
 		</WorkUnit>
 	</SoundBanks>

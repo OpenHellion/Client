@@ -23,8 +23,6 @@ namespace ZeroGravity.ShipComponents
 
 		public int NumberOfOrbitPositions = 750;
 
-		private double lastOrbitUpdateTime = -1.0;
-
 		[SerializeField]
 		private Material orbitMaterial;
 

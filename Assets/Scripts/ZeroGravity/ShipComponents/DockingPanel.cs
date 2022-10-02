@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -19,17 +17,6 @@ namespace ZeroGravity.ShipComponents
 			public SceneDockingPort Port;
 
 			public DockingPanelUIItem UI;
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CReloadRadarElements_003Ec__AnonStorey0
-		{
-			internal ArtificialBody ab;
-
-			internal bool _003C_003Em__0(Ship m)
-			{
-				return m == ab as Ship;
-			}
 		}
 
 		private UpdateTimer Timer = new UpdateTimer(0.35f);
@@ -94,10 +81,6 @@ namespace ZeroGravity.ShipComponents
 
 		private float radarScanningRange = 3000f;
 
-		private float defaultCameraFov = 60f;
-
-		private float maximumZoomFov = 40f;
-
 		[SerializeField]
 		private Material DockingEffectMat;
 
@@ -158,33 +141,9 @@ namespace ZeroGravity.ShipComponents
 
 		public Text TargetModuleName;
 
-		[CompilerGenerated]
-		private static Func<SceneDockingPort, bool> _003C_003Ef__am_0024cache0;
+		public SceneDockingPort DockingPort => (DockingPorts.Count - 1 >= myCurrentPort) ? DockingPorts[myCurrentPort] : null;
 
-		[CompilerGenerated]
-		private static Func<SceneDockingPort, long> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Func<SceneDockingPort, string> _003C_003Ef__am_0024cache2;
-
-		[CompilerGenerated]
-		private static Func<SceneDockingPort, bool> _003C_003Ef__am_0024cache3;
-
-		public SceneDockingPort DockingPort
-		{
-			get
-			{
-				return (DockingPorts.Count - 1 >= myCurrentPort) ? DockingPorts[myCurrentPort] : null;
-			}
-		}
-
-		public bool IsDockingEnabled
-		{
-			get
-			{
-				return ParentShip != null && !ParentShip.DockingControlsDisabled && MyDockingPortsUI.Count > 0;
-			}
-		}
+		public bool IsDockingEnabled => ParentShip != null && !ParentShip.DockingControlsDisabled && MyDockingPortsUI.Count > 0;
 
 		private void Awake()
 		{
@@ -347,7 +306,7 @@ namespace ZeroGravity.ShipComponents
 				float num7 = Vector3.Distance(dockingPort.SceneDockingTriggerTrans.position, TargetDockingPort.SceneDockingTriggerTrans.position);
 				if (!RotationIndicator.gameObject.activeInHierarchy)
 				{
-					RotationIndicator.gameObject.SetActive(true);
+					RotationIndicator.gameObject.SetActive(value: true);
 				}
 				RollAngleIndicator.fillClockwise = num5 < 0f;
 				RollAngleIndicator.fillAmount = Mathf.Abs(num5) / 360f;
@@ -379,11 +338,11 @@ namespace ZeroGravity.ShipComponents
 				{
 					if (dockingPort.ParentShip.Engine != null && TargetDockingPort.ParentShip.Engine == null && !TargetDockingPort.ParentShip.IsDocked && TargetDockingPort.ParentShip.AllDockedVessels.Count == 0 && !dockingPort.ParentShip.IsDocked && dockingPort.ParentShip.AllDockedVessels.Count == 0)
 					{
-						TargetDockingPort.ToggleDockTo(dockingPort, true);
+						TargetDockingPort.ToggleDockTo(dockingPort, toggle: true);
 					}
 					else
 					{
-						dockingPort.ToggleDockTo(TargetDockingPort, true);
+						dockingPort.ToggleDockTo(TargetDockingPort, toggle: true);
 					}
 					TargetDockingPort = null;
 				}
@@ -391,19 +350,19 @@ namespace ZeroGravity.ShipComponents
 				{
 					if (dockingPort.ParentShip.Engine != null && TargetDockingPort.ParentShip.Engine == null && !TargetDockingPort.ParentShip.IsDocked && TargetDockingPort.ParentShip.AllDockedVessels.Count == 0 && !dockingPort.ParentShip.IsDocked && dockingPort.ParentShip.AllDockedVessels.Count == 0)
 					{
-						TargetDockingPort.ToggleDockTo(dockingPort, true);
+						TargetDockingPort.ToggleDockTo(dockingPort, toggle: true);
 					}
 					else if (Input.GetKeyDown(KeyCode.Keypad9))
 					{
-						dockingPort.ToggleDockTo(TargetDockingPort, true);
+						dockingPort.ToggleDockTo(TargetDockingPort, toggle: true);
 					}
 					else
 					{
-						TargetDockingPort.ToggleDockTo(dockingPort, true);
+						TargetDockingPort.ToggleDockTo(dockingPort, toggle: true);
 					}
 					TargetDockingPort = null;
 				}
-				RadarTarget.gameObject.Activate(true);
+				RadarTarget.gameObject.Activate(value: true);
 				RadarTarget.ParentTrans = null;
 				RadarTarget.ParentTrans = dockingPort.CameraPosition;
 				if (TargetDockingPort != null)
@@ -413,8 +372,8 @@ namespace ZeroGravity.ShipComponents
 			}
 			else
 			{
-				RadarTarget.gameObject.Activate(false);
-				RotationIndicator.gameObject.Activate(false);
+				RadarTarget.gameObject.Activate(value: false);
+				RotationIndicator.gameObject.Activate(value: false);
 				RollAngleIndicator.fillAmount = 0f;
 				lateralXE.fillAmount = 0f;
 				lateralXW.fillAmount = 0f;
@@ -441,12 +400,12 @@ namespace ZeroGravity.ShipComponents
 			TargetedModulePorts[currentTargetedModulePortIndex].UI.Distance = Localization.Selected.ToUpper();
 			if (currentRootBlinker != null)
 			{
-				currentRootBlinker.SetActive(false);
+				currentRootBlinker.SetActive(value: false);
 			}
 			currentRootBlinker = TargetedModulePorts[currentTargetedModulePortIndex].Port.DockingVisualROOT;
 			if (currentRootBlinker != null)
 			{
-				currentRootBlinker.SetActive(true);
+				currentRootBlinker.SetActive(value: true);
 			}
 			TargetDockingPort = TargetedModulePorts[currentTargetedModulePortIndex].Port;
 			if (TargetedModulePorts.Count > 8)
@@ -465,15 +424,15 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (TargetDockingPort != null)
 			{
-				NoTargetModule.Activate(false);
+				NoTargetModule.Activate(value: false);
 				TargetModuleIcon.sprite = Client.Instance.SpriteManager.GetSprite(TargetDockingPort.ParentShip);
 				TargetModuleName.text = TargetDockingPort.ParentShip.MainVessel.CustomName;
-				AvailablePortsHolder.Activate(true);
+				AvailablePortsHolder.Activate(value: true);
 			}
 			else
 			{
-				NoTargetModule.Activate(true);
-				AvailablePortsHolder.Activate(false);
+				NoTargetModule.Activate(value: true);
+				AvailablePortsHolder.Activate(value: false);
 			}
 		}
 
@@ -493,7 +452,7 @@ namespace ZeroGravity.ShipComponents
 			AvailableTargetShips.Clear();
 			foreach (DockingPortUI targetedModulePort in TargetedModulePorts)
 			{
-				UnityEngine.Object.Destroy(targetedModulePort.UI.gameObject);
+				Object.Destroy(targetedModulePort.UI.gameObject);
 			}
 			TargetedModulePorts.Clear();
 			RefreshDockingPorts();
@@ -514,7 +473,7 @@ namespace ZeroGravity.ShipComponents
 			ReloadRadarElements();
 			DockingTips.Activate(Client.Instance.CanvasManager.ShowTips);
 			MakeTargetModulePorts();
-			base.gameObject.SetActive(true);
+			base.gameObject.SetActive(value: true);
 		}
 
 		private void RefreshDockingPorts()
@@ -542,7 +501,7 @@ namespace ZeroGravity.ShipComponents
 			}
 			else
 			{
-				SceneDockingPort[] componentsInChildren = ParentShip.GeometryRoot.GetComponentsInChildren<SceneDockingPort>(true);
+				SceneDockingPort[] componentsInChildren = ParentShip.GeometryRoot.GetComponentsInChildren<SceneDockingPort>(includeInactive: true);
 				foreach (SceneDockingPort sceneDockingPort in componentsInChildren)
 				{
 					if (!sceneDockingPort.LocalyDisabled)
@@ -551,22 +510,10 @@ namespace ZeroGravity.ShipComponents
 					}
 				}
 			}
-			List<SceneDockingPort> dockingPorts = DockingPorts;
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CRefreshDockingPorts_003Em__0;
-			}
-			IOrderedEnumerable<SceneDockingPort> source = dockingPorts.Where(_003C_003Ef__am_0024cache0).OrderBy(_003CRefreshDockingPorts_003Em__1);
-			if (_003C_003Ef__am_0024cache1 == null)
-			{
-				_003C_003Ef__am_0024cache1 = _003CRefreshDockingPorts_003Em__2;
-			}
-			IOrderedEnumerable<SceneDockingPort> source2 = source.ThenBy(_003C_003Ef__am_0024cache1);
-			if (_003C_003Ef__am_0024cache2 == null)
-			{
-				_003C_003Ef__am_0024cache2 = _003CRefreshDockingPorts_003Em__3;
-			}
-			DockingPorts = source2.ThenBy(_003C_003Ef__am_0024cache2).ToList();
+			DockingPorts = (from m in DockingPorts
+				where !m.Locked
+				orderby m.ParentShip != ParentShip, m.ParentShip.GUID, m.Name
+				select m).ToList();
 		}
 
 		public void OnDetach()
@@ -577,15 +524,15 @@ namespace ZeroGravity.ShipComponents
 			MyPlayer.Instance.FpsController.MainCamera.transform.localScale = MainCameraScale;
 			if (currentRootBlinker != null)
 			{
-				currentRootBlinker.SetActive(false);
+				currentRootBlinker.SetActive(value: false);
 			}
-			RadarTarget.gameObject.SetActive(false);
-			SceneDockingPort[] componentsInChildren = ParentShip.GeometryRoot.GetComponentsInChildren<SceneDockingPort>(true);
+			RadarTarget.gameObject.SetActive(value: false);
+			SceneDockingPort[] componentsInChildren = ParentShip.GeometryRoot.GetComponentsInChildren<SceneDockingPort>(includeInactive: true);
 			foreach (SceneDockingPort dockingPort in componentsInChildren)
 			{
 				Client.Instance.CubemapRenderer.RemoveDockingPort(dockingPort);
 			}
-			base.gameObject.SetActive(false);
+			base.gameObject.SetActive(value: false);
 		}
 
 		private void SwitchPort()
@@ -627,24 +574,19 @@ namespace ZeroGravity.ShipComponents
 		private void ReloadRadarElements()
 		{
 			List<Ship> list = new List<Ship>(AvailableTargetShips);
-			using (IEnumerator<ArtificialBody> enumerator = Client.Instance.SolarSystem.ArtificialBodies.Where(_003CReloadRadarElements_003Em__4).GetEnumerator())
+			foreach (ArtificialBody ab in Client.Instance.SolarSystem.ArtificialBodies.Where((ArtificialBody m) => m is SpaceObjectVessel && (m as SpaceObjectVessel).MainVessel != ParentShip.MainVessel))
 			{
-				while (enumerator.MoveNext())
+				float num = (float)(ParentShip.Position - ab.Position).Magnitude;
+				Ship ship = AvailableTargetShips.Find((Ship m) => m == ab as Ship);
+				if (ab is Ship && num < radarScanningRange)
 				{
-					_003CReloadRadarElements_003Ec__AnonStorey0 _003CReloadRadarElements_003Ec__AnonStorey = new _003CReloadRadarElements_003Ec__AnonStorey0();
-					_003CReloadRadarElements_003Ec__AnonStorey.ab = enumerator.Current;
-					float num = (float)(ParentShip.Position - _003CReloadRadarElements_003Ec__AnonStorey.ab.Position).Magnitude;
-					Ship ship = AvailableTargetShips.Find(_003CReloadRadarElements_003Ec__AnonStorey._003C_003Em__0);
-					if (_003CReloadRadarElements_003Ec__AnonStorey.ab is Ship && num < radarScanningRange)
+					if (ship == null)
 					{
-						if (ship == null)
-						{
-							AvailableTargetShips.Add(_003CReloadRadarElements_003Ec__AnonStorey.ab as Ship);
-						}
-						else
-						{
-							list.Remove(ship);
-						}
+						AvailableTargetShips.Add(ab as Ship);
+					}
+					else
+					{
+						list.Remove(ship);
 					}
 				}
 			}
@@ -670,7 +612,7 @@ namespace ZeroGravity.ShipComponents
 				if (num2 <= 0.2f)
 				{
 					FillerRcs.color = Colors.Red;
-					RCSFuelStatus.gameObject.SetActive(true);
+					RCSFuelStatus.gameObject.SetActive(value: true);
 					if (num2 > 0.01f)
 					{
 						RCSFuelStatus.text = Localization.LowFuel.ToUpper();
@@ -683,7 +625,7 @@ namespace ZeroGravity.ShipComponents
 				else
 				{
 					FillerRcs.color = Colors.White;
-					RCSFuelStatus.gameObject.SetActive(false);
+					RCSFuelStatus.gameObject.SetActive(value: false);
 				}
 			}
 			UpdateTargetPortsUI();
@@ -693,8 +635,8 @@ namespace ZeroGravity.ShipComponents
 		{
 			foreach (DockingPortUI item in MyDockingPortsUI)
 			{
-				item.UI.gameObject.SetActive(false);
-				UnityEngine.Object.Destroy(item.UI.gameObject);
+				item.UI.gameObject.SetActive(value: false);
+				Object.Destroy(item.UI.gameObject);
 			}
 			MyDockingPortsUI.Clear();
 			MyVisibleDockingPortsUI.Clear();
@@ -722,7 +664,7 @@ namespace ZeroGravity.ShipComponents
 
 		private DockingPanelUIItem MakeDockingPortUI(SceneDockingPort port)
 		{
-			DockingPanelUIItem dockingPanelUIItem = UnityEngine.Object.Instantiate(ListItemPrefab, AvailableDockingPortsTransform);
+			DockingPanelUIItem dockingPanelUIItem = Object.Instantiate(ListItemPrefab, AvailableDockingPortsTransform);
 			dockingPanelUIItem.gameObject.SetActive(!port.IgnoreThisDockingPort && !port.Locked);
 			dockingPanelUIItem.transform.localScale = Vector3.one;
 			dockingPanelUIItem.gameObject.SetActive(!port.IgnoreThisDockingPort);
@@ -736,23 +678,18 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (currentRootBlinker != null)
 			{
-				currentRootBlinker.SetActive(false);
+				currentRootBlinker.SetActive(value: false);
 			}
 			foreach (DockingPortUI targetedModulePort in TargetedModulePorts)
 			{
-				UnityEngine.Object.Destroy(targetedModulePort.UI.gameObject);
+				Object.Destroy(targetedModulePort.UI.gameObject);
 			}
 			TargetedModulePorts.Clear();
 			if (AvailableTargetShips.Count > 0)
 			{
 				foreach (Ship availableTargetShip in AvailableTargetShips)
 				{
-					Dictionary<int, SceneDockingPort>.ValueCollection values = availableTargetShip.DockingPorts.Values;
-					if (_003C_003Ef__am_0024cache3 == null)
-					{
-						_003C_003Ef__am_0024cache3 = _003CMakeTargetModulePorts_003Em__5;
-					}
-					foreach (SceneDockingPort item in values.Where(_003C_003Ef__am_0024cache3))
+					foreach (SceneDockingPort item in availableTargetShip.DockingPorts.Values.Where((SceneDockingPort m) => !m.Locked))
 					{
 						if (item.DockedToPort == null && SceneHelper.CompareTags(item.DockType, DockingPort.DockType) && item.ParentShip.IsPlayerAuthorizedOrNoSecurity(MyPlayer.Instance))
 						{
@@ -772,30 +709,30 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (TargetedModulePorts.Count > 0)
 			{
-				NoTargetModule.Activate(false);
+				NoTargetModule.Activate(value: false);
 				TargetedModulePorts[currentTargetedModulePortIndex].UI.IsSelected = true;
 				TargetedModulePorts[currentTargetedModulePortIndex].UI.Distance = Localization.Selected.ToUpper();
 				currentRootBlinker = TargetedModulePorts[currentTargetedModulePortIndex].Port.DockingVisualROOT;
 				if (currentRootBlinker != null)
 				{
-					currentRootBlinker.SetActive(true);
+					currentRootBlinker.SetActive(value: true);
 				}
 				TargetDockingPort = TargetedModulePorts[currentTargetedModulePortIndex].Port;
-				HasTargetPanel.Activate(true);
+				HasTargetPanel.Activate(value: true);
 				UpdateTargetedModule();
 			}
 			else
 			{
-				HasTargetPanel.Activate(false);
+				HasTargetPanel.Activate(value: false);
 				UpdateTargetedModule();
 			}
 		}
 
 		private DockingPanelUIItem MakeTargetModulePort(SceneDockingPort port)
 		{
-			DockingPanelUIItem dockingPanelUIItem = UnityEngine.Object.Instantiate(ListItemPrefab, TargetedModulePortsTranform);
+			DockingPanelUIItem dockingPanelUIItem = Object.Instantiate(ListItemPrefab, TargetedModulePortsTranform);
 			dockingPanelUIItem.transform.localScale = Vector3.one;
-			dockingPanelUIItem.gameObject.SetActive(true);
+			dockingPanelUIItem.gameObject.SetActive(value: true);
 			dockingPanelUIItem.IsSelected = false;
 			dockingPanelUIItem.NameText.text = ((!(port.ParentShip == ParentShip)) ? (GameScenes.GetShortVesselClassName(port.ParentShip.SceneID) + "-") : string.Empty) + port.Name;
 			dockingPanelUIItem.DistanceText.text = string.Empty;
@@ -807,7 +744,7 @@ namespace ZeroGravity.ShipComponents
 			string axisKeyName = InputManager.GetAxisKeyName(axName);
 			if (axisKeyName == "None")
 			{
-				axisKeyName = InputManager.GetAxisKeyName(axName, true, true, true);
+				axisKeyName = InputManager.GetAxisKeyName(axName, getPositive: true, getNegative: true, getAlt: true);
 			}
 			return axisKeyName;
 		}
@@ -825,48 +762,12 @@ namespace ZeroGravity.ShipComponents
 
 		private void OnEnable()
 		{
-			Client.Instance.CanvasManager.CanvasUI.HelmetHud.gameObject.Activate(false);
+			Client.Instance.CanvasManager.CanvasUI.HelmetHud.gameObject.Activate(value: false);
 		}
 
 		private void OnDisable()
 		{
-			Client.Instance.CanvasManager.CanvasUI.HelmetHud.gameObject.Activate(true);
-		}
-
-		[CompilerGenerated]
-		private static bool _003CRefreshDockingPorts_003Em__0(SceneDockingPort m)
-		{
-			return !m.Locked;
-		}
-
-		[CompilerGenerated]
-		private bool _003CRefreshDockingPorts_003Em__1(SceneDockingPort m)
-		{
-			return m.ParentShip != ParentShip;
-		}
-
-		[CompilerGenerated]
-		private static long _003CRefreshDockingPorts_003Em__2(SceneDockingPort m)
-		{
-			return m.ParentShip.GUID;
-		}
-
-		[CompilerGenerated]
-		private static string _003CRefreshDockingPorts_003Em__3(SceneDockingPort m)
-		{
-			return m.Name;
-		}
-
-		[CompilerGenerated]
-		private bool _003CReloadRadarElements_003Em__4(ArtificialBody m)
-		{
-			return m is SpaceObjectVessel && (m as SpaceObjectVessel).MainVessel != ParentShip.MainVessel;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CMakeTargetModulePorts_003Em__5(SceneDockingPort m)
-		{
-			return !m.Locked;
+			Client.Instance.CanvasManager.CanvasUI.HelmetHud.gameObject.Activate(value: true);
 		}
 	}
 }
