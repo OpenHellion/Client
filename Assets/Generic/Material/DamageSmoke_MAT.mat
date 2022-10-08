@@ -10,7 +10,7 @@ Material:
   m_Name: DamageSmoke_MAT
   m_Shader: {fileID: 210, guid: 0000000000000000f000000000000000, type: 0}
   m_ValidKeywords:
-  - _ALPHAPREMULTIPLY_ON
+  - _ALPHABLEND_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
@@ -69,13 +69,13 @@ Material:
     - _LightingEnabled: 1
     - _MaskClipValue: 0.5
     - _Metallic: 0
-    - _Mode: 3
+    - _Mode: 2
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SoftParticlesEnabled: 0
     - _SoftParticlesFarFadeDistance: 0
     - _SoftParticlesNearFadeDistance: 0
-    - _SrcBlend: 1
+    - _SrcBlend: 5
     - _UVSec: 0
     - _ZWrite: 0
     - __dirty: 0

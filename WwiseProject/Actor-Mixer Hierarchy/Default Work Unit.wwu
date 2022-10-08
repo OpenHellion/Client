@@ -10773,6 +10773,1047 @@
 						</Folder>
 					</ChildrenList>
 				</Folder>
+				<ActorMixer Name="VoiceMixer" ID="{6A6D09A4-EDA8-4900-9E9D-0A8238DE8BDA}" ShortID="954525456">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Folder Name="QuestAudio" ID="{C7B4E500-BFE2-452D-9525-532205EFECFF}" ShortID="592982544">
+							<ChildrenList>
+								<Folder Name="02_echoes_from_the_past" ID="{71B78E6F-A9FE-4D98-99DD-B272760DF58D}" ShortID="459485081">
+									<ChildrenList>
+										<Sound Name="Theona_Mission_1_Message_1" ID="{0DE9CD5B-E472-460F-8933-9D79D5CACA32}" ShortID="783736582">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_1_Message_1" ID="{50A0297C-6B59-46BF-9DE3-56755911AC65}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_1_Message_1.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="26932236"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_1_Message_1" ID="{50A0297C-6B59-46BF-9DE3-56755911AC65}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_1_Message_1_BadSignal_Short" ID="{4D6365B2-C78F-48FC-A63F-FD1CA6284629}" ShortID="482044467">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_1_Message_1_BadSignal_Short" ID="{D2ED3290-295F-4196-94F5-B630F265B5C9}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_1_Message_1_BadSignal_Short.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="322003810"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_1_Message_1_BadSignal_Short" ID="{D2ED3290-295F-4196-94F5-B630F265B5C9}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_1_Message_2" ID="{9B5B82BA-457D-4816-8D8A-756F787DCE1D}" ShortID="694537829">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_1_Message_2" ID="{82EC48F4-09B4-45DE-BB97-33F01C8600A1}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_1_Message_2.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="953977693"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_1_Message_2" ID="{82EC48F4-09B4-45DE-BB97-33F01C8600A1}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_1_Message_Alp1" ID="{78594861-821A-46C5-9FEE-72CBE04E3E13}" ShortID="868834087">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_1_Message_Alp1" ID="{9C61CFFA-0F22-4148-A5FC-A0010AD4804C}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_1_Message_Alp1.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="42631897"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_1_Message_Alp1" ID="{9C61CFFA-0F22-4148-A5FC-A0010AD4804C}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_1_Message_Alp2" ID="{5154E6AA-29D5-4B0C-A499-378105F837B2}" ShortID="267350312">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_1_Message_Alp2" ID="{6B93E1AE-715A-4A5C-9BDD-627DE0720BD5}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_1_Message_Alp2.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="1012386409"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_1_Message_Alp2" ID="{6B93E1AE-715A-4A5C-9BDD-627DE0720BD5}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</Folder>
+								<Folder Name="03_walking_in_her_shoes" ID="{EB3B846A-5446-4250-BB5D-AB35E56203D0}" ShortID="547383741">
+									<ChildrenList>
+										<Sound Name="Theona_Mission_2_Message_1" ID="{F8C5F597-2B17-4024-A16C-26E78EBCFDBA}" ShortID="873192407">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_2_Message_1" ID="{419F1DAB-F953-4094-A13D-5A5436B0B523}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_2_Message_1.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="721792583"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_2_Message_1" ID="{419F1DAB-F953-4094-A13D-5A5436B0B523}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_2_Message_2" ID="{821211F4-BE78-4533-83C0-768CE18954A4}" ShortID="248605584">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_2_Message_2" ID="{DB8E03AB-DA0C-43EE-9DB5-DC599BD885EE}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_2_Message_2.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="754095480"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_2_Message_2" ID="{DB8E03AB-DA0C-43EE-9DB5-DC599BD885EE}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_2_Message_9" ID="{08D2C52F-FFF9-4EAB-AC9D-95DE310A6A9B}" ShortID="804097942">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_2_Message_9" ID="{E3BB7250-D766-4AB6-BB31-4D3DC1E6E67A}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_2_Message_9.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="23599422"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_2_Message_9" ID="{E3BB7250-D766-4AB6-BB31-4D3DC1E6E67A}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_2_Message_10" ID="{5ED82B22-3E15-4738-988F-E68F2946C0D7}" ShortID="225579699">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_2_Message_10" ID="{F216E85E-2968-4B29-B761-ED340D794585}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_2_Message_10.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="117788879"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_2_Message_10" ID="{F216E85E-2968-4B29-B761-ED340D794585}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_2_Message_11" ID="{DFE6AD2D-FBD4-4F67-873F-5423A4EE3C17}" ShortID="456559206">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_2_Message_11" ID="{4EDC317F-C900-42A7-A891-67C861AA380E}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_2_Message_11.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="758259806"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_2_Message_11" ID="{4EDC317F-C900-42A7-A891-67C861AA380E}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</Folder>
+								<Folder Name="04_burned_ruins" ID="{8F4D662C-EA22-45E0-96C5-10D475876B42}" ShortID="743075150">
+									<ChildrenList>
+										<Sound Name="Theona_Mission_2_Message_3" ID="{A14688D0-3705-40DB-9874-F190A2CDE400}" ShortID="269419554">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_2_Message_3" ID="{FC7609A6-16F1-492E-90F6-B6A1CFD766E9}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_2_Message_3.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="383791938"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_2_Message_3" ID="{FC7609A6-16F1-492E-90F6-B6A1CFD766E9}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_2_Message_4" ID="{21622FA0-6AE8-4422-B4EE-538B61180832}" ShortID="642999042">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_2_Message_4" ID="{7D95888E-4D12-4DEC-8AAC-86A89C26E46C}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_2_Message_4.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="1065595855"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_2_Message_4" ID="{7D95888E-4D12-4DEC-8AAC-86A89C26E46C}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_2_SoE_Talking" ID="{F2088468-62B7-47DE-B361-19D531065C8A}" ShortID="605290444">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_2_SoE_Talking" ID="{E50CBE35-B867-4ABD-BEA0-623110AEFC6B}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_2_SoE_Talking.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="371873190"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_2_SoE_Talking" ID="{E50CBE35-B867-4ABD-BEA0-623110AEFC6B}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</Folder>
+								<Folder Name="05_amnisos_waystation" ID="{43346D93-2362-4CAE-A023-4E995DAFF01A}" ShortID="284071949">
+									<ChildrenList>
+										<Sound Name="Theona_Mission_2_Message_5" ID="{AD74E581-3EB2-465B-929D-630DC9909172}" ShortID="649894715">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_2_Message_5" ID="{CBE467F4-CFF3-46F7-8C75-B5845B2AB3C3}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_2_Message_5.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="222691234"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_2_Message_5" ID="{CBE467F4-CFF3-46F7-8C75-B5845B2AB3C3}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_2_Message_5_AltairMessage" ID="{4769EA66-3223-4EAC-A8D6-F9E8D04A9792}" ShortID="895456113">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_2_Message_5_AltairMessage" ID="{A5F2DD5E-5D9A-47EC-B71C-4DCB2A8E5B53}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_2_Message_5_AltairMessage.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="806612116"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_2_Message_5_AltairMessage" ID="{A5F2DD5E-5D9A-47EC-B71C-4DCB2A8E5B53}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_2_Message_6" ID="{B4B46B59-C235-4234-9B5B-C99E47443D86}" ShortID="335162380">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_2_Message_6" ID="{1037DDDA-3459-486C-B7A1-AF24488C1BAE}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_2_Message_6.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="836960079"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_2_Message_6" ID="{1037DDDA-3459-486C-B7A1-AF24488C1BAE}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_2_Message_7" ID="{768830B6-A4AE-444E-B60B-D9F89061228C}" ShortID="169638530">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_2_Message_7" ID="{F86B8A14-BCFF-4409-AE23-084571B4AF09}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_2_Message_7.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="154898044"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_2_Message_7" ID="{F86B8A14-BCFF-4409-AE23-084571B4AF09}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_2_Message_8" ID="{7FA4F568-80EE-4EA7-A1CA-56A304B124FE}" ShortID="283048147">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_2_Message_8" ID="{4EF262DD-F7F7-4862-BAF8-6EFCD88E9254}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_2_Message_8.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="829039588"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_2_Message_8" ID="{4EF262DD-F7F7-4862-BAF8-6EFCD88E9254}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</Folder>
+								<Folder Name="Test" ID="{C3FB0B39-DECB-4BFB-AF16-60C279D57308}" ShortID="714601915">
+									<ChildrenList>
+										<RandomSequenceContainer Name="New Sequence Container" ID="{7B6E5D10-69E9-4ED5-AC2C-B8A2706B91DC}" ShortID="233503275">
+											<PropertyList>
+												<Property Name="RandomOrSequence" Type="int16" Value="0"/>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<Sound Name="VOICE_RADIO_MALE_Yes_Sir_1_Question_mono" ID="{C39AB2B3-2054-4A54-B158-24F8EC206DF0}" ShortID="650998583">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="VOICE_RADIO_MALE_Yes_Sir_1_Question_mono" ID="{04F0CDB5-5277-4F2A-AEA3-B9407EBF4A3C}">
+															<Language>SFX</Language>
+															<AudioFile>Quests\VOICE_RADIO_MALE_Yes_Sir_1_Question_mono.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="355466138"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="VOICE_RADIO_MALE_Yes_Sir_1_Question_mono" ID="{04F0CDB5-5277-4F2A-AEA3-B9407EBF4A3C}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="VOICE_RADIO_MALE_You_Got_It_5_mono" ID="{98BCC07B-98AE-43C2-84AD-7D7E0533176B}" ShortID="480598958">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="VOICE_RADIO_MALE_You_Got_It_5_mono" ID="{314CB04B-2EEC-453B-8F70-6F963D7CEA4B}">
+															<Language>SFX</Language>
+															<AudioFile>Quests\VOICE_RADIO_MALE_You_Got_It_5_mono.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="1056405732"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="VOICE_RADIO_MALE_You_Got_It_5_mono" ID="{314CB04B-2EEC-453B-8F70-6F963D7CEA4B}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="VOICE_RADIO_MALE_Your_Base_Is_Under_Attack_3_Aggressive_mono" ID="{79B1594F-8A71-4E6A-823C-B7874F2E31C0}" ShortID="29950839">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="VOICE_RADIO_MALE_Your_Base_Is_Under_Attack_3_Aggressive_mono" ID="{8AFFF36B-5F8E-4DE0-914D-EEF84AA810F6}">
+															<Language>SFX</Language>
+															<AudioFile>Quests\VOICE_RADIO_MALE_Your_Base_Is_Under_Attack_3_Aggressive_mono.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="482415177"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="VOICE_RADIO_MALE_Your_Base_Is_Under_Attack_3_Aggressive_mono" ID="{8AFFF36B-5F8E-4DE0-914D-EEF84AA810F6}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="VOICE_RADIO_MALE_Your_Forces_Are_Under_Attack_3_Aggressive_mono" ID="{A8FB943F-6EC1-4F8E-BA6B-703C4C12DD08}" ShortID="991594627">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="VOICE_RADIO_MALE_Your_Forces_Are_Under_Attack_3_Aggressive_mono" ID="{7D54CEB0-9945-44B3-87DE-EA31A72D193F}">
+															<Language>SFX</Language>
+															<AudioFile>Quests\VOICE_RADIO_MALE_Your_Forces_Are_Under_Attack_3_Aggressive_mono.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="693029563"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="VOICE_RADIO_MALE_Your_Forces_Are_Under_Attack_3_Aggressive_mono" ID="{7D54CEB0-9945-44B3-87DE-EA31A72D193F}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+											</ChildrenList>
+											<ObjectLists/>
+											<Playlist>
+												<ItemRef Name="VOICE_RADIO_MALE_Yes_Sir_1_Question_mono" ID="{C39AB2B3-2054-4A54-B158-24F8EC206DF0}"/>
+												<ItemRef Name="VOICE_RADIO_MALE_You_Got_It_5_mono" ID="{98BCC07B-98AE-43C2-84AD-7D7E0533176B}"/>
+												<ItemRef Name="VOICE_RADIO_MALE_Your_Base_Is_Under_Attack_3_Aggressive_mono" ID="{79B1594F-8A71-4E6A-823C-B7874F2E31C0}"/>
+												<ItemRef Name="VOICE_RADIO_MALE_Your_Forces_Are_Under_Attack_3_Aggressive_mono" ID="{A8FB943F-6EC1-4F8E-BA6B-703C4C12DD08}"/>
+											</Playlist>
+										</RandomSequenceContainer>
+										<Sound Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__01" ID="{7590AD62-60BC-4B6B-9B80-1215606E37C8}" ShortID="559343886">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__01" ID="{4AE6B4F8-65FB-4BC8-834A-0800A9195E53}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__01.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="205140700"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__01" ID="{4AE6B4F8-65FB-4BC8-834A-0800A9195E53}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__02" ID="{04C6FEDE-5386-440E-ADA8-20D3436BE10A}" ShortID="1033472270">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__02" ID="{0AB038DA-A8A3-4F7C-9D3F-9D7B2228061C}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__02.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="285694746"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__02" ID="{0AB038DA-A8A3-4F7C-9D3F-9D7B2228061C}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__03" ID="{DEA58D67-3D5F-454A-842F-BBA775CF057D}" ShortID="138829933">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__03" ID="{B9F54F28-9524-4CC4-94FF-9F790F1B67BA}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__03.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="714399932"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__03" ID="{B9F54F28-9524-4CC4-94FF-9F790F1B67BA}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__04" ID="{BACDB4AD-EECA-4F38-9FC6-C213866F0452}" ShortID="865153985">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__04" ID="{AD4A49EA-3B92-4066-BABC-C6F6926F58D3}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__04.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="220610992"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__04" ID="{AD4A49EA-3B92-4066-BABC-C6F6926F58D3}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__" ID="{70E3BDE4-8C07-4BE3-8C14-620CD32CE1CF}" ShortID="799494649">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__" ID="{17474889-7292-4C67-8087-DF366DB41872}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="227262180"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__" ID="{17474889-7292-4C67-8087-DF366DB41872}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</Folder>
+								<Folder Name="sound_of_silence" ID="{7CE50E59-94BF-466F-AD8A-1F954EF27270}" ShortID="52566722">
+									<ChildrenList>
+										<Sound Name="Theona_Mission_3_Message_01" ID="{FD8B5C38-800B-4D95-8D10-2185F88EB5F2}" ShortID="389122554">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_3_Message_01" ID="{7442B419-C75F-4FAD-946D-CC410B9E1B88}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_3_Message_01.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="129662719"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_3_Message_01" ID="{7442B419-C75F-4FAD-946D-CC410B9E1B88}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_3_Message_1" ID="{77A6A31D-4DED-470D-BDC4-3DB0A4BA2AF9}" ShortID="766065158">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_3_Message_1" ID="{F814ABBF-7E5E-41CD-909A-657EF3691354}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_3_Message_1.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="714374558"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_3_Message_1" ID="{F814ABBF-7E5E-41CD-909A-657EF3691354}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_3_Message_2" ID="{33ABE1F6-95D4-4094-BB56-F814080716F7}" ShortID="969034342">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_3_Message_2" ID="{EA83DFBF-C952-4780-AACB-B79EACF2E250}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_3_Message_2.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="435084094"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_3_Message_2" ID="{EA83DFBF-C952-4780-AACB-B79EACF2E250}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_3_Message_3" ID="{BACFF3E7-3C62-4F70-80B8-F4A9A57F89A8}" ShortID="1040744314">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_3_Message_3" ID="{0FCA442A-CE47-428F-87D1-6BD0039FA931}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_3_Message_3.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="290656743"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_3_Message_3" ID="{0FCA442A-CE47-428F-87D1-6BD0039FA931}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</Folder>
+								<Folder Name="shattered_dreams" ID="{16504C2E-79D2-4BFC-9995-81AA87510415}" ShortID="220126038">
+									<ChildrenList>
+										<Sound Name="Theona_Mission_3_Message_4" ID="{83BE81AD-33B4-4AF3-9398-0EACB2323996}" ShortID="788127809">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_3_Message_4" ID="{F73DBCE4-B3DC-489F-8A54-40389E152DBF}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_3_Message_4.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="582161981"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_3_Message_4" ID="{F73DBCE4-B3DC-489F-8A54-40389E152DBF}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_3_Message_5" ID="{B6FAD06B-5065-455B-889E-275C1B8BDED2}" ShortID="1063283460">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_3_Message_5" ID="{1C9A2762-88E4-4732-A512-66D0DF0DFB78}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_3_Message_5.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="701420752"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_3_Message_5" ID="{1C9A2762-88E4-4732-A512-66D0DF0DFB78}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</Folder>
+								<Folder Name="heart_of_stone" ID="{9D68F83B-F93F-41C2-B8C0-847E84C9EEE5}" ShortID="541949067">
+									<ChildrenList>
+										<Sound Name="Theona_Mission_3_Message_6" ID="{A913CE7F-B385-448B-B796-11FF1E6DDC67}" ShortID="450427684">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_3_Message_6" ID="{1834B295-92F3-4F0E-AC38-1AFF712905A3}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_3_Message_6.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="277493988"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_3_Message_6" ID="{1834B295-92F3-4F0E-AC38-1AFF712905A3}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Mission_3_Message_7" ID="{C7575389-8903-4102-9216-EF9F624B16F4}" ShortID="242876336">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Mission_3_Message_7" ID="{FA1BFD43-C15A-451D-8DB1-E1B2ECB34D20}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Mission_3_Message_7.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="121869123"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Mission_3_Message_7" ID="{FA1BFD43-C15A-451D-8DB1-E1B2ECB34D20}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</Folder>
+								<Folder Name="01_a_rude_awakening" ID="{9F73786E-843D-4E5E-AD89-2989C074996E}" ShortID="36829983">
+									<ChildrenList>
+										<Sound Name="Theona_Log_7_PlayerWarps" ID="{8E2D8093-2ABD-4E89-BECE-04531F251A78}" ShortID="215866263">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Log_7_PlayerWarps" ID="{2D90ED27-5134-48C6-9A01-F8E072CDF905}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Log_7_PlayerWarps.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="723024372"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Log_7_PlayerWarps" ID="{2D90ED27-5134-48C6-9A01-F8E072CDF905}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Log_5_PlayerEntersAShip" ID="{615253F7-2132-447F-98D4-E9FA5B4211B5}" ShortID="1006935411">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Log_5_PlayerEntersAShip" ID="{4105C49E-AF4B-4986-B576-C8A3C71B0042}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Log_5_PlayerEntersAShip.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="192292160"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Log_5_PlayerEntersAShip" ID="{4105C49E-AF4B-4986-B576-C8A3C71B0042}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Log_6_PlayerRegistersOnTheSecurityPanel" ID="{19264C1E-013A-4EE8-A23B-2EC3D5118DBF}" ShortID="91959083">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Log_6_PlayerRegistersOnTheSecurityPanel" ID="{A0760CA1-411D-4E90-A61D-B1BA786A6D89}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Log_6_PlayerRegistersOnTheSecurityPanel.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="784787853"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Log_6_PlayerRegistersOnTheSecurityPanel" ID="{A0760CA1-411D-4E90-A61D-B1BA786A6D89}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Log_2_PlayerEntersCommandModule" ID="{7D8516C7-79EC-43C6-9C4D-DA8FA1E7D3C9}" ShortID="790681049">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Log_2_PlayerEntersCommandModule" ID="{BFAB275B-EAAB-4F86-BAAC-2CE05E9322FF}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Log_2_PlayerEntersCommandModule.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="551037640"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Log_2_PlayerEntersCommandModule" ID="{BFAB275B-EAAB-4F86-BAAC-2CE05E9322FF}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Log_3_PlayerUsesHackingTool" ID="{6745B77E-B7D3-4A70-BF4D-5DBF336B379F}" ShortID="751379839">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Log_3_PlayerUsesHackingTool" ID="{D2027DD6-D0CE-481D-B0F2-FE3ED24C03FD}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Log_3_PlayerUsesHackingTool.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="143139835"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Log_3_PlayerUsesHackingTool" ID="{D2027DD6-D0CE-481D-B0F2-FE3ED24C03FD}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Log_4_PlayerCallsARescueShip" ID="{4F34CE17-6353-4346-AAF8-AF1A211661BB}" ShortID="111989219">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Log_4_PlayerCallsARescueShip" ID="{D326E94A-1F83-4F2A-A162-043D4F843C03}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Log_4_PlayerCallsARescueShip.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="635738527"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Log_4_PlayerCallsARescueShip" ID="{D326E94A-1F83-4F2A-A162-043D4F843C03}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Theona_Log_1_PlayerWakesUp" ID="{F4ACF7C6-C97C-453C-8965-D2757C5292A0}" ShortID="991427513">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Theona_Log_1_PlayerWakesUp" ID="{A6E515BD-B41F-45F4-AA6F-4D2A7F471D62}">
+													<Language>SFX</Language>
+													<AudioFile>Quests\Theona_Log_1_PlayerWakesUp.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="418132193"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Theona_Log_1_PlayerWakesUp" ID="{A6E515BD-B41F-45F4-AA6F-4D2A7F471D62}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</Folder>
+							</ChildrenList>
+						</Folder>
+					</ChildrenList>
+					<ObjectLists/>
+				</ActorMixer>
 			</ChildrenList>
 		</WorkUnit>
 	</AudioObjects>

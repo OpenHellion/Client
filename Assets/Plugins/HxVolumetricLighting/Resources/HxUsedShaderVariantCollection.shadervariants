@@ -7,30 +7,160 @@ ShaderVariantCollection:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: HxUsedShaderVariantCollection
-  m_Shaders: {}
---- !u!21 &2639994536756131555
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_Shader: {fileID: 4800000, guid: e018c43c94e977a4391a157071caa9d8, type: 3}
-  m_ValidKeywords:
-  - NOISE_ON
-  - SHADOWS_OFF
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Ints: []
-    m_Floats: []
-    m_Colors: []
-  m_BuildTextureStacks: []
+  m_Shaders:
+  - first: {fileID: 4800000, guid: b97795349fa40164aab13f2e759b32de, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: POINT_COOKIE
+        passType: 0
+      - keywords: VTRANSPARENCY_ON
+        passType: 0
+      - keywords: POINT_COOKIE VTRANSPARENCY_ON
+        passType: 0
+      - keywords: SHADOWS_OFF
+        passType: 0
+      - keywords: POINT_COOKIE SHADOWS_OFF
+        passType: 0
+      - keywords: SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+      - keywords: POINT_COOKIE SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+      - keywords: NOISE_ON
+        passType: 0
+      - keywords: NOISE_ON POINT_COOKIE
+        passType: 0
+      - keywords: NOISE_ON VTRANSPARENCY_ON
+        passType: 0
+      - keywords: NOISE_ON POINT_COOKIE VTRANSPARENCY_ON
+        passType: 0
+      - keywords: NOISE_ON SHADOWS_OFF
+        passType: 0
+      - keywords: NOISE_ON POINT_COOKIE SHADOWS_OFF
+        passType: 0
+      - keywords: NOISE_ON SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+      - keywords: NOISE_ON POINT_COOKIE SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON POINT_COOKIE
+        passType: 0
+      - keywords: HEIGHTFOG_ON VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON POINT_COOKIE VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON SHADOWS_OFF
+        passType: 0
+      - keywords: HEIGHTFOG_ON POINT_COOKIE SHADOWS_OFF
+        passType: 0
+      - keywords: HEIGHTFOG_ON SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON POINT_COOKIE SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON POINT_COOKIE
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON POINT_COOKIE VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON SHADOWS_OFF
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON POINT_COOKIE SHADOWS_OFF
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON POINT_COOKIE SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: c3a915038b817214686f4cda3da3effa, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: VTRANSPARENCY_ON
+        passType: 0
+      - keywords: NOISE_ON
+        passType: 0
+      - keywords: NOISE_ON VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON VTRANSPARENCY_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 80ee27cb87c278c46abbc87fb014b009, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: VTRANSPARENCY_ON
+        passType: 0
+      - keywords: SHADOWS_OFF
+        passType: 0
+      - keywords: SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+      - keywords: NOISE_ON
+        passType: 0
+      - keywords: NOISE_ON VTRANSPARENCY_ON
+        passType: 0
+      - keywords: NOISE_ON SHADOWS_OFF
+        passType: 0
+      - keywords: NOISE_ON SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON SHADOWS_OFF
+        passType: 0
+      - keywords: HEIGHTFOG_ON SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON SHADOWS_OFF
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 5d10b41b68f47f84ebe41726f9f7025f, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: VTRANSPARENCY_ON
+        passType: 0
+      - keywords: SHADOWS_OFF
+        passType: 0
+      - keywords: SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+      - keywords: NOISE_ON
+        passType: 0
+      - keywords: NOISE_ON VTRANSPARENCY_ON
+        passType: 0
+      - keywords: NOISE_ON SHADOWS_OFF
+        passType: 0
+      - keywords: NOISE_ON SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON SHADOWS_OFF
+        passType: 0
+      - keywords: HEIGHTFOG_ON SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON VTRANSPARENCY_ON
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON SHADOWS_OFF
+        passType: 0
+      - keywords: HEIGHTFOG_ON NOISE_ON SHADOWS_OFF VTRANSPARENCY_ON
+        passType: 0

@@ -495,10 +495,8 @@ namespace ZeroGravity
 			SceneVesselEmblem.Textures = source.ToDictionary((Texture x) => x.name, (Texture y) => y);
 			if (!SteamManager.Initialized)
 			{
-				Dbg.Warning("Steam isn't initialised.");
-				// Some anti-piracy stuff it seems.
-				//Application.OpenURL("http://store.steampowered.com/app/588210/");
-				//ExitGame();
+				Dbg.Error("Steam isn't initialised.");
+				ExitGame();
 			}
 			RCS_THRUST_SENSITIVITY = Properties.GetProperty("rcs_thrust_sensitivity", RCS_THRUST_SENSITIVITY);
 			RCS_ROTATION_SENSITIVITY = Properties.GetProperty("rcs_rotation_sensitivity", RCS_ROTATION_SENSITIVITY);

@@ -1584,6 +1584,489 @@
 						</Event>
 					</ChildrenList>
 				</Folder>
+				<Folder Name="Quests" ID="{465F7961-06DA-4F05-ADCE-89E1FF4406D3}" ShortID="733757701">
+					<ChildrenList>
+						<Folder Name="amnisos_waystation" ID="{91987065-828A-45E7-AE6B-BA4F9264DEEB}" ShortID="247654815">
+							<ChildrenList>
+								<Event Name="terminal3" ID="{2BBBE323-4CBB-4799-AEB4-EC07C4231E93}">
+									<ChildrenList>
+										<Action Name="" ID="{7B2BC2D1-AB2B-4D45-81D6-175E82AFE0F0}" ShortID="422305195">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_2_Message_7" ID="{768830B6-A4AE-444E-B60B-D9F89061228C}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="terminal2" ID="{E54AAE37-A7E3-4E04-9C29-D27231F0781F}">
+									<ChildrenList>
+										<Action Name="" ID="{3D4BFEBB-6002-4B25-BA62-7D901FF2C821}" ShortID="674035778">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_2_Message_6" ID="{B4B46B59-C235-4234-9B5B-C99E47443D86}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="terminal1" ID="{BDA3396A-C64E-4621-9A08-87FC5C359C29}">
+									<ChildrenList>
+										<Action Name="" ID="{B1886303-3DC7-4340-A262-680E9C5078E1}" ShortID="300074240">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_2_Message_5" ID="{AD74E581-3EB2-465B-929D-630DC9909172}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="terminal4" ID="{1C260B5B-EFE3-41C1-95A4-6EB3D6AD3399}">
+									<ChildrenList>
+										<Action Name="" ID="{FC850CAD-6581-46FD-859A-3C155C92F38C}" ShortID="898653398">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_2_Message_8" ID="{7FA4F568-80EE-4EA7-A1CA-56A304B124FE}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="gerryLog" ID="{0A1487EC-C62A-4227-925C-5B2FF5F47BAD}">
+									<ChildrenList>
+										<Action Name="" ID="{6D86928F-04A9-4F76-B44D-EC4F24138380}" ShortID="851226787">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_2_Message_5_AltairMessage" ID="{4769EA66-3223-4EAC-A8D6-F9E8D04A9792}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+							</ChildrenList>
+						</Folder>
+						<Folder Name="a_rude_awakening" ID="{CF3A6778-8A57-4288-867E-1680EE76CBD3}" ShortID="874319523">
+							<ChildrenList>
+								<Event Name="Theona_Log_7_PlayerWarps" ID="{905D6628-2C55-4A66-AA10-9902708AC7B1}">
+									<ChildrenList>
+										<Action Name="" ID="{53FA4D77-7BCA-4DDE-8ED5-8B7A66084FEF}" ShortID="472818997">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Log_7_PlayerWarps" ID="{8E2D8093-2ABD-4E89-BECE-04531F251A78}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="Theona_Log_6_PlayerRegistersOnTheSecurityPanel" ID="{55806F26-BFCE-4A61-924C-B36D018A06F7}">
+									<ChildrenList>
+										<Action Name="" ID="{F4847E09-D606-4EDA-9ADD-41405CFEE2C1}" ShortID="582574100">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Log_6_PlayerRegistersOnTheSecurityPanel" ID="{19264C1E-013A-4EE8-A23B-2EC3D5118DBF}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="Theona_Log_1_PlayerWakesUp" ID="{B629EC66-B867-4524-9990-05A55B9136FA}">
+									<ChildrenList>
+										<Action Name="" ID="{250E4E66-988F-468C-94CE-9B6E1B54AA2B}" ShortID="763860969">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Log_1_PlayerWakesUp" ID="{F4ACF7C6-C97C-453C-8965-D2757C5292A0}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="Theona_Log_4_PlayerCallsARescueShip" ID="{5EA68A2D-1AE0-4560-A81F-18436930C314}">
+									<ChildrenList>
+										<Action Name="" ID="{2D2A1D23-D7C7-49DC-B82E-EB639F7B898A}" ShortID="1042642128">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Log_4_PlayerCallsARescueShip" ID="{4F34CE17-6353-4346-AAF8-AF1A211661BB}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="Theona_Log_2_PlayerEntersCommandModule" ID="{1DD144D4-9CE2-4919-9FAA-C8BC0D95F9F9}">
+									<ChildrenList>
+										<Action Name="" ID="{B1BCD2C3-784A-4A0F-B7EC-DC86878E5A7F}" ShortID="190293680">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Log_2_PlayerEntersCommandModule" ID="{7D8516C7-79EC-43C6-9C4D-DA8FA1E7D3C9}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="Theona_Log_5_PlayerEntersAShip" ID="{F1D644E7-F7B2-4BDC-AB2D-810B89D25C4A}">
+									<ChildrenList>
+										<Action Name="" ID="{34B9C7B6-8782-4C37-9E9F-9CD2E92C564B}" ShortID="310004934">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Log_5_PlayerEntersAShip" ID="{615253F7-2132-447F-98D4-E9FA5B4211B5}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="Theona_Log_3_PlayerUsesHackingTool" ID="{09D00706-8FF0-48EF-AF00-2B4F10753F36}">
+									<ChildrenList>
+										<Action Name="" ID="{30BA6EFB-A51E-47C5-9603-55DC57114868}" ShortID="129953175">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Log_3_PlayerUsesHackingTool" ID="{6745B77E-B7D3-4A70-BF4D-5DBF336B379F}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+							</ChildrenList>
+						</Folder>
+						<Folder Name="burned_ruins" ID="{751200BF-34BB-42A5-80D1-C797ECF83F52}" ShortID="133735927">
+							<ChildrenList>
+								<Event Name="metzeLog" ID="{A248927D-1563-4EE1-900A-69946C564B0F}">
+									<ChildrenList>
+										<Action Name="" ID="{43DEA179-0EB4-4BBE-9C00-D22251F7F415}" ShortID="973097482">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_2_Message_3" ID="{A14688D0-3705-40DB-9874-F190A2CDE400}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="terminal" ID="{E53F9BF5-D304-491A-86E3-DEDC9DEB5BF8}">
+									<ChildrenList>
+										<Action Name="" ID="{9D21C5D5-1FA7-4594-95A5-A348A271A510}" ShortID="339646129">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_2_SoE_Talking" ID="{F2088468-62B7-47DE-B361-19D531065C8A}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="ewaldLog" ID="{654DDBF6-3911-490D-AFB6-E94F494E436F}">
+									<ChildrenList>
+										<Action Name="" ID="{A6E548F1-7E77-4BB3-900B-827EBF61D417}" ShortID="288168882">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_2_Message_4" ID="{21622FA0-6AE8-4422-B4EE-538B61180832}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+							</ChildrenList>
+						</Folder>
+						<Folder Name="walking_in_her_shoes" ID="{67B686C0-4FB9-4E3C-9EDC-1F6289DCC7AF}" ShortID="262750168">
+							<ChildrenList>
+								<Event Name="SdsTerminal" ID="{00571DD9-7260-4350-B00E-3F0148E448CF}">
+									<ChildrenList>
+										<Action Name="" ID="{178EC5E6-144F-4FBF-B3AC-6B2D27981467}" ShortID="692258908">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_2_Message_11" ID="{DFE6AD2D-FBD4-4F67-873F-5423A4EE3C17}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="ActivationMessage2" ID="{DB2B3BE0-B966-40D9-A943-3B0BF1691D30}">
+									<ChildrenList>
+										<Action Name="" ID="{DAE5A9D0-E163-4FCB-B42D-781886153CF7}" ShortID="960241195">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_2_Message_2" ID="{821211F4-BE78-4533-83C0-768CE18954A4}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="SdsLog2" ID="{E4BE7823-392F-424B-ABD9-AEA359761FB9}">
+									<ChildrenList>
+										<Action Name="" ID="{A29512C6-9A5C-4128-BB47-003C3D65699D}" ShortID="465738496">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_2_Message_10" ID="{5ED82B22-3E15-4738-988F-E68F2946C0D7}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="ActivationMessage" ID="{47A0F553-3149-4978-B066-0EF86FD2C27C}">
+									<ChildrenList>
+										<Action Name="" ID="{5B4119DC-3CAF-4B90-BCD4-9691728BEB7F}" ShortID="690234135">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_2_Message_1" ID="{F8C5F597-2B17-4024-A16C-26E78EBCFDBA}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="SdsLog" ID="{9A99F7B7-EBD9-486D-9E2C-F7CE1FE111EA}">
+									<ChildrenList>
+										<Action Name="" ID="{329FC8C8-E844-43C0-8B4C-BE31A548AFF7}" ShortID="1023858446">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_2_Message_9" ID="{08D2C52F-FFF9-4EAB-AC9D-95DE310A6A9B}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+							</ChildrenList>
+						</Folder>
+						<Folder Name="sound_of_silence" ID="{F08A8AF7-902C-40C0-946F-B1DFBC4F13EB}" ShortID="768305430">
+							<ChildrenList>
+								<Event Name="knossosLog" ID="{A7878C33-0C2A-4421-A388-41819D5C69F7}">
+									<ChildrenList>
+										<Action Name="" ID="{ABA52229-CDAF-4EAE-981D-C0586719007F}" ShortID="70544543">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_3_Message_01" ID="{FD8B5C38-800B-4D95-8D10-2185F88EB5F2}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="knossosResidentialLog" ID="{A199CF18-3262-4395-AB18-C08E0AB2BFBA}">
+									<ChildrenList>
+										<Action Name="" ID="{0FF214A1-3ECF-401B-AE1F-622DDA22762D}" ShortID="670730664">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_3_Message_1" ID="{77A6A31D-4DED-470D-BDC4-3DB0A4BA2AF9}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="knossosResidentialTerminal2" ID="{E481C9D4-4753-49E9-9575-692B1BCB7407}">
+									<ChildrenList>
+										<Action Name="" ID="{5B0BC9E2-524A-4DEF-B03C-53146875BC6F}" ShortID="359411595">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_3_Message_3" ID="{BACFF3E7-3C62-4F70-80B8-F4A9A57F89A8}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="knossosResidentialTerminal1" ID="{4E9787E5-212D-41FC-B2A0-6D64A518821A}">
+									<ChildrenList>
+										<Action Name="" ID="{F5C82D7F-4475-4022-9AE6-560E2CBAFE76}" ShortID="212722505">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_3_Message_2" ID="{33ABE1F6-95D4-4094-BB56-F814080716F7}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+							</ChildrenList>
+						</Folder>
+						<Event Name="StopQuestAudio" ID="{F4BABE95-2661-498B-9C8D-25F0396FBC75}">
+							<ChildrenList>
+								<Action Name="" ID="{0C9FFAD1-6CDD-49D1-B585-82C9DA6549C9}" ShortID="372960534">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="VoiceMixer" ID="{6A6D09A4-EDA8-4900-9E9D-0A8238DE8BDA}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Folder Name="echoes_from_the_past" ID="{70C475CE-806F-426B-8985-28F0249FC3C5}" ShortID="1007579364">
+							<ChildrenList>
+								<Event Name="FragmentedMessage" ID="{5370DBE5-BC81-4EB1-BB13-7801AEF1A8CB}">
+									<ChildrenList>
+										<Action Name="" ID="{4F18A957-F983-4432-A509-6E666F604021}" ShortID="806655160">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_1_Message_1_BadSignal_Short" ID="{4D6365B2-C78F-48FC-A63F-FD1CA6284629}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="CompleteMessage2" ID="{24B3B345-B53E-49E1-826F-5448F5AEBDAD}">
+									<ChildrenList>
+										<Action Name="" ID="{5F93BDE1-DC5D-4B90-BAA6-66B832F2F2A2}" ShortID="1068723331">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_1_Message_2" ID="{9B5B82BA-457D-4816-8D8A-756F787DCE1D}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="CompleteMessage1" ID="{7EC71714-2656-432C-9B25-94C5F220284A}">
+									<ChildrenList>
+										<Action Name="" ID="{A6E00103-5BC1-4ACE-B2DE-EC088146420C}" ShortID="327002113">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_1_Message_1" ID="{0DE9CD5B-E472-460F-8933-9D79D5CACA32}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="AlpLog1" ID="{583CD7A1-6AA7-4FC9-9DFF-ED26D7D16868}">
+									<ChildrenList>
+										<Action Name="" ID="{3408604F-78FA-414B-B5F8-57D1F7944E9D}" ShortID="10420751">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_1_Message_Alp1" ID="{78594861-821A-46C5-9FEE-72CBE04E3E13}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="AlpLog2" ID="{1C5A60A7-7CFC-4D77-A1B0-05BEC6085325}">
+									<ChildrenList>
+										<Action Name="" ID="{4B30FF2E-79A2-47DD-95CD-C679EF9FE568}" ShortID="93159210">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_1_Message_Alp2" ID="{5154E6AA-29D5-4B0C-A499-378105F837B2}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+							</ChildrenList>
+						</Folder>
+						<Folder Name="Test" ID="{D0288053-0578-4AD6-B64C-791FD1B10FE5}" ShortID="587289907">
+							<ChildrenList>
+								<Event Name="Test" ID="{82FD2C8C-A794-4136-A951-B5271B54C970}">
+									<ChildrenList>
+										<Action Name="" ID="{CF4A9AD1-53B6-4662-A189-2BD1F1CA4FBB}" ShortID="865059199">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="New Sequence Container" ID="{7B6E5D10-69E9-4ED5-AC2C-B8A2706B91DC}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="ror1_02" ID="{46EB07DF-3930-4228-81FC-006A7E527A8C}">
+									<ChildrenList>
+										<Action Name="" ID="{0866B9E8-A22A-4390-9E6C-943D7556E333}" ShortID="973048907">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__01" ID="{7590AD62-60BC-4B6B-9B80-1215606E37C8}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="ror1_03" ID="{F68166E3-B7DC-4575-BAF8-2F4976090810}">
+									<ChildrenList>
+										<Action Name="" ID="{C3145EA8-CD5F-4D16-9975-AC99646A771C}" ShortID="38418680">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__02" ID="{04C6FEDE-5386-440E-ADA8-20D3436BE10A}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="ror1_01" ID="{7E11B433-E098-409F-9EE1-6F9CF267FEE6}">
+									<ChildrenList>
+										<Action Name="" ID="{0ED58ACB-D970-4E65-B5D7-B55239D33E8A}" ShortID="840684621">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__" ID="{70E3BDE4-8C07-4BE3-8C14-620CD32CE1CF}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="ror1_04" ID="{CF9451E8-7362-4D4A-A912-1B54D7E51E15}">
+									<ChildrenList>
+										<Action Name="" ID="{60104065-492A-4F3D-84BD-38EBB3A70C8F}" ShortID="939268036">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__03" ID="{DEA58D67-3D5F-454A-842F-BBA775CF057D}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="ror1_05" ID="{325E6821-11CD-4473-9C09-D7D2B17DE4FB}">
+									<ChildrenList>
+										<Action Name="" ID="{444C6E8B-4A11-4620-BFBC-97DAB43749B2}" ShortID="411171990">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Watchmen-Rorschach__39_s-Opening-Scene-___-and-I__39_ll-whisper-no__04" ID="{BACDB4AD-EECA-4F38-9FC6-C213866F0452}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+							</ChildrenList>
+						</Folder>
+						<Folder Name="heart_of_stone" ID="{20A9B299-4421-4C54-95C4-3A1E30F0A32E}" ShortID="6066737">
+							<ChildrenList>
+								<Event Name="Log" ID="{5F001564-7172-49AF-803A-63AE1B0593E0}">
+									<ChildrenList>
+										<Action Name="" ID="{6F07978B-0DB5-4839-8F3A-476E3EA9F1EF}" ShortID="954427791">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_3_Message_6" ID="{A913CE7F-B385-448B-B796-11FF1E6DDC67}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="Finish" ID="{E0C21040-1D27-446F-A15C-C6C545D0BF37}">
+									<ChildrenList>
+										<Action Name="" ID="{5D576987-AA72-4F8D-B8BE-5A9B2DC62D42}" ShortID="998450907">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_3_Message_7" ID="{C7575389-8903-4102-9216-EF9F624B16F4}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+							</ChildrenList>
+						</Folder>
+						<Folder Name="shattered_dreams" ID="{B60A42B1-C88F-463F-853E-6788738C07AE}" ShortID="189248556">
+							<ChildrenList>
+								<Event Name="FBTerminal" ID="{73A6A9D8-1EF2-45B5-9770-10851E2C8D97}">
+									<ChildrenList>
+										<Action Name="" ID="{52E5844B-999F-49E5-BA32-B076F721BA19}" ShortID="71458873">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_3_Message_5" ID="{B6FAD06B-5065-455B-889E-275C1B8BDED2}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="CQMLog" ID="{BEAB7DEB-7433-4A26-BC61-74B5E8CFD626}">
+									<ChildrenList>
+										<Action Name="" ID="{6AA548C6-8B43-48D6-941D-362785010739}" ShortID="1019220524">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Theona_Mission_3_Message_4" ID="{83BE81AD-33B4-4AF3-9398-0EACB2323996}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+							</ChildrenList>
+						</Folder>
+					</ChildrenList>
+				</Folder>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

@@ -83,6 +83,14 @@
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
 				</SoundBank>
+				<SoundBank Name="Quests" ID="{202CD915-9840-4991-BC61-96120A802B89}">
+					<ObjectInclusionList>
+						<ObjectRef Name="QuestAudio" ID="{C7B4E500-BFE2-452D-9525-532205EFECFF}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Quests" ID="{465F7961-06DA-4F05-ADCE-89E1FF4406D3}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
 			</ChildrenList>
 		</WorkUnit>
 	</SoundBanks>
