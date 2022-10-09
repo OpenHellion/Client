@@ -858,11 +858,12 @@ namespace ZeroGravity
 		public void SaveGameOption()
 		{
 			InGameMenuCanvas.GetComponent<GameMenu>().ResumeButton();
-			Invoke("QuickSave", 0.5f);
+			StartCoroutine(QuickSave());
 		}
 
-		private void QuickSave()
+		private IEnumerator QuickSave()
 		{
+			yield return new WaitForSeconds(0.5f);
 			Client.Instance.QuickSave();
 		}
 

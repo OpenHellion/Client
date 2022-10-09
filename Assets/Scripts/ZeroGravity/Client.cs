@@ -1088,8 +1088,7 @@ namespace ZeroGravity
 				PlayerSpawnRequest playerSpawnRequest = new PlayerSpawnRequest();
 				playerSpawnRequest.SpawnSetupType = details.SpawnSetupType;
 				playerSpawnRequest.SpawPointParentID = details.SpawnPointParentID;
-				PlayerSpawnRequest data = playerSpawnRequest;
-				NetworkController.SendToGameServer(data);
+				NetworkController.SendToGameServer(playerSpawnRequest);
 			}
 		}
 

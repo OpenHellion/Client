@@ -9602,8 +9602,78 @@
 										<ItemRef Name="FireLoop" ID="{35831A51-BD43-49E1-869A-DF773E61CE4A}"/>
 									</Playlist>
 								</RandomSequenceContainer>
-								<Folder Name="Spark" ID="{12393058-A309-43C0-86AF-1B5118D8657E}" ShortID="1033967267">
+								<ActorMixer Name="Breach" ID="{D3566E80-F17E-4C38-BF52-83B077D1A210}" ShortID="550322232">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+										</Reference>
+									</ReferenceList>
 									<ChildrenList>
+										<Sound Name="BreachLoop" ID="{A8F4FBC2-7C38-4654-A3BA-703FEC0FA771}" ShortID="102539729">
+											<PropertyList>
+												<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="BreachLoop" ID="{B297D3C1-57EF-49CB-9AF0-DE420CEEC5C6}">
+													<Language>SFX</Language>
+													<AudioFile>Environment\BreachLoop.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="1024575343"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="BreachLoop" ID="{B297D3C1-57EF-49CB-9AF0-DE420CEEC5C6}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+									<ObjectLists/>
+								</ActorMixer>
+								<ActorMixer Name="Spark" ID="{5E9A7CA7-3816-4126-AB09-1F91F74205E6}" ShortID="408504250">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<Sound Name="IMPACT_Metal_Scrap_Deep_Pipe_stereo" ID="{3B4E6C45-3E9D-470B-9F59-66C1153B6A76}" ShortID="128843196">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="IMPACT_Metal_Scrap_Deep_Pipe_stereo" ID="{313966C1-6D54-4D8C-9624-71321CAE8E6E}">
+													<Language>SFX</Language>
+													<AudioFile>Environment\IMPACT_Metal_Scrap_Deep_Pipe_stereo.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="232779323"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="IMPACT_Metal_Scrap_Deep_Pipe_stereo" ID="{313966C1-6D54-4D8C-9624-71321CAE8E6E}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
 										<RandomSequenceContainer Name="SparkEffect" ID="{ACB97227-9BAE-48F5-ACF7-353A3D833BC2}" ShortID="817544838">
 											<PropertyList>
 												<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
@@ -9827,56 +9897,19 @@
 											</ChildrenList>
 											<ObjectLists/>
 										</RandomSequenceContainer>
-										<Sound Name="IMPACT_Metal_Scrap_Deep_Pipe_stereo" ID="{3B4E6C45-3E9D-470B-9F59-66C1153B6A76}" ShortID="128843196">
-											<ReferenceList>
-												<Reference Name="Conversion">
-													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-												</Reference>
-												<Reference Name="OutputBus">
-													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-												</Reference>
-											</ReferenceList>
-											<ChildrenList>
-												<AudioFileSource Name="IMPACT_Metal_Scrap_Deep_Pipe_stereo" ID="{313966C1-6D54-4D8C-9624-71321CAE8E6E}">
-													<Language>SFX</Language>
-													<AudioFile>Environment\IMPACT_Metal_Scrap_Deep_Pipe_stereo.wav</AudioFile>
-													<MediaIDList>
-														<MediaID ID="232779323"/>
-													</MediaIDList>
-												</AudioFileSource>
-											</ChildrenList>
-											<ObjectLists/>
-											<ActiveSourceList>
-												<ActiveSource Name="IMPACT_Metal_Scrap_Deep_Pipe_stereo" ID="{313966C1-6D54-4D8C-9624-71321CAE8E6E}" Platform="Linked"/>
-											</ActiveSourceList>
-										</Sound>
 									</ChildrenList>
-								</Folder>
-								<Folder Name="Steam" ID="{5BF3BB85-6CEA-4AD2-AF09-E7350742825D}" ShortID="767101243">
+									<ObjectLists/>
+								</ActorMixer>
+								<ActorMixer Name="Steam" ID="{85837708-C531-4C68-BC80-8CBDF047F76E}" ShortID="318523081">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+										</Reference>
+									</ReferenceList>
 									<ChildrenList>
-										<Sound Name="SteamLoop" ID="{E7772E62-B19F-403E-9324-1F5F7D84E379}" ShortID="266951372">
-											<ReferenceList>
-												<Reference Name="Conversion">
-													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-												</Reference>
-												<Reference Name="OutputBus">
-													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-												</Reference>
-											</ReferenceList>
-											<ChildrenList>
-												<AudioFileSource Name="SteamLoop" ID="{4675BBB6-25E4-4A8C-99FE-733240561EF3}">
-													<Language>SFX</Language>
-													<AudioFile>Environment\SteamLoop.wav</AudioFile>
-													<MediaIDList>
-														<MediaID ID="153524159"/>
-													</MediaIDList>
-												</AudioFileSource>
-											</ChildrenList>
-											<ObjectLists/>
-											<ActiveSourceList>
-												<ActiveSource Name="SteamLoop" ID="{4675BBB6-25E4-4A8C-99FE-733240561EF3}" Platform="Linked"/>
-											</ActiveSourceList>
-										</Sound>
 										<Sound Name="IMPACT_Metal_Tank_Stick_RR1_mono" ID="{FF5F76BD-AB2F-4873-A38E-51EAD9CAD9EF}" ShortID="991424481">
 											<ReferenceList>
 												<Reference Name="Conversion">
@@ -9900,14 +9933,7 @@
 												<ActiveSource Name="IMPACT_Metal_Tank_Stick_RR1_mono" ID="{F54C520F-FD9B-4673-86AF-761DF68F6131}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
-									</ChildrenList>
-								</Folder>
-								<Folder Name="Breach" ID="{3C9D5606-D44C-4A4D-8562-E19F51A7A02E}" ShortID="655250147">
-									<ChildrenList>
-										<Sound Name="BreachLoop" ID="{A8F4FBC2-7C38-4654-A3BA-703FEC0FA771}" ShortID="102539729">
-											<PropertyList>
-												<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
-											</PropertyList>
+										<Sound Name="SteamLoop" ID="{E7772E62-B19F-403E-9324-1F5F7D84E379}" ShortID="266951372">
 											<ReferenceList>
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
@@ -9917,21 +9943,22 @@
 												</Reference>
 											</ReferenceList>
 											<ChildrenList>
-												<AudioFileSource Name="BreachLoop" ID="{B297D3C1-57EF-49CB-9AF0-DE420CEEC5C6}">
+												<AudioFileSource Name="SteamLoop" ID="{4675BBB6-25E4-4A8C-99FE-733240561EF3}">
 													<Language>SFX</Language>
-													<AudioFile>Environment\BreachLoop.wav</AudioFile>
+													<AudioFile>Environment\SteamLoop.wav</AudioFile>
 													<MediaIDList>
-														<MediaID ID="1024575343"/>
+														<MediaID ID="153524159"/>
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
 											<ObjectLists/>
 											<ActiveSourceList>
-												<ActiveSource Name="BreachLoop" ID="{B297D3C1-57EF-49CB-9AF0-DE420CEEC5C6}" Platform="Linked"/>
+												<ActiveSource Name="SteamLoop" ID="{4675BBB6-25E4-4A8C-99FE-733240561EF3}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
 									</ChildrenList>
-								</Folder>
+									<ObjectLists/>
+								</ActorMixer>
 							</ChildrenList>
 						</Folder>
 						<Folder Name="FireExtinguisher" ID="{83CE26A5-289B-4D51-AD7B-11F9AA796B29}" ShortID="732378619">

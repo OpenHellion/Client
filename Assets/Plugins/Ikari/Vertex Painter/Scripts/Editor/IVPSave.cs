@@ -15,15 +15,9 @@ public class IVPSave : MonoBehaviour {
     string filePath = EditorUtility.SaveFilePanelInProject("Save Prefab", "", "prefab", "");
 
     if (!string.IsNullOrEmpty(filePath)) {
-      GameObject prefabToOverwrite = AssetDatabase.LoadMainAssetAtPath(filePath) as GameObject;
-
-      if (prefabToOverwrite != null) {
-        PrefabUtility.ReplacePrefab(prefabToOverwrite, go);
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-      } else {
-        PrefabUtility.CreatePrefab(filePath, go);
-      }
+      PrefabUtility.SaveAsPrefabAsset(go, filePath);
+      AssetDatabase.SaveAssets();
+      AssetDatabase.Refresh();
     }
 
     //Set original materials

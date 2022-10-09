@@ -1526,7 +1526,60 @@
 				</Folder>
 				<Folder Name="Effects" ID="{9C0E6CE7-FD19-48A5-A423-47BC00349F8B}" ShortID="450147778">
 					<ChildrenList>
-						<Event Name="StopEffects" ID="{294C760D-3F9A-4AF5-9E69-DA2F731C3017}"/>
+						<Event Name="StopEffects" ID="{294C760D-3F9A-4AF5-9E69-DA2F731C3017}">
+							<ChildrenList>
+								<Action Name="" ID="{A57EC1D0-F1F3-45C4-B01B-E127C869B79B}" ShortID="983861794">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Spark" ID="{5E9A7CA7-3816-4126-AB09-1F91F74205E6}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+								<Action Name="" ID="{E38730F1-AADE-4FF6-9575-E1E5CC8A4AC8}" ShortID="365746435">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Breach" ID="{D3566E80-F17E-4C38-BF52-83B077D1A210}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+								<Action Name="" ID="{08635523-471C-45F1-83EC-3C2141A17BC7}" ShortID="260690304">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Steam" ID="{85837708-C531-4C68-BC80-8CBDF047F76E}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+								<Action Name="" ID="{3E777CDB-DB01-4064-9901-112048454452}" ShortID="253731849">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Fire" ID="{3FF197F9-569A-4FDE-A9E5-F1E12F306DC1}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+								<Action Name="" ID="{0F6065A9-6BAA-49F2-9F41-C1375CE35C20}" ShortID="891096613">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="DamageImpact" ID="{70C835CC-CD97-43F5-BC18-5BD24C4188F9}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
 						<Event Name="Breach" ID="{ED6B4773-1994-4DB6-ABA8-78FAFF3987F6}">
 							<ChildrenList>
 								<Action Name="" ID="{3E547B4C-AA48-4E3C-ACE5-3255B478B6C7}" ShortID="12172580">

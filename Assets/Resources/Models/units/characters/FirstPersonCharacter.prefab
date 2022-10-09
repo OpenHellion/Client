@@ -4481,7 +4481,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 5066aebdbc9d8d943abc2cbd1718e871, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5824,7 +5823,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1241487161733373}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40b43d267f02890468c2e1f09109914f, type: 3}
   m_Name: 
@@ -12754,7 +12753,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -19974,7 +19972,7 @@ MonoBehaviour:
     Source: {fileID: 0}
     PlayOnAwake: 1
     UseStringInsteadOfId: 0
-    IsPlaying: 1
+    IsPlaying: 0
     ShowRadius: 0
     AttenuationRadius: 0
   - EventID: -1455436248

@@ -211,7 +211,7 @@ namespace ZeroGravity.UI
 			}
 			gameMenuUp = false;
 			MainMenu(false);
-			base.gameObject.SetActive(false);
+			gameObject.SetActive(false);
 			Client.Instance.OnInGameMenuClosed();
 		}
 

@@ -2236,10 +2236,10 @@ namespace ZeroGravity.Objects
 		{
 			long iD = l.ID;
 			Client.Instance.NetworkController.SenderID = iD;
-			GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/FirstPersonCharacter")) as GameObject;
-			GenderSettings component = gameObject.GetComponent<GenderSettings>();
+			GameObject characterObject = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/FirstPersonCharacter")) as GameObject;
+			GenderSettings genderSettings = characterObject.GetComponent<GenderSettings>();
 			GenderSettings.GenderItem genderItem = null;
-			foreach (GenderSettings.GenderItem setting in component.settings)
+			foreach (GenderSettings.GenderItem setting in genderSettings.settings)
 			{
 				if (setting.Gender != l.Data.Gender)
 				{
@@ -2256,46 +2256,49 @@ namespace ZeroGravity.Objects
 				return null;
 			}
 			InventoryCharacterPreview.instance.ChangeGender(l.Data.Gender);
-			MyPlayer component2 = gameObject.GetComponent<MyPlayer>();
-			AnimatorHelper component3 = genderItem.Outfit.GetComponent<AnimatorHelper>();
-			component2.FpsController.animatorHelper = component3;
-			component2.animHelper = component3;
-			component2.FpsController.CameraController.animatorHelper = component3;
-			component2.FpsController.HeadCameraParent = genderItem.HeadCameraParent;
-			component2.FpsController.ragdollChestRigidbody = component2.FpsController.animatorHelper.GetBone(AnimatorHelper.HumanBones.Spine2).GetComponent<Rigidbody>();
-			component2.ragdollComponent = genderItem.Outfit.GetComponent<RagdollHelper>();
-			component2.Outfit = genderItem.Outfit;
-			GameObject gameObject2 = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/Heads/" + l.Data.Gender.ToString() + "/Head" + l.Data.HeadType)) as GameObject;
-			gameObject2.transform.parent = gameObject.transform;
-			gameObject2.transform.localPosition = new Vector3(0f, -1.34f, 0f);
-			gameObject2.transform.localRotation = Quaternion.identity;
-			gameObject2.transform.localScale = Vector3.one;
-			component2.HeadSkin = gameObject2.GetComponent<SkinnedMeshRenderer>();
-			component2.HeadSkin.rootBone = component2.FpsController.animatorHelper.GetBone(AnimatorHelper.HumanBones.Spine2);
-			component2.ReferenceHead.rootBone = component2.FpsController.animatorHelper.GetBone(AnimatorHelper.HumanBones.Spine2);
-			component2.ArmSkins.Clear();
-			component2.ArmSkins = genderItem.ArmSkins;
-			component2.UpdateReferenceHead();
-			component2.FpsController.CameraController.spineTransform = component2.FpsController.animatorHelper.GetBone(AnimatorHelper.HumanBones.Spine2);
-			component2.RefreshOutfitData();
-			gameObject.name = "MyCharacter";
-			component2.GUID = iD;
-			component2.PlayerName = l.Data.Name;
-			component2.SunCameraRoot = Client.Instance.SunCameraRootTransform;
-			component2.SunCamera = Client.Instance.SunCameraTransform;
-			component2.PlanetsCameraRoot = Client.Instance.PlanetsCameraRootTransform;
-			component2.PlanetsCamera = Client.Instance.PlanetsCameraTransform;
-			component2.ShipSunLight = Client.Instance.ShipSunLightTransform;
-			component2.shipExteriorSunLight = Client.Instance.ShipSunLightTransform.GetComponent<Light>();
-			component2.gameObject.SetActive(value: false);
-			component2.rigidBody.isKinematic = true;
+			MyPlayer myPlayer = characterObject.GetComponent<MyPlayer>();
+			characterObject.name = "MyCharacter";
+
+			GameObject headObject = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/Heads/" + l.Data.Gender.ToString() + "/Head" + l.Data.HeadType)) as GameObject;
+			headObject.transform.parent = characterObject.transform;
+			headObject.transform.localPosition = new Vector3(0f, -1.34f, 0f);
+			headObject.transform.localRotation = Quaternion.identity;
+			headObject.transform.localScale = Vector3.one;
+
+			AnimatorHelper animatorHelper = genderItem.Outfit.GetComponent<AnimatorHelper>();
+			myPlayer.FpsController.animatorHelper = animatorHelper;
+			myPlayer.animHelper = animatorHelper;
+			myPlayer.FpsController.CameraController.animatorHelper = animatorHelper;
+
+			myPlayer.HeadSkin = headObject.GetComponent<SkinnedMeshRenderer>();
+			myPlayer.FpsController.HeadCameraParent = genderItem.HeadCameraParent;
+			myPlayer.FpsController.ragdollChestRigidbody = myPlayer.FpsController.animatorHelper.GetBone(AnimatorHelper.HumanBones.Spine2).GetComponent<Rigidbody>();
+			myPlayer.ragdollComponent = genderItem.Outfit.GetComponent<RagdollHelper>();
+			myPlayer.Outfit = genderItem.Outfit;
+			myPlayer.HeadSkin.rootBone = myPlayer.FpsController.animatorHelper.GetBone(AnimatorHelper.HumanBones.Spine2);
+			myPlayer.ReferenceHead.rootBone = myPlayer.FpsController.animatorHelper.GetBone(AnimatorHelper.HumanBones.Spine2);
+			myPlayer.ArmSkins.Clear();
+			myPlayer.ArmSkins = genderItem.ArmSkins;
+			myPlayer.UpdateReferenceHead();
+			myPlayer.FpsController.CameraController.spineTransform = myPlayer.FpsController.animatorHelper.GetBone(AnimatorHelper.HumanBones.Spine2);
+			myPlayer.RefreshOutfitData();
+			myPlayer.GUID = iD;
+			myPlayer.PlayerName = l.Data.Name;
+			myPlayer.SunCameraRoot = Client.Instance.SunCameraRootTransform;
+			myPlayer.SunCamera = Client.Instance.SunCameraTransform;
+			myPlayer.PlanetsCameraRoot = Client.Instance.PlanetsCameraRootTransform;
+			myPlayer.PlanetsCamera = Client.Instance.PlanetsCameraTransform;
+			myPlayer.ShipSunLight = Client.Instance.ShipSunLightTransform;
+			myPlayer.shipExteriorSunLight = Client.Instance.ShipSunLightTransform.GetComponent<Light>();
+			myPlayer.gameObject.SetActive(value: false);
+			myPlayer.rigidBody.isKinematic = true;
 			AkSoundEngine.SetRTPCValue(SoundManager.instance.InGameVolume, 0f);
 			Client.Instance.NetworkController.SendToGameServer(new ConsoleMessage
 			{
 				Text = "god"
 			});
 			Client.Instance.CanvasManager.DefaultInteractionTipSeen = false;
-			return component2;
+			return myPlayer;
 		}
 
 		public void SendPlayerRoomMessage()
