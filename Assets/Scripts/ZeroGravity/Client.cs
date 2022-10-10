@@ -222,6 +222,10 @@ namespace ZeroGravity
 
 		public SoundEffect AmbientSounds;
 
+		/// <summary>
+		/// 	If we have loaded up a save or joined a server, and is in game.
+		/// 	True when game is started.
+		/// </summary>
 		public bool IsInGame;
 
 		public bool HasFocus;
@@ -1236,7 +1240,7 @@ namespace ZeroGravity
 				// Prevent the app from quitting.
 				Application.wantsToQuit += () => { return false; };
 
-				// Exit safely.
+				// Exit safely instead.
 				ExitGame();
 			}
 			else
@@ -1246,7 +1250,7 @@ namespace ZeroGravity
 		}
 
 		/// <summary>
-		/// 	Method to exit the game safely. Handles shutting down connections to servers/clients properly, and saves settings and such.
+		/// 	Method to exit the game safely. Handles shutting down connections to servers/clients properly, and saves settings.
 		/// </summary>
 		public void ExitGame()
 		{
@@ -1262,7 +1266,9 @@ namespace ZeroGravity
 			OnDestroy();
 			NetworkController.DisconnectImmediate();
 			Application.Quit();
-			//KillGameProcess();
+		#if PLATFORM_STANDALONE
+			KillGameProcess();
+		#endif
 		}
 
 		private void OnDestroy()

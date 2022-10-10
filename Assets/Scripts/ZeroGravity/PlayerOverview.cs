@@ -24,6 +24,9 @@ namespace ZeroGravity
 		{
 		}
 
+		/// <summary>
+		/// 	Toggle the visibility of this menu.
+		/// </summary>
 		public void Toggle(bool val, int screen = 0, bool gloss = false)
 		{
 			if (MyPlayer.Instance.InIteractLayer)

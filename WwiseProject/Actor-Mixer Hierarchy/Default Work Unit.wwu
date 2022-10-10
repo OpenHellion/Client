@@ -303,69 +303,6 @@
 										<MediaID ID="471890150"/>
 									</MediaIDList>
 								</AudioFileSource>
-								<AudioFileSource Name="AltCorp_Background_Random Sub 1_01" ID="{E5134B37-2FCE-49E7-924E-87EDDE46B6FF}">
-									<Language>SFX</Language>
-									<AudioFile>Ambience\AltCorp_Background_Random Sub 1_01.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="947243565"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="AltCorp_Background_Random_Impact 2_01" ID="{7D6C0A98-8E91-42FB-B897-AF0DC9D62001}">
-									<Language>SFX</Language>
-									<AudioFile>Ambience\AltCorp_Background_Random_Impact 2_01.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="674479"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="AltCorp_Background_Random_Impact 6_01" ID="{32C98B33-16CF-4B80-A4A0-DFA992C2AACE}">
-									<Language>SFX</Language>
-									<AudioFile>Ambience\AltCorp_Background_Random_Impact 6_01.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="863346266"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="AltCorp_Background_Random_Impact 7_01" ID="{1E1207E4-F2B1-4E76-B3D7-E39E0AE112BC}">
-									<Language>SFX</Language>
-									<AudioFile>Ambience\AltCorp_Background_Random_Impact 7_01.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="388219060"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="AltCorp_Background_Random_Squeek_01" ID="{3960B87D-F225-4A00-BB26-00E284AF9DDE}">
-									<Language>SFX</Language>
-									<AudioFile>Ambience\AltCorp_Background_Random_Squeek_01.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="385011275"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="AltCorp_Loop_Ambience_Medium Room 1_Less Bass" ID="{AE19C405-D18F-4DFD-A040-F426177DA4D7}">
-									<Language>SFX</Language>
-									<AudioFile>Ambience\AltCorp_Loop_Ambience_Medium Room 1_Less Bass.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="63756390"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="AltCorp_Loop_CryoChamber_1_A_01" ID="{92626A2F-EB04-493E-8E03-A027F93E7D0F}">
-									<Language>SFX</Language>
-									<AudioFile>Ambience\AltCorp_Loop_CryoChamber_1_A_01.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="891761248"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="Background_Vacuum_A" ID="{EDE13CBB-2D1D-45F4-9CAD-EF78CF1BAE54}">
-									<Language>SFX</Language>
-									<AudioFile>Ambience\Background_Vacuum_A.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="287518139"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="Hellion_Main Menu Theme 1" ID="{633B1087-E4E9-4EA6-AE6B-13A24B3BB2F0}">
-									<Language>SFX</Language>
-									<AudioFile>Ambience\Hellion_Main Menu Theme 1.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="242681264"/>
-									</MediaIDList>
-								</AudioFileSource>
 							</ChildrenList>
 							<ObjectLists/>
 							<ActiveSourceList>
@@ -816,6 +753,7 @@
 									<ChildrenList>
 										<Sound Name="Hellion_Main Menu Theme 1" ID="{291A14A2-C966-408E-861A-3DE0139CDE52}" ShortID="62677415">
 											<PropertyList>
+												<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
 														<Value>-13</Value>

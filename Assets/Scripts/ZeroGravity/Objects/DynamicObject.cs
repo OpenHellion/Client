@@ -583,6 +583,7 @@ namespace ZeroGravity.Objects
 			catch (Exception ex)
 			{
 				Dbg.Error(ex);
+				Dbg.Error("Could not find dynamic object with GUID {}, path {}", details.GUID, data.PrefabPath);
 				return dynamicObject;
 			}
 		}

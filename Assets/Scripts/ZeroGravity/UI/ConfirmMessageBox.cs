@@ -44,7 +44,7 @@ namespace ZeroGravity.UI
 		public void HideConfirmMessageBox()
 		{
 			Client.Instance.CanvasManager.IsConfirmBoxActive = false;
-			base.gameObject.SetActive(false);
+			gameObject.SetActive(false);
 			Cursor.visible = wasCursorVisible;
 			GameMenu.DisableGameMenu = false;
 		}

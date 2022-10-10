@@ -150,8 +150,28 @@
 								</Action>
 							</ChildrenList>
 						</Event>
-						<Event Name="QuestTitleCompleted" ID="{A3D013AB-D672-4E2E-B02E-CEFB7290A069}"/>
-						<Event Name="QuestTitleUI" ID="{36A65ABC-1F6B-4605-940A-8CCB3222FB06}"/>
+						<Event Name="QuestTitleCompleted" ID="{A3D013AB-D672-4E2E-B02E-CEFB7290A069}">
+							<ChildrenList>
+								<Action Name="" ID="{5FEA4AA4-B95A-4906-92BC-E0FCCD335464}" ShortID="136813415">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="TrackedQuestCompleted" ID="{5C76600B-F15D-4E1F-8D6D-AA364CC1ACAD}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="QuestTitleUI" ID="{36A65ABC-1F6B-4605-940A-8CCB3222FB06}">
+							<ChildrenList>
+								<Action Name="" ID="{7FFEF3D0-56A0-40CA-8CC1-B616EA9517A5}" ShortID="519386669">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="QuestTitle" ID="{594BCA6F-834C-43FF-81B2-01020A1D9CA3}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
 						<Event Name="TrackedQuestCompleted" ID="{2C0F5361-F7C8-4085-A712-033E337401C0}">
 							<ChildrenList>
 								<Action Name="" ID="{ECC41431-99A5-44EA-93F9-572BC3236968}" ShortID="125494053">
@@ -1438,8 +1458,28 @@
 										</Action>
 									</ChildrenList>
 								</Event>
-								<Event Name="LightTPS" ID="{E6A9997A-5124-4007-8CB4-324F362A0251}"/>
-								<Event Name="LightFPS" ID="{89E81F12-3A8B-4A53-B14C-990622E0BD96}"/>
+								<Event Name="LightTPS" ID="{E6A9997A-5124-4007-8CB4-324F362A0251}">
+									<ChildrenList>
+										<Action Name="" ID="{518E3D25-E99D-4293-BEBF-F333D67C30C0}" ShortID="803106817">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Altair_Helmet_Light" ID="{B959F3E0-E29A-44C9-9BCC-27D7059AD190}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
+								<Event Name="LightFPS" ID="{89E81F12-3A8B-4A53-B14C-990622E0BD96}">
+									<ChildrenList>
+										<Action Name="" ID="{D6611C47-497D-4A1B-909D-11CAA48663D8}" ShortID="76749706">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Altair_Helmet_Light" ID="{B959F3E0-E29A-44C9-9BCC-27D7059AD190}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
 								<Event Name="RaiseVisorTPS" ID="{63731812-B8FF-4A97-8F09-DA1DADF3AE78}">
 									<ChildrenList>
 										<Action Name="" ID="{AA64B88F-F1B7-42A5-BBB6-93E32EFDA9EE}" ShortID="380248203">

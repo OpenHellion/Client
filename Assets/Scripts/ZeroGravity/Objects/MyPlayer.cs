@@ -1450,6 +1450,8 @@ namespace ZeroGravity.Objects
 			{
 				animHelper.SetParameterTrigger(AnimatorHelper.Triggers.Melee);
 			}
+
+			// Open the in game meny when pressing escape.
 			if (ZeroGravity.UI.InputManager.GetKeyDown(KeyCode.Escape) && LockedToTrigger == null && !Client.Instance.CanvasManager.IsGameMenuOpen && !Client.Instance.CanvasManager.ScreenShootMod.activeInHierarchy)
 			{
 				if (Client.Instance.CanvasManager.IsPlayerOverviewOpen)
@@ -1458,7 +1460,7 @@ namespace ZeroGravity.Objects
 				}
 				else
 				{
-					Client.Instance.CanvasManager.OnInGameMenuOpened();
+					Client.Instance.CanvasManager.OpenInGameMenu();
 				}
 			}
 			if (ZeroGravity.UI.InputManager.GetButtonDown(ZeroGravity.UI.InputManager.AxisNames.Mouse3) && !FpsController.IsZeroG)

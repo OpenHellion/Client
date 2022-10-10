@@ -5,57 +5,20 @@
 			<ChildrenList>
 				<SoundBank Name="Intro" ID="{AEB41240-521C-48CD-BD09-54B262590D04}">
 					<ObjectInclusionList>
-						<ObjectRef Name="StopIntro" ID="{9E1D73BE-9AA6-42AF-82E1-3DC01F7013A2}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="StopFreshStart" ID="{B8256E92-A268-464A-AD38-A6587DCD8448}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="PlayIntro" ID="{B24AC516-998F-46BD-B776-DC01E9295F85}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="PlayFreshStart" ID="{30B2579D-E891-4967-B980-40FA29D2B192}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Hellion_Trailer_Nov_2018_v1_7_FB2C5546" ID="{C8C28FA1-AAC0-4A5F-A8F6-FD064ADF211B}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="EAT_Final Audio_2_56D34C19" ID="{6ABAAC49-4F69-4E92-B84B-388150780EB3}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Intro" ID="{E78804A3-DF0A-47A2-9BE4-3DBBDD517DC5}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
 				</SoundBank>
 				<SoundBank Name="UI" ID="{89625B73-6C9B-486C-9B22-748EE303D1C1}">
 					<ObjectInclusionList>
-						<ObjectRef Name="TrackedQuestCompleted" ID="{2C0F5361-F7C8-4085-A712-033E337401C0}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="TrackerStart" ID="{85AD2945-1C2B-4097-91BB-8785145FF256}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="NotificationUIEnd" ID="{ABA9323D-97C8-40A6-9A9D-24315D514F9C}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="TrackerStart" ID="{590CCA3A-CFB6-4101-A8D4-ED647C84D143}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="TrackerSwitch" ID="{97881403-EA41-419C-84A7-799685E73F53}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="CutSceneChangeCharacter" ID="{26E03986-7A63-421E-B645-5A9BFDF2168C}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="CutSceneStart" ID="{9D7433F1-C9A3-4232-82BA-E97D67FB2B06}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="TrackedQuestStart" ID="{5C6D99FC-B0BB-4267-A450-8000C8F85816}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Click" ID="{966D9A62-5C29-42ED-9941-993725ECEBFB}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="QuestTitleActivated" ID="{321ABE2A-0BDC-43B2-9BEB-DE12F303E615}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="QuestTitle" ID="{594BCA6F-834C-43FF-81B2-01020A1D9CA3}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="TrackerEnd" ID="{A6403FD1-B0F8-4429-A519-8503000A9D3C}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="CutSceneEnd" ID="{EDFFBE0A-2E31-4466-8839-8F82A6D97AF3}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="NotificationEnd" ID="{03578E4F-E899-44F8-A4E7-338DAB10E58F}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="ClickSelect1" ID="{01BA7E16-6AFA-45CC-963A-F53165ADDB72}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="QuestTitleUI" ID="{36A65ABC-1F6B-4605-940A-8CCB3222FB06}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="NotificationUIStart" ID="{D7991CD2-6EBE-4615-817C-39D54F98AED0}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="TrackedQuestEnd" ID="{04A767E6-31FD-466D-90BE-3C7C6ADE42CB}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="AltCorp_Space Feedback 5" ID="{6D814973-E52F-4678-B518-0343397ECF85}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="TrackerSwitch" ID="{D5CEE609-3ED3-4686-A516-418CBA939554}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="TrackerEnd" ID="{762DA908-998E-46F1-BE8B-7C0099DF605C}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="CutSceneStart" ID="{4A7D247E-E956-4A26-A91E-EF3E42A73327}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="CutSceneChangeCharacter" ID="{977AA8C0-D658-4A77-855B-2BDBA7D4ED36}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="NotificationStart" ID="{ED301BE8-D016-4ACA-8E42-6A5992EC5301}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="TrackedQuestEnd" ID="{54605995-A957-4AD3-AB80-802498384839}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Click5" ID="{99974F21-4A4F-4ADD-B76A-37DF323F6C34}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="AltCorp_Space Feedback 1" ID="{2A8E0E29-643C-4C98-A8D9-D329B341887C}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="CutSceneEnd" ID="{CE4694C5-1034-4CB1-A61D-CD5EB629384F}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="TrackedQuestCompleted" ID="{5C76600B-F15D-4E1F-8D6D-AA364CC1ACAD}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="QuestTitleCompleted" ID="{A3D013AB-D672-4E2E-B02E-CEFB7290A069}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="TrackedQuestStart" ID="{F024F3FD-97A7-4F1A-9EBD-DC3956F8029B}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Hover" ID="{11A7655D-DF14-4FAA-992E-8501A40C096E}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="UI" ID="{545DB06A-AAE8-4141-B011-FCABCEC2D6D5}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
 				</SoundBank>
 				<SoundBank Name="Ambience" ID="{EB053646-EFD4-4AAC-8C93-F36186212B95}">
 					<ObjectInclusionList>
-						<ObjectRef Name="Ambience" ID="{F492F15B-8340-4C8F-8DAC-270FC237C64C}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Ambience" ID="{4B735E94-2D5F-4E58-A8B3-243B9C01BF81}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
@@ -64,29 +27,27 @@
 				<SoundBank Name="Character" ID="{795E6858-F231-4F3D-B032-2DC56C43F37F}">
 					<ObjectInclusionList>
 						<ObjectRef Name="Character" ID="{848A6F73-0D8C-40EA-9F04-FB0DD88767F2}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Footsteps_run" ID="{CE8E4AE0-D792-4124-AFAD-65A2AB4DA7D9}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Health" ID="{30FDEC54-DB60-4158-82F9-0383C6A797ED}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Footsteps_walk" ID="{2EEEB9A8-D600-4533-9629-C125F2AB731F}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Footsteps_walkBackwards" ID="{FA88FD2D-B7DB-49FD-A57D-B7D3087965BC}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Impact" ID="{2075A810-D435-4F7A-B403-72EFF17DC71A}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
 				</SoundBank>
 				<SoundBank Name="Environment" ID="{088A76F7-7ABD-47B9-9BCD-AEAEAF4CF3D2}">
 					<ObjectInclusionList>
-						<ObjectRef Name="Helmet" ID="{0EAE99D6-65FB-41FC-BE7C-36E387D6BD18}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Environment" ID="{BC87A919-9F9F-446C-9CD1-B5A74C75F4CE}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Effects" ID="{9C0E6CE7-FD19-48A5-A423-47BC00349F8B}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Props" ID="{A0C3B9AD-5032-4AC0-8122-412073CC3970}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
 				</SoundBank>
 				<SoundBank Name="Quests" ID="{202CD915-9840-4991-BC61-96120A802B89}">
 					<ObjectInclusionList>
-						<ObjectRef Name="QuestAudio" ID="{C7B4E500-BFE2-452D-9525-532205EFECFF}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Quests" ID="{465F7961-06DA-4F05-ADCE-89E1FF4406D3}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
+				<SoundBank Name="Props" ID="{E779AED5-CEC2-44B4-98C4-2D795D7B0612}">
+					<ObjectInclusionList>
+						<ObjectRef Name="Props" ID="{A0C3B9AD-5032-4AC0-8122-412073CC3970}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>

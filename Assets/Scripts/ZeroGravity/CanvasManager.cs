@@ -370,7 +370,10 @@ namespace ZeroGravity
 			}
 		}
 
-		public void OnInGameMenuOpened()
+		/// <summary>
+		/// 	Open the ingame menu.
+		/// </summary>
+		public void OpenInGameMenu()
 		{
 			ToggleInGameMenuCanvas(val: true);
 			Client.Instance.ToggleCursor(true);
@@ -454,7 +457,7 @@ namespace ZeroGravity
 			if (Client.Instance.IsInGame)
 			{
 				Client.Instance.ToggleCursor(true);
-				GetGameMenu().MainMenu(val);
+				GameMenuScript.MainMenu(val);
 				if (!MyPlayer.Instance.FpsController.IsZeroG)
 				{
 					MyPlayer.Instance.FpsController.ResetVelocity();
@@ -563,11 +566,6 @@ namespace ZeroGravity
 			LoadingCanvas.Activate(type != LoadingScreenType.None);
 			LoadingScreenText.text = type.ToLocalizedString();
 			Client.Instance.LastLoadingTipsChangeTime = Time.realtimeSinceStartup;
-		}
-
-		public GameMenu GetGameMenu()
-		{
-			return InGameMenuCanvas.GetComponent<GameMenu>();
 		}
 
 		public MessageBox GetMessageBox()
@@ -791,7 +789,7 @@ namespace ZeroGravity
 		public void SettingsButton()
 		{
 			ToggleInGameMenuCanvas(val: true);
-			GetGameMenu().SettingsMenu(isUp: true);
+			GameMenuScript.SettingsMenu(isUp: true);
 		}
 
 		/// <summary>
