@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0870357c3027a34ab5e8bd2c40ca98c, type: 3}
+  m_Name: Madleneslog
+  m_EditorClassIdentifier:
+  Title: Final log of MadMetze, last survivor of Civilian Outpost 4
+  Character: {fileID: 11400000, guid: 205e8f5d5f92ffe4b9bbf232abdbcd6d, type: 2}
+  LogText: 'Lang and Dom turned on us.
+
+	
+
+	They took Arthur hostage and locked us in, then turned off life support. Ewald was out and tried to reach the distress beacon but Dom gunned him down before he could activate it. I guess Dom forgot Ew’s recorder. I remember hating him for recording us without saying anything, and now he’s dead and that recording is the only proof I have. I guess he was broadcasting since I heard everything Dom said. They worked for Deadwolf, for Sons of Earth.
+
+	
+
+	To think that we trusted those two. Worked with them, laughed with them.
+
+	
+
+	An hour or so later we got hit by a cloud of debris I guess the impact knocked me out. When I came to the station was a wreck and I was almost out of air.
+
+	
+
+	I can’t get to the cryopod anymore, had to tape everything to save what little oxygen I have left.
+
+	
+
+	If I don’t make it, give my Lava Lamp to Dimberger… The old man had a soft spot for those things.
+
+	'
+  LogDate: 2409.08.22

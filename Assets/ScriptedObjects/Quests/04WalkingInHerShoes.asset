@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 045e95257a910444eb0dcca09e1f84cf, type: 3}
+  m_Name: 04WalkingInHerShoes
+  m_EditorClassIdentifier:
+  ParentQuest: {fileID: 0}
+  DependencyQuests:
+  - {fileID: 11400000, guid: 65344bab63d46fb40a6ff277e1d83dd7, type: 2}
+  ID: 7
+  QuestTaskBatches:
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 4312edcdeb224b940b34b1afcf66e40f, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 1e4f1f106d192ec49828e4efd8e2e2ee, type: 2}
+    - {fileID: 11400000, guid: 35c79dfc363f9dc4493a4850dc8b53f2, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 4c4a112c7e5a73744b1d8f14f94deebe, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: afa06822f074d85429eb3ff226f92da2, type: 2}
+    - {fileID: 11400000, guid: bc837ad600c65744eb8e1b0cdd79a5ce, type: 2}
+    BatchDependency: 1
+  Name: Walking in her shoes
+  Description: Follow Theona's footsteps to find out what caused debris fields around Bethyr and it's moons.
+  Achivement: 5
+  AutoActivate: 0
+  QuestToTrackWhenCompleted: {fileID: 0}
+  TrackOnPickUp: 0
+  Skippable: 0

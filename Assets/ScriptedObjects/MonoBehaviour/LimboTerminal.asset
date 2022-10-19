@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 337831424, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: LimboTerminal
+  m_EditorClassIdentifier:
+  m_NextId: 0
+  m_Tracks:
+  - {fileID: 11400000, guid: 1e860359972ce52469a54a6c6eea3fe9, type: 2}
+  - {fileID: 11400000, guid: 1e819a3999133604fb6dd12c20aa1441, type: 2}
+  - {fileID: 11400000, guid: 302cce05923d32144a58c926221e7599, type: 2}
+  - {fileID: 11400000, guid: 5d5e5c89aedfd1e41aa2782a94fc8899, type: 2}
+  - {fileID: 11400000, guid: edf8fc4253f9901419f49f0d2c020841, type: 2}
+  - {fileID: 11400000, guid: 2b59b3beae1b8f447a2cfc4dd16366d2, type: 2}
+  - {fileID: 11400000, guid: ca164263fa1dc7c45b68c6f8606b360d, type: 2}
+  - {fileID: 11400000, guid: b7c9cf19b1099c64888b9f08824be25c, type: 2}
+  - {fileID: 11400000, guid: 6b4407633d031d44f877b005d8f8e3c9, type: 2}
+  - {fileID: 11400000, guid: a18f8264029d6064eb116930fa736f9c, type: 2}
+  m_FixedDuration: 0
+  m_EditorSettings:
+    m_Framerate: 60
+  m_DurationMode: 0
+  m_Version: 0

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fcc81f2658f04641aaf1ee5408cec1f, type: 3}
+  m_Name: MiddleOfNowhereLog
+  m_EditorClassIdentifier:
+  Location: {fileID: 11400000, guid: ea0ae6d66d6e1094f96d515c9b7292bf, type: 2}
+  Tags:
+  - {fileID: 11400000, guid: 097114c2418ff774d827d39c621e089a, type: 2}
+  Celestial: 0
+  NameTag: Search the derelicts
+  NameOnIndicator: Check Theona's log.
+  DescriptionTag: Search the derelicts for Theona's logs.
+  CutScene: {fileID: 11400000, guid: 2b1798bdd8c10384eb11d0e2363b3bf5, type: 2}
+  SceneID: -1
+  QuestID: 10
+  QuestTriggerID: 6
+  LastTask: 0

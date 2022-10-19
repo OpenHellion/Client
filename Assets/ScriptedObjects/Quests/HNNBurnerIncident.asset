@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0870357c3027a34ab5e8bd2c40ca98c, type: 3}
+  m_Name: HNNBurnerIncident
+  m_EditorClassIdentifier:
+  Title: HNN Tragedy at Burner
+  Character: {fileID: 11400000, guid: 75107b6878a7fbf4f816dc46adf3c54d, type: 2}
+  LogText: 'Earlier today HNN received reports of a large scale disaster taking place in the orbit of Bethyr’s second moon, Burner. According to an anonymous source, two heat spikes resembling explosions were detected in the upper orbit yesterday around noon.
+
+	
+
+	As per our reports, Burner is currently surrounded by a class 2 debris field and 3 civilian outposts remain trapped inside the Burner’s “no flight” zone. Fate of their crew is still unknown. Both AltCorp and SDS vessels are present on site and coordinating search and rescue efforts. 
+
+	
+
+	HNN is still awaiting the official statement by Altair Corporation and the Expedition command regarding this incident.'
+  LogDate: 2409.08.23

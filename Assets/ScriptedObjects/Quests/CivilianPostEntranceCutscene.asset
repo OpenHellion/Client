@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4100b041523c0624c87765598d71eac5, type: 3}
+  m_Name: CivilianPostEntranceCutscene
+  m_EditorClassIdentifier:
+  QuestID: 14
+  QuestTriggerID: 2
+  Elements:
+  - Character: {fileID: 11400000, guid: 6bbba0c827f496b46ad6c3e62b92e462, type: 2}
+    Dialogue: Ggggrrrrrrr... bbwwaarrkkkkkrrrr....ggg...
+    PlaySound: 0
+    DialogueSound:
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 47d7725731ba6774b828082374967154, type: 2}
+    Dialogue: Yeah, that's the uhm... the alien... that we have to, uhm.. kill.. yeah.
+    PlaySound: 0
+    DialogueSound:
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 47d7725731ba6774b828082374967154, type: 2}
+    Dialogue: Just get us the goods! We're at the Crew Quarters Module.
+    PlaySound: 0
+    DialogueSound:
+    SkipInJournal: 0
+    TaskDependencyList: []
+  QuestName: If it bleeds we can kill it
+  Delay: 0

@@ -706,11 +706,11 @@ public class pb_Object : MonoBehaviour
 				((CapsuleCollider)collider).radius = pb_Math.LargestValue(v);
 				((CapsuleCollider)collider).height = mesh.bounds.size.y;
 			}
-			else if ((object)type == typeof(WheelCollider))
-			{
-				((WheelCollider)collider).center = mesh.bounds.center;
-				((WheelCollider)collider).radius = pb_Math.LargestValue(mesh.bounds.extents);
-			}
+			//else if ((object)type == typeof(WheelCollider))
+			//{
+			//	((WheelCollider)collider).center = mesh.bounds.center;
+			//	((WheelCollider)collider).radius = pb_Math.LargestValue(mesh.bounds.extents);
+			//}
 			else if ((object)type == typeof(MeshCollider))
 			{
 				base.gameObject.GetComponent<MeshCollider>().sharedMesh = null;

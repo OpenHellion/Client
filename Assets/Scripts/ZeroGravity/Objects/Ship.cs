@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ThreeEyedGames;
 using UnityEngine;
@@ -19,107 +18,107 @@ namespace ZeroGravity.Objects
 	public class Ship : SpaceObjectVessel
 	{
 		public delegate void DockCompletedDelegate(bool isInitialize);
-	
+
 		public Rigidbody Rigidbody;
-	
+
 		private bool shipStatsChanged;
-	
+
 		private ShipStatsMessage shipStatsMsg;
-	
+
 		public Dictionary<DistributionSystemType, float> AvailableResourceCapacities = new Dictionary<DistributionSystemType, float>();
-	
+
 		public Dictionary<DistributionSystemType, float> AvailableResourceQuantities = new Dictionary<DistributionSystemType, float>();
-	
+
 		public Ship TargetObject;
-	
+
 		private Transform stardustCameraTrans;
-	
+
 		private Stardust stardustObj;
-	
+
 		public float EngineThrustPercentage;
-	
+
 		public double EndWarpTime;
-	
+
 		public Vector3 AutoStabilize = Vector3.zero;
-	
+
 		public short lvl;
-	
+
 		public short[] index;
-	
+
 		public float[] resDebug;
-	
+
 		public Vector3 CurrRcsMoveThrust;
-	
+
 		public Vector3 CurrRcsRotationThrust;
-	
+
 		public bool gatherAtmos;
-	
+
 		public bool IsRotationStabilized;
-	
+
 		public NavigationPanel NavPanel;
-	
+
 		private EngineThrusters engineThrusters;
-	
+
 		private WarpEffect warpEffect;
-	
+
 		private WarpStartEffect warpStartEffect;
-	
+
 		public Task WarpStartEffectTask;
-	
+
 		private WarpEndEffect warpEndEffect;
-	
+
 		public Task WarpEndEffectTask;
-	
+
 		private WarpInductorExecuter warpInductorExecuter;
-	
+
 		private RCSThrusters rcsThrusters;
-	
+
 		private RefuelingStationUI refuelingStation;
-	
+
 		private bool listenersConnected;
-	
+
 		private List<Material> temperatureMaterials = new List<Material>();
-	
+
 		private Vector3D rotPredictionForward = Vector3D.Forward;
-	
+
 		private Vector3D rotPredictionUp = Vector3D.Up;
-	
+
 		private double rotationPredictionLastTime;
-	
+
 		private bool _useRCS;
-	
+
 		private bool _rcsOn;
-	
+
 		private Queue<VesselObjects> shipObjectsLoadingQueue;
-	
+
 		private bool rcsShipPlaying;
-	
+
 		private float previousThrustSoundTime;
-	
+
 		private bool sceneLoadStarted;
-	
+
 		public DockCompletedDelegate OnDockCompleted;
-	
+
 		public DockCompletedDelegate OnUndockCompleted;
-	
+
 		public DockCompletedDelegate OnUndockStarted;
-	
+
 		private SceneDockingPortDetails currDockDetails;
-	
+
 		private float lerpTimer;
-	
+
 		public override SpaceObjectType Type => SpaceObjectType.Ship;
-	
+
 		public long CourseWaitingActivation { get; private set; }
-	
+
 		public Vector3 CourseStartDirection { get; private set; }
-	
+
 		public double CourseStartTime { get; private set; }
-	
+
 		public double CourseEndTime { get; private set; }
-	
+
 		public SecuritySystem SecuritySystem { get; private set; }
-	
+
 		public bool IsThrusting
 		{
 			get
@@ -131,7 +130,7 @@ namespace ZeroGravity.Objects
 				return false;
 			}
 		}
-	
+
 		public bool RCSIsOn
 		{
 			get
@@ -147,7 +146,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 		}
-	
+
 		public void ToggleGatheringAtmosphere(bool? isGathering = null)
 		{
 			if (isGathering.HasValue)
@@ -165,7 +164,7 @@ namespace ZeroGravity.Objects
 			shipStatsMsg.GatherAtmosphere = gatherAtmos;
 			shipStatsChanged = true;
 		}
-	
+
 		private void CreateNewStatsMessage()
 		{
 			shipStatsMsg = new ShipStatsMessage();
@@ -181,7 +180,7 @@ namespace ZeroGravity.Objects
 			shipStatsMsg.VesselObjects.SpawnPoints = new List<SpawnPointStats>();
 			shipStatsChanged = false;
 		}
-	
+
 		public override void ChangeStats(Vector3? thrust = null, Vector3? rotation = null, Vector3? autoStabilize = null, float? engineThrustPercentage = null, SubSystemDetails subSystem = null, GeneratorDetails generator = null, RoomDetails roomTrigger = null, DoorDetails door = null, SceneTriggerExecuterDetails sceneTriggerExecuter = null, SceneDockingPortDetails dockingPort = null, AttachPointDetails attachPoint = null, long? stabilizationTarget = null, SpawnPointStats spawnPoint = null, float? selfDestructTime = null, string emblemId = null)
 		{
 			if (shipStatsMsg == null)
@@ -278,7 +277,7 @@ namespace ZeroGravity.Objects
 				shipStatsChanged = true;
 			}
 		}
-	
+
 		public override void DestroyGeometry()
 		{
 			base.DestroyGeometry();
@@ -293,7 +292,7 @@ namespace ZeroGravity.Objects
 			sceneLoadStarted = false;
 			base.SceneObjectsLoaded = false;
 		}
-	
+
 		public static Ship Create(long guid, VesselData data, ObjectTransform trans, bool isMainObject)
 		{
 			Ship ship = ArtificialBody.Create(SpaceObjectType.Ship, guid, trans, isMainObject) as Ship;
@@ -306,13 +305,13 @@ namespace ZeroGravity.Objects
 			Client.Instance.Map.InitializeMapObject(ship);
 			return ship;
 		}
-	
+
 		private void Start()
 		{
 			ConnectMessageListeners();
 			this.InvokeRepeating(ProximityCanvasCheck, 1f, MathHelper.RandomRange(1f, 1.5f));
 		}
-	
+
 		private void FixedUpdate()
 		{
 			if (AutoStabilize.IsNotEpsilonZero() && base.AngularVelocity != Vector3.zero)
@@ -370,14 +369,14 @@ namespace ZeroGravity.Objects
 			}
 			SmoothRotation(Time.fixedDeltaTime);
 		}
-	
+
 		public void SetRotationPredictionValues(Vector3D forward, Vector3D up)
 		{
 			rotPredictionForward = forward;
 			rotPredictionUp = up;
 			rotationPredictionLastTime = -1.0;
 		}
-	
+
 		public Vector3D DampenRotationPrediction(double timeDelta, bool dampen, double stabilizationMultiplier = 1.0)
 		{
 			double num = (double)((!(RCS != null)) ? 0f : (RCS.RotationStabilization * RCS.MaxOperationRate)) * stabilizationMultiplier * timeDelta;
@@ -411,7 +410,7 @@ namespace ZeroGravity.Objects
 			}
 			return RotationVec - rotationVec;
 		}
-	
+
 		private void ApplyRotationPrediction()
 		{
 			if (rotationPredictionLastTime < 0.0)
@@ -439,7 +438,7 @@ namespace ZeroGravity.Objects
 				SetTargetPositionAndRotation(null, rotPredictionForward.ToVector3(), rotPredictionUp.ToVector3());
 			}
 		}
-	
+
 		private void Update()
 		{
 			if (MyPlayer.Instance.Parent != null)
@@ -458,7 +457,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 		}
-	
+
 		private void OnDestroy()
 		{
 			this.CancelInvoke(ActivateDamagePoints);
@@ -468,7 +467,7 @@ namespace ZeroGravity.Objects
 			SceneHelper.RemoveCubemapProbes(base.gameObject);
 			Client.Instance.ActiveVessels.Remove(base.GUID);
 		}
-	
+
 		public void ConnectMessageListeners()
 		{
 			if (!listenersConnected)
@@ -482,7 +481,7 @@ namespace ZeroGravity.Objects
 				Client.Instance.NetworkController.EventSystem.AddListener(typeof(DestroyVesselMessage), DestroyVesselMessageListener);
 			}
 		}
-	
+
 		public void DisconnectMessageListeners()
 		{
 			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(ShipStatsMessage), ShipStatsMessageListener);
@@ -493,7 +492,7 @@ namespace ZeroGravity.Objects
 			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(VesselRequestResponse), VesselRequestResponseListener);
 			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(DestroyVesselMessage), DestroyVesselMessageListener);
 		}
-	
+
 		private void DestroyVesselMessageListener(NetworkData data)
 		{
 			DestroyVesselMessage destroyVesselMessage = data as DestroyVesselMessage;
@@ -506,7 +505,7 @@ namespace ZeroGravity.Objects
 				DestructionEffects.enabled = true;
 			}
 		}
-	
+
 		private void VesselRequestResponseListener(NetworkData data)
 		{
 			VesselRequestResponse vesselRequestResponse = data as VesselRequestResponse;
@@ -530,7 +529,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 		}
-	
+
 		private void InitializeSpaceObjectsMessageListener(NetworkData data)
 		{
 			InitializeSpaceObjectMessage initializeSpaceObjectMessage = data as InitializeSpaceObjectMessage;
@@ -543,7 +542,7 @@ namespace ZeroGravity.Objects
 				UpdateCorpses(initializeSpaceObjectMessage.Corpses);
 			}
 		}
-	
+
 		public void SendCancelManeuverCourseRequest()
 		{
 			ManeuverCourseRequest maneuverCourseRequestData = Client.Instance.Map.GetManeuverCourseRequestData(lockCourse: true);
@@ -554,7 +553,7 @@ namespace ZeroGravity.Objects
 				Client.Instance.NetworkController.SendToGameServer(maneuverCourseRequestData);
 			}
 		}
-	
+
 		public void SendManeuverCourseRequest()
 		{
 			ManeuverCourseRequest maneuverCourseRequestData = Client.Instance.Map.GetManeuverCourseRequestData(lockCourse: true);
@@ -564,7 +563,7 @@ namespace ZeroGravity.Objects
 				Client.Instance.NetworkController.SendToGameServer(maneuverCourseRequestData);
 			}
 		}
-	
+
 		public void SendManeuverCourseActivationRequest()
 		{
 			if (CourseWaitingActivation > 0)
@@ -577,7 +576,7 @@ namespace ZeroGravity.Objects
 				});
 			}
 		}
-	
+
 		private void ManeuverCourseResponseListener(NetworkData data)
 		{
 			ManeuverCourseResponse maneuverCourseResponse = data as ManeuverCourseResponse;
@@ -663,7 +662,7 @@ namespace ZeroGravity.Objects
 			}
 			Client.Instance.Discord.UpdateStatus();
 		}
-	
+
 		public void ActivateWarpStartEffect()
 		{
 			if (warpStartEffect != null)
@@ -674,7 +673,7 @@ namespace ZeroGravity.Objects
 				gameObject.gameObject.Activate(value: true);
 			}
 		}
-	
+
 		public void ActivateWarpEndEffect()
 		{
 			if (warpEndEffect != null)
@@ -685,7 +684,7 @@ namespace ZeroGravity.Objects
 				gameObject.gameObject.Activate(value: true);
 			}
 		}
-	
+
 		public void CancelManeuver()
 		{
 			CourseWaitingActivation = 0L;
@@ -715,7 +714,7 @@ namespace ZeroGravity.Objects
 				warpInductorExecuter.ToggleInductor(isActive: false, isInstant: false);
 			}
 		}
-	
+
 		private void VesselSecurityResponseListener(NetworkData data)
 		{
 			VesselSecurityResponse vesselSecurityResponse = data as VesselSecurityResponse;
@@ -732,7 +731,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 		}
-	
+
 		private void NameTagMessageListener(NetworkData data)
 		{
 			NameTagMessage nameTagMessage = data as NameTagMessage;
@@ -748,7 +747,7 @@ namespace ZeroGravity.Objects
 			{
 			}
 		}
-	
+
 		private void UpdateShipObjects(VesselObjects shipObjects, bool isInitialize = false)
 		{
 			if (shipObjects == null || !base.gameObject.activeInHierarchy)
@@ -1158,7 +1157,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 		}
-	
+
 		private void ShipStatsMessageListener(NetworkData data)
 		{
 			ShipStatsMessage shipStatsMessage = data as ShipStatsMessage;
@@ -1286,12 +1285,12 @@ namespace ZeroGravity.Objects
 				}
 			}
 		}
-	
+
 		private float GetDamagePointsFrequency()
 		{
 			return (DamagePointEffectFrequency == null) ? 0f : DamagePointEffectFrequency.Evaluate(Health / base.MaxHealth);
 		}
-	
+
 		public override void ParseSpawnData(SpawnObjectResponseData data)
 		{
 			base.ParseSpawnData(data);
@@ -1313,7 +1312,7 @@ namespace ZeroGravity.Objects
 				StartCoroutine(LoadAllShipScenesCoroutine(spawnShipResponseData));
 			}
 		}
-	
+
 		private IEnumerator LoadAllShipScenesCoroutine(SpawnShipResponseData res)
 		{
 			yield return StartCoroutine(LoadShipScenesCoroutine(isMainShip: false, res.VesselObjects));
@@ -1374,7 +1373,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 		}
-	
+
 		private IEnumerator LoadStructureScenes(GameScenes.SceneID sceneID, Transform rootTransform, VesselObjects shipObjects)
 		{
 			yield return StartCoroutine(Client.Instance.SceneLoader.LoadSceneCoroutine(SceneLoader.SceneType.Structure, (long)sceneID));
@@ -1402,7 +1401,7 @@ namespace ZeroGravity.Objects
 			Mass = sscene.Mass * 1000f;
 			List<StructureSceneConnection> sceneConnections = new List<StructureSceneConnection>(sceneRoot.GetComponentsInChildren<StructureSceneConnection>());
 			List<long> connectedConnections = new List<long>();
-			sceneRoot.transform.localPosition = Vector3.zero;
+			//sceneRoot.transform.localPosition = Vector3.zero;
 			SceneHelper.FillAttachPoints(this, sceneRoot, AttachPoints, shipObjects?.AttachPoints);
 			SceneHelper.FillSubSystems(sceneRoot, SubSystems, shipObjects?.SubSystems);
 			SceneHelper.FillGenerators(sceneRoot, Generators, shipObjects?.Generators);
@@ -1436,7 +1435,7 @@ namespace ZeroGravity.Objects
 				item.ToggleObjects(showEnabled);
 			}
 		}
-	
+
 		public void ActivateDamagePoints()
 		{
 			float damagePointsFrequency = GetDamagePointsFrequency();
@@ -1484,7 +1483,7 @@ namespace ZeroGravity.Objects
 			}
 			this.Invoke(ActivateDamagePoints, MathHelper.RandomRange(0f, MathHelper.Clamp(1f / damagePointsFrequency, 1f, 10f)));
 		}
-	
+
 		public IEnumerator LoadShipScenesCoroutine(bool isMainShip, VesselObjects shipObjects)
 		{
 			CreateArtificalRigidbody();
@@ -1525,7 +1524,7 @@ namespace ZeroGravity.Objects
 			base.SceneObjectsLoaded = true;
 			ZeroOcclusion.CheckOcclusionFor(this, onlyCheckDistance: false);
 		}
-	
+
 		private void DockUndockCompleted(bool isDock, bool isInitialize)
 		{
 			AllowOtherCharacterMovement();
@@ -1727,7 +1726,7 @@ namespace ZeroGravity.Objects
 				Client.Instance.InGamePanels.Docking.UpdateDockingPorts();
 			}
 		}
-	
+
 		private static void SetRcsThrustersCenterOfMass(Ship sh, bool resetIsOn)
 		{
 			Ship ship = sh;
@@ -1751,7 +1750,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 		}
-	
+
 		public void DockToShip(SceneDockingPort myPort, Ship dockToShip, SceneDockingPort dockToPort, SceneDockingPortDetails details, bool isInitialize)
 		{
 			currDockDetails = details;
@@ -1867,7 +1866,7 @@ namespace ZeroGravity.Objects
 				dockToShip.RCS.Status = SystemStatus.OffLine;
 			}
 		}
-	
+
 		private IEnumerator LerpDock(Vector3 targetPos, Quaternion targetRot)
 		{
 			Vector3 startingPosition = base.transform.localPosition;
@@ -1903,7 +1902,7 @@ namespace ZeroGravity.Objects
 			}
 			DockUndockCompleted(isDock: true, isInitialize: false);
 		}
-	
+
 		public void UndockFromShip(SceneDockingPort myPort, Ship dockedToShip, SceneDockingPort dockedToPort, SceneDockingPortDetails details)
 		{
 			if (myPort == null || dockedToPort == null || !dockedToShip)
@@ -2059,7 +2058,7 @@ namespace ZeroGravity.Objects
 			}
 			UpdateMapObjects(dockedToShip);
 		}
-	
+
 		private void UpdateMapObjects(Ship dockedToShip)
 		{
 			if (Client.Instance.Map.AllMapObjects.TryGetValue(this, out var value) && value != null)
@@ -2071,7 +2070,7 @@ namespace ZeroGravity.Objects
 				value2.gameObject.SetActive(dockedToShip.IsMainVessel);
 			}
 		}
-	
+
 		public override void OnSceneLoaded()
 		{
 			base.OnSceneLoaded();
@@ -2142,7 +2141,7 @@ namespace ZeroGravity.Objects
 				}
 			});
 		}
-	
+
 		public override void OnStabilizationChanged(bool isStabilized)
 		{
 			if (!base.IsMainVessel)
@@ -2154,24 +2153,24 @@ namespace ZeroGravity.Objects
 				allDockedVessel.OnStabilizationChanged(isStabilized);
 			}
 		}
-	
+
 		public override bool IsPlayerAuthorized(Player pl)
 		{
 			return IsPlayerAuthorized(pl, new HashSet<SpaceObjectVessel>(), new HashSet<SecuritySystem>());
 		}
-	
+
 		public override bool IsPlayerAuthorizedOrNoSecurity(Player pl)
 		{
 			HashSet<SecuritySystem> hashSet = new HashSet<SecuritySystem>();
 			return IsPlayerAuthorized(pl, new HashSet<SpaceObjectVessel>(), hashSet) || hashSet.Count == 0;
 		}
-	
+
 		public override bool IsPlayerAuthorizedOrFreeSecurity(Player pl)
 		{
 			HashSet<SecuritySystem> hashSet = new HashSet<SecuritySystem>();
 			return IsPlayerAuthorized(pl, new HashSet<SpaceObjectVessel>(), hashSet) || hashSet.Count == 0 || hashSet.Count((SecuritySystem m) => m.AuthorizedPlayers.Count == 0) == hashSet.Count;
 		}
-	
+
 		private bool IsPlayerAuthorized(Player pl, HashSet<SpaceObjectVessel> traversedVessels, HashSet<SecuritySystem> securitySystems)
 		{
 			if (!traversedVessels.Add(this))
@@ -2200,7 +2199,7 @@ namespace ZeroGravity.Objects
 			}
 			return false;
 		}
-	
+
 		public void ProximityCanvasCheck()
 		{
 			if (!base.IsDummyObject)

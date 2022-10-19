@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0870357c3027a34ab5e8bd2c40ca98c, type: 3}
+  m_Name: LimboTerminalLog
+  m_EditorClassIdentifier:
+  Title: Revelation
+  Character: {fileID: 11400000, guid: 1a3aac73e9559154e894400e9d73ac25, type: 2}
+  LogText: 'By the time you receive this message “Old man”, my body will be dead. Taken by that deceiving monster you call “a friend”.
+
+	
+
+	I will entrust my truth to you and leave our fates in your hands. 
+
+	
+
+	Truth, that we were all led here to become kindling for the deceivers funeral pyre… Sheep dragged helplessly to the altar, where all of mankind is to be sacrificed to the blazing terror that they worship.
+
+	
+
+	Just as I was sacrificed long ago. That terror still lurks in the back of my mind, ever since the day the soul of Michael Roznikov burned away. The day Deadwolf rose from its ashes and was remade in the image of our lord and savior. This is the truth the deceiver hides from you!
+
+	
+
+	Heed the omens for I have seen the light! Cast the veil from your eyes Dimberger and see Sandi for what he truly is! Lest you all burn away as I did.
+
+	
+
+	Know before I go, that when you find my body, you will also find the ones Roznikov took from you.'
+  LogDate: 2410.03.12

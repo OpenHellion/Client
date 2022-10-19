@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if false
+using System;
 using UnityEngine;
 
 namespace Photon.Voice.Unity
@@ -53,9 +54,9 @@ namespace Photon.Voice.Unity
             // true means to use a route-dependent value which is usually the sample rate of the source
             // otherwise, 44100 Hz requested
             // On Android 4.4.4 (probably on all < 6.0), auto does not work: java.lang.IllegalArgumentException: 0Hz is not a supported sample rate.
-            const bool SAMPLE_RATE_AUTO = false; 
-            
-            // 44100Hz is currently the only rate that is guaranteed to work on all devices 
+            const bool SAMPLE_RATE_AUTO = false;
+
+            // 44100Hz is currently the only rate that is guaranteed to work on all devices
             // used for GetMinBufferSize call even if SAMPLE_RATE_AUTO = true
             const int SAMPLE_RATE_44100 = 44100;
             const int SAMPLE_RATE_UNSPECIFIED = 0;
@@ -68,7 +69,7 @@ namespace Photon.Voice.Unity
                 audioIn = new AndroidJavaObject("com.exitgames.photon.audioinaec.AudioInAEC");
                 //bool aecAvailable = audioIn.Call<bool>("AECIsAvailable");
                 int minBufSize = audioIn.Call<int>("GetMinBufferSize", SAMPLE_RATE_44100, Channels);
-                logger.LogInfo("[PV] AndroidAudioInAEC: AndroidJavaObject created: aec: {0}/{1}, agc: {2}/{3}, ns: {4}/{5} minBufSize: {6}", 
+                logger.LogInfo("[PV] AndroidAudioInAEC: AndroidJavaObject created: aec: {0}/{1}, agc: {2}/{3}, ns: {4}/{5} minBufSize: {6}",
                     enableAEC, audioIn.Call<bool>("AECIsAvailable"),
                     enableAGC, audioIn.Call<bool>("AGCIsAvailable"),
                     enableNS, audioIn.Call<bool>("NSIsAvailable"),
@@ -88,7 +89,7 @@ namespace Photon.Voice.Unity
                 {
                     Error = "[PV] AndroidAudioInAEC constructor: calling Start java method failure";
                     logger.LogError("[PV] AndroidAudioInAEC: {0}", Error);
-                }                
+                }
             }
             catch (Exception e)
             {
@@ -149,3 +150,4 @@ namespace Photon.Voice.Unity
         }
     }
 }
+#endif

@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4100b041523c0624c87765598d71eac5, type: 3}
+  m_Name: AlpLog
+  m_EditorClassIdentifier:
+  QuestID: 6
+  QuestTriggerID: 5
+  Elements:
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: '...|Burned out after 6 minutes… |I’m just horrible at this…
+
+	|I should have taken that engineering course… |Ok… |let 
+
+	me see if I can fix this|'
+    PlaySound: 1
+    DialogueSound: AlpLog1
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'fried coupling... |and a blown amplifier. |Well, |ok |it’s not
+
+	that bad...|But I think I’ll have to make another
+
+	salvage run through Bethyr’s scrapyard...|'
+    PlaySound: 0
+    DialogueSound:
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: '... |Note to self: |Find spare warp cells before you end
+
+	up stranded,|again! |You got lucky last time!|'
+    PlaySound: 1
+    DialogueSound: AlpLog2
+    SkipInJournal: 0
+    TaskDependencyList: []
+  QuestName: Echoes From The Past
+  Delay: 0

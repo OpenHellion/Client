@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 300a307ff35cc154da9e6bd59d033044, type: 3}
+  m_Name: EffectPrefabs
+  m_EditorClassIdentifier:
+  BulletHitsMetal:
+  - {fileID: 114487554475601907, guid: a175355704a374e48ae7ffa1e4880bf2, type: 2}
+  BulletHitsFlesh:
+  - {fileID: 114784552390668228, guid: e046214c242d61345b9cdc550bc2275a, type: 2}
+  BulletHitsObject:
+  - {fileID: 114487554475601907, guid: a175355704a374e48ae7ffa1e4880bf2, type: 2}

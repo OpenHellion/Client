@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4100b041523c0624c87765598d71eac5, type: 3}
+  m_Name: Ror
+  m_EditorClassIdentifier:
+  QuestID: 17
+  QuestTriggerID: 1
+  Elements:
+  - Character: {fileID: 11400000, guid: 1ce32242c95b0a14ea83530b4a6997b7, type: 2}
+    Dialogue: 'Rorschach''s Journal.  October 12th, 1985:'
+    PlaySound: 1
+    DialogueSound: ror1_01
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 1ce32242c95b0a14ea83530b4a6997b7, type: 2}
+    Dialogue: Dog carcass in alley this morning, tire tread on burst stomach.  This city is afraid of me.  I have seen it's true face.
+    PlaySound: 1
+    DialogueSound: ror1_02
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 1ce32242c95b0a14ea83530b4a6997b7, type: 2}
+    Dialogue: The streets are extended gutters and the gutters are full of blood and when the drains finally scab over, all the vermin will drown.
+    PlaySound: 1
+    DialogueSound: ror1_03
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 1ce32242c95b0a14ea83530b4a6997b7, type: 2}
+    Dialogue: The accumulated filth of all their sex and murder will foam up about their waists and all the whores and politicians will look up and shout "Save us!"...
+    PlaySound: 1
+    DialogueSound: ror1_04
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 1ce32242c95b0a14ea83530b4a6997b7, type: 2}
+    Dialogue: ...and I'll whisper "no."
+    PlaySound: 1
+    DialogueSound: ror1_05
+    SkipInJournal: 0
+    TaskDependencyList: []
+  QuestName: BranchQuest
+  Delay: 0

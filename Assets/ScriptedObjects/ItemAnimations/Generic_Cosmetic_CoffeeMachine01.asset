@@ -1,0 +1,188 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d29d0d9a5066435488a3bbcdc60a217a, type: 3}
+  m_Name: Generic_Cosmetic_CoffeeMachine01
+  m_EditorClassIdentifier:
+  FPS:
+    Passive_Idle: {fileID: 7400000, guid: f74f9e98cdac34048b7650f6f4ac5529, type: 2}
+    Passive_WalkForward: {fileID: 7400000, guid: 80f3060b4cd347e40a9b9f228727f1d3, type: 2}
+    Passive_WalkBackward: {fileID: 7400000, guid: 80f3060b4cd347e40a9b9f228727f1d3, type: 2}
+    Passive_WalkRight: {fileID: 7400000, guid: 80f3060b4cd347e40a9b9f228727f1d3, type: 2}
+    Passive_WalkLeft: {fileID: 7400000, guid: 80f3060b4cd347e40a9b9f228727f1d3, type: 2}
+    Passive_Run: {fileID: 7400000, guid: ed2066e52cbba7a4da7775ada0992e52, type: 2}
+    Active_Idle: {fileID: 0}
+    Active_WalkForward: {fileID: 0}
+    Active_WalkBackward: {fileID: 0}
+    Active_WalkRight: {fileID: 0}
+    Active_WalkLeft: {fileID: 0}
+    Active_Run: {fileID: 0}
+    Special_Idle: {fileID: 0}
+    Special_WalkForward: {fileID: 0}
+    Stance1ToStance2: {fileID: 0}
+    Stance1ToStance3: {fileID: 0}
+    Stance2ToStance1: {fileID: 0}
+    Stance2ToStance3: {fileID: 0}
+    Stance3ToStance1: {fileID: 0}
+    Stance3ToStance2: {fileID: 0}
+    Passive_Jump: {fileID: 7400000, guid: 1be7d7abe75bdd141a4e62a45f23cb8a, type: 2}
+    Passive_Land: {fileID: 7400000, guid: 6b4d5b2161c610740812ada05ebca813, type: 2}
+    Active_Jump: {fileID: 0}
+    Active_Land: {fileID: 0}
+    Special_Jump: {fileID: 0}
+    Special_Land: {fileID: 0}
+    Sway_Left: {fileID: 0}
+    Sway_Right: {fileID: 0}
+    Sway_Up: {fileID: 0}
+    Sway_Down: {fileID: 0}
+    Sway_Idle: {fileID: 0}
+    WeaponCheck_Idle: {fileID: 0}
+    Stance1_WeaponCheck_IdleToCheck: {fileID: 0}
+    Stance1_WeaponCheck_CheckToIdle: {fileID: 0}
+    Stance2_WeaponCheck_IdleToCheck: {fileID: 0}
+    Stance2_WeaponCheck_CheckToIdle: {fileID: 0}
+    Stance2_Shooting_Standard: {fileID: 0}
+    Stance2_Shooting_PowerShot: {fileID: 0}
+    Stance3_Shooting_Standard: {fileID: 0}
+    Stance3_Shooting_PowerShot: {fileID: 0}
+    Consumable_Use: {fileID: 0}
+    Stance1_Load: {fileID: 0}
+    Stance1_Reload: {fileID: 0}
+    Stance1_Unload: {fileID: 0}
+    Stance2_Load: {fileID: 0}
+    Stance2_Reload: {fileID: 0}
+    Stance2_Unload: {fileID: 0}
+    Pickup_ToHands: {fileID: 7400000, guid: 2a72e476582cef140abaed4c44d47fbd, type: 2}
+    Pickup_ToInventory: {fileID: 0}
+    Drop_Stance1: {fileID: 7400000, guid: e1fd02251c5bf644f90dc8e451ced466, type: 2}
+    Drop_Stance2: {fileID: 0}
+    Item_Equip: {fileID: 0}
+    Item_DeEquip: {fileID: 0}
+    Weapon_Activation: {fileID: 0}
+    Weapon_ActivatedIdle: {fileID: 0}
+    Weapon_ActivationCancel: {fileID: 0}
+    Melee_Passive: {fileID: 0}
+    Melee_Passive2: {fileID: 0}
+    Melee_Active: {fileID: 0}
+  TPS:
+    Passive_Idle: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Passive_WalkForward: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Passive_WalkBackward: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Passive_WalkRight: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Passive_WalkLeft: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Passive_Run: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Active_Idle: {fileID: 0}
+    Active_WalkForward: {fileID: 0}
+    Active_WalkBackward: {fileID: 0}
+    Active_WalkRight: {fileID: 0}
+    Active_WalkLeft: {fileID: 0}
+    Active_Run: {fileID: 0}
+    Special_Idle: {fileID: 0}
+    Special_WalkForward: {fileID: 0}
+    Stance1ToStance2: {fileID: 0}
+    Stance1ToStance3: {fileID: 0}
+    Stance2ToStance1: {fileID: 0}
+    Stance2ToStance3: {fileID: 0}
+    Stance3ToStance1: {fileID: 0}
+    Stance3ToStance2: {fileID: 0}
+    Passive_Jump: {fileID: 7400000, guid: d92e5fe67e346ea4d9c0f23fd1a1842b, type: 2}
+    Passive_Land: {fileID: 7400000, guid: d92e5fe67e346ea4d9c0f23fd1a1842b, type: 2}
+    Active_Jump: {fileID: 0}
+    Active_Land: {fileID: 0}
+    Special_Jump: {fileID: 0}
+    Special_Land: {fileID: 0}
+    Sway_Left: {fileID: 0}
+    Sway_Right: {fileID: 0}
+    Sway_Up: {fileID: 0}
+    Sway_Down: {fileID: 0}
+    Sway_Idle: {fileID: 0}
+    WeaponCheck_Idle: {fileID: 0}
+    Stance1_WeaponCheck_IdleToCheck: {fileID: 0}
+    Stance1_WeaponCheck_CheckToIdle: {fileID: 0}
+    Stance2_WeaponCheck_IdleToCheck: {fileID: 0}
+    Stance2_WeaponCheck_CheckToIdle: {fileID: 0}
+    Stance2_Shooting_Standard: {fileID: 0}
+    Stance2_Shooting_PowerShot: {fileID: 0}
+    Stance3_Shooting_Standard: {fileID: 0}
+    Stance3_Shooting_PowerShot: {fileID: 0}
+    Consumable_Use: {fileID: 0}
+    Stance1_Load: {fileID: 0}
+    Stance1_Reload: {fileID: 0}
+    Stance1_Unload: {fileID: 0}
+    Stance2_Load: {fileID: 0}
+    Stance2_Reload: {fileID: 0}
+    Stance2_Unload: {fileID: 0}
+    Pickup_ToHands: {fileID: 0}
+    Pickup_ToInventory: {fileID: 0}
+    Drop_Stance1: {fileID: 0}
+    Drop_Stance2: {fileID: 0}
+    Item_Equip: {fileID: 0}
+    Item_DeEquip: {fileID: 0}
+    Weapon_Activation: {fileID: 0}
+    Weapon_ActivatedIdle: {fileID: 0}
+    Weapon_ActivationCancel: {fileID: 0}
+    Melee_Passive: {fileID: 0}
+    Melee_Passive2: {fileID: 0}
+    Melee_Active: {fileID: 0}
+    Passive_Walk_Forward_Right: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Passive_Walk_Forward_Left: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Passive_Walk_Backward_Right: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Passive_Walk_Backward_Left: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Passive_Run_Forward_Right: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Passive_Run_Forward_Left: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Passive_Run_Right: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Passive_Run_Left: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Passive_0G_Idle: {fileID: 7400000, guid: 64d6fcfb333bf264ab30598963d2b33a, type: 2}
+    Passive_InAir: {fileID: 7400000, guid: d92e5fe67e346ea4d9c0f23fd1a1842b, type: 2}
+    Active_Walk_Forward_Right: {fileID: 0}
+    Active_Walk_Forward_Left: {fileID: 0}
+    Active_Walk_Backward_Right: {fileID: 0}
+    Active_Walk_Backward_Left: {fileID: 0}
+    Active_Run_Forward_Right: {fileID: 0}
+    Active_Run_Forward_Left: {fileID: 0}
+    Active_Run_Right: {fileID: 0}
+    Active_Run_Left: {fileID: 0}
+    Active_0G_Idle: {fileID: 0}
+    Active_InAir: {fileID: 0}
+    Special_Walk_Backward: {fileID: 0}
+    Special_Walk_Right: {fileID: 0}
+    Special_Walk_Left: {fileID: 0}
+    Special_Walk_Forward_Right: {fileID: 0}
+    Special_Walk_Forward_Left: {fileID: 0}
+    Special_Walk_Backward_Right: {fileID: 0}
+    Special_Walk_Backward_Left: {fileID: 0}
+    Special_0G_Idle: {fileID: 0}
+    Stance1_CrouchWalk_Forward: {fileID: 0}
+    Stance1_CrouchWalk_Backward: {fileID: 0}
+    Stance1_CrouchWalk_Right: {fileID: 0}
+    Stance1_CrouchWalk_Left: {fileID: 0}
+    Stance1_CrouchWalk_Forward_Right: {fileID: 0}
+    Stance1_CrouchWalk_Forward_Left: {fileID: 0}
+    Stance1_CrouchWalk_Backward_Right: {fileID: 0}
+    Stance1_CrouchWalk_Backward_Left: {fileID: 0}
+    Stance1_CrouchWalk_Idle: {fileID: 0}
+    Stance2_CrouchWalk_Forward: {fileID: 0}
+    Stance2_CrouchWalk_Backward: {fileID: 0}
+    Stance2_CrouchWalk_Right: {fileID: 0}
+    Stance2_CrouchWalk_Left: {fileID: 0}
+    Stance2_CrouchWalk_Forward_Right: {fileID: 0}
+    Stance2_CrouchWalk_Forward_Left: {fileID: 0}
+    Stance2_CrouchWalk_Backward_Right: {fileID: 0}
+    Stance2_CrouchWalk_Backward_Left: {fileID: 0}
+    Stance2_CrouchWalk_Idle: {fileID: 0}
+    Stance3_CrouchWalk_Forward: {fileID: 0}
+    Stance3_CrouchWalk_Backward: {fileID: 0}
+    Stance3_CrouchWalk_Right: {fileID: 0}
+    Stance3_CrouchWalk_Left: {fileID: 0}
+    Stance3_CrouchWalk_Forward_Right: {fileID: 0}
+    Stance3_CrouchWalk_Forward_Left: {fileID: 0}
+    Stance3_CrouchWalk_Backward_Right: {fileID: 0}
+    Stance3_CrouchWalk_Backward_Left: {fileID: 0}
+    Stance3_CrouchWalk_Idle: {fileID: 0}

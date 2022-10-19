@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4100b041523c0624c87765598d71eac5, type: 3}
+  m_Name: KnossosResidentalLogCutScene
+  m_EditorClassIdentifier:
+  QuestID: 10
+  QuestTriggerID: 3
+  Elements:
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'I…|I might be going crazy but|I think the Sons
+
+	agent|is none other than Deadwolf himself…|'
+    PlaySound: 1
+    DialogueSound: knossosResidentialLog
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'But if that’s true…|then the bastard just walked onto
+
+	the station and no one figured it out…|How could
+
+	this have happened?|'
+    PlaySound: 0
+    DialogueSound:
+    SkipInJournal: 0
+    TaskDependencyList: []
+  QuestName: Sound of Silence
+  Delay: 0

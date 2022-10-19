@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 045e95257a910444eb0dcca09e1f84cf, type: 3}
+  m_Name: 00ARudeAwakening
+  m_EditorClassIdentifier:
+  ParentQuest: {fileID: 0}
+  DependencyQuests: []
+  ID: 2
+  QuestTaskBatches:
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 78c89a97d3507424798b735c5646374c, type: 2}
+    BatchDependency: 0
+  - TasksInBatch:
+    - {fileID: 11400000, guid: b5eb6691afc7c7c4daaec9555948426e, type: 2}
+    BatchDependency: 0
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 9ea86f6d0d9b44148a9934553d279664, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: a91d4af965e67fa4cba2feab5330d188, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 78bca4dba2052544aa56015d21bac9d2, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: b17037d07955e2f42bc92cc9f4f622ca, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: b3daa13cb76d6fa4c8539aa9be7c368e, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 7f889d70154d3f34eb1e7fc036cc4741, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: b6375434107ef9b4d82e81d9ffed79b8, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: a3dfff9514d9a984b846a5209b145b02, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: a280ada298a80254e826f48f84efee25, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 8756c54040783364aa17538100419006, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: e7e75f39609e8ac44a56c8d8628dcfd6, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 4469ffe592c8c324181ddf5e968c7ce4, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: babe72be5b80c284ab89783ceb9b7940, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: c6dbceec4d5209044a9f000be114b595, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 7e4694e80a1fbf84c8038475c512c751, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: e6291cafa5a9cb740abbd9084a99bf57, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 85a1ae6632f29af489edee8cde49d4f2, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 543ff7df7a511274dbf00578e88289aa, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 2b0859bdb595279468f2e35dddf50e05, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 0d8de42d93ef4d84eb8ba59a672e400d, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: f507a026c1880ad4bb2c37f0549cdfb7, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: c36bca0c3939a8441b489a1e363c3b49, type: 2}
+    BatchDependency: 1
+  Name: A Rude Awakening
+  Description: Find a way to escape from the Doomed Station.
+  Achivement: 1
+  AutoActivate: 0
+  QuestToTrackWhenCompleted: {fileID: 0}
+  TrackOnPickUp: 0
+  Skippable: 1

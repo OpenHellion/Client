@@ -1229,6 +1229,7 @@ namespace ZeroGravity
 
 		private void OnApplicationQuit()
 		{
+			// Kill the single player server.
 			if (SinglePlayerMode)
 			{
 				KillAllSPProcesses();
@@ -1266,9 +1267,6 @@ namespace ZeroGravity
 			OnDestroy();
 			NetworkController.DisconnectImmediate();
 			Application.Quit();
-		#if PLATFORM_STANDALONE
-			KillGameProcess();
-		#endif
 		}
 
 		private void OnDestroy()
@@ -1308,6 +1306,9 @@ namespace ZeroGravity
 			}
 		}
 
+		/// <summary>
+		/// 	Toggles the visibility and lock state of the cursor. No value inverts the current value.
+		/// </summary>
 		public void ToggleCursor(bool? val = null)
 		{
 			Cursor.visible = ((!val.HasValue) ? (!Cursor.visible) : val.Value);
@@ -1316,21 +1317,15 @@ namespace ZeroGravity
 			{
 				Cursor.lockState = CursorLockMode.Locked;
 			}
-			if (HasFocus)
-			{
-				Cursor.lockState = CursorLockMode.Confined;
-			}
-		}
-
-		public void ToggleCursorConstrain(bool val)
-		{
-			Cursor.lockState = (val ? CursorLockMode.Confined : CursorLockMode.None);
+			//if (HasFocus)
+			//{
+			//	Cursor.lockState = CursorLockMode.Confined;
+			//}
 		}
 
 		public void OnApplicationFocus(bool focusStatus)
 		{
 			HasFocus = focusStatus;
-			ToggleCursorConstrain(focusStatus);
 			if (MyPlayer.Instance != null)
 			{
 				if (MyPlayer.Instance.InLockState && !MyPlayer.Instance.IsLockedToTrigger && MyPlayer.Instance.Parent is SpaceObjectVessel && (MyPlayer.Instance.Parent as SpaceObjectVessel).SpawnPoints.Values.FirstOrDefault((SceneSpawnPoint m) => m.PlayerGUID == MyPlayer.Instance.GUID) != null)
@@ -3022,7 +3017,6 @@ namespace ZeroGravity
 			IsInGame = true;
 			lastSPAutosaveTime = Time.time;
 			ToggleCursor(false);
-			ToggleCursorConstrain(val: true);
 			CanvasManager.ToggleCanvasUI(val: true);
 			CanvasManager.ToggleTextChatCanvas(val: true);
 			MainMenuRoot.gameObject.SetActive(value: false);

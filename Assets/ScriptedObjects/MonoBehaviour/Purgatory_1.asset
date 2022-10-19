@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 337831424, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: Purgatory_1
+  m_EditorClassIdentifier: 
+  m_NextId: 0
+  m_Tracks:
+  - {fileID: 11400000, guid: 18b91fef8a8d11d42b807e67f572e248, type: 2}
+  - {fileID: 11400000, guid: 07e5cd835cd404a4186457d11e8bf4e4, type: 2}
+  - {fileID: 11400000, guid: 603c310c84c7ba04cb68a8c022444915, type: 2}
+  - {fileID: 11400000, guid: 9cfc9b7eae29d8143a5328d817bfae1a, type: 2}
+  - {fileID: 11400000, guid: cf5cf0fc9b845284d9c5620c19d8f0ab, type: 2}
+  - {fileID: 11400000, guid: 559aa508f4d61044aa248b900e4fad37, type: 2}
+  - {fileID: 11400000, guid: 2c404ef6dc05bc94186d426132553a48, type: 2}
+  m_FixedDuration: 0
+  m_EditorSettings:
+    m_Framerate: 60
+  m_DurationMode: 0
+  m_Version: 0
