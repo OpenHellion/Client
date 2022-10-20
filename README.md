@@ -1,4 +1,6 @@
 # Hellion Revived Client
+![Image of the Hellion Project open in the Unity game engine.](https://user-images.githubusercontent.com/37084190/196989422-4079d0fe-c16a-416b-80f7-27df3077c366.png)
+
 This is the client for the Hellion Revived game. It is the main part of the game, with the server always accompanying the client in every release.
 In the basegame, the server is located in the HELLION_SP folder, and contains data such as world saves.
 A [separate repository](https://github.com/Hellion-Revived/Hellion_SP) for the development of the single player server also exists.
