@@ -398,10 +398,10 @@ namespace ZeroGravity
 		{
 			CurrentSpawnPointDescription.text = Localization.FreshStart;
 			Client.SinglePlayerGameMode = (Client.SPGameMode) mode;
-			ShowSavedGames();
+			ShowSingleplayerSaves();
 		}
 
-		public void ShowSavedGames()
+		public void ShowSingleplayerSaves()
 		{
 			// Enable menu.
 			SelectSpawnPointScreen.SetActive(value: true);
@@ -414,7 +414,7 @@ namespace ZeroGravity
 			SpawnPointOptionUI newWorldEntry = GameObject.Instantiate(SpawnPointOptionUI, SpawnPointsHolder);
 			newWorldEntry.CreateNewGameButton();
 
-			DirectoryInfo directoryInfo = new DirectoryInfo(Client.Instance.GetServerPath());
+			DirectoryInfo directoryInfo = new DirectoryInfo(Client.Instance.GetSPPath());
 			bool flag = true;
 			foreach (FileInfo item in from m in directoryInfo.GetFiles("*.save") orderby m.LastWriteTime descending select m)
 			{

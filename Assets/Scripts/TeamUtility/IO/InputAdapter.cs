@@ -27,9 +27,6 @@ namespace TeamUtility.IO
 		private string windowsJoystickConfiguration = "Windows_Gamepad";
 
 		[SerializeField]
-		private string osxJoystickConfiguration = "OSX_Gamepad";
-
-		[SerializeField]
 		private string linuxJoystickConfiguration = "Linux_Gamepad";
 
 		[SerializeField]

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfda56da833e2384a9677cd3c976a436, type: 3}
+  m_Name: AmnisosTerminalVoiceLog
+  m_EditorClassIdentifier:
+  m_NextId: 0
+  m_Tracks:
+  - {fileID: 11400000, guid: 4c90ed39fdc2cb948b483ef25aacd719, type: 2}
+  - {fileID: 11400000, guid: fa816a3b80c0db047af0123bd19c53b2, type: 2}
+  - {fileID: 11400000, guid: 581c66b7838294d4798c85565ef71121, type: 2}
+  - {fileID: 11400000, guid: 50c2b18479da7c242862c9ad802358de, type: 2}
+  - {fileID: 11400000, guid: 1c4b7ab354700ab4aa5ffdbd1a0305c4, type: 2}
+  - {fileID: 11400000, guid: 647a1513080115644918aa6aad909076, type: 2}
+  - {fileID: 11400000, guid: 10be6fa10b0f2154ebc259c51bb0d188, type: 2}
+  - {fileID: 11400000, guid: 762ee4f6da450d948ab1122bd006c411, type: 2}
+  - {fileID: 11400000, guid: 22e650a8d87fa1843afa40b0063bebe2, type: 2}
+  - {fileID: 11400000, guid: c91b4f85e3c18e9479118f1b345afdbe, type: 2}
+  m_FixedDuration: 0
+  m_EditorSettings:
+    m_Framerate: 60
+  m_DurationMode: 0
+  m_Version: 0

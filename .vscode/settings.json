@@ -1,6 +1,5 @@
 {
 	"search.exclude": {
-		//"Assets/Plugins": false,
 		"Packages": true
 	},
     "files.exclude":
@@ -16,24 +15,22 @@
         "ProjectSettings/":true,
         "temp/":true,
         "Temp/":true,
-		//"Assets/Test":true,
+		"Assets/Test":true,
 		"Assets/Wwise":true,
-		//"Assets/Scenes":true,
+		"Assets/Scenes":true,
 		"Assets/Shaders":true,
-		//"Assets/StreamingAssets":true,
+		"Assets/StreamingAssets":true,
 		"Assets/TextMesh Pro":true,
 		"Assets/Textures":true,
 		"Assets/Materials":true,
 		"Assets/BulletUnity":true,
-		//"Assets/Environment":true,
-		//"Assets/Generic":true,
+		"Assets/Generic":true,
 		"Assets/Photon":true,
-		//"Assets/Plugins":false,
-		//"Assets/Prefabs":true,
-		//"Assets/Resources":true,
+		"Assets/Resources":true,
 		"Assets/Fonts":true,
 		"Assets/FontsTMPro":true,
-		//"Assets/**/*.meta":true,
+		"Assets/ScriptedObjects":true,
+		"Assets/**/*.meta":true,
 		"Packages":true,
 		"UserSettings":true,
 		"WwiseProject":true

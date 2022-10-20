@@ -93,7 +93,7 @@ public class SpawnPointOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerE
 	private void Delete()
 	{
 		SaveFile.Delete();
-		Client.Instance.CanvasManager.ShowSavedGames();
+		Client.Instance.CanvasManager.ShowSingleplayerSaves();
 	}
 
 	public void OnPointerEnter(PointerEventData eventData)

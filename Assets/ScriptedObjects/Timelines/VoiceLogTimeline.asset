@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfda56da833e2384a9677cd3c976a436, type: 3}
+  m_Name: VoiceLogTimeline
+  m_EditorClassIdentifier:
+  m_NextId: 0
+  m_Tracks:
+  - {fileID: 11400000, guid: 67167508c4c6237419e0da873fdaccb4, type: 2}
+  - {fileID: 11400000, guid: 73c88c424560c1b4b89f1b9f63a201bf, type: 2}
+  - {fileID: 11400000, guid: f53a632f13bca064282b600bbdb9a01b, type: 2}
+  - {fileID: 11400000, guid: 26ceec767e18df44abc42bdb9b6765e5, type: 2}
+  - {fileID: 11400000, guid: 507b99325c3183e45a33b43e62bd717d, type: 2}
+  - {fileID: 11400000, guid: 18955b590f57f8e47aa7bf7e678fc954, type: 2}
+  m_FixedDuration: 0
+  m_EditorSettings:
+    m_Framerate: 60
+  m_DurationMode: 0
+  m_Version: 0

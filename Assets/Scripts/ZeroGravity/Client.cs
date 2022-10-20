@@ -2859,7 +2859,7 @@ namespace ZeroGravity
 			}
 		}
 
-		public string GetServerPath()
+		public string GetSPPath()
 		{
 			return SpServerPath + ((SinglePlayerGameMode != 0) ? "\\Sandbox\\" : string.Empty);
 		}

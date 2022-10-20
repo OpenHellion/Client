@@ -33,6 +33,7 @@
 				</SoundBank>
 				<SoundBank Name="Environment" ID="{088A76F7-7ABD-47B9-9BCD-AEAEAF4CF3D2}">
 					<ObjectInclusionList>
+						<ObjectRef Name="ShipHealth" ID="{B68F3987-E0FF-451E-AB67-A3D0B406B784}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Effects" ID="{9C0E6CE7-FD19-48A5-A423-47BC00349F8B}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
@@ -47,7 +48,24 @@
 				</SoundBank>
 				<SoundBank Name="Props" ID="{E779AED5-CEC2-44B4-98C4-2D795D7B0612}">
 					<ObjectInclusionList>
-						<ObjectRef Name="Props" ID="{A0C3B9AD-5032-4AC0-8122-412073CC3970}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Welder" ID="{52BFEF13-2FBA-41DF-9832-4624740F05D7}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="ShipRCS" ID="{F1F00B2D-3099-41F3-913E-3972E093CB9D}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="ItemThrow" ID="{A9F14D6E-89AD-42CF-8FF9-996462D3D46D}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Systems" ID="{B7C894D1-5D03-44B1-B637-44CB3952B8FB}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="SolarPanels" ID="{9E50AC90-CF45-45C9-A741-40B6019102B3}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="ItemImpact" ID="{114B7FDF-B27C-48E0-ADDA-CE642AB249E5}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Shredder" ID="{293F8684-4A7C-48E6-8EE9-BFE60D01883B}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="CryoPod" ID="{952FAECB-2AFC-4910-8324-48B759B840F6}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Weapons" ID="{0761BF05-D71E-4AC2-A54D-9C2713CA92FB}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Debris" ID="{7333EAF2-69C0-4B66-8E8C-6B1605AE9135}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Doors" ID="{5C6422B3-4FF0-4B6E-800E-61C217F6D80A}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="ShipFTL" ID="{F7B89793-F449-4CC8-A1F2-B475397CD94B}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Drill" ID="{EC40F0E6-90CD-4CD1-BA43-BB2199C1E406}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Alarm" ID="{04805147-C310-4CEC-BD8C-0CC57BC535F3}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="FireExtinguisher" ID="{BAE148D0-9B75-4E7F-BC98-A45B49F90159}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Jetpack" ID="{55EF2588-A929-4F04-856C-3E35DF63F76E}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Pressurize" ID="{485F168A-7032-4F2C-8523-48E87F97DA90}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Helmet" ID="{2AF543B5-9EB1-4F9B-BBD6-A11BFB818A64}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
