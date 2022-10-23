@@ -8,9 +8,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: DamageSmoke_MAT
-  m_Shader: {fileID: 210, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 211, guid: 0000000000000000f000000000000000, type: 0}
   m_ValidKeywords:
   - _ALPHABLEND_ON
+  - _REQUIRE_UV2
   m_InvalidKeywords: []
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
@@ -50,6 +51,7 @@ Material:
     - _CameraFadingEnabled: 0
     - _CameraFarFadeDistance: 2
     - _CameraNearFadeDistance: 1
+    - _ColorMode: 0
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -59,17 +61,18 @@ Material:
     - _DistortionStrengthScaled: 0.1
     - _DstBlend: 10
     - _EmissionEnabled: 0
-    - _FlipbookMode: 0
+    - _FlipbookMode: 1
     - _Float0: 0.2
     - _Glossiness: 0.5
-    - _InvFade: 1
+    - _InvFade: 1.32
     - _LightClamp: 1
     - _LightFalloff: 0.7
     - _LightRange: 1.36
-    - _LightingEnabled: 1
+    - _LightingEnabled: 0
     - _MaskClipValue: 0.5
     - _Metallic: 0
     - _Mode: 2
+    - _Multiplier: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SoftParticlesEnabled: 0
@@ -84,6 +87,7 @@ Material:
     m_Colors:
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
     - _Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+    - _ColorAddSubDiff: {r: 0, g: 0, b: 0, a: 0}
     - _EmisColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}

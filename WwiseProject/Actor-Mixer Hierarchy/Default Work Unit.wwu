@@ -9448,6 +9448,11 @@
 								<RandomSequenceContainer Name="Fire" ID="{3FF197F9-569A-4FDE-A9E5-F1E12F306DC1}" ShortID="539792479">
 									<PropertyList>
 										<Property Name="RandomOrSequence" Type="int16" Value="0"/>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-6</Value>
+											</ValueList>
+										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -9635,7 +9640,7 @@
 												<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
-														<Value>-6</Value>
+														<Value>-14</Value>
 													</ValueList>
 												</Property>
 											</PropertyList>
@@ -9665,6 +9670,13 @@
 									<ObjectLists/>
 								</ActorMixer>
 								<ActorMixer Name="Spark" ID="{5E9A7CA7-3816-4126-AB09-1F91F74205E6}" ShortID="408504250">
+									<PropertyList>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-12</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
@@ -9700,11 +9712,6 @@
 										<RandomSequenceContainer Name="SparkEffect" ID="{ACB97227-9BAE-48F5-ACF7-353A3D833BC2}" ShortID="817544838">
 											<PropertyList>
 												<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
-												<Property Name="Volume" Type="Real64">
-													<ValueList>
-														<Value>-18</Value>
-													</ValueList>
-												</Property>
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
@@ -9932,7 +9939,7 @@
 									<PropertyList>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
-												<Value>-3</Value>
+												<Value>-15</Value>
 											</ValueList>
 										</Property>
 									</PropertyList>
@@ -9972,7 +9979,7 @@
 											<PropertyList>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
-														<Value>-5</Value>
+														<Value>-8</Value>
 													</ValueList>
 												</Property>
 											</PropertyList>
@@ -10462,6 +10469,13 @@
 						<Folder Name="Damage" ID="{3C0DDEF9-7F6B-43D8-A0B4-297BBACF5F25}" ShortID="753746906">
 							<ChildrenList>
 								<RandomSequenceContainer Name="DamageImpact" ID="{70C835CC-CD97-43F5-BC18-5BD24C4188F9}" ShortID="670334306">
+									<PropertyList>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-6</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
@@ -10472,6 +10486,13 @@
 									</ReferenceList>
 									<ChildrenList>
 										<Sound Name="Bluezone_BC0245_064_hit_metal" ID="{5E2FBA6F-10CA-4263-89A3-D2B1C141FC85}" ShortID="183986335">
+											<PropertyList>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>-3</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
@@ -10495,6 +10516,13 @@
 											</ActiveSourceList>
 										</Sound>
 										<Sound Name="Bluezone_BC0245_065_hit_metal" ID="{384522B0-DFE9-41A6-8A60-F5E18076111C}" ShortID="711996394">
+											<PropertyList>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>-4</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
@@ -10518,6 +10546,13 @@
 											</ActiveSourceList>
 										</Sound>
 										<Sound Name="Bluezone_BC0245_073_hit_metal" ID="{F0D3D9D3-B3D8-44C6-92A8-1B5684D25390}" ShortID="627558380">
+											<PropertyList>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>-5</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
@@ -10541,6 +10576,13 @@
 											</ActiveSourceList>
 										</Sound>
 										<Sound Name="Bluezone_BC0245_074_hit_metal" ID="{5E0CFE95-7DC2-48DE-8A54-52162D2EA376}" ShortID="1062102366">
+											<PropertyList>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>-5</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
@@ -10633,6 +10675,13 @@
 											</ActiveSourceList>
 										</Sound>
 										<Sound Name="IMPACT_Metal_Sheet_Subtle_01_mono" ID="{B1312826-10AE-46A6-9F54-0E31D5C6DC12}" ShortID="797333907">
+											<PropertyList>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>7</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
@@ -10656,6 +10705,13 @@
 											</ActiveSourceList>
 										</Sound>
 										<Sound Name="IMPACT_Metal_Sheet_Subtle_02_mono" ID="{C88E6B77-4DAC-4512-9B13-2A36C5A1FD89}" ShortID="293329675">
+											<PropertyList>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>8</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>

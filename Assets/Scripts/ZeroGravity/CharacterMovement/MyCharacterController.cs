@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using ZeroGravity;
+using ZeroGravity.CharacterMovement;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Math;
 using ZeroGravity.Objects;
@@ -60,9 +61,9 @@ namespace ZeroGravity.CharacterMovement
 		private enum MovementState
 		{
 			Normal = 1,
-			Run = 2,
-			Crouch = 3,
-			Jump = 4
+			Run,
+			Crouch,
+			Jump
 		}
 
 		public struct MovementAxis
@@ -320,18 +321,9 @@ namespace ZeroGravity.CharacterMovement
 
 		public Transform attachPointSaved;
 
-		[CompilerGenerated]
-		private static Func<RaycastHit, float> _003C_003Ef__am_0024cache0;
-
 		public float MaxAngularVelocity { get; private set; }
 
-		public bool IsGrounded
-		{
-			get
-			{
-				return isGrounded;
-			}
-		}
+		public bool IsGrounded => isGrounded;
 
 		public float HeadBobStrength
 		{
@@ -348,45 +340,15 @@ namespace ZeroGravity.CharacterMovement
 			}
 		}
 
-		public Camera MainCamera
-		{
-			get
-			{
-				return mainCamera;
-			}
-		}
+		public Camera MainCamera => mainCamera;
 
-		public Camera FarCamera
-		{
-			get
-			{
-				return farCamera;
-			}
-		}
+		public Camera FarCamera => farCamera;
 
-		public Camera NearCamera
-		{
-			get
-			{
-				return nearCamera;
-			}
-		}
+		public Camera NearCamera => nearCamera;
 
-		public Vector3 CameraPosition
-		{
-			get
-			{
-				return mainCamera.transform.position;
-			}
-		}
+		public Vector3 CameraPosition => mainCamera.transform.position;
 
-		public Vector3 CameraForward
-		{
-			get
-			{
-				return mainCamera.transform.forward;
-			}
-		}
+		public Vector3 CameraForward => mainCamera.transform.forward;
 
 		public Vector2 FreeLookAngle
 		{
@@ -419,139 +381,43 @@ namespace ZeroGravity.CharacterMovement
 			}
 		}
 
-		public bool IsAttached
-		{
-			get
-			{
-				return cameraController.IsAttached;
-			}
-		}
+		public bool IsAttached => cameraController.IsAttached;
 
-		public bool IsJump
-		{
-			get
-			{
-				return lastMovementState == MovementState.Jump;
-			}
-		}
+		public bool IsJump => lastMovementState == MovementState.Jump;
 
-		public bool IsCrouch
-		{
-			get
-			{
-				return lastMovementState == MovementState.Crouch;
-			}
-		}
+		public bool IsCrouch => lastMovementState == MovementState.Crouch;
 
-		public bool IsZeroG
-		{
-			get
-			{
-				return isZeroG;
-			}
-		}
+		public bool IsZeroG => isZeroG;
 
-		public bool IsFreeLook
-		{
-			get
-			{
-				return cameraController.IsFreeLook;
-			}
-		}
+		public bool IsFreeLook => cameraController.IsFreeLook;
 
-		public float AnimationForward
-		{
-			get
-			{
-				return (!isZeroG) ? currForwardAnimationVal : 0f;
-			}
-		}
+		public float AnimationForward => (!isZeroG) ? currForwardAnimationVal : 0f;
 
-		public float AnimationRight
-		{
-			get
-			{
-				return (!isZeroG) ? currRightAnimationVal : 0f;
-			}
-		}
+		public float AnimationRight => (!isZeroG) ? currRightAnimationVal : 0f;
 
-		public float AnimationZeroGForward
-		{
-			get
-			{
-				return (!isZeroG) ? 0f : currForwardAnimationVal;
-			}
-		}
+		public float AnimationZeroGForward => (!isZeroG) ? 0f : currForwardAnimationVal;
 
-		public float AnimationZeroGRight
-		{
-			get
-			{
-				return (!isZeroG) ? 0f : currRightAnimationVal;
-			}
-		}
+		public float AnimationZeroGRight => (!isZeroG) ? 0f : currRightAnimationVal;
 
 		public bool MeleeTriggered { get; set; }
 
 		public bool UseConsumableTriggered { get; set; }
 
-		public Vector3 Velocity
-		{
-			get
-			{
-				return rigidBody.velocity;
-			}
-		}
+		public Vector3 Velocity => rigidBody.velocity;
 
 		public bool IsEquippingAnimationTriggered { get; set; }
 
-		public float MouseUpAxis
-		{
-			get
-			{
-				return cameraController.MouseUpAxis;
-			}
-		}
+		public float MouseUpAxis => cameraController.MouseUpAxis;
 
-		public float MouseRightAxis
-		{
-			get
-			{
-				return cameraController.MouseRightAxis;
-			}
-		}
+		public float MouseRightAxis => cameraController.MouseRightAxis;
 
-		public float CameraMaxUpAngle
-		{
-			get
-			{
-				return cameraController.MaxUpAngle;
-			}
-		}
+		public float CameraMaxUpAngle => cameraController.MaxUpAngle;
 
-		public float CameraMaxDownAngle
-		{
-			get
-			{
-				return cameraController.MaxDownAngle;
-			}
-		}
+		public float CameraMaxDownAngle => cameraController.MaxDownAngle;
 
-		public float CameraMaxRightAngle
-		{
-			get
-			{
-				return cameraController.MaxRightAngle;
-			}
-		}
+		public float CameraMaxRightAngle => cameraController.MaxRightAngle;
 
-		public bool IsOnLadder
-		{
-			get
-			{
-				return isOnLadder;
-			}
-		}
+		public bool IsOnLadder => isOnLadder;
 
 		public bool IsJetpackOn
 		{
@@ -568,29 +434,11 @@ namespace ZeroGravity.CharacterMovement
 			}
 		}
 
-		public float JetpackMaxFuel
-		{
-			get
-			{
-				return (!(CurrentJetpack != null)) ? 0f : CurrentJetpack.MaxFuel;
-			}
-		}
+		public float JetpackMaxFuel => (!(CurrentJetpack != null)) ? 0f : CurrentJetpack.MaxFuel;
 
-		public float JetpackFuel
-		{
-			get
-			{
-				return (!(CurrentJetpack != null)) ? 0f : CurrentJetpack.CurrentFuel;
-			}
-		}
+		public float JetpackFuel => (!(CurrentJetpack != null)) ? 0f : CurrentJetpack.CurrentFuel;
 
-		public bool CanGrabWall
-		{
-			get
-			{
-				return canGrabWall;
-			}
-		}
+		public bool CanGrabWall => canGrabWall;
 
 		public bool CanLockToPoint
 		{
@@ -616,53 +464,17 @@ namespace ZeroGravity.CharacterMovement
 			}
 		}
 
-		public MovementSpeed CurrentSpeeds
-		{
-			get
-			{
-				return currSpeeds;
-			}
-		}
+		public MovementSpeed CurrentSpeeds => currSpeeds;
 
-		public Transform MouseLookXTransform
-		{
-			get
-			{
-				return cameraController.MouseLookXTransform;
-			}
-		}
+		public Transform MouseLookXTransform => cameraController.MouseLookXTransform;
 
-		public CameraController CameraController
-		{
-			get
-			{
-				return cameraController;
-			}
-		}
+		public CameraController CameraController => cameraController;
 
-		public bool IsMovementEnabled
-		{
-			get
-			{
-				return isMovementEnabled;
-			}
-		}
+		public bool IsMovementEnabled => isMovementEnabled;
 
-		public float AirTime
-		{
-			get
-			{
-				return airTime;
-			}
-		}
+		public float AirTime => airTime;
 
-		public float StanceSpeedMultiplier
-		{
-			get
-			{
-				return stanceSpeedMultiplier;
-			}
-		}
+		public float StanceSpeedMultiplier => stanceSpeedMultiplier;
 
 		private void Awake()
 		{
@@ -683,8 +495,7 @@ namespace ZeroGravity.CharacterMovement
 
 		private void CalculateCrouch()
 		{
-			RaycastHit hitInfo;
-			if (!IsCrouch && collider1G.height < normalColliderHeight && Physics.SphereCast(characterRoot.position, collider1G.radius - 0.02f, characterRoot.up, out hitInfo, normalColliderHeight - collider1G.radius, collisionLayerMask))
+			if (!IsCrouch && collider1G.height < normalColliderHeight && Physics.SphereCast(characterRoot.position, collider1G.radius - 0.02f, characterRoot.up, out var _, normalColliderHeight - collider1G.radius, collisionLayerMask))
 			{
 				lastMovementState = MovementState.Crouch;
 			}
@@ -695,8 +506,7 @@ namespace ZeroGravity.CharacterMovement
 			}
 			else if (!IsCrouch && num < 1f)
 			{
-				RaycastHit hitInfo2;
-				Physics.SphereCast(characterRoot.position, collider1G.radius - 0.02f, characterRoot.up, out hitInfo2, normalColliderHeight - collider1G.radius, collisionLayerMask);
+				Physics.SphereCast(characterRoot.position, collider1G.radius - 0.02f, characterRoot.up, out var hitInfo2, normalColliderHeight - collider1G.radius, collisionLayerMask);
 				if (hitInfo2.transform == null)
 				{
 					num = Mathf.Min(num + Time.deltaTime * crouchLerpSpeed, 1f);
@@ -722,11 +532,11 @@ namespace ZeroGravity.CharacterMovement
 				currSpeeds.RightVelocity = Mathf.Lerp(crouchSpeeds.RightVelocity, normalSpeeds.RightVelocity, crouchLerpHelper);
 				if (crouchLerpHelper < 0.7f && myPlayer.MeshRenderersEnabled)
 				{
-					myPlayer.ToggleMeshRendereres(false);
+					myPlayer.ToggleMeshRendereres(enableMesh: false);
 				}
 				else if (crouchLerpHelper >= 0.7f && !myPlayer.MeshRenderersEnabled)
 				{
-					myPlayer.ToggleMeshRendereres(true);
+					myPlayer.ToggleMeshRendereres(enableMesh: true);
 				}
 			}
 			animatorHelper.SetParameter(IsCrouch);
@@ -863,7 +673,7 @@ namespace ZeroGravity.CharacterMovement
 				}
 				if (CurrentJetpack != null)
 				{
-					CurrentJetpack.StartNozzles(Vector4.zero, true);
+					CurrentJetpack.StartNozzles(Vector4.zero, myJetpack: true);
 				}
 			}
 			else
@@ -1135,7 +945,7 @@ namespace ZeroGravity.CharacterMovement
 			}
 			if (CurrentJetpack != null && CurrentJetpack.IsActive && JetpackFuel > float.Epsilon)
 			{
-				CurrentJetpack.StartNozzles(new Vector4(movementAxis.Right, movementAxis.Up, movementAxis.Forward, movementAxis.LeanRight), true);
+				CurrentJetpack.StartNozzles(new Vector4(movementAxis.Right, movementAxis.Up, movementAxis.Forward, movementAxis.LeanRight), myJetpack: true);
 			}
 			Check0GCurrentSpeed();
 			int num = 0;
@@ -1359,7 +1169,7 @@ namespace ZeroGravity.CharacterMovement
 		{
 			if (isLockedToPoint)
 			{
-				LockPlayerToPoint(true);
+				LockPlayerToPoint(locked: true);
 			}
 			if (grabSlowEnabled)
 			{
@@ -1445,12 +1255,12 @@ namespace ZeroGravity.CharacterMovement
 					{
 						CurrentJetpack.OldJetpackActiveState = CurrentJetpack.IsActive;
 						CurrentJetpack.IsActive = false;
-						CurrentJetpack.StartNozzles(Vector4.zero, true);
+						CurrentJetpack.StartNozzles(Vector4.zero, myJetpack: true);
 						RefreshMaxAngularVelocity();
 					}
 					animatorHelper.SetParameter(null, false, false, false);
 				}
-				LockedToLadder.LadderAttach(myPlayer, false);
+				LockedToLadder.LadderAttach(myPlayer, checkGravity: false);
 				myPlayer.OldGravity = myPlayer.Gravity;
 				return;
 			}
@@ -1465,7 +1275,7 @@ namespace ZeroGravity.CharacterMovement
 				cameraController.IsZeroG = true;
 				if (cameraController.transform.localPosition.y.IsNotEpsilonZero())
 				{
-					ReparentCenterOfMass(false);
+					ReparentCenterOfMass(isInChest: false);
 					base.transform.position += base.transform.up * cameraController.transform.localPosition.y;
 					lastMovementState = MovementState.Normal;
 					crouchLerpHelper = 1f;
@@ -1473,7 +1283,7 @@ namespace ZeroGravity.CharacterMovement
 					collider1G.center = new Vector3(0f, normalColliderCenter, 0f);
 					animatorHelper.SetParameter(false);
 					animatorHelper.SetParameterTrigger(AnimatorHelper.Triggers.InstantStandUp);
-					ReparentCenterOfMass(true);
+					ReparentCenterOfMass(isInChest: true);
 				}
 				if (!IsAttached)
 				{
@@ -1501,7 +1311,7 @@ namespace ZeroGravity.CharacterMovement
 				{
 					CurrentJetpack.OldJetpackActiveState = CurrentJetpack.IsActive;
 					CurrentJetpack.IsActive = false;
-					CurrentJetpack.StartNozzles(Vector4.zero, true);
+					CurrentJetpack.StartNozzles(Vector4.zero, myJetpack: true);
 					RefreshMaxAngularVelocity();
 				}
 				animatorHelper.SetParameter(null, false, false, false);
@@ -1528,8 +1338,7 @@ namespace ZeroGravity.CharacterMovement
 				}
 				else if (myPlayer.OldGravity.IsEpsilonEqual(Vector3.zero))
 				{
-					RaycastHit hitInfo;
-					if (Physics.SphereCast(base.transform.position, collider1G.radius - 0.05f, myPlayer.GravityDirection, out hitInfo, 1.34f - collider1G.radius, collisionLayerMask))
+					if (Physics.SphereCast(base.transform.position, collider1G.radius - 0.05f, myPlayer.GravityDirection, out var _, 1.34f - collider1G.radius, collisionLayerMask))
 					{
 						gravityChanged = false;
 						base.transform.rotation = gravityChangeEndingRotation;
@@ -1540,7 +1349,7 @@ namespace ZeroGravity.CharacterMovement
 						collider1G.center = new Vector3(0f, crouchColliderCenter, 0f);
 						lastMovementState = MovementState.Crouch;
 						animatorHelper.SetParameter(true);
-						myPlayer.ToggleMeshRendereres(false);
+						myPlayer.ToggleMeshRendereres(enableMesh: false);
 					}
 					else
 					{
@@ -1554,12 +1363,9 @@ namespace ZeroGravity.CharacterMovement
 
 		private bool CheckGravityRagdollDistance()
 		{
-			RaycastHit[] source = Physics.RaycastAll(base.transform.position, myPlayer.GravityDirection, 4f, collisionLayerMask);
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CCheckGravityRagdollDistance_003Em__0;
-			}
-			RaycastHit[] array = source.OrderBy(_003C_003Ef__am_0024cache0).ToArray();
+			RaycastHit[] array = (from h in Physics.RaycastAll(base.transform.position, myPlayer.GravityDirection, 4f, collisionLayerMask)
+				orderby h.distance
+				select h).ToArray();
 			if (array != null && array.Length > 0)
 			{
 				for (int i = 0; i < array.Length; i++)
@@ -1601,14 +1407,14 @@ namespace ZeroGravity.CharacterMovement
 			rigidBody.velocity = Vector3.zero;
 			rigidBody.angularVelocity = Vector3.zero;
 			animatorHelper.SetParameter(false, null, null, null, null, null, null, null, null, null, 0f, 0f);
-			myPlayer.ToggleMeshRendereres(true);
+			myPlayer.ToggleMeshRendereres(enableMesh: true);
 		}
 
 		public void ResetPlayerLock()
 		{
 			IsLockedToPoint = false;
 			myPlayer.SetParentTransferableObjectsRoot();
-			LockRigidbodyZRotation(false);
+			LockRigidbodyZRotation(locked: false);
 		}
 
 		public void CheckVelocityForLock()
@@ -1666,11 +1472,11 @@ namespace ZeroGravity.CharacterMovement
 			}
 			if (cameraController.IsAttached)
 			{
-				cameraController.ToggleFreeLook(false);
+				cameraController.ToggleFreeLook(isActive: false);
 			}
 			else if (cameraController.IsAttached && cameraController.AutoFreeLook)
 			{
-				cameraController.ToggleFreeLook(true);
+				cameraController.ToggleFreeLook(isActive: true);
 			}
 		}
 
@@ -1841,7 +1647,7 @@ namespace ZeroGravity.CharacterMovement
 			myPlayer.InLerpingState = true;
 			if (Client.Instance.CanvasManager.IsPlayerOverviewOpen)
 			{
-				Client.Instance.CanvasManager.PlayerOverview.Toggle(false);
+				Client.Instance.CanvasManager.PlayerOverview.Toggle(val: false);
 			}
 			if (myPlayer.CurrentActiveItem != null)
 			{
@@ -1900,15 +1706,14 @@ namespace ZeroGravity.CharacterMovement
 
 		public int CheckGetUpRoom()
 		{
-			RaycastHit hitInfo;
-			if (Physics.SphereCast(characterRoot.position, collider1G.radius - 0.02f, -myPlayer.GravityDirection * 1.34f, out hitInfo, normalColliderHeight - collider1G.radius, collisionLayerMask))
+			if (Physics.SphereCast(characterRoot.position, collider1G.radius - 0.02f, -myPlayer.GravityDirection * 1.34f, out var _, normalColliderHeight - collider1G.radius, collisionLayerMask))
 			{
 				crouchLerpHelper = 0f;
 				collider1G.height = crouchColliderHeight;
 				collider1G.center = new Vector3(0f, crouchColliderCenter, 0f);
 				lastMovementState = MovementState.Crouch;
 				animatorHelper.SetParameter(true);
-				myPlayer.ToggleMeshRendereres(false);
+				myPlayer.ToggleMeshRendereres(enableMesh: false);
 				return 0;
 			}
 			return 1;
@@ -1931,12 +1736,6 @@ namespace ZeroGravity.CharacterMovement
 		public Collider GetCollider()
 		{
 			return (!collider1G.enabled) ? ((Collider)collider0G) : ((Collider)collider1G);
-		}
-
-		[CompilerGenerated]
-		private static float _003CCheckGravityRagdollDistance_003Em__0(RaycastHit h)
-		{
-			return h.distance;
 		}
 	}
 }

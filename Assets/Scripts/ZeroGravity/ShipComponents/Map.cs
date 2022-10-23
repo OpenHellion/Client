@@ -14,6 +14,7 @@ namespace ZeroGravity.ShipComponents
 {
 	public class Map : MonoBehaviour
 	{
+		[HideInInspector]
 		public NavigationPanel Panel;
 
 		public Dictionary<IMapMainObject, MapObject> AllMapObjects = new Dictionary<IMapMainObject, MapObject>();

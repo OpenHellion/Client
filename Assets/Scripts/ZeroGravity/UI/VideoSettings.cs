@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
+using ZeroGravity;
 using ZeroGravity.Data;
 
 namespace ZeroGravity.UI
@@ -45,30 +45,64 @@ namespace ZeroGravity.UI
 
 		public List<PostProcessProfile> PostEffectProfiles;
 
-		private void Update()
-		{
-		}
-
-		private void Awake()
-		{
-		}
+		[SerializeField]
+		private GameObject _resolutionElement;
 
 		private void Start()
 		{
 			qualitySettingsDropdown.value = VideoData.QualityIndex;
 			qualitySettingsDropdown.RefreshShownValue();
-			fullScreenToggle.onValueChanged.AddListener(_003CStart_003Em__0);
-			resolutionDropdown.onValueChanged.AddListener(_003CStart_003Em__1);
-			qualitySettingsDropdown.onValueChanged.AddListener(_003CStart_003Em__2);
-			textureQualityDropdown.onValueChanged.AddListener(_003CStart_003Em__3);
-			shadowQualityDropdown.onValueChanged.AddListener(_003CStart_003Em__4);
-			antialiasingDropdown.onValueChanged.AddListener(_003CStart_003Em__5);
-			VolumetricLighting.onValueChanged.AddListener(_003CStart_003Em__6);
-			AmbientOcclusion.onValueChanged.AddListener(_003CStart_003Em__7);
-			MotionBlur.onValueChanged.AddListener(_003CStart_003Em__8);
-			EyeAdaptation.onValueChanged.AddListener(_003CStart_003Em__9);
-			Bloom.onValueChanged.AddListener(_003CStart_003Em__A);
-			ChromaticAberration.onValueChanged.AddListener(_003CStart_003Em__B);
+			fullScreenToggle.onValueChanged.AddListener(delegate
+			{
+				OnFullscreenChange();
+			});
+			resolutionDropdown.onValueChanged.AddListener(delegate
+			{
+				OnResolutionChange();
+			});
+			qualitySettingsDropdown.onValueChanged.AddListener(delegate
+			{
+				OnQualityChange();
+			});
+			textureQualityDropdown.onValueChanged.AddListener(delegate
+			{
+				OnTextureChange();
+			});
+			shadowQualityDropdown.onValueChanged.AddListener(delegate
+			{
+				OnShadowChange();
+			});
+			antialiasingDropdown.onValueChanged.AddListener(delegate
+			{
+				OnAliasingChange();
+			});
+			VolumetricLighting.onValueChanged.AddListener(delegate
+			{
+				OnVolumetricChange();
+			});
+			AmbientOcclusion.onValueChanged.AddListener(delegate
+			{
+				AmbientOcclusionSetter();
+			});
+			MotionBlur.onValueChanged.AddListener(delegate
+			{
+				MotionBlurSetter();
+			});
+			EyeAdaptation.onValueChanged.AddListener(delegate
+			{
+				EyeAdaptationSetter();
+			});
+			Bloom.onValueChanged.AddListener(delegate
+			{
+				BloomSetter();
+			});
+			ChromaticAberration.onValueChanged.AddListener(delegate
+			{
+				ChromaticAberrationSetter();
+			});
+
+			// Hide resolution dropdown if we are not in fullscreen.
+			_resolutionElement.SetActive(VideoData.Fullscreen);
 		}
 
 		public void SetDefault()
@@ -121,21 +155,33 @@ namespace ZeroGravity.UI
 			videoData5.ChromaticAberration = flag;
 			qualitySettingsDropdown.value = 2;
 			VideoData.QualityIndex = qualitySettingsDropdown.value;
-			QualitySettings.SetQualityLevel(VideoData.QualityIndex, false);
+			QualitySettings.SetQualityLevel(VideoData.QualityIndex, applyExpensiveChanges: false);
 			qualitySettingsDropdown.RefreshShownValue();
-			qualitySettingsDropdown.onValueChanged.AddListener(_003CSetDefault_003Em__C);
+			qualitySettingsDropdown.onValueChanged.AddListener(delegate
+			{
+				OnQualityChange();
+			});
 			VideoData.TextureIndex = QualitySettings.masterTextureLimit;
 			textureQualityDropdown.value = VideoData.TextureIndex;
 			textureQualityDropdown.RefreshShownValue();
-			textureQualityDropdown.onValueChanged.AddListener(_003CSetDefault_003Em__D);
+			textureQualityDropdown.onValueChanged.AddListener(delegate
+			{
+				OnTextureChange();
+			});
 			VideoData.ShadowIndex = (int)QualitySettings.shadows;
 			shadowQualityDropdown.value = VideoData.ShadowIndex;
 			shadowQualityDropdown.RefreshShownValue();
-			shadowQualityDropdown.onValueChanged.AddListener(_003CSetDefault_003Em__E);
+			shadowQualityDropdown.onValueChanged.AddListener(delegate
+			{
+				OnShadowChange();
+			});
 			VideoData.AntialiasingIndex = 1;
 			antialiasingDropdown.value = VideoData.AntialiasingIndex;
 			antialiasingDropdown.RefreshShownValue();
-			antialiasingDropdown.onValueChanged.AddListener(_003CSetDefault_003Em__F);
+			antialiasingDropdown.onValueChanged.AddListener(delegate
+			{
+				OnAliasingChange();
+			});
 			VideoSettingsData videoData6 = VideoData;
 			flag = true;
 			VolumetricLighting.isOn = flag;
@@ -240,6 +286,9 @@ namespace ZeroGravity.UI
 			VideoSettingsData videoData = VideoData;
 			bool fullscreen = (Screen.fullScreen = fullScreenToggle.isOn);
 			videoData.Fullscreen = fullscreen;
+
+			// Hide resolution dropdown if we are not in fullscreen.
+			_resolutionElement.gameObject.SetActive(fullscreen);
 		}
 
 		public void OnResolutionChange()
@@ -289,7 +338,7 @@ namespace ZeroGravity.UI
 		public void ConfirmQualityChange()
 		{
 			VideoData.QualityIndex = qualitySettingsDropdown.value;
-			QualitySettings.SetQualityLevel(VideoData.QualityIndex, false);
+			QualitySettings.SetQualityLevel(VideoData.QualityIndex, applyExpensiveChanges: false);
 			VideoSettingsData videoData = VideoData;
 			int masterTextureLimit = QualitySettings.masterTextureLimit;
 			textureQualityDropdown.value = masterTextureLimit;
@@ -310,7 +359,7 @@ namespace ZeroGravity.UI
 
 		public void SetQualityOnStart()
 		{
-			QualitySettings.SetQualityLevel(VideoData.QualityIndex, true);
+			QualitySettings.SetQualityLevel(VideoData.QualityIndex, applyExpensiveChanges: true);
 		}
 
 		public void AmbientOcclusionSetter()
@@ -336,102 +385,6 @@ namespace ZeroGravity.UI
 		public void ChromaticAberrationSetter()
 		{
 			VideoData.ChromaticAberration = ChromaticAberration.isOn;
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__0(bool P_0)
-		{
-			OnFullscreenChange();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__1(int P_0)
-		{
-			OnResolutionChange();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__2(int P_0)
-		{
-			OnQualityChange();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__3(int P_0)
-		{
-			OnTextureChange();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__4(int P_0)
-		{
-			OnShadowChange();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__5(int P_0)
-		{
-			OnAliasingChange();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__6(bool P_0)
-		{
-			OnVolumetricChange();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__7(bool P_0)
-		{
-			AmbientOcclusionSetter();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__8(bool P_0)
-		{
-			MotionBlurSetter();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__9(bool P_0)
-		{
-			EyeAdaptationSetter();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__A(bool P_0)
-		{
-			BloomSetter();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__B(bool P_0)
-		{
-			ChromaticAberrationSetter();
-		}
-
-		[CompilerGenerated]
-		private void _003CSetDefault_003Em__C(int P_0)
-		{
-			OnQualityChange();
-		}
-
-		[CompilerGenerated]
-		private void _003CSetDefault_003Em__D(int P_0)
-		{
-			OnTextureChange();
-		}
-
-		[CompilerGenerated]
-		private void _003CSetDefault_003Em__E(int P_0)
-		{
-			OnShadowChange();
-		}
-
-		[CompilerGenerated]
-		private void _003CSetDefault_003Em__F(int P_0)
-		{
-			OnAliasingChange();
 		}
 	}
 }
