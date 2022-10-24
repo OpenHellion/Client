@@ -292,7 +292,7 @@ namespace ZeroGravity
 				}
 				else if (Client.Instance.PasswordEnterPanel.activeInHierarchy)
 				{
-					Client.Instance.EnterPasswordButton();
+					Client.Instance.EnterPasswordMenu(true);
 				}
 				else if (Client.Instance.CreateCharacterPanel.activeInHierarchy)
 				{
@@ -325,8 +325,7 @@ namespace ZeroGravity
 				}
 				else if (Client.Instance.PasswordEnterPanel.activeInHierarchy)
 				{
-					Client.Instance.StopConnectToServerCoroutine();
-					Client.Instance.PasswordEnterPanel.SetActive(value: false);
+					Client.Instance.EnterPasswordMenu(false);
 				}
 				else if (Client.Instance.CreateCharacterPanel.activeInHierarchy)
 				{
@@ -338,7 +337,7 @@ namespace ZeroGravity
 				}
 				else if (SpawnOptionsScreen.activeInHierarchy)
 				{
-					Client.Instance.LogOut();
+					ExitSpawnOptionsScreen();
 				}
 			}
 			if (ScreenShootMod.activeInHierarchy && Input.GetKeyDown(KeyCode.F11))
@@ -768,10 +767,8 @@ namespace ZeroGravity
 		/// </summary>
 		public void PlaySP()
 		{
+			SelectScreen(Screen.None);
 			SinglePlayerModeScreen.SetActive(value: true);
-			OnLoadPanel.Activate(value: false);
-			SpawnOptionsScreen.SetActive(value: false);
-			SelectSpawnPointScreen.SetActive(value: false);
 		}
 
 		/// <summary>
@@ -779,7 +776,6 @@ namespace ZeroGravity
 		/// </summary>
 		public void PlayMP()
 		{
-
 			Client.Instance.SignInButton();
 		}
 
@@ -806,12 +802,33 @@ namespace ZeroGravity
 		#endif
 		}
 
+		/// <summary>
+		/// 	Used to exit the server list and character select menu.
+		/// </summary>
 		public void BackButton()
 		{
 			Client.Instance.ClearServerList();
 			Client.Instance.UpdateServers = false;
 			SelectScreen(Screen.OnLoad);
 			Client.Instance.NetworkController.Disconnect();
+		}
+
+		/// <summary>
+		/// 	Handle exiting the spawn options screen.
+		/// </summary>
+		public void ExitSpawnOptionsScreen()
+		{
+			// Go back to general spawn options (new game, continue, invite).
+			if (FreshStartSpawnOptions.gameObject.activeSelf)
+			{
+				SpawnOptions.gameObject.SetActive(true);
+				FreshStartSpawnOptions.gameObject.SetActive(false);
+			}
+			else
+			{
+				// Exit screen completely, and go back to server list.
+				SelectScreen(Screen.CharacterSelect);
+			}
 		}
 
 		public void BeingHit()

@@ -55,7 +55,7 @@ public abstract class LightOverride : MonoBehaviour
 		}
 	}
 
-	public Light light
+	public new Light light
 	{
 		get
 		{

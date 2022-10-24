@@ -1188,7 +1188,7 @@ namespace ZeroGravity
 		{
 			if (CanvasManager.SpawnOptionsScreen.activeInHierarchy)
 			{
-				LogOut();
+				CanvasManager.ExitSpawnOptionsScreen();
 			}
 			else
 			{
@@ -1317,10 +1317,6 @@ namespace ZeroGravity
 			{
 				Cursor.lockState = CursorLockMode.Locked;
 			}
-			//if (HasFocus)
-			//{
-			//	Cursor.lockState = CursorLockMode.Confined;
-			//}
 		}
 
 		public void OnApplicationFocus(bool focusStatus)
@@ -1346,7 +1342,7 @@ namespace ZeroGravity
 		public void ShowMessageBox(string title, string text, MessageBox.OnCloseDelegate onClose)
 		{
 			GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load("UI/CanvasMessageBox")) as GameObject;
-			gameObject.transform.parent = CanvasManager.transform;
+			transform.SetParent(CanvasManager.transform, false);
 			gameObject.GetComponent<RectTransform>().Reset(resetScale: true);
 			gameObject.SetActive(value: true);
 			gameObject.GetComponent<MessageBox>().OnClose = onClose;
@@ -2310,48 +2306,6 @@ namespace ZeroGravity
 			serverListForUi = new ConcurrentBag<GameServerUI>();
 		}
 
-		private void SignInResponseListener(NetworkData data)
-		{
-			SignInResponse signInResponse = data as SignInResponse;
-			if (ReconnectAutomatically)
-			{
-				return;
-			}
-			if (signInResponse.Response == ResponseResult.Error)
-			{
-				Dbg.Warning("Unable to sign in", signInResponse.Message);
-				CanvasManager.SelectScreen(CanvasManager.Screen.OnLoad);
-				ShowMessageBox(Localization.ConnectionError, Localization.LogInError);
-			}
-			/*else if (signInResponse.Response == ResponseResult.OwnershipIssue)
-			{
-				// Anti-piracy stuff.
-				Application.OpenURL("http://store.steampowered.com/app/588210/");
-				ExitGame();
-			}*/
-			else if (signInResponse.Response == ResponseResult.ClientVersionError)
-			{
-				ShowMessageBox(Localization.VersionError, Localization.VersionErrorMessage);
-			}
-			else
-			{
-				currentResponse = signInResponse;
-				CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
-				ClearServerList();
-
-				Dbg.Log("Found " + signInResponse.Servers.Count + " servers.");
-				foreach (ServerData value in signInResponse.Servers.Values)
-				{
-					CreateServerButton(value);
-				}
-				// Set order buttons by name.
-				OrderByButton(0);
-				UpdateServers = true;
-			}
-			LastSignInResponse = signInResponse;
-			receivedSignInResponse = true;
-		}
-
 		private void LogInResponseListener(NetworkData data)
 		{
 			LogInResponse logInResponse = data as LogInResponse;
@@ -2410,6 +2364,29 @@ namespace ZeroGravity
 			}
 		}
 
+		public void SignInButton()
+		{
+			StartCoroutine(SignInCoroutine());
+		}
+
+		public IEnumerator SignInCoroutine()
+		{
+			CanvasManager.SelectScreen(CanvasManager.Screen.Loading);
+			yield return null;
+
+			// Make sure that no single player games are running.
+			KillAllSPProcesses();
+			if (SteamManager.Initialized)
+			{
+				SinglePlayerMode = false;
+				prevSortMode = -1;
+				Connect();
+			}
+		}
+
+		/// <summary>
+		/// 	Sign in to the main server.
+		/// </summary>
 		public void Connect()
 		{
 			if (SteamManager.Initialized)
@@ -2449,24 +2426,49 @@ namespace ZeroGravity
 			}
 		}
 
-		public void SignInButton()
+		/// <summary>
+		/// 	Check for errors and get server list.
+		/// </summary>
+		private void SignInResponseListener(NetworkData data)
 		{
-			StartCoroutine(SignInCoroutine());
-		}
-
-		public IEnumerator SignInCoroutine()
-		{
-			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.Loading);
-			yield return null;
-
-			// Make sure that no single player games are running.
-			KillAllSPProcesses();
-			if (SteamManager.Initialized)
+			SignInResponse signInResponse = data as SignInResponse;
+			if (ReconnectAutomatically)
 			{
-				SinglePlayerMode = false;
-				prevSortMode = -1;
-				Connect();
+				return;
 			}
+			if (signInResponse.Response == ResponseResult.Error)
+			{
+				Dbg.Warning("Unable to sign in", signInResponse.Message);
+				CanvasManager.SelectScreen(CanvasManager.Screen.OnLoad);
+				ShowMessageBox(Localization.ConnectionError, Localization.LogInError);
+			}
+			/*else if (signInResponse.Response == ResponseResult.OwnershipIssue)
+			{
+				// Anti-piracy stuff.
+				Application.OpenURL("http://store.steampowered.com/app/588210/");
+				ExitGame();
+			}*/
+			else if (signInResponse.Response == ResponseResult.ClientVersionError)
+			{
+				ShowMessageBox(Localization.VersionError, Localization.VersionErrorMessage);
+			}
+			else
+			{
+				currentResponse = signInResponse;
+				CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
+				ClearServerList();
+
+				Dbg.Log("Found " + signInResponse.Servers.Count + " servers.");
+				foreach (ServerData value in signInResponse.Servers.Values)
+				{
+					CreateServerButton(value);
+				}
+				// Set order buttons by name.
+				OrderByButton(0);
+				UpdateServers = true;
+			}
+			LastSignInResponse = signInResponse;
+			receivedSignInResponse = true;
 		}
 
 		public void ServerCategoryButton(int filter)
@@ -2543,9 +2545,20 @@ namespace ZeroGravity
 			CreateCharacterPanel.SetActive(value: false);
 		}
 
-		public void EnterPasswordButton()
+		/// <summary>
+		/// 	Connects to server if input is successful, cancels if not.
+		/// </summary>
+		public void EnterPasswordMenu(bool success)
 		{
-			PasswordEnterPanel.SetActive(value: false);
+			if (success)
+			{
+				PasswordEnterPanel.SetActive(value: false);
+			}
+			else
+			{
+				StopConnectToServerCoroutine();
+				PasswordEnterPanel.SetActive(value: false);
+			}
 		}
 
 		/// <summary>
@@ -2735,8 +2748,6 @@ namespace ZeroGravity
 
 		public void PlayNewSPGame()
 		{
-			CanvasManager.SpawnOptionsScreen.SetActive(value: false);
-			CanvasManager.SinglePlayerModeScreen.SetActive(value: false);
 			StartCoroutine(PlaySPCoroutine());
 		}
 
@@ -2751,12 +2762,8 @@ namespace ZeroGravity
 				yield break;
 			}
 
-			// Close menus.
-			CanvasManager.SpawnOptionsScreen.SetActive(value: false);
-			CanvasManager.SelectSpawnPointScreen.SetActive(value: false);
-
 			// Enable loading screen.
-			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.Loading);
+			CanvasManager.SelectScreen(CanvasManager.Screen.Loading);
 			yield return null;
 			string filePath = SpServerPath + "\\" + spServerFileName;
 			try
@@ -2848,6 +2855,8 @@ namespace ZeroGravity
 			catch (Exception ex)
 			{
 				Dbg.Error("Unable to start single player game", ex.Message, ex.StackTrace);
+				CanvasManager.SelectSpawnPointScreen.SetActive(false);
+				CanvasManager.SelectScreen(CanvasManager.Screen.OnLoad);
 				if (File.Exists(filePath))
 				{
 					ShowMessageBox(Localization.Error, Localization.UnableToStartSPGame);

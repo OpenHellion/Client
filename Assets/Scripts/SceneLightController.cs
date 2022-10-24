@@ -13,7 +13,7 @@ public class SceneLightController : MonoBehaviour
 		LowPressure = 2
 	}
 
-	private Light light;
+	private new Light light;
 
 	private HxVolumetricLight volumelight;
 

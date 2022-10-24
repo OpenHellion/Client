@@ -2234,6 +2234,9 @@ namespace ZeroGravity.Objects
 			return true;
 		}
 
+		/// <summary>
+		/// 	Spawns a player owned by the local machine into the world.
+		/// </summary>
 		public static MyPlayer SpawnMyPlayer(LogInResponse l)
 		{
 			long iD = l.ID;
@@ -2245,7 +2248,7 @@ namespace ZeroGravity.Objects
 			{
 				if (setting.Gender != l.Data.Gender)
 				{
-					UnityEngine.Object.Destroy(setting.Outfit.gameObject);
+					GameObject.Destroy(setting.Outfit.gameObject);
 				}
 				else
 				{

@@ -6,132 +6,132 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/InitializingScene.unity
+    path: Assets/Scene/InitializingScene.unity
     guid: 8799ffec4bd89534ea24c48afdae15c7
   - enabled: 1
-    path: Assets/Scenes/Client.unity
+    path: Assets/Scene/Client.unity
     guid: e0c4038852f75684abdae929e103d0a3
   - enabled: 1
-    path: Assets/Scenes/SolarSystemSetup.unity
+    path: Assets/Scene/SolarSystemSetup.unity
     guid: 7a4744b6721d1bd4da0c78f351af25f2
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/AltCorp_CorridorModule/AltCorp_CorridorModule.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_CorridorModule/AltCorp_CorridorModule.unity
     guid: 0f0763d4d3919a040abe791adc4dfaaf
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/AltCorp_CorridorIntersectionModule/AltCorp_CorridorIntersectionModule.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_CorridorIntersectionModule/AltCorp_CorridorIntersectionModule.unity
     guid: 8b87be27f0f5a504192937a8eec5a385
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/Altcorp_Corridor45TurnModule/AltCorp_Corridor45TurnModule.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/Altcorp_Corridor45TurnModule/AltCorp_Corridor45TurnModule.unity
     guid: 95cbe568f81f49c4aa8703db6b08d242
   - enabled: 1
-    path: Assets/Scenes/Environment/Ship/AltCorp_Shuttle_SARA/AltCorp_Shuttle_SARA.unity
+    path: Assets/Scene/Environment/Ship/AltCorp_Shuttle_SARA/AltCorp_Shuttle_SARA.unity
     guid: df0aded97ba32f34c82bdd08862c6e1c
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/ALtCorp_PowerSupply_Module/ALtCorp_PowerSupply_Module.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/ALtCorp_PowerSupply_Module/ALtCorp_PowerSupply_Module.unity
     guid: 52595359b7148dd4c823a828c1f4d3a7
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/AltCorp_LifeSupportModule/AltCorp_LifeSupportModule.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_LifeSupportModule/AltCorp_LifeSupportModule.unity
     guid: 09cab1707d0335f499526c6229274961
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/AltCorp_Cargo_Module/AltCorp_Cargo_Module.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_Cargo_Module/AltCorp_Cargo_Module.unity
     guid: a93cb896247969e49801adbbc093ec53
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/AltCorp_CorridorVertical/AltCorp_CorridorVertical.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_CorridorVertical/AltCorp_CorridorVertical.unity
     guid: bdd42dd96fc352e4085bb084bf65e763
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/AltCorp_Command_Module/AltCorp_Command_Module.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_Command_Module/AltCorp_Command_Module.unity
     guid: 0f9b9bd21ccdbde4fa7862ae617a5eb5
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/AltCorp_Corridor45TurnRightModule/AltCorp_Corridor45TurnRightModule.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_Corridor45TurnRightModule/AltCorp_Corridor45TurnRightModule.unity
     guid: 812a7af82d5b4c545a6692e52e3ed907
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/AltCorp_StartingModule/AltCorp_StartingModule.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_StartingModule/AltCorp_StartingModule.unity
     guid: b87e4e8e5451374489a47e6286e7c348
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/Generic/Generic_Debris_Module_JuncRoom001/Generic_Debris_Module_JuncRoom001.unity
+    path: Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Module_JuncRoom001/Generic_Debris_Module_JuncRoom001.unity
     guid: 89ba0fa5999e68444959a8db8e38fd25
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/Generic/Generic_Debris_Module_JuncRoom002/Generic_Debris_Module_JuncRoom002.unity
+    path: Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Module_JuncRoom002/Generic_Debris_Module_JuncRoom002.unity
     guid: 3a8bc7292abdfdc4392e6745c3c4e251
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/Generic/Generic_Debris_Module_Corridor001/Generic_Debris_Module_Corridor001.unity
+    path: Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Module_Corridor001/Generic_Debris_Module_Corridor001.unity
     guid: a584ba4a412c50740ad36c0e0644c303
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/Generic/Generic_Debris_Module_Corridor002/Generic_Debris_Module_Corridor002.unity
+    path: Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Module_Corridor002/Generic_Debris_Module_Corridor002.unity
     guid: 72780c523f2a8fa43b1f7b88ff75f984
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/AltCorp_Airlock_Module/AltCorp_Airlock_Module.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_Airlock_Module/AltCorp_Airlock_Module.unity
     guid: 3adac4b2886c61d4cb69ebd0fa9f7276
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/AltCorp_DockableContainer/AltCorp_DockableContainer.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_DockableContainer/AltCorp_DockableContainer.unity
     guid: 54adac20ee049644cbaed5a69b4913d3
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/Generic/Generic_Debris_Outpost001/Generic_Debris_Outpost001.unity
+    path: Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Outpost001/Generic_Debris_Outpost001.unity
     guid: 2a73d25cd6d409c42ae76e3d9dac4c32
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/AltCorp_CrewQuarters_Module/AltCorp_CrewQuarters_Module.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_CrewQuarters_Module/AltCorp_CrewQuarters_Module.unity
     guid: 1209cdc5db6f1394d9e12cf2d884ebdc
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/Generic/Generic_Debris_Spawn1/Generic_Debris_Spawn1.unity
+    path: Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Spawn1/Generic_Debris_Spawn1.unity
     guid: d9929e61fbc5bc445a9762dead471950
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/Generic/Generic_Debris_Spawn2/Generic_Debris_Spawn2.unity
+    path: Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Spawn2/Generic_Debris_Spawn2.unity
     guid: 3a824dfa619d0bd488c96b01430e03ee
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/Generic/Generic_Debris_Spawn3/Generic_Debris_Spawn3.unity
+    path: Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Spawn3/Generic_Debris_Spawn3.unity
     guid: df4ddb39a955397419b228383a68fc24
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/AltCorp_SolarPowerModule/AltCorp_SolarPowerModule.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_SolarPowerModule/AltCorp_SolarPowerModule.unity
     guid: 7fd3934b39c99d449bac3b436ed41335
   - enabled: 1
-    path: Assets/Scenes/Environment/Ship/AltCorp_Shuttle_CECA/AltCorp_Shuttle_CECA.unity
+    path: Assets/Scene/Environment/Ship/AltCorp_Shuttle_CECA/AltCorp_Shuttle_CECA.unity
     guid: 2b7f28f2b22da6b4a937af3801dee3a3
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/AltCorp_FabricatorModule/AltCorp_FabricatorModule.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_FabricatorModule/AltCorp_FabricatorModule.unity
     guid: 9ef931f8ade12464886ff3b75bebe9c6
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp/AltCorp_PatchModule/AltCorp_PatchModule.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_PatchModule/AltCorp_PatchModule.unity
     guid: 9c0615863409cfc40a2813043f25a7a6
   - enabled: 1
-    path: Assets/Scenes/Environment/Other/SOE/SOE_Location002/SOE_Location002.unity
+    path: Assets/Scene/Environment/Other/SOE/SOE_Location002/SOE_Location002.unity
     guid: 701e83def60bdd94783866f611675ad0
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp_V02/AltCorp_Secure_Module/AltCorp_Secure_Module.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp_V02/AltCorp_Secure_Module/AltCorp_Secure_Module.unity
     guid: 2ae8e29a8c1a64f4f952600079cdc62b
   - enabled: 1
-    path: Assets/Scenes/Environment/Ship/AltCorp_Shuttle_CECA/AltCorp_Destroyed_Shuttle_CECA.unity
+    path: Assets/Scene/Environment/Ship/AltCorp_Shuttle_CECA/AltCorp_Destroyed_Shuttle_CECA.unity
     guid: 87e79eb8594e7bb478ad6710d0c20d1a
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp_V02/AltCorp_CorridorIntersection_Module/AltCorp_CorridorIntersection_MKII.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp_V02/AltCorp_CorridorIntersection_Module/AltCorp_CorridorIntersection_MKII.unity
     guid: 5206f81a87cdbf14daa08a235667c071
   - enabled: 1
-    path: Assets/Scenes/Environment/Station/Module/AltCorp_V02/AltCorp_Corridor_Module/AlrCorp_Corridor_MKII.unity
+    path: Assets/Scene/Environment/Station/Module/AltCorp_V02/AltCorp_Corridor_Module/AlrCorp_Corridor_MKII.unity
     guid: 0628467db3761b74f988bdf03d644a69
   - enabled: 1
     path: Assets/Test/FlatShipTest.unity
     guid: 56eb96898e3cdf44a9c2f1c3fc63510a
   - enabled: 1
-    path: Assets/Scenes/Environment/SolarSystem/Asteroids/Asteroid01/Asteroid01.unity
+    path: Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid01/Asteroid01.unity
     guid: 06c0c725a35381447bf0f825d6d3d565
   - enabled: 1
-    path: Assets/Scenes/Environment/SolarSystem/Asteroids/Asteroid02/Asteroid02.unity
+    path: Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid02/Asteroid02.unity
     guid: b0b0be02cbd275a46b537f7f1c140642
   - enabled: 1
-    path: Assets/Scenes/Environment/SolarSystem/Asteroids/Asteroid03/Asteroid03.unity
+    path: Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid03/Asteroid03.unity
     guid: 04b6a51e9489af249b5c68e2206970f4
   - enabled: 1
-    path: Assets/Scenes/Environment/SolarSystem/Asteroids/Asteroid04/Asteroid04.unity
+    path: Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid04/Asteroid04.unity
     guid: e715ab925b2042540b79eaf70a6485fd
   - enabled: 1
-    path: Assets/Scenes/Environment/SolarSystem/Asteroids/Asteroid05/Asteroid05.unity
+    path: Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid05/Asteroid05.unity
     guid: 4602b7e985d856748982052645acb412
   - enabled: 1
-    path: Assets/Scenes/Environment/SolarSystem/Asteroids/Asteroid06/Asteroid06.unity
+    path: Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid06/Asteroid06.unity
     guid: f5bdd09e7b79a7c4ca6206b40cb2cc00
   - enabled: 1
-    path: Assets/Scenes/Environment/SolarSystem/Asteroids/Asteroid07/Asteroid07.unity
+    path: Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid07/Asteroid07.unity
     guid: 9e50930ec15722a4d8c871e82e3b990c
   - enabled: 1
-    path: Assets/Scenes/Environment/SolarSystem/Asteroids/Asteroid08/Asteroid08.unity
+    path: Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid08/Asteroid08.unity
     guid: baa2ae3971de57d4a808b31d1f58da19
   m_configObjects: {}

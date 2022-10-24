@@ -122,37 +122,43 @@ namespace ZeroGravity.UI
 			{
 				qualitySettingsDropdown.options.Add(new Dropdown.OptionData(text.ToString()));
 			}
+
 			qualitySettingsDropdown.onValueChanged.RemoveAllListeners();
 			textureQualityDropdown.onValueChanged.RemoveAllListeners();
 			shadowQualityDropdown.onValueChanged.RemoveAllListeners();
 			antialiasingDropdown.onValueChanged.RemoveAllListeners();
 			VolumetricLighting.onValueChanged.RemoveAllListeners();
+
 			resolutionDropdown.value = resolutionDropdown.options.Count - 1;
 			Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, Screen.fullScreen);
-			bool flag = true;
-			fullScreenToggle.isOn = flag;
-			Screen.fullScreen = flag;
+
+			// Resolution.
+			fullScreenToggle.isOn = true;
+			Screen.fullScreen = true;
 			VideoData.Fullscreen = true;
-			VideoSettingsData videoData = VideoData;
-			flag = true;
-			AmbientOcclusion.isOn = flag;
-			videoData.AmbientOcclusion = flag;
-			VideoSettingsData videoData2 = VideoData;
-			flag = true;
-			MotionBlur.isOn = flag;
-			videoData2.MotionBlur = flag;
-			VideoSettingsData videoData3 = VideoData;
-			flag = true;
-			EyeAdaptation.isOn = flag;
-			videoData3.EyeAdaptation = flag;
-			VideoSettingsData videoData4 = VideoData;
-			flag = true;
-			Bloom.isOn = flag;
-			videoData4.Bloom = flag;
-			VideoSettingsData videoData5 = VideoData;
-			flag = true;
-			ChromaticAberration.isOn = flag;
-			videoData5.ChromaticAberration = flag;
+			_resolutionElement.SetActive(true);
+
+			// Ambient occlusion.
+			AmbientOcclusion.isOn = true;
+			VideoData.AmbientOcclusion = true;
+
+			// Motion blur.
+			MotionBlur.isOn = false;
+			VideoData.MotionBlur = false;
+
+			// Eye adaptation.
+			EyeAdaptation.isOn = true;
+			VideoData.EyeAdaptation = true;
+
+			// Bloom
+			Bloom.isOn = true;
+			VideoData.Bloom = true;
+
+			// Chromatic aberration.
+			ChromaticAberration.isOn = true;
+			VideoData.ChromaticAberration = true;
+
+			// Quality.
 			qualitySettingsDropdown.value = 2;
 			VideoData.QualityIndex = qualitySettingsDropdown.value;
 			QualitySettings.SetQualityLevel(VideoData.QualityIndex, applyExpensiveChanges: false);
@@ -161,6 +167,8 @@ namespace ZeroGravity.UI
 			{
 				OnQualityChange();
 			});
+
+			// Texture quality.
 			VideoData.TextureIndex = QualitySettings.masterTextureLimit;
 			textureQualityDropdown.value = VideoData.TextureIndex;
 			textureQualityDropdown.RefreshShownValue();
@@ -168,6 +176,8 @@ namespace ZeroGravity.UI
 			{
 				OnTextureChange();
 			});
+
+			// Shadow quality.
 			VideoData.ShadowIndex = (int)QualitySettings.shadows;
 			shadowQualityDropdown.value = VideoData.ShadowIndex;
 			shadowQualityDropdown.RefreshShownValue();
@@ -175,6 +185,8 @@ namespace ZeroGravity.UI
 			{
 				OnShadowChange();
 			});
+
+			// Anti-aliasing.
 			VideoData.AntialiasingIndex = 1;
 			antialiasingDropdown.value = VideoData.AntialiasingIndex;
 			antialiasingDropdown.RefreshShownValue();
@@ -182,10 +194,10 @@ namespace ZeroGravity.UI
 			{
 				OnAliasingChange();
 			});
-			VideoSettingsData videoData6 = VideoData;
-			flag = true;
-			VolumetricLighting.isOn = flag;
-			videoData6.VolumetricLights = flag;
+
+			// Volumetric lighing. TODO: Off until I can fix it.
+			VolumetricLighting.isOn = false;
+			VideoData.VolumetricLights = false;
 		}
 
 		public void Load(VideoSettingsData videoData)
@@ -213,14 +225,21 @@ namespace ZeroGravity.UI
 			Screen.SetResolution(resolutions[resolutionDropdown.value].width, resolutions[resolutionDropdown.value].height, VideoData.Fullscreen);
 			fullScreenToggle.isOn = VideoData.Fullscreen;
 			SetQualityOnStart();
+
 			textureQualityDropdown.value = VideoData.TextureIndex;
 			textureQualityDropdown.RefreshShownValue();
+
 			shadowQualityDropdown.value = VideoData.ShadowIndex;
 			shadowQualityDropdown.RefreshShownValue();
+
 			antialiasingDropdown.value = VideoData.AntialiasingIndex;
 			antialiasingDropdown.RefreshShownValue();
-			VolumetricLighting.isOn = VideoData.VolumetricLights;
-			Client.Instance.VolumetricOption = VideoData.VolumetricLights;
+			//VolumetricLighting.isOn = VideoData.VolumetricLights;
+			//Client.Instance.VolumetricOption = VideoData.VolumetricLights;
+			// Disabled.
+			VolumetricLighting.isOn = false;
+			Client.Instance.VolumetricOption = false;
+
 			AmbientOcclusion.isOn = VideoData.AmbientOcclusion;
 			MotionBlur.isOn = VideoData.MotionBlur;
 			EyeAdaptation.isOn = VideoData.EyeAdaptation;
@@ -339,18 +358,21 @@ namespace ZeroGravity.UI
 		{
 			VideoData.QualityIndex = qualitySettingsDropdown.value;
 			QualitySettings.SetQualityLevel(VideoData.QualityIndex, applyExpensiveChanges: false);
-			VideoSettingsData videoData = VideoData;
+
 			int masterTextureLimit = QualitySettings.masterTextureLimit;
 			textureQualityDropdown.value = masterTextureLimit;
-			videoData.TextureIndex = masterTextureLimit;
-			VideoSettingsData videoData2 = VideoData;
+			VideoData.TextureIndex = masterTextureLimit;
+
 			masterTextureLimit = (int)QualitySettings.shadows;
 			shadowQualityDropdown.value = masterTextureLimit;
-			videoData2.ShadowIndex = masterTextureLimit;
+			VideoData.ShadowIndex = masterTextureLimit;
+
 			VideoData.AntialiasingIndex = antialiasingDropdown.value;
 			Client.Instance.AntialiasingOption = VideoData.AntialiasingIndex;
+
 			VideoData.VolumetricLights = VolumetricLighting.isOn;
 			Client.Instance.VolumetricOption = VideoData.VolumetricLights;
+
 			qualitySettingsDropdown.RefreshShownValue();
 			textureQualityDropdown.RefreshShownValue();
 			shadowQualityDropdown.RefreshShownValue();

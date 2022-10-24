@@ -284,17 +284,30 @@ namespace ZeroGravity.Objects
 		public void LoadDataFromResources()
 		{
 			SolarSystemData solarSystemData = Json.LoadResource<SolarSystemData>("Data/SolarSystem");
-			foreach (CelestialBodyData celestialBody2 in solarSystemData.CelestialBodies)
+			foreach (CelestialBodyData data in solarSystemData.CelestialBodies)
 			{
-				CelestialBody celestialBody = new CelestialBody(celestialBody2.GUID);
-				celestialBody.Set((celestialBody2.ParentGUID != -1) ? FindCelestialBody(celestialBody2.ParentGUID) : null, celestialBody2.Name, celestialBody2.Mass, celestialBody2.Radius * Client.CELESTIAL_BODY_RADIUS_MULTIPLIER, celestialBody2.RotationPeriod, celestialBody2.Eccentricity, celestialBody2.SemiMajorAxis, celestialBody2.Inclination, celestialBody2.ArgumentOfPeriapsis, celestialBody2.LongitudeOfAscendingNode, celestialBody2.PlanetsPrefabPath, CurrentTime);
-				if (!string.IsNullOrEmpty(celestialBody2.NavigationPrefabPath))
+				CelestialBody celestialBody = new CelestialBody(data.GUID);
+
+				celestialBody.Set((data.ParentGUID != -1) ? FindCelestialBody(data.ParentGUID) : null,
+				data.Name,
+				data.Mass,
+				data.Radius * Client.CELESTIAL_BODY_RADIUS_MULTIPLIER,
+				data.RotationPeriod,
+				data.Eccentricity,
+				data.SemiMajorAxis,
+				data.Inclination,
+				data.ArgumentOfPeriapsis,
+				data.LongitudeOfAscendingNode,
+				data.PlanetsPrefabPath,
+				CurrentTime);
+
+				if (!string.IsNullOrEmpty(data.NavigationPrefabPath))
 				{
-					Client.Instance.Map.InitializeMapObject(celestialBody, celestialBody2);
+					Client.Instance.Map.InitializeMapObject(celestialBody, data);
 				}
-				celestialBody.AsteroidGasBurstDmgMultiplier = celestialBody2.AsteroidGasBurstDmgMultiplier;
-				celestialBody.ScanningSensitivityModifierValues = celestialBody2.ScanningSensitivityModifierValues;
-				celestialBody.RadarSignatureModifierValues = celestialBody2.RadarSignatureModifierValues;
+				celestialBody.AsteroidGasBurstDmgMultiplier = data.AsteroidGasBurstDmgMultiplier;
+				celestialBody.ScanningSensitivityModifierValues = data.ScanningSensitivityModifierValues;
+				celestialBody.RadarSignatureModifierValues = data.RadarSignatureModifierValues;
 				AddCelestialBody(celestialBody);
 			}
 			CalculatePositionsAfterTime(CurrentTime);
