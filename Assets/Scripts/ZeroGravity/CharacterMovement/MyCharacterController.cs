@@ -1084,7 +1084,9 @@ namespace ZeroGravity.CharacterMovement
 					StickToVesselRotation = Quaternion.identity;
 					rigidBody.drag = 0f;
 				}
-				if (flag && IsJetpackOn)
+
+				// Stabilise rotation.
+				if (IsJetpackOn)
 				{
 					rigidBody.angularDrag = zgJetpackAngularDrag;
 				}

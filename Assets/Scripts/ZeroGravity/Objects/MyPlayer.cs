@@ -1139,9 +1139,12 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
+			// Control ships and docking.
 			if ((ShipControlMode == ShipControlMode.Piloting || ShipControlMode == ShipControlMode.Docking || LockedToTrigger is SceneTriggerDockingPanel) && Parent is SpaceObjectVessel)
 			{
 				SpaceObjectVessel spaceObjectVessel = ((!(LockedToTrigger != null)) ? (Parent as SpaceObjectVessel) : LockedToTrigger.ParentShip);
+				// Docking controls.
 				if (ShipControlMode == ShipControlMode.Docking || LockedToTrigger is SceneTriggerDockingPanel)
 				{
 					if (!(LockedToTrigger is SceneTriggerDockingPanel) || (LockedToTrigger as SceneTriggerDockingPanel).MyDockingPanel.IsDockingEnabled)
@@ -1154,15 +1157,21 @@ namespace ZeroGravity.Objects
 						}
 					}
 				}
+				// Ship controls.
 				else if (ShipControlMode == ShipControlMode.Piloting && !FpsController.IsFreeLook && !Client.Instance.CanvasManager.ConsoleIsUp)
 				{
 					Vector3 shipRotationCursor = ShipRotationCursor;
 					ShipRotationCursor.x -= Mathf.Clamp((float)((!Client.Instance.InvertMouseWhileDriving) ? 1 : (-1)) * TeamUtility.IO.InputManager.GetAxis("LookVertical"), -1f, 1f);
 					ShipRotationCursor.y += Mathf.Clamp(TeamUtility.IO.InputManager.GetAxis("LookHorizontal"), -1f, 1f);
-					if (ZeroGravity.UI.InputManager.GetButton(ZeroGravity.UI.InputManager.AxisNames.LeftShift))
-					{
-						ShipRotationCursor *= spaceObjectVessel.RCS.RotationAcceleration / spaceObjectVessel.RCS.RotationStabilization;
-					}
+
+					//if (ZeroGravity.UI.InputManager.GetButton(ZeroGravity.UI.InputManager.AxisNames.LeftShift))
+					//{
+					//	ShipRotationCursor *= spaceObjectVessel.RCS.RotationAcceleration / spaceObjectVessel.RCS.RotationStabilization;
+					//}
+
+					// Stabilize rotation.
+					ShipRotationCursor *= spaceObjectVessel.RCS.RotationAcceleration / spaceObjectVessel.RCS.RotationStabilization;
+
 					Vector3 vector = ShipRotationCursor - shipRotationCursor;
 					float magnitude = vector.magnitude;
 					if (magnitude > spaceObjectVessel.RCS.MaxOperationRate)
@@ -1219,6 +1228,8 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
+
+			// Camera controls.
 			if (cameraLerpHelper < 1f && cameraLerpPosTo.HasValue && cameraLerpPosFrom.HasValue && cameraLerpRotFrom.HasValue && cameraLerpRotTo.HasValue)
 			{
 				cameraLerpHelper += Mathf.Clamp01(Time.deltaTime * 2f);
