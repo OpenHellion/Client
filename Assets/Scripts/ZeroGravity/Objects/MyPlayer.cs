@@ -1160,19 +1160,14 @@ namespace ZeroGravity.Objects
 				// Ship controls.
 				else if (ShipControlMode == ShipControlMode.Piloting && !FpsController.IsFreeLook && !Client.Instance.CanvasManager.ConsoleIsUp)
 				{
-					Vector3 shipRotationCursor = ShipRotationCursor;
+					Vector3 oldShipRotationCursor = ShipRotationCursor;
 					ShipRotationCursor.x -= Mathf.Clamp((float)((!Client.Instance.InvertMouseWhileDriving) ? 1 : (-1)) * TeamUtility.IO.InputManager.GetAxis("LookVertical"), -1f, 1f);
 					ShipRotationCursor.y += Mathf.Clamp(TeamUtility.IO.InputManager.GetAxis("LookHorizontal"), -1f, 1f);
 
-					//if (ZeroGravity.UI.InputManager.GetButton(ZeroGravity.UI.InputManager.AxisNames.LeftShift))
-					//{
-					//	ShipRotationCursor *= spaceObjectVessel.RCS.RotationAcceleration / spaceObjectVessel.RCS.RotationStabilization;
-					//}
-
-					// Stabilize rotation.
+					// Stabilise rotation.
 					ShipRotationCursor *= spaceObjectVessel.RCS.RotationAcceleration / spaceObjectVessel.RCS.RotationStabilization;
 
-					Vector3 vector = ShipRotationCursor - shipRotationCursor;
+					Vector3 vector = ShipRotationCursor - oldShipRotationCursor;
 					float magnitude = vector.magnitude;
 					if (magnitude > spaceObjectVessel.RCS.MaxOperationRate)
 					{

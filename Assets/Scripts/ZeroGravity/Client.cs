@@ -2564,7 +2564,7 @@ namespace ZeroGravity
 		/// <summary>
 		/// 	Orders the server list by the specified sort mode.<br />
 		/// 	1 sorts by ping.<br />
-		/// 	2 sorts by ?.<br />
+		/// 	2 sorts by whether player has joined before.<br />
 		/// 	3 sorts by name.<br />
 		/// 	4 sorts by player count.<br />
 		/// 	5 sorts by whether it is locked.<br />

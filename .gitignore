@@ -102,3 +102,5 @@ WwiseUnityIntegration_*_Src.zip
 logRunSetup.txt
 *.bak
 GeneratedSoundBanks**
+
+/Hellion_Data

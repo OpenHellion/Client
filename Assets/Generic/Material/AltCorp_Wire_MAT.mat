@@ -2,18 +2,23 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: AltCorp_Wire_MAT
-  m_Shader: {fileID: 4800000, guid: 2332bea2986470a47ad2208e6c626da2, type: 3}
-  m_ShaderKeywords: _ALPHATEST_ON _EMISSION _NORMALMAP
-  m_LightmapFlags: 1
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_ValidKeywords:
+  - _ALPHATEST_ON
+  - _NORMALMAP
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 2450
+  stringTagMap:
+    RenderType: TransparentCutout
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -21,6 +26,18 @@ Material:
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: 9a0e5e39ba41b2241a43ad498ef1cd93, type: 3}
         m_Scale: {x: 60, y: 60}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
@@ -42,6 +59,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 60, y: 60}
         m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -50,19 +71,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _AlwaysEmit: 0
     - _BumpScale: 1
-    - _Cutoff: 0.5
+    - _Cutoff: 0.1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EmissionControl: 1
     - _Float2: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0.5
+    - _Glossiness: 0.528
     - _GlossyReflections: 1
     - _MaskClipValue: 0.5
-    - _Metallic: 0
+    - _Metallic: 0.102
     - _Mode: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -73,7 +95,8 @@ Material:
     - _ZWrite: 1
     - __dirty: 0
     m_Colors:
-    - _Color: {r: 0.125, g: 0.125, b: 0.125, a: 1}
+    - _Color: {r: 0.355, g: 0.355, b: 0.355, a: 1}
     - _Color1: {r: 2, g: 0, b: 0, a: 0}
     - _Color3: {r: 2, g: 1.034483, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+  m_BuildTextureStacks: []

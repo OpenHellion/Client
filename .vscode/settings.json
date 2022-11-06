@@ -10,6 +10,7 @@
         "Build/":true,
         "Library/":true,
         "library/":true,
+        "Hellion_Data/":true,
         "obj/":true,
         "Obj/":true,
         "ProjectSettings/":true,
@@ -34,5 +35,6 @@
 		"Packages":true,
 		"UserSettings":true,
 		"WwiseProject":true
-    }
+    },
+	"diffEditor.diffAlgorithm": "experimental"
 }

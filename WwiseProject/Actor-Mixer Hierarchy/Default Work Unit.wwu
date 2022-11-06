@@ -9673,7 +9673,7 @@
 									<PropertyList>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
-												<Value>-12</Value>
+												<Value>-16</Value>
 											</ValueList>
 										</Property>
 									</PropertyList>
@@ -10176,9 +10176,12 @@
 							<ChildrenList>
 								<Sound Name="DistressCall_Received_Alarm" ID="{949C2020-CE6A-486B-8CA0-54D7007BDA41}" ShortID="295590330">
 									<PropertyList>
+										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+										<Property Name="IsLoopingInfinite" Type="bool" Value="False"/>
+										<Property Name="LoopCount" Type="int32" Value="4"/>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
-												<Value>-11</Value>
+												<Value>-14</Value>
 											</ValueList>
 										</Property>
 									</PropertyList>
@@ -10925,13 +10928,6 @@
 					</ChildrenList>
 				</Folder>
 				<ActorMixer Name="VoiceMixer" ID="{6A6D09A4-EDA8-4900-9E9D-0A8238DE8BDA}" ShortID="954525456">
-					<PropertyList>
-						<Property Name="Volume" Type="Real64">
-							<ValueList>
-								<Value>-10</Value>
-							</ValueList>
-						</Property>
-					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>

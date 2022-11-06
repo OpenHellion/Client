@@ -35,6 +35,7 @@
 					<ObjectInclusionList>
 						<ObjectRef Name="ShipHealth" ID="{B68F3987-E0FF-451E-AB67-A3D0B406B784}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Effects" ID="{9C0E6CE7-FD19-48A5-A423-47BC00349F8B}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Alarm" ID="{04805147-C310-4CEC-BD8C-0CC57BC535F3}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
@@ -61,7 +62,6 @@
 						<ObjectRef Name="Doors" ID="{5C6422B3-4FF0-4B6E-800E-61C217F6D80A}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="ShipFTL" ID="{F7B89793-F449-4CC8-A1F2-B475397CD94B}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Drill" ID="{EC40F0E6-90CD-4CD1-BA43-BB2199C1E406}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Alarm" ID="{04805147-C310-4CEC-BD8C-0CC57BC535F3}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="FireExtinguisher" ID="{BAE148D0-9B75-4E7F-BC98-A45B49F90159}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Jetpack" ID="{55EF2588-A929-4F04-856C-3E35DF63F76E}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Pressurize" ID="{485F168A-7032-4F2C-8523-48E87F97DA90}" WorkUnitID="{ED2E1363-15D0-498E-96B0-9CB6E7CADBB2}" Origin="Manual" Filter="7"/>

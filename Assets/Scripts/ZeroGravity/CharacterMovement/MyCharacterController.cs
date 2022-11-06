@@ -488,9 +488,8 @@ namespace ZeroGravity.CharacterMovement
 
 		private void CheckLegDistanceFromFloor()
 		{
-			AnimatorHelper obj = animatorHelper;
 			bool? touchingFloor = Physics.Raycast(base.transform.position, -base.transform.up, legDistance, collisionLayerMask);
-			obj.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, touchingFloor);
+			animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, touchingFloor);
 		}
 
 		private void CalculateCrouch()
@@ -801,9 +800,8 @@ namespace ZeroGravity.CharacterMovement
 						currSlopeAngle = Vector3.Angle(currSlopeNormal, base.transform.up);
 					}
 				}
-				AnimatorHelper obj = animatorHelper;
 				bool? isMoving = rigidBody.velocity.magnitude > float.Epsilon;
-				obj.SetParameter(null, isMoving);
+				animatorHelper.SetParameter(null, isMoving);
 				if (InputManager.GetButton(InputManager.AxisNames.LeftCtrl))
 				{
 					lastMovementState = MovementState.Crouch;
@@ -847,10 +845,9 @@ namespace ZeroGravity.CharacterMovement
 					}
 					currForwardAnimationVal = ((!(Mathf.Abs(movementAxis.Forward) <= float.Epsilon)) ? Mathf.Clamp(Vector3.Project(myPlayer.MyVelocity, base.transform.forward).magnitude / runSpeeds.ForwardVelocity * (float)MathHelper.Sign(movementAxis.Forward), -1f, 1f) : 0f);
 					currRightAnimationVal = ((!(Mathf.Abs(movementAxis.Right) <= float.Epsilon)) ? Mathf.Clamp(Vector3.Project(myPlayer.MyVelocity, base.transform.right).magnitude / runSpeeds.RightVelocity * (float)MathHelper.Sign(movementAxis.Right), -1f, 1f) : 0f);
-					AnimatorHelper obj2 = animatorHelper;
 					float? ladderDirection = currForwardAnimationVal;
 					float? velocityRight = currRightAnimationVal;
-					obj2.SetParameter(null, null, null, null, null, null, null, null, null, null, velocityRight, ladderDirection);
+					animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, velocityRight, ladderDirection);
 				}
 				else
 				{
@@ -859,10 +856,9 @@ namespace ZeroGravity.CharacterMovement
 					movementAxis.Right = 0f;
 					currForwardAnimationVal = 0f;
 					currRightAnimationVal = 0f;
-					AnimatorHelper obj3 = animatorHelper;
 					float? ladderDirection = currForwardAnimationVal;
 					float? velocityRight = currRightAnimationVal;
-					obj3.SetParameter(null, null, null, null, null, null, null, null, null, null, velocityRight, ladderDirection);
+					animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, velocityRight, ladderDirection);
 					if (slopeJumpTimer > 1f && isGrounded && InputManager.GetButtonDown(InputManager.AxisNames.Space))
 					{
 						float num2 = Mathf.Sqrt(2f * jumpHeightMax * myPlayer.Gravity.magnitude);
@@ -922,11 +918,17 @@ namespace ZeroGravity.CharacterMovement
 			}
 		}
 
+		/// <summary>
+		/// 	Calculates movement velocities.
+		/// </summary>
 		private void Calculate0GMovementData()
 		{
+			// Get normal input.
 			movementAxis.Forward = InputManager.GetAxis(InputManager.AxisNames.Forward);
 			movementAxis.Right = InputManager.GetAxis(InputManager.AxisNames.Right);
 			movementAxis.LeanRight = InputManager.GetAxis(InputManager.AxisNames.Lean);
+
+			// Get vertical input.
 			if (InputManager.GetButton(InputManager.AxisNames.Space))
 			{
 				movementAxis.Up = Mathf.Min(movementAxis.Up + Time.fixedDeltaTime * 4f, 1f);
@@ -943,25 +945,17 @@ namespace ZeroGravity.CharacterMovement
 			{
 				movementAxis.Up = Mathf.Max(movementAxis.Up - Time.fixedDeltaTime * 4f, 0f);
 			}
+
+			// Sound and VFX.
 			if (CurrentJetpack != null && CurrentJetpack.IsActive && JetpackFuel > float.Epsilon)
 			{
 				CurrentJetpack.StartNozzles(new Vector4(movementAxis.Right, movementAxis.Up, movementAxis.Forward, movementAxis.LeanRight), myJetpack: true);
 			}
+
 			Check0GCurrentSpeed();
-			int num = 0;
-			if (movementAxis.Forward.IsNotEpsilonZero())
-			{
-				num++;
-			}
-			if (movementAxis.Right.IsNotEpsilonZero())
-			{
-				num++;
-			}
-			if (movementAxis.Up.IsNotEpsilonZero())
-			{
-				num++;
-			}
-			if (num > 1)
+
+			// Calculate final velocity if numbers are not epsilon zero.
+			if (!movementAxis.Forward.IsNotEpsilonZero() || !movementAxis.Right.IsNotEpsilonZero() || !movementAxis.Up.IsNotEpsilonZero())
 			{
 				float a = Mathf.Abs(movementAxis.Forward) * currSpeeds.ForwardVelocity;
 				float b = Mathf.Abs(movementAxis.Right) * currSpeeds.RightVelocity;
@@ -976,14 +970,12 @@ namespace ZeroGravity.CharacterMovement
 
 		private void Calculate0GAnimatorParams()
 		{
-			float num = currForwardAnimationVal;
-			float num2 = currRightAnimationVal;
 			Vector3 vector = Vector3.Project(myPlayer.MyVelocity, base.transform.forward);
-			float num3 = Vector3.Dot(vector.normalized, base.transform.forward);
 			Vector3 vector2 = Vector3.Project(myPlayer.MyVelocity, base.transform.right);
 			float f = Vector3.Dot(vector2.normalized, base.transform.right);
-			num = Mathf.Min(MathHelper.ProportionalValue(vector.magnitude, 0f, (!(num3 > 1f)) ? animatorBackwardMaxVelocity : animatorForwardMaxVelocity, 0f, 1f), 1f) * Mathf.Sign(num3);
-			num2 = Mathf.Min(MathHelper.ProportionalValue(vector2.magnitude, 0f, animatorRightMaxVelocity, 0f, 1f), 1f) * Mathf.Sign(f);
+			float num3 = Vector3.Dot(vector.normalized, base.transform.forward);
+			float num = Mathf.Min(MathHelper.ProportionalValue(vector.magnitude, 0f, (!(num3 > 1f)) ? animatorBackwardMaxVelocity : animatorForwardMaxVelocity, 0f, 1f), 1f) * Mathf.Sign(num3);
+			float num2 = Mathf.Min(MathHelper.ProportionalValue(vector2.magnitude, 0f, animatorRightMaxVelocity, 0f, 1f), 1f) * Mathf.Sign(f);
 			if (!Mathf.Approximately(currForwardAnimationVal, num))
 			{
 				currForwardAnimationVal = Mathf.Lerp(currForwardAnimationVal, num, Time.fixedDeltaTime * animatorForwardMaxVelocity);
@@ -992,10 +984,9 @@ namespace ZeroGravity.CharacterMovement
 			{
 				currRightAnimationVal = Mathf.Lerp(currRightAnimationVal, num2, Time.fixedDeltaTime * animatorRightMaxVelocity);
 			}
-			AnimatorHelper obj = animatorHelper;
 			float? velocityForward = currForwardAnimationVal;
 			float? velocityRight = currRightAnimationVal;
-			obj.SetParameter(null, null, null, null, null, null, null, null, null, null, velocityRight, velocityForward);
+			animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, velocityRight, velocityForward);
 			float forward = movementAxis.Forward;
 			float right = movementAxis.Right;
 			AnimatorHelper animHelper = myPlayer.animHelper;
@@ -1043,9 +1034,8 @@ namespace ZeroGravity.CharacterMovement
 				}
 				Calculate0GMovementData();
 				cameraController.SetLeanRightAxis(0f - movementAxis.LeanRight);
-				bool flag = InputManager.GetButton(InputManager.AxisNames.LeftShift) || (myPlayer.IsUsingItemInHands && myPlayer.Inventory.CheckIfItemInHandsIsType<HandDrill>());
-				bool flag2 = movementAxis.Right.IsNotEpsilonZero() || movementAxis.Forward.IsNotEpsilonZero() || movementAxis.Up.IsNotEpsilonZero();
-				if (flag && canGrabWall && NearbyVessel != null && (NearbyVessel.Velocity - (myPlayer.Parent.Velocity + rigidBody.velocity.ToVector3D())).SqrMagnitude < 100.0)
+				bool hasToStabilise = InputManager.GetButton(InputManager.AxisNames.LeftShift) || (myPlayer.IsUsingItemInHands && myPlayer.Inventory.CheckIfItemInHandsIsType<HandDrill>());
+				if (hasToStabilise && canGrabWall && NearbyVessel != null && (NearbyVessel.Velocity - (myPlayer.Parent.Velocity + rigidBody.velocity.ToVector3D())).SqrMagnitude < 100.0)
 				{
 					if (myPlayer.CurrentRoomTrigger == null)
 					{
@@ -1085,12 +1075,12 @@ namespace ZeroGravity.CharacterMovement
 					rigidBody.drag = 0f;
 				}
 
-				// Stabilise rotation.
+				// Handle rotation.
 				if (IsJetpackOn)
 				{
 					rigidBody.angularDrag = zgJetpackAngularDrag;
 				}
-				else if (flag && canGrabWall)
+				else if (hasToStabilise && canGrabWall)
 				{
 					rigidBody.angularDrag = zgGrabAngularDrag;
 				}
@@ -1102,9 +1092,13 @@ namespace ZeroGravity.CharacterMovement
 				{
 					rigidBody.angularDrag = 0f;
 				}
-				if (flag2)
+
+				if (movementAxis.Right.IsNotEpsilonZero() || movementAxis.Forward.IsNotEpsilonZero() || movementAxis.Up.IsNotEpsilonZero())
 				{
-					Vector3 vector = cameraController.transform.forward * movementAxis.Forward * currSpeeds.ForwardVelocity + cameraController.transform.right * movementAxis.Right * currSpeeds.RightVelocity + cameraController.transform.up * movementAxis.Up * currSpeeds.RightVelocity;
+					Vector3 vector = cameraController.transform.forward * movementAxis.Forward * currSpeeds.ForwardVelocity
+					+ cameraController.transform.right * movementAxis.Right * currSpeeds.RightVelocity
+					+ cameraController.transform.up * movementAxis.Up * currSpeeds.RightVelocity;
+
 					if (!IsJetpackOn && rigidBody.velocity.sqrMagnitude >= currSpeeds.ForwardVelocity * currSpeeds.ForwardVelocity)
 					{
 						Vector3 vector2 = Vector3.Project(vector, rigidBody.velocity);
@@ -1118,6 +1112,8 @@ namespace ZeroGravity.CharacterMovement
 						rigidBody.AddForce(vector, ForceMode.Impulse);
 					}
 				}
+
+				// Set animation paramaters.
 				Calculate0GAnimatorParams();
 			}
 		}
