@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +22,7 @@ namespace ZeroGravity.UI
 		{
 			if (Data == null)
 			{
-				Data = Client.Instance.CanvasManager.StartingPointData.FirstOrDefault(_003CStart_003Em__0);
+				Data = Client.Instance.CanvasManager.StartingPointData.FirstOrDefault((StartingPointOptionData m) => m.Type == Type);
 			}
 			base.transform.Reset();
 			Heading.text = Data.Title;
@@ -36,16 +35,6 @@ namespace ZeroGravity.UI
 			{
 				Description.text = Data.Description;
 			}
-		}
-
-		private void Update()
-		{
-		}
-
-		[CompilerGenerated]
-		private bool _003CStart_003Em__0(StartingPointOptionData m)
-		{
-			return m.Type == Type;
 		}
 	}
 }

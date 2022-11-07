@@ -1164,21 +1164,22 @@ namespace ZeroGravity.Objects
 					ShipRotationCursor.x -= Mathf.Clamp((float)((!Client.Instance.InvertMouseWhileDriving) ? 1 : (-1)) * TeamUtility.IO.InputManager.GetAxis("LookVertical"), -1f, 1f);
 					ShipRotationCursor.y += Mathf.Clamp(TeamUtility.IO.InputManager.GetAxis("LookHorizontal"), -1f, 1f);
 
-					// Stabilise rotation.
+					// Stabilise rotation cursor.
 					ShipRotationCursor *= spaceObjectVessel.RCS.RotationAcceleration / spaceObjectVessel.RCS.RotationStabilization;
 
-					Vector3 vector = ShipRotationCursor - oldShipRotationCursor;
-					float magnitude = vector.magnitude;
-					if (magnitude > spaceObjectVessel.RCS.MaxOperationRate)
+					// Calculate velocity.
+					Vector3 velocity = ShipRotationCursor - oldShipRotationCursor;
+					if (velocity.magnitude > spaceObjectVessel.RCS.MaxOperationRate)
 					{
-						vector = vector.normalized * spaceObjectVessel.RCS.MaxOperationRate;
-						ShipRotationCursor += vector;
+						velocity = velocity.normalized * spaceObjectVessel.RCS.MaxOperationRate;
+						ShipRotationCursor += velocity;
 					}
-					if (vector.IsNotEpsilonZero() && !ZeroGravity.UI.InputManager.GetButton(ZeroGravity.UI.InputManager.AxisNames.LeftShift))
+
+					if (velocity.IsNotEpsilonZero() && !ZeroGravity.UI.InputManager.GetButton(ZeroGravity.UI.InputManager.AxisNames.LeftShift))
 					{
 						lastShipRotationCursorChangeTime = Time.realtimeSinceStartup;
-						shipRotation.x = vector.x;
-						shipRotation.y = vector.y;
+						shipRotation.x = velocity.x;
+						shipRotation.y = velocity.y;
 						if (shipRotation.IsNotEpsilonZero())
 						{
 							(spaceObjectVessel as Ship).IsRotationStabilized = false;
@@ -1190,7 +1191,6 @@ namespace ZeroGravity.Objects
 					}
 					else
 					{
-						magnitude = ShipRotationCursor.magnitude;
 						ShipRotationCursor = Vector3.Lerp(ShipRotationCursor, Quaternion.LookRotation(spaceObjectVessel.Forward, spaceObjectVessel.Up).Inverse() * spaceObjectVessel.MainVessel.AngularVelocity, (Time.realtimeSinceStartup - lastShipRotationCursorChangeTime) / 5f);
 						ShipRotationCursor.z = 0f;
 					}

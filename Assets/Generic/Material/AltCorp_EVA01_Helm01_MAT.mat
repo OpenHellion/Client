@@ -2,23 +2,44 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: AltCorp_EVA01_Helm01_MAT
   m_Shader: {fileID: 4800000, guid: a37f65c25f2781b498c9f937674ce11f, type: 3}
-  m_ShaderKeywords: _ALPHATEST_ON _EMISSION _MAT1USERUST_ON _METALLICGLOSSMAP _NORMALMAP
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _ALPHATEST_ON
+  - _EMISSION
+  - _MAT1USERUST_ON
+  - _MAT6USERUST_ON
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
-  stringTagMap:
-  - RenderType: TransparentCutout
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _DifuseMap:
         m_Texture: {fileID: 2800000, guid: b8c951c4210f40e409c953234559a886, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -27,12 +48,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 20, y: 20}
         m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _FrostNormal:
         m_Texture: {fileID: 0}
         m_Scale: {x: 5, y: 5}
         m_Offset: {x: 0, y: 0}
     - _IdMask:
         m_Texture: {fileID: 2800000, guid: 278879ec75f672a4db9602fea1a750c6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Masks:
@@ -63,14 +92,27 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 20, y: 20}
         m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _NormalEmision:
         m_Texture: {fileID: 2800000, guid: d893cbe5befcfb941acfb630ae385496, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RustNormal:
         m_Texture: {fileID: 0}
         m_Scale: {x: 20, y: 20}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _BumpScale: 1
     - _Color2Amount: 0
@@ -89,7 +131,9 @@ Material:
     - _FrostAmount: 0
     - _FrostColorVariationAdj: 0.693
     - _FrostMetalic: 0
+    - _GlossMapScale: 1
     - _Glossiness: 0.5
+    - _GlossyReflections: 1
     - _Glow: 0
     - _IdDebug: 0
     - _Mat1BaseMetalic: 0
@@ -160,8 +204,10 @@ Material:
     - _RustAmount: 0.045
     - _RustColorVariationAdj: 0.864
     - _RustMetaic: 0
+    - _SmoothnessTextureChannel: 0
     - _SoftDrtAmount: 1
     - _SpecualVariationAdj: 0.02
+    - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
     - _WearAmount: 0.592
@@ -208,3 +254,4 @@ Material:
     - _RustColor1: {r: 0.35294116, g: 0.19386701, b: 0.090830445, a: 1}
     - _RustColor2: {r: 0.18382353, g: 0.0405493, b: 0.0405493, a: 1}
     - _node_4748: {r: 1, g: 1, b: 0.04411763, a: 1}
+  m_BuildTextureStacks: []

@@ -9,10 +9,9 @@ A [separate repository](https://github.com/Hellion-Revived/Hellion_SP) for the d
 Hellion Revived is a multiplayer game set in space. You're apart of a mission-gone-wrong to colonise the nearest star. The goal is to survive in space, and to do such you need to follow the quests. The game has some sandbox features, that allows you to build and manage your own space stations and ships.
 
 ## Info
-The game is developed with `Unity 2021.3 LTS` and `Wwise 2021.1 LTS`. I'm not very sure to which extent the game is cross-platform,
-as have found features in the code that are only available on Windows. Some of them have been replaced, but it is to be tested.
+The game is developed with `Unity 2021.3 LTS` and `Wwise 2021.1 LTS`. The game should be cross-platform, but it has only been tested on Windows.
 
-Any improvements you may have are gladly accepted in the form of a pull request. I probably won't bother reviewing pull requests with thousands of lines of code, so keep them small please. If enough people want to become part of the project, I might create a whole team around the development of this game.
+Any improvements you may have are gladly accepted in the form of a pull request. I probably won't bother reviewing pull requests with thousands of lines of code, so please keep them small. If enough people want to become part of the project, I might create a whole team around the development of this game.
 
 ## How to open
 To open this project in the editor, you need to download and install the [Wwise Launcher](https://www.audiokinetic.com/download/). Adding the program to the Wwise Launcher is as simple as downloading this project and adding it to Unity Hub, but be careful not to open it. Once you have added the project to Unity Hub, it should be visible under the Unity tab.

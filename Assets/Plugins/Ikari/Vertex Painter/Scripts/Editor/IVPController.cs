@@ -87,8 +87,8 @@ namespace Ikari.VertexPainter
 
         void SubscribeEvents()
         {
-            if (SceneView.onSceneGUIDelegate != this.OnSceneGUI) SceneView.onSceneGUIDelegate += this.OnSceneGUI;
-            if (EditorApplication.playmodeStateChanged != HandleOnPlayModeChanged) { EditorApplication.playmodeStateChanged += HandleOnPlayModeChanged; }
+            //if (SceneView.onSceneGUIDelegate != this.OnSceneGUI) SceneView.onSceneGUIDelegate += this.OnSceneGUI;
+            //if (EditorApplication.playmodeStateChanged != HandleOnPlayModeChanged) { EditorApplication.playmodeStateChanged += HandleOnPlayModeChanged; }
             Undo.undoRedoPerformed += OnUndoRedo;
         }
 
@@ -1006,8 +1006,8 @@ namespace Ikari.VertexPainter
 
         void UnsubscribeEvents()
         {
-            if (SceneView.onSceneGUIDelegate == this.OnSceneGUI) SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
-            if (EditorApplication.playmodeStateChanged == HandleOnPlayModeChanged) { EditorApplication.playmodeStateChanged -= HandleOnPlayModeChanged; }
+            //if (SceneView.onSceneGUIDelegate == this.OnSceneGUI) SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
+            //if (EditorApplication.playmodeStateChanged == HandleOnPlayModeChanged) { EditorApplication.playmodeStateChanged -= HandleOnPlayModeChanged; }
             if (Undo.undoRedoPerformed == OnUndoRedo) { Undo.undoRedoPerformed -= OnUndoRedo; }
         }
 

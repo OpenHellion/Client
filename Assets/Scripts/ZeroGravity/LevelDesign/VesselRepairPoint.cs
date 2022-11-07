@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Math;
@@ -68,24 +66,6 @@ namespace ZeroGravity.LevelDesign
 		private bool _SecondaryDamageActive;
 
 		private bool prevSecondaryDamageActive;
-
-		[CompilerGenerated]
-		private static Func<RepairPointParticleEffect, bool> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<RepairPointMeshEffect, bool> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Func<RepairPointParticleEffect, bool> _003C_003Ef__am_0024cache2;
-
-		[CompilerGenerated]
-		private static Func<RepairPointMeshEffect, bool> _003C_003Ef__am_0024cache3;
-
-		[CompilerGenerated]
-		private static Func<RepairPointParticleEffect, bool> _003C_003Ef__am_0024cache4;
-
-		[CompilerGenerated]
-		private static Func<RepairPointMeshEffect, bool> _003C_003Ef__am_0024cache5;
 
 		public bool SecondaryDamageActive
 		{
@@ -154,13 +134,7 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public float Damage
-		{
-			get
-			{
-				return 1f - MathHelper.Clamp(Health / (MaxHealth * 0.98f), 0f, 1f);
-			}
-		}
+		public float Damage => 1f - MathHelper.Clamp(Health / (MaxHealth * 0.98f), 0f, 1f);
 
 		private void OnEnable()
 		{
@@ -169,35 +143,22 @@ namespace ZeroGravity.LevelDesign
 
 		private void Awake()
 		{
-			IEnumerator enumerator = base.transform.GetEnumerator();
-			try
+			foreach (Transform item in base.transform)
 			{
-				while (enumerator.MoveNext())
+				RepairPointParticleEffect component = item.gameObject.GetComponent<RepairPointParticleEffect>();
+				if (component != null && item.gameObject.activeInHierarchy && !DamageEffects.Contains(component) && !SecondaryDamageEffects.Contains(component))
 				{
-					Transform transform = (Transform)enumerator.Current;
-					RepairPointParticleEffect component = transform.gameObject.GetComponent<RepairPointParticleEffect>();
-					if (component != null && transform.gameObject.activeInHierarchy && !DamageEffects.Contains(component) && !SecondaryDamageEffects.Contains(component))
-					{
-						DamageEffects.Add(transform.gameObject.GetComponent<RepairPointParticleEffect>());
-					}
-					RepairPointMeshEffect component2 = transform.gameObject.GetComponent<RepairPointMeshEffect>();
-					if (component2 != null && transform.gameObject.activeInHierarchy && !DamageMeshes.Contains(component2))
-					{
-						DamageMeshes.Add(transform.gameObject.GetComponent<RepairPointMeshEffect>());
-					}
-					RepairPointLight component3 = transform.gameObject.GetComponent<RepairPointLight>();
-					if (component3 != null && transform.gameObject.activeInHierarchy && !LightEffects.Contains(component3))
-					{
-						LightEffects.Add(transform.gameObject.GetComponent<RepairPointLight>());
-					}
+					DamageEffects.Add(item.gameObject.GetComponent<RepairPointParticleEffect>());
 				}
-			}
-			finally
-			{
-				IDisposable disposable;
-				if ((disposable = enumerator as IDisposable) != null)
+				RepairPointMeshEffect component2 = item.gameObject.GetComponent<RepairPointMeshEffect>();
+				if (component2 != null && item.gameObject.activeInHierarchy && !DamageMeshes.Contains(component2))
 				{
-					disposable.Dispose();
+					DamageMeshes.Add(item.gameObject.GetComponent<RepairPointMeshEffect>());
+				}
+				RepairPointLight component3 = item.gameObject.GetComponent<RepairPointLight>();
+				if (component3 != null && item.gameObject.activeInHierarchy && !LightEffects.Contains(component3))
+				{
+					LightEffects.Add(item.gameObject.GetComponent<RepairPointLight>());
 				}
 			}
 			if (Client.IsGameBuild)
@@ -238,22 +199,17 @@ namespace ZeroGravity.LevelDesign
 			{
 				SecondaryDamageObject.Activate(SecondaryDamageActive);
 			}
-			List<RepairPointParticleEffect> secondaryDamageEffects = SecondaryDamageEffects;
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CUpdateEffects_003Em__0;
-			}
-			foreach (RepairPointParticleEffect item in secondaryDamageEffects.Where(_003C_003Ef__am_0024cache0))
+			foreach (RepairPointParticleEffect item in SecondaryDamageEffects.Where((RepairPointParticleEffect m) => m.Effect != null))
 			{
 				if (SecondaryDamageActive)
 				{
 					if (Room == null || !Room.UseGravity || Room.GravityForce == Vector3.zero)
 					{
-						item.SetGravity(false);
+						item.SetGravity(gravity: false);
 					}
 					else
 					{
-						item.SetGravity(true);
+						item.SetGravity(gravity: true);
 					}
 					item.SetIntensity(Damage);
 				}
@@ -262,12 +218,7 @@ namespace ZeroGravity.LevelDesign
 					item.Stop();
 				}
 			}
-			List<RepairPointMeshEffect> damageMeshes = DamageMeshes;
-			if (_003C_003Ef__am_0024cache1 == null)
-			{
-				_003C_003Ef__am_0024cache1 = _003CUpdateEffects_003Em__1;
-			}
-			foreach (RepairPointMeshEffect item2 in damageMeshes.Where(_003C_003Ef__am_0024cache1))
+			foreach (RepairPointMeshEffect item2 in DamageMeshes.Where((RepairPointMeshEffect m) => m.Mesh != null))
 			{
 				if (SecondaryDamageActive)
 				{
@@ -284,21 +235,11 @@ namespace ZeroGravity.LevelDesign
 			}
 			if (Damage <= float.Epsilon)
 			{
-				List<RepairPointParticleEffect> damageEffects = DamageEffects;
-				if (_003C_003Ef__am_0024cache2 == null)
-				{
-					_003C_003Ef__am_0024cache2 = _003CUpdateEffects_003Em__2;
-				}
-				foreach (RepairPointParticleEffect item3 in damageEffects.Where(_003C_003Ef__am_0024cache2))
+				foreach (RepairPointParticleEffect item3 in DamageEffects.Where((RepairPointParticleEffect m) => m.Effect != null))
 				{
 					item3.Stop();
 				}
-				List<RepairPointMeshEffect> damageMeshes2 = DamageMeshes;
-				if (_003C_003Ef__am_0024cache3 == null)
-				{
-					_003C_003Ef__am_0024cache3 = _003CUpdateEffects_003Em__3;
-				}
-				foreach (RepairPointMeshEffect item4 in damageMeshes2.Where(_003C_003Ef__am_0024cache3))
+				foreach (RepairPointMeshEffect item4 in DamageMeshes.Where((RepairPointMeshEffect m) => m.Mesh != null))
 				{
 					item4.Mesh.material.SetFloat("_Health", 1f);
 				}
@@ -310,20 +251,15 @@ namespace ZeroGravity.LevelDesign
 					return;
 				}
 			}
-			List<RepairPointParticleEffect> damageEffects2 = DamageEffects;
-			if (_003C_003Ef__am_0024cache4 == null)
-			{
-				_003C_003Ef__am_0024cache4 = _003CUpdateEffects_003Em__4;
-			}
-			foreach (RepairPointParticleEffect item5 in damageEffects2.Where(_003C_003Ef__am_0024cache4))
+			foreach (RepairPointParticleEffect item5 in DamageEffects.Where((RepairPointParticleEffect m) => m.Effect != null))
 			{
 				if (Room == null || !Room.UseGravity || Room.GravityForce == Vector3.zero)
 				{
-					item5.SetGravity(false);
+					item5.SetGravity(gravity: false);
 				}
 				else
 				{
-					item5.SetGravity(true);
+					item5.SetGravity(gravity: true);
 				}
 				if (item5.PlayOnce)
 				{
@@ -338,12 +274,7 @@ namespace ZeroGravity.LevelDesign
 					item5.SetIntensity(Damage);
 				}
 			}
-			List<RepairPointMeshEffect> damageMeshes3 = DamageMeshes;
-			if (_003C_003Ef__am_0024cache5 == null)
-			{
-				_003C_003Ef__am_0024cache5 = _003CUpdateEffects_003Em__5;
-			}
-			foreach (RepairPointMeshEffect item6 in damageMeshes3.Where(_003C_003Ef__am_0024cache5))
+			foreach (RepairPointMeshEffect item6 in DamageMeshes.Where((RepairPointMeshEffect m) => m.Mesh != null))
 			{
 				item6.Mesh.material.SetFloat("_Health", item6.Curve.Evaluate(1f - Damage));
 				if (!SecondaryDamageMesh.Contains(item6))
@@ -444,42 +375,6 @@ namespace ZeroGravity.LevelDesign
 				string msg = ((!(ParentVessel.DockedToVessel == null) || ParentVessel.DockedVessels.Count != 0) ? string.Format(Localization.RepairPointMessageVesselRoom, text.ToUpper(), ParentVessel.VesselData.VesselRegistration, (!External) ? Room.RoomName.ToUpper() : Localization.Hull.ToUpper()) : string.Format(Localization.RepairPointMessageRoom, text.ToUpper(), (!External) ? Room.RoomName.ToUpper() : Localization.Hull.ToUpper()));
 				Client.Instance.CanvasManager.CanvasUI.Notification(msg, CanvasUI.NotificationType.Alert);
 			}
-		}
-
-		[CompilerGenerated]
-		private static bool _003CUpdateEffects_003Em__0(RepairPointParticleEffect m)
-		{
-			return m.Effect != null;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CUpdateEffects_003Em__1(RepairPointMeshEffect m)
-		{
-			return m.Mesh != null;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CUpdateEffects_003Em__2(RepairPointParticleEffect m)
-		{
-			return m.Effect != null;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CUpdateEffects_003Em__3(RepairPointMeshEffect m)
-		{
-			return m.Mesh != null;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CUpdateEffects_003Em__4(RepairPointParticleEffect m)
-		{
-			return m.Effect != null;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CUpdateEffects_003Em__5(RepairPointMeshEffect m)
-		{
-			return m.Mesh != null;
 		}
 	}
 }

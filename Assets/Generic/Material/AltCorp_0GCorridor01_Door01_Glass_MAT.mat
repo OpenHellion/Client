@@ -2,19 +2,23 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: AltCorp_0GCorridor01_Door01_Glass_MAT
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _ALPHABLEND_ON _EMISSION _MAT1USERUST_ON
-  m_LightmapFlags: 1
+  m_ValidKeywords:
+  - _ALPHABLEND_ON
+  m_InvalidKeywords:
+  - _MAT1USERUST_ON
+  m_LightmapFlags: 6
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3000
   stringTagMap:
-  - RenderType: Transparent
+    RenderType: Transparent
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -55,6 +59,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _BumpScale: 1
     - _Color2Amount: 0
@@ -193,3 +198,4 @@ Material:
     - _RustColor1: {r: 0.35294116, g: 0.19386701, b: 0.090830445, a: 1}
     - _RustColor2: {r: 0.18382353, g: 0.0405493, b: 0.0405493, a: 1}
     - _node_4748: {r: 1, g: 1, b: 0.04411763, a: 1}
+  m_BuildTextureStacks: []

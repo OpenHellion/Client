@@ -581,33 +581,36 @@ namespace ZeroGravity
 		private void InstantiateFreshStartOptions()
 		{
 			FreshStartSpawnOptions.DestroyAll<StartingPointOptionUI>();
-			StartingPointOptionUI startingPointOptionUI = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
-			startingPointOptionUI.Type = StartingPointOption.FreshStart;
-			startingPointOptionUI.GetComponent<Button>().onClick.AddListener(delegate
+			StartingPointOptionUI freshStartUI = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
+			freshStartUI.Type = StartingPointOption.FreshStart;
+			freshStartUI.GetComponent<Button>().onClick.AddListener(delegate
 			{
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start1));
 			});
+
 			SteamStats.GetAchievement(SteamAchievementID.quest_sound_of_silence, out var achieved);
-			StartingPointOptionUI startingPointOptionUI2 = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
-			startingPointOptionUI2.Type = StartingPointOption.StrandedMiner;
-			startingPointOptionUI2.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
-			startingPointOptionUI2.GetComponent<Button>().onClick.AddListener(delegate
+			StartingPointOptionUI strandedMinerUI = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
+			strandedMinerUI.Type = StartingPointOption.StrandedMiner;
+			strandedMinerUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
+			strandedMinerUI.GetComponent<Button>().onClick.AddListener(delegate
 			{
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start2));
 			});
+
 			SteamStats.GetAchievement(SteamAchievementID.quest_shattered_dreams, out achieved);
-			StartingPointOptionUI startingPointOptionUI3 = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
-			startingPointOptionUI3.Type = StartingPointOption.Eva;
-			startingPointOptionUI3.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
-			startingPointOptionUI3.GetComponent<Button>().onClick.AddListener(delegate
+			StartingPointOptionUI evaUI = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
+			evaUI.Type = StartingPointOption.Eva;
+			evaUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
+			evaUI.GetComponent<Button>().onClick.AddListener(delegate
 			{
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start3));
 			});
+
 			SteamStats.GetAchievement(SteamAchievementID.quest_heart_of_stone, out achieved);
-			StartingPointOptionUI startingPointOptionUI4 = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
-			startingPointOptionUI4.Type = StartingPointOption.Soe;
-			startingPointOptionUI4.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
-			startingPointOptionUI4.GetComponent<Button>().onClick.AddListener(delegate
+			StartingPointOptionUI soeUI = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
+			soeUI.Type = StartingPointOption.Soe;
+			soeUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
+			soeUI.GetComponent<Button>().onClick.AddListener(delegate
 			{
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start4));
 			});

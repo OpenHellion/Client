@@ -122,19 +122,19 @@ namespace ZeroGravity.UI
 
 		public void CreateMessage(string user, string body, bool local)
 		{
-			GameObject gameObject = Object.Instantiate(ChatItemPref, base.transform.position, base.transform.rotation);
-			gameObject.transform.SetParent(ContentTrans);
-			gameObject.SetActive(true);
-			gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+			GameObject chatItem = Object.Instantiate(ChatItemPref, base.transform.position, base.transform.rotation);
+			chatItem.transform.SetParent(ContentTrans);
+			chatItem.SetActive(true);
+			chatItem.transform.localScale = new Vector3(1f, 1f, 1f);
 			float num = 0f;
 			float num2 = body.Length;
 			num = ((num2 <= 75f) ? 30f : ((!(num2 > 75f) || !(num2 <= 150f)) ? 90f : 60f));
-			gameObject.GetComponent<LayoutElement>().minHeight = num;
-			gameObject.transform.Find("UsernameText").GetComponent<Text>().text = user;
-			Text component = gameObject.transform.Find("BodyText").GetComponent<Text>();
+			chatItem.GetComponent<LayoutElement>().minHeight = num;
+			chatItem.transform.Find("UsernameText").GetComponent<Text>().text = user;
+			Text component = chatItem.transform.Find("BodyText").GetComponent<Text>();
 			component.color = ((!local) ? GlobalColor : LocalColor);
 			component.text = body;
-			ChatMessage component2 = gameObject.GetComponent<ChatMessage>();
+			ChatMessage component2 = chatItem.GetComponent<ChatMessage>();
 			Messages.Add(component2);
 			if (Messages.Count > KeepMessegesCount)
 			{
@@ -183,7 +183,7 @@ namespace ZeroGravity.UI
 			ChatInput.textComponent.color = ((!local) ? GlobalColor : LocalColor);
 			if (show)
 			{
-				FocuseInput();
+				FocusInput();
 				return;
 			}
 			if (ChatInput.text == "/l" || ChatInput.text == "/L")
@@ -230,7 +230,7 @@ namespace ZeroGravity.UI
 			}
 		}
 
-		private void FocuseInput()
+		private void FocusInput()
 		{
 			ChatInput.Select();
 			ChatInput.ActivateInputField();

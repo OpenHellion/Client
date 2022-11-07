@@ -4264,6 +4264,11 @@
 									<PropertyList>
 										<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
 										<Property Name="RandomOrSequence" Type="int16" Value="0"/>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-12</Value>
+											</ValueList>
+										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -10176,9 +10181,7 @@
 							<ChildrenList>
 								<Sound Name="DistressCall_Received_Alarm" ID="{949C2020-CE6A-486B-8CA0-54D7007BDA41}" ShortID="295590330">
 									<PropertyList>
-										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
 										<Property Name="IsLoopingInfinite" Type="bool" Value="False"/>
-										<Property Name="LoopCount" Type="int32" Value="4"/>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
 												<Value>-14</Value>

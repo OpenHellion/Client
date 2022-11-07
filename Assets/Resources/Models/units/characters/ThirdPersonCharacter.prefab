@@ -8354,7 +8354,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4895775221025250}
-  - component: {fileID: 114946701275477183}
   - component: {fileID: 114809453128015135}
   m_Layer: 11
   m_Name: Sounds
@@ -8383,31 +8382,6 @@ Transform:
   m_Father: {fileID: 4953693310769371}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114946701275477183
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1801690979119179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1a1e30def9bd9b4a9bac72da692b785, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triggerList: f7e1664c
-  useOtherObject: 0
-  data:
-    idInternal: 0
-    valueGuidInternal: 
-    WwiseObjectReference: {fileID: 11400000, guid: 450807c9785b1b3488458b78a26a4a40,
-      type: 2}
-  decodeBank: 0
-  loadAsynchronous: 0
-  saveDecodedBank: 0
-  unloadTriggerList: 958ca0ea
-  bankNameInternal: Character
-  valueGuidInternal: 3a86065d7f8b2d418f72e2200acce4b4
 --- !u!114 &114809453128015135
 MonoBehaviour:
   m_ObjectHideFlags: 0
