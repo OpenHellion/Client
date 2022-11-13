@@ -18,7 +18,7 @@
         "Temp/":true,
 		"Assets/Test":true,
 		"Assets/Wwise":true,
-		"Assets/Scenes":true,
+		"Assets/Scene":true,
 		"Assets/Shaders":true,
 		"Assets/StreamingAssets":true,
 		"Assets/TextMesh Pro":true,

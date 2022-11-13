@@ -75,7 +75,7 @@ namespace ZeroGravity
 		}
 
 		/// <summary>
-		/// 	Starts loading of objects that will be used to create the world.
+		/// 	Starts loading, and initializes objects for pooling.
 		/// </summary>
 		public void InitializeScenes()
 		{
@@ -85,7 +85,10 @@ namespace ZeroGravity
 				IsPreloading = false;
 				return;
 			}
+
 			GameObject gameObject = GameObject.Find("VesselsGeometryCache");
+
+			// Create new VesselsGeometryCarche if it doesn't exist.
 			if (gameObject == null)
 			{
 				gameObject = new GameObject("VesselsGeometryCache");
@@ -95,10 +98,14 @@ namespace ZeroGravity
 				Client.Instance.PreloadingScreen.SetActive(value: true);
 				PreloadStartTime = DateTime.UtcNow;
 				IsPreloading = true;
+
+				// Do the loading.
 				StartCoroutine(PreLoadScenesCoroutine());
 				return;
 			}
 			vesselsGeometryCacheTransform = gameObject.transform;
+
+			// Initialize structures.
 			StructureScene[] componentsInChildren = vesselsGeometryCacheTransform.gameObject.GetComponentsInChildren<StructureScene>(includeInactive: true);
 			foreach (StructureScene structureScene in componentsInChildren)
 			{
@@ -109,6 +116,8 @@ namespace ZeroGravity
 					RootObject = structureScene.gameObject
 				});
 			}
+
+			// Initialize asteroids.
 			AsteroidScene[] componentsInChildren2 = vesselsGeometryCacheTransform.gameObject.GetComponentsInChildren<AsteroidScene>(includeInactive: true);
 			foreach (AsteroidScene asteroidScene in componentsInChildren2)
 			{
@@ -122,7 +131,7 @@ namespace ZeroGravity
 		}
 
 		/// <summary>
-		/// 	Handles the loading of objects to use later.
+		/// 	Handles the loading of objects to pool.
 		/// </summary>
 		private IEnumerator PreLoadScenesCoroutine()
 		{

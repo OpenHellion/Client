@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -16,49 +15,16 @@ namespace ZeroGravity.Objects
 		public enum VesselObjectType
 		{
 			SubSystem = 1,
-			Generator = 2,
-			RoomTrigger = 3,
-			ResourceContainer = 4,
-			Door = 5,
-			SceneTriggerExecuter = 6,
-			AttachPoint = 7,
-			DockingPort = 8,
-			SpawnPoint = 9,
-			NameTag = 10,
-			RepairPoint = 11
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CUpdateDynamicObjects_003Ec__AnonStorey0
-		{
-			internal DynamicObject obj;
-
-			internal bool _003C_003Em__0(DynamicObjectDetails m)
-			{
-				return m.GUID == obj.GUID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CUpdateCharacters_003Ec__AnonStorey1
-		{
-			internal OtherPlayer opl;
-
-			internal bool _003C_003Em__0(CharacterDetails m)
-			{
-				return m.GUID == opl.GUID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CUpdateCorpses_003Ec__AnonStorey2
-		{
-			internal Corpse obj;
-
-			internal bool _003C_003Em__0(CorpseDetails m)
-			{
-				return m.GUID == obj.GUID;
-			}
+			Generator,
+			RoomTrigger,
+			ResourceContainer,
+			Door,
+			SceneTriggerExecuter,
+			AttachPoint,
+			DockingPort,
+			SpawnPoint,
+			NameTag,
+			RepairPoint
 		}
 
 		public GameObject RootObject;
@@ -149,52 +115,13 @@ namespace ZeroGravity.Objects
 
 		private float rotDifferenceCheck = 1E-08f;
 
-		[CompilerGenerated]
-		private static Func<DockedVesselData, bool> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<SpaceObjectVessel, bool> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Func<DockedVesselData, bool> _003C_003Ef__am_0024cache2;
-
-		[CompilerGenerated]
-		private static Func<SpaceObjectVessel, bool> _003C_003Ef__am_0024cache3;
-
-		[CompilerGenerated]
-		private static Func<DockedVesselData, bool> _003C_003Ef__am_0024cache4;
-
-		[CompilerGenerated]
-		private static Func<SpaceObjectVessel, bool> _003C_003Ef__am_0024cache5;
-
-		[CompilerGenerated]
-		private static Func<SpaceObjectVessel, float> _003C_003Ef__am_0024cache6;
-
-		public GameScenes.SceneID SceneID
-		{
-			get
-			{
-				return (VesselData == null) ? GameScenes.SceneID.None : VesselData.SceneID;
-			}
-		}
+		public GameScenes.SceneID SceneID => (VesselData == null) ? GameScenes.SceneID.None : VesselData.SceneID;
 
 		public float MaxHealth { get; protected set; }
 
-		public bool EngineOnLine
-		{
-			get
-			{
-				return Engine != null && Engine.Status == SystemStatus.OnLine;
-			}
-		}
+		public bool EngineOnLine => Engine != null && Engine.Status == SystemStatus.OnLine;
 
-		public bool HasPower
-		{
-			get
-			{
-				return VesselBaseSystem == null || VesselBaseSystem.Status == SystemStatus.OnLine;
-			}
-		}
+		public bool HasPower => VesselBaseSystem == null || VesselBaseSystem.Status == SystemStatus.OnLine;
 
 		public bool OptimizationEnabled { get; private set; }
 
@@ -202,45 +129,15 @@ namespace ZeroGravity.Objects
 
 		public SubSystemRadar RadarSystem { get; protected set; }
 
-		public bool IsDocked
-		{
-			get
-			{
-				return DockedToMainVessel != null;
-			}
-		}
+		public bool IsDocked => DockedToMainVessel != null;
 
-		public bool IsMainVessel
-		{
-			get
-			{
-				return MainVessel == this;
-			}
-		}
+		public bool IsMainVessel => MainVessel == this;
 
-		public SpaceObjectVessel MainVessel
-		{
-			get
-			{
-				return (!(DockedToMainVessel != null)) ? this : DockedToMainVessel;
-			}
-		}
+		public SpaceObjectVessel MainVessel => (!(DockedToMainVessel != null)) ? this : DockedToMainVessel;
 
-		public override CelestialBody ParentCelesitalBody
-		{
-			get
-			{
-				return base.ParentCelesitalBody;
-			}
-		}
+		public override CelestialBody ParentCelesitalBody => base.ParentCelesitalBody;
 
-		public virtual string Name
-		{
-			get
-			{
-				return (VesselData == null) ? base.name : (VesselData.VesselRegistration + " " + VesselData.VesselName);
-			}
-		}
+		public virtual string Name => (VesselData == null) ? base.name : (VesselData.VesselRegistration + " " + VesselData.VesselName);
 
 		public virtual string CustomName
 		{
@@ -281,12 +178,7 @@ namespace ZeroGravity.Objects
 			{
 				if (MainVessel.IsDummyObject)
 				{
-					List<DockedVesselData> dummyDockedVessels = MainVessel.DummyDockedVessels;
-					if (_003C_003Ef__am_0024cache0 == null)
-					{
-						_003C_003Ef__am_0024cache0 = _003Cget_CommandVesselData_003Em__0;
-					}
-					DockedVesselData dockedVesselData = dummyDockedVessels.FirstOrDefault(_003C_003Ef__am_0024cache0);
+					DockedVesselData dockedVesselData = MainVessel.DummyDockedVessels.FirstOrDefault((DockedVesselData m) => m.Data.SceneID == GameScenes.SceneID.AltCorp_Command_Module);
 					if (dockedVesselData != null)
 					{
 						return dockedVesselData.Data;
@@ -294,12 +186,7 @@ namespace ZeroGravity.Objects
 				}
 				else
 				{
-					List<SpaceObjectVessel> allDockedVessels = MainVessel.AllDockedVessels;
-					if (_003C_003Ef__am_0024cache1 == null)
-					{
-						_003C_003Ef__am_0024cache1 = _003Cget_CommandVesselData_003Em__1;
-					}
-					SpaceObjectVessel spaceObjectVessel = allDockedVessels.FirstOrDefault(_003C_003Ef__am_0024cache1);
+					SpaceObjectVessel spaceObjectVessel = MainVessel.AllDockedVessels.FirstOrDefault((SpaceObjectVessel m) => m.SceneID == GameScenes.SceneID.AltCorp_Command_Module);
 					if (spaceObjectVessel != null)
 					{
 						return spaceObjectVessel.VesselData;
@@ -344,21 +231,9 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public override bool IsDistressSignalActive
-		{
-			get
-			{
-				return (VesselData != null && VesselData.IsDistressSignalActive) ? true : false;
-			}
-		}
+		public override bool IsDistressSignalActive => (VesselData != null && VesselData.IsDistressSignalActive) ? true : false;
 
-		public override bool IsAlwaysVisible
-		{
-			get
-			{
-				return (VesselData != null && VesselData.IsAlwaysVisible) ? true : false;
-			}
-		}
+		public override bool IsAlwaysVisible => (VesselData != null && VesselData.IsAlwaysVisible) ? true : false;
 
 		public bool IsDebrisFragment
 		{
@@ -387,7 +262,7 @@ namespace ZeroGravity.Objects
 				}
 				foreach (SpaceObjectVessel allDockedVessel in AllDockedVessels)
 				{
-					if ((((object)allDockedVessel != null) ? allDockedVessel.gameObject : null) != null)
+					if (allDockedVessel?.gameObject != null)
 					{
 						allDockedVessel.Forward = Quaternion.LookRotation(Forward, Up) * Quaternion.LookRotation(allDockedVessel.transform.forward, allDockedVessel.transform.up) * Vector3.forward;
 					}
@@ -410,7 +285,7 @@ namespace ZeroGravity.Objects
 				}
 				foreach (SpaceObjectVessel allDockedVessel in AllDockedVessels)
 				{
-					if ((((object)allDockedVessel != null) ? allDockedVessel.gameObject : null) != null)
+					if (allDockedVessel?.gameObject != null)
 					{
 						allDockedVessel.Up = Quaternion.LookRotation(Forward, Up) * Quaternion.LookRotation(allDockedVessel.transform.forward, allDockedVessel.transform.up) * Vector3.up;
 					}
@@ -424,37 +299,9 @@ namespace ZeroGravity.Objects
 			{
 				if (base.IsDummyObject)
 				{
-					int result;
-					if (DummyDockedVessels.Count > 0)
-					{
-						List<DockedVesselData> dummyDockedVessels = DummyDockedVessels;
-						if (_003C_003Ef__am_0024cache2 == null)
-						{
-							_003C_003Ef__am_0024cache2 = _003Cget_IsStation_003Em__2;
-						}
-						result = ((dummyDockedVessels.FirstOrDefault(_003C_003Ef__am_0024cache2) != null) ? 1 : 0);
-					}
-					else
-					{
-						result = 0;
-					}
-					return (byte)result != 0;
+					return DummyDockedVessels.Count > 0 && DummyDockedVessels.FirstOrDefault((DockedVesselData m) => m.Data.SceneID == GameScenes.SceneID.AltCorp_Command_Module) != null;
 				}
-				int result2;
-				if (AllDockedVessels.Count > 0)
-				{
-					List<SpaceObjectVessel> allDockedVessels = AllDockedVessels;
-					if (_003C_003Ef__am_0024cache3 == null)
-					{
-						_003C_003Ef__am_0024cache3 = _003Cget_IsStation_003Em__3;
-					}
-					result2 = ((allDockedVessels.FirstOrDefault(_003C_003Ef__am_0024cache3) != null) ? 1 : 0);
-				}
-				else
-				{
-					result2 = 0;
-				}
-				return (byte)result2 != 0;
+				return AllDockedVessels.Count > 0 && AllDockedVessels.FirstOrDefault((SpaceObjectVessel m) => m.SceneID == GameScenes.SceneID.AltCorp_Command_Module) != null;
 			}
 		}
 
@@ -464,55 +311,15 @@ namespace ZeroGravity.Objects
 			{
 				if (base.IsDummyObject)
 				{
-					int result;
-					if (DummyDockedVessels.Count > 0)
-					{
-						List<DockedVesselData> dummyDockedVessels = DummyDockedVessels;
-						if (_003C_003Ef__am_0024cache4 == null)
-						{
-							_003C_003Ef__am_0024cache4 = _003Cget_IsOutpost_003Em__4;
-						}
-						result = ((dummyDockedVessels.FirstOrDefault(_003C_003Ef__am_0024cache4) == null) ? 1 : 0);
-					}
-					else
-					{
-						result = 0;
-					}
-					return (byte)result != 0;
+					return DummyDockedVessels.Count > 0 && DummyDockedVessels.FirstOrDefault((DockedVesselData m) => m.Data.SceneID == GameScenes.SceneID.AltCorp_Command_Module) == null;
 				}
-				int result2;
-				if (AllDockedVessels.Count > 0)
-				{
-					List<SpaceObjectVessel> allDockedVessels = AllDockedVessels;
-					if (_003C_003Ef__am_0024cache5 == null)
-					{
-						_003C_003Ef__am_0024cache5 = _003Cget_IsOutpost_003Em__5;
-					}
-					result2 = ((allDockedVessels.FirstOrDefault(_003C_003Ef__am_0024cache5) == null) ? 1 : 0);
-				}
-				else
-				{
-					result2 = 0;
-				}
-				return (byte)result2 != 0;
+				return AllDockedVessels.Count > 0 && AllDockedVessels.FirstOrDefault((SpaceObjectVessel m) => m.SceneID == GameScenes.SceneID.AltCorp_Command_Module) == null;
 			}
 		}
 
-		public bool IsOutpostOrStation
-		{
-			get
-			{
-				return (base.IsDummyObject && DummyDockedVessels.Count > 0) || (!base.IsDummyObject && AllDockedVessels.Count > 0);
-			}
-		}
+		public bool IsOutpostOrStation => (base.IsDummyObject && DummyDockedVessels.Count > 0) || (!base.IsDummyObject && AllDockedVessels.Count > 0);
 
-		public float ExposureDamage
-		{
-			get
-			{
-				return Client.Instance.GetVesselExposureDamage(MainVessel.Orbit.Position.Magnitude);
-			}
-		}
+		public float ExposureDamage => Client.Instance.GetVesselExposureDamage(MainVessel.Orbit.Position.Magnitude);
 
 		public override double RadarSignature
 		{
@@ -543,21 +350,9 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		protected override bool ShouldSetLocalTransform
-		{
-			get
-			{
-				return !IsDocked && (MyPlayer.Instance == null || !(MyPlayer.Instance.Parent is SpaceObjectVessel) || (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel != this);
-			}
-		}
+		protected override bool ShouldSetLocalTransform => !IsDocked && (MyPlayer.Instance == null || !(MyPlayer.Instance.Parent is SpaceObjectVessel) || (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel != this);
 
-		protected override bool ShouldUpdateTransform
-		{
-			get
-			{
-				return !IsDocked;
-			}
-		}
+		protected override bool ShouldUpdateTransform => !IsDocked;
 
 		public bool SoundObjectsEnabled { get; private set; }
 
@@ -771,23 +566,20 @@ namespace ZeroGravity.Objects
 				return;
 			}
 			List<GameObject> list = new List<GameObject>();
-			using (IEnumerator<DynamicObject> enumerator = TransferableObjectsRoot.GetComponentsInChildren<DynamicObject>().Where(_003CUpdateDynamicObjects_003Em__6).GetEnumerator())
+			foreach (DynamicObject obj in from m in TransferableObjectsRoot.GetComponentsInChildren<DynamicObject>()
+				where m.Parent == this
+				select m)
 			{
-				while (enumerator.MoveNext())
+				if (obj != null)
 				{
-					_003CUpdateDynamicObjects_003Ec__AnonStorey0 _003CUpdateDynamicObjects_003Ec__AnonStorey = new _003CUpdateDynamicObjects_003Ec__AnonStorey0();
-					_003CUpdateDynamicObjects_003Ec__AnonStorey.obj = enumerator.Current;
-					if (_003CUpdateDynamicObjects_003Ec__AnonStorey.obj != null)
+					DynamicObjectDetails dynamicObjectDetails2 = dynamicObjectDetails.Find((DynamicObjectDetails m) => m.GUID == obj.GUID);
+					if (dynamicObjectDetails2 != null)
 					{
-						DynamicObjectDetails dynamicObjectDetails2 = dynamicObjectDetails.Find(_003CUpdateDynamicObjects_003Ec__AnonStorey._003C_003Em__0);
-						if (dynamicObjectDetails2 != null)
-						{
-							dynamicObjectDetails.Remove(dynamicObjectDetails2);
-						}
-						else
-						{
-							list.Add(_003CUpdateDynamicObjects_003Ec__AnonStorey.obj.gameObject);
-						}
+						dynamicObjectDetails.Remove(dynamicObjectDetails2);
+					}
+					else
+					{
+						list.Add(obj.gameObject);
 					}
 				}
 			}
@@ -819,20 +611,18 @@ namespace ZeroGravity.Objects
 			}
 			List<GameObject> list = new List<GameObject>();
 			OtherPlayer[] componentsInChildren = TransferableObjectsRoot.GetComponentsInChildren<OtherPlayer>();
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			foreach (OtherPlayer opl in componentsInChildren)
 			{
-				_003CUpdateCharacters_003Ec__AnonStorey1 _003CUpdateCharacters_003Ec__AnonStorey = new _003CUpdateCharacters_003Ec__AnonStorey1();
-				_003CUpdateCharacters_003Ec__AnonStorey.opl = componentsInChildren[i];
-				if (_003CUpdateCharacters_003Ec__AnonStorey.opl != null)
+				if (opl != null)
 				{
-					CharacterDetails characterDetails2 = characterDetails.Find(_003CUpdateCharacters_003Ec__AnonStorey._003C_003Em__0);
+					CharacterDetails characterDetails2 = characterDetails.Find((CharacterDetails m) => m.GUID == opl.GUID);
 					if (characterDetails2 != null)
 					{
 						characterDetails.Remove(characterDetails2);
 					}
 					else
 					{
-						list.Add(_003CUpdateCharacters_003Ec__AnonStorey.opl.gameObject);
+						list.Add(opl.gameObject);
 					}
 				}
 			}
@@ -864,20 +654,18 @@ namespace ZeroGravity.Objects
 			}
 			List<GameObject> list = new List<GameObject>();
 			Corpse[] componentsInChildren = TransferableObjectsRoot.GetComponentsInChildren<Corpse>();
-			for (int i = 0; i < componentsInChildren.Length; i++)
+			foreach (Corpse obj in componentsInChildren)
 			{
-				_003CUpdateCorpses_003Ec__AnonStorey2 _003CUpdateCorpses_003Ec__AnonStorey = new _003CUpdateCorpses_003Ec__AnonStorey2();
-				_003CUpdateCorpses_003Ec__AnonStorey.obj = componentsInChildren[i];
-				if (_003CUpdateCorpses_003Ec__AnonStorey.obj != null)
+				if (obj != null)
 				{
-					CorpseDetails corpseDetails2 = corpseDetails.Find(_003CUpdateCorpses_003Ec__AnonStorey._003C_003Em__0);
+					CorpseDetails corpseDetails2 = corpseDetails.Find((CorpseDetails m) => m.GUID == obj.GUID);
 					if (corpseDetails2 != null)
 					{
 						corpseDetails.Remove(corpseDetails2);
 					}
 					else
 					{
-						list.Add(_003CUpdateCorpses_003Ec__AnonStorey.obj.gameObject);
+						list.Add(obj.gameObject);
 					}
 				}
 			}
@@ -1007,7 +795,7 @@ namespace ZeroGravity.Objects
 				RecalculateDifferenceChecks();
 			}
 			base.UpdatePositionAndRotation(setLocalPositionAndRotation);
-			ZeroOcclusion.CheckOcclusionFor(this, true);
+			ZeroOcclusion.CheckOcclusionFor(this, onlyCheckDistance: true);
 		}
 
 		public void ActivateSelfDestruct(float time)
@@ -1144,71 +932,18 @@ namespace ZeroGravity.Objects
 
 		public double GetCompoundMass()
 		{
-			List<SpaceObjectVessel> allVessels = MainVessel.AllVessels;
-			if (_003C_003Ef__am_0024cache6 == null)
-			{
-				_003C_003Ef__am_0024cache6 = _003CGetCompoundMass_003Em__7;
-			}
-			return allVessels.Sum(_003C_003Ef__am_0024cache6);
+			return MainVessel.AllVessels.Sum((SpaceObjectVessel m) => m.Mass);
 		}
 
 		public void SetLastKnownMapOrbit()
 		{
 			LastKnownMapOrbit = new OrbitParameters();
-			LastKnownMapOrbit.CopyDataFrom(Orbit, Client.Instance.SolarSystem.CurrentTime, true);
+			LastKnownMapOrbit.CopyDataFrom(Orbit, Client.Instance.SolarSystem.CurrentTime, exactCopy: true);
 		}
 
 		public void ResetLastKnownMapOrbit()
 		{
 			LastKnownMapOrbit = null;
-		}
-
-		[CompilerGenerated]
-		private static bool _003Cget_CommandVesselData_003Em__0(DockedVesselData m)
-		{
-			return m.Data.SceneID == GameScenes.SceneID.AltCorp_Command_Module;
-		}
-
-		[CompilerGenerated]
-		private static bool _003Cget_CommandVesselData_003Em__1(SpaceObjectVessel m)
-		{
-			return m.SceneID == GameScenes.SceneID.AltCorp_Command_Module;
-		}
-
-		[CompilerGenerated]
-		private static bool _003Cget_IsStation_003Em__2(DockedVesselData m)
-		{
-			return m.Data.SceneID == GameScenes.SceneID.AltCorp_Command_Module;
-		}
-
-		[CompilerGenerated]
-		private static bool _003Cget_IsStation_003Em__3(SpaceObjectVessel m)
-		{
-			return m.SceneID == GameScenes.SceneID.AltCorp_Command_Module;
-		}
-
-		[CompilerGenerated]
-		private static bool _003Cget_IsOutpost_003Em__4(DockedVesselData m)
-		{
-			return m.Data.SceneID == GameScenes.SceneID.AltCorp_Command_Module;
-		}
-
-		[CompilerGenerated]
-		private static bool _003Cget_IsOutpost_003Em__5(SpaceObjectVessel m)
-		{
-			return m.SceneID == GameScenes.SceneID.AltCorp_Command_Module;
-		}
-
-		[CompilerGenerated]
-		private bool _003CUpdateDynamicObjects_003Em__6(DynamicObject m)
-		{
-			return m.Parent == this;
-		}
-
-		[CompilerGenerated]
-		private static float _003CGetCompoundMass_003Em__7(SpaceObjectVessel m)
-		{
-			return m.Mass;
 		}
 	}
 }

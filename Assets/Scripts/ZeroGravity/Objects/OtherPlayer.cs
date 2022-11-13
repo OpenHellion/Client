@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering;
 using ZeroGravity.CharacterMovement;
@@ -13,17 +12,6 @@ namespace ZeroGravity.Objects
 	public class OtherPlayer : Player
 	{
 		public delegate void InteractLockDelegate();
-
-		[CompilerGenerated]
-		private sealed class _003CPlayerStatsMessageListener_003Ec__AnonStorey0
-		{
-			internal PlayerStatsMessage psm;
-
-			internal bool _003C_003Em__0(BaseSceneTrigger m)
-			{
-				return m.GetID() == psm.LockedToTriggerID;
-			}
-		}
 
 		public InteractLockDelegate OnIteractStart;
 
@@ -65,64 +53,7 @@ namespace ZeroGravity.Objects
 
 		private Vector3 movementLocalVelocityCorrection;
 
-		[CompilerGenerated]
-		private static Predicate<DynamicObjectDetails> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, bool> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, float> _003C_003Ef__am_0024cache2;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, bool> _003C_003Ef__am_0024cache3;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, float> _003C_003Ef__am_0024cache4;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, bool> _003C_003Ef__am_0024cache5;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, float> _003C_003Ef__am_0024cache6;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, bool> _003C_003Ef__am_0024cache7;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, float> _003C_003Ef__am_0024cache8;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, bool> _003C_003Ef__am_0024cache9;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, float> _003C_003Ef__am_0024cacheA;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, bool> _003C_003Ef__am_0024cacheB;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, float> _003C_003Ef__am_0024cacheC;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, bool> _003C_003Ef__am_0024cacheD;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, float> _003C_003Ef__am_0024cacheE;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, bool> _003C_003Ef__am_0024cacheF;
-
-		[CompilerGenerated]
-		private static Func<PlayerDamage, float> _003C_003Ef__am_0024cache10;
-
-		public override SpaceObjectType Type
-		{
-			get
-			{
-				return SpaceObjectType.Player;
-			}
-		}
+		public override SpaceObjectType Type => SpaceObjectType.Player;
 
 		public new SpaceObject Parent
 		{
@@ -141,7 +72,7 @@ namespace ZeroGravity.Objects
 			if (Time.time - movementReceivedTime <= 1f)
 			{
 				base.transform.localPosition += (movementLocalVelocity + movementLocalVelocityCorrection) * Time.deltaTime;
-				base.transform.localRotation = Quaternion.Slerp(base.transform.localRotation, movementTargetLocalRotation, (float)System.Math.Pow(Time.time - movementReceivedTime, 0.5));
+				base.transform.localRotation = Quaternion.Slerp(base.transform.localRotation, movementTargetLocalRotation, Mathf.Pow(Time.time - movementReceivedTime, 0.5f));
 				if (base.CurrentRoomTrigger != null && base.CurrentRoomTrigger.GravityForce.IsNotEpsilonZero() && base.CurrentRoomTrigger.UseGravity)
 				{
 					base.transform.localPosition += Vector3.Project(movementTargetLocalPosition - base.transform.localPosition, base.transform.up) * 0.1f;
@@ -208,11 +139,11 @@ namespace ZeroGravity.Objects
 
 		public void EquipOutfit(Outfit o)
 		{
-			o.FoldedOutfitTrans.gameObject.SetActive(false);
+			o.FoldedOutfitTrans.gameObject.SetActive(value: false);
 			o.transform.parent = base.transform;
 			RemoveOutfit();
 			tpsController.CurrentOutfit = o;
-			SetOutfitParent(o.OutfitTrans.GetChildren(), tpsController.Outfit, true);
+			SetOutfitParent(o.OutfitTrans.GetChildren(), tpsController.Outfit, activeGeometry: true);
 			RefreshOutfitData();
 			tpsController.TransitionHelperGO.transform.parent = base.AnimHelper.GetBone(AnimatorHelper.HumanBones.Spine2);
 			tpsController.TransitionHelperGO.transform.Reset();
@@ -222,16 +153,16 @@ namespace ZeroGravity.Objects
 			{
 				Helmet helmet = inventorySlot.Item as Helmet;
 				helmet.ChangeEquip(Item.EquipType.EquipInventory, this);
-				helmet.gameObject.SetActive(true);
-				helmet.AttachToObject(inventorySlot, false);
+				helmet.gameObject.SetActive(value: true);
+				helmet.AttachToObject(inventorySlot, sendAttachMessage: false);
 			}
 			InventorySlot inventorySlot2 = tpsController.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Jetpack).Values.FirstOrDefault();
 			if (inventorySlot2 != null && inventorySlot2.Item != null)
 			{
 				Jetpack jetpack = inventorySlot2.Item as Jetpack;
 				jetpack.ChangeEquip(Item.EquipType.EquipInventory, this);
-				jetpack.gameObject.SetActive(true);
-				jetpack.AttachToObject(inventorySlot2, false);
+				jetpack.gameObject.SetActive(value: true);
+				jetpack.AttachToObject(inventorySlot2, sendAttachMessage: false);
 			}
 			if (HairObject != null)
 			{
@@ -246,14 +177,14 @@ namespace ZeroGravity.Objects
 		{
 			if (tpsController.CurrentOutfit != null)
 			{
-				tpsController.CurrentOutfit.SetOutfitParent(tpsController.Outfit.GetChildren(), tpsController.CurrentOutfit.OutfitTrans, false);
-				tpsController.CurrentOutfit.FoldedOutfitTrans.gameObject.SetActive(true);
+				tpsController.CurrentOutfit.SetOutfitParent(tpsController.Outfit.GetChildren(), tpsController.CurrentOutfit.OutfitTrans, activateGeometry: false);
+				tpsController.CurrentOutfit.FoldedOutfitTrans.gameObject.SetActive(value: true);
 				return;
 			}
 			foreach (Transform child in tpsController.Outfit.GetChildren())
 			{
 				child.parent = tpsController.BasicOutfitHolder;
-				child.gameObject.SetActive(false);
+				child.gameObject.SetActive(value: false);
 			}
 		}
 
@@ -264,7 +195,7 @@ namespace ZeroGravity.Objects
 			{
 				Helmet helmet = inventorySlot.Item as Helmet;
 				helmet.ChangeEquip(Item.EquipType.Inventory, this);
-				helmet.gameObject.SetActive(false);
+				helmet.gameObject.SetActive(value: false);
 				helmet.transform.parent = tpsController.CurrentOutfit.transform;
 			}
 			InventorySlot inventorySlot2 = tpsController.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Jetpack).Values.FirstOrDefault();
@@ -272,7 +203,7 @@ namespace ZeroGravity.Objects
 			{
 				Jetpack jetpack = inventorySlot2.Item as Jetpack;
 				jetpack.ChangeEquip(Item.EquipType.Inventory, this);
-				jetpack.gameObject.SetActive(false);
+				jetpack.gameObject.SetActive(value: false);
 				jetpack.transform.parent = tpsController.CurrentOutfit.transform;
 			}
 			RemoveOutfit();
@@ -281,7 +212,7 @@ namespace ZeroGravity.Objects
 				child.parent = tpsController.Outfit;
 				child.localPosition = Vector3.zero;
 				child.localRotation = Quaternion.Euler((!(child.name == "Root")) ? Vector3.zero : new Vector3(0f, 90f, -90f));
-				child.gameObject.SetActive(true);
+				child.gameObject.SetActive(value: true);
 			}
 			tpsController.CurrentOutfit = null;
 			RefreshOutfitData();
@@ -369,7 +300,7 @@ namespace ZeroGravity.Objects
 				{
 					UnityEngine.Object.Destroy((Inventory.ItemInHands as HandDrill).effectScript.gameObject);
 				}
-				base.gameObject.SetActive(false);
+				base.gameObject.SetActive(value: false);
 				if (killPlayerMessage.CorpseDetails != null)
 				{
 					Corpse.SpawnCorpse(killPlayerMessage.CorpseDetails, this);
@@ -426,7 +357,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 			GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/ThirdPersonCharacter"), new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject;
-			gameObject.SetActive(false);
+			gameObject.SetActive(value: false);
 			OtherPlayer otherPlayer = gameObject.AddComponent<OtherPlayer>();
 			otherPlayer.tpsController = otherPlayer.GetComponent<OtherCharacterController>();
 			byte b = 1;
@@ -508,8 +439,8 @@ namespace ZeroGravity.Objects
 				otherPlayer.transform.localPosition = characterDetails.TransformData.LocalPosition.ToVector3();
 				otherPlayer.transform.localRotation = characterDetails.TransformData.LocalRotation.ToQuaternion();
 			}
-			otherPlayer.tpsController.SetTargetPositionAndRotation(otherPlayer.transform.localPosition, otherPlayer.transform.localRotation, true);
-			gameObject.SetActive(true);
+			otherPlayer.tpsController.SetTargetPositionAndRotation(otherPlayer.transform.localPosition, otherPlayer.transform.localRotation, instant: true);
+			gameObject.SetActive(value: true);
 			otherPlayer.PlayerStatsMessageListener(new PlayerStatsMessage
 			{
 				GUID = otherPlayer.GUID,
@@ -528,12 +459,7 @@ namespace ZeroGravity.Objects
 					{
 						otherPlayer.InitInventory();
 					}
-					List<DynamicObjectDetails> dynamicObjects = characterDetails.DynamicObjects;
-					if (_003C_003Ef__am_0024cache0 == null)
-					{
-						_003C_003Ef__am_0024cache0 = _003CSpawnPlayer_003Em__0;
-					}
-					DynamicObjectDetails dynamicObjectDetails = dynamicObjects.Find(_003C_003Ef__am_0024cache0);
+					DynamicObjectDetails dynamicObjectDetails = characterDetails.DynamicObjects.Find((DynamicObjectDetails x) => x.AttachData.IsAttached && x.AttachData.InventorySlotID == -2);
 					if (dynamicObjectDetails != null)
 					{
 						DynamicObject.SpawnDynamicObject(dynamicObjectDetails, otherPlayer);
@@ -561,7 +487,7 @@ namespace ZeroGravity.Objects
 					IsFail = false,
 					CurrentStateID = sceneSpawnPoint.Executer.CurrentStateID,
 					NewStateID = sceneSpawnPoint.Executer.GetStateID(sceneSpawnPoint.ExecuterState)
-				}, false, null, false);
+				}, isInstant: false, null, checkCurrentState: false);
 			}
 			if (Client.Instance.CharacterInteractionStatesQueue.ContainsKey(otherPlayer.GUID))
 			{
@@ -639,228 +565,75 @@ namespace ZeroGravity.Objects
 
 		private void PlayerStatsMessageListener(NetworkData data)
 		{
-			_003CPlayerStatsMessageListener_003Ec__AnonStorey0 _003CPlayerStatsMessageListener_003Ec__AnonStorey = new _003CPlayerStatsMessageListener_003Ec__AnonStorey0();
-			_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm = data as PlayerStatsMessage;
-			if (base.GUID != _003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.GUID)
+			PlayerStatsMessage psm = data as PlayerStatsMessage;
+			if (base.GUID != psm.GUID)
 			{
 				return;
 			}
-			tpsController.animHelper.animationData.ReloadType = _003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.ReloadType;
-			tpsController.animHelper.animationData.IsCrouch = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 1) != 0;
-			tpsController.animHelper.animationData.IsJump = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 2) != 0;
-			tpsController.animHelper.animationData.IsZeroG = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 4) != 0;
-			tpsController.animHelper.animationData.isInStance = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 8) != 0;
-			tpsController.animHelper.animationData.IsReloading = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 0x10) != 0;
-			tpsController.animHelper.animationData.IsGrounded = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 0x20) != 0;
-			tpsController.animHelper.animationData.IsHolster = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 0x40) != 0;
-			tpsController.animHelper.animationData.IsDraw = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 0x80) != 0;
-			tpsController.animHelper.animationData.CancelInteract = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 0x100) != 0;
-			tpsController.animHelper.animationData.IsFalling = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 0x400) != 0;
-			tpsController.animHelper.animationData.isEquipping = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 0x800) != 0;
-			tpsController.animHelper.animationData.TouchingFloor = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 0x1000) != 0;
-			tpsController.animHelper.animationData.UsingTool = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 0x2000) != 0;
-			tpsController.animHelper.animationData.IsEmote = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 0x4000) != 0;
-			tpsController.animHelper.animationData.IsMelee = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 0x8000) != 0;
-			tpsController.animHelper.animationData.UsingLadder = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 0x10000) != 0;
-			tpsController.animHelper.animationData.UseConsumable = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 0x20000) != 0;
-			tpsController.animHelper.animationData.WeaponActivated = (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.AnimationStatesMask & 0x40000) != 0;
+			tpsController.animHelper.animationData.ReloadType = psm.ReloadType;
+			tpsController.animHelper.animationData.IsCrouch = (psm.AnimationStatesMask & 1) != 0;
+			tpsController.animHelper.animationData.IsJump = (psm.AnimationStatesMask & 2) != 0;
+			tpsController.animHelper.animationData.IsZeroG = (psm.AnimationStatesMask & 4) != 0;
+			tpsController.animHelper.animationData.isInStance = (psm.AnimationStatesMask & 8) != 0;
+			tpsController.animHelper.animationData.IsReloading = (psm.AnimationStatesMask & 0x10) != 0;
+			tpsController.animHelper.animationData.IsGrounded = (psm.AnimationStatesMask & 0x20) != 0;
+			tpsController.animHelper.animationData.IsHolster = (psm.AnimationStatesMask & 0x40) != 0;
+			tpsController.animHelper.animationData.IsDraw = (psm.AnimationStatesMask & 0x80) != 0;
+			tpsController.animHelper.animationData.CancelInteract = (psm.AnimationStatesMask & 0x100) != 0;
+			tpsController.animHelper.animationData.IsFalling = (psm.AnimationStatesMask & 0x400) != 0;
+			tpsController.animHelper.animationData.isEquipping = (psm.AnimationStatesMask & 0x800) != 0;
+			tpsController.animHelper.animationData.TouchingFloor = (psm.AnimationStatesMask & 0x1000) != 0;
+			tpsController.animHelper.animationData.UsingTool = (psm.AnimationStatesMask & 0x2000) != 0;
+			tpsController.animHelper.animationData.IsEmote = (psm.AnimationStatesMask & 0x4000) != 0;
+			tpsController.animHelper.animationData.IsMelee = (psm.AnimationStatesMask & 0x8000) != 0;
+			tpsController.animHelper.animationData.UsingLadder = (psm.AnimationStatesMask & 0x10000) != 0;
+			tpsController.animHelper.animationData.UseConsumable = (psm.AnimationStatesMask & 0x20000) != 0;
+			tpsController.animHelper.animationData.WeaponActivated = (psm.AnimationStatesMask & 0x40000) != 0;
 			tpsController.UpdateAnimatorOneFrame();
-			if (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.LockedToTriggerID != null && Parent is SpaceObjectVessel)
+			if (psm.LockedToTriggerID != null && Parent is SpaceObjectVessel)
 			{
-				LockedToTrigger = Parent.GeometryRoot.GetComponentsInChildren<BaseSceneTrigger>(true).FirstOrDefault(_003CPlayerStatsMessageListener_003Ec__AnonStorey._003C_003Em__0);
+				LockedToTrigger = Parent.GeometryRoot.GetComponentsInChildren<BaseSceneTrigger>(includeInactive: true).FirstOrDefault((BaseSceneTrigger m) => m.GetID() == psm.LockedToTriggerID);
 			}
 			else
 			{
 				LockedToTrigger = null;
 			}
-			float num;
-			if (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList != null)
-			{
-				List<PlayerDamage> damageList = _003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList;
-				if (_003C_003Ef__am_0024cache1 == null)
-				{
-					_003C_003Ef__am_0024cache1 = _003CPlayerStatsMessageListener_003Em__1;
-				}
-				IEnumerable<PlayerDamage> source = damageList.Where(_003C_003Ef__am_0024cache1);
-				if (_003C_003Ef__am_0024cache2 == null)
-				{
-					_003C_003Ef__am_0024cache2 = _003CPlayerStatsMessageListener_003Em__2;
-				}
-				num = source.Sum(_003C_003Ef__am_0024cache2);
-			}
-			else
-			{
-				num = 0f;
-			}
-			float num2 = num;
-			if (num2 > float.Epsilon)
+			float num = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Shot).Sum((PlayerDamage m) => m.Amount));
+			if (num > float.Epsilon)
 			{
 				tpsController.HealthSounds.Play(1);
 			}
-			float num3;
-			if (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList != null)
+			float num2 = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Pressure).Sum((PlayerDamage m) => m.Amount));
+			if (num2 > float.Epsilon)
 			{
-				List<PlayerDamage> damageList2 = _003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList;
-				if (_003C_003Ef__am_0024cache3 == null)
-				{
-					_003C_003Ef__am_0024cache3 = _003CPlayerStatsMessageListener_003Em__3;
-				}
-				IEnumerable<PlayerDamage> source2 = damageList2.Where(_003C_003Ef__am_0024cache3);
-				if (_003C_003Ef__am_0024cache4 == null)
-				{
-					_003C_003Ef__am_0024cache4 = _003CPlayerStatsMessageListener_003Em__4;
-				}
-				num3 = source2.Sum(_003C_003Ef__am_0024cache4);
+				tpsController.HealthSounds.Play(0);
 			}
-			else
+			float num3 = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Impact).Sum((PlayerDamage m) => m.Amount));
+			if (num3 > float.Epsilon)
 			{
-				num3 = 0f;
+				tpsController.HealthSounds.Play(1);
 			}
-			float num4 = num3;
+			float num4 = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Suffocate).Sum((PlayerDamage m) => m.Amount));
 			if (num4 > float.Epsilon)
 			{
 				tpsController.HealthSounds.Play(0);
 			}
-			float num5;
-			if (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList != null)
+			float num5 = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Frost).Sum((PlayerDamage m) => m.Amount));
+			if (num5 > float.Epsilon)
 			{
-				List<PlayerDamage> damageList3 = _003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList;
-				if (_003C_003Ef__am_0024cache5 == null)
-				{
-					_003C_003Ef__am_0024cache5 = _003CPlayerStatsMessageListener_003Em__5;
-				}
-				IEnumerable<PlayerDamage> source3 = damageList3.Where(_003C_003Ef__am_0024cache5);
-				if (_003C_003Ef__am_0024cache6 == null)
-				{
-					_003C_003Ef__am_0024cache6 = _003CPlayerStatsMessageListener_003Em__6;
-				}
-				num5 = source3.Sum(_003C_003Ef__am_0024cache6);
 			}
-			else
-			{
-				num5 = 0f;
-			}
-			float num6 = num5;
+			float num6 = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Heat).Sum((PlayerDamage m) => m.Amount));
 			if (num6 > float.Epsilon)
 			{
 				tpsController.HealthSounds.Play(1);
 			}
-			float num7;
-			if (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList != null)
+			float num7 = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Shred).Sum((PlayerDamage m) => m.Amount));
+			if (num7 > float.Epsilon)
 			{
-				List<PlayerDamage> damageList4 = _003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList;
-				if (_003C_003Ef__am_0024cache7 == null)
-				{
-					_003C_003Ef__am_0024cache7 = _003CPlayerStatsMessageListener_003Em__7;
-				}
-				IEnumerable<PlayerDamage> source4 = damageList4.Where(_003C_003Ef__am_0024cache7);
-				if (_003C_003Ef__am_0024cache8 == null)
-				{
-					_003C_003Ef__am_0024cache8 = _003CPlayerStatsMessageListener_003Em__8;
-				}
-				num7 = source4.Sum(_003C_003Ef__am_0024cache8);
+				tpsController.HealthSounds.Play(1);
 			}
-			else
-			{
-				num7 = 0f;
-			}
-			float num8 = num7;
+			float num8 = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.SpaceExposure).Sum((PlayerDamage m) => m.Amount));
 			if (num8 > float.Epsilon)
-			{
-				tpsController.HealthSounds.Play(0);
-			}
-			float num9;
-			if (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList != null)
-			{
-				List<PlayerDamage> damageList5 = _003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList;
-				if (_003C_003Ef__am_0024cache9 == null)
-				{
-					_003C_003Ef__am_0024cache9 = _003CPlayerStatsMessageListener_003Em__9;
-				}
-				IEnumerable<PlayerDamage> source5 = damageList5.Where(_003C_003Ef__am_0024cache9);
-				if (_003C_003Ef__am_0024cacheA == null)
-				{
-					_003C_003Ef__am_0024cacheA = _003CPlayerStatsMessageListener_003Em__A;
-				}
-				num9 = source5.Sum(_003C_003Ef__am_0024cacheA);
-			}
-			else
-			{
-				num9 = 0f;
-			}
-			float num10 = num9;
-			if (num10 > float.Epsilon)
-			{
-			}
-			float num11;
-			if (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList != null)
-			{
-				List<PlayerDamage> damageList6 = _003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList;
-				if (_003C_003Ef__am_0024cacheB == null)
-				{
-					_003C_003Ef__am_0024cacheB = _003CPlayerStatsMessageListener_003Em__B;
-				}
-				IEnumerable<PlayerDamage> source6 = damageList6.Where(_003C_003Ef__am_0024cacheB);
-				if (_003C_003Ef__am_0024cacheC == null)
-				{
-					_003C_003Ef__am_0024cacheC = _003CPlayerStatsMessageListener_003Em__C;
-				}
-				num11 = source6.Sum(_003C_003Ef__am_0024cacheC);
-			}
-			else
-			{
-				num11 = 0f;
-			}
-			float num12 = num11;
-			if (num12 > float.Epsilon)
-			{
-				tpsController.HealthSounds.Play(1);
-			}
-			float num13;
-			if (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList != null)
-			{
-				List<PlayerDamage> damageList7 = _003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList;
-				if (_003C_003Ef__am_0024cacheD == null)
-				{
-					_003C_003Ef__am_0024cacheD = _003CPlayerStatsMessageListener_003Em__D;
-				}
-				IEnumerable<PlayerDamage> source7 = damageList7.Where(_003C_003Ef__am_0024cacheD);
-				if (_003C_003Ef__am_0024cacheE == null)
-				{
-					_003C_003Ef__am_0024cacheE = _003CPlayerStatsMessageListener_003Em__E;
-				}
-				num13 = source7.Sum(_003C_003Ef__am_0024cacheE);
-			}
-			else
-			{
-				num13 = 0f;
-			}
-			float num14 = num13;
-			if (num14 > float.Epsilon)
-			{
-				tpsController.HealthSounds.Play(1);
-			}
-			float num15;
-			if (_003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList != null)
-			{
-				List<PlayerDamage> damageList8 = _003CPlayerStatsMessageListener_003Ec__AnonStorey.psm.DamageList;
-				if (_003C_003Ef__am_0024cacheF == null)
-				{
-					_003C_003Ef__am_0024cacheF = _003CPlayerStatsMessageListener_003Em__F;
-				}
-				IEnumerable<PlayerDamage> source8 = damageList8.Where(_003C_003Ef__am_0024cacheF);
-				if (_003C_003Ef__am_0024cache10 == null)
-				{
-					_003C_003Ef__am_0024cache10 = _003CPlayerStatsMessageListener_003Em__10;
-				}
-				num15 = source8.Sum(_003C_003Ef__am_0024cache10);
-			}
-			else
-			{
-				num15 = 0f;
-			}
-			float num16 = num15;
-			if (num16 > float.Epsilon)
 			{
 				tpsController.HealthSounds.Play(1);
 			}
@@ -870,7 +643,7 @@ namespace ZeroGravity.Objects
 		{
 			base.transform.position = position;
 			base.transform.rotation = rotation;
-			tpsController.SetTargetPositionAndRotation(base.transform.localPosition, base.transform.localRotation, true);
+			tpsController.SetTargetPositionAndRotation(base.transform.localPosition, base.transform.localRotation, instant: true);
 		}
 
 		public override void EnterVessel(SpaceObjectVessel vessel)
@@ -912,108 +685,6 @@ namespace ZeroGravity.Objects
 		public override void RoomChanged(SceneTriggerRoom prevRoomTrigger)
 		{
 			base.RoomChanged(prevRoomTrigger);
-		}
-
-		[CompilerGenerated]
-		private static bool _003CSpawnPlayer_003Em__0(DynamicObjectDetails x)
-		{
-			return x.AttachData.IsAttached && x.AttachData.InventorySlotID == -2;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CPlayerStatsMessageListener_003Em__1(PlayerDamage m)
-		{
-			return m.HurtType == HurtType.Shot;
-		}
-
-		[CompilerGenerated]
-		private static float _003CPlayerStatsMessageListener_003Em__2(PlayerDamage m)
-		{
-			return m.Amount;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CPlayerStatsMessageListener_003Em__3(PlayerDamage m)
-		{
-			return m.HurtType == HurtType.Pressure;
-		}
-
-		[CompilerGenerated]
-		private static float _003CPlayerStatsMessageListener_003Em__4(PlayerDamage m)
-		{
-			return m.Amount;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CPlayerStatsMessageListener_003Em__5(PlayerDamage m)
-		{
-			return m.HurtType == HurtType.Impact;
-		}
-
-		[CompilerGenerated]
-		private static float _003CPlayerStatsMessageListener_003Em__6(PlayerDamage m)
-		{
-			return m.Amount;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CPlayerStatsMessageListener_003Em__7(PlayerDamage m)
-		{
-			return m.HurtType == HurtType.Suffocate;
-		}
-
-		[CompilerGenerated]
-		private static float _003CPlayerStatsMessageListener_003Em__8(PlayerDamage m)
-		{
-			return m.Amount;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CPlayerStatsMessageListener_003Em__9(PlayerDamage m)
-		{
-			return m.HurtType == HurtType.Frost;
-		}
-
-		[CompilerGenerated]
-		private static float _003CPlayerStatsMessageListener_003Em__A(PlayerDamage m)
-		{
-			return m.Amount;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CPlayerStatsMessageListener_003Em__B(PlayerDamage m)
-		{
-			return m.HurtType == HurtType.Heat;
-		}
-
-		[CompilerGenerated]
-		private static float _003CPlayerStatsMessageListener_003Em__C(PlayerDamage m)
-		{
-			return m.Amount;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CPlayerStatsMessageListener_003Em__D(PlayerDamage m)
-		{
-			return m.HurtType == HurtType.Shred;
-		}
-
-		[CompilerGenerated]
-		private static float _003CPlayerStatsMessageListener_003Em__E(PlayerDamage m)
-		{
-			return m.Amount;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CPlayerStatsMessageListener_003Em__F(PlayerDamage m)
-		{
-			return m.HurtType == HurtType.SpaceExposure;
-		}
-
-		[CompilerGenerated]
-		private static float _003CPlayerStatsMessageListener_003Em__10(PlayerDamage m)
-		{
-			return m.Amount;
 		}
 	}
 }

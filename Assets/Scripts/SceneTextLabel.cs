@@ -44,16 +44,7 @@ public class SceneTextLabel : MonoBehaviour
 	/// </summary>
 	public void GenerateTexture(string text)
 	{
-		TMP_Text textObject = new CustomTMPText(text);
-
-		textObject.font = Client.Instance.GetLocalFont(fontName);
-		textObject.fontStyle = FontStyles.Bold;
-		textObject.alignment = TextAlignmentOptions.Center;
-		textObject.verticalAlignment = VerticalAlignmentOptions.Middle;
-		textObject.autoSizeTextContainer = true;
-		textObject.enableWordWrapping = false;
-
-		matInstance.mainTexture = textObject.mainTexture;
+		Debug.LogError("Tried to generate texture, but method is deprecated.");
 	}
 
 	public void SetNameTagText(string text)
