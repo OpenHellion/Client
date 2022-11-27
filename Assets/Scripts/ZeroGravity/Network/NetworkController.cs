@@ -35,34 +35,27 @@ namespace ZeroGravity.Network
 			mainThreads = new MainServerThreads();
 		}
 
-		private void Start()
-		{
-		}
-
 		private void FixedUpdate()
 		{
 			if (spawnObjectsList.Count > 0)
 			{
 				SpawnObjectsRequest spawnObjectsRequest = new SpawnObjectsRequest();
 				spawnObjectsRequest.GUIDs = new List<long>(spawnObjectsList);
-				SpawnObjectsRequest data = spawnObjectsRequest;
-				SendToGameServer(data);
+				SendToGameServer(spawnObjectsRequest);
 				spawnObjectsList.Clear();
 			}
 			if (subscribeToObjectsList.Count > 0)
 			{
 				SubscribeToObjectsRequest subscribeToObjectsRequest = new SubscribeToObjectsRequest();
 				subscribeToObjectsRequest.GUIDs = new List<long>(subscribeToObjectsList);
-				SubscribeToObjectsRequest data2 = subscribeToObjectsRequest;
-				SendToGameServer(data2);
+				SendToGameServer(subscribeToObjectsRequest);
 				subscribeToObjectsList.Clear();
 			}
 			if (unsubscribeFromObjectsList.Count > 0)
 			{
 				UnsubscribeFromObjectsRequest unsubscribeFromObjectsRequest = new UnsubscribeFromObjectsRequest();
 				unsubscribeFromObjectsRequest.GUIDs = new List<long>(unsubscribeFromObjectsList);
-				UnsubscribeFromObjectsRequest data3 = unsubscribeFromObjectsRequest;
-				SendToGameServer(data3);
+				SendToGameServer(unsubscribeFromObjectsRequest);
 				unsubscribeFromObjectsList.Clear();
 			}
 		}

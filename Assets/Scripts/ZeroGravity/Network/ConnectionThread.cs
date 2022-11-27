@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace ZeroGravity.Network
 {
-	public class ConnectionThread
+	public sealed class ConnectionThread
 	{
 		private volatile bool gameSocketReady;
 

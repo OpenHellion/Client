@@ -5597,7 +5597,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1241487161733373}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f5454b0c5f60804591a9c87eb515233, type: 3}
   m_Name: 
@@ -5656,7 +5656,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1241487161733373}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a8bb15d12c690e149bc3820ed5cffb45, type: 3}
   m_Name: 
@@ -5836,7 +5836,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1241487161733373}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06a6a33d87a6a294db939dbfbd524613, type: 3}
   m_Name: 
@@ -5860,7 +5860,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1241487161733373}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c86d8a147711e240b2f96511dacb243, type: 3}
   m_Name: 
@@ -19962,7 +19962,7 @@ MonoBehaviour:
     Source: {fileID: 0}
     PlayOnAwake: 1
     UseStringInsteadOfId: 0
-    IsPlaying: 0
+    IsPlaying: 1
     ShowRadius: 0
     AttenuationRadius: 0
   - EventID: -1037460825

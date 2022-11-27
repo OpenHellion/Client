@@ -11,11 +11,10 @@ Material:
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ValidKeywords:
   - _ALPHATEST_ON
-  - _EMISSION
   - _NORMALMAP
   m_InvalidKeywords:
   - _ALWAYSEMIT_ON
-  m_LightmapFlags: 0
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2450
@@ -84,7 +83,7 @@ Material:
     - _EmissionState: 0
     - _Float2: 0
     - _GlossMapScale: 0.626
-    - _Glossiness: 0.459
+    - _Glossiness: 0.624
     - _GlossyReflections: 1
     - _InvFade: 1
     - _MaskClipValue: 0.5

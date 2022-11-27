@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity;
@@ -50,7 +49,7 @@ public class QuestTracker : MonoBehaviour
 				Tasks.Add(questTrigger, taskUI);
 			}
 		}
-		QuestName.text = Localization.GetLocalizedField(CurrentQuest.Name, true).ToUpper();
+		QuestName.text = Localization.GetLocalizedField(CurrentQuest.Name, useDefault: true).ToUpper();
 	}
 
 	public void RefreshTasks()
@@ -59,7 +58,7 @@ public class QuestTracker : MonoBehaviour
 		{
 			if (key.Status == QuestStatus.Completed)
 			{
-				Tasks[key].Animator.SetBool("Completed", true);
+				Tasks[key].Animator.SetBool("Completed", value: true);
 			}
 		}
 	}
@@ -71,19 +70,20 @@ public class QuestTracker : MonoBehaviour
 		{
 			if (key.Status == QuestStatus.Active)
 			{
-				Tasks[key].gameObject.SetActive(true);
+				Tasks[key].gameObject.SetActive(value: true);
 				flag = false;
 			}
 		}
-		if (flag)
+		if (!flag)
 		{
-			Quest quest = null;
-			HideActiveTasks();
-			if (CurrentQuest.QuestObject.QuestToTrackWhenCompleted != null)
-			{
-				quest = Client.Instance.Quests.FirstOrDefault(_003CRefreshBatch_003Em__0);
-				Client.Instance.CanvasManager.CanvasUI.SetCurrentTrackingQuest(quest);
-			}
+			return;
+		}
+		Quest quest = null;
+		HideActiveTasks();
+		if (CurrentQuest.QuestObject.QuestToTrackWhenCompleted != null)
+		{
+			quest = Client.Instance.Quests.FirstOrDefault((Quest m) => m.ID == CurrentQuest.QuestObject.QuestToTrackWhenCompleted.ID);
+			Client.Instance.CanvasManager.CanvasUI.SetCurrentTrackingQuest(quest);
 		}
 	}
 
@@ -91,8 +91,8 @@ public class QuestTracker : MonoBehaviour
 	{
 		if (CurrentQuest.Status != QuestStatus.Completed)
 		{
-			base.gameObject.SetActive(true);
-			Animator.SetBool("Close", false);
+			base.gameObject.SetActive(value: true);
+			Animator.SetBool("Close", value: false);
 			AddTasks();
 		}
 	}
@@ -109,7 +109,7 @@ public class QuestTracker : MonoBehaviour
 		{
 			value.Animator.SetTrigger("Close");
 		}
-		Animator.SetBool("Close", true);
+		Animator.SetBool("Close", value: true);
 	}
 
 	public void TriggerNonTrackedTask(QuestTrigger trigger)
@@ -117,11 +117,5 @@ public class QuestTracker : MonoBehaviour
 		AltQuestName.text = trigger.Quest.Name;
 		AltTriggerName.text = trigger.Name;
 		Animator.SetTrigger("Switch");
-	}
-
-	[CompilerGenerated]
-	private bool _003CRefreshBatch_003Em__0(Quest m)
-	{
-		return m.ID == CurrentQuest.QuestObject.QuestToTrackWhenCompleted.ID;
 	}
 }

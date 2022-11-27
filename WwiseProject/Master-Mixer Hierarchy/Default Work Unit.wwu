@@ -4,6 +4,13 @@
 		<WorkUnit Name="Default Work Unit" ID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}" PersistMode="Standalone">
 			<ChildrenList>
 				<Bus Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}">
+					<PropertyList>
+						<Property Name="BusVolume" Type="Real64">
+							<ValueList>
+								<Value>-15</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="AudioDevice">
 							<ObjectRef Name="System" ID="{218FA2CE-918C-4E83-A467-9ED75C3FE004}" WorkUnitID="{DD8F64F6-C0EB-4974-98C6-4CEBA0FD2F56}"/>

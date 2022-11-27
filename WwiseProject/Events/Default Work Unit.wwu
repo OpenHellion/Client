@@ -571,7 +571,17 @@
 						</Folder>
 						<Folder Name="Shredder" ID="{293F8684-4A7C-48E6-8EE9-BFE60D01883B}" ShortID="745748517">
 							<ChildrenList>
-								<Event Name="StartSpin" ID="{59196EB4-32C7-40BF-B613-F8B1E4988464}"/>
+								<Event Name="StartSpin" ID="{59196EB4-32C7-40BF-B613-F8B1E4988464}">
+									<ChildrenList>
+										<Action Name="" ID="{73829A80-1EE9-4D00-9F12-93DCBBEE764B}" ShortID="337958775">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="ShredderStart" ID="{0A55A832-36C1-4D3C-B1B4-029D1799CF94}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
 								<Event Name="Shredding" ID="{849A176C-508E-44BD-9BC4-6214A8BED516}">
 									<ChildrenList>
 										<Action Name="" ID="{EA1E439E-54B0-4D46-AE2E-F8628753775A}" ShortID="507062940">
@@ -594,7 +604,27 @@
 										</Action>
 									</ChildrenList>
 								</Event>
-								<Event Name="StopSpin" ID="{A8E97DC9-AEC4-4CED-8EC0-C5192FF99F1D}"/>
+								<Event Name="StopSpin" ID="{A8E97DC9-AEC4-4CED-8EC0-C5192FF99F1D}">
+									<ChildrenList>
+										<Action Name="" ID="{7AD692F8-167B-4AEB-812F-13EAC756C5DC}" ShortID="20815816">
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="ShredderEnd" ID="{04D8CDB4-B9F7-4B35-B0FA-A2E6DE2DABFE}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+										<Action Name="" ID="{B2F61258-D9CA-47E8-8611-DD98B4C182B8}" ShortID="985823927">
+											<PropertyList>
+												<Property Name="ActionType" Type="int16" Value="2"/>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Target">
+													<ObjectRef Name="Shredding" ID="{833F5480-78A1-4568-8678-C6351F744684}" WorkUnitID="{6C34260F-9D25-4946-B605-52CE932664AE}"/>
+												</Reference>
+											</ReferenceList>
+										</Action>
+									</ChildrenList>
+								</Event>
 								<Event Name="OpenShredder" ID="{6915A686-56F6-412C-9363-56E5197B6908}">
 									<ChildrenList>
 										<Action Name="" ID="{D94BDD04-FD8C-483C-92F7-FAB533112D46}" ShortID="124536337">

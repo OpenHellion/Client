@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Steamworks;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.SceneManagement;
@@ -495,13 +496,19 @@ namespace ZeroGravity
 			{
 				SteamStats = base.gameObject.AddComponent<SteamStats>();
 			}
+
 			Texture[] source = Resources.LoadAll<Texture>("Emblems");
 			SceneVesselEmblem.Textures = source.ToDictionary((Texture x) => x.name, (Texture y) => y);
+
 			if (!SteamManager.Initialized)
 			{
 				Dbg.Error("Steam isn't initialised.");
 				ExitGame();
+#if UNITY_EDITOR
+				EditorApplication.isPlaying = false;
+#endif
 			}
+
 			RCS_THRUST_SENSITIVITY = Properties.GetProperty("rcs_thrust_sensitivity", RCS_THRUST_SENSITIVITY);
 			RCS_ROTATION_SENSITIVITY = Properties.GetProperty("rcs_rotation_sensitivity", RCS_ROTATION_SENSITIVITY);
 			CELESTIAL_BODY_RADIUS_MULTIPLIER = Properties.GetProperty("celestial_body_radius_multiplier", CELESTIAL_BODY_RADIUS_MULTIPLIER);
@@ -513,6 +520,7 @@ namespace ZeroGravity
 			VESSEL_ROTATION_LERP_UNCLAMPED = Properties.GetProperty("vessel_rotation_lerp_unclamped", VESSEL_ROTATION_LERP_UNCLAMPED);
 			VESSEL_TRANSLATION_LERP_VALUE = Properties.GetProperty("vessel_translation_lerp_value", VESSEL_TRANSLATION_LERP_VALUE);
 			VESSEL_TRANSLATION_LERP_UNCLAMPED = Properties.GetProperty("vessel_translation_lerp_unclamped", VESSEL_TRANSLATION_LERP_UNCLAMPED);
+
 			StaticData.LoadData();
 			Application.runInBackground = true;
 			MainThreadID = Thread.CurrentThread.ManagedThreadId;
@@ -2686,7 +2694,7 @@ namespace ZeroGravity
 
 		public void QuitGameYes()
 		{
-			QuitApplication();
+			ExitGame();
 		}
 
 		public void ProcessInvitation(InviteMessage inviteMessage)
