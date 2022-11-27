@@ -2,13 +2,16 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: RepairPoint_MAT
   m_Shader: {fileID: 4800000, guid: d88951dbd2483084fb9d7f41e4fe2fcc, type: 3}
-  m_ShaderKeywords: _EMISSION
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _EMISSION
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -54,6 +57,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
@@ -79,7 +83,7 @@ Material:
     - _Smoothness: 0.574
     - _SrcBlend: 1
     - _SystemDamage: 0
-    - _Texture1Emission: 100
+    - _Texture1Emission: 10
     - _Texture1Height: 0.7
     - _Texture2Height: 0.8
     - _TransAmbient: 0.2
@@ -97,4 +101,5 @@ Material:
     - _Color1: {r: 0, g: 0, b: 0, a: 1}
     - _EdgeColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0.98529404, g: 0.6591277, b: 0.24632293, a: 0}
-    - _Texture1EmissionColor: {r: 1, g: 0.84827584, b: 0.35294116, a: 1}
+    - _Texture1EmissionColor: {r: 1, g: 0.84827584, b: 0.35294116, a: 0.1}
+  m_BuildTextureStacks: []

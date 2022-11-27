@@ -93,6 +93,9 @@ namespace ZeroGravity.UI
 			ReportReason.RefreshShownValue();
 		}
 
+		/// <summary>
+		/// 	TODO: The server is down, so this has to be rewritten eventually.
+		/// </summary>
 		public void SendReport()
 		{
 			try
@@ -120,6 +123,9 @@ namespace ZeroGravity.UI
 			yield return request;
 		}
 
+		/// <summary>
+		/// 	TODO: The server is down, so this has to be rewritten eventually.
+		/// </summary>
 		public IEnumerator PostFileOnServer()
 		{
 			WWWForm form = new WWWForm();

@@ -57,9 +57,9 @@ namespace ZeroGravity.Network
 		/// <summary>
 		/// 	Send a request to the main server with data.
 		/// </summary>
-		private void MServerComm(object data)
+		private void MServerComm(object rawData)
 		{
-			NetworkData rawData = data as NetworkData;
+			NetworkData data = rawData as NetworkData;
 			int maxAttempts = 5;
 			for (int i = 1; i <= maxAttempts; i++)
 			{
@@ -79,7 +79,7 @@ namespace ZeroGravity.Network
 					string remotePublicKey = CryptoHelper.ExchangePublicKeys(stream, PublicKey);
 
 					// Convert the data to binary
-					byte[] dataBinary = Serializer.Serialize(rawData);
+					byte[] dataBinary = Serializer.Serialize(data);
 
 					// Request data.
 					CryptoHelper.WriteRequest(stream, dataBinary, remotePublicKey);

@@ -94,6 +94,9 @@ namespace ZeroGravity.Network
 			}
 		}
 
+		/// <summary>
+		/// 	Add listener for custom events.
+		/// </summary>
 		public void AddListener(Type group, NetworkDataDelegate function)
 		{
 			if (networkDataGroups.ContainsKey(group))
@@ -108,6 +111,26 @@ namespace ZeroGravity.Network
 			}
 		}
 
+		/// <summary>
+		/// 	Add listener for base Unity events.
+		/// </summary>
+		public void AddListener(InternalEventType group, InternalDataDelegate function)
+		{
+			if (internalDataGroups.ContainsKey(group))
+			{
+				ConcurrentDictionary<InternalEventType, InternalDataDelegate> concurrentDictionary;
+				InternalEventType key;
+				(concurrentDictionary = internalDataGroups)[key = group] = (InternalDataDelegate)Delegate.Combine(concurrentDictionary[key], function);
+			}
+			else
+			{
+				internalDataGroups[group] = function;
+			}
+		}
+
+		/// <summary>
+		/// 	Remove listener for custom events.
+		/// </summary>
 		public void RemoveListener(Type group, NetworkDataDelegate function)
 		{
 			if (networkDataGroups.ContainsKey(group))
@@ -118,6 +141,22 @@ namespace ZeroGravity.Network
 			}
 		}
 
+		/// <summary>
+		/// 	Remove listener for base Unity events.
+		/// </summary>
+		public void RemoveListener(InternalEventType group, InternalDataDelegate function)
+		{
+			if (internalDataGroups.ContainsKey(group))
+			{
+				ConcurrentDictionary<InternalEventType, InternalDataDelegate> concurrentDictionary;
+				InternalEventType key;
+				(concurrentDictionary = internalDataGroups)[key = group] = (InternalDataDelegate)Delegate.Remove(concurrentDictionary[key], function);
+			}
+		}
+
+		/// <summary>
+		/// 	Execute corresponding code for request.
+		/// </summary>
 		public void Invoke(NetworkData data)
 		{
 			if (networkDataGroups.ContainsKey(data.GetType()) && networkDataGroups[data.GetType()] != null)
@@ -137,6 +176,31 @@ namespace ZeroGravity.Network
 			}
 		}
 
+		/// <summary>
+		/// 	Execute corresponding code for request.
+		/// </summary>
+		public void Invoke(InternalEventData data)
+		{
+			if (internalDataGroups.ContainsKey(data.Type) && internalDataGroups[data.Type] != null)
+			{
+				if (!Client.IsGameBuild || Thread.CurrentThread.ManagedThreadId == Client.MainThreadID)
+				{
+					internalDataGroups[data.Type](data);
+				}
+				else
+				{
+					internalBuffer.Enqueue(data);
+				}
+			}
+			else
+			{
+				Dbg.Info("Cannot invoke ", data.Type, data);
+			}
+		}
+
+		/// <summary>
+		/// 	Execute code for requests stored in queue.
+		/// </summary>
 		public void InvokeQueuedData()
 		{
 			packetCounter.Clear();
@@ -192,49 +256,6 @@ namespace ZeroGravity.Network
 				{
 					value2(result2);
 				}
-			}
-		}
-
-		public void AddListener(InternalEventType group, InternalDataDelegate function)
-		{
-			if (internalDataGroups.ContainsKey(group))
-			{
-				ConcurrentDictionary<InternalEventType, InternalDataDelegate> concurrentDictionary;
-				InternalEventType key;
-				(concurrentDictionary = internalDataGroups)[key = group] = (InternalDataDelegate)Delegate.Combine(concurrentDictionary[key], function);
-			}
-			else
-			{
-				internalDataGroups[group] = function;
-			}
-		}
-
-		public void RemoveListener(InternalEventType group, InternalDataDelegate function)
-		{
-			if (internalDataGroups.ContainsKey(group))
-			{
-				ConcurrentDictionary<InternalEventType, InternalDataDelegate> concurrentDictionary;
-				InternalEventType key;
-				(concurrentDictionary = internalDataGroups)[key = group] = (InternalDataDelegate)Delegate.Remove(concurrentDictionary[key], function);
-			}
-		}
-
-		public void Invoke(InternalEventData data)
-		{
-			if (internalDataGroups.ContainsKey(data.Type) && internalDataGroups[data.Type] != null)
-			{
-				if (!Client.IsGameBuild || Thread.CurrentThread.ManagedThreadId == Client.MainThreadID)
-				{
-					internalDataGroups[data.Type](data);
-				}
-				else
-				{
-					internalBuffer.Enqueue(data);
-				}
-			}
-			else
-			{
-				Dbg.Info("Cannot invoke ", data.Type, data);
 			}
 		}
 	}

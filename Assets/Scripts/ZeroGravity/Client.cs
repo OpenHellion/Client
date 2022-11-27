@@ -61,15 +61,12 @@ namespace ZeroGravity
 		[NonSerialized]
 		public SteamStats SteamStats;
 
-		[SerializeField]
-		private bool _loadSimpleScene;
-
 		public bool ExperimentalBuild;
 
 		[Multiline(2)]
 		public string ExperimentalText;
 
-		public GameObject ExperimentalGameObject;
+		public GameObject Exper<imentalGameObject;
 
 		public bool AllowLoadingOldSaveGames;
 
@@ -224,7 +221,7 @@ namespace ZeroGravity
 		public SoundEffect AmbientSounds;
 
 		/// <summary>
-		/// 	If we have loaded up a save or joined a server, and is in game.
+		/// 	If we have loaded up a save or joined a server, and is in game.<br/>
 		/// 	True when game is started.
 		/// </summary>
 		public bool IsInGame;
@@ -299,13 +296,9 @@ namespace ZeroGravity
 
 		public Dictionary<long, CharacterInteractionState> CharacterInteractionStatesQueue = new Dictionary<long, CharacterInteractionState>();
 
-		private bool GetP2PPacketsThreadActive;
-
 		public bool SignInFailed;
 
 		private int collisionLayerMask;
-
-		private Dictionary<string, TMP_FontAsset> localFonts = new();
 
 		public static volatile bool ForceRespawn = false;
 
@@ -529,7 +522,7 @@ namespace ZeroGravity
 			openMainSceneStarted = false;
 
 			// Only load simple scenes if we have little available memory, regardless of settings.
-			if (SystemInfo.systemMemorySize < 6000 || _loadSimpleScene)
+			if (SystemInfo.systemMemorySize < 6000 || Application.isEditor)
 			{
 				SceneLoadType = SceneLoadTypeValue.Simple;
 			}
@@ -540,19 +533,6 @@ namespace ZeroGravity
 				{
 					SceneLoadType = (SceneLoadTypeValue)property;
 				}
-			}
-
-			// Load fonts.
-			try
-			{
-				TMP_FontAsset[] fonts = Resources.LoadAll<TMP_FontAsset>("FontsTMPro");
-				foreach (TMP_FontAsset font in fonts)
-				{
-					localFonts.Add(font.name, font);
-				}
-			}
-			catch
-			{
 			}
 		}
 
@@ -1243,13 +1223,13 @@ namespace ZeroGravity
 				KillAllSPProcesses();
 			}
 
-
+			// If we didn't tell the game explicitly that we want to exit.
 			if (!gameExitWanted)
 			{
-				// Prevent the app from quitting.
+				// Prevent the app from quitting...
 				Application.wantsToQuit += () => { return false; };
 
-				// Exit safely instead.
+				// ...and exit safely instead.
 				ExitGame();
 			}
 			else
@@ -1274,6 +1254,7 @@ namespace ZeroGravity
 			IsRunning = false;
 			OnDestroy();
 			NetworkController.DisconnectImmediate();
+			SteamAPI.Shutdown();
 			Application.Quit();
 		}
 
@@ -1296,11 +1277,6 @@ namespace ZeroGravity
 			NetworkController.EventSystem.RemoveListener(typeof(SignInResponse), SignInResponseListener);
 			NetworkController.EventSystem.RemoveListener(typeof(LogInResponse), LogInResponseListener);
 			Localization.RevertToDefault();
-		}
-
-		private void KillGameProcess()
-		{
-			Process.GetCurrentProcess().Kill();
 		}
 
 		public void OnInGameMenuClosed()
@@ -1661,11 +1637,6 @@ namespace ZeroGravity
 
 		private void FixedUpdate()
 		{
-			NetworkController.EventSystem.InvokeQueuedData();
-			if (SteamManager.Initialized && !GetP2PPacketsThreadActive && SteamNetworking.IsP2PPacketAvailable(out var _))
-			{
-				new Thread(GetP2PPacketsThread).Start();
-			}
 			if (serverUpdateCounter < 5 && UpdateServers)
 			{
 				List<GameServerUI> list = (from m in ServerListContentPanel.GetComponentsInChildren<GameServerUI>()
@@ -1807,23 +1778,6 @@ namespace ZeroGravity
 				}
 			}
 			return null;
-		}
-
-		private void GetP2PPacketsThread()
-		{
-			GetP2PPacketsThreadActive = true;
-			uint pcubMsgSize;
-			while (SteamNetworking.IsP2PPacketAvailable(out pcubMsgSize))
-			{
-				byte[] array = new byte[pcubMsgSize];
-				SteamNetworking.ReadP2PPacket(array, pcubMsgSize, out var _, out var _);
-				NetworkData networkData = Serializer.ReceiveData(new MemoryStream(array));
-				if (networkData is ISteamP2PMessage)
-				{
-					NetworkController.EventSystem.Invoke(networkData);
-				}
-			}
-			GetP2PPacketsThreadActive = false;
 		}
 
 		private void MovementMessageListener(NetworkData data)
@@ -2066,16 +2020,6 @@ namespace ZeroGravity
 			float x = Mathf.Clamp(trans.localPosition.x + ZeroGravity.UI.InputManager.GetAxis(ZeroGravity.UI.InputManager.AxisNames.LookHorizontal) * MouseSpeedOnPanels, 0f, panelWidth);
 			float y = Mathf.Clamp(trans.localPosition.y + ZeroGravity.UI.InputManager.GetAxis(ZeroGravity.UI.InputManager.AxisNames.LookVertical) * MouseSpeedOnPanels * (float)((!Instance.InvertedMouse) ? 1 : (-1)), 0f, panelHeight);
 			trans.localPosition = new Vector3(x, y, trans.localPosition.z);
-		}
-
-		public TMP_FontAsset GetLocalFont(string fontName)
-		{
-			TMP_FontAsset value = null;
-			if (localFonts.TryGetValue(fontName, out value))
-			{
-				return value;
-			}
-			return null;
 		}
 
 		public void ConnectToServer(GameServerUI server, string serverPassword = null)

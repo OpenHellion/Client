@@ -19,29 +19,63 @@ Shader "ZeroGravity/Surface/StandardLightMap" {
 		[HideInInspector] _texcoord ("", 2D) = "white" {}
 		[HideInInspector] _texcoord4 ("", 2D) = "white" {}
 	}
-	//DummyShaderTextExporter
-	SubShader{
-		Tags { "RenderType"="Opaque" }
-		LOD 200
-		CGPROGRAM
-#pragma surface surf Standard
-#pragma target 3.0
+	SubShader {
+        Tags { "RenderType"="Opaque" }
+        LOD 200
 
-		sampler2D _MainTex;
-		fixed4 _Color;
-		struct Input
-		{
-			float2 uv_MainTex;
-		};
+        CGPROGRAM
+        // Physically based Standard lighting model, and enable shadows on all light types
+        #pragma surface surf Standard fullforwardshadows
 
-		void surf(Input IN, inout SurfaceOutputStandard o)
-		{
-			fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
-			o.Albedo = c.rgb;
+        // Use shader model 3.0 target, to get nicer looking lighting
+        #pragma target 3.0
+
+        sampler2D _MainTex;
+
+        struct Input
+        {
+            float2 uv_MainTex;
+        };
+
+        sampler2D _MetallicGlossMap;
+        sampler2D _BumpMap;
+        sampler2D _OcclusionMap;
+        sampler2D _EmissionMap;
+		half _GlossMapScale;
+        fixed4 _Color;
+		fixed3 _EmissionColor;
+		half _EmissionControl;
+		fixed _AlwaysEmit;
+
+        // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
+        // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
+        // #pragma instancing_options assumeuniformscaling
+        UNITY_INSTANCING_BUFFER_START(Props)
+            // put more per-instance properties here
+        UNITY_INSTANCING_BUFFER_END(Props)
+
+        void surf (Input IN, inout SurfaceOutputStandard o)
+        {
+            // Albedo comes from a texture tinted by color
+            fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+            o.Albedo = c.rgb;
 			o.Alpha = c.a;
-		}
-		ENDCG
-	}
-	Fallback "Diffuse"
-	//CustomEditor "ASEMaterialInspector"
+
+			fixed4 metallicGloss = tex2D(_MetallicGlossMap, IN.uv_MainTex);
+            o.Metallic = metallicGloss.r;
+            o.Smoothness = metallicGloss.a * _GlossMapScale;
+
+			fixed4 normal = tex2D(_BumpMap, IN.uv_MainTex);
+			o.Normal = normal.rgb;
+
+			fixed4 occlusion = tex2D(_OcclusionMap, IN.uv_MainTex);
+			o.Occlusion = occlusion.r;
+
+			// Emission if enabled.
+			fixed4 emissionMap = tex2D(_EmissionMap, IN.uv_MainTex);
+			o.Emission = _AlwaysEmit == 1 ? emissionMap.rgb * _EmissionColor * _EmissionControl : 0;
+        }
+        ENDCG
+    }
+    FallBack "Diffuse"
 }

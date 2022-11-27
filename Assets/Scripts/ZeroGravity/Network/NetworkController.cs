@@ -1,5 +1,10 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 using UnityEngine;
+using Steamworks;
+using System;
+using System.Runtime.InteropServices;
 
 namespace ZeroGravity.Network
 {
@@ -29,14 +34,21 @@ namespace ZeroGravity.Network
 
 		public static string NameOfCurrentServer = string.Empty;
 
+		private bool GetP2PPacketsThreadActive;
+
+		private SteamNetworkingMessagesSessionRequest_t _sessionRequest;
+
 		private void Awake()
 		{
 			EventSystem = new EventSystem();
 			mainThreads = new MainServerThreads();
+
 		}
 
 		private void FixedUpdate()
 		{
+			EventSystem.InvokeQueuedData();
+
 			if (spawnObjectsList.Count > 0)
 			{
 				SpawnObjectsRequest spawnObjectsRequest = new SpawnObjectsRequest();
@@ -57,6 +69,12 @@ namespace ZeroGravity.Network
 				unsubscribeFromObjectsRequest.GUIDs = new List<long>(unsubscribeFromObjectsList);
 				SendToGameServer(unsubscribeFromObjectsRequest);
 				unsubscribeFromObjectsList.Clear();
+			}
+
+			// Handle Steam P2P packets.
+			if (SteamManager.Initialized && !GetP2PPacketsThreadActive)
+			{
+				new Thread(P2PPacketListener).Start();
 			}
 		}
 
@@ -145,6 +163,43 @@ namespace ZeroGravity.Network
 			{
 				gameConnectionThreads.Disconnect();
 			}
+		}
+
+		/// <summary>
+		/// 	Read and invoke P2P packets sent though Steam.<br/>
+		/// 	TODO: Integrate this into <c>ZeroGravity.Network.ConnectionThread</c> or create a new class.
+		/// </summary>
+		private void P2PPacketListener() {
+			GetP2PPacketsThreadActive = true;
+
+			// Create pointer array and put data in it.
+			IntPtr[] ptr = new IntPtr[1];
+			int msgSize = SteamNetworkingMessages.ReceiveMessagesOnChannel(0, ptr, 1);
+
+			if (msgSize == 0) {
+				return;
+			}
+
+			try {
+				SteamNetworkingMessage_t netMessage = Marshal.PtrToStructure<SteamNetworkingMessage_t>(ptr[0]);
+				if (netMessage.m_cbSize != 0)
+				{
+					// Copy payload of the message and put it in a byte array.
+					byte[] message = new byte[netMessage.m_cbSize];
+					Marshal.Copy(netMessage.m_pData, message, 0, message.Length);
+
+					// Deseralise data and invoke code.
+					NetworkData networkData = Serializer.ReceiveData(new MemoryStream(message));
+					Debug.Log(networkData);
+					if (networkData is ISteamP2PMessage)
+					{
+						EventSystem.Invoke(networkData);
+					}
+				}
+			} finally {
+				Marshal.DestroyStructure<SteamNetworkingMessage_t>(ptr[0]);
+			}
+			GetP2PPacketsThreadActive = false;
 		}
 	}
 }

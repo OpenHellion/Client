@@ -46,9 +46,11 @@ namespace ZeroGravity.Network
 			runThread = true;
 			networkDataQueue = new ConcurrentQueue<NetworkData>();
 			waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
+			
 			connectThread = new Thread(Connect);
 			connectThread.IsBackground = true;
 			connectThread.Start();
+
 			sendingThread = new Thread(Send);
 			sendingThread.IsBackground = true;
 			sendingThread.Start();
@@ -258,6 +260,10 @@ namespace ZeroGravity.Network
 			}
 		}
 
+		/// <summary>
+		/// 	Thread code that handles listening for data.<br/>
+		/// 	Calls <c>EventSystem.Invoke</c>, which in turn refers it to a listener function.
+		/// </summary>
 		private void Listen()
 		{
 			while (Client.IsRunning && gameSocketReady && runThread)

@@ -65,7 +65,7 @@ namespace ZeroGravity.Helpers
 		}
 
 		/// <summary>
-		/// 	Gets the public key of the supplied connection.
+		/// 	Gets the public key of the supplied stream.
 		/// </summary>
 		public static string ExchangePublicKeys(NetworkStream stream, string publicKey)
 		{

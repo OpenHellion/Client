@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 using POpusCodec;
 using POpusCodec.Enums;
@@ -15,29 +15,6 @@ namespace ZeroGravity.Audio
 {
 	public class VoiceCommTransmitter : MonoBehaviour
 	{
-		[CompilerGenerated]
-		private sealed class _003CSendP2PPacketToPlayers_003Ec__AnonStorey0
-		{
-			internal ICollection<OtherPlayer> otherPlayers;
-
-			internal byte[] msgBytes;
-
-			internal void _003C_003Em__0()
-			{
-				foreach (OtherPlayer otherPlayer in otherPlayers)
-				{
-					try
-					{
-						SteamNetworking.SendP2PPacket(new CSteamID(ulong.Parse(otherPlayer.SteamId)), msgBytes, (uint)msgBytes.Length, EP2PSend.k_EP2PSendReliable);
-					}
-					catch
-					{
-						Dbg.Error("Couldn`t send audio packet");
-					}
-				}
-			}
-		}
-
 		private AudioClip inAudioClip;
 
 		private string micDevice;
@@ -79,7 +56,7 @@ namespace ZeroGravity.Audio
 						Dbg.Info("Start " + AudioListener.volume);
 					}
 					micDevice = Microphone.devices[0];
-					inAudioClip = Microphone.Start(micDevice, true, 5, samplerate);
+					inAudioClip = Microphone.Start(micDevice, loop: true, 5, samplerate);
 					lastSample = 0;
 					radio = false;
 					talk = true;
@@ -90,7 +67,7 @@ namespace ZeroGravity.Audio
 				if (Microphone.devices.Length > 0)
 				{
 					micDevice = Microphone.devices[0];
-					inAudioClip = Microphone.Start(micDevice, true, 5, samplerate);
+					inAudioClip = Microphone.Start(micDevice, loop: true, 5, samplerate);
 					lastSample = 0;
 					radio = true;
 					talk = true;
@@ -208,10 +185,29 @@ namespace ZeroGravity.Audio
 
 		private static void SendP2PPacketToPlayers(ICollection<OtherPlayer> otherPlayers, byte[] msgBytes)
 		{
-			_003CSendP2PPacketToPlayers_003Ec__AnonStorey0 _003CSendP2PPacketToPlayers_003Ec__AnonStorey = new _003CSendP2PPacketToPlayers_003Ec__AnonStorey0();
-			_003CSendP2PPacketToPlayers_003Ec__AnonStorey.otherPlayers = otherPlayers;
-			_003CSendP2PPacketToPlayers_003Ec__AnonStorey.msgBytes = msgBytes;
-			new Thread(_003CSendP2PPacketToPlayers_003Ec__AnonStorey._003C_003Em__0).Start();
+			new Thread((ThreadStart)delegate
+			{
+				// Create int pointer to copy the data to.
+				IntPtr msg = IntPtr.Zero;
+				Marshal.Copy(msgBytes, 0, msg, msgBytes.Length);
+
+				foreach (OtherPlayer otherPlayer in otherPlayers)
+				{
+					try
+					{
+						// Get player's steam identity.
+						SteamNetworkingIdentity sni = new SteamNetworkingIdentity();
+						sni.SetSteamID(new CSteamID(ulong.Parse(otherPlayer.SteamId)));
+
+						// https://partner.steamgames.com/doc/api/steamnetworkingtypes#message_sending_flags
+						SteamNetworkingMessages.SendMessageToUser(ref sni, msg, (uint) msgBytes.Length, 8, 0);
+					}
+					catch
+					{
+						Dbg.Error("Couldn't send audio packet.");
+					}
+				}
+			}).Start();
 		}
 	}
 }

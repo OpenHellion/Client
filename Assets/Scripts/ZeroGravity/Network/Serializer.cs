@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using ProtoBuf;
 using ZeroGravity.Objects;
 
 namespace ZeroGravity.Network
 {
+	/// <summary>
+	/// 	Wrapper around ProtoBuf.Serializer; customised for sending game NetworkData.
+	/// </summary>
 	public static class Serializer
 	{
 		public class ZeroDataException : Exception
@@ -54,9 +56,6 @@ namespace ZeroGravity.Network
 		private static Dictionary<Type, StatisticsHelper> sentStatistics = new Dictionary<Type, StatisticsHelper>();
 
 		private static Dictionary<Type, StatisticsHelper> receivedStatistics = new Dictionary<Type, StatisticsHelper>();
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<Type, StatisticsHelper>, long> _003C_003Ef__am_0024cache0;
 
 		public static NetworkData Deserialize(MemoryStream ms)
 		{
@@ -128,45 +127,40 @@ namespace ZeroGravity.Network
 
 		public static byte[] Serialize(NetworkData data)
 		{
-			using (MemoryStream memoryStream2 = new MemoryStream())
+			using MemoryStream memoryStream2 = new MemoryStream();
+			using MemoryStream memoryStream = new MemoryStream();
+			try
 			{
-				using (MemoryStream memoryStream = new MemoryStream())
+				NetworkDataTransportWrapper networkDataTransportWrapper = new NetworkDataTransportWrapper();
+				networkDataTransportWrapper.data = data;
+				NetworkDataTransportWrapper instance = networkDataTransportWrapper;
+				ProtoBuf.Serializer.Serialize(memoryStream, instance);
+			}
+			catch (Exception ex)
+			{
+				Dbg.Error("Failed to serialize communication data", ex.Message, ex.StackTrace);
+				return null;
+			}
+			if (statisticsLogUpdateTime > 0.0)
+			{
+				try
 				{
-					try
-					{
-						NetworkDataTransportWrapper networkDataTransportWrapper = new NetworkDataTransportWrapper();
-						networkDataTransportWrapper.data = data;
-						NetworkDataTransportWrapper instance = networkDataTransportWrapper;
-						ProtoBuf.Serializer.Serialize(memoryStream, instance);
-					}
-					catch (Exception ex)
-					{
-						Dbg.Error("Failed to serialize communication data", ex.Message, ex.StackTrace);
-						return null;
-					}
-					if (statisticsLogUpdateTime > 0.0)
-					{
-						try
-						{
-							ProcessStatistics(data, memoryStream, sentStatistics);
-						}
-						catch
-						{
-						}
-					}
-					memoryStream2.Write(BitConverter.GetBytes((uint)memoryStream.Length), 0, 4);
-					memoryStream2.Write(memoryStream.ToArray(), 0, (int)memoryStream.Length);
-					memoryStream2.Flush();
-					return memoryStream2.ToArray();
+					ProcessStatistics(data, memoryStream, sentStatistics);
+				}
+				catch
+				{
 				}
 			}
+			memoryStream2.Write(BitConverter.GetBytes((uint)memoryStream.Length), 0, 4);
+			memoryStream2.Write(memoryStream.ToArray(), 0, (int)memoryStream.Length);
+			memoryStream2.Flush();
+			return memoryStream2.ToArray();
 		}
 
 		private static void ProcessStatistics(NetworkData data, MemoryStream ms, Dictionary<Type, StatisticsHelper> stat)
 		{
 			Type type = data.GetType();
-			StatisticsHelper value;
-			if (stat.TryGetValue(type, out value))
+			if (stat.TryGetValue(type, out var value))
 			{
 				value.ByteSum += ms.Length;
 				value.PacketNubmer++;
@@ -183,12 +177,8 @@ namespace ZeroGravity.Network
 			TimeSpan timeSpan = DateTime.UtcNow.Subtract(statisticUpdateResetTime);
 			string text = ((stat != sentStatistics) ? ("Received packets statistics (" + timeSpan.ToString("h':'mm':'ss") + "): \n") : ("Sent packets statistics (" + timeSpan.ToString("h':'mm':'ss") + "): \n"));
 			long num = 0L;
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CProcessStatistics_003Em__0;
-			}
 			string text2;
-			foreach (KeyValuePair<Type, StatisticsHelper> item in stat.OrderBy(_003C_003Ef__am_0024cache0).Reverse())
+			foreach (KeyValuePair<Type, StatisticsHelper> item in stat.OrderBy((KeyValuePair<Type, StatisticsHelper> m) => m.Value.ByteSum).Reverse())
 			{
 				text2 = text;
 				text = text2 + item.Key.Name + ": " + item.Value.PacketNubmer + " (" + ((float)item.Value.ByteSum / 1000f).ToString("##,0") + " kB), \n";
@@ -217,12 +207,6 @@ namespace ZeroGravity.Network
 			receivedStatistics.Clear();
 			statisticUpdateResetTime = DateTime.UtcNow;
 			lastStatisticUpdateTime = DateTime.UtcNow;
-		}
-
-		[CompilerGenerated]
-		private static long _003CProcessStatistics_003Em__0(KeyValuePair<Type, StatisticsHelper> m)
-		{
-			return m.Value.ByteSum;
 		}
 	}
 }
