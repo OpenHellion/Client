@@ -38,10 +38,6 @@ namespace ZeroGravity.UI
 
 		public Text TooltipContent;
 
-		private void Start()
-		{
-		}
-
 		public void LocalizePanels()
 		{
 			Text[] componentsInChildren = GetComponentsInChildren<Text>(true);
@@ -53,10 +49,6 @@ namespace ZeroGravity.UI
 					text.text = value;
 				}
 			}
-		}
-
-		private void Update()
-		{
 		}
 
 		public void Interact()

@@ -1,5 +1,26 @@
 {
   "dependencies": {
+    "com.bedtime.selection-detective": {
+      "version": "https://github.com/BedtimeDigitalGames/Unity-Selection-Detective.git#1.6.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "42c88a6190f665ca28690ad4f72860ac88bf499d"
+    },
+    "com.codewriter.triinspector": {
+      "version": "https://github.com/codewriter-packages/Tri-Inspector.git#1.9.3",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "8cffc61ebeefbc7901dd823f380199d4597a2470"
+    },
+    "com.innogames.asset-relations-viewer": {
+      "version": "https://github.com/innogames/asset-relations-viewer.git#1.5.1",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "2efe35444fe9100bd3bc543fb38ac3199760684f"
+    },
     "com.rlabrecque.steamworks.net": {
       "version": "https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net#20.1.0",
       "depth": 0,
@@ -171,7 +192,7 @@
       }
     },
     "com.unity.vfx-toolbox": {
-      "version": "https://github.com/Unity-Technologies/VFXToolbox.git",
+      "version": "https://github.com/Unity-Technologies/VFXToolbox.git#2.1.0-preview",
       "depth": 0,
       "source": "git",
       "dependencies": {},
@@ -186,6 +207,94 @@
         "com.unity.modules.xr": "1.0.0"
       },
       "url": "https://packages.unity.com"
+    },
+    "org.nuget.protobuf-net": {
+      "version": "3.1.25",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "org.nuget.protobuf-net.core": "3.1.25",
+        "org.nuget.system.memory": "4.5.4",
+        "org.nuget.system.reflection.emit": "4.7.0",
+        "org.nuget.system.reflection.emit.lightweight": "4.7.0"
+      },
+      "url": "https://unitynuget-registry.azurewebsites.net"
+    },
+    "org.nuget.protobuf-net.core": {
+      "version": "3.1.25",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "org.nuget.system.collections.immutable": "1.7.1",
+        "org.nuget.system.memory": "4.5.4"
+      },
+      "url": "https://unitynuget-registry.azurewebsites.net"
+    },
+    "org.nuget.system.buffers": {
+      "version": "4.5.1",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://unitynuget-registry.azurewebsites.net"
+    },
+    "org.nuget.system.collections.immutable": {
+      "version": "1.7.1",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {
+        "org.nuget.system.memory": "4.5.4"
+      },
+      "url": "https://unitynuget-registry.azurewebsites.net"
+    },
+    "org.nuget.system.memory": {
+      "version": "4.5.4",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "org.nuget.system.buffers": "4.5.1",
+        "org.nuget.system.numerics.vectors": "4.4.0",
+        "org.nuget.system.runtime.compilerservices.unsafe": "4.5.3"
+      },
+      "url": "https://unitynuget-registry.azurewebsites.net"
+    },
+    "org.nuget.system.numerics.vectors": {
+      "version": "4.4.0",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://unitynuget-registry.azurewebsites.net"
+    },
+    "org.nuget.system.reflection.emit": {
+      "version": "4.7.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "org.nuget.system.reflection.emit.ilgeneration": "4.7.0"
+      },
+      "url": "https://unitynuget-registry.azurewebsites.net"
+    },
+    "org.nuget.system.reflection.emit.ilgeneration": {
+      "version": "4.7.0",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://unitynuget-registry.azurewebsites.net"
+    },
+    "org.nuget.system.reflection.emit.lightweight": {
+      "version": "4.7.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "org.nuget.system.reflection.emit.ilgeneration": "4.7.0"
+      },
+      "url": "https://unitynuget-registry.azurewebsites.net"
+    },
+    "org.nuget.system.runtime.compilerservices.unsafe": {
+      "version": "4.5.3",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://unitynuget-registry.azurewebsites.net"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

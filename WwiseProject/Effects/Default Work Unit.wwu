@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{B60878C0-295E-4509-BC86-608E34C82B95}" SchemaVersion="103">
 	<Effects>
-		<WorkUnit Name="Default Work Unit" ID="{B60878C0-295E-4509-BC86-608E34C82B95}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{B60878C0-295E-4509-BC86-608E34C82B95}" PersistMode="Standalone">
+			<ChildrenList>
+				<Effect Name="LowPressureEQ" ID="{2C5ABDF7-BFD4-4669-B72E-4D8C96BF4BCD}" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3"/>
+				<Effect Name="MyJetpackEQ" ID="{FD6A4CF4-8889-4CC0-A546-91239F45880B}" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3"/>
+			</ChildrenList>
+		</WorkUnit>
 	</Effects>
 </WwiseDocument>

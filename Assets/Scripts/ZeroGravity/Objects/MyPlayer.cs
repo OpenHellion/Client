@@ -1165,7 +1165,10 @@ namespace ZeroGravity.Objects
 					ShipRotationCursor.y += Mathf.Clamp(TeamUtility.IO.InputManager.GetAxis("LookHorizontal"), -1f, 1f);
 
 					// Stabilise rotation cursor.
-					ShipRotationCursor *= spaceObjectVessel.RCS.RotationAcceleration / spaceObjectVessel.RCS.RotationStabilization;
+					if (ZeroGravity.UI.InputManager.GetButton(ZeroGravity.UI.InputManager.AxisNames.LeftShift))
+					{
+						ShipRotationCursor *= spaceObjectVessel.RCS.RotationAcceleration / spaceObjectVessel.RCS.RotationStabilization;
+					}
 
 					// Calculate velocity.
 					Vector3 velocity = ShipRotationCursor - oldShipRotationCursor;

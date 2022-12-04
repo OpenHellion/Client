@@ -130,6 +130,26 @@ namespace ZeroGravity.Audio
 			}
 		}
 
+		private void DecodeAudioPacket(byte[] bytes)
+		{
+			if (bytes.Length == 0 && audioSource.isPlaying)
+			{
+				audioSource.Stop();
+				audioData.Clear();
+				return;
+			}
+			FrameBuffer buf = new FrameBuffer(bytes, FrameFlags.PartialFrame);
+			float[] collection = opusDecoder.DecodePacket(ref buf);
+			// float[] collection = opusDecoder.DecodePacketFloat(bytes);
+			audioData.AddRange(collection);
+			if (!audioSource.isPlaying)
+			{
+				audioData.Clear();
+				audioSource.Play();
+				emptyAudioFramesCounter = 0;
+			}
+		}
+
 		private void UpdateAudioParameters()
 		{
 			if (!(thisPlayer != null))
@@ -161,8 +181,7 @@ namespace ZeroGravity.Audio
 			}
 			else if (thisPlayer.CurrentRoomTrigger != null && thisPlayer.CurrentRoomTrigger.AirPressure > 0f)
 			{
-				bool throughBulkhead = false;
-				float? num = MyPlayer.Instance.GetDistance(thisPlayer, out throughBulkhead);
+				float? num = MyPlayer.Instance.GetDistance(thisPlayer, out bool throughBulkhead);
 				if (MyPlayer.isAudioDebug)
 				{
 					Dbg.Info("dist " + num);
@@ -217,26 +236,6 @@ namespace ZeroGravity.Audio
 			{
 				Array.Clear(data, 0, data.Length);
 				emptyAudioFramesCounter++;
-			}
-		}
-
-		private void DecodeAudioPacket(byte[] bytes)
-		{
-			if (bytes.Length == 0 && audioSource.isPlaying)
-			{
-				audioSource.Stop();
-				audioData.Clear();
-				return;
-			}
-			FrameBuffer buf = new FrameBuffer(bytes, FrameFlags.PartialFrame);
-			float[] collection = opusDecoder.DecodePacket(ref buf);
-			// float[] collection = opusDecoder.DecodePacketFloat(bytes);
-			audioData.AddRange(collection);
-			if (!audioSource.isPlaying)
-			{
-				audioData.Clear();
-				audioSource.Play();
-				emptyAudioFramesCounter = 0;
 			}
 		}
 

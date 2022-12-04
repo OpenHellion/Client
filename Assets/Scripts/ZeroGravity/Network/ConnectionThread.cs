@@ -279,7 +279,7 @@ namespace ZeroGravity.Network
 					{
 						if (!Client.Instance.LogInResponseReceived)
 						{
-							Client.Instance.NetworkController.EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.ShowMessageBox, Localization.ConnectionError, Localization.TryAgainLeater));
+							Client.Instance.NetworkController.EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.ShowMessageBox, Localization.ConnectionError, Localization.TryAgainLater));
 						}
 						else if (Client.Instance.LogoutRequestSent)
 						{
