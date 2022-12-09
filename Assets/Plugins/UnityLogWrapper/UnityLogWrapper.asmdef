@@ -1,5 +1,14 @@
 {
-  "name": "UnityLogWrapper",
-  "references": [],
-  "allowUnsafeCode": true
+    "name": "UnityLogWrapper",
+    "rootNamespace": "",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

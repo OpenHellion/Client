@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Steamworks;
 using TMPro;
+using TriInspector;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Analytics;
@@ -49,7 +50,7 @@ namespace ZeroGravity
 			PreloadWithCopy
 		}
 
-		[NonSerialized]
+		[ReadOnly]
 		public string SpServerPath = Directory.GetCurrentDirectory() + "\\Hellion_Data\\HELLION_SP";
 
 		private string spServerFileName = "HELLION_SP.exe";
@@ -66,7 +67,7 @@ namespace ZeroGravity
 		[Multiline(2)]
 		public string ExperimentalText;
 
-		public GameObject Exper<imentalGameObject;
+		public GameObject ExperimentalGameObject;
 
 		public bool AllowLoadingOldSaveGames;
 
@@ -85,7 +86,8 @@ namespace ZeroGravity
 
 		private int prevSortMode = -1;
 
-		public ConcurrentBag<GameServerUI> serverListForUi = new ConcurrentBag<GameServerUI>();
+		[NonSerialized]
+		public ConcurrentBag<GameServerUI> serverListElements = new ConcurrentBag<GameServerUI>();
 
 		[Space(10f)]
 		public ServerCategories CurrentServerFilter;
@@ -186,12 +188,16 @@ namespace ZeroGravity
 
 		public static ConcurrentBag<GameServerUI> LastGameServersData = null;
 
+		[NonSerialized]
 		public Dictionary<long, OtherPlayer> Players = new Dictionary<long, OtherPlayer>();
 
+		[NonSerialized]
 		public Dictionary<long, DynamicObject> DynamicObjects = new Dictionary<long, DynamicObject>();
 
+		[NonSerialized]
 		public Dictionary<long, Corpse> Corpses = new Dictionary<long, Corpse>();
 
+		[NonSerialized]
 		public Dictionary<long, SpaceObjectVessel> ActiveVessels = new Dictionary<long, SpaceObjectVessel>();
 
 		public GameObject SolarSystemRoot;
@@ -224,8 +230,10 @@ namespace ZeroGravity
 		/// 	If we have loaded up a save or joined a server, and is in game.<br/>
 		/// 	True when game is started.
 		/// </summary>
+		[ReadOnly]
 		public bool IsInGame;
 
+		[ReadOnly]
 		public bool HasFocus;
 
 		public bool InvertMouseWhileDriving;
@@ -294,8 +302,12 @@ namespace ZeroGravity
 
 		public GameObject MainMenuRoot;
 
+		[NonSerialized]
 		public Dictionary<long, CharacterInteractionState> CharacterInteractionStatesQueue = new Dictionary<long, CharacterInteractionState>();
 
+		private bool GetP2PPacketsThreadActive;
+
+		[ReadOnly]
 		public bool SignInFailed;
 
 		private int collisionLayerMask;
@@ -628,7 +640,6 @@ namespace ZeroGravity
 			m_GameRichPresenceJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested);
 			if (SteamManager.Initialized)
 			{
-				SteamNetworking.AllowP2PPacketRelay(bAllow: true);
 				Analytics.SetUserId(SteamUser.GetSteamID().ToString());
 			}
 			Discord.UpdateStatus();
@@ -1189,8 +1200,8 @@ namespace ZeroGravity
 			InviteScreen.SetActive(value: true);
 			Connect();
 			CanvasManager.Disclamer.SetActive(value: false);
-			yield return new WaitUntil(() => receivedSignInResponse && serverListForUi.FirstOrDefault((GameServerUI m) => m.Id == InvitedToServerId) != null);
-			_invitedToServer = serverListForUi.FirstOrDefault((GameServerUI m) => m.Id == InvitedToServerId && m.Hash == CombinedHash);
+			yield return new WaitUntil(() => receivedSignInResponse && serverListElements.FirstOrDefault((GameServerUI m) => m.Id == InvitedToServerId) != null);
+			_invitedToServer = serverListElements.FirstOrDefault((GameServerUI m) => m.Id == InvitedToServerId && m.Hash == CombinedHash);
 			yield return new WaitForSeconds(1f);
 			InvitedToServerId = -1L;
 			if (_invitedToServer == null)
@@ -2088,7 +2099,7 @@ namespace ZeroGravity
 			}
 
 			// Prepare for connection.
-			LastGameServersData = serverListForUi;
+			LastGameServersData = serverListElements;
 			LastConnectedServer = server;
 			CanvasManager.LoadingTips.text = ShuffledTexts.GetNextInLoop();
 			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.ConnectingToGame);
@@ -2209,7 +2220,7 @@ namespace ZeroGravity
 			server.Private.SetActive(serverData.Locked);
 
 			// Add button to list.
-			serverListForUi.Add(server);
+			serverListElements.Add(server);
 
 			// Add button to correct server catergory.
 			if (serverData.Tag == ServerTag.Official)
@@ -2251,11 +2262,11 @@ namespace ZeroGravity
 
 		public void ClearServerList()
 		{
-			foreach (GameServerUI item in serverListForUi)
+			foreach (GameServerUI item in serverListElements)
 			{
 				UnityEngine.Object.Destroy(item.Panel);
 			}
-			serverListForUi = new ConcurrentBag<GameServerUI>();
+			serverListElements = new ConcurrentBag<GameServerUI>();
 		}
 
 		private void LogInResponseListener(NetworkData data)
@@ -2429,7 +2440,7 @@ namespace ZeroGravity
 			{
 			case 0:
 				CurrentServerFilter = ServerCategories.Official;
-				foreach (GameServerUI item in serverListForUi)
+				foreach (GameServerUI item in serverListElements)
 				{
 					bool flag2 = item.FilterType == CurrentServerFilter;
 					item.Panel.SetActive(flag2);
@@ -2438,7 +2449,7 @@ namespace ZeroGravity
 				break;
 			case 1:
 				CurrentServerFilter = ServerCategories.Community;
-				foreach (GameServerUI item2 in serverListForUi)
+				foreach (GameServerUI item2 in serverListElements)
 				{
 					bool flag = item2.FilterType == CurrentServerFilter;
 					item2.Panel.SetActive(flag);
@@ -2447,7 +2458,7 @@ namespace ZeroGravity
 				break;
 			default:
 				CurrentServerFilter = ServerCategories.Favorites;
-				foreach (GameServerUI item3 in serverListForUi)
+				foreach (GameServerUI item3 in serverListElements)
 				{
 					item3.Panel.SetActive(item3.IsFavourite);
 					item3.IsVisible = item3.IsFavourite;
@@ -2603,7 +2614,7 @@ namespace ZeroGravity
 
 		public void SearchServersInput()
 		{
-			foreach (GameServerUI item in serverListForUi)
+			foreach (GameServerUI item in serverListElements)
 			{
 				if (item.NameText.text.ToLower().Contains(ServerSearchInputField.text.ToLower()) && (item.FilterType == CurrentServerFilter || (item.IsFavourite && CurrentServerFilter == ServerCategories.Favorites)))
 				{

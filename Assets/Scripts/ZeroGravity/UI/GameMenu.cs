@@ -137,6 +137,8 @@ namespace ZeroGravity.UI
 			}
 			else
 			{
+				Client.Instance.ToggleCursor(false);
+
 				BaseSceneTrigger lockedToTrigger = MyPlayer.Instance.LockedToTrigger;
 				if (MyPlayer.Instance.IsLockedToTrigger)
 				{

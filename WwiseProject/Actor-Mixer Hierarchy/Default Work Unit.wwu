@@ -4263,6 +4263,9 @@
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
 										</Reference>
+										<Reference Name="Effect0" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
+											<ObjectRef Name="MyJetpackEQ" ID="{FD6A4CF4-8889-4CC0-A546-91239F45880B}" WorkUnitID="{B60878C0-295E-4509-BC86-608E34C82B95}"/>
+										</Reference>
 										<Reference Name="OutputBus">
 											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
 										</Reference>

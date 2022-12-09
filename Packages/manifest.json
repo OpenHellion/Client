@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "com.bedtime.selection-detective": "https://github.com/BedtimeDigitalGames/Unity-Selection-Detective.git#1.6.0",
+    "com.codewriter.triinspector": "https://github.com/codewriter-packages/Tri-Inspector.git#1.9.3",
+    "com.innogames.asset-relations-viewer": "https://github.com/innogames/asset-relations-viewer.git#1.5.1",
     "com.rlabrecque.steamworks.net": "https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net#20.1.0",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",
@@ -16,8 +19,9 @@
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.timeline": "1.6.4",
     "com.unity.ugui": "1.0.0",
-    "com.unity.vfx-toolbox": "https://github.com/Unity-Technologies/VFXToolbox.git",
+    "com.unity.vfx-toolbox": "https://github.com/Unity-Technologies/VFXToolbox.git#2.1.0-preview",
     "com.unity.xr.legacyinputhelpers": "2.1.10",
+    "org.nuget.protobuf-net": "3.1.25",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
     "com.unity.modules.assetbundle": "1.0.0",
@@ -38,5 +42,14 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "scopedRegistries": [
+    {
+      "name": "Unity NuGet",
+      "url": "https://unitynuget-registry.azurewebsites.net",
+      "scopes": [
+        "org.nuget"
+      ]
+    }
+  ]
 }

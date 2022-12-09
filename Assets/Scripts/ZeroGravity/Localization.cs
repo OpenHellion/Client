@@ -515,7 +515,7 @@ namespace ZeroGravity
 
 		public static string AreYouSureYouWantToSave;
 
-		public static string TryAgainLeater;
+		public static string TryAgainLater;
 
 		public static string SpawnErrorTitle;
 
@@ -2462,7 +2462,7 @@ namespace ZeroGravity
 			AreYouSureRespawn = "Confirming this option will kill your character!\nAre you sure you want to respawn?";
 			AreYouSureLoad = "Confirming this option will delete all current progress! \n Are you sure you want to load game?";
 			AreYouSureYouWantToSave = "Settings have been updated! \n Do you want to save changes?";
-			TryAgainLeater = "Try again later";
+			TryAgainLater = "Try again later";
 			SpawnErrorTitle = "Spawn error";
 			SpawnErrorMessage = "Unable to spawn on selected point, please select a different spawn point";
 			InvertMouse = "Invert Mouse";
