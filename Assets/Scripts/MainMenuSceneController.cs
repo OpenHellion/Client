@@ -7,8 +7,6 @@ public class MainMenuSceneController : MonoBehaviour
 {
 	public PostProcessProfile PostProcessProfile;
 
-	public List<HxVolumetricLight> VolumetricLights;
-
 	public AnimationCurve FadeInCurve;
 
 	public float FadeInTime = 1f;
@@ -107,10 +105,6 @@ public class MainMenuSceneController : MonoBehaviour
 		while (fadeTime > 0f)
 		{
 			colorGrading.postExposure.value = FadeInCurve.Evaluate(1f - Mathf.Clamp01(fadeTime / FadeInTime));
-			foreach (HxVolumetricLight volumetricLight in VolumetricLights)
-			{
-				volumetricLight.Intensity = VolumeFadeInCurve.Evaluate(1f - Mathf.Clamp01(fadeTime / FadeInTime));
-			}
 			fadeTime -= Time.deltaTime;
 			yield return new WaitForEndOfFrame();
 		}
@@ -125,10 +119,6 @@ public class MainMenuSceneController : MonoBehaviour
 		while (fadeTime > 0f)
 		{
 			colorGrading.postExposure.value = FadeOutCurve.Evaluate(1f - Mathf.Clamp01(fadeTime / FadeOutTime));
-			foreach (HxVolumetricLight volumetricLight in VolumetricLights)
-			{
-				volumetricLight.Intensity = VolumeFadeInCurve.Evaluate(1f - Mathf.Clamp01(fadeTime / FadeInTime));
-			}
 			fadeTime -= Time.deltaTime;
 			yield return new WaitForEndOfFrame();
 		}

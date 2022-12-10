@@ -15,8 +15,6 @@ public class SceneLightController : MonoBehaviour
 
 	private new Light light;
 
-	private HxVolumetricLight volumelight;
-
 	[Space(20f)]
 	public LightState State;
 
@@ -83,11 +81,6 @@ public class SceneLightController : MonoBehaviour
 
 	private void Reset()
 	{
-		if (GetComponent<HxVolumetricLight>() != null)
-		{
-			volumelight = GetComponent<HxVolumetricLight>();
-			volumelight.CustomIntensity = true;
-		}
 		light = GetComponent<Light>();
 		OnIntensity = light.intensity;
 		OnColor = light.color;
@@ -101,11 +94,6 @@ public class SceneLightController : MonoBehaviour
 
 	private void OnEnable()
 	{
-		if (GetComponent<HxVolumetricLight>() != null)
-		{
-			volumelight = GetComponent<HxVolumetricLight>();
-			volumelight.CustomIntensity = true;
-		}
 		if (light == null)
 		{
 			light = GetComponent<Light>();
@@ -158,43 +146,25 @@ public class SceneLightController : MonoBehaviour
 		float endIntensity = 0f;
 		Color startColor = light.color;
 		Color endColor2 = Color.white;
-		float startVolume = 0f;
-		float endVolume = 0f;
 		float emissionState = 0f;
-		if (volumelight != null)
-		{
-			startVolume = volumelight.Intensity;
-		}
 		if (OnOff)
 		{
 			if (State == LightState.Normal)
 			{
 				endIntensity = OnIntensity;
 				endColor2 = OnColor;
-				if (volumelight != null)
-				{
-					endVolume = OnVolumetricIntensity;
-				}
 				emissionState = 0f;
 			}
 			else if (State == LightState.ToxicAtmosphere)
 			{
 				endIntensity = ToxicIntensity;
 				endColor2 = ToxicColor;
-				if (volumelight != null)
-				{
-					endVolume = ToxicVolumetricIntensity;
-				}
 				emissionState = 1f;
 			}
 			else
 			{
 				endIntensity = PressureIntensity;
 				endColor2 = PressureColor;
-				if (volumelight != null)
-				{
-					endVolume = OffVolumetricIntensity;
-				}
 				emissionState = 2f;
 			}
 		}
@@ -202,10 +172,6 @@ public class SceneLightController : MonoBehaviour
 		{
 			endIntensity = OffIntensity;
 			endColor2 = OffColor;
-			if (volumelight != null)
-			{
-				endVolume = OffVolumetricIntensity;
-			}
 		}
 		int curveIndex = 0;
 		if (CurveHelper != null)
@@ -219,20 +185,12 @@ public class SceneLightController : MonoBehaviour
 			{
 				light.intensity = Mathf.Lerp(startIntensity, endIntensity, CurveHelper.Curves[curveIndex].Evaluate(1f - time / LightChangeDuration));
 				light.color = Color.Lerp(startColor, endColor2, CurveHelper.Curves[curveIndex].Evaluate(1f - time / LightChangeDuration));
-				if (volumelight != null)
-				{
-					volumelight.Intensity = Mathf.Lerp(startVolume, endVolume, CurveHelper.Curves[curveIndex].Evaluate(1f - time / LightChangeDuration));
-				}
 				previousOnOff = OnOff;
 			}
 			else
 			{
 				light.intensity = Mathf.Lerp(startIntensity, endIntensity, 1f - time / LightChangeDuration);
 				light.color = Color.Lerp(startColor, endColor2, 1f - time / LightChangeDuration);
-				if (volumelight != null)
-				{
-					volumelight.Intensity = Mathf.Lerp(startVolume, endVolume, 1f - time / LightChangeDuration);
-				}
 			}
 			time -= Time.deltaTime;
 			yield return new WaitForEndOfFrame();

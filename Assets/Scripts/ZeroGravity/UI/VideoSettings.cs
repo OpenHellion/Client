@@ -234,8 +234,6 @@ namespace ZeroGravity.UI
 
 			antialiasingDropdown.value = VideoData.AntialiasingIndex;
 			antialiasingDropdown.RefreshShownValue();
-			//VolumetricLighting.isOn = VideoData.VolumetricLights;
-			//Client.Instance.VolumetricOption = VideoData.VolumetricLights;
 			// Disabled.
 			VolumetricLighting.isOn = false;
 			Client.Instance.VolumetricOption = false;

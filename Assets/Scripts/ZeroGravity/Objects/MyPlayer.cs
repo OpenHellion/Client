@@ -614,7 +614,6 @@ namespace ZeroGravity.Objects
 		{
 			PostProcessLayer.Antialiasing antialiasingOption = (PostProcessLayer.Antialiasing)Client.Instance.AntialiasingOption;
 			FpsController.MainCamera.GetComponent<PostProcessLayer>().antialiasingMode = antialiasingOption;
-			FpsController.MainCamera.GetComponent<HxVolumetricCamera>().enabled = Client.Instance.VolumetricOption;
 		}
 
 		private void InitializeInventory()

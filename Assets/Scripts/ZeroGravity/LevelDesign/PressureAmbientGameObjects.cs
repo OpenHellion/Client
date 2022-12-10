@@ -18,22 +18,13 @@ namespace ZeroGravity.LevelDesign
 
 		public List<SceneLightController> SceneLightControllers;
 
-		private HxVolumetricCamera hvc;
-
 		public void Initialize()
 		{
-			if (MyPlayer.Instance != null)
-			{
-				hvc = MyPlayer.Instance.FpsController.MainCamera.GetComponent<HxVolumetricCamera>();
-			}
+
 		}
 
 		public void CheckPressureForAmbient(float pressure, bool isAirOk, bool isAirCrit)
 		{
-			if (hvc != null)
-			{
-				hvc.Density = pressure;
-			}
 			if (PressureUnder0_4bar != null)
 			{
 				PressureUnder0_4bar.SetActive(pressure < 0.4f);
