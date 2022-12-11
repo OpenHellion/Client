@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;
@@ -17,6 +18,7 @@ namespace ZeroGravity.ShipComponents
 		[HideInInspector]
 		public NavigationPanel Panel;
 
+		[HideInInspector]
 		public Dictionary<IMapMainObject, MapObject> AllMapObjects = new Dictionary<IMapMainObject, MapObject>();
 
 		[Header("PREFABS")]
@@ -43,16 +45,20 @@ namespace ZeroGravity.ShipComponents
 
 		public GameObject ScanEffectPrefab;
 
+		[HideInInspector]
 		public GameObject MapScanEffect;
 
 		public Transform MapObjectsRoot;
 
 		public Camera MapCamera;
 
+		[ReadOnly]
 		public MapObject MyShip;
 
+		[ReadOnly]
 		public MapObject Home;
 
+		[ReadOnly]
 		public MapObject Sun;
 
 		[Header("ZOOM")]
@@ -133,6 +139,7 @@ namespace ZeroGravity.ShipComponents
 
 		private Ray ray;
 
+		[HideInInspector]
 		public Dictionary<long, OrbitParameters> UnknownVisibilityOrbits = new Dictionary<long, OrbitParameters>();
 
 		[NonSerialized]

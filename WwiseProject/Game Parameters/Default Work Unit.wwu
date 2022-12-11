@@ -14,6 +14,12 @@
 					</PropertyList>
 				</GameParameter>
 				<GameParameter Name="RepairPointIntensity" ID="{A3EA5262-F1DA-428D-94DA-DA9F66AD1288}"/>
+				<GameParameter Name="MasterVolume" ID="{BBD77930-B57E-45DD-A302-2F06BA9FBD2B}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="80"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="AmbienceVolume" ID="{7B982211-E9D7-4EB5-A467-3E75CB6CB35E}"/>
 			</ChildrenList>
 		</WorkUnit>
 	</GameParameters>

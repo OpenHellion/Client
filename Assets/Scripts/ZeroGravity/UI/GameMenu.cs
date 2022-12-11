@@ -137,8 +137,6 @@ namespace ZeroGravity.UI
 			}
 			else
 			{
-				Client.Instance.ToggleCursor(false);
-
 				BaseSceneTrigger lockedToTrigger = MyPlayer.Instance.LockedToTrigger;
 				if (MyPlayer.Instance.IsLockedToTrigger)
 				{
@@ -215,6 +213,8 @@ namespace ZeroGravity.UI
 			MainMenu(false);
 			Client.Instance.CanvasManager.ToggleInGameMenuCanvas(false);
 			Client.Instance.OnInGameMenuClosed();
+
+			Client.Instance.ToggleCursor(false);
 		}
 
 		public void LogoutButton()

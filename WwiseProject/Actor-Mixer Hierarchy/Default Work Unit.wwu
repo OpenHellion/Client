@@ -452,395 +452,6 @@
 						</Sound>
 					</ChildrenList>
 				</Folder>
-				<Folder Name="Ambience" ID="{F492F15B-8340-4C8F-8DAC-270FC237C64C}" ShortID="153375043">
-					<ChildrenList>
-						<SwitchContainer Name="RoomAmbiences" ID="{2F996E2B-B22E-43BA-A8A2-18B1BACC7F62}" ShortID="679555285">
-							<ReferenceList>
-								<Reference Name="Conversion">
-									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-								</Reference>
-								<Reference Name="DefaultSwitchOrState">
-									<ObjectRef Name="MainMenu" ID="{CB78F9B6-4FBC-4841-9C95-F6D5A83A248D}" WorkUnitID="{C436E4A2-B696-4919-8FBF-CE0FDEB7B0FA}"/>
-								</Reference>
-								<Reference Name="OutputBus">
-									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-								</Reference>
-								<Reference Name="SwitchGroupOrStateGroup">
-									<ObjectRef Name="Ambience" ID="{0343ED8B-98B7-4152-A235-6DFECE9E23D3}" WorkUnitID="{C436E4A2-B696-4919-8FBF-CE0FDEB7B0FA}"/>
-								</Reference>
-							</ReferenceList>
-							<ChildrenList>
-								<RandomSequenceContainer Name="CQM" ID="{6811A38E-40C9-480E-9321-DFA943ACC908}" ShortID="221851340">
-									<PropertyList>
-										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
-										<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-3</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
-									<ReferenceList>
-										<Reference Name="Conversion">
-											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-										</Reference>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-										</Reference>
-									</ReferenceList>
-									<ChildrenList>
-										<RandomSequenceContainer Name="RandomBGimpacts" ID="{FA1F8554-CDA5-4A0E-9DD8-36E42D4DCA20}" ShortID="921001039">
-											<PropertyList>
-												<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
-												<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
-												<Property Name="Volume" Type="Real64">
-													<ValueList>
-														<Value>-5</Value>
-													</ValueList>
-												</Property>
-											</PropertyList>
-											<ReferenceList>
-												<Reference Name="Conversion">
-													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-												</Reference>
-												<Reference Name="OutputBus">
-													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-												</Reference>
-											</ReferenceList>
-											<ChildrenList>
-												<Sound Name="AltCorp_Background_Random_Squeek_01" ID="{40EFC8C0-E8AD-4850-87E1-D1E15C79E834}" ShortID="797995517">
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="AltCorp_Background_Random_Squeek_01" ID="{6106EC4F-23A1-4036-A651-6E5CCD080C45}">
-															<Language>SFX</Language>
-															<AudioFile>Ambience\AltCorp_Background_Random_Squeek_01.wav</AudioFile>
-															<MediaIDList>
-																<MediaID ID="385011275"/>
-															</MediaIDList>
-														</AudioFileSource>
-													</ChildrenList>
-													<ObjectLists/>
-													<ActiveSourceList>
-														<ActiveSource Name="AltCorp_Background_Random_Squeek_01" ID="{6106EC4F-23A1-4036-A651-6E5CCD080C45}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-												<Sound Name="AltCorp_Background_Random Sub 1_01" ID="{ED91097E-D14F-4D0E-A5B3-C412C6D82DE1}" ShortID="417231960">
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="AltCorp_Background_Random Sub 1_01" ID="{6BB7A730-3EE8-4BFD-893D-B3091453BEAE}">
-															<Language>SFX</Language>
-															<AudioFile>Ambience\AltCorp_Background_Random Sub 1_01.wav</AudioFile>
-															<MediaIDList>
-																<MediaID ID="947243565"/>
-															</MediaIDList>
-														</AudioFileSource>
-													</ChildrenList>
-													<ObjectLists/>
-													<ActiveSourceList>
-														<ActiveSource Name="AltCorp_Background_Random Sub 1_01" ID="{6BB7A730-3EE8-4BFD-893D-B3091453BEAE}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-												<Sound Name="AltCorp_Background_Random_Impact 2_01" ID="{A7AC2E9F-B290-4A88-8347-19DB6C9840E6}" ShortID="872662498">
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="AltCorp_Background_Random_Impact 2_01" ID="{35A0F7D8-7003-463C-AC61-45E5B1BD00C9}">
-															<Language>SFX</Language>
-															<AudioFile>Ambience\AltCorp_Background_Random_Impact 2_01.wav</AudioFile>
-															<MediaIDList>
-																<MediaID ID="674479"/>
-															</MediaIDList>
-														</AudioFileSource>
-													</ChildrenList>
-													<ObjectLists/>
-													<ActiveSourceList>
-														<ActiveSource Name="AltCorp_Background_Random_Impact 2_01" ID="{35A0F7D8-7003-463C-AC61-45E5B1BD00C9}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-												<Sound Name="AltCorp_Background_Random_Impact 7_01" ID="{8C973008-0F90-457E-A6B7-FB2A86380768}" ShortID="815519409">
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="AltCorp_Background_Random_Impact 7_01" ID="{7595F2EE-E7C0-4208-B5DB-709C7E6F56E5}">
-															<Language>SFX</Language>
-															<AudioFile>Ambience\AltCorp_Background_Random_Impact 7_01.wav</AudioFile>
-															<MediaIDList>
-																<MediaID ID="388219060"/>
-															</MediaIDList>
-														</AudioFileSource>
-													</ChildrenList>
-													<ObjectLists/>
-													<ActiveSourceList>
-														<ActiveSource Name="AltCorp_Background_Random_Impact 7_01" ID="{7595F2EE-E7C0-4208-B5DB-709C7E6F56E5}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-												<Sound Name="AltCorp_Background_Random_Impact 6_01" ID="{F0158118-1DB0-4CFF-BE3F-41E5B91162F1}" ShortID="247848399">
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="AltCorp_Background_Random_Impact 6_01" ID="{DBDCEC54-3FAB-49BE-8009-3893C3455C34}">
-															<Language>SFX</Language>
-															<AudioFile>Ambience\AltCorp_Background_Random_Impact 6_01.wav</AudioFile>
-															<MediaIDList>
-																<MediaID ID="863346266"/>
-															</MediaIDList>
-														</AudioFileSource>
-													</ChildrenList>
-													<ObjectLists/>
-													<ActiveSourceList>
-														<ActiveSource Name="AltCorp_Background_Random_Impact 6_01" ID="{DBDCEC54-3FAB-49BE-8009-3893C3455C34}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-											</ChildrenList>
-											<ObjectLists/>
-										</RandomSequenceContainer>
-										<Sound Name="AltCorp_Loop_CryoChamber_1_A_01" ID="{55DBC4BE-2B8A-498B-B83F-4E7E8EEC7B18}" ShortID="1056238331">
-											<ReferenceList>
-												<Reference Name="Conversion">
-													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-												</Reference>
-												<Reference Name="OutputBus">
-													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-												</Reference>
-											</ReferenceList>
-											<ChildrenList>
-												<AudioFileSource Name="AltCorp_Loop_CryoChamber_1_A_01" ID="{1E4C804A-ED10-417C-B33F-6044221FACBA}">
-													<Language>SFX</Language>
-													<AudioFile>Ambience\AltCorp_Loop_CryoChamber_1_A_01.wav</AudioFile>
-													<MediaIDList>
-														<MediaID ID="891761248"/>
-													</MediaIDList>
-												</AudioFileSource>
-											</ChildrenList>
-											<ObjectLists/>
-											<ActiveSourceList>
-												<ActiveSource Name="AltCorp_Loop_CryoChamber_1_A_01" ID="{1E4C804A-ED10-417C-B33F-6044221FACBA}" Platform="Linked"/>
-											</ActiveSourceList>
-										</Sound>
-									</ChildrenList>
-									<ObjectLists/>
-								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="Outpost" ID="{34299A59-FA79-4DEE-97A7-912A0FACD160}" ShortID="601965045">
-									<PropertyList>
-										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-5</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
-									<ReferenceList>
-										<Reference Name="Conversion">
-											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-										</Reference>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-										</Reference>
-									</ReferenceList>
-									<ChildrenList>
-										<Sound Name="AltCorp_Loop_Ambience_Medium Room 1_Less Bass" ID="{D7458C61-7B0C-47DE-97CD-32E8EF4194AC}" ShortID="16384571">
-											<PropertyList>
-												<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
-											</PropertyList>
-											<ReferenceList>
-												<Reference Name="Conversion">
-													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-												</Reference>
-												<Reference Name="OutputBus">
-													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-												</Reference>
-											</ReferenceList>
-											<ChildrenList>
-												<AudioFileSource Name="AltCorp_Loop_Ambience_Medium Room 1_Less Bass" ID="{3B191D08-5E5D-4026-B97A-6F53054C2662}">
-													<Language>SFX</Language>
-													<AudioFile>Ambience\AltCorp_Loop_Ambience_Medium Room 1_Less Bass.wav</AudioFile>
-													<MediaIDList>
-														<MediaID ID="919959386"/>
-													</MediaIDList>
-												</AudioFileSource>
-											</ChildrenList>
-											<ObjectLists/>
-											<ActiveSourceList>
-												<ActiveSource Name="AltCorp_Loop_Ambience_Medium Room 1_Less Bass" ID="{3B191D08-5E5D-4026-B97A-6F53054C2662}" Platform="Linked"/>
-											</ActiveSourceList>
-										</Sound>
-									</ChildrenList>
-									<ObjectLists/>
-								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="Space" ID="{4A08C6E9-6935-4042-ADF2-FBA741780F65}" ShortID="514447690">
-									<PropertyList>
-										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
-									</PropertyList>
-									<ReferenceList>
-										<Reference Name="Conversion">
-											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-										</Reference>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-										</Reference>
-									</ReferenceList>
-									<ChildrenList>
-										<Sound Name="Background_Vacuum_A" ID="{2095461D-8590-49A0-AAA9-B86BCE86060D}" ShortID="833535256">
-											<PropertyList>
-												<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
-											</PropertyList>
-											<ReferenceList>
-												<Reference Name="Conversion">
-													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-												</Reference>
-												<Reference Name="OutputBus">
-													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-												</Reference>
-											</ReferenceList>
-											<ChildrenList>
-												<AudioFileSource Name="Background_Vacuum_A" ID="{9C9FE4C1-8EF5-4864-8692-35F9D231E8D5}">
-													<Language>SFX</Language>
-													<AudioFile>Ambience\Background_Vacuum_A.wav</AudioFile>
-													<MediaIDList>
-														<MediaID ID="550205693"/>
-													</MediaIDList>
-												</AudioFileSource>
-											</ChildrenList>
-											<ObjectLists/>
-											<ActiveSourceList>
-												<ActiveSource Name="Background_Vacuum_A" ID="{9C9FE4C1-8EF5-4864-8692-35F9D231E8D5}" Platform="Linked"/>
-											</ActiveSourceList>
-										</Sound>
-									</ChildrenList>
-									<ObjectLists/>
-								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="MainMenu" ID="{853EDECA-5574-4A55-894F-AE5FC8CBE9AE}" ShortID="861796229">
-									<PropertyList>
-										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-5</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
-									<ReferenceList>
-										<Reference Name="Conversion">
-											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-										</Reference>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-										</Reference>
-									</ReferenceList>
-									<ChildrenList>
-										<Sound Name="Hellion_Main Menu Theme 1" ID="{291A14A2-C966-408E-861A-3DE0139CDE52}" ShortID="62677415">
-											<PropertyList>
-												<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
-											</PropertyList>
-											<ReferenceList>
-												<Reference Name="Conversion">
-													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-												</Reference>
-												<Reference Name="OutputBus">
-													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-												</Reference>
-											</ReferenceList>
-											<ChildrenList>
-												<AudioFileSource Name="Hellion_Main Menu Theme 1" ID="{B3E0F53A-9F47-4C5B-9662-703D3EFC3771}">
-													<Language>SFX</Language>
-													<AudioFile>Ambience\Hellion_Main Menu Theme 1.wav</AudioFile>
-													<MediaIDList>
-														<MediaID ID="242681264"/>
-													</MediaIDList>
-												</AudioFileSource>
-											</ChildrenList>
-											<ObjectLists/>
-											<ActiveSourceList>
-												<ActiveSource Name="Hellion_Main Menu Theme 1" ID="{B3E0F53A-9F47-4C5B-9662-703D3EFC3771}" Platform="Linked"/>
-											</ActiveSourceList>
-										</Sound>
-									</ChildrenList>
-									<ObjectLists/>
-								</RandomSequenceContainer>
-							</ChildrenList>
-							<ObjectLists/>
-							<GroupingInfo>
-								<GroupingBehaviorList>
-									<GroupingBehavior>
-										<ItemRef Name="Outpost" ID="{34299A59-FA79-4DEE-97A7-912A0FACD160}"/>
-									</GroupingBehavior>
-									<GroupingBehavior>
-										<ItemRef Name="CQM" ID="{6811A38E-40C9-480E-9321-DFA943ACC908}"/>
-									</GroupingBehavior>
-									<GroupingBehavior>
-										<ItemRef Name="MainMenu" ID="{853EDECA-5574-4A55-894F-AE5FC8CBE9AE}"/>
-									</GroupingBehavior>
-									<GroupingBehavior>
-										<ItemRef Name="Space" ID="{4A08C6E9-6935-4042-ADF2-FBA741780F65}"/>
-									</GroupingBehavior>
-								</GroupingBehaviorList>
-								<GroupingList>
-									<Grouping>
-										<SwitchRef Name="Corridor_ambience" ID="{6257552D-F398-4DBD-B089-F2F1C38169E9}"/>
-										<ItemList>
-											<ItemRef Name="Space" ID="{4A08C6E9-6935-4042-ADF2-FBA741780F65}"/>
-										</ItemList>
-									</Grouping>
-									<Grouping>
-										<SwitchRef Name="CQM_ambience" ID="{E80B0345-D079-4786-B45C-EF57BD875929}"/>
-										<ItemList>
-											<ItemRef Name="CQM" ID="{6811A38E-40C9-480E-9321-DFA943ACC908}"/>
-										</ItemList>
-									</Grouping>
-									<Grouping>
-										<SwitchRef Name="Outpost_ambience" ID="{4B97376B-369C-497C-9788-451386609BA3}"/>
-										<ItemList>
-											<ItemRef Name="Outpost" ID="{34299A59-FA79-4DEE-97A7-912A0FACD160}"/>
-										</ItemList>
-									</Grouping>
-									<Grouping>
-										<SwitchRef Name="MainMenu" ID="{CB78F9B6-4FBC-4841-9C95-F6D5A83A248D}"/>
-										<ItemList>
-											<ItemRef Name="MainMenu" ID="{853EDECA-5574-4A55-894F-AE5FC8CBE9AE}"/>
-										</ItemList>
-									</Grouping>
-									<Grouping>
-										<SwitchRef Name="Space_ambience" ID="{3CCD68E0-621E-4778-808C-AA84EC3B0D63}"/>
-										<ItemList>
-											<ItemRef Name="Space" ID="{4A08C6E9-6935-4042-ADF2-FBA741780F65}"/>
-										</ItemList>
-									</Grouping>
-								</GroupingList>
-							</GroupingInfo>
-						</SwitchContainer>
-					</ChildrenList>
-				</Folder>
 				<Folder Name="ThirdPersonCharacter" ID="{2FC435BD-0B98-409B-95BA-9A151DD3F09F}" ShortID="912709987">
 					<ChildrenList>
 						<RandomSequenceContainer Name="Footsteps_walk" ID="{2EEEB9A8-D600-4533-9629-C125F2AB731F}" ShortID="266849661">
@@ -6246,7 +5857,7 @@
 											<PropertyList>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
-														<Value>-10</Value>
+														<Value>-13</Value>
 													</ValueList>
 												</Property>
 											</PropertyList>
@@ -8097,7 +7708,7 @@
 											<Custom>
 												<Attenuation Name="Attenuation (Custom)" ID="{EA000584-6186-42B6-8D84-A3DC36B9B447}" ShortID="225035843">
 													<PropertyList>
-														<Property Name="RadiusMax" Type="Real64" Value="20"/>
+														<Property Name="RadiusMax" Type="Real64" Value="15"/>
 													</PropertyList>
 													<CurveUsageInfoList>
 														<VolumeDryUsage>
@@ -8113,7 +7724,7 @@
 																			<Flags>5</Flags>
 																		</Point>
 																		<Point>
-																			<XPos>20</XPos>
+																			<XPos>15</XPos>
 																			<YPos>-200</YPos>
 																			<Flags>37</Flags>
 																		</Point>
@@ -12134,6 +11745,435 @@
 								</Folder>
 							</ChildrenList>
 						</Folder>
+					</ChildrenList>
+					<ObjectLists/>
+				</ActorMixer>
+				<ActorMixer Name="Ambience" ID="{C78CF287-2990-4450-A3D8-73F231207A93}" ShortID="505708691">
+					<PropertyList>
+						<Property Name="Volume" Type="Real64">
+							<RTPCList>
+								<RTPC Name="" ID="{CDFE5F29-33C1-4C78-B2EC-B124C7773F06}" ShortID="1003917999">
+									<ReferenceList>
+										<Reference Name="ControlInput">
+											<ObjectRef Name="AmbienceVolume" ID="{7B982211-E9D7-4EB5-A467-3E75CB6CB35E}" WorkUnitID="{28BF7696-FAE4-4797-A245-1672504B32F1}"/>
+										</Reference>
+									</ReferenceList>
+									<Curve Name="" ID="{E17B1B6F-C4AE-4398-B6AF-F030B3095952}">
+										<PropertyList>
+											<Property Name="Flags" Type="int32" Value="3"/>
+										</PropertyList>
+										<PointList>
+											<Point>
+												<XPos>0</XPos>
+												<YPos>-96</YPos>
+												<Flags>5</Flags>
+												<SegmentShape>Exp1</SegmentShape>
+											</Point>
+											<Point>
+												<XPos>100</XPos>
+												<YPos>0</YPos>
+												<Flags>37</Flags>
+											</Point>
+										</PointList>
+									</Curve>
+								</RTPC>
+							</RTPCList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<SwitchContainer Name="RoomAmbiences" ID="{2F996E2B-B22E-43BA-A8A2-18B1BACC7F62}" ShortID="679555285">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+								</Reference>
+								<Reference Name="DefaultSwitchOrState">
+									<ObjectRef Name="MainMenu" ID="{CB78F9B6-4FBC-4841-9C95-F6D5A83A248D}" WorkUnitID="{C436E4A2-B696-4919-8FBF-CE0FDEB7B0FA}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+								</Reference>
+								<Reference Name="SwitchGroupOrStateGroup">
+									<ObjectRef Name="Ambience" ID="{0343ED8B-98B7-4152-A235-6DFECE9E23D3}" WorkUnitID="{C436E4A2-B696-4919-8FBF-CE0FDEB7B0FA}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<RandomSequenceContainer Name="CQM" ID="{6811A38E-40C9-480E-9321-DFA943ACC908}" ShortID="221851340">
+									<PropertyList>
+										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
+										<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-3</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<RandomSequenceContainer Name="RandomBGimpacts" ID="{FA1F8554-CDA5-4A0E-9DD8-36E42D4DCA20}" ShortID="921001039">
+											<PropertyList>
+												<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
+												<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>-5</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<Sound Name="AltCorp_Background_Random_Squeek_01" ID="{40EFC8C0-E8AD-4850-87E1-D1E15C79E834}" ShortID="797995517">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="AltCorp_Background_Random_Squeek_01" ID="{6106EC4F-23A1-4036-A651-6E5CCD080C45}">
+															<Language>SFX</Language>
+															<AudioFile>Ambience\AltCorp_Background_Random_Squeek_01.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="385011275"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="AltCorp_Background_Random_Squeek_01" ID="{6106EC4F-23A1-4036-A651-6E5CCD080C45}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="AltCorp_Background_Random Sub 1_01" ID="{ED91097E-D14F-4D0E-A5B3-C412C6D82DE1}" ShortID="417231960">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="AltCorp_Background_Random Sub 1_01" ID="{6BB7A730-3EE8-4BFD-893D-B3091453BEAE}">
+															<Language>SFX</Language>
+															<AudioFile>Ambience\AltCorp_Background_Random Sub 1_01.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="947243565"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="AltCorp_Background_Random Sub 1_01" ID="{6BB7A730-3EE8-4BFD-893D-B3091453BEAE}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="AltCorp_Background_Random_Impact 2_01" ID="{A7AC2E9F-B290-4A88-8347-19DB6C9840E6}" ShortID="872662498">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="AltCorp_Background_Random_Impact 2_01" ID="{35A0F7D8-7003-463C-AC61-45E5B1BD00C9}">
+															<Language>SFX</Language>
+															<AudioFile>Ambience\AltCorp_Background_Random_Impact 2_01.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="674479"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="AltCorp_Background_Random_Impact 2_01" ID="{35A0F7D8-7003-463C-AC61-45E5B1BD00C9}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="AltCorp_Background_Random_Impact 7_01" ID="{8C973008-0F90-457E-A6B7-FB2A86380768}" ShortID="815519409">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="AltCorp_Background_Random_Impact 7_01" ID="{7595F2EE-E7C0-4208-B5DB-709C7E6F56E5}">
+															<Language>SFX</Language>
+															<AudioFile>Ambience\AltCorp_Background_Random_Impact 7_01.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="388219060"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="AltCorp_Background_Random_Impact 7_01" ID="{7595F2EE-E7C0-4208-B5DB-709C7E6F56E5}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="AltCorp_Background_Random_Impact 6_01" ID="{F0158118-1DB0-4CFF-BE3F-41E5B91162F1}" ShortID="247848399">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="AltCorp_Background_Random_Impact 6_01" ID="{DBDCEC54-3FAB-49BE-8009-3893C3455C34}">
+															<Language>SFX</Language>
+															<AudioFile>Ambience\AltCorp_Background_Random_Impact 6_01.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="863346266"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="AltCorp_Background_Random_Impact 6_01" ID="{DBDCEC54-3FAB-49BE-8009-3893C3455C34}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+											</ChildrenList>
+											<ObjectLists/>
+										</RandomSequenceContainer>
+										<Sound Name="AltCorp_Loop_CryoChamber_1_A_01" ID="{55DBC4BE-2B8A-498B-B83F-4E7E8EEC7B18}" ShortID="1056238331">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="AltCorp_Loop_CryoChamber_1_A_01" ID="{1E4C804A-ED10-417C-B33F-6044221FACBA}">
+													<Language>SFX</Language>
+													<AudioFile>Ambience\AltCorp_Loop_CryoChamber_1_A_01.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="891761248"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="AltCorp_Loop_CryoChamber_1_A_01" ID="{1E4C804A-ED10-417C-B33F-6044221FACBA}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+									<ObjectLists/>
+								</RandomSequenceContainer>
+								<RandomSequenceContainer Name="Outpost" ID="{34299A59-FA79-4DEE-97A7-912A0FACD160}" ShortID="601965045">
+									<PropertyList>
+										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-5</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<Sound Name="AltCorp_Loop_Ambience_Medium Room 1_Less Bass" ID="{D7458C61-7B0C-47DE-97CD-32E8EF4194AC}" ShortID="16384571">
+											<PropertyList>
+												<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="AltCorp_Loop_Ambience_Medium Room 1_Less Bass" ID="{3B191D08-5E5D-4026-B97A-6F53054C2662}">
+													<Language>SFX</Language>
+													<AudioFile>Ambience\AltCorp_Loop_Ambience_Medium Room 1_Less Bass.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="919959386"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="AltCorp_Loop_Ambience_Medium Room 1_Less Bass" ID="{3B191D08-5E5D-4026-B97A-6F53054C2662}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+									<ObjectLists/>
+								</RandomSequenceContainer>
+								<RandomSequenceContainer Name="Space" ID="{4A08C6E9-6935-4042-ADF2-FBA741780F65}" ShortID="514447690">
+									<PropertyList>
+										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<Sound Name="Background_Vacuum_A" ID="{2095461D-8590-49A0-AAA9-B86BCE86060D}" ShortID="833535256">
+											<PropertyList>
+												<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Background_Vacuum_A" ID="{9C9FE4C1-8EF5-4864-8692-35F9D231E8D5}">
+													<Language>SFX</Language>
+													<AudioFile>Ambience\Background_Vacuum_A.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="550205693"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Background_Vacuum_A" ID="{9C9FE4C1-8EF5-4864-8692-35F9D231E8D5}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+									<ObjectLists/>
+								</RandomSequenceContainer>
+								<RandomSequenceContainer Name="MainMenu" ID="{853EDECA-5574-4A55-894F-AE5FC8CBE9AE}" ShortID="861796229">
+									<PropertyList>
+										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-5</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<Sound Name="Hellion_Main Menu Theme 1" ID="{291A14A2-C966-408E-861A-3DE0139CDE52}" ShortID="62677415">
+											<PropertyList>
+												<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Hellion_Main Menu Theme 1" ID="{B3E0F53A-9F47-4C5B-9662-703D3EFC3771}">
+													<Language>SFX</Language>
+													<AudioFile>Ambience\Hellion_Main Menu Theme 1.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="242681264"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists/>
+											<ActiveSourceList>
+												<ActiveSource Name="Hellion_Main Menu Theme 1" ID="{B3E0F53A-9F47-4C5B-9662-703D3EFC3771}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+									<ObjectLists/>
+								</RandomSequenceContainer>
+							</ChildrenList>
+							<ObjectLists/>
+							<GroupingInfo>
+								<GroupingBehaviorList>
+									<GroupingBehavior>
+										<ItemRef Name="Outpost" ID="{34299A59-FA79-4DEE-97A7-912A0FACD160}"/>
+									</GroupingBehavior>
+									<GroupingBehavior>
+										<ItemRef Name="CQM" ID="{6811A38E-40C9-480E-9321-DFA943ACC908}"/>
+									</GroupingBehavior>
+									<GroupingBehavior>
+										<ItemRef Name="MainMenu" ID="{853EDECA-5574-4A55-894F-AE5FC8CBE9AE}"/>
+									</GroupingBehavior>
+									<GroupingBehavior>
+										<ItemRef Name="Space" ID="{4A08C6E9-6935-4042-ADF2-FBA741780F65}"/>
+									</GroupingBehavior>
+								</GroupingBehaviorList>
+								<GroupingList>
+									<Grouping>
+										<SwitchRef Name="Corridor_ambience" ID="{6257552D-F398-4DBD-B089-F2F1C38169E9}"/>
+										<ItemList>
+											<ItemRef Name="Space" ID="{4A08C6E9-6935-4042-ADF2-FBA741780F65}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="CQM_ambience" ID="{E80B0345-D079-4786-B45C-EF57BD875929}"/>
+										<ItemList>
+											<ItemRef Name="CQM" ID="{6811A38E-40C9-480E-9321-DFA943ACC908}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="Outpost_ambience" ID="{4B97376B-369C-497C-9788-451386609BA3}"/>
+										<ItemList>
+											<ItemRef Name="Outpost" ID="{34299A59-FA79-4DEE-97A7-912A0FACD160}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="MainMenu" ID="{CB78F9B6-4FBC-4841-9C95-F6D5A83A248D}"/>
+										<ItemList>
+											<ItemRef Name="MainMenu" ID="{853EDECA-5574-4A55-894F-AE5FC8CBE9AE}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="Space_ambience" ID="{3CCD68E0-621E-4778-808C-AA84EC3B0D63}"/>
+										<ItemList>
+											<ItemRef Name="Space" ID="{4A08C6E9-6935-4042-ADF2-FBA741780F65}"/>
+										</ItemList>
+									</Grouping>
+								</GroupingList>
+							</GroupingInfo>
+						</SwitchContainer>
 					</ChildrenList>
 					<ObjectLists/>
 				</ActorMixer>

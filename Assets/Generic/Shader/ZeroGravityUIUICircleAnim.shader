@@ -11,27 +11,140 @@ Shader "ZeroGravity/UI/UICircleAnim" {
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
 		_Buffer ("Buffer", Float) = 0.1
 	}
-	//DummyShaderTextExporter
-	SubShader{
-		Tags { "RenderType"="Opaque" }
-		LOD 200
-		CGPROGRAM
-#pragma surface surf Standard
-#pragma target 3.0
+	SubShader {
+		Tags { "CanUseSpriteAtlas" = "true" "IGNOREPROJECTOR" = "true" "PreviewType" = "Plane" "QUEUE" = "Transparent" "RenderType" = "Transparent" }
+		Pass {
+			Name "Default"
+			Tags { "CanUseSpriteAtlas" = "true" "IGNOREPROJECTOR" = "true" "PreviewType" = "Plane" "QUEUE" = "Transparent" "RenderType" = "Transparent" }
+			Blend SrcAlpha OneMinusSrcAlpha, SrcAlpha OneMinusSrcAlpha
+			ColorMask 0 -1
+			ZWrite Off
+			Cull Off
+			Stencil {
+				ReadMask 255
+				WriteMask 255
+				Comp Always
+				Pass Keep
+				Fail Keep
+				ZFail Keep
+			}
+			GpuProgramID 63965
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
 
-		sampler2D _MainTex;
-		fixed4 _Color;
-		struct Input
-		{
-			float2 uv_MainTex;
-		};
-		
-		void surf(Input IN, inout SurfaceOutputStandard o)
-		{
-			fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
-			o.Albedo = c.rgb;
-			o.Alpha = c.a;
+			#include "UnityCG.cginc"
+			struct v2f
+			{
+				float4 position : SV_POSITION0;
+				float4 color : COLOR0;
+				float2 texcoord : TEXCOORD0;
+				float4 texcoord1 : TEXCOORD1;
+			};
+			struct fout
+			{
+				float4 sv_target : SV_Target0;
+			};
+			// $Globals ConstantBuffers for Vertex Shader
+			float4 _Color;
+			// $Globals ConstantBuffers for Fragment Shader
+			float4 _ClipRect;
+			float _Buffer;
+			// Custom ConstantBuffers for Vertex Shader
+			// Custom ConstantBuffers for Fragment Shader
+			// Texture params for Vertex Shader
+			// Texture params for Fragment Shader
+			sampler2D _MainTex;
+
+			// Keywords:
+			v2f vert(appdata_full v)
+			{
+                v2f o;
+                float4 tmp0;
+                float4 tmp1;
+                tmp0 = v.vertex.yyyy * unity_ObjectToWorld._m01_m11_m21_m31;
+                tmp0 = unity_ObjectToWorld._m00_m10_m20_m30 * v.vertex.xxxx + tmp0;
+                tmp0 = unity_ObjectToWorld._m02_m12_m22_m32 * v.vertex.zzzz + tmp0;
+                tmp0 = tmp0 + unity_ObjectToWorld._m03_m13_m23_m33;
+                tmp1 = tmp0.yyyy * unity_MatrixVP._m01_m11_m21_m31;
+                tmp1 = unity_MatrixVP._m00_m10_m20_m30 * tmp0.xxxx + tmp1;
+                tmp1 = unity_MatrixVP._m02_m12_m22_m32 * tmp0.zzzz + tmp1;
+                o.position = unity_MatrixVP._m03_m13_m23_m33 * tmp0.wwww + tmp1;
+                o.color = v.color * _Color;
+                o.texcoord.xy = v.texcoord.xy;
+                o.texcoord1 = v.vertex;
+                return o;
+			}
+			// Keywords:
+			fout frag(v2f inp)
+			{
+                fout o;
+                float4 tmp0;
+                float4 tmp1;
+                float4 tmp2;
+                float4 tmp3;
+                tmp0.x = _Buffer + 0.5;
+                tmp0.y = 0.5 - _Buffer;
+                tmp0.z = tmp0.y < inp.color.w;
+                tmp0.xy = inp.color.ww < tmp0.xy;
+                tmp0.x = tmp0.x ? tmp0.z : 0.0;
+                tmp0.z = tmp0.y ? 2.0 : -2.0;
+                tmp0.z = tmp0.z * _Time.y;
+                tmp0.z = tmp0.x ? 0.0 : tmp0.z;
+                tmp1.x = sin(tmp0.z);
+                tmp2.x = cos(tmp0.z);
+                tmp3.z = tmp1.x;
+                tmp3.y = tmp2.x;
+                tmp3.x = -tmp1.x;
+                tmp0.zw = inp.texcoord.xy - float2(0.5, 0.5);
+                tmp1.y = dot(tmp0.xy, tmp3.xy);
+                tmp1.x = dot(tmp0.xy, tmp3.xy);
+                tmp0.zw = tmp1.xy + float2(0.5, 0.5);
+                tmp0.zw = tmp0.zw * float2(2.0, 2.0) + float2(-1.0, -1.0);
+                tmp1.x = max(abs(tmp0.w), abs(tmp0.z));
+                tmp1.x = 1.0 / tmp1.x;
+                tmp1.y = min(abs(tmp0.w), abs(tmp0.z));
+                tmp1.x = tmp1.x * tmp1.y;
+                tmp1.y = tmp1.x * tmp1.x;
+                tmp1.z = tmp1.y * 0.0208351 + -0.085133;
+                tmp1.z = tmp1.y * tmp1.z + 0.180141;
+                tmp1.z = tmp1.y * tmp1.z + -0.3302995;
+                tmp1.y = tmp1.y * tmp1.z + 0.999866;
+                tmp1.z = tmp1.y * tmp1.x;
+                tmp1.z = tmp1.z * -2.0 + 1.570796;
+                tmp1.w = abs(tmp0.w) < abs(tmp0.z);
+                tmp1.z = tmp1.w ? tmp1.z : 0.0;
+                tmp1.x = tmp1.x * tmp1.y + tmp1.z;
+                tmp1.y = tmp0.w < -tmp0.w;
+                tmp1.y = tmp1.y ? -3.141593 : 0.0;
+                tmp1.x = tmp1.y + tmp1.x;
+                tmp1.y = min(tmp0.w, tmp0.z);
+                tmp0.z = max(tmp0.w, tmp0.z);
+                tmp0.z = tmp0.z >= -tmp0.z;
+                tmp0.w = tmp1.y < -tmp1.y;
+                tmp0.z = tmp0.z ? tmp0.w : 0.0;
+                tmp0.z = tmp0.z ? -tmp1.x : tmp1.x;
+                tmp0.z = tmp0.z * 0.3183099 + 1.0;
+                tmp0.w = tmp0.z * 0.5;
+                tmp0.z = -tmp0.z * 0.5 + 1.0;
+                tmp0.y = tmp0.y ? tmp0.w : tmp0.z;
+                tmp0.xyz = tmp0.xxx ? float3(1.0, 1.0, 1.0) : tmp0.yyy;
+                tmp1 = tex2D(_MainTex, inp.texcoord.xy);
+                tmp2.xyz = inp.color.xyz;
+                tmp2.w = 1.0;
+                tmp1 = tmp1 * tmp2;
+                tmp0.w = 1.0;
+                tmp0 = tmp0 * tmp1;
+                tmp1.xy = inp.texcoord1.xy >= _ClipRect.xy;
+                tmp1.zw = _ClipRect.zw >= inp.texcoord1.xy;
+                tmp1 = tmp1 ? 1.0 : 0.0;
+                tmp1.xy = tmp1.zw * tmp1.xy;
+                tmp1.x = tmp1.y * tmp1.x;
+                o.sv_target.w = tmp0.w * tmp1.x;
+                o.sv_target.xyz = tmp0.xyz;
+                return o;
+			}
+			ENDCG
 		}
-		ENDCG
 	}
 }

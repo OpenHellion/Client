@@ -2,13 +2,15 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: sun_MAT
   m_Shader: {fileID: 4800000, guid: 04c4dbd3b6df4b747b3c8311095cdefa, type: 3}
-  m_ShaderKeywords:
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -22,6 +24,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: 718f3b0ec1551ed4a9075c9440d04601, type: 3}
         m_Scale: {x: 0.5, y: 0.5}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
@@ -57,3 +60,4 @@ Material:
     - _FresnelColor: {r: 0.97794116, g: 0.9469968, b: 0.6975021, a: 1}
     - _node_625: {r: 1, g: 0.84827876, b: 0, a: 1}
     - _node_6800: {r: 1, g: 0.91034484, b: 0, a: 1}
+  m_BuildTextureStacks: []

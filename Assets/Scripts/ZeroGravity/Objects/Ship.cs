@@ -1401,7 +1401,7 @@ namespace ZeroGravity.Objects
 			Mass = sscene.Mass * 1000f;
 			List<StructureSceneConnection> sceneConnections = new List<StructureSceneConnection>(sceneRoot.GetComponentsInChildren<StructureSceneConnection>());
 			List<long> connectedConnections = new List<long>();
-			//sceneRoot.transform.localPosition = Vector3.zero;
+			sceneRoot.transform.localPosition = Vector3.zero;
 			SceneHelper.FillAttachPoints(this, sceneRoot, AttachPoints, shipObjects?.AttachPoints);
 			SceneHelper.FillSubSystems(sceneRoot, SubSystems, shipObjects?.SubSystems);
 			SceneHelper.FillGenerators(sceneRoot, Generators, shipObjects?.Generators);

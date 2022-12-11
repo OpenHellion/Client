@@ -99,7 +99,7 @@ namespace ZeroGravity.UI
 		public void SetDefault()
 		{
 			VoiceVolumeSetter = 100f;
-			VolumeSetter = 100f;
+			VolumeSetter = 80f;
 			AmbienceVolumeSetter = 100f;
 			AudioData.Volume = VolumeSetter;
 			AudioData.VoiceVolume = VoiceVolumeSetter;
