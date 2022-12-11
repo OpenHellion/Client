@@ -704,6 +704,7 @@ Shader "DamageParallaxShader" {
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
+			#pragma target 3.0
 
 			#include "UnityCG.cginc"
 			struct v2f
@@ -944,6 +945,8 @@ Shader "DamageParallaxShader" {
 			#pragma vertex vert
 			#pragma fragment frag
 
+			#pragma target 3.0
+
 			#include "UnityCG.cginc"
 			struct v2f
 			{
@@ -1171,6 +1174,8 @@ Shader "DamageParallaxShader" {
 			#pragma vertex vert
 			#pragma fragment frag
 
+			#pragma target 3.0
+
 			#include "UnityCG.cginc"
 			struct v2f
 			{
@@ -1298,5 +1303,4 @@ Shader "DamageParallaxShader" {
 		}
 	}
 	Fallback "Diffuse"
-	CustomEditor "ASEMaterialInspector"
 }

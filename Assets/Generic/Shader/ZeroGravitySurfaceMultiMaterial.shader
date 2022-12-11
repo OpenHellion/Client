@@ -137,11 +137,11 @@ SubShader {
 
         struct Input
         {
-            float2 uv_MainTex;
+            float2 uv_DifuseMap;
         };
 
         sampler2D _NormalEmision;
-		fixed3 _EmColor;
+		half4 _EmColor;
 		half _EmissionAmount;
 		fixed _AlwaysEmit;
 
@@ -155,19 +155,18 @@ SubShader {
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             // Color
-            fixed4 c = tex2D (_DifuseMap, IN.uv_MainTex);
+            fixed4 c = tex2D(_DifuseMap, IN.uv_DifuseMap);
             o.Albedo = c.rgb;
-			//o.Alpha = c.a;
+			o.Alpha = c.a;
 
-			//fixed4 normal = tex2D(_NormalEmision, IN.uv_MainTex);
-			//o.Normal = normal.rgb;
-
-			//fixed4 occlusion = tex2D(_OcclusionMap, IN.uv_MainTex);
-			//o.Occlusion = occlusion.r;
+			fixed4 normalEmission = tex2D(_NormalEmision, IN.uv_DifuseMap);
+			o.Normal = normalEmission.rgb;
 
 			// Emission if enabled.
-			//fixed4 emissionMap = tex2D(_NormalEmision, IN.uv_MainTex) * _EmColor;
-			//o.Emission = _AlwaysEmit == 1 ? emissionMap.rgb * (_EmissionAmount / 8) : 0;
+			o.Emission = _AlwaysEmit == 1 ? normalEmission.a * _EmColor * (_EmissionAmount / 8) : 0;
+
+			//fixed4 occlusion = tex2D(_OcclusionMap, IN.uv_DifuseMap);
+			//o.Occlusion = occlusion.r;
         }
         ENDCG
     }

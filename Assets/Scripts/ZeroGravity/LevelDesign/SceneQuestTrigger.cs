@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 using ZeroGravity.Data;
@@ -11,39 +10,6 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneQuestTrigger : MonoBehaviour
 	{
-		[CompilerGenerated]
-		private sealed class _003CUpdateAvailableQuestMarker_003Ec__AnonStorey0
-		{
-			internal uint dependencyQuestID;
-
-			internal bool _003C_003Em__0(Quest m)
-			{
-				return m.ID == dependencyQuestID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CCheck_003Ec__AnonStorey1
-		{
-			internal SceneQuestTriggerEvent triggerEvent;
-
-			internal bool _003C_003Em__0(SceneQuestTrigger m)
-			{
-				return m.TriggerEvent == triggerEvent && m.QuestTrigger != null && m.QuestTrigger.Status == QuestStatus.Active;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CCheckInChildren_003Ec__AnonStorey2
-		{
-			internal SceneQuestTriggerEvent triggerEvent;
-
-			internal bool _003C_003Em__0(SceneQuestTrigger m)
-			{
-				return m.TriggerEvent == triggerEvent && m.QuestTrigger != null && m.QuestTrigger.Status == QuestStatus.Active;
-			}
-		}
-
 		[Tooltip("Used only if Task is not assigned")]
 		public uint QuestID;
 
@@ -82,21 +48,9 @@ namespace ZeroGravity.LevelDesign
 
 		public string QuickTooltip;
 
-		public QuestTrigger QuestTrigger
-		{
-			get
-			{
-				return questTrigger;
-			}
-		}
+		public QuestTrigger QuestTrigger => questTrigger;
 
-		public SpaceObjectVessel ParentVessel
-		{
-			get
-			{
-				return GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
-			}
-		}
+		public SpaceObjectVessel ParentVessel => GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
 
 		private void Start()
 		{
@@ -108,8 +62,8 @@ namespace ZeroGravity.LevelDesign
 			{
 				QuestID = Task.QuestID;
 				QuestTriggerID = Task.QuestTriggerID;
-				quest = Client.Instance.Quests.FirstOrDefault(_003CStart_003Em__0);
-				questTrigger = quest.QuestTriggers.FirstOrDefault(_003CStart_003Em__1);
+				quest = Client.Instance.Quests.FirstOrDefault((Quest m) => m.ID == QuestID);
+				questTrigger = quest.QuestTriggers.FirstOrDefault((QuestTrigger m) => m.ID == QuestTriggerID);
 				parentVessel = base.gameObject.GetComponentInParent<SpaceObjectVessel>();
 				OnQuestTriggerUpdate();
 				UpdateQuestTriggerMarker();
@@ -150,7 +104,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void Activate()
 		{
-			if ((double)Time.realtimeSinceStartup - lastActivationTime < 1.0 || (quest.DependencyQuests != null && Client.Instance.Quests.FirstOrDefault(_003CActivate_003Em__2) != null))
+			if ((double)Time.realtimeSinceStartup - lastActivationTime < 1.0 || (quest.DependencyQuests != null && Client.Instance.Quests.FirstOrDefault((Quest m) => quest.DependencyQuests.Contains(m.ID) && m.Status != QuestStatus.Completed) != null))
 			{
 				return;
 			}
@@ -212,18 +166,13 @@ namespace ZeroGravity.LevelDesign
 			bool flag2 = true;
 			if (questTrigger.Quest != null && questTrigger.Quest.DependencyQuests != null)
 			{
-				using (List<uint>.Enumerator enumerator = questTrigger.Quest.DependencyQuests.GetEnumerator())
+				foreach (uint dependencyQuestID in questTrigger.Quest.DependencyQuests)
 				{
-					while (enumerator.MoveNext())
+					Quest quest = Client.Instance.Quests.FirstOrDefault((Quest m) => m.ID == dependencyQuestID);
+					if (quest != null && quest.Status != QuestStatus.Completed)
 					{
-						_003CUpdateAvailableQuestMarker_003Ec__AnonStorey0 _003CUpdateAvailableQuestMarker_003Ec__AnonStorey = new _003CUpdateAvailableQuestMarker_003Ec__AnonStorey0();
-						_003CUpdateAvailableQuestMarker_003Ec__AnonStorey.dependencyQuestID = enumerator.Current;
-						Quest quest = Client.Instance.Quests.FirstOrDefault(_003CUpdateAvailableQuestMarker_003Ec__AnonStorey._003C_003Em__0);
-						if (quest != null && quest.Status != QuestStatus.Completed)
-						{
-							flag2 = false;
-							break;
-						}
+						flag2 = false;
+						break;
 					}
 				}
 			}
@@ -299,13 +248,13 @@ namespace ZeroGravity.LevelDesign
 
 		public static void Check(GameObject go, SceneQuestTriggerEvent triggerEvent)
 		{
-			_003CCheck_003Ec__AnonStorey1 _003CCheck_003Ec__AnonStorey = new _003CCheck_003Ec__AnonStorey1();
-			_003CCheck_003Ec__AnonStorey.triggerEvent = triggerEvent;
 			if (go.GetComponents<SceneQuestTrigger>() == null)
 			{
 				return;
 			}
-			foreach (SceneQuestTrigger item in go.GetComponents<SceneQuestTrigger>().Where(_003CCheck_003Ec__AnonStorey._003C_003Em__0))
+			foreach (SceneQuestTrigger item in from m in go.GetComponents<SceneQuestTrigger>()
+				where m.TriggerEvent == triggerEvent && m.QuestTrigger != null && m.QuestTrigger.Status == QuestStatus.Active
+				select m)
 			{
 				item.Activate();
 			}
@@ -313,34 +262,16 @@ namespace ZeroGravity.LevelDesign
 
 		public static void CheckInChildren(GameObject go, SceneQuestTriggerEvent triggerEvent)
 		{
-			_003CCheckInChildren_003Ec__AnonStorey2 _003CCheckInChildren_003Ec__AnonStorey = new _003CCheckInChildren_003Ec__AnonStorey2();
-			_003CCheckInChildren_003Ec__AnonStorey.triggerEvent = triggerEvent;
 			if (go.GetComponentsInChildren<SceneQuestTrigger>() == null)
 			{
 				return;
 			}
-			foreach (SceneQuestTrigger item in go.GetComponentsInChildren<SceneQuestTrigger>().Where(_003CCheckInChildren_003Ec__AnonStorey._003C_003Em__0))
+			foreach (SceneQuestTrigger item in from m in go.GetComponentsInChildren<SceneQuestTrigger>()
+				where m.TriggerEvent == triggerEvent && m.QuestTrigger != null && m.QuestTrigger.Status == QuestStatus.Active
+				select m)
 			{
 				item.Activate();
 			}
-		}
-
-		[CompilerGenerated]
-		private bool _003CStart_003Em__0(Quest m)
-		{
-			return m.ID == QuestID;
-		}
-
-		[CompilerGenerated]
-		private bool _003CStart_003Em__1(QuestTrigger m)
-		{
-			return m.ID == QuestTriggerID;
-		}
-
-		[CompilerGenerated]
-		private bool _003CActivate_003Em__2(Quest m)
-		{
-			return quest.DependencyQuests.Contains(m.ID) && m.Status != QuestStatus.Completed;
 		}
 	}
 }

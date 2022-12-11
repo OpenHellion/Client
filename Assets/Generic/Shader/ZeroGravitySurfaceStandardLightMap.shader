@@ -61,12 +61,12 @@ Shader "ZeroGravity/Surface/StandardLightMap" {
             o.Albedo = c.rgb;
 			o.Alpha = c.a;
 
-			fixed4 metallicGloss = tex2D(_MetallicGlossMap, IN.uv_MainTex);
+			fixed4 metallicGloss = tex2D(_MetallicGlossMap, IN.uv_MainTex) * _GlossMapScale;
             o.Metallic = metallicGloss.r;
-            o.Smoothness = metallicGloss.a * _GlossMapScale;
+            o.Smoothness = metallicGloss.a;
 
-			fixed4 normal = tex2D(_BumpMap, IN.uv_MainTex);
-			o.Normal = normal.rgb;
+			//fixed4 normal = tex2D(_BumpMap, IN.uv_MainTex);
+			//o.Normal = normal.rgb;
 
 			fixed4 occlusion = tex2D(_OcclusionMap, IN.uv_MainTex);
 			o.Occlusion = occlusion.r;

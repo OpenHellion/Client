@@ -85,9 +85,9 @@ Shader "ZeroGravity/Surface/StandardDoubleSided" {
 			fixed4 albedoDetail = tex2D(_DetailAlbedoMap, IN.uv_MainTex) * tex2D(_DetailMask, IN.uv_MainTex);
 			o.Albedo = c.rgb * albedoDetail.rgb * 4;
 
-			fixed4 metallicGloss = tex2D(_MetallicGlossMap, IN.uv_MainTex);
-			o.Metallic = metallicGloss * _Metallic;
-			o.Smoothness = metallicGloss * _Glossiness * _GlossMapScale;
+			fixed4 metallicGloss = tex2D(_MetallicGlossMap, IN.uv_MainTex) * _GlossMapScale;
+			o.Metallic = metallicGloss.r * _Metallic;
+			o.Smoothness = metallicGloss.a * _Glossiness;
 			o.Alpha = c.a;
 
 			fixed4 normal = tex2D(_BumpMap, IN.uv_MainTex) * _BumpScale;

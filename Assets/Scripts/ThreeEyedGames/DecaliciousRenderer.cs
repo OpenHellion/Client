@@ -30,20 +30,6 @@ namespace ThreeEyedGames
 
 		protected List<MeshFilter> _meshFilterComponent;
 
-		protected const string _bufferBaseName = "Decalicious - ";
-
-		protected const string _bufferDeferredName = "Decalicious - Deferred";
-
-		protected const string _bufferUnlitName = "Decalicious - Unlit";
-
-		protected const string _bufferLimitToName = "Decalicious - Limit To Game Objects";
-
-		protected const CameraEvent _camEventDeferred = CameraEvent.BeforeReflections;
-
-		protected const CameraEvent _camEventUnlit = CameraEvent.BeforeImageEffectsOpaque;
-
-		protected const CameraEvent _camEventLimitTo = CameraEvent.AfterGBuffer;
-
 		protected Camera _camera;
 
 		protected bool _camLastKnownHDR;
@@ -67,8 +53,6 @@ namespace ThreeEyedGames
 		protected Material _materialLimitToGameObjects;
 
 		protected static Vector4[] _avCoeff = new Vector4[7];
-
-		protected const float _noLimitToValue = 0f;
 
 		private void OnEnable()
 		{
