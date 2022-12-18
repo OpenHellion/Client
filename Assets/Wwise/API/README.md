@@ -8,4 +8,4 @@ See [Wwise Unity Integration](https://www.audiokinetic.com/library/edge/?source=
 
 ## Legal
 
-Copyright © 2020 Audiokinetic Inc. All rights reserved.
+Copyright © 2022 Audiokinetic Inc. All rights reserved.

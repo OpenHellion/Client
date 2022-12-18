@@ -1,9 +1,20 @@
 #if ! (UNITY_DASHBOARD_WIDGET || UNITY_WEBPLAYER || UNITY_WII || UNITY_WIIU || UNITY_NACL || UNITY_FLASH || UNITY_BLACKBERRY) // Disable under unsupported platforms.
-//////////////////////////////////////////////////////////////////////
-//
-// Copyright (c) 2012 Audiokinetic Inc. / All Rights Reserved
-//
-//////////////////////////////////////////////////////////////////////
+/*******************************************************************************
+The content of this file includes portions of the proprietary AUDIOKINETIC Wwise
+Technology released in source code form as part of the game integration package.
+The content of this file may not be used without valid licenses to the
+AUDIOKINETIC Wwise Technology.
+Note that the use of the game engine is subject to the Unity(R) Terms of
+Service at https://unity3d.com/legal/terms-of-service
+ 
+License Usage
+ 
+Licensees holding valid licenses to the AUDIOKINETIC Wwise Technology may use
+this file in accordance with the end user license agreement provided with the
+software or, alternatively, in accordance with the terms contained
+in a written agreement between you and Audiokinetic Inc.
+Copyright (c) 2022 Audiokinetic Inc.
+*******************************************************************************/
 
 #if AK_WWISE_ADDRESSABLES && UNITY_ADDRESSABLES
 using AK.Wwise.Unity.WwiseAddressables;
@@ -33,6 +44,11 @@ public class AkInitializer : UnityEngine.MonoBehaviour
 
 	private void Awake()
 	{
+#if UNITY_EDITOR
+		if (UnityEditor.BuildPipeline.isBuildingPlayer)
+			return;
+#endif
+
 		if (ms_Instance)
 		{
 			DestroyImmediate(this);
@@ -42,6 +58,8 @@ public class AkInitializer : UnityEngine.MonoBehaviour
 		ms_Instance = this;
 
 #if UNITY_EDITOR
+		UnityEditor.EditorApplication.quitting += OnApplicationQuit;
+
 		if (!UnityEditor.EditorApplication.isPlaying)
 			return;
 
@@ -55,8 +73,13 @@ public class AkInitializer : UnityEngine.MonoBehaviour
 
 	private void OnEnable()
 	{
+#if UNITY_EDITOR
+		if (UnityEditor.BuildPipeline.isBuildingPlayer)
+			return;
+#endif
+
 #if AK_WWISE_ADDRESSABLES && UNITY_ADDRESSABLES
-		InitializationSettings =AkWwiseAddressablesInitializationSettings.Instance;
+		InitializationSettings = AkWwiseAddressablesInitializationSettings.Instance;
 #else
 		InitializationSettings = AkWwiseInitializationSettings.Instance;
 #endif
@@ -67,14 +90,29 @@ public class AkInitializer : UnityEngine.MonoBehaviour
 
 	private void OnDisable()
 	{
+#if UNITY_EDITOR
+		if (UnityEditor.BuildPipeline.isBuildingPlayer)
+			return;
+#endif
+
 		if (ms_Instance == this)
 			AkSoundEngineController.Instance.OnDisable();
 	}
 
 	private void OnDestroy()
 	{
+#if UNITY_EDITOR
+		if (UnityEditor.BuildPipeline.isBuildingPlayer)
+			return;
+#endif
+
 		if (ms_Instance == this)
+		{
+#if UNITY_EDITOR
+			UnityEditor.EditorApplication.quitting -= OnApplicationQuit;
+#endif
 			ms_Instance = null;
+		}
 	}
 
 	private void OnApplicationPause(bool pauseStatus)

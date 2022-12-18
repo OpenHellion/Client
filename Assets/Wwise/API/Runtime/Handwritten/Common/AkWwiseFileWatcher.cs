@@ -1,9 +1,20 @@
 #if UNITY_EDITOR
-//////////////////////////////////////////////////////////////////////
-//
-// Copyright (c) 2014 Audiokinetic Inc. / All Rights Reserved
-//
-//////////////////////////////////////////////////////////////////////
+/*******************************************************************************
+The content of this file includes portions of the proprietary AUDIOKINETIC Wwise
+Technology released in source code form as part of the game integration package.
+The content of this file may not be used without valid licenses to the
+AUDIOKINETIC Wwise Technology.
+Note that the use of the game engine is subject to the Unity(R) Terms of
+Service at https://unity3d.com/legal/terms-of-service
+ 
+License Usage
+ 
+Licensees holding valid licenses to the AUDIOKINETIC Wwise Technology may use
+this file in accordance with the end user license agreement provided with the
+software or, alternatively, in accordance with the terms contained
+in a written agreement between you and Audiokinetic Inc.
+Copyright (c) 2022 Audiokinetic Inc.
+*******************************************************************************/
 
 using System.Threading;
 
@@ -77,7 +88,7 @@ public class AkWwiseFileWatcher
 
 		try
 		{
-			if (XmlWatcher != null)
+			if (WprojWatcher != null)
 			{
 				WprojWatcher.Dispose();
 			}
@@ -112,6 +123,10 @@ public class AkWwiseFileWatcher
 
 		if (XmlExceptionOccurred || generatedSoundbanksPath != XmlWatcher?.Path)
 		{
+			if (!System.IO.Directory.Exists(generatedSoundbanksPath))
+			{
+				return;
+			}
 			new Thread(CreateXmlWatcher).Start();
 		}
 		
@@ -138,6 +153,10 @@ public class AkWwiseFileWatcher
 
 		if (ProjectExceptionOccurred || wwiseProjectPath != WprojWatcher?.Path)
 		{
+			if (!System.IO.Directory.Exists(wwiseProjectPath))
+            {
+				return;
+			}
 			new Thread(CreateProjectWatcher).Start();
 		}
 

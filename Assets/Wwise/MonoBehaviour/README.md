@@ -12,4 +12,4 @@ See [Unity Wwise Components](https://www.audiokinetic.com/library/edge/?source=U
 
 ## Legal
 
-Copyright © 2020 Audiokinetic Inc. All rights reserved.
+Copyright © 2022 Audiokinetic Inc. All rights reserved.
