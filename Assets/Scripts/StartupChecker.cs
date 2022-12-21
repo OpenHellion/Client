@@ -16,7 +16,6 @@ public class StartupChecker : MonoBehaviour
 	/// </summary>
 	private void Start()
 	{
-		// We're not going to use this, since we are obviously not booting from steam.
 		/*
 		if (!SteamManager.Initialized || File.Exists("steam_appid.txt"))
 		{
@@ -29,14 +28,14 @@ public class StartupChecker : MonoBehaviour
 			// Never actually do this
 			//Application.OpenURL("steam://run/588210");
 			Application.Quit();
-		}
-		else if (SteamAPI.RestartAppIfNecessary((AppId_t)588210u))
+		}*/
+		if (SteamAPI.RestartAppIfNecessary((AppId_t)588210u))
 		{
 			// Ensure that we launced this through steam.
 			// Some anti-piracy thing it seems.
 			Application.Quit();
 		}
-		else*/
+		else
 		{
 			// This is if we sucessfully started the game.
 			Client.LogCustomEvent("application_start", true);

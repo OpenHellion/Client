@@ -18,7 +18,6 @@ using UnityEngine.Analytics;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using ZeroGravity.Data;
-using ZeroGravity.Discord;
 using ZeroGravity.Effects;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Math;
@@ -2405,12 +2404,6 @@ namespace ZeroGravity
 				CanvasManager.SelectScreen(CanvasManager.Screen.OnLoad);
 				ShowMessageBox(Localization.ConnectionError, Localization.LogInError);
 			}
-			/*else if (signInResponse.Response == ResponseResult.OwnershipIssue)
-			{
-				// Anti-piracy stuff.
-				Application.OpenURL("http://store.steampowered.com/app/588210/");
-				ExitGame();
-			}*/
 			else if (signInResponse.Response == ResponseResult.ClientVersionError)
 			{
 				ShowMessageBox(Localization.VersionError, Localization.VersionErrorMessage);

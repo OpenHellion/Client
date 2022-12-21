@@ -4,48 +4,19 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0870357c3027a34ab5e8bd2c40ca98c, type: 3}
   m_Name: MissionReport
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   Title: Mission report 2405.02.04
   Character: {fileID: 11400000, guid: 82d85e26a5050ee48ba3a3eb0e02a8a7, type: 2}
-  LogText: 'From: M.Roznikov@AEGIS.hsn
-
-	To: A.Sandi@skyline.hsn
-
-	
-
-	Mission report: 2409.02.04
-
-	
-
-	Number of targets: 2
-
-	Objectives completed: 2
-
-	Civilian casualties: 2
-
-	Captives: 4
-
-	
-
-	Lynne Schmidt - Engineer 1st Class
-
-	Tamara Guerrero - Engineer 3rd Class
-
-	Erica Summers - EVA Specialist
-
-	Kerry Copeland - Pilot
-
-	
-
-	Subjects delivered to BS4IHO2,
-
-	
-
-	Awaiting instructions.'
+  LogText: "From: M.Roznikov@AEGIS.hsn\nTo: A.Sandi@skyline.hsn\n\n\nMission report:
+    2409.02.04\n\n\nNumber of targets: 2\nObjectives completed: 2\nCivilian casualties:
+    2\nCaptives: 4\n\n\nLynne Schmidt - Engineer 1st Class\nTamara Guerrero - Engineer
+    3rd Class\nErica Summers - EVA Specialist\nKerry Copeland - Pilot\n\n\nSubjects
+    delivered to BS4IHO2,\n\n\nAwaiting instructions.\r"
   LogDate: 2409.02.04

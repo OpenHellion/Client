@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using ZeroGravity;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
+using ZeroGravity.UI;
 
 namespace ZeroGravity.UI
 {
@@ -106,6 +107,7 @@ namespace ZeroGravity.UI
 		[SerializeField]
 		private List<MachineryParts> _MachineryPartsSprites;
 
+		[HideInInspector]
 		public Dictionary<MachineryPartType, Sprite> MachineryPartsSprites;
 
 		[Space(30f)]
@@ -114,6 +116,7 @@ namespace ZeroGravity.UI
 		[SerializeField]
 		private List<GenericItems> _GenericItemsSprites;
 
+		[HideInInspector]
 		public Dictionary<GenericItemSubType, Sprite> GenericItemsSprites;
 
 		[Space(30f)]
@@ -122,6 +125,7 @@ namespace ZeroGravity.UI
 		[SerializeField]
 		private List<SlotTypes> _InventorySlotSprites;
 
+		[HideInInspector]
 		public Dictionary<InventorySlot.Group, Sprite> InventorySlotSprites;
 
 		[Space(30f)]
@@ -130,6 +134,7 @@ namespace ZeroGravity.UI
 		[SerializeField]
 		private List<AttachPoints> _AttachPointSprites;
 
+		[HideInInspector]
 		public Dictionary<Localization.StandardInteractionTip, Sprite> AttachPointSprites;
 
 		[Space(30f)]
@@ -138,6 +143,7 @@ namespace ZeroGravity.UI
 		[SerializeField]
 		private List<AllItems> _AllItemsSprites;
 
+		[HideInInspector]
 		public Dictionary<ItemType, Sprite> AllItemsSprites;
 
 		[Space(30f)]
@@ -152,6 +158,7 @@ namespace ZeroGravity.UI
 		[SerializeField]
 		private List<SpaceObjects> _SpaceObjectSprites;
 
+		[HideInInspector]
 		public Dictionary<GameScenes.SceneID, Sprite> SpaceObjectSprites;
 
 		[Space(30f)]
@@ -160,6 +167,7 @@ namespace ZeroGravity.UI
 		[SerializeField]
 		private List<RadarObjects> _RadarObjectsSprites;
 
+		[HideInInspector]
 		public Dictionary<SpaceObjectType, Sprite> RadarObjectsSprites;
 
 		[Space(30f)]
@@ -168,6 +176,7 @@ namespace ZeroGravity.UI
 		[SerializeField]
 		private List<ResourceObject> _ResourceObjectsSprites;
 
+		[HideInInspector]
 		public Dictionary<ResourceType, Sprite> ResourceObjectsSprites;
 
 		[Space(30f)]
@@ -180,6 +189,7 @@ namespace ZeroGravity.UI
 		[SerializeField]
 		private List<SceneObject> _SceneObjectTextures;
 
+		[HideInInspector]
 		public Dictionary<SpawnSetupType, Texture2D> SceneObjectTextures;
 
 		[Space(30f)]
@@ -188,6 +198,7 @@ namespace ZeroGravity.UI
 		[SerializeField]
 		private List<NotificationObject> _NotificationObjectsSprites;
 
+		[HideInInspector]
 		public Dictionary<CanvasUI.NotificationType, Sprite> NotificationObjectsSprites;
 
 		[Space(30f)]
@@ -196,197 +207,22 @@ namespace ZeroGravity.UI
 		[SerializeField]
 		private List<WeaponModObject> _WeaponModSprites;
 
+		[HideInInspector]
 		public Dictionary<WeaponMod.FireMode, Sprite> WeaponModSprites;
-
-		[CompilerGenerated]
-		private static Func<SpaceObjects, GameScenes.SceneID> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<SpaceObjects, Sprite> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Func<MachineryParts, MachineryPartType> _003C_003Ef__am_0024cache2;
-
-		[CompilerGenerated]
-		private static Func<MachineryParts, Sprite> _003C_003Ef__am_0024cache3;
-
-		[CompilerGenerated]
-		private static Func<GenericItems, GenericItemSubType> _003C_003Ef__am_0024cache4;
-
-		[CompilerGenerated]
-		private static Func<GenericItems, Sprite> _003C_003Ef__am_0024cache5;
-
-		[CompilerGenerated]
-		private static Func<AllItems, ItemType> _003C_003Ef__am_0024cache6;
-
-		[CompilerGenerated]
-		private static Func<AllItems, Sprite> _003C_003Ef__am_0024cache7;
-
-		[CompilerGenerated]
-		private static Func<RadarObjects, SpaceObjectType> _003C_003Ef__am_0024cache8;
-
-		[CompilerGenerated]
-		private static Func<RadarObjects, Sprite> _003C_003Ef__am_0024cache9;
-
-		[CompilerGenerated]
-		private static Func<ResourceObject, ResourceType> _003C_003Ef__am_0024cacheA;
-
-		[CompilerGenerated]
-		private static Func<ResourceObject, Sprite> _003C_003Ef__am_0024cacheB;
-
-		[CompilerGenerated]
-		private static Func<SceneObject, SpawnSetupType> _003C_003Ef__am_0024cacheC;
-
-		[CompilerGenerated]
-		private static Func<SceneObject, Texture2D> _003C_003Ef__am_0024cacheD;
-
-		[CompilerGenerated]
-		private static Func<SlotTypes, InventorySlot.Group> _003C_003Ef__am_0024cacheE;
-
-		[CompilerGenerated]
-		private static Func<SlotTypes, Sprite> _003C_003Ef__am_0024cacheF;
-
-		[CompilerGenerated]
-		private static Func<NotificationObject, CanvasUI.NotificationType> _003C_003Ef__am_0024cache10;
-
-		[CompilerGenerated]
-		private static Func<NotificationObject, Sprite> _003C_003Ef__am_0024cache11;
-
-		[CompilerGenerated]
-		private static Func<AttachPoints, Localization.StandardInteractionTip> _003C_003Ef__am_0024cache12;
-
-		[CompilerGenerated]
-		private static Func<AttachPoints, Sprite> _003C_003Ef__am_0024cache13;
-
-		[CompilerGenerated]
-		private static Func<WeaponModObject, WeaponMod.FireMode> _003C_003Ef__am_0024cache14;
-
-		[CompilerGenerated]
-		private static Func<WeaponModObject, Sprite> _003C_003Ef__am_0024cache15;
 
 		private void Start()
 		{
-			List<SpaceObjects> spaceObjectSprites = _SpaceObjectSprites;
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CStart_003Em__0;
-			}
-			Func<SpaceObjects, GameScenes.SceneID> keySelector = _003C_003Ef__am_0024cache0;
-			if (_003C_003Ef__am_0024cache1 == null)
-			{
-				_003C_003Ef__am_0024cache1 = _003CStart_003Em__1;
-			}
-			SpaceObjectSprites = spaceObjectSprites.ToDictionary(keySelector, _003C_003Ef__am_0024cache1);
-			List<MachineryParts> machineryPartsSprites = _MachineryPartsSprites;
-			if (_003C_003Ef__am_0024cache2 == null)
-			{
-				_003C_003Ef__am_0024cache2 = _003CStart_003Em__2;
-			}
-			Func<MachineryParts, MachineryPartType> keySelector2 = _003C_003Ef__am_0024cache2;
-			if (_003C_003Ef__am_0024cache3 == null)
-			{
-				_003C_003Ef__am_0024cache3 = _003CStart_003Em__3;
-			}
-			MachineryPartsSprites = machineryPartsSprites.ToDictionary(keySelector2, _003C_003Ef__am_0024cache3);
-			List<GenericItems> genericItemsSprites = _GenericItemsSprites;
-			if (_003C_003Ef__am_0024cache4 == null)
-			{
-				_003C_003Ef__am_0024cache4 = _003CStart_003Em__4;
-			}
-			Func<GenericItems, GenericItemSubType> keySelector3 = _003C_003Ef__am_0024cache4;
-			if (_003C_003Ef__am_0024cache5 == null)
-			{
-				_003C_003Ef__am_0024cache5 = _003CStart_003Em__5;
-			}
-			GenericItemsSprites = genericItemsSprites.ToDictionary(keySelector3, _003C_003Ef__am_0024cache5);
-			List<AllItems> allItemsSprites = _AllItemsSprites;
-			if (_003C_003Ef__am_0024cache6 == null)
-			{
-				_003C_003Ef__am_0024cache6 = _003CStart_003Em__6;
-			}
-			Func<AllItems, ItemType> keySelector4 = _003C_003Ef__am_0024cache6;
-			if (_003C_003Ef__am_0024cache7 == null)
-			{
-				_003C_003Ef__am_0024cache7 = _003CStart_003Em__7;
-			}
-			AllItemsSprites = allItemsSprites.ToDictionary(keySelector4, _003C_003Ef__am_0024cache7);
-			List<RadarObjects> radarObjectsSprites = _RadarObjectsSprites;
-			if (_003C_003Ef__am_0024cache8 == null)
-			{
-				_003C_003Ef__am_0024cache8 = _003CStart_003Em__8;
-			}
-			Func<RadarObjects, SpaceObjectType> keySelector5 = _003C_003Ef__am_0024cache8;
-			if (_003C_003Ef__am_0024cache9 == null)
-			{
-				_003C_003Ef__am_0024cache9 = _003CStart_003Em__9;
-			}
-			RadarObjectsSprites = radarObjectsSprites.ToDictionary(keySelector5, _003C_003Ef__am_0024cache9);
-			List<ResourceObject> resourceObjectsSprites = _ResourceObjectsSprites;
-			if (_003C_003Ef__am_0024cacheA == null)
-			{
-				_003C_003Ef__am_0024cacheA = _003CStart_003Em__A;
-			}
-			Func<ResourceObject, ResourceType> keySelector6 = _003C_003Ef__am_0024cacheA;
-			if (_003C_003Ef__am_0024cacheB == null)
-			{
-				_003C_003Ef__am_0024cacheB = _003CStart_003Em__B;
-			}
-			ResourceObjectsSprites = resourceObjectsSprites.ToDictionary(keySelector6, _003C_003Ef__am_0024cacheB);
-			List<SceneObject> sceneObjectTextures = _SceneObjectTextures;
-			if (_003C_003Ef__am_0024cacheC == null)
-			{
-				_003C_003Ef__am_0024cacheC = _003CStart_003Em__C;
-			}
-			Func<SceneObject, SpawnSetupType> keySelector7 = _003C_003Ef__am_0024cacheC;
-			if (_003C_003Ef__am_0024cacheD == null)
-			{
-				_003C_003Ef__am_0024cacheD = _003CStart_003Em__D;
-			}
-			SceneObjectTextures = sceneObjectTextures.ToDictionary(keySelector7, _003C_003Ef__am_0024cacheD);
-			List<SlotTypes> inventorySlotSprites = _InventorySlotSprites;
-			if (_003C_003Ef__am_0024cacheE == null)
-			{
-				_003C_003Ef__am_0024cacheE = _003CStart_003Em__E;
-			}
-			Func<SlotTypes, InventorySlot.Group> keySelector8 = _003C_003Ef__am_0024cacheE;
-			if (_003C_003Ef__am_0024cacheF == null)
-			{
-				_003C_003Ef__am_0024cacheF = _003CStart_003Em__F;
-			}
-			InventorySlotSprites = inventorySlotSprites.ToDictionary(keySelector8, _003C_003Ef__am_0024cacheF);
-			List<NotificationObject> notificationObjectsSprites = _NotificationObjectsSprites;
-			if (_003C_003Ef__am_0024cache10 == null)
-			{
-				_003C_003Ef__am_0024cache10 = _003CStart_003Em__10;
-			}
-			Func<NotificationObject, CanvasUI.NotificationType> keySelector9 = _003C_003Ef__am_0024cache10;
-			if (_003C_003Ef__am_0024cache11 == null)
-			{
-				_003C_003Ef__am_0024cache11 = _003CStart_003Em__11;
-			}
-			NotificationObjectsSprites = notificationObjectsSprites.ToDictionary(keySelector9, _003C_003Ef__am_0024cache11);
-			List<AttachPoints> attachPointSprites = _AttachPointSprites;
-			if (_003C_003Ef__am_0024cache12 == null)
-			{
-				_003C_003Ef__am_0024cache12 = _003CStart_003Em__12;
-			}
-			Func<AttachPoints, Localization.StandardInteractionTip> keySelector10 = _003C_003Ef__am_0024cache12;
-			if (_003C_003Ef__am_0024cache13 == null)
-			{
-				_003C_003Ef__am_0024cache13 = _003CStart_003Em__13;
-			}
-			AttachPointSprites = attachPointSprites.ToDictionary(keySelector10, _003C_003Ef__am_0024cache13);
-			List<WeaponModObject> weaponModSprites = _WeaponModSprites;
-			if (_003C_003Ef__am_0024cache14 == null)
-			{
-				_003C_003Ef__am_0024cache14 = _003CStart_003Em__14;
-			}
-			Func<WeaponModObject, WeaponMod.FireMode> keySelector11 = _003C_003Ef__am_0024cache14;
-			if (_003C_003Ef__am_0024cache15 == null)
-			{
-				_003C_003Ef__am_0024cache15 = _003CStart_003Em__15;
-			}
-			WeaponModSprites = weaponModSprites.ToDictionary(keySelector11, _003C_003Ef__am_0024cache15);
+			SpaceObjectSprites = _SpaceObjectSprites.ToDictionary((SpaceObjects x) => x.Key, (SpaceObjects y) => y.Sprite);
+			MachineryPartsSprites = _MachineryPartsSprites.ToDictionary((MachineryParts x) => x.Key, (MachineryParts y) => y.Sprite);
+			GenericItemsSprites = _GenericItemsSprites.ToDictionary((GenericItems x) => x.Key, (GenericItems y) => y.Sprite);
+			AllItemsSprites = _AllItemsSprites.ToDictionary((AllItems x) => x.Key, (AllItems y) => y.Sprite);
+			RadarObjectsSprites = _RadarObjectsSprites.ToDictionary((RadarObjects x) => x.Key, (RadarObjects y) => y.Sprite);
+			ResourceObjectsSprites = _ResourceObjectsSprites.ToDictionary((ResourceObject x) => x.Key, (ResourceObject y) => y.Sprite);
+			SceneObjectTextures = _SceneObjectTextures.ToDictionary((SceneObject x) => x.Key, (SceneObject y) => y.Texture);
+			InventorySlotSprites = _InventorySlotSprites.ToDictionary((SlotTypes x) => x.Key, (SlotTypes y) => y.Sprite);
+			NotificationObjectsSprites = _NotificationObjectsSprites.ToDictionary((NotificationObject x) => x.Key, (NotificationObject y) => y.Sprite);
+			AttachPointSprites = _AttachPointSprites.ToDictionary((AttachPoints x) => x.Key, (AttachPoints y) => y.Sprite);
+			WeaponModSprites = _WeaponModSprites.ToDictionary((WeaponModObject x) => x.Key, (WeaponModObject y) => y.Sprite);
 		}
 
 		public Sprite GetSprite(Item item)
@@ -420,8 +256,7 @@ namespace ZeroGravity.UI
 			SpaceObjectVessel mainVessel = vessel.MainVessel;
 			if (!checkDocked || !mainVessel.IsOutpostOrStation)
 			{
-				Sprite value;
-				if (SpaceObjectSprites.TryGetValue(vessel.SceneID, out value))
+				if (SpaceObjectSprites.TryGetValue(vessel.SceneID, out var value))
 				{
 					return value;
 				}
@@ -436,8 +271,7 @@ namespace ZeroGravity.UI
 
 		public Sprite GetSprite(GameScenes.SceneID module)
 		{
-			Sprite value;
-			if (SpaceObjectSprites.TryGetValue(module, out value))
+			if (SpaceObjectSprites.TryGetValue(module, out var value))
 			{
 				return value;
 			}
@@ -446,8 +280,7 @@ namespace ZeroGravity.UI
 
 		public Sprite GetSprite(MachineryPartType part)
 		{
-			Sprite value;
-			if (MachineryPartsSprites.TryGetValue(part, out value))
+			if (MachineryPartsSprites.TryGetValue(part, out var value))
 			{
 				return value;
 			}
@@ -456,8 +289,7 @@ namespace ZeroGravity.UI
 
 		public Sprite GetSprite(GenericItemSubType generic)
 		{
-			Sprite value;
-			if (GenericItemsSprites.TryGetValue(generic, out value))
+			if (GenericItemsSprites.TryGetValue(generic, out var value))
 			{
 				return value;
 			}
@@ -466,8 +298,7 @@ namespace ZeroGravity.UI
 
 		public Sprite GetSprite(InventorySlot.Group slot)
 		{
-			Sprite value;
-			if (InventorySlotSprites.TryGetValue(slot, out value))
+			if (InventorySlotSprites.TryGetValue(slot, out var value))
 			{
 				return value;
 			}
@@ -476,8 +307,7 @@ namespace ZeroGravity.UI
 
 		public Sprite GetSprite(ItemType item)
 		{
-			Sprite value;
-			if (AllItemsSprites.TryGetValue(item, out value))
+			if (AllItemsSprites.TryGetValue(item, out var value))
 			{
 				return value;
 			}
@@ -486,8 +316,7 @@ namespace ZeroGravity.UI
 
 		public Sprite GetSprite(Localization.StandardInteractionTip tip)
 		{
-			Sprite value;
-			if (AttachPointSprites.TryGetValue(tip, out value))
+			if (AttachPointSprites.TryGetValue(tip, out var value))
 			{
 				return value;
 			}
@@ -496,8 +325,7 @@ namespace ZeroGravity.UI
 
 		public Sprite GetSprite(SpaceObjectType spaceObject)
 		{
-			Sprite value;
-			if (RadarObjectsSprites.TryGetValue(spaceObject, out value))
+			if (RadarObjectsSprites.TryGetValue(spaceObject, out var value))
 			{
 				return value;
 			}
@@ -506,8 +334,7 @@ namespace ZeroGravity.UI
 
 		public Sprite GetSprite(ResourceType resourceType)
 		{
-			Sprite value;
-			if (ResourceObjectsSprites.TryGetValue(resourceType, out value))
+			if (ResourceObjectsSprites.TryGetValue(resourceType, out var value))
 			{
 				return value;
 			}
@@ -516,8 +343,7 @@ namespace ZeroGravity.UI
 
 		public Texture2D GetTexture(SpawnSetupType tip)
 		{
-			Texture2D value;
-			if (SceneObjectTextures.TryGetValue(tip, out value))
+			if (SceneObjectTextures.TryGetValue(tip, out var value))
 			{
 				return value;
 			}
@@ -526,8 +352,7 @@ namespace ZeroGravity.UI
 
 		public Sprite GetSprite(CanvasUI.NotificationType notificationType)
 		{
-			Sprite value;
-			if (NotificationObjectsSprites.TryGetValue(notificationType, out value))
+			if (NotificationObjectsSprites.TryGetValue(notificationType, out var value))
 			{
 				return value;
 			}
@@ -536,144 +361,11 @@ namespace ZeroGravity.UI
 
 		public Sprite GetSprite(WeaponMod.FireMode fireMod)
 		{
-			Sprite value;
-			if (WeaponModSprites.TryGetValue(fireMod, out value))
+			if (WeaponModSprites.TryGetValue(fireMod, out var value))
 			{
 				return value;
 			}
 			return DefaultWeaponMod;
-		}
-
-		[CompilerGenerated]
-		private static GameScenes.SceneID _003CStart_003Em__0(SpaceObjects x)
-		{
-			return x.Key;
-		}
-
-		[CompilerGenerated]
-		private static Sprite _003CStart_003Em__1(SpaceObjects y)
-		{
-			return y.Sprite;
-		}
-
-		[CompilerGenerated]
-		private static MachineryPartType _003CStart_003Em__2(MachineryParts x)
-		{
-			return x.Key;
-		}
-
-		[CompilerGenerated]
-		private static Sprite _003CStart_003Em__3(MachineryParts y)
-		{
-			return y.Sprite;
-		}
-
-		[CompilerGenerated]
-		private static GenericItemSubType _003CStart_003Em__4(GenericItems x)
-		{
-			return x.Key;
-		}
-
-		[CompilerGenerated]
-		private static Sprite _003CStart_003Em__5(GenericItems y)
-		{
-			return y.Sprite;
-		}
-
-		[CompilerGenerated]
-		private static ItemType _003CStart_003Em__6(AllItems x)
-		{
-			return x.Key;
-		}
-
-		[CompilerGenerated]
-		private static Sprite _003CStart_003Em__7(AllItems y)
-		{
-			return y.Sprite;
-		}
-
-		[CompilerGenerated]
-		private static SpaceObjectType _003CStart_003Em__8(RadarObjects x)
-		{
-			return x.Key;
-		}
-
-		[CompilerGenerated]
-		private static Sprite _003CStart_003Em__9(RadarObjects y)
-		{
-			return y.Sprite;
-		}
-
-		[CompilerGenerated]
-		private static ResourceType _003CStart_003Em__A(ResourceObject x)
-		{
-			return x.Key;
-		}
-
-		[CompilerGenerated]
-		private static Sprite _003CStart_003Em__B(ResourceObject y)
-		{
-			return y.Sprite;
-		}
-
-		[CompilerGenerated]
-		private static SpawnSetupType _003CStart_003Em__C(SceneObject x)
-		{
-			return x.Key;
-		}
-
-		[CompilerGenerated]
-		private static Texture2D _003CStart_003Em__D(SceneObject y)
-		{
-			return y.Texture;
-		}
-
-		[CompilerGenerated]
-		private static InventorySlot.Group _003CStart_003Em__E(SlotTypes x)
-		{
-			return x.Key;
-		}
-
-		[CompilerGenerated]
-		private static Sprite _003CStart_003Em__F(SlotTypes y)
-		{
-			return y.Sprite;
-		}
-
-		[CompilerGenerated]
-		private static CanvasUI.NotificationType _003CStart_003Em__10(NotificationObject x)
-		{
-			return x.Key;
-		}
-
-		[CompilerGenerated]
-		private static Sprite _003CStart_003Em__11(NotificationObject y)
-		{
-			return y.Sprite;
-		}
-
-		[CompilerGenerated]
-		private static Localization.StandardInteractionTip _003CStart_003Em__12(AttachPoints x)
-		{
-			return x.Key;
-		}
-
-		[CompilerGenerated]
-		private static Sprite _003CStart_003Em__13(AttachPoints y)
-		{
-			return y.Sprite;
-		}
-
-		[CompilerGenerated]
-		private static WeaponMod.FireMode _003CStart_003Em__14(WeaponModObject x)
-		{
-			return x.Key;
-		}
-
-		[CompilerGenerated]
-		private static Sprite _003CStart_003Em__15(WeaponModObject y)
-		{
-			return y.Sprite;
 		}
 	}
 }

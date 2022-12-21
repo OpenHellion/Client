@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -15,72 +13,6 @@ namespace ZeroGravity.UI
 {
 	public class CargoPanel : AbstractPanelUI
 	{
-		[CompilerGenerated]
-		private sealed class _003CUpdateCraftingResources_003Ec__AnonStorey0
-		{
-			internal KeyValuePair<ResourceType, CargoResourceUI> kv;
-
-			internal bool _003C_003Em__0(CargoResourceData m)
-			{
-				return m.ResourceType == kv.Value.Resource.ResourceType;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CUpdateRefineryResources_003Ec__AnonStorey1
-		{
-			internal KeyValuePair<ResourceType, CargoResourceUI> kv;
-
-			internal bool _003C_003Em__0(CargoResourceData m)
-			{
-				return m.ResourceType == kv.Value.Resource.ResourceType;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillAttached_003Ec__AnonStorey3
-		{
-			internal CargoCompartment cc;
-
-			internal bool _003C_003Em__0(CargoResourceData m)
-			{
-				return cc.IsAllowed(m.ResourceType);
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CFillAttached_003Ec__AnonStorey2
-		{
-			internal CargoResourceData resource;
-
-			internal bool _003C_003Em__0(CargoResourceData m)
-			{
-				return m.ResourceType == resource.ResourceType;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003COpenCrafingScreen_003Ec__AnonStorey4
-		{
-			internal SubSystemFabricator.CraftableItemData data;
-
-			internal bool _003C_003Em__0(ItemCompoundType m)
-			{
-				return m.Type == data.CompoundType.Type && m.SubType == data.CompoundType.SubType && m.PartType == data.CompoundType.PartType && m.Tier == data.CompoundType.Tier;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003COpenCrafingScreen_003Ec__AnonStorey5
-		{
-			internal ItemCompoundType ict;
-
-			internal bool _003C_003Em__0(ItemCompoundType m)
-			{
-				return m.Type == ict.Type && m.SubType == ict.SubType && m.PartType == ict.PartType && m.Tier == ict.Tier;
-			}
-		}
-
 		[Space(20f)]
 		public SubSystemRefinery Refinery;
 
@@ -293,30 +225,6 @@ namespace ZeroGravity.UI
 
 		public GameObject CraftingItemUI;
 
-		[CompilerGenerated]
-		private static Func<CargoResourceData, float> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<CargoResourceData, float> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Func<SceneAttachPoint, bool> _003C_003Ef__am_0024cache2;
-
-		[CompilerGenerated]
-		private static Func<SceneAttachPoint, bool> _003C_003Ef__am_0024cache3;
-
-		[CompilerGenerated]
-		private static Func<CargoResourceData, float> _003C_003Ef__am_0024cache4;
-
-		[CompilerGenerated]
-		private static Func<CargoResourceData, float> _003C_003Ef__am_0024cache5;
-
-		[CompilerGenerated]
-		private static Func<CargoResourceData, float> _003C_003Ef__am_0024cache6;
-
-		[CompilerGenerated]
-		private static Func<RefinedResourcesData, ResourceType> _003C_003Ef__am_0024cache7;
-
 		private void Start()
 		{
 		}
@@ -337,14 +245,26 @@ namespace ZeroGravity.UI
 			{
 				AttachPoint.Initialize(this);
 			}
-			ConnectedVesselsDropdown.onValueChanged.AddListener(_003COnInteract_003Em__0);
-			RawToggle.onValueChanged.AddListener(_003COnInteract_003Em__1);
-			RefinedToggle.onValueChanged.AddListener(_003COnInteract_003Em__2);
-			CraftingToggle.onValueChanged.AddListener(_003COnInteract_003Em__3);
-			MainScreen.Activate(true);
-			CraftingScreen.Activate(false);
-			ToggleCancelCrafting(false);
-			base.gameObject.Activate(true);
+			ConnectedVesselsDropdown.onValueChanged.AddListener(delegate
+			{
+				SlectCurrentVesselSystems();
+			});
+			RawToggle.onValueChanged.AddListener(delegate
+			{
+				RefreshMainCargoResources();
+			});
+			RefinedToggle.onValueChanged.AddListener(delegate
+			{
+				RefreshMainCargoResources();
+			});
+			CraftingToggle.onValueChanged.AddListener(delegate
+			{
+				RefreshMainCargoResources();
+			});
+			MainScreen.Activate(value: true);
+			CraftingScreen.Activate(value: false);
+			ToggleCancelCrafting(cancel: false);
+			base.gameObject.Activate(value: true);
 			RefineryAction.Activate(Refinery != null);
 			FabricatorAction.Activate(Fabricator != null);
 			HaveAttachItem.Activate(AttachPoint.Item != null);
@@ -353,7 +273,7 @@ namespace ZeroGravity.UI
 		public override void OnDetach()
 		{
 			base.OnDetach();
-			base.gameObject.SetActive(false);
+			base.gameObject.SetActive(value: false);
 			RawToggle.onValueChanged.RemoveAllListeners();
 			RefinedToggle.onValueChanged.RemoveAllListeners();
 			CraftingToggle.onValueChanged.RemoveAllListeners();
@@ -386,7 +306,7 @@ namespace ZeroGravity.UI
 				if (!(allVessel.CargoBay == null))
 				{
 					GameObject gameObject = UnityEngine.Object.Instantiate(VesselObject, vesselListTransform);
-					gameObject.SetActive(true);
+					gameObject.SetActive(value: true);
 					gameObject.transform.Reset();
 					VesselObjectScript component = gameObject.GetComponent<VesselObjectScript>();
 					component.MyCargoPanel = this;
@@ -406,11 +326,11 @@ namespace ZeroGravity.UI
 				if (vessel == value.Vessel)
 				{
 					SelectedVessel = value;
-					value.Selected.SetActive(true);
+					value.Selected.SetActive(value: true);
 				}
 				else
 				{
-					value.Selected.SetActive(false);
+					value.Selected.SetActive(value: false);
 				}
 			}
 			if (SelectedVessel != null)
@@ -421,14 +341,13 @@ namespace ZeroGravity.UI
 			}
 			else
 			{
-				AuthorizationFail.SetActive(false);
+				AuthorizationFail.SetActive(value: false);
 			}
 		}
 
 		public void UpdateVesselObjects(SpaceObjectVessel vessel)
 		{
-			VesselObjectScript value;
-			if (CargoVessels.TryGetValue(vessel, out value) && !(value == null))
+			if (CargoVessels.TryGetValue(vessel, out var value) && !(value == null))
 			{
 				value.CapacityFiller.fillAmount = value.CargoCapacityFillerValue();
 				if (SelectedVessel == value)
@@ -460,7 +379,7 @@ namespace ZeroGravity.UI
 						MainCargoItems.Add(resource);
 						GameObject gameObject = UnityEngine.Object.Instantiate(MainCargoResourcePref, CargoResourceHolder.transform);
 						gameObject.transform.localScale = Vector3.one;
-						gameObject.SetActive(true);
+						gameObject.SetActive(value: true);
 						CargoResourceUI component = gameObject.GetComponent<CargoResourceUI>();
 						component.Compartment = CurrentlySelectedCargoBay.CargoBayResources;
 						component.Resource = resource;
@@ -518,7 +437,7 @@ namespace ZeroGravity.UI
 		{
 			GameObject gameObject = UnityEngine.Object.Instantiate(CargoVesselObject, SystemHolder.transform);
 			gameObject.transform.localScale = Vector3.one;
-			gameObject.SetActive(true);
+			gameObject.SetActive(value: true);
 			ConnectedVessel component = gameObject.GetComponent<ConnectedVessel>();
 			component.Vessel = vessel;
 			component.CargoPanel = this;
@@ -536,13 +455,13 @@ namespace ZeroGravity.UI
 		{
 			GameObject gameObject = UnityEngine.Object.Instantiate(CargoSystemObject, newVessel.transform);
 			gameObject.transform.localScale = Vector3.one;
-			gameObject.SetActive(true);
+			gameObject.SetActive(value: true);
 			CargoSystemObject component = gameObject.GetComponent<CargoSystemObject>();
 			component.Capacity = rc.Capacity;
 			component.Quantity = rc.Quantity;
 			GameObject gameObject2 = UnityEngine.Object.Instantiate(CargoSystemResource, newVessel.transform);
 			gameObject2.transform.localScale = Vector3.one;
-			gameObject2.SetActive(true);
+			gameObject2.SetActive(value: true);
 			CargoResourceData cargoResourceData = rc.CargoCompartment.Resources[0];
 			CargoResourceUI component2 = gameObject2.GetComponent<CargoResourceUI>();
 			component2.Compartment = rc.CargoCompartment;
@@ -557,8 +476,7 @@ namespace ZeroGravity.UI
 
 		public void RefreshSystemObject(ResourceContainer rc)
 		{
-			CargoSystemObject value;
-			if (ConnectedContainerResourcesUI.TryGetValue(rc, out value) && value.gameObject.activeInHierarchy)
+			if (ConnectedContainerResourcesUI.TryGetValue(rc, out var value) && value.gameObject.activeInHierarchy)
 			{
 				value.Capacity = rc.Capacity;
 				value.Quantity = rc.Quantity;
@@ -578,20 +496,20 @@ namespace ZeroGravity.UI
 			if (AttachPoint.Item != null)
 			{
 				itemCargos = AttachPoint.Item as ICargo;
-				HaveAttachItem.Activate(true);
-				NoItemAttached.SetActive(false);
+				HaveAttachItem.Activate(value: true);
+				NoItemAttached.SetActive(value: false);
 				AttachItemName.text = AttachPoint.Item.Name.ToUpper();
-				AttachPointActive.SetActive(true);
-				UnloadAttachedButton.SetActive(false);
+				AttachPointActive.SetActive(value: true);
+				UnloadAttachedButton.SetActive(value: false);
 				CreateAttachItemUI();
 			}
 			else
 			{
 				itemCargos = null;
 				AttachItemName.text = Localization.AttachPoint.ToUpper();
-				HaveAttachItem.Activate(false);
-				NoItemAttached.SetActive(true);
-				AttachPointActive.SetActive(false);
+				HaveAttachItem.Activate(value: false);
+				NoItemAttached.SetActive(value: true);
+				AttachPointActive.SetActive(value: false);
 			}
 		}
 
@@ -602,12 +520,12 @@ namespace ZeroGravity.UI
 				return;
 			}
 			AttachedItemContainersUI.Clear();
-			CargoAttachPointContainer[] componentsInChildren = AttachedItemContent.GetComponentsInChildren<CargoAttachPointContainer>(true);
+			CargoAttachPointContainer[] componentsInChildren = AttachedItemContent.GetComponentsInChildren<CargoAttachPointContainer>(includeInactive: true);
 			foreach (CargoAttachPointContainer cargoAttachPointContainer in componentsInChildren)
 			{
 				UnityEngine.Object.DestroyImmediate(cargoAttachPointContainer.gameObject);
 			}
-			CargoResourceUI[] componentsInChildren2 = AttachedItemContent.GetComponentsInChildren<CargoResourceUI>(true);
+			CargoResourceUI[] componentsInChildren2 = AttachedItemContent.GetComponentsInChildren<CargoResourceUI>(includeInactive: true);
 			foreach (CargoResourceUI cargoResourceUI in componentsInChildren2)
 			{
 				UnityEngine.Object.DestroyImmediate(cargoResourceUI.gameObject);
@@ -616,26 +534,12 @@ namespace ZeroGravity.UI
 			{
 				GameObject gameObject = UnityEngine.Object.Instantiate(AttachedItemCompartment, AttachedItemContent);
 				gameObject.transform.localScale = Vector3.one;
-				gameObject.SetActive(true);
+				gameObject.SetActive(value: true);
 				CargoAttachPointContainer component = gameObject.GetComponent<CargoAttachPointContainer>();
 				component.ItemCompartment = compartment;
 				component.Name.text = compartment.Name.ToUpper();
 				component.Capacity = compartment.Capacity;
-				float quantity;
-				if (compartment.Resources != null)
-				{
-					List<CargoResourceData> resources = compartment.Resources;
-					if (_003C_003Ef__am_0024cache0 == null)
-					{
-						_003C_003Ef__am_0024cache0 = _003CCreateAttachItemUI_003Em__4;
-					}
-					quantity = resources.Sum(_003C_003Ef__am_0024cache0);
-				}
-				else
-				{
-					quantity = 0f;
-				}
-				component.Quantity = quantity;
+				component.Quantity = ((compartment.Resources == null) ? 0f : compartment.Resources.Sum((CargoResourceData m) => m.Quantity));
 				component.Value.text = System.Math.Round(component.Quantity, 2).ToString("0.#") + " / " + component.Capacity.ToString("0.#");
 				AttachedItemContainersUI.Add(component);
 				UpdateAttachedResources(compartment);
@@ -644,7 +548,7 @@ namespace ZeroGravity.UI
 
 		public void RefreshAttachedItemResources()
 		{
-			CargoResourceUI[] componentsInChildren = AttachedItemContent.GetComponentsInChildren<CargoResourceUI>(true);
+			CargoResourceUI[] componentsInChildren = AttachedItemContent.GetComponentsInChildren<CargoResourceUI>(includeInactive: true);
 			foreach (CargoResourceUI cargoResourceUI in componentsInChildren)
 			{
 				UnityEngine.Object.DestroyImmediate(cargoResourceUI.gameObject);
@@ -652,21 +556,7 @@ namespace ZeroGravity.UI
 			foreach (CargoAttachPointContainer item in AttachedItemContainersUI)
 			{
 				item.Capacity = item.ItemCompartment.Capacity;
-				float quantity;
-				if (item.ItemCompartment.Resources != null)
-				{
-					List<CargoResourceData> resources = item.ItemCompartment.Resources;
-					if (_003C_003Ef__am_0024cache1 == null)
-					{
-						_003C_003Ef__am_0024cache1 = _003CRefreshAttachedItemResources_003Em__5;
-					}
-					quantity = resources.Sum(_003C_003Ef__am_0024cache1);
-				}
-				else
-				{
-					quantity = 0f;
-				}
-				item.Quantity = quantity;
+				item.Quantity = ((item.ItemCompartment.Resources == null) ? 0f : item.ItemCompartment.Resources.Sum((CargoResourceData m) => m.Quantity));
 				item.Value.text = System.Math.Round(item.Quantity, 2).ToString("0.#") + " / " + item.Capacity.ToString("0.#");
 				UpdateAttachedResources(item.ItemCompartment);
 			}
@@ -678,7 +568,7 @@ namespace ZeroGravity.UI
 			{
 				GameObject gameObject = UnityEngine.Object.Instantiate(AttachedCargoResourceItem, AttachedItemContent);
 				gameObject.transform.localScale = Vector3.one;
-				gameObject.SetActive(true);
+				gameObject.SetActive(value: true);
 				CargoResourceUI component = gameObject.GetComponent<CargoResourceUI>();
 				component.Compartment = itemCompartment;
 				component.Name.text = Localization.Slot.ToUpper();
@@ -692,7 +582,7 @@ namespace ZeroGravity.UI
 				{
 					GameObject gameObject2 = UnityEngine.Object.Instantiate(AttachedCargoResourceItem, AttachedItemContent);
 					gameObject2.transform.localScale = Vector3.one;
-					gameObject2.SetActive(true);
+					gameObject2.SetActive(value: true);
 					CargoResourceUI component2 = gameObject2.GetComponent<CargoResourceUI>();
 					component2.Compartment = itemCompartment;
 					component2.Resource = resource;
@@ -771,8 +661,7 @@ namespace ZeroGravity.UI
 			{
 				foreach (CargoResourceData resource in Fabricator.CargoResources.Resources)
 				{
-					CargoResourceUI value;
-					if (CraftingItems.TryGetValue(resource.ResourceType, out value))
+					if (CraftingItems.TryGetValue(resource.ResourceType, out var value))
 					{
 						value.Quantity = resource.Quantity;
 						value.Value.text = FormatHelper.FormatValue(resource.Quantity);
@@ -783,16 +672,11 @@ namespace ZeroGravity.UI
 					}
 				}
 				List<ResourceType> list = new List<ResourceType>();
-				using (Dictionary<ResourceType, CargoResourceUI>.Enumerator enumerator2 = CraftingItems.GetEnumerator())
+				foreach (KeyValuePair<ResourceType, CargoResourceUI> kv in CraftingItems)
 				{
-					while (enumerator2.MoveNext())
+					if (Fabricator.CargoResources.Resources.Count((CargoResourceData m) => m.ResourceType == kv.Value.Resource.ResourceType) == 0)
 					{
-						_003CUpdateCraftingResources_003Ec__AnonStorey0 _003CUpdateCraftingResources_003Ec__AnonStorey = new _003CUpdateCraftingResources_003Ec__AnonStorey0();
-						_003CUpdateCraftingResources_003Ec__AnonStorey.kv = enumerator2.Current;
-						if (Fabricator.CargoResources.Resources.Count(_003CUpdateCraftingResources_003Ec__AnonStorey._003C_003Em__0) == 0)
-						{
-							list.Add(_003CUpdateCraftingResources_003Ec__AnonStorey.kv.Key);
-						}
+						list.Add(kv.Key);
 					}
 				}
 				foreach (ResourceType item in list)
@@ -821,7 +705,7 @@ namespace ZeroGravity.UI
 				{
 					CraftingItemInProgress = Fabricator.ItemsInQueue[0];
 				}
-				CraftingInProgress.SetActive(true);
+				CraftingInProgress.SetActive(value: true);
 				InProgressName.text = CurrentItemName.text;
 				InProgressName.color = CurrentItemName.color;
 				InProgressIcon.sprite = CurrentItemIcon.sprite;
@@ -830,60 +714,41 @@ namespace ZeroGravity.UI
 			else
 			{
 				SelectItem.SetActive(CurrentCraftingItem == null);
-				CraftingInProgress.SetActive(false);
+				CraftingInProgress.SetActive(value: false);
 				if (CurrentCraftingItem != null)
 				{
 					CheckCraftingResources();
 				}
-				if (CurrentCraftingItem != null)
+				if (CurrentCraftingItem != null && Fabricator.AttachPoints.Count((SceneAttachPoint m) => m.Item == null) > 0 && CurrentCraftingItem.CanFabricate())
 				{
-					List<SceneAttachPoint> attachPoints = Fabricator.AttachPoints;
-					if (_003C_003Ef__am_0024cache2 == null)
-					{
-						_003C_003Ef__am_0024cache2 = _003CCraftingStatusUpdate_003Em__6;
-					}
-					if (attachPoints.Count(_003C_003Ef__am_0024cache2) > 0 && CurrentCraftingItem.CanFabricate())
-					{
-						CraftButton.interactable = true;
-						CraftingStatus.text = string.Empty;
-						goto IL_0242;
-					}
-				}
-				CraftButton.interactable = false;
-				List<SceneAttachPoint> attachPoints2 = Fabricator.AttachPoints;
-				if (_003C_003Ef__am_0024cache3 == null)
-				{
-					_003C_003Ef__am_0024cache3 = _003CCraftingStatusUpdate_003Em__7;
-				}
-				if (attachPoints2.Count(_003C_003Ef__am_0024cache3) == 0)
-				{
-					CraftingStatus.text = Localization.RemoveItem;
-				}
-				else if (CurrentCraftingItem == null)
-				{
-					CraftingStatus.text = Localization.ChooseAnItem;
-				}
-				else if (!CurrentCraftingItem.CanFabricate())
-				{
-					CraftingStatus.text = Localization.NotEnoughResources;
+					CraftButton.interactable = true;
+					CraftingStatus.text = string.Empty;
 				}
 				else
 				{
-					CraftingStatus.text = Localization.NoPower;
+					CraftButton.interactable = false;
+					if (Fabricator.AttachPoints.Count((SceneAttachPoint m) => m.Item == null) == 0)
+					{
+						CraftingStatus.text = Localization.RemoveItem;
+					}
+					else if (CurrentCraftingItem == null)
+					{
+						CraftingStatus.text = Localization.ChooseAnItem;
+					}
+					else if (!CurrentCraftingItem.CanFabricate())
+					{
+						CraftingStatus.text = Localization.NotEnoughResources;
+					}
+					else
+					{
+						CraftingStatus.text = Localization.NoPower;
+					}
 				}
 			}
-			goto IL_0242;
-			IL_0242:
 			UnloadFabricatorButton.SetActive(Fabricator.CargoResources.Resources != null);
 			if (Fabricator.CargoResources.Resources != null)
 			{
-				Text craftingCapacity = CraftingCapacity;
-				List<CargoResourceData> resources = Fabricator.CargoResources.Resources;
-				if (_003C_003Ef__am_0024cache4 == null)
-				{
-					_003C_003Ef__am_0024cache4 = _003CCraftingStatusUpdate_003Em__8;
-				}
-				craftingCapacity.text = FormatHelper.CurrentMax(resources.Sum(_003C_003Ef__am_0024cache4), Fabricator.CargoResources.Capacity);
+				CraftingCapacity.text = FormatHelper.CurrentMax(Fabricator.CargoResources.Resources.Sum((CargoResourceData m) => m.Quantity), Fabricator.CargoResources.Capacity);
 			}
 			else
 			{
@@ -917,7 +782,7 @@ namespace ZeroGravity.UI
 		private void MakeParts(Transform loc, SceneMachineryPartSlot[] systemSlots)
 		{
 			PartsUI.Clear();
-			PartSlotUI[] componentsInChildren = loc.GetComponentsInChildren<PartSlotUI>(true);
+			PartSlotUI[] componentsInChildren = loc.GetComponentsInChildren<PartSlotUI>(includeInactive: true);
 			foreach (PartSlotUI partSlotUI in componentsInChildren)
 			{
 				UnityEngine.Object.DestroyImmediate(partSlotUI.gameObject);
@@ -925,7 +790,7 @@ namespace ZeroGravity.UI
 			foreach (SceneMachineryPartSlot partSlot in systemSlots)
 			{
 				GameObject gameObject = UnityEngine.Object.Instantiate(PartPref, PartsTransform);
-				gameObject.SetActive(true);
+				gameObject.SetActive(value: true);
 				gameObject.transform.Reset();
 				PartSlotUI component = gameObject.GetComponent<PartSlotUI>();
 				component.Panel = gameObject;
@@ -950,8 +815,7 @@ namespace ZeroGravity.UI
 			{
 				foreach (CargoResourceData resource in Refinery.CargoResources.Resources)
 				{
-					CargoResourceUI value;
-					if (RefineryItems.TryGetValue(resource.ResourceType, out value))
+					if (RefineryItems.TryGetValue(resource.ResourceType, out var value))
 					{
 						value.Quantity = resource.Quantity;
 						value.Value.text = FormatHelper.FormatValue(resource.Quantity);
@@ -962,16 +826,11 @@ namespace ZeroGravity.UI
 					}
 				}
 				List<ResourceType> list = new List<ResourceType>();
-				using (Dictionary<ResourceType, CargoResourceUI>.Enumerator enumerator2 = RefineryItems.GetEnumerator())
+				foreach (KeyValuePair<ResourceType, CargoResourceUI> kv in RefineryItems)
 				{
-					while (enumerator2.MoveNext())
+					if (Refinery.CargoResources.Resources.Count((CargoResourceData m) => m.ResourceType == kv.Value.Resource.ResourceType) == 0)
 					{
-						_003CUpdateRefineryResources_003Ec__AnonStorey1 _003CUpdateRefineryResources_003Ec__AnonStorey = new _003CUpdateRefineryResources_003Ec__AnonStorey1();
-						_003CUpdateRefineryResources_003Ec__AnonStorey.kv = enumerator2.Current;
-						if (Refinery.CargoResources.Resources.Count(_003CUpdateRefineryResources_003Ec__AnonStorey._003C_003Em__0) == 0)
-						{
-							list.Add(_003CUpdateRefineryResources_003Ec__AnonStorey.kv.Key);
-						}
+						list.Add(kv.Key);
 					}
 				}
 				foreach (ResourceType item in list)
@@ -983,7 +842,7 @@ namespace ZeroGravity.UI
 			else
 			{
 				RefineryItems.Clear();
-				CargoResourceUI[] componentsInChildren = RefineryItemContent.GetComponentsInChildren<CargoResourceUI>(true);
+				CargoResourceUI[] componentsInChildren = RefineryItemContent.GetComponentsInChildren<CargoResourceUI>(includeInactive: true);
 				foreach (CargoResourceUI cargoResourceUI in componentsInChildren)
 				{
 					UnityEngine.Object.DestroyImmediate(cargoResourceUI.gameObject);
@@ -1005,21 +864,10 @@ namespace ZeroGravity.UI
 			}
 			if (Refinery.CargoResources.Resources != null)
 			{
-				IEnumerable<CargoResourceData> source = Refinery.CargoResources.Resources.Where(_003CRefineryStatusUpdate_003Em__9);
-				if (_003C_003Ef__am_0024cache5 == null)
-				{
-					_003C_003Ef__am_0024cache5 = _003CRefineryStatusUpdate_003Em__A;
-				}
-				float num = source.Sum(_003C_003Ef__am_0024cache5);
+				float num = Refinery.CargoResources.Resources.Where((CargoResourceData m) => Refinery.Resources.Select((RefinedResourcesData n) => n.RawResource).Contains(m.ResourceType)).Sum((CargoResourceData m) => m.Quantity);
 				float val = Refinery.ProcessingTime * (num / Refinery.Capacity);
 				RefineButton.interactable = num != 0f && curCap >= Refinery.ProcessingTime;
-				Text refineryCapacity = RefineryCapacity;
-				List<CargoResourceData> resources = Refinery.CargoResources.Resources;
-				if (_003C_003Ef__am_0024cache6 == null)
-				{
-					_003C_003Ef__am_0024cache6 = _003CRefineryStatusUpdate_003Em__B;
-				}
-				refineryCapacity.text = FormatHelper.CurrentMax(resources.Sum(_003C_003Ef__am_0024cache6), Refinery.CargoResources.Capacity);
+				RefineryCapacity.text = FormatHelper.CurrentMax(Refinery.CargoResources.Resources.Sum((CargoResourceData m) => m.Quantity), Refinery.CargoResources.Capacity);
 				if (num > 0f)
 				{
 					RefiningTimer.text = FormatHelper.Timer(val);
@@ -1041,7 +889,7 @@ namespace ZeroGravity.UI
 		{
 			GameObject gameObject = UnityEngine.Object.Instantiate(ResourceItem, loc);
 			gameObject.transform.localScale = Vector3.one;
-			gameObject.SetActive(true);
+			gameObject.SetActive(value: true);
 			CargoResourceUI component = gameObject.GetComponent<CargoResourceUI>();
 			component.gameObject.transform.localScale = Vector3.one;
 			if (loc == RefineryItemContent)
@@ -1102,84 +950,74 @@ namespace ZeroGravity.UI
 		{
 			bool flag = false;
 			ICargo cargo = AttachPoint.Item as ICargo;
-			using (List<ICargoCompartment>.Enumerator enumerator = cargo.Compartments.GetEnumerator())
+			foreach (CargoCompartment cc in cargo.Compartments)
 			{
-				while (enumerator.MoveNext())
+				if (cc.Resources != null && cc.Resources.Count > 0)
 				{
-					_003CFillAttached_003Ec__AnonStorey3 _003CFillAttached_003Ec__AnonStorey = new _003CFillAttached_003Ec__AnonStorey3();
-					_003CFillAttached_003Ec__AnonStorey.cc = (CargoCompartment)enumerator.Current;
-					if (_003CFillAttached_003Ec__AnonStorey.cc.Resources != null && _003CFillAttached_003Ec__AnonStorey.cc.Resources.Count > 0)
+					foreach (CargoResourceData resource in cc.Resources)
 					{
-						using (List<CargoResourceData>.Enumerator enumerator2 = _003CFillAttached_003Ec__AnonStorey.cc.Resources.GetEnumerator())
+						if (CurrentlySelectedCargoBay.CargoBayResources.Resources == null || CurrentlySelectedCargoBay.CargoBayResources.Resources.Count <= 0)
 						{
-							while (enumerator2.MoveNext())
-							{
-								_003CFillAttached_003Ec__AnonStorey2 _003CFillAttached_003Ec__AnonStorey2 = new _003CFillAttached_003Ec__AnonStorey2();
-								_003CFillAttached_003Ec__AnonStorey2.resource = enumerator2.Current;
-								if (CurrentlySelectedCargoBay.CargoBayResources.Resources == null || CurrentlySelectedCargoBay.CargoBayResources.Resources.Count <= 0)
-								{
-									continue;
-								}
-								foreach (CargoResourceData item in CurrentlySelectedCargoBay.CargoBayResources.Resources.Where(_003CFillAttached_003Ec__AnonStorey2._003C_003Em__0))
-								{
-									if (item.Quantity > 0f)
-									{
-										TransferResourceMessage transferResourceMessage = null;
-										TransferResourceMessage transferResourceMessage2 = new TransferResourceMessage();
-										transferResourceMessage2.ToLocationType = ResourceLocationType.ResourcesTransferPoint;
-										transferResourceMessage2.ToVesselGuid = AttachPoint.ParentVessel.GUID;
-										transferResourceMessage2.ToInSceneID = AttachPoint.InSceneID;
-										transferResourceMessage2.ToCompartmentID = _003CFillAttached_003Ec__AnonStorey.cc.ID;
-										transferResourceMessage2.ResourceType = item.ResourceType;
-										transferResourceMessage2.Quantity = item.Quantity;
-										transferResourceMessage = transferResourceMessage2;
-										transferResourceMessage.FromLocationType = ResourceLocationType.CargoBay;
-										transferResourceMessage.FromVesselGuid = CurrentlySelectedCargoBay.ParentVessel.GUID;
-										transferResourceMessage.FromInSceneID = CurrentlySelectedCargoBay.InSceneID;
-										transferResourceMessage.FromCompartmentID = CurrentlySelectedCargoBay.Compartments[0].ID;
-										if (transferResourceMessage != null)
-										{
-											Client.Instance.NetworkController.SendToGameServer(transferResourceMessage);
-										}
-										flag = true;
-									}
-								}
-							}
+							continue;
 						}
-					}
-					else
-					{
-						foreach (CargoResourceData item2 in CurrentlySelectedCargoBay.CargoBayResources.Resources.Where(_003CFillAttached_003Ec__AnonStorey._003C_003Em__0))
+						foreach (CargoResourceData item in CurrentlySelectedCargoBay.CargoBayResources.Resources.Where((CargoResourceData m) => m.ResourceType == resource.ResourceType))
 						{
-							if (item2.Quantity > 0f)
+							if (item.Quantity > 0f)
 							{
-								TransferResourceMessage transferResourceMessage3 = null;
+								TransferResourceMessage transferResourceMessage = null;
 								TransferResourceMessage transferResourceMessage2 = new TransferResourceMessage();
 								transferResourceMessage2.ToLocationType = ResourceLocationType.ResourcesTransferPoint;
 								transferResourceMessage2.ToVesselGuid = AttachPoint.ParentVessel.GUID;
 								transferResourceMessage2.ToInSceneID = AttachPoint.InSceneID;
-								transferResourceMessage2.ToCompartmentID = _003CFillAttached_003Ec__AnonStorey.cc.ID;
-								transferResourceMessage2.ResourceType = item2.ResourceType;
-								transferResourceMessage2.Quantity = item2.Quantity;
-								transferResourceMessage3 = transferResourceMessage2;
-								transferResourceMessage3.FromLocationType = ResourceLocationType.CargoBay;
-								transferResourceMessage3.FromVesselGuid = CurrentlySelectedCargoBay.ParentVessel.GUID;
-								transferResourceMessage3.FromInSceneID = CurrentlySelectedCargoBay.InSceneID;
-								transferResourceMessage3.FromCompartmentID = CurrentlySelectedCargoBay.Compartments[0].ID;
-								if (transferResourceMessage3 != null)
+								transferResourceMessage2.ToCompartmentID = cc.ID;
+								transferResourceMessage2.ResourceType = item.ResourceType;
+								transferResourceMessage2.Quantity = item.Quantity;
+								transferResourceMessage = transferResourceMessage2;
+								transferResourceMessage.FromLocationType = ResourceLocationType.CargoBay;
+								transferResourceMessage.FromVesselGuid = CurrentlySelectedCargoBay.ParentVessel.GUID;
+								transferResourceMessage.FromInSceneID = CurrentlySelectedCargoBay.InSceneID;
+								transferResourceMessage.FromCompartmentID = CurrentlySelectedCargoBay.Compartments[0].ID;
+								if (transferResourceMessage != null)
 								{
-									Client.Instance.NetworkController.SendToGameServer(transferResourceMessage3);
+									Client.Instance.NetworkController.SendToGameServer(transferResourceMessage);
 								}
 								flag = true;
 							}
 						}
 					}
-					if (!flag)
-					{
-						break;
-					}
-					RefreshMainCargoResources();
 				}
+				else
+				{
+					foreach (CargoResourceData item2 in CurrentlySelectedCargoBay.CargoBayResources.Resources.Where((CargoResourceData m) => cc.IsAllowed(m.ResourceType)))
+					{
+						if (item2.Quantity > 0f)
+						{
+							TransferResourceMessage transferResourceMessage3 = null;
+							TransferResourceMessage transferResourceMessage2 = new TransferResourceMessage();
+							transferResourceMessage2.ToLocationType = ResourceLocationType.ResourcesTransferPoint;
+							transferResourceMessage2.ToVesselGuid = AttachPoint.ParentVessel.GUID;
+							transferResourceMessage2.ToInSceneID = AttachPoint.InSceneID;
+							transferResourceMessage2.ToCompartmentID = cc.ID;
+							transferResourceMessage2.ResourceType = item2.ResourceType;
+							transferResourceMessage2.Quantity = item2.Quantity;
+							transferResourceMessage3 = transferResourceMessage2;
+							transferResourceMessage3.FromLocationType = ResourceLocationType.CargoBay;
+							transferResourceMessage3.FromVesselGuid = CurrentlySelectedCargoBay.ParentVessel.GUID;
+							transferResourceMessage3.FromInSceneID = CurrentlySelectedCargoBay.InSceneID;
+							transferResourceMessage3.FromCompartmentID = CurrentlySelectedCargoBay.Compartments[0].ID;
+							if (transferResourceMessage3 != null)
+							{
+								Client.Instance.NetworkController.SendToGameServer(transferResourceMessage3);
+							}
+							flag = true;
+						}
+					}
+				}
+				if (!flag)
+				{
+					break;
+				}
+				RefreshMainCargoResources();
 			}
 		}
 
@@ -1257,7 +1095,7 @@ namespace ZeroGravity.UI
 		{
 			if (TransferingBox.activeInHierarchy)
 			{
-				TransferingBox.SetActive(false);
+				TransferingBox.SetActive(value: false);
 			}
 			CargoTransferingResource component = DragingItem.GetComponent<CargoTransferingResource>();
 			component.FromCompartment = null;
@@ -1271,7 +1109,10 @@ namespace ZeroGravity.UI
 		public void SetTransferBox()
 		{
 			ConfirmTransferButton.onClick.RemoveAllListeners();
-			ConfirmTransferButton.onClick.AddListener(_003CSetTransferBox_003Em__C);
+			ConfirmTransferButton.onClick.AddListener(delegate
+			{
+				TransferResources();
+			});
 			CargoTransferingResource component = DragingItem.GetComponent<CargoTransferingResource>();
 			if (component.ToCompartment != null && (component.FromCompartment == null || component.FromCompartment == component.ToCompartment || !component.ToCompartment.IsAllowed(component.FromResource.ResourceType)))
 			{
@@ -1279,7 +1120,7 @@ namespace ZeroGravity.UI
 			}
 			TransferSlider.onValueChanged.AddListener(UpdateValueFromSlider);
 			TransferInput.onValueChanged.AddListener(UpdateValueFromInputField);
-			TransferingBox.SetActive(true);
+			TransferingBox.SetActive(value: true);
 			From.text = Localization.From.ToUpper() + ":" + component.FromCompartment.Name.ToUpper();
 			FromName.text = component.FromResource.ResourceType.ToLocalizedString().CamelCaseToSpaced();
 			FromIcon.sprite = Client.Instance.SpriteManager.GetSprite(component.FromResource.ResourceType);
@@ -1322,8 +1163,7 @@ namespace ZeroGravity.UI
 
 		public void UpdateValueFromInputField(string value)
 		{
-			float result;
-			float.TryParse(value, out result);
+			float.TryParse(value, out var result);
 			if ((bool)TransferSlider)
 			{
 				TransferSlider.value = result;
@@ -1430,48 +1270,42 @@ namespace ZeroGravity.UI
 		public void OpenCrafingScreen()
 		{
 			CraftingItemsContent.DestroyAll<CraftingItem>();
-			using (List<SubSystemFabricator.CraftableItemData>.Enumerator enumerator = Fabricator.CraftableItems.GetEnumerator())
+			foreach (SubSystemFabricator.CraftableItemData data in Fabricator.CraftableItems)
 			{
-				while (enumerator.MoveNext())
+				if (MyPlayer.Instance.Blueprints.FirstOrDefault((ItemCompoundType m) => m.Type == data.CompoundType.Type && m.SubType == data.CompoundType.SubType && m.PartType == data.CompoundType.PartType && m.Tier == data.CompoundType.Tier) != null)
 				{
-					_003COpenCrafingScreen_003Ec__AnonStorey4 _003COpenCrafingScreen_003Ec__AnonStorey = new _003COpenCrafingScreen_003Ec__AnonStorey4();
-					_003COpenCrafingScreen_003Ec__AnonStorey.data = enumerator.Current;
-					if (MyPlayer.Instance.Blueprints.FirstOrDefault(_003COpenCrafingScreen_003Ec__AnonStorey._003C_003Em__0) != null)
+					GameObject gameObject = UnityEngine.Object.Instantiate(CraftingItemUI, CraftingItemsContent);
+					gameObject.transform.localScale = Vector3.one;
+					CraftingItem component = gameObject.GetComponent<CraftingItem>();
+					component.gameObject.transform.localScale = Vector3.one;
+					component.Panel = this;
+					component.Data = data;
+					ItemCompoundType ict = data.CompoundType;
+					if (MyPlayer.Instance.Blueprints.Count((ItemCompoundType m) => m.Type == ict.Type && m.SubType == ict.SubType && m.PartType == ict.PartType && m.Tier == ict.Tier) == 0)
 					{
-						_003COpenCrafingScreen_003Ec__AnonStorey5 _003COpenCrafingScreen_003Ec__AnonStorey2 = new _003COpenCrafingScreen_003Ec__AnonStorey5();
-						GameObject gameObject = UnityEngine.Object.Instantiate(CraftingItemUI, CraftingItemsContent);
-						gameObject.transform.localScale = Vector3.one;
-						CraftingItem component = gameObject.GetComponent<CraftingItem>();
-						component.gameObject.transform.localScale = Vector3.one;
-						component.Panel = this;
-						component.Data = _003COpenCrafingScreen_003Ec__AnonStorey.data;
-						_003COpenCrafingScreen_003Ec__AnonStorey2.ict = _003COpenCrafingScreen_003Ec__AnonStorey.data.CompoundType;
-						if (MyPlayer.Instance.Blueprints.Count(_003COpenCrafingScreen_003Ec__AnonStorey2._003C_003Em__0) == 0)
-						{
-							component.GetComponent<Button>().interactable = false;
-							component.GetComponent<Tooltip>().enabled = true;
-							component.GetComponent<Image>().color = Colors.DistressRed;
-						}
-						else
-						{
-							component.GetComponent<Button>().interactable = true;
-							component.GetComponent<Tooltip>().enabled = false;
-							component.GetComponent<Image>().color = Colors.White;
-						}
-						if (ShowAvailable.isOn)
-						{
-							component.gameObject.Activate(component.CanFabricate());
-						}
-						else
-						{
-							component.gameObject.Activate(true);
-						}
+						component.GetComponent<Button>().interactable = false;
+						component.GetComponent<Tooltip>().enabled = true;
+						component.GetComponent<Image>().color = Colors.DistressRed;
+					}
+					else
+					{
+						component.GetComponent<Button>().interactable = true;
+						component.GetComponent<Tooltip>().enabled = false;
+						component.GetComponent<Image>().color = Colors.White;
+					}
+					if (ShowAvailable.isOn)
+					{
+						component.gameObject.Activate(component.CanFabricate());
+					}
+					else
+					{
+						component.gameObject.Activate(value: true);
 					}
 				}
 			}
 			CraftingPowerConsumption.text = FormatHelper.FormatValue(Fabricator.GetPowerConsumption(true)) + " / s";
-			MainScreen.Activate(false);
-			CraftingScreen.Activate(true);
+			MainScreen.Activate(value: false);
+			CraftingScreen.Activate(value: true);
 		}
 
 		public void SetItemForCrafting()
@@ -1483,67 +1317,40 @@ namespace ZeroGravity.UI
 			if (CurrentCraftingItem == null)
 			{
 				CraftingTime.text = "/";
-				SelectItem.SetActive(true);
-				IEnumerator enumerator = CurrentItemResources.GetComponentInChildren<Transform>(true).GetEnumerator();
-				try
+				SelectItem.SetActive(value: true);
+				foreach (Transform componentInChild in CurrentItemResources.GetComponentInChildren<Transform>(includeInactive: true))
 				{
-					while (enumerator.MoveNext())
-					{
-						Transform transform = (Transform)enumerator.Current;
-						UnityEngine.Object.Destroy(transform.gameObject);
-					}
-				}
-				finally
-				{
-					IDisposable disposable;
-					if ((disposable = enumerator as IDisposable) != null)
-					{
-						disposable.Dispose();
-					}
+					UnityEngine.Object.Destroy(componentInChild.gameObject);
 				}
 			}
 			else
 			{
-				SelectItem.SetActive(false);
+				SelectItem.SetActive(value: false);
 				CraftingTime.text = FormatHelper.Timer(CurrentCraftingItem.GetTime());
 				CurrentItemName.text = Item.GetName(CurrentCraftingItem.Data.CompoundType);
 				CurrentItemName.color = Colors.Tier[CurrentCraftingItem.Data.CompoundType.Tier];
 				CurrentItemIcon.sprite = Client.Instance.SpriteManager.GetSprite(CurrentCraftingItem.Data.CompoundType);
 				CheckCraftingResources();
 			}
-			CraftingScreen.SetActive(false);
-			MainScreen.SetActive(true);
+			CraftingScreen.SetActive(value: false);
+			MainScreen.SetActive(value: true);
 			CraftingStatusUpdate();
 		}
 
 		public void CheckCraftingResources()
 		{
-			IEnumerator enumerator = CurrentItemResources.GetComponentInChildren<Transform>(true).GetEnumerator();
-			try
+			foreach (Transform componentInChild in CurrentItemResources.GetComponentInChildren<Transform>(includeInactive: true))
 			{
-				while (enumerator.MoveNext())
-				{
-					Transform transform = (Transform)enumerator.Current;
-					UnityEngine.Object.Destroy(transform.gameObject);
-				}
-			}
-			finally
-			{
-				IDisposable disposable;
-				if ((disposable = enumerator as IDisposable) != null)
-				{
-					disposable.Dispose();
-				}
+				UnityEngine.Object.Destroy(componentInChild.gameObject);
 			}
 			foreach (KeyValuePair<ResourceType, float> resource in CurrentCraftingItem.Data.Resources)
 			{
 				CargoResourceForCraftingUI cargoResourceForCraftingUI = UnityEngine.Object.Instantiate(CurrentItemResourcesUI, CurrentItemResources);
 				cargoResourceForCraftingUI.transform.localScale = Vector3.one;
-				cargoResourceForCraftingUI.gameObject.SetActive(true);
+				cargoResourceForCraftingUI.gameObject.SetActive(value: true);
 				cargoResourceForCraftingUI.Icon.sprite = Client.Instance.SpriteManager.GetSprite(resource.Key);
 				cargoResourceForCraftingUI.Name.text = resource.Key.ToLocalizedString().ToUpper();
-				CargoResourceUI value;
-				if (CraftingItems.TryGetValue(resource.Key, out value))
+				if (CraftingItems.TryGetValue(resource.Key, out var value))
 				{
 					cargoResourceForCraftingUI.Value.text = FormatHelper.CurrentMax(value.Quantity, resource.Value);
 					if (value.Quantity < resource.Value)
@@ -1566,8 +1373,8 @@ namespace ZeroGravity.UI
 		public void CloseCraftingScreen()
 		{
 			CurrentCraftingItem = null;
-			CraftingScreen.SetActive(false);
-			MainScreen.SetActive(true);
+			CraftingScreen.SetActive(value: false);
+			MainScreen.SetActive(value: true);
 			CraftingStatusUpdate();
 		}
 
@@ -1583,97 +1390,8 @@ namespace ZeroGravity.UI
 
 		public void CancelCraftingConfirm()
 		{
-			Fabricator.CancelFabrication(true);
-			CancelCrafingBox.Activate(false);
-		}
-
-		[CompilerGenerated]
-		private void _003COnInteract_003Em__0(int P_0)
-		{
-			SlectCurrentVesselSystems();
-		}
-
-		[CompilerGenerated]
-		private void _003COnInteract_003Em__1(bool P_0)
-		{
-			RefreshMainCargoResources();
-		}
-
-		[CompilerGenerated]
-		private void _003COnInteract_003Em__2(bool P_0)
-		{
-			RefreshMainCargoResources();
-		}
-
-		[CompilerGenerated]
-		private void _003COnInteract_003Em__3(bool P_0)
-		{
-			RefreshMainCargoResources();
-		}
-
-		[CompilerGenerated]
-		private static float _003CCreateAttachItemUI_003Em__4(CargoResourceData m)
-		{
-			return m.Quantity;
-		}
-
-		[CompilerGenerated]
-		private static float _003CRefreshAttachedItemResources_003Em__5(CargoResourceData m)
-		{
-			return m.Quantity;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CCraftingStatusUpdate_003Em__6(SceneAttachPoint m)
-		{
-			return m.Item == null;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CCraftingStatusUpdate_003Em__7(SceneAttachPoint m)
-		{
-			return m.Item == null;
-		}
-
-		[CompilerGenerated]
-		private static float _003CCraftingStatusUpdate_003Em__8(CargoResourceData m)
-		{
-			return m.Quantity;
-		}
-
-		[CompilerGenerated]
-		private bool _003CRefineryStatusUpdate_003Em__9(CargoResourceData m)
-		{
-			List<RefinedResourcesData> resources = Refinery.Resources;
-			if (_003C_003Ef__am_0024cache7 == null)
-			{
-				_003C_003Ef__am_0024cache7 = _003CRefineryStatusUpdate_003Em__D;
-			}
-			return resources.Select(_003C_003Ef__am_0024cache7).Contains(m.ResourceType);
-		}
-
-		[CompilerGenerated]
-		private static float _003CRefineryStatusUpdate_003Em__A(CargoResourceData m)
-		{
-			return m.Quantity;
-		}
-
-		[CompilerGenerated]
-		private static float _003CRefineryStatusUpdate_003Em__B(CargoResourceData m)
-		{
-			return m.Quantity;
-		}
-
-		[CompilerGenerated]
-		private void _003CSetTransferBox_003Em__C()
-		{
-			TransferResources();
-		}
-
-		[CompilerGenerated]
-		private static ResourceType _003CRefineryStatusUpdate_003Em__D(RefinedResourcesData n)
-		{
-			return n.RawResource;
+			Fabricator.CancelFabrication(currentItemOnly: true);
+			CancelCrafingBox.Activate(value: false);
 		}
 	}
 }

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 045e95257a910444eb0dcca09e1f84cf, type: 3}
+  m_Name: 00HomeSweetHome
+  m_EditorClassIdentifier: 
+  ParentQuest: {fileID: 0}
+  DependencyQuests: []
+  ID: 4
+  QuestTaskBatches:
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 91c5e242843e98d46ab882895218dc01, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 5cc37fa9fd7f401488eba9a89df2577f, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: b2c70a390a1f646418f57d60d42aeb8c, type: 2}
+    BatchDependency: 1
+  Name: Home Sweet Home
+  Description: Connect an Airlock module to the Outpost to avoid losing pressure
+    when entering and exiting the station.
+  Achivement: 3
+  AutoActivate: 0
+  QuestToTrackWhenCompleted: {fileID: 0}
+  TrackOnPickUp: 0
+  Skippable: 0

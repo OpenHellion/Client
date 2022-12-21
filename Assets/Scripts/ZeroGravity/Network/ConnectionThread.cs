@@ -46,7 +46,7 @@ namespace ZeroGravity.Network
 			runThread = true;
 			networkDataQueue = new ConcurrentQueue<NetworkData>();
 			waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
-			
+
 			connectThread = new Thread(Connect);
 			connectThread.IsBackground = true;
 			connectThread.Start();
@@ -289,7 +289,7 @@ namespace ZeroGravity.Network
 						}
 						else if (Client.Instance.LogoutRequestSent)
 						{
-							Dbg.Error("Logout requested");
+							Dbg.Info("Tried to listen to data, but logout was requested.");
 						}
 						else
 						{

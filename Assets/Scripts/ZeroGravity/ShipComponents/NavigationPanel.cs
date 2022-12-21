@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -27,30 +26,6 @@ namespace ZeroGravity.ShipComponents
 			public static implicit operator Point(POINT point)
 			{
 				return new Point(point.x, point.y);
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CAuthorizedVesselsResponseListener_003Ec__AnonStorey0
-		{
-			internal AuthorizedVesselsResponse avr;
-
-			internal bool _003C_003Em__0(long m)
-			{
-				return avr.GUIDs.Contains(m);
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CDoScan_003Ec__AnonStorey1
-		{
-			internal MapObjectShip mos;
-
-			internal NavigationPanel _0024this;
-
-			internal void _003C_003Em__0()
-			{
-				_0024this.ParentVessel.RadarSystem.ActiveScan(mos.ScanningConeAngle, mos.ScanningCone.transform.forward);
 			}
 		}
 
@@ -268,48 +243,6 @@ namespace ZeroGravity.ShipComponents
 
 		public UnityEngine.UI.Image CapacitorFiller;
 
-		[CompilerGenerated]
-		private static Func<SubSystem, bool> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<SubSystem, bool> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Func<SpaceObjectVessel, double> _003C_003Ef__am_0024cache2;
-
-		[CompilerGenerated]
-		private static Func<SpaceObjectVessel, double> _003C_003Ef__am_0024cache3;
-
-		[CompilerGenerated]
-		private static Func<MapObject, bool> _003C_003Ef__am_0024cache4;
-
-		[CompilerGenerated]
-		private static Func<DockedVesselData, long> _003C_003Ef__am_0024cache5;
-
-		[CompilerGenerated]
-		private static Func<SpaceObjectVessel, long> _003C_003Ef__am_0024cache6;
-
-		[CompilerGenerated]
-		private static Func<SceneMachineryPartSlot, bool> _003C_003Ef__am_0024cache7;
-
-		[CompilerGenerated]
-		private static Func<SceneMachineryPartSlot, int> _003C_003Ef__am_0024cache8;
-
-		[CompilerGenerated]
-		private static Func<WarpCellUI, bool> _003C_003Ef__am_0024cache9;
-
-		[CompilerGenerated]
-		private static Func<WarpCellUI, bool> _003C_003Ef__am_0024cacheA;
-
-		[CompilerGenerated]
-		private static Func<WarpCellUI, int> _003C_003Ef__am_0024cacheB;
-
-		[CompilerGenerated]
-		private static Func<SpaceObjectVessel, double> _003C_003Ef__am_0024cacheC;
-
-		[CompilerGenerated]
-		private static Func<SpaceObjectVessel, double> _003C_003Ef__am_0024cacheD;
-
 		public bool InputFocused
 		{
 			get
@@ -366,7 +299,7 @@ namespace ZeroGravity.ShipComponents
 		public void ShowWarning(string warningText)
 		{
 			WarningText.text = warningText;
-			Warnings.SetActive(true);
+			Warnings.SetActive(value: true);
 		}
 
 		public void HideWarning()
@@ -376,7 +309,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void OnInteract(Ship parent)
 		{
-			base.gameObject.Activate(true);
+			base.gameObject.Activate(value: true);
 			Map = Client.Instance.Map;
 			if (parent != ParentVessel)
 			{
@@ -392,18 +325,12 @@ namespace ZeroGravity.ShipComponents
 			PositionOnOrbit.onEndEdit.AddListener(SetOrbitPosition);
 			Client.Instance.NetworkController.EventSystem.AddListener(typeof(AuthorizedVesselsResponse), AuthorizedVesselsResponseListener);
 			Client.Instance.NetworkController.SendToGameServer(new AuthorizedVesselsRequest());
-			GameObject go = WarpButton.gameObject;
-			Dictionary<int, SubSystem>.ValueCollection values = ParentVessel.SubSystems.Values;
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003COnInteract_003Em__0;
-			}
-			go.Activate(values.FirstOrDefault(_003C_003Ef__am_0024cache0) != null);
+			WarpButton.gameObject.Activate(ParentVessel.SubSystems.Values.FirstOrDefault((SubSystem m) => m.Type == SubSystemType.FTL) != null);
 		}
 
 		public void OnDetach()
 		{
-			base.gameObject.SetActive(false);
+			base.gameObject.SetActive(value: false);
 			Inclination.onEndEdit.RemoveAllListeners();
 			ArgumentOfPeriapsis.onEndEdit.RemoveAllListeners();
 			PeriapsisHeight.onEndEdit.RemoveAllListeners();
@@ -430,16 +357,16 @@ namespace ZeroGravity.ShipComponents
 			}
 			else if (ParentVessel.EndWarpTime > Client.Instance.SolarSystem.CurrentTime && ParentVessel.IsWarpOnline && ParentVessel.FTLEngine.IsSwitchedOn())
 			{
-				ManeuverInProgress.SetActive(true);
+				ManeuverInProgress.SetActive(value: true);
 				ManeuverTimeLeft.text = Localization.ETA + " " + FormatHelper.PeriodFormat(ParentVessel.EndWarpTime - Client.Instance.SolarSystem.CurrentTime);
-				AlignShipInfo.SetActive(false);
-				NoManeuverSelected.SetActive(false);
+				AlignShipInfo.SetActive(value: false);
+				NoManeuverSelected.SetActive(value: false);
 			}
 			else if (ManeuverInProgress.activeInHierarchy && Map.WarpManeuver == null)
 			{
-				ManeuverInProgress.SetActive(false);
+				ManeuverInProgress.SetActive(value: false);
 				ManeuverTimeLeft.text = string.Empty;
-				NoManeuverSelected.SetActive(true);
+				NoManeuverSelected.SetActive(value: true);
 			}
 			if (InputManager.GetAxis(InputManager.AxisNames.MouseWheel).IsNotEpsilonZero() && (StartTimeEdit || EndTimeEdit) && Map.WarpManeuver != null)
 			{
@@ -504,48 +431,42 @@ namespace ZeroGravity.ShipComponents
 
 		public void SetInclination(string value)
 		{
-			double result;
-			double.TryParse(value, out result);
+			double.TryParse(value, out var result);
 			result = CheckValue(0.0, 360.0, result);
 			UpdateOrbit(1, result);
 		}
 
 		public void SetAop(string value)
 		{
-			double result;
-			double.TryParse(value, out result);
+			double.TryParse(value, out var result);
 			result = CheckValue(0.0, 360.0, result);
 			UpdateOrbit(2, result);
 		}
 
 		public void SetPeriapsis(string value)
 		{
-			double result;
-			double.TryParse(value, out result);
+			double.TryParse(value, out var result);
 			result = CheckValue(0.0, Map.SelectedObject.Orbit.ApoapsisDistance / 1000.0, result);
 			UpdateOrbit(3, result * 1000.0);
 		}
 
 		public void SetApoapsis(string value)
 		{
-			double result;
-			double.TryParse(value, out result);
+			double.TryParse(value, out var result);
 			result = CheckValue(Map.SelectedObject.Orbit.PeriapsisDistance / 1000.0, Map.SelectedObject.Orbit.Parent.GravityInfluenceRadius / 1000.0, result);
 			UpdateOrbit(4, result * 1000.0);
 		}
 
 		public void SetLoan(string value)
 		{
-			double result;
-			double.TryParse(value, out result);
+			double.TryParse(value, out var result);
 			result = CheckValue(0.0, 360.0, result);
 			UpdateOrbit(5, result);
 		}
 
 		public void SetOrbitPosition(string value)
 		{
-			double result;
-			double.TryParse(value, out result);
+			double.TryParse(value, out var result);
 			result = CheckValue(0.0, 360.0, result);
 			UpdateOrbit(6, result);
 		}
@@ -612,36 +533,21 @@ namespace ZeroGravity.ShipComponents
 				AddCustomOrbitButton.gameObject.SetActive(Map.SelectedObject is MapObjectCelestial);
 				if (Map.SelectedObject == Map.MyShip)
 				{
-					WarpToButton.gameObject.Activate(false);
+					WarpToButton.gameObject.Activate(value: false);
 				}
 				else if (!(Map.SelectedObject is MapObjectCelestial) && Map.SelectedObject.Orbit != null)
 				{
-					GameObject go = WarpToButton.gameObject;
-					int value;
-					if (!ParentVessel.IsWarpOnline)
-					{
-						Dictionary<int, SubSystem>.ValueCollection values = ParentVessel.SubSystems.Values;
-						if (_003C_003Ef__am_0024cache1 == null)
-						{
-							_003C_003Ef__am_0024cache1 = _003CUpdateObjectData_003Em__1;
-						}
-						value = ((values.FirstOrDefault(_003C_003Ef__am_0024cache1) != null) ? 1 : 0);
-					}
-					else
-					{
-						value = 0;
-					}
-					go.Activate((byte)value != 0);
+					WarpToButton.gameObject.Activate(!ParentVessel.IsWarpOnline && ParentVessel.SubSystems.Values.FirstOrDefault((SubSystem m) => m.Type == SubSystemType.FTL) != null);
 				}
 				else
 				{
-					WarpToButton.gameObject.Activate(false);
+					WarpToButton.gameObject.Activate(value: false);
 				}
-				RightHolder.Activate(true);
+				RightHolder.Activate(value: true);
 			}
 			else
 			{
-				RightHolder.Activate(false);
+				RightHolder.Activate(value: false);
 				ActivateOther(-1);
 			}
 		}
@@ -653,7 +559,7 @@ namespace ZeroGravity.ShipComponents
 			string text2 = Map.SelectedObject.Description;
 			string empty = string.Empty;
 			string text3 = ((!(Map.SelectedObject is MapObjectVessel)) ? "-" : (Map.SelectedObject as MapObjectVessel).RadarSignature.ToString("0"));
-			RadiationInfo.Activate(true);
+			RadiationInfo.Activate(value: true);
 			if (Map.SelectedObject is MapObjectCustomOrbit)
 			{
 				float vesselExposureDamage = Client.Instance.GetVesselExposureDamage((Map.SelectedObject as MapObjectCustomOrbit).Orbit.Position.Magnitude);
@@ -662,35 +568,15 @@ namespace ZeroGravity.ShipComponents
 			else if (Map.SelectedObject is MapObjectFuzzyScan)
 			{
 				MapObjectFuzzyScan mapObjectFuzzyScan = Map.SelectedObject as MapObjectFuzzyScan;
-				string text5;
-				if (mapObjectFuzzyScan.Vessels.Count > 1)
-				{
-					List<SpaceObjectVessel> vessels = mapObjectFuzzyScan.Vessels;
-					if (_003C_003Ef__am_0024cache2 == null)
-					{
-						_003C_003Ef__am_0024cache2 = _003CUpdateSelectedObjectInfo_003Em__2;
-					}
-					string text4 = vessels.Min(_003C_003Ef__am_0024cache2).ToString("0");
-					List<SpaceObjectVessel> vessels2 = mapObjectFuzzyScan.Vessels;
-					if (_003C_003Ef__am_0024cache3 == null)
-					{
-						_003C_003Ef__am_0024cache3 = _003CUpdateSelectedObjectInfo_003Em__3;
-					}
-					text5 = text4 + " to " + vessels2.Max(_003C_003Ef__am_0024cache3).ToString("0");
-				}
-				else
-				{
-					text5 = mapObjectFuzzyScan.Vessels[0].RadarSignature.ToString("0");
-				}
-				text3 = text5;
+				text3 = ((mapObjectFuzzyScan.Vessels.Count <= 1) ? mapObjectFuzzyScan.Vessels[0].RadarSignature.ToString("0") : (mapObjectFuzzyScan.Vessels.Min((SpaceObjectVessel m) => m.RadarSignature).ToString("0") + " to " + mapObjectFuzzyScan.Vessels.Max((SpaceObjectVessel m) => m.RadarSignature).ToString("0")));
 				text2 = Localization.PossibleContacts + ": " + mapObjectFuzzyScan.Vessels.Count;
 				empty = "-";
-				RadiationInfo.Activate(false);
+				RadiationInfo.Activate(value: false);
 			}
 			else if (Map.SelectedObject is MapObjectFixedPosition)
 			{
 				empty = "-";
-				RadiationInfo.Activate(false);
+				RadiationInfo.Activate(value: false);
 			}
 			else
 			{
@@ -698,7 +584,7 @@ namespace ZeroGravity.ShipComponents
 			}
 			if (ToScan)
 			{
-				SelectedDetails.Activate(true);
+				SelectedDetails.Activate(value: true);
 				double sensitivityMultiplier = ParentVessel.RadarSystem.GetSensitivityMultiplier();
 				ActiveSens.text = (ParentVessel.RadarSystem.ActiveScanSensitivity * sensitivityMultiplier).ToString("0.0");
 				PassiveSens.text = (ParentVessel.RadarSystem.PassiveScanSensitivity * sensitivityMultiplier).ToString("0.0");
@@ -734,17 +620,17 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (Map.SelectedObject == null)
 			{
-				RightHolder.SetActive(false);
+				RightHolder.SetActive(value: false);
 				ActivateOther(-1);
 				return;
 			}
-			RightHolder.SetActive(true);
+			RightHolder.SetActive(value: true);
 			int num = 0;
 			GroupItemsHolder.DestroyAll<MapObjectUI>();
 			foreach (MapObject item in Map.SelectedVesselsGroup)
 			{
 				MapObjectUI mapObjectUI = UnityEngine.Object.Instantiate(MapObjectPrefab, GroupItemsHolder);
-				mapObjectUI.gameObject.SetActive(true);
+				mapObjectUI.gameObject.SetActive(value: true);
 				mapObjectUI.gameObject.transform.Reset();
 				mapObjectUI.gameObject.transform.localScale = Vector3.one;
 				mapObjectUI.MapObj = item;
@@ -756,18 +642,13 @@ namespace ZeroGravity.ShipComponents
 
 		public void DistressSignals()
 		{
-			RightHolder.SetActive(true);
+			RightHolder.SetActive(value: true);
 			int num = 0;
 			DistressItemsHolder.DestroyAll<MapObjectUI>();
-			Dictionary<IMapMainObject, MapObject>.ValueCollection values = Map.AllMapObjects.Values;
-			if (_003C_003Ef__am_0024cache4 == null)
-			{
-				_003C_003Ef__am_0024cache4 = _003CDistressSignals_003Em__4;
-			}
-			foreach (MapObject item in values.Where(_003C_003Ef__am_0024cache4))
+			foreach (MapObject item in Map.AllMapObjects.Values.Where((MapObject m) => m.RadarVisibilityType == RadarVisibilityType.Distress))
 			{
 				MapObjectUI mapObjectUI = UnityEngine.Object.Instantiate(MapObjectPrefab, DistressItemsHolder);
-				mapObjectUI.gameObject.SetActive(true);
+				mapObjectUI.gameObject.SetActive(value: true);
 				mapObjectUI.gameObject.transform.Reset();
 				mapObjectUI.gameObject.transform.localScale = Vector3.one;
 				mapObjectUI.MapObj = item;
@@ -779,11 +660,10 @@ namespace ZeroGravity.ShipComponents
 
 		private void AuthorizedVesselsResponseListener(NetworkData data)
 		{
-			_003CAuthorizedVesselsResponseListener_003Ec__AnonStorey0 _003CAuthorizedVesselsResponseListener_003Ec__AnonStorey = new _003CAuthorizedVesselsResponseListener_003Ec__AnonStorey0();
-			_003CAuthorizedVesselsResponseListener_003Ec__AnonStorey.avr = data as AuthorizedVesselsResponse;
+			AuthorizedVesselsResponse avr = data as AuthorizedVesselsResponse;
 			AuthorizedItemsHolder.DestroyAll<MapObjectUI>();
 			int num = 0;
-			if (_003CAuthorizedVesselsResponseListener_003Ec__AnonStorey.avr.GUIDs == null)
+			if (avr.GUIDs == null)
 			{
 				return;
 			}
@@ -799,26 +679,16 @@ namespace ZeroGravity.ShipComponents
 				List<long> list2 = list;
 				if (spaceObjectVessel.IsDummyObject && spaceObjectVessel.DummyDockedVessels.Count > 0)
 				{
-					List<DockedVesselData> dummyDockedVessels = spaceObjectVessel.DummyDockedVessels;
-					if (_003C_003Ef__am_0024cache5 == null)
-					{
-						_003C_003Ef__am_0024cache5 = _003CAuthorizedVesselsResponseListener_003Em__5;
-					}
-					list2.AddRange(dummyDockedVessels.Select(_003C_003Ef__am_0024cache5));
+					list2.AddRange(spaceObjectVessel.DummyDockedVessels.Select((DockedVesselData m) => m.GUID));
 				}
 				else
 				{
-					List<SpaceObjectVessel> allDockedVessels = spaceObjectVessel.AllDockedVessels;
-					if (_003C_003Ef__am_0024cache6 == null)
-					{
-						_003C_003Ef__am_0024cache6 = _003CAuthorizedVesselsResponseListener_003Em__6;
-					}
-					list2.AddRange(allDockedVessels.Select(_003C_003Ef__am_0024cache6));
+					list2.AddRange(spaceObjectVessel.AllDockedVessels.Select((SpaceObjectVessel m) => m.GUID));
 				}
-				if (list2.FirstOrDefault(_003CAuthorizedVesselsResponseListener_003Ec__AnonStorey._003C_003Em__0) != 0)
+				if (list2.FirstOrDefault((long m) => avr.GUIDs.Contains(m)) != 0)
 				{
 					MapObjectUI mapObjectUI = UnityEngine.Object.Instantiate(MapObjectPrefab, AuthorizedItemsHolder);
-					mapObjectUI.gameObject.SetActive(true);
+					mapObjectUI.gameObject.SetActive(value: true);
 					mapObjectUI.gameObject.transform.Reset();
 					mapObjectUI.gameObject.transform.localScale = Vector3.one;
 					mapObjectUI.MapObj = value;
@@ -837,7 +707,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				Map.SelectMapObject(Map.MyShip);
 			}
-			UpdateSelectedObjectInfo(true);
+			UpdateSelectedObjectInfo(ToScan: true);
 			MapObjectShip mapObjectShip = Map.MyShip as MapObjectShip;
 			if (Map.SelectedObject != null && Map.SelectedObject != mapObjectShip)
 			{
@@ -846,8 +716,8 @@ namespace ZeroGravity.ShipComponents
 				YawAngle = quaternion.eulerAngles.y;
 			}
 			Map.FocusToParentVessel();
-			mapObjectShip.ToggleCone(true);
-			RightHolder.Activate(true);
+			mapObjectShip.ToggleCone(val: true);
+			RightHolder.Activate(value: true);
 			ScaningAngleSlider(scanAngle);
 			SetScanningConePitch(PitchAngle);
 			ScanningConeYaw(YawAngle);
@@ -869,8 +739,7 @@ namespace ZeroGravity.ShipComponents
 				int num = (int)PitchSlider.handleRect.position.x;
 				SetScanningConePitch(359f);
 				int num2 = (int)PitchSlider.handleRect.position.x;
-				POINT lpPoint;
-				GetCursorPos(out lpPoint);
+				GetCursorPos(out var lpPoint);
 				SetCursorPos(lpPoint.x + (num2 - num), lpPoint.y);
 			}
 			else if (val == 360f)
@@ -878,8 +747,7 @@ namespace ZeroGravity.ShipComponents
 				int num3 = (int)PitchSlider.handleRect.position.x;
 				SetScanningConePitch(0f);
 				int num4 = (int)PitchSlider.handleRect.position.x;
-				POINT lpPoint2;
-				GetCursorPos(out lpPoint2);
+				GetCursorPos(out var lpPoint2);
 				SetCursorPos(lpPoint2.x + (num4 - num3), lpPoint2.y);
 			}
 			else
@@ -893,17 +761,7 @@ namespace ZeroGravity.ShipComponents
 			PitchAngle = val;
 			PitchSlider.value = val;
 			MapObjectShip mapObjectShip = Map.SelectedObject as MapObjectShip;
-			bool? obj;
-			if ((object)mapObjectShip == null)
-			{
-				obj = null;
-			}
-			else
-			{
-				GameObject scanningCone = mapObjectShip.ScanningCone;
-				obj = (((object)scanningCone != null) ? new bool?(scanningCone.activeInHierarchy) : null);
-			}
-			if (obj == true)
+			if (mapObjectShip?.ScanningCone?.activeInHierarchy == true)
 			{
 				mapObjectShip.ScanningCone.transform.localRotation = Quaternion.Euler(val, YawAngle, 0f);
 				mapObjectShip.Pitch.transform.localRotation = Quaternion.Euler(val, 0f, 0f);
@@ -918,8 +776,7 @@ namespace ZeroGravity.ShipComponents
 				int num = (int)YawSlider.handleRect.position.x;
 				SetScanningConeYaw(359f);
 				int num2 = (int)YawSlider.handleRect.position.x;
-				POINT lpPoint;
-				GetCursorPos(out lpPoint);
+				GetCursorPos(out var lpPoint);
 				SetCursorPos(lpPoint.x + (num2 - num), lpPoint.y);
 			}
 			else if (val == 360f)
@@ -927,8 +784,7 @@ namespace ZeroGravity.ShipComponents
 				int num3 = (int)YawSlider.handleRect.position.x;
 				SetScanningConeYaw(0f);
 				int num4 = (int)YawSlider.handleRect.position.x;
-				POINT lpPoint2;
-				GetCursorPos(out lpPoint2);
+				GetCursorPos(out var lpPoint2);
 				SetCursorPos(lpPoint2.x + (num4 - num3), lpPoint2.y);
 			}
 			else
@@ -942,17 +798,7 @@ namespace ZeroGravity.ShipComponents
 			YawAngle = val;
 			YawSlider.value = val;
 			MapObjectShip mapObjectShip = Map.SelectedObject as MapObjectShip;
-			bool? obj;
-			if ((object)mapObjectShip == null)
-			{
-				obj = null;
-			}
-			else
-			{
-				GameObject scanningCone = mapObjectShip.ScanningCone;
-				obj = (((object)scanningCone != null) ? new bool?(scanningCone.activeInHierarchy) : null);
-			}
-			if (obj == true)
+			if (mapObjectShip?.ScanningCone?.activeInHierarchy == true)
 			{
 				mapObjectShip.ScanningCone.transform.localRotation = Quaternion.Euler(PitchAngle, val, 0f);
 				mapObjectShip.Yaw.transform.localRotation = Quaternion.Euler(0f, val, 0f);
@@ -962,12 +808,13 @@ namespace ZeroGravity.ShipComponents
 
 		public void DoScan()
 		{
-			_003CDoScan_003Ec__AnonStorey1 _003CDoScan_003Ec__AnonStorey = new _003CDoScan_003Ec__AnonStorey1();
-			_003CDoScan_003Ec__AnonStorey._0024this = this;
-			_003CDoScan_003Ec__AnonStorey.mos = Map.MyShip as MapObjectShip;
+			MapObjectShip mos = Map.MyShip as MapObjectShip;
 			if (ParentVessel.RadarSystem != null && (ParentVessel.RadarSystem.Status == SystemStatus.OffLine || ParentVessel.RadarSystem.Status == SystemStatus.CoolDown))
 			{
-				ParentVessel.RadarSystem.ActiveScanTask = new Task(_003CDoScan_003Ec__AnonStorey._003C_003Em__0);
+				ParentVessel.RadarSystem.ActiveScanTask = new Task(delegate
+				{
+					ParentVessel.RadarSystem.ActiveScan(mos.ScanningConeAngle, mos.ScanningCone.transform.forward);
+				});
 				ParentVessel.RadarSystem.SwitchOn();
 			}
 		}
@@ -982,8 +829,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				ScanButton.interactable = false;
 			}
-			UnityEngine.Color color;
-			ScanStatus.text = ParentVessel.RadarSystem.GetStatus(out color);
+			ScanStatus.text = ParentVessel.RadarSystem.GetStatus(out var color);
 			ScanStatus.color = color;
 			ScanPowerFiller.fillAmount = currentCapacity / maximumCapacity;
 			ScanPowerValue.text = FormatHelper.CurrentMax(currentCapacity, maximumCapacity);
@@ -1009,7 +855,7 @@ namespace ZeroGravity.ShipComponents
 				UpdateObjectData();
 				break;
 			case 1:
-				RightHolder.Activate(true);
+				RightHolder.Activate(value: true);
 				break;
 			case 2:
 				DistressSignals();
@@ -1045,22 +891,22 @@ namespace ZeroGravity.ShipComponents
 
 		public void Warp()
 		{
-			RightHolder.SetActive(true);
+			RightHolder.SetActive(value: true);
 			if (Map.WarpManeuver != null)
 			{
-				NoManeuverSelected.SetActive(false);
+				NoManeuverSelected.SetActive(value: false);
 				if (Map.WarpManeuver.Initialized && ParentVessel.FTLEngine.IsSwitchedOn())
 				{
-					ManeuverDetails.SetActive(false);
-					ManeuverInProgress.SetActive(true);
-					AlignShipInfo.SetActive(true);
+					ManeuverDetails.SetActive(value: false);
+					ManeuverInProgress.SetActive(value: true);
+					AlignShipInfo.SetActive(value: true);
 					ManeuverTimeLeft.text = string.Empty;
 				}
 				else
 				{
-					AlignShipInfo.SetActive(false);
-					ManeuverInProgress.SetActive(false);
-					ManeuverDetails.SetActive(true);
+					AlignShipInfo.SetActive(value: false);
+					ManeuverInProgress.SetActive(value: false);
+					ManeuverDetails.SetActive(value: true);
 					DockedVessels.text = ParentVessel.MainVessel.AllDockedVessels.Count.ToString();
 					SetWarpStages();
 					SetWarpCells();
@@ -1070,9 +916,9 @@ namespace ZeroGravity.ShipComponents
 			}
 			else
 			{
-				ManeuverDetails.SetActive(false);
-				ManeuverInProgress.SetActive(false);
-				NoManeuverSelected.SetActive(true);
+				ManeuverDetails.SetActive(value: false);
+				ManeuverInProgress.SetActive(value: false);
+				NoManeuverSelected.SetActive(value: true);
 				ManeuverTimeLeft.text = string.Empty;
 			}
 		}
@@ -1083,7 +929,7 @@ namespace ZeroGravity.ShipComponents
 			for (int i = 0; i <= ParentVessel.FTLEngine.MaxWarp; i++)
 			{
 				WarpStageUI warpStageUI = UnityEngine.Object.Instantiate(WarpStage, WarpStageHolder);
-				warpStageUI.gameObject.SetActive(true);
+				warpStageUI.gameObject.SetActive(value: true);
 				warpStageUI.gameObject.transform.Reset();
 				warpStageUI.gameObject.transform.localScale = Vector3.one;
 				warpStageUI.Value = i;
@@ -1119,20 +965,13 @@ namespace ZeroGravity.ShipComponents
 			float num = 0f;
 			WarpCellsHolder.DestroyAll<WarpCellUI>();
 			AllWarpCells.Clear();
-			SceneMachineryPartSlot[] machineryPartSlots = ParentVessel.FTLEngine.MachineryPartSlots;
-			if (_003C_003Ef__am_0024cache7 == null)
-			{
-				_003C_003Ef__am_0024cache7 = _003CSetWarpCells_003Em__7;
-			}
-			IEnumerable<SceneMachineryPartSlot> source = machineryPartSlots.Where(_003C_003Ef__am_0024cache7);
-			if (_003C_003Ef__am_0024cache8 == null)
-			{
-				_003C_003Ef__am_0024cache8 = _003CSetWarpCells_003Em__8;
-			}
-			foreach (SceneMachineryPartSlot item in source.OrderBy(_003C_003Ef__am_0024cache8))
+			foreach (SceneMachineryPartSlot item in from m in ParentVessel.FTLEngine.MachineryPartSlots
+				where m.CanAttachItemType(ItemType.MachineryPart, null, MachineryPartType.WarpCell)
+				orderby m.SlotIndex
+				select m)
 			{
 				WarpCellUI warpCellUI = UnityEngine.Object.Instantiate(WarpCell, WarpCellsHolder);
-				warpCellUI.gameObject.SetActive(true);
+				warpCellUI.gameObject.SetActive(value: true);
 				warpCellUI.gameObject.transform.Reset();
 				warpCellUI.gameObject.transform.localScale = Vector3.one;
 				warpCellUI.Panel = this;
@@ -1159,12 +998,7 @@ namespace ZeroGravity.ShipComponents
 			DistanceValue.text = (Map.WarpManeuver.ManeuverDistance / 1000.0).ToString("0.0") + " km";
 			WarpStartTime.text = FormatHelper.PeriodFormat(Map.WarpManeuver.Transfer.StartEta);
 			WarpEndTime.text = FormatHelper.PeriodFormat(Map.WarpManeuver.Transfer.EndEta);
-			List<WarpCellUI> allWarpCells = AllWarpCells;
-			if (_003C_003Ef__am_0024cache9 == null)
-			{
-				_003C_003Ef__am_0024cache9 = _003CUpdateManeuver_003Em__9;
-			}
-			foreach (WarpCellUI item in allWarpCells.Where(_003C_003Ef__am_0024cache9))
+			foreach (WarpCellUI item in AllWarpCells.Where((WarpCellUI m) => m.IsSelected && m.Slot.Item != null))
 			{
 				num += item.Slot.Item.Health;
 				if (item.Slot.Item.Health > num2)
@@ -1178,18 +1012,9 @@ namespace ZeroGravity.ShipComponents
 					num2 -= item.Slot.Item.Health;
 				}
 			}
-			ManeuverTransfer transfer = Map.WarpManeuver.Transfer;
-			List<WarpCellUI> allWarpCells2 = AllWarpCells;
-			if (_003C_003Ef__am_0024cacheA == null)
-			{
-				_003C_003Ef__am_0024cacheA = _003CUpdateManeuver_003Em__A;
-			}
-			IEnumerable<WarpCellUI> source = allWarpCells2.Where(_003C_003Ef__am_0024cacheA);
-			if (_003C_003Ef__am_0024cacheB == null)
-			{
-				_003C_003Ef__am_0024cacheB = _003CUpdateManeuver_003Em__B;
-			}
-			transfer.WarpCells = source.Select(_003C_003Ef__am_0024cacheB).ToList();
+			Map.WarpManeuver.Transfer.WarpCells = (from m in AllWarpCells
+				where m.IsSelected
+				select m.Slot.SlotIndex).ToList();
 			Map.WarpManeuver.Transfer.WarpIndex = SelectedWarpStage;
 			if (ParentVessel.VesselBaseSystem.IsSwitchedOn())
 			{
@@ -1217,10 +1042,10 @@ namespace ZeroGravity.ShipComponents
 			VesselBaseSystemsStatus.SetActive(!ParentVessel.VesselBaseSystem.IsSwitchedOn());
 			if (Map.WarpManeuver.FeasibilityError == ManeuverCourse.FeasibilityErrorType.Course_Impossible)
 			{
-				TimerStatus.SetActive(true);
-				PowerStatus.SetActive(true);
-				WarpCellStatus.SetActive(true);
-				DockedStructureStatus.SetActive(true);
+				TimerStatus.SetActive(value: true);
+				PowerStatus.SetActive(value: true);
+				WarpCellStatus.SetActive(value: true);
+				DockedStructureStatus.SetActive(value: true);
 			}
 			else
 			{
@@ -1237,10 +1062,10 @@ namespace ZeroGravity.ShipComponents
 			{
 				ParentVessel.FTLEngine.SwitchOn();
 				Map.InitializeManeuverCourse();
-				NoManeuverSelected.SetActive(false);
-				ManeuverDetails.SetActive(false);
-				ManeuverInProgress.SetActive(true);
-				AlignShipInfo.SetActive(true);
+				NoManeuverSelected.SetActive(value: false);
+				ManeuverDetails.SetActive(value: false);
+				ManeuverInProgress.SetActive(value: true);
+				AlignShipInfo.SetActive(value: true);
 				ManeuverTimeLeft.text = string.Empty;
 			}
 		}
@@ -1248,7 +1073,7 @@ namespace ZeroGravity.ShipComponents
 		public void CancelManeuver()
 		{
 			Map.RemoveManeuverCourse();
-			ManeuverInProgress.SetActive(false);
+			ManeuverInProgress.SetActive(value: false);
 			ActivateOther(0);
 			(Map.MyShip.MainObject as Ship).CancelManeuver();
 		}
@@ -1258,7 +1083,7 @@ namespace ZeroGravity.ShipComponents
 			if (ManeuverInProgress.activeInHierarchy)
 			{
 				ParentVessel.FTLEngine.SwitchOff();
-				ManeuverDetails.SetActive(true);
+				ManeuverDetails.SetActive(value: true);
 			}
 			CancelManeuver();
 		}
@@ -1287,12 +1112,12 @@ namespace ZeroGravity.ShipComponents
 
 		public void ShowHoverInfo(List<MapObject> mapObjects)
 		{
-			HoverObjectUi.SetActive(true);
+			HoverObjectUi.SetActive(value: true);
 			if (InputManager.GetKey(KeyCode.LeftControl) && Map.SelectedObject != null)
 			{
 				HoverObjectName.text = Map.SelectedObject.Name.ToUpper() + " - " + mapObjects[0].Name.ToUpper() + "\n" + Localization.Distance + ": " + FormatHelper.DistanceFormat((Map.SelectedObject.TruePosition - mapObjects[0].TruePosition).Magnitude);
-				HoverObjectUiAnimator.SetBool("cluster", false);
-				HoverObjectUiAnimator.SetBool("object", true);
+				HoverObjectUiAnimator.SetBool("cluster", value: false);
+				HoverObjectUiAnimator.SetBool("object", value: true);
 				return;
 			}
 			if (mapObjects.Count > 1)
@@ -1303,8 +1128,8 @@ namespace ZeroGravity.ShipComponents
 					Text groupObject = GroupObject;
 					groupObject.text = groupObject.text + mapObject.Name.ToUpper() + "\n";
 				}
-				HoverObjectUiAnimator.SetBool("object", false);
-				HoverObjectUiAnimator.SetBool("cluster", true);
+				HoverObjectUiAnimator.SetBool("object", value: false);
+				HoverObjectUiAnimator.SetBool("cluster", value: true);
 				return;
 			}
 			if (mapObjects[0] is MapObjectFuzzyScan)
@@ -1315,23 +1140,7 @@ namespace ZeroGravity.ShipComponents
 				{
 					Text hoverObjectName = HoverObjectName;
 					string text = hoverObjectName.text;
-					string[] obj = new string[6] { text, null, null, null, null, null };
-					List<SpaceObjectVessel> vessels = mapObjectFuzzyScan.Vessels;
-					if (_003C_003Ef__am_0024cacheC == null)
-					{
-						_003C_003Ef__am_0024cacheC = _003CShowHoverInfo_003Em__C;
-					}
-					obj[1] = vessels.Min(_003C_003Ef__am_0024cacheC).ToString("0");
-					obj[2] = " ";
-					obj[3] = Localization.To.ToLower();
-					obj[4] = " ";
-					List<SpaceObjectVessel> vessels2 = mapObjectFuzzyScan.Vessels;
-					if (_003C_003Ef__am_0024cacheD == null)
-					{
-						_003C_003Ef__am_0024cacheD = _003CShowHoverInfo_003Em__D;
-					}
-					obj[5] = vessels2.Max(_003C_003Ef__am_0024cacheD).ToString("0");
-					hoverObjectName.text = string.Concat(obj);
+					hoverObjectName.text = text + mapObjectFuzzyScan.Vessels.Min((SpaceObjectVessel m) => m.RadarSignature).ToString("0") + " " + Localization.To.ToLower() + " " + mapObjectFuzzyScan.Vessels.Max((SpaceObjectVessel m) => m.RadarSignature).ToString("0");
 				}
 				else
 				{
@@ -1342,14 +1151,14 @@ namespace ZeroGravity.ShipComponents
 			{
 				HoverObjectName.text = mapObjects[0].Name.ToUpper();
 			}
-			HoverObjectUiAnimator.SetBool("cluster", false);
-			HoverObjectUiAnimator.SetBool("object", true);
+			HoverObjectUiAnimator.SetBool("cluster", value: false);
+			HoverObjectUiAnimator.SetBool("object", value: true);
 		}
 
 		public void HideHoverInfo()
 		{
-			HoverObjectUiAnimator.SetBool("object", false);
-			HoverObjectUiAnimator.SetBool("cluster", false);
+			HoverObjectUiAnimator.SetBool("object", value: false);
+			HoverObjectUiAnimator.SetBool("cluster", value: false);
 		}
 
 		public void CalculateMass()
@@ -1392,90 +1201,6 @@ namespace ZeroGravity.ShipComponents
 			{
 				DockedVesselsMass.text = text;
 			}
-		}
-
-		[CompilerGenerated]
-		private static bool _003COnInteract_003Em__0(SubSystem m)
-		{
-			return m.Type == SubSystemType.FTL;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CUpdateObjectData_003Em__1(SubSystem m)
-		{
-			return m.Type == SubSystemType.FTL;
-		}
-
-		[CompilerGenerated]
-		private static double _003CUpdateSelectedObjectInfo_003Em__2(SpaceObjectVessel m)
-		{
-			return m.RadarSignature;
-		}
-
-		[CompilerGenerated]
-		private static double _003CUpdateSelectedObjectInfo_003Em__3(SpaceObjectVessel m)
-		{
-			return m.RadarSignature;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CDistressSignals_003Em__4(MapObject m)
-		{
-			return m.RadarVisibilityType == RadarVisibilityType.Distress;
-		}
-
-		[CompilerGenerated]
-		private static long _003CAuthorizedVesselsResponseListener_003Em__5(DockedVesselData m)
-		{
-			return m.GUID;
-		}
-
-		[CompilerGenerated]
-		private static long _003CAuthorizedVesselsResponseListener_003Em__6(SpaceObjectVessel m)
-		{
-			return m.GUID;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CSetWarpCells_003Em__7(SceneMachineryPartSlot m)
-		{
-			return m.CanAttachItemType(ItemType.MachineryPart, null, MachineryPartType.WarpCell);
-		}
-
-		[CompilerGenerated]
-		private static int _003CSetWarpCells_003Em__8(SceneMachineryPartSlot m)
-		{
-			return m.SlotIndex;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CUpdateManeuver_003Em__9(WarpCellUI m)
-		{
-			return m.IsSelected && m.Slot.Item != null;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CUpdateManeuver_003Em__A(WarpCellUI m)
-		{
-			return m.IsSelected;
-		}
-
-		[CompilerGenerated]
-		private static int _003CUpdateManeuver_003Em__B(WarpCellUI m)
-		{
-			return m.Slot.SlotIndex;
-		}
-
-		[CompilerGenerated]
-		private static double _003CShowHoverInfo_003Em__C(SpaceObjectVessel m)
-		{
-			return m.RadarSignature;
-		}
-
-		[CompilerGenerated]
-		private static double _003CShowHoverInfo_003Em__D(SpaceObjectVessel m)
-		{
-			return m.RadarSignature;
 		}
 	}
 }

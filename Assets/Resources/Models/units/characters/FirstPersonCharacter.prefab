@@ -5595,7 +5595,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1241487161733373}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f5454b0c5f60804591a9c87eb515233, type: 3}
   m_Name: 
@@ -5705,10 +5705,10 @@ MonoBehaviour:
   volumeTrigger: {fileID: 4917029889081530}
   volumeLayer:
     serializedVersion: 2
-    m_Bits: 2049
+    m_Bits: 2048
   stopNaNPropagation: 0
   finalBlitToCameraTarget: 0
-  antialiasingMode: 0
+  antialiasingMode: 2
   temporalAntialiasing:
     jitterSpread: 0.75
     sharpness: 0.25
