@@ -49,14 +49,13 @@ namespace ZeroGravity
 			PreloadWithCopy
 		}
 
-		[ReadOnly]
-		public string SpServerPath = Directory.GetCurrentDirectory() + "\\Hellion_Data\\HELLION_SP";
+		private string _spServerPath = Directory.GetCurrentDirectory() + "\\Hellion_Data\\HELLION_SP";
 
-		private string spServerFileName = "HELLION_SP.exe";
+		private string _spServerFileName = "HELLION_SP.exe";
 
-		private CharacterData newCharacterData;
+		private CharacterData _newCharacterData;
 
-		private GameServerUI deleteChararacterFromServer;
+		private GameServerUI _deleteChararacterFromServer;
 
 		[NonSerialized]
 		public SteamStats SteamStats;
@@ -73,20 +72,20 @@ namespace ZeroGravity
 		[NonSerialized]
 		public ZeroGravity.Network.Gender CurrentGender;
 
-		private string userName = string.Empty;
+		private string _userName = string.Empty;
 
 		private string ServerIP;
 
-		private int port;
+		private int _port;
 
-		private SignInResponse currentResponse;
+		private SignInResponse _currentResponse;
 
-		private int sortOrder = 1;
+		private int _sortOrder = 1;
 
-		private int prevSortMode = -1;
+		private int _prevSortMode = -1;
 
 		[NonSerialized]
-		public ConcurrentBag<GameServerUI> serverListElements = new ConcurrentBag<GameServerUI>();
+		public ConcurrentBag<GameServerUI> ServerListElements = new ConcurrentBag<GameServerUI>();
 
 		[Space(10f)]
 		public ServerCategories CurrentServerFilter;
@@ -1199,8 +1198,8 @@ namespace ZeroGravity
 			InviteScreen.SetActive(value: true);
 			Connect();
 			CanvasManager.Disclamer.SetActive(value: false);
-			yield return new WaitUntil(() => receivedSignInResponse && serverListElements.FirstOrDefault((GameServerUI m) => m.Id == InvitedToServerId) != null);
-			_invitedToServer = serverListElements.FirstOrDefault((GameServerUI m) => m.Id == InvitedToServerId && m.Hash == CombinedHash);
+			yield return new WaitUntil(() => receivedSignInResponse && ServerListElements.FirstOrDefault((GameServerUI m) => m.Id == InvitedToServerId) != null);
+			_invitedToServer = ServerListElements.FirstOrDefault((GameServerUI m) => m.Id == InvitedToServerId && m.Hash == CombinedHash);
 			yield return new WaitForSeconds(1f);
 			InvitedToServerId = -1L;
 			if (_invitedToServer == null)
@@ -2062,7 +2061,7 @@ namespace ZeroGravity
 			}
 
 			// Create new character if you don't have it from before.
-			if (server.CharacterData == null && newCharacterData == null)
+			if (server.CharacterData == null && _newCharacterData == null)
 			{
 				CreateCharacterPanel.SetActive(value: true);
 				CurrentGenderText.text = CurrentGender.ToLocalizedString();
@@ -2081,11 +2080,11 @@ namespace ZeroGravity
 				CharacterInputField.text = string.Empty;
 				if (newCharacterName.Length > 0)
 				{
-					newCharacterData = new CharacterData();
-					newCharacterData.Name = newCharacterName;
-					newCharacterData.Gender = CurrentGender;
-					newCharacterData.HeadType = 1;
-					newCharacterData.HairType = 1;
+					_newCharacterData = new CharacterData();
+					_newCharacterData.Name = newCharacterName;
+					_newCharacterData.Gender = CurrentGender;
+					_newCharacterData.HeadType = 1;
+					_newCharacterData.HairType = 1;
 				}
 			}
 
@@ -2098,22 +2097,22 @@ namespace ZeroGravity
 			}
 
 			// Prepare for connection.
-			LastGameServersData = serverListElements;
+			LastGameServersData = ServerListElements;
 			LastConnectedServer = server;
 			CanvasManager.LoadingTips.text = ShuffledTexts.GetNextInLoop();
 			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.ConnectingToGame);
 			LastConnectedServerPass = serverPassword;
-			if (userName == string.Empty && LastSignInRequest != null)
+			if (_userName == string.Empty && LastSignInRequest != null)
 			{
-				userName = LastSignInRequest.SteamId;
+				_userName = LastSignInRequest.SteamId;
 			}
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 
 			// Connect to server.
-			NetworkController.ConnectToGame(server, (!SteamManager.Initialized) ? userName : SteamUser.GetSteamID().m_SteamID.ToString(), newCharacterData, serverPassword);
+			NetworkController.ConnectToGame(server, (!SteamManager.Initialized) ? _userName : SteamUser.GetSteamID().m_SteamID.ToString(), _newCharacterData, serverPassword);
 
 			// Cleanup data.
-			newCharacterData = null;
+			_newCharacterData = null;
 			UpdateServers = false;
 			_invitedToServer = null;
 			InvitedToServerPassword = null;
@@ -2134,18 +2133,18 @@ namespace ZeroGravity
 
 		public void DeleteCharacterRequest(GameServerUI gs)
 		{
-			deleteChararacterFromServer = gs;
+			_deleteChararacterFromServer = gs;
 			ShowConfirmMessageBox(Localization.DeleteCharacter, Localization.AreYouSureDeleteCharacter, Localization.Yes, Localization.No, DeleteCharacter);
 		}
 
 		public void DeleteCharacter()
 		{
-			if (deleteChararacterFromServer == null)
+			if (_deleteChararacterFromServer == null)
 			{
 				return;
 			}
 			TcpClient tcpClient = new TcpClient();
-			IAsyncResult asyncResult = (deleteChararacterFromServer.UseAltIPAddress ? tcpClient.BeginConnect(deleteChararacterFromServer.AltIPAddress, deleteChararacterFromServer.AltStatusPort, null, null) : tcpClient.BeginConnect(deleteChararacterFromServer.IPAddress, deleteChararacterFromServer.StatusPort, null, null));
+			IAsyncResult asyncResult = (_deleteChararacterFromServer.UseAltIPAddress ? tcpClient.BeginConnect(_deleteChararacterFromServer.AltIPAddress, _deleteChararacterFromServer.AltStatusPort, null, null) : tcpClient.BeginConnect(_deleteChararacterFromServer.IPAddress, _deleteChararacterFromServer.StatusPort, null, null));
 			WaitHandle asyncWaitHandle = asyncResult.AsyncWaitHandle;
 			try
 			{
@@ -2167,16 +2166,16 @@ namespace ZeroGravity
 				networkStream.ReadTimeout = 1000;
 				networkStream.WriteTimeout = 1000;
 				DeleteCharacterRequest deleteCharacterRequest = new DeleteCharacterRequest();
-				deleteCharacterRequest.ServerId = deleteChararacterFromServer.Id;
-				deleteCharacterRequest.SteamId = ((!SteamManager.Initialized) ? userName : SteamUser.GetSteamID().m_SteamID.ToString());
+				deleteCharacterRequest.ServerId = _deleteChararacterFromServer.Id;
+				deleteCharacterRequest.SteamId = ((!SteamManager.Initialized) ? _userName : SteamUser.GetSteamID().m_SteamID.ToString());
 				byte[] array = Serializer.Serialize(deleteCharacterRequest);
 				DateTime dateTime = DateTime.UtcNow.ToUniversalTime();
 				networkStream.Write(array, 0, array.Length);
 				networkStream.Flush();
-				deleteChararacterFromServer.DeleteCharacter.gameObject.SetActive(value: false);
-				deleteChararacterFromServer.CharacterNameText.text = null;
-				deleteChararacterFromServer.CharacterData = null;
-				deleteChararacterFromServer = null;
+				_deleteChararacterFromServer.DeleteCharacter.gameObject.SetActive(value: false);
+				_deleteChararacterFromServer.CharacterNameText.text = null;
+				_deleteChararacterFromServer.CharacterData = null;
+				_deleteChararacterFromServer = null;
 			}
 			catch
 			{
@@ -2188,12 +2187,12 @@ namespace ZeroGravity
 		/// </summary>
 		public void Reconnect()
 		{
-			if (userName == string.Empty && LastSignInRequest != null)
+			if (_userName == string.Empty && LastSignInRequest != null)
 			{
-				userName = LastSignInRequest.SteamId;
+				_userName = LastSignInRequest.SteamId;
 			}
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
-			NetworkController.ConnectToGame(LastConnectedServer, (!SteamManager.Initialized) ? userName : SteamUser.GetSteamID().m_SteamID.ToString(), newCharacterData, LastConnectedServerPass);
+			NetworkController.ConnectToGame(LastConnectedServer, (!SteamManager.Initialized) ? _userName : SteamUser.GetSteamID().m_SteamID.ToString(), _newCharacterData, LastConnectedServerPass);
 		}
 
 		private void CreateServerButton(ServerData serverData)
@@ -2219,7 +2218,7 @@ namespace ZeroGravity
 			server.Private.SetActive(serverData.Locked);
 
 			// Add button to list.
-			serverListElements.Add(server);
+			ServerListElements.Add(server);
 
 			// Add button to correct server catergory.
 			if (serverData.Tag == ServerTag.Official)
@@ -2261,11 +2260,11 @@ namespace ZeroGravity
 
 		public void ClearServerList()
 		{
-			foreach (GameServerUI item in serverListElements)
+			foreach (GameServerUI item in ServerListElements)
 			{
 				UnityEngine.Object.Destroy(item.Panel);
 			}
-			serverListElements = new ConcurrentBag<GameServerUI>();
+			ServerListElements = new ConcurrentBag<GameServerUI>();
 		}
 
 		private void LogInResponseListener(NetworkData data)
@@ -2278,7 +2277,7 @@ namespace ZeroGravity
 			}
 			if (logInResponse.Response == ResponseResult.Success)
 			{
-				deleteChararacterFromServer = null;
+				_deleteChararacterFromServer = null;
 				SolarSystem.Set(SolarSystemRoot.transform.Find("SunRoot"), SolarSystemRoot.transform.Find("PlanetsRoot"), logInResponse.ServerTime);
 				SolarSystem.LoadDataFromResources();
 				MyPlayer.SpawnMyPlayer(logInResponse);
@@ -2341,7 +2340,7 @@ namespace ZeroGravity
 			if (SteamManager.Initialized)
 			{
 				SinglePlayerMode = false;
-				prevSortMode = -1;
+				_prevSortMode = -1;
 				Connect();
 			}
 		}
@@ -2353,20 +2352,20 @@ namespace ZeroGravity
 		{
 			if (SteamManager.Initialized)
 			{
-				userName = SteamUser.GetSteamID().ToString();
+				_userName = SteamUser.GetSteamID().ToString();
 			}
 			string property = Properties.GetProperty("server_address", "188.166.144.65:6000");
-			if (userName.Length > 0)
+			if (_userName.Length > 0)
 			{
 				CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.ConnectingToMain);
 				string[] array = property.Split(':');
 				ServerIP = array[0];
-				port = int.Parse(array[1]);
-				NetworkController.MainServerAddres = ServerIP;
-				NetworkController.MainServerPort = port;
+				_port = int.Parse(array[1]);
+				NetworkController.MainServerAddress = ServerIP;
+				NetworkController.MainServerPort = _port;
 				Regex regex = new Regex("[^0-9.]");
 				SignInRequest signInRequest = new SignInRequest();
-				signInRequest.SteamId = userName;
+				signInRequest.SteamId = _userName;
 				signInRequest.ClientVersion = regex.Replace(Application.version, string.Empty);
 				signInRequest.ClientHash = CombinedHash;
 				LastSignInRequest = signInRequest;
@@ -2410,7 +2409,7 @@ namespace ZeroGravity
 			}
 			else
 			{
-				currentResponse = signInResponse;
+				_currentResponse = signInResponse;
 				CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
 				ClearServerList();
 
@@ -2433,7 +2432,7 @@ namespace ZeroGravity
 			{
 			case 0:
 				CurrentServerFilter = ServerCategories.Official;
-				foreach (GameServerUI item in serverListElements)
+				foreach (GameServerUI item in ServerListElements)
 				{
 					bool flag2 = item.FilterType == CurrentServerFilter;
 					item.Panel.SetActive(flag2);
@@ -2442,7 +2441,7 @@ namespace ZeroGravity
 				break;
 			case 1:
 				CurrentServerFilter = ServerCategories.Community;
-				foreach (GameServerUI item2 in serverListElements)
+				foreach (GameServerUI item2 in ServerListElements)
 				{
 					bool flag = item2.FilterType == CurrentServerFilter;
 					item2.Panel.SetActive(flag);
@@ -2451,7 +2450,7 @@ namespace ZeroGravity
 				break;
 			default:
 				CurrentServerFilter = ServerCategories.Favorites;
-				foreach (GameServerUI item3 in serverListElements)
+				foreach (GameServerUI item3 in ServerListElements)
 				{
 					item3.Panel.SetActive(item3.IsFavourite);
 					item3.IsVisible = item3.IsFavourite;
@@ -2529,9 +2528,9 @@ namespace ZeroGravity
 		public void OrderByButton(int sortMode)
 		{
 			// If clicked again, reverse the sort order.
-			if (prevSortMode == sortMode)
+			if (_prevSortMode == sortMode)
 			{
-				sortOrder *= -1;
+				_sortOrder *= -1;
 			}
 
 			// Assemble the list.
@@ -2564,7 +2563,7 @@ namespace ZeroGravity
 			};
 
 			// Reverse the order if sort order is supposed to be reversed.
-			if (sortOrder == -1)
+			if (_sortOrder == -1)
 			{
 				list = Enumerable.Reverse(list).ToList();
 			}
@@ -2582,7 +2581,7 @@ namespace ZeroGravity
 			{
 				Invoke("FirstSort", 0.5f);
 			}
-			prevSortMode = sortMode;
+			_prevSortMode = sortMode;
 		}
 
 		private void FirstSort()
@@ -2602,12 +2601,12 @@ namespace ZeroGravity
 				item.transform.SetParent(null);
 				item.transform.SetParent(parent);
 			}
-			prevSortMode = num;
+			_prevSortMode = num;
 		}
 
 		public void SearchServersInput()
 		{
-			foreach (GameServerUI item in serverListElements)
+			foreach (GameServerUI item in ServerListElements)
 			{
 				if (item.NameText.text.ToLower().Contains(ServerSearchInputField.text.ToLower()) && (item.FilterType == CurrentServerFilter || (item.IsFavourite && CurrentServerFilter == ServerCategories.Favorites)))
 				{
@@ -2721,12 +2720,12 @@ namespace ZeroGravity
 			// Enable loading screen.
 			CanvasManager.SelectScreen(CanvasManager.Screen.Loading);
 			yield return null;
-			string filePath = SpServerPath + "\\" + spServerFileName;
+			string filePath = _spServerPath + "\\" + _spServerFileName;
 			try
 			{
 				KillAllSPProcesses();
 				_spServerProcess = new Process();
-				_spServerProcess.StartInfo.WorkingDirectory = SpServerPath;
+				_spServerProcess.StartInfo.WorkingDirectory = _spServerPath;
 				_spServerProcess.StartInfo.FileName = filePath;
 				string text = ((SinglePlayerGameMode != 0) ? "-configdir Sandbox " : string.Empty);
 				if (SinglePlayerQuickLoad)
@@ -2826,7 +2825,7 @@ namespace ZeroGravity
 
 		public string GetSPPath()
 		{
-			return SpServerPath + ((SinglePlayerGameMode != 0) ? "\\Sandbox\\" : string.Empty);
+			return _spServerPath + ((SinglePlayerGameMode != 0) ? "\\Sandbox\\" : string.Empty);
 		}
 
 		public void QuickLoad()
@@ -2886,7 +2885,7 @@ namespace ZeroGravity
 			try
 			{
 				List<Process> list = (from m in Process.GetProcesses()
-					where !m.HasExited && m.MainModule.FileName.ToLower().EndsWith(spServerFileName.ToLower())
+					where !m.HasExited && m.MainModule.FileName.ToLower().EndsWith(_spServerFileName.ToLower())
 					select m).ToList();
 				foreach (Process item in list)
 				{

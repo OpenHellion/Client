@@ -10,7 +10,7 @@ namespace ZeroGravity.Network
 {
 	public class NetworkController : MonoBehaviour
 	{
-		public static string MainServerAddres;
+		public static string MainServerAddress;
 
 		public static int MainServerPort;
 
@@ -97,10 +97,7 @@ namespace ZeroGravity.Network
 
 		public void SendToMainServer(NetworkData data)
 		{
-			if (SteamManager.Initialized)
-			{
-				mainThreads.Send(data);
-			}
+			mainThreads.Send(data);
 		}
 
 		public void ConnectToGame(GameServerUI serverData, string steamId, CharacterData charData, string password)

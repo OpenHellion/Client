@@ -10,7 +10,7 @@ using Discord;
 namespace ZeroGravity
 {
 	/// <summary>
-	/// 	This class is a mess and needs to be rewritten completely. TODO
+	/// 	This class handles everything related to Discord. Acts as a bridge between the game and the API.
 	/// </summary>
 	public class DiscordController : MonoBehaviour
 	{
@@ -39,66 +39,64 @@ namespace ZeroGravity
 
 		private static List<string> descriptions = new List<string> { "Building a huuuuuge station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job", "Repairing a hull breach" };
 
-		public string clientID = "349114016968474626";
-		public uint optionalSteamId = 588210;
-		public int callbackCalls;
+		public long ClientID = 349114016968474626L;
+		public uint OptionalSteamId = 588210;
 
-		Discord.Discord discord;
-		ActivityManager activityManager;
-		Activity activity = new();
-		User joinUser;
+		private int _callbackCalls;
+		private Discord.Discord _discord;
+		private ActivityManager _activityManager;
+		private Activity _activity = new();
+		public User _joinUser;
 
 		[Tooltip("When player responds to an 'ask to join' request. ")]
-		public UnityEngine.Events.UnityEvent hasResponded;
+		public UnityEvent HasResponded;
 
 		private void OnEnable()
 		{
 			Dbg.Log("Discord: Init");
-			callbackCalls = 0;
+			_callbackCalls = 0;
 
-			discord = new(Int64.Parse(clientID), (UInt64)CreateFlags.NoRequireDiscord);
-
-			discord.SetLogHook(Discord.LogLevel.Debug, (level, message) =>
+			// Init Discord API.
+			try
 			{
-		   		Dbg.Log("Log[{0}] {1}", level, message);
+				_discord = new(ClientID, (UInt64)CreateFlags.NoRequireDiscord);
+			}
+			catch (ResultException)
+			{
+				Dbg.Log("Discord API could not start.");
+				this.enabled = false;
+				return;
+			}
+
+			_discord.SetLogHook(Discord.LogLevel.Debug, (level, message) =>
+			{
+				Dbg.Log("Log[{0}] {1}", level, message);
 			});
 
-			activityManager = discord.GetActivityManager();
+			_activityManager = _discord.GetActivityManager();
 
-			activityManager.RegisterSteam(optionalSteamId);
+			// Required to work with Steam.
+			_activityManager.RegisterSteam(OptionalSteamId);
+			_activityManager.RegisterCommand();
 
-			activityManager.OnActivitySpectate += SpectateCallback;
-			activityManager.OnActivityJoin += JoinCallback;
-			activityManager.OnActivityInvite += InviteCallback;
-			activityManager.OnActivityJoinRequest += JoinRequestCallback;
-
-			activityManager.RegisterCommand();
+			// Callbacks.
+			_activityManager.OnActivitySpectate += JoinCallback;
+			_activityManager.OnActivityJoin += JoinCallback;
+			_activityManager.OnActivityInvite += InviteCallback;
+			_activityManager.OnActivityJoinRequest += JoinRequestCallback;
 
 			UpdateStatus();
 		}
 
 		private void Update()
 		{
-			discord.RunCallbacks();
+			_discord.RunCallbacks();
 		}
 
-		private void SpectateCallback(string secret)
-		{
-			callbackCalls++;
-			try
-			{
-				InviteMessage inviteMessage = Serializer.ReceiveData(new MemoryStream(Convert.FromBase64String(secret))) as InviteMessage;
-				Client.Instance.ProcessInvitation(inviteMessage);
-			}
-			catch (Exception ex)
-			{
-				Dbg.Error(ex.Message, ex.StackTrace);
-			}
-		}
-
+		// When we are joining a game.
 		private void JoinCallback(string secret)
 		{
-			callbackCalls++;
+			_callbackCalls++;
 			try
 			{
 				InviteMessage inviteMessage = Serializer.ReceiveData(new MemoryStream(Convert.FromBase64String(secret))) as InviteMessage;
@@ -110,50 +108,60 @@ namespace ZeroGravity
 			}
 		}
 
+		// When we get an invite to a game.
 		private void InviteCallback(ActivityActionType Type, ref User user, ref Activity activity2)
 		{
-			callbackCalls++;
+			_callbackCalls++;
+
+			// TODO: Make this safer.
+			_activityManager.AcceptInvite(user.Id, result => {
+				Dbg.Log("AcceptInvite {0}", result);
+			});
 		}
 
+		// When we get an ask to join request from another user.
 		private void JoinRequestCallback(ref User user)
 		{
 			Dbg.Log(string.Format("Discord: Join request {0}#{1}: {2}", user.Username, user.Discriminator, user.Id));
-			callbackCalls++;
-			/*activityManager.AcceptInvite(user.Id, result => {
-				Dbg.Log("AcceptInvite {0}", result);
-			});*/
+			_callbackCalls++;
+			_joinUser = user;
 
-			joinUser = user;
+			RequestRespondYes();
 		}
 
 		public void RequestRespondYes()
 		{
 			Dbg.Log("Discord: Responding yes to Ask to Join request");
-			activityManager.SendRequestReply(joinUser.Id, Discord.ActivityJoinRequestReply.Yes, res => {
+			_activityManager.SendRequestReply(_joinUser.Id, ActivityJoinRequestReply.Yes, res => {
 				if (res == Discord.Result.Ok)
 	  			{
 	  			  Console.WriteLine("Responded successfully");
 	  			}
 			});
-			hasResponded.Invoke();
+			HasResponded.Invoke();
 		}
 
 		public void RequestRespondNo()
 		{
 			Dbg.Log("Discord: Responding no to Ask to Join request");
-			activityManager.SendRequestReply(joinUser.Id, Discord.ActivityJoinRequestReply.No, res => {
+			_activityManager.SendRequestReply(_joinUser.Id, ActivityJoinRequestReply.No, res => {
 				if (res == Discord.Result.Ok)
 	  			{
 	  			  Console.WriteLine("Responded successfully");
 	  			}
 			});
-			hasResponded.Invoke();
+			HasResponded.Invoke();
 		}
 
 		private void OnDisable()
 		{
 			Dbg.Log("Discord: Shutdown");
-			discord.Dispose();
+
+			try
+			{
+				_discord.Dispose();
+			}
+			catch (NullReferenceException) {}
 		}
 
 		public void UpdateStatus()
@@ -162,68 +170,73 @@ namespace ZeroGravity
 			{
 				if (Client.Instance.SinglePlayerMode)
 				{
-					activity.State = "Playing single player game";
-					activity.Details = "Having so much fun.";
-					activity.Assets.LargeImage = "cover";
-					activity.Assets.LargeText = string.Empty;
-					activity.Assets.SmallImage = string.Empty;
-					activity.Assets.SmallText = string.Empty;
-					activity.Secrets.Join = string.Empty;
-					activity.Party.Size.CurrentSize = 0;
-					activity.Party.Size.MaxSize = 0;
-					activity.Party.Id = string.Empty;
+					_activity.State = "Playing single player game";
+					_activity.Details = "Having so much fun.";
+					_activity.Assets.LargeImage = "cover";
+					_activity.Assets.LargeText = string.Empty;
+					_activity.Assets.SmallImage = string.Empty;
+					_activity.Assets.SmallText = string.Empty;
+					_activity.Secrets.Join = string.Empty;
+					_activity.Party.Size.CurrentSize = 0;
+					_activity.Party.Size.MaxSize = 0;
+					_activity.Party.Id = string.Empty;
 				}
 				else if (MyPlayer.Instance != null && MyPlayer.Instance.PlayerReady)
 				{
-					activity.Secrets.Join = Client.Instance.GetInviteString(null);
-					activity.Assets.LargeText = Localization.InGameDescription + ": " + Client.LastConnectedServer.Name;
-					activity.Details = descriptions[UnityEngine.Random.Range(0, descriptions.Count - 1)];
+					_activity.Secrets.Join = Client.Instance.GetInviteString(null);
+					_activity.Assets.LargeText = Localization.InGameDescription + ": " + Client.LastConnectedServer.Name;
+					_activity.Details = descriptions[UnityEngine.Random.Range(0, descriptions.Count - 1)];
 					ArtificialBody artificialBody = MyPlayer.Instance.Parent as ArtificialBody;
 					if (artificialBody != null && artificialBody.ParentCelesitalBody != null)
 					{
 						string value;
 						if (planets.TryGetValue(artificialBody.ParentCelesitalBody.GUID, out value))
 						{
-							activity.Assets.LargeImage = artificialBody.ParentCelesitalBody.GUID.ToString();
+							_activity.Assets.LargeImage = artificialBody.ParentCelesitalBody.GUID.ToString();
 						}
 						else
 						{
-							activity.Assets.LargeImage = "default";
+							_activity.Assets.LargeImage = "default";
 							value = artificialBody.ParentCelesitalBody.Name;
 						}
+
 						if (artificialBody is Ship && (artificialBody as Ship).IsWarpOnline)
 						{
-							activity.State = Localization.WarpingNear + " " + value.ToUpper();
+							_activity.State = Localization.WarpingNear + " " + value.ToUpper();
 						}
 						else if (artificialBody is Pivot)
 						{
-							activity.State = Localization.FloatingFreelyNear + " " + value.ToUpper();
+							_activity.State = Localization.FloatingFreelyNear + " " + value.ToUpper();
 						}
 						else
 						{
-							activity.State = Localization.OrbitingNear + " " + value.ToUpper();
+							_activity.State = Localization.OrbitingNear + " " + value.ToUpper();
 						}
 					}
-					activity.Assets.SmallImage = Client.Instance.CurrentGender.ToLocalizedString().ToLower();
-					activity.Assets.SmallText = MyPlayer.Instance.PlayerName;
-					activity.Party.Size.CurrentSize = Client.LastConnectedServer.CurrentPlayers + 1;
-					activity.Party.Size.MaxSize = Client.LastConnectedServer.MaxPlayers;
-					activity.Party.Id = Client.LastConnectedServer.Hash.ToString();
+					_activity.Assets.SmallImage = Client.Instance.CurrentGender.ToLocalizedString().ToLower();
+					_activity.Assets.SmallText = MyPlayer.Instance.PlayerName;
+					_activity.Party.Size.CurrentSize = Client.LastConnectedServer.CurrentPlayers + 1;
+					_activity.Party.Size.MaxSize = Client.LastConnectedServer.MaxPlayers;
+					_activity.Party.Id = Client.LastConnectedServer.Hash.ToString();
 				}
 				else
 				{
-					activity.State = "In Menus";
-					activity.Details = "Launch Sequence Initiated";
-					activity.Assets.LargeImage = "cover";
-					activity.Assets.LargeText = string.Empty;
-					activity.Assets.SmallImage = string.Empty;
-					activity.Assets.SmallText = string.Empty;
-					activity.Secrets.Join = string.Empty;
-					activity.Party.Size.CurrentSize = 0;
-					activity.Party.Size.MaxSize = 0;
-					activity.Party.Id = string.Empty;
+					_activity.State = "In Menus";
+					_activity.Details = "Launch Sequence Initiated";
+					_activity.Assets.LargeImage = "cover";
+					_activity.Assets.LargeText = string.Empty;
+					_activity.Assets.SmallImage = string.Empty;
+					_activity.Assets.SmallText = string.Empty;
+					_activity.Secrets.Join = string.Empty;
+					_activity.Party.Size.CurrentSize = 0;
+					_activity.Party.Size.MaxSize = 0;
+					_activity.Party.Id = string.Empty;
 				}
-				activityManager.UpdateActivity(activity, result => {});
+
+				if (_activityManager != null)
+				{
+					_activityManager.UpdateActivity(_activity, result => {});
+				}
 			}
 			catch (Exception ex)
 			{

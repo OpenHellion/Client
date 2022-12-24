@@ -20,6 +20,12 @@
 					</PropertyList>
 				</GameParameter>
 				<GameParameter Name="AmbienceVolume" ID="{7B982211-E9D7-4EB5-A467-3E75CB6CB35E}"/>
+				<GameParameter Name="InGameVolume" ID="{76580637-A18D-430F-AD2A-ECF2F3EDD0EB}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="1"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
 			</ChildrenList>
 		</WorkUnit>
 	</GameParameters>

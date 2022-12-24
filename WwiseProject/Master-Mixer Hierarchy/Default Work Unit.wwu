@@ -29,7 +29,36 @@
 											</Point>
 											<Point>
 												<XPos>100</XPos>
-												<YPos>-0</YPos>
+												<YPos>5</YPos>
+												<Flags>37</Flags>
+											</Point>
+										</PointList>
+									</Curve>
+								</RTPC>
+							</RTPCList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<RTPCList>
+								<RTPC Name="" ID="{89DE41D6-5F7E-47D2-8734-B287B5E79B30}" ShortID="327182198">
+									<ReferenceList>
+										<Reference Name="ControlInput">
+											<ObjectRef Name="InGameVolume" ID="{76580637-A18D-430F-AD2A-ECF2F3EDD0EB}" WorkUnitID="{28BF7696-FAE4-4797-A245-1672504B32F1}"/>
+										</Reference>
+									</ReferenceList>
+									<Curve Name="" ID="{8D8D6B36-4CC7-44B2-99E9-61295ACD2D17}">
+										<PropertyList>
+											<Property Name="Flags" Type="int32" Value="3"/>
+										</PropertyList>
+										<PointList>
+											<Point>
+												<XPos>0</XPos>
+												<YPos>-96</YPos>
+												<Flags>5</Flags>
+												<SegmentShape>Exp1</SegmentShape>
+											</Point>
+											<Point>
+												<XPos>1</XPos>
+												<YPos>0</YPos>
 												<Flags>37</Flags>
 											</Point>
 										</PointList>

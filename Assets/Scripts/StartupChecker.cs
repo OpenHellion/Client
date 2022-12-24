@@ -29,7 +29,7 @@ public class StartupChecker : MonoBehaviour
 			//Application.OpenURL("steam://run/588210");
 			Application.Quit();
 		}*/
-		if (SteamAPI.RestartAppIfNecessary((AppId_t)588210u))
+		if (SteamAPI.RestartAppIfNecessary((AppId_t)588210u) || !SteamManager.Initialized)
 		{
 			// Ensure that we launced this through steam.
 			// Some anti-piracy thing it seems.

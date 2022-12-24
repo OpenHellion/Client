@@ -68,7 +68,7 @@ namespace ZeroGravity.Network
 				try
 				{
 					// Check connection to socket.
-					IAsyncResult asyncResult = socket.BeginConnect(NetworkController.MainServerAddres, NetworkController.MainServerPort, null, null);
+					IAsyncResult asyncResult = socket.BeginConnect(NetworkController.MainServerAddress, NetworkController.MainServerPort, null, null);
 					if (!asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5.0), exitContext: false))
 					{
 						throw new TimeoutException();
@@ -78,11 +78,13 @@ namespace ZeroGravity.Network
 					NetworkStream stream = new NetworkStream(socket);
 					string remotePublicKey = CryptoHelper.ExchangePublicKeys(stream, PublicKey);
 
-					// Convert the data to binary
+					// Convert the class to binary
 					byte[] dataBinary = Serializer.Serialize(data);
 
-					// Request data.
+					// Send data.
 					CryptoHelper.WriteRequest(stream, dataBinary, remotePublicKey);
+
+					// Read response.
 					byte[] buffer = CryptoHelper.ReadResponse(stream, PrivateKey);
 					stream.Close();
 
