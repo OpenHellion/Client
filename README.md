@@ -1,4 +1,4 @@
-# Hellion Revived Client
+# OpenHellion Client
 ![Image of the Hellion Project open in the Unity game engine.](https://user-images.githubusercontent.com/37084190/196989422-4079d0fe-c16a-416b-80f7-27df3077c366.png)
 
 This is the client for the Hellion Revived game. It is the main part of the game, with the server always accompanying the client in every release.
@@ -6,7 +6,7 @@ In the basegame, the server is located in the HELLION_SP folder, and contains da
 A [separate repository](https://github.com/Hellion-Revived/Hellion_SP) for the development of the single player server also exists.
 
 ## About Hellion
-Hellion Revived is a multiplayer game set in space. You're apart of a mission-gone-wrong to colonise the nearest star. The goal is to survive in space, and to do such you need to follow the quests. The game has some sandbox features, that allows you to build and manage your own space stations and ships.
+Hellion Revived is a multiplayer game set in space. You're a part of a mission-gone-wrong to colonise the nearest star. The goal is to survive in space, and to do such you need to follow some quests. The game is an open-world sandbox game, and have features that allow you to build and manage your own space stations and ships.
 
 ## Info
 The game is developed with `Unity 2021.3 LTS` and `Wwise 2021.1 LTS`. The game should be cross-platform, but it has only been tested on Windows.
