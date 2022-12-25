@@ -27,7 +27,7 @@ public class QuestObject : ScriptableObject
 
 	public string Description;
 
-	public SteamAchievementID Achivement;
+	public AchievementID Achivement;
 
 	public bool AutoActivate;
 

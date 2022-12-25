@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using OpenHellion.ProviderSystem;
 using Steamworks;
 using UnityEngine;
 using ZeroGravity.Data;
@@ -28,28 +28,6 @@ namespace ZeroGravity.ShipComponents
 
 		public delegate void GetInvitedPlayersDelegate(List<PlayerSecurityData> availablePlayers);
 
-		[CompilerGenerated]
-		private sealed class _003CGetPlayerRank_003Ec__AnonStorey0
-		{
-			internal Player pl;
-
-			internal bool _003C_003Em__0(PlayerSecurityData m)
-			{
-				return m.GUID == pl.GUID;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CGetPlayersForAuthorization_003Ec__AnonStorey1
-		{
-			internal CSteamID id;
-
-			internal bool _003C_003Em__0(PlayerSecurityData m)
-			{
-				return m.SteamID == id.m_SteamID.ToString();
-			}
-		}
-
 		public List<PlayerSecurityData> AuthorizedPlayers = new List<PlayerSecurityData>();
 
 		private Ship parentShip;
@@ -58,19 +36,7 @@ namespace ZeroGravity.ShipComponents
 
 		private GetInvitedPlayersDelegate onPlayersLodedDelegate;
 
-		[CompilerGenerated]
-		private static Func<PlayerSecurityData, AuthorizedPersonRank> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<PlayerSecurityData, string> _003C_003Ef__am_0024cache1;
-
-		public Ship ParentShip
-		{
-			get
-			{
-				return parentShip;
-			}
-		}
+		public Ship ParentShip => parentShip;
 
 		public void Awake()
 		{
@@ -94,14 +60,7 @@ namespace ZeroGravity.ShipComponents
 
 		public AuthorizedPersonRank GetPlayerRank(Player pl)
 		{
-			_003CGetPlayerRank_003Ec__AnonStorey0 _003CGetPlayerRank_003Ec__AnonStorey = new _003CGetPlayerRank_003Ec__AnonStorey0();
-			_003CGetPlayerRank_003Ec__AnonStorey.pl = pl;
-			PlayerSecurityData playerSecurityData = AuthorizedPlayers.Find(_003CGetPlayerRank_003Ec__AnonStorey._003C_003Em__0);
-			if (playerSecurityData != null)
-			{
-				return playerSecurityData.Rank;
-			}
-			return AuthorizedPersonRank.None;
+			return AuthorizedPlayers.Find((PlayerSecurityData m) => m.GUID == pl.GUID)?.Rank ?? AuthorizedPersonRank.None;
 		}
 
 		public void AddPerson(PlayerSecurityData player, AuthorizedPersonRank newRank)
@@ -139,21 +98,20 @@ namespace ZeroGravity.ShipComponents
 
 		public void GetPlayersForAuthorization(bool getSteamFriends, bool getPlayerFromServer, GetInvitedPlayersDelegate onPlayersLoaded)
 		{
-			if (getSteamFriends && SteamManager.Initialized)
+			if (getSteamFriends && ProviderManager.MainProvider is SteamProvider)
 			{
 				List<PlayerSecurityData> list = new List<PlayerSecurityData>();
 				for (int i = 0; i < SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate); i++)
 				{
-					_003CGetPlayersForAuthorization_003Ec__AnonStorey1 _003CGetPlayersForAuthorization_003Ec__AnonStorey = new _003CGetPlayersForAuthorization_003Ec__AnonStorey1();
-					_003CGetPlayersForAuthorization_003Ec__AnonStorey.id = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
-					EPersonaState friendPersonaState = SteamFriends.GetFriendPersonaState(_003CGetPlayersForAuthorization_003Ec__AnonStorey.id);
-					if ((friendPersonaState == EPersonaState.k_EPersonaStateOnline || friendPersonaState == EPersonaState.k_EPersonaStateLookingToPlay) && AuthorizedPlayers.Find(_003CGetPlayersForAuthorization_003Ec__AnonStorey._003C_003Em__0) == null)
+					CSteamID id = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
+					EPersonaState friendPersonaState = SteamFriends.GetFriendPersonaState(id);
+					if ((friendPersonaState == EPersonaState.k_EPersonaStateOnline || friendPersonaState == EPersonaState.k_EPersonaStateLookingToPlay) && AuthorizedPlayers.Find((PlayerSecurityData m) => m.SteamID == id.m_SteamID.ToString()) == null)
 					{
 						list.Add(new PlayerSecurityData
 						{
-							SteamID = _003CGetPlayersForAuthorization_003Ec__AnonStorey.id.m_SteamID.ToString(),
+							SteamID = id.m_SteamID.ToString(),
 							IsSteamFriend = true,
-							Name = SteamFriends.GetFriendPersonaName(_003CGetPlayersForAuthorization_003Ec__AnonStorey.id),
+							Name = SteamFriends.GetFriendPersonaName(id),
 							Rank = AuthorizedPersonRank.None
 						});
 					}
@@ -207,17 +165,9 @@ namespace ZeroGravity.ShipComponents
 			}
 			if (AuthorizedPlayers.Count > 1)
 			{
-				List<PlayerSecurityData> authorizedPlayers = AuthorizedPlayers;
-				if (_003C_003Ef__am_0024cache0 == null)
-				{
-					_003C_003Ef__am_0024cache0 = _003CParseSecurityData_003Em__0;
-				}
-				IOrderedEnumerable<PlayerSecurityData> source = authorizedPlayers.OrderBy(_003C_003Ef__am_0024cache0);
-				if (_003C_003Ef__am_0024cache1 == null)
-				{
-					_003C_003Ef__am_0024cache1 = _003CParseSecurityData_003Em__1;
-				}
-				AuthorizedPlayers = source.ThenBy(_003C_003Ef__am_0024cache1).ToList();
+				AuthorizedPlayers = (from m in AuthorizedPlayers
+					orderby m.Rank, m.Name
+					select m).ToList();
 			}
 			UpdateUI();
 			AuthorizedPersonRank playerRank2 = GetPlayerRank(MyPlayer.Instance);
@@ -277,18 +227,6 @@ namespace ZeroGravity.ShipComponents
 			{
 				Client.Instance.InGamePanels.Security.RefreshSelfDestructTimer();
 			}
-		}
-
-		[CompilerGenerated]
-		private static AuthorizedPersonRank _003CParseSecurityData_003Em__0(PlayerSecurityData m)
-		{
-			return m.Rank;
-		}
-
-		[CompilerGenerated]
-		private static string _003CParseSecurityData_003Em__1(PlayerSecurityData m)
-		{
-			return m.Name;
 		}
 	}
 }

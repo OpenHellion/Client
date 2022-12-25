@@ -5,6 +5,7 @@ using UnityEngine;
 using Steamworks;
 using System;
 using System.Runtime.InteropServices;
+using OpenHellion.ProviderSystem;
 
 namespace ZeroGravity.Network
 {
@@ -72,7 +73,7 @@ namespace ZeroGravity.Network
 			}
 
 			// Handle Steam P2P packets.
-			if (SteamManager.Initialized && !GetP2PPacketsThreadActive)
+			if (ProviderManager.MainProvider is SteamProvider && !GetP2PPacketsThreadActive)
 			{
 				new Thread(P2PPacketListener).Start();
 			}
@@ -132,7 +133,7 @@ namespace ZeroGravity.Network
 
 		public void SendToGameServer(NetworkData data)
 		{
-			if (SteamManager.Initialized)
+			if (ProviderManager.MainProvider is SteamProvider)
 			{
 				gameConnectionThreads.Send(data);
 			}

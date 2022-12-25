@@ -1,4 +1,4 @@
-public enum SteamStatID
+public enum ProviderStatID
 {
 	none = 0,
 	docked_vessels = 1,

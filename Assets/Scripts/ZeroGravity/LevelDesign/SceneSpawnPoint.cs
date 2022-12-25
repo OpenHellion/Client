@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using OpenHellion.ProviderSystem;
 using Steamworks;
 using ThreeEyedGames;
 using UnityEngine;
@@ -274,7 +275,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
-			if (getSteamFriends && SteamManager.Initialized)
+			if (getSteamFriends && ProviderManager.MainProvider is SteamProvider)
 			{
 				List<PlayerInviteData> list = new List<PlayerInviteData>();
 				for (int i = 0; i < SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate); i++)
@@ -314,11 +315,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
-			string text = string.Empty;
-			if (SteamManager.Initialized)
-			{
-				text = SteamUser.GetSteamID().m_SteamID.ToString();
-			}
+			string text = Client.Instance.SteamId;
 			List<PlayerInviteData> list = new List<PlayerInviteData>();
 			if (data.PlayersOnServer != null && data.PlayersOnServer.Count > 0)
 			{

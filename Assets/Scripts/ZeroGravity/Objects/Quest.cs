@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using OpenHellion.ProviderSystem;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 
@@ -64,7 +64,7 @@ namespace ZeroGravity.Objects
 			QuestObject.Quest = this;
 			if (QuestObject != null && QuestObject.Achivement != 0)
 			{
-				SteamStats.GetAchievement(QuestObject.Achivement, out CanSkip);
+				ProviderManager.MainProvider.GetAchievement(QuestObject.Achivement, out CanSkip);
 			}
 		}
 
@@ -90,7 +90,7 @@ namespace ZeroGravity.Objects
 			}
 			if (Status == QuestStatus.Completed && QuestObject != null && QuestObject.Achivement != 0)
 			{
-				SteamStats.SetAchievement(QuestObject.Achivement);
+				ProviderManager.MainProvider.SetAchievement(QuestObject.Achivement);
 			}
 		}
 	}

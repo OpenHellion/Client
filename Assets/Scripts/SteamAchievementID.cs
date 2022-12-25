@@ -1,4 +1,4 @@
-public enum SteamAchievementID
+public enum AchievementID
 {
 	none = 0,
 	quest_rude_awakening = 1,

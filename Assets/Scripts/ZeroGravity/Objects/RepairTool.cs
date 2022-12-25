@@ -226,7 +226,7 @@ namespace ZeroGravity.Objects
 						GUID = componentInParent.GUID
 					});
 					flag = true;
-					Client.Instance.ChangeStatsByIfNotAdmin(SteamStatID.repair_time, UsageCooldown / 60f);
+					Client.Instance.ChangeStatsByIfNotAdmin(ProviderStatID.repair_time, UsageCooldown / 60f);
 					break;
 				}
 				VesselRepairPoint componentInParent2 = raycastHit.collider.gameObject.GetComponentInParent<VesselRepairPoint>();
@@ -239,11 +239,11 @@ namespace ZeroGravity.Objects
 					flag = true;
 					if (Type == ItemType.FireExtinguisher)
 					{
-						Client.Instance.ChangeStatsByIfNotAdmin(SteamStatID.firefighting_time, UsageCooldown / 60f);
+						Client.Instance.ChangeStatsByIfNotAdmin(ProviderStatID.firefighting_time, UsageCooldown / 60f);
 					}
 					else
 					{
-						Client.Instance.ChangeStatsByIfNotAdmin(SteamStatID.repair_time, UsageCooldown / 60f);
+						Client.Instance.ChangeStatsByIfNotAdmin(ProviderStatID.repair_time, UsageCooldown / 60f);
 					}
 					break;
 				}

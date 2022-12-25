@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OpenHellion.ProviderSystem;
 using ThreeEyedGames;
 using UnityEngine;
 using ZeroGravity.Data;
@@ -660,7 +661,7 @@ namespace ZeroGravity.Objects
 					});
 				}
 			}
-			Client.Instance.Discord.UpdateStatus();
+			ProviderManager.MainProvider.UpdateStatus();
 		}
 
 		public void ActivateWarpStartEffect()

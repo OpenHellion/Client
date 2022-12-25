@@ -25,6 +25,7 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
 using ZeroGravity.UI;
+using OpenHellion.ProviderSystem;
 
 namespace ZeroGravity
 {
@@ -56,9 +57,6 @@ namespace ZeroGravity
 		private CharacterData _newCharacterData;
 
 		private GameServerUI _deleteChararacterFromServer;
-
-		[NonSerialized]
-		public SteamStats SteamStats;
 
 		public bool ExperimentalBuild;
 
@@ -165,8 +163,6 @@ namespace ZeroGravity
 		public static SceneLoadTypeValue SceneLoadType = SceneLoadTypeValue.PreloadWithCopy;
 
 		public static int ControlsVersion = 1;
-
-		private static Client singletonInstance = null;
 
 		public static volatile bool IsRunning = false;
 
@@ -326,8 +322,6 @@ namespace ZeroGravity
 
 		public GameObject InviteScreen;
 
-		public DiscordController Discord;
-
 		public List<DebrisField> DebrisFields = new List<DebrisField>();
 
 		public ExteriorParticles ExtParticles;
@@ -365,9 +359,9 @@ namespace ZeroGravity
 		[NonSerialized]
 		public float[] PlayerExposureValues;
 
-		private float lastLatencyMessateTime = -1f;
+		private float _lastLatencyMessateTime = -1f;
 
-		private int _LatencyMs;
+		private int _latencyMs;
 
 		[Header("Cursor")]
 		public Texture2D DefaultCursor;
@@ -394,7 +388,8 @@ namespace ZeroGravity
 
 		private Task _restoreMapDetailsTask;
 
-		public static Client Instance => singletonInstance;
+		private static Client _instance = null;
+		public static Client Instance => _instance;
 
 		public static bool IsGameBuild => Instance != null;
 
@@ -472,45 +467,30 @@ namespace ZeroGravity
 			}
 		}
 
-		public string SteamId => (!SteamManager.Initialized) ? null : SteamUser.GetSteamID().ToString();
+		public string SteamId => (ProviderManager.MainProvider is not SteamProvider) ? string.Empty : SteamUser.GetSteamID().ToString();
 
 		public int LatencyMs
 		{
 			get
 			{
-				if (lastLatencyMessateTime < 0f)
+				if (_lastLatencyMessateTime < 0f)
 				{
 					return 0;
 				}
-				float num = Time.realtimeSinceStartup - lastLatencyMessateTime;
-				if (_LatencyMs < 0 || num > 5f)
+				float num = Time.realtimeSinceStartup - _lastLatencyMessateTime;
+				if (_latencyMs < 0 || num > 5f)
 				{
 					return (int)(num * 1000f);
 				}
-				return _LatencyMs;
+				return _latencyMs;
 			}
 		}
 
 
 		private void Awake()
 		{
-			SteamStats = GetComponent<SteamStats>();
-			if (SteamStats == null)
-			{
-				SteamStats = base.gameObject.AddComponent<SteamStats>();
-			}
-
 			Texture[] source = Resources.LoadAll<Texture>("Emblems");
 			SceneVesselEmblem.Textures = source.ToDictionary((Texture x) => x.name, (Texture y) => y);
-
-			if (!SteamManager.Initialized)
-			{
-				Dbg.Error("Steam isn't initialised.");
-				ExitGame();
-#if UNITY_EDITOR
-				EditorApplication.isPlaying = false;
-#endif
-			}
 
 			RCS_THRUST_SENSITIVITY = Properties.GetProperty("rcs_thrust_sensitivity", RCS_THRUST_SENSITIVITY);
 			RCS_ROTATION_SENSITIVITY = Properties.GetProperty("rcs_rotation_sensitivity", RCS_ROTATION_SENSITIVITY);
@@ -527,7 +507,7 @@ namespace ZeroGravity
 			StaticData.LoadData();
 			Application.runInBackground = true;
 			MainThreadID = Thread.CurrentThread.ManagedThreadId;
-			singletonInstance = this;
+			_instance = this;
 			IsRunning = true;
 			openMainSceneStarted = false;
 
@@ -555,7 +535,7 @@ namespace ZeroGravity
 				{
 					ExperimentalGameObject.SetActive(value: true);
 					ExperimentalGameObject.GetComponentInChildren<Text>().text = ExperimentalText.Trim() + " " + Application.version;
-					SteamStats.SetAchievement(SteamAchievementID.other_testing_squad_member);
+					ProviderManager.MainProvider.SetAchievement(AchievementID.other_testing_squad_member);
 				}
 				else
 				{
@@ -636,12 +616,11 @@ namespace ZeroGravity
 			NetworkController.EventSystem.AddListener(EventSystem.InternalEventType.ConnectionFailed, ConnectionFailedListener);
 			NetworkController.EventSystem.AddListener(EventSystem.InternalEventType.CloseAllLoadingScreens, CloseAllLoadingScreensListener);
 			m_GameRichPresenceJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested);
-			if (SteamManager.Initialized)
+			if (ProviderManager.MainProvider is SteamProvider)
 			{
-				Analytics.SetUserId(SteamUser.GetSteamID().ToString());
+				Analytics.SetUserId(SteamId);
 			}
-			Discord.UpdateStatus();
-			if (InvitedToServerId > 0 && SteamManager.Initialized)
+			if (InvitedToServerId > 0 && ProviderManager.MainProvider is SteamProvider)
 			{
 				inviteCoroutine = ConnectToInvite();
 				StartCoroutine(inviteCoroutine);
@@ -1689,15 +1668,10 @@ namespace ZeroGravity
 			}
 			if (gameServerUI != null && (DateTime.UtcNow - gameServerUI.LastUpdateTime).TotalSeconds > 5.0)
 			{
-				string steamId = string.Empty;
-				if (SteamManager.Initialized)
-				{
-					steamId = SteamUser.GetSteamID().ToString();
-				}
 				gameServerUI.LastUpdateTime = DateTime.UtcNow;
 				int latency = -1;
 				ServerStatusRequest serverStatusRequest = new ServerStatusRequest();
-				serverStatusRequest.SteamId = steamId;
+				serverStatusRequest.SteamId = SteamId;
 				serverStatusRequest.SendDetails = gameServerUI.Description == null;
 				ServerStatusRequest request = serverStatusRequest;
 				ServerStatusResponse serverStatusResponse = SendRequest(request, gameServerUI.IPAddress, gameServerUI.StatusPort, out latency) as ServerStatusResponse;
@@ -1725,11 +1699,6 @@ namespace ZeroGravity
 				}
 			}
 			serverUpdateCounter--;
-		}
-
-		private void SendRequest(NetworkData request, string address, int port, bool logException = false)
-		{
-			SendRequest(request, address, port, out var _, getResponse: false, logException);
 		}
 
 		private NetworkData SendRequest(NetworkData request, string address, int port, out int latency, bool getResponse = true, bool logException = false)
@@ -1763,11 +1732,6 @@ namespace ZeroGravity
 				}
 				networkStream.ReadTimeout = 1000;
 				networkStream.WriteTimeout = 1000;
-				string empty = string.Empty;
-				if (SteamManager.Initialized)
-				{
-					empty = SteamUser.GetSteamID().ToString();
-				}
 				byte[] array = Serializer.Serialize(request);
 				DateTime dateTime = DateTime.UtcNow.ToUniversalTime();
 				networkStream.Write(array, 0, array.Length);
@@ -1968,7 +1932,7 @@ namespace ZeroGravity
 				}
 				if (MyPlayer.Instance != null && this == MyPlayer.Instance.Parent)
 				{
-					Discord.UpdateStatus();
+					ProviderManager.MainProvider.UpdateStatus();
 				}
 			}
 			if (MyPlayer.Instance.LockedToTrigger is SceneTriggerNavigationPanel || MyPlayer.Instance.ShipControlMode == ShipControlMode.Navigation)
@@ -2066,9 +2030,9 @@ namespace ZeroGravity
 				CreateCharacterPanel.SetActive(value: true);
 				CurrentGenderText.text = CurrentGender.ToLocalizedString();
 				InventoryCharacterPreview.instance.ResetPosition();
-				if (SteamManager.Initialized)
+				if (ProviderManager.MainProvider is SteamProvider)
 				{
-					CharacterInputField.text = SteamFriends.GetFriendPersonaName(SteamUser.GetSteamID());
+					CharacterInputField.text = ProviderManager.MainProvider.GetUsername();
 				}
 				else
 				{
@@ -2109,7 +2073,7 @@ namespace ZeroGravity
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 
 			// Connect to server.
-			NetworkController.ConnectToGame(server, (!SteamManager.Initialized) ? _userName : SteamUser.GetSteamID().m_SteamID.ToString(), _newCharacterData, serverPassword);
+			NetworkController.ConnectToGame(server, (ProviderManager.MainProvider is not SteamProvider) ? _userName : SteamId, _newCharacterData, serverPassword);
 
 			// Cleanup data.
 			_newCharacterData = null;
@@ -2167,7 +2131,7 @@ namespace ZeroGravity
 				networkStream.WriteTimeout = 1000;
 				DeleteCharacterRequest deleteCharacterRequest = new DeleteCharacterRequest();
 				deleteCharacterRequest.ServerId = _deleteChararacterFromServer.Id;
-				deleteCharacterRequest.SteamId = ((!SteamManager.Initialized) ? _userName : SteamUser.GetSteamID().m_SteamID.ToString());
+				deleteCharacterRequest.SteamId = SteamId;
 				byte[] array = Serializer.Serialize(deleteCharacterRequest);
 				DateTime dateTime = DateTime.UtcNow.ToUniversalTime();
 				networkStream.Write(array, 0, array.Length);
@@ -2192,7 +2156,7 @@ namespace ZeroGravity
 				_userName = LastSignInRequest.SteamId;
 			}
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
-			NetworkController.ConnectToGame(LastConnectedServer, (!SteamManager.Initialized) ? _userName : SteamUser.GetSteamID().m_SteamID.ToString(), _newCharacterData, LastConnectedServerPass);
+			NetworkController.ConnectToGame(LastConnectedServer, (ProviderManager.MainProvider is not SteamProvider) ? _userName : SteamId, _newCharacterData, LastConnectedServerPass);
 		}
 
 		private void CreateServerButton(ServerData serverData)
@@ -2337,7 +2301,7 @@ namespace ZeroGravity
 
 			// Make sure that no single player games are running.
 			KillAllSPProcesses();
-			if (SteamManager.Initialized)
+			if (ProviderManager.MainProvider is SteamProvider)
 			{
 				SinglePlayerMode = false;
 				_prevSortMode = -1;
@@ -2350,12 +2314,8 @@ namespace ZeroGravity
 		/// </summary>
 		public void Connect()
 		{
-			if (SteamManager.Initialized)
-			{
-				_userName = SteamUser.GetSteamID().ToString();
-			}
 			string property = Properties.GetProperty("server_address", "188.166.144.65:6000");
-			if (_userName.Length > 0)
+			if (SteamId.Length > 0)
 			{
 				CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.ConnectingToMain);
 				string[] array = property.Split(':');
@@ -2365,7 +2325,7 @@ namespace ZeroGravity
 				NetworkController.MainServerPort = _port;
 				Regex regex = new Regex("[^0-9.]");
 				SignInRequest signInRequest = new SignInRequest();
-				signInRequest.SteamId = _userName;
+				signInRequest.SteamId = SteamId;
 				signInRequest.ClientVersion = regex.Replace(Application.version, string.Empty);
 				signInRequest.ClientHash = CombinedHash;
 				LastSignInRequest = signInRequest;
@@ -2711,8 +2671,7 @@ namespace ZeroGravity
 		/// </summary>
 		public IEnumerator PlaySPCoroutine(string filename = null)
 		{
-			// Another anti-piracy check.
-			if (!SteamManager.Initialized)
+			if (!ProviderManager.AnyInitialised)
 			{
 				yield break;
 			}
@@ -2778,14 +2737,9 @@ namespace ZeroGravity
 				SinglePlayerRespawn = false;
 				SinglePlayerMode = true;
 				lastSPAutosaveTime = Time.time;
-				string steamId = string.Empty;
-				if (SteamManager.Initialized)
-				{
-					steamId = SteamUser.GetSteamID().ToString();
-				}
 				int latency = -1;
 				ServerStatusRequest serverStatusRequest = new ServerStatusRequest();
-				serverStatusRequest.SteamId = steamId;
+				serverStatusRequest.SteamId = SteamId;
 				serverStatusRequest.SendDetails = true;
 				ServerStatusRequest request = serverStatusRequest;
 				if (SendRequest(request, "127.0.0.1", result2, out latency) is ServerStatusResponse serverStatusResponse && serverStatusResponse.Response == ResponseResult.Success)
@@ -2794,7 +2748,7 @@ namespace ZeroGravity
 					{
 						serverStatusResponse.CharacterData = new CharacterData
 						{
-							Name = SteamFriends.GetFriendPersonaName(SteamUser.GetSteamID()),
+							Name = ProviderManager.MainProvider.GetUsername(),
 							Gender = ZeroGravity.Network.Gender.Male,
 							HairType = 1,
 							HeadType = 1
@@ -2905,7 +2859,7 @@ namespace ZeroGravity
 
 		public void LatencyTestMessage()
 		{
-			lastLatencyMessateTime = Time.realtimeSinceStartup;
+			_lastLatencyMessateTime = Time.realtimeSinceStartup;
 			new Task(delegate
 			{
 				int latency;
@@ -2917,7 +2871,7 @@ namespace ZeroGravity
 				{
 					SendRequest(new LatencyTestMessage(), LastConnectedServer.IPAddress, LastConnectedServer.StatusPort, out latency);
 				}
-				_LatencyMs = latency;
+				_latencyMs = latency;
 			}).Start();
 			if (MyPlayer.Instance.IsAlive)
 			{
@@ -2966,7 +2920,7 @@ namespace ZeroGravity
 			this.CancelInvoke(CheckLoadingComplete);
 			AkSoundEngine.SetRTPCValue(SoundManager.instance.InGameVolume, 1f);
 			MyPlayer.Instance.PlayerReady = true;
-			Instance.Discord.UpdateStatus();
+			ProviderManager.MainProvider.UpdateStatus();
 			MyPlayer.Instance.InitializeCameraEffects();
 			if (Instance.SinglePlayerMode)
 			{
@@ -3003,13 +2957,13 @@ namespace ZeroGravity
 			}
 		}
 
-		public void ChangeStatsByIfNotAdmin<T>(SteamStatID id, T value)
+		public void ChangeStatsByIfNotAdmin<T>(ProviderStatID id, T value)
 		{
 			try
 			{
 				if (!MyPlayer.Instance.IsAdmin)
 				{
-					SteamStats.ChangeStatBy(id, value);
+					ProviderManager.MainProvider.ChangeStatBy(id, value);
 				}
 			}
 			catch (Exception ex)

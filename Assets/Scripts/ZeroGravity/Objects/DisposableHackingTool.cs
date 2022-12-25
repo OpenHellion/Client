@@ -37,7 +37,7 @@ namespace ZeroGravity.Objects
 			DisposableHackingToolStats disposableHackingToolStats = dos as DisposableHackingToolStats;
 			if (disposableHackingToolStats.Use && DynamicObj.Parent is MyPlayer)
 			{
-				Client.Instance.ChangeStatsByIfNotAdmin(SteamStatID.hacked_stuff, 1);
+				Client.Instance.ChangeStatsByIfNotAdmin(ProviderStatID.hacked_stuff, 1);
 			}
 		}
 

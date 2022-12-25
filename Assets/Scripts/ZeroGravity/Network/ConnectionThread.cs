@@ -33,6 +33,7 @@ namespace ZeroGravity.Network
 
 		private EventWaitHandle waitHandle;
 
+		// TODO: Replace this with a custom generated id, and save this in an external provider.
 		private string steamId;
 
 		public void Start(string address, int port, long id, string password, string steamId, int retryAttempt = 3)
@@ -47,11 +48,11 @@ namespace ZeroGravity.Network
 			networkDataQueue = new ConcurrentQueue<NetworkData>();
 			waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
 
-			connectThread = new Thread(Connect);
+			connectThread = new Thread(ConnectThread);
 			connectThread.IsBackground = true;
 			connectThread.Start();
 
-			sendingThread = new Thread(Send);
+			sendingThread = new Thread(SendingThread);
 			sendingThread.IsBackground = true;
 			sendingThread.Start();
 		}
@@ -101,7 +102,7 @@ namespace ZeroGravity.Network
 			}
 		}
 
-		private void Send()
+		private void SendingThread()
 		{
 			while (Client.IsRunning && runThread)
 			{
@@ -194,7 +195,7 @@ namespace ZeroGravity.Network
 			Stop();
 		}
 
-		private void Connect()
+		private void ConnectThread()
 		{
 			socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 			while (retryAttempt > 0)
@@ -250,8 +251,7 @@ namespace ZeroGravity.Network
 				logInRequest.ServerID = gameServerID;
 				logInRequest.Password = gameServerPassword;
 				logInRequest.ClientHash = Client.CombinedHash;
-				LogInRequest data = logInRequest;
-				Send(data);
+				Send(logInRequest);
 			}
 			else
 			{

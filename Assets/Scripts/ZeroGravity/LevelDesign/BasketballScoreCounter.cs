@@ -27,7 +27,7 @@ namespace ZeroGravity.LevelDesign
 			if (componentInParent != null && componentInParent.SubType == GenericItemSubType.BasketBall && componentInParent.DynamicObj.Master && coli.gameObject.name == "ScoreTrigger")
 			{
 				Counter++;
-				Client.Instance.ChangeStatsByIfNotAdmin(SteamStatID.basketball_hoop_hits, 1);
+				Client.Instance.ChangeStatsByIfNotAdmin(ProviderStatID.basketball_hoop_hits, 1);
 			}
 		}
 

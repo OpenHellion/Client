@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using OpenHellion.ProviderSystem;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Rendering;
@@ -469,7 +470,7 @@ namespace ZeroGravity.Objects
 				base.Parent = value;
 				if (flag)
 				{
-					Client.Instance.Discord.UpdateStatus();
+					ProviderManager.MainProvider.UpdateStatus();
 				}
 			}
 		}
@@ -3555,7 +3556,7 @@ namespace ZeroGravity.Objects
 		{
 			if (!(CurrentOutfit == null) && !(CurrentHelmet == null) && !(FpsController.CurrentJetpack == null) && !IsAdmin && CurrentOutfit.Type == ItemType.SoePressurisedSuit && CurrentHelmet.Type == ItemType.SoePressurisedHelmet && FpsController.CurrentJetpack.Type == ItemType.SoePressurisedJetpack)
 			{
-				SteamStats.SetAchievement(SteamAchievementID.collection_full_soe_outfit);
+				ProviderManager.MainProvider.SetAchievement(AchievementID.collection_full_soe_outfit);
 			}
 		}
 

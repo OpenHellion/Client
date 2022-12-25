@@ -3,6 +3,7 @@ using Steamworks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using ZeroGravity;
+using OpenHellion.ProviderSystem;
 
 
 /// <summary>
@@ -16,23 +17,10 @@ public class StartupChecker : MonoBehaviour
 	/// </summary>
 	private void Start()
 	{
-		/*
-		if (!SteamManager.Initialized || File.Exists("steam_appid.txt"))
+		// Safety check.
+		if (SteamAPI.RestartAppIfNecessary((AppId_t)588210u) || !ProviderManager.AnyInitialised)
 		{
-			try
-			{
-				File.Delete("steam_appid.txt");
-			}
-			catch { }
-
-			// Never actually do this
-			//Application.OpenURL("steam://run/588210");
-			Application.Quit();
-		}*/
-		if (SteamAPI.RestartAppIfNecessary((AppId_t)588210u) || !SteamManager.Initialized)
-		{
-			// Ensure that we launced this through steam.
-			// Some anti-piracy thing it seems.
+			Dbg.Error("No external provider could be found. Exiting.");
 			Application.Quit();
 		}
 		else
