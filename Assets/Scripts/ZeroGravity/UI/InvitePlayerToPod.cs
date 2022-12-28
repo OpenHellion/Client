@@ -11,7 +11,7 @@ namespace ZeroGravity.UI
 
 		public Button InvitePlayerButton;
 
-		public GameObject IsSteamFriend;
+		public GameObject IsFriend;
 
 		public RawImage Avatar;
 	}

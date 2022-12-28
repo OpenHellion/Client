@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using OpenHellion.ProviderSystem;
-using Steamworks;
 using ThreeEyedGames;
 using UnityEngine;
 using ZeroGravity.Data;
@@ -13,11 +12,11 @@ namespace ZeroGravity.LevelDesign
 	{
 		public class PlayerInviteData
 		{
-			public string SteamID;
+			public string PlayerId;
 
 			public string Name;
 
-			public bool IsSteamFriend;
+			public bool IsFriend;
 
 			public bool AlreadyHasInvite;
 		}
@@ -65,13 +64,13 @@ namespace ZeroGravity.LevelDesign
 
 		public string PlayerName { get; private set; }
 
-		public string PlayerSteamID { get; private set; }
+		public string PlayerId { get; private set; }
 
 		public SpawnPointState State { get; private set; }
 
 		public string InvitedPlayerName { get; private set; }
 
-		public string InvitedPlayerSteamID { get; private set; }
+		public string InvitedPlayerId { get; private set; }
 
 		private void Awake()
 		{
@@ -98,14 +97,14 @@ namespace ZeroGravity.LevelDesign
 				{
 					PlayerGUID = details.PlayerGUID.Value;
 					PlayerName = ((PlayerGUID <= 0) ? string.Empty : details.PlayerName);
-					PlayerSteamID = details.PlayerSteamID;
+					PlayerId = details.PlayerSteamID;
 				}
 				InvitedPlayerName = details.InvitedPlayerName;
 				if (InvitedPlayerName == null)
 				{
 					InvitedPlayerName = string.Empty;
 				}
-				InvitedPlayerSteamID = details.InvitedPlayerSteamID;
+				InvitedPlayerId = details.InvitedPlayerSteamID;
 				UpdateState();
 			}
 		}
@@ -258,13 +257,15 @@ namespace ZeroGravity.LevelDesign
 				{
 					InSceneID = InSceneID,
 					PlayerInvite = true,
-					InvitedPlayerSteamID = player.SteamID,
+					InvitedPlayerSteamID = player.PlayerId,
 					InvitedPlayerName = player.Name
 				};
 				parentVessel2.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, spawnPoint);
+
+				// Send invite.
 				if (!Client.Instance.SinglePlayerMode)
 				{
-					SteamFriends.InviteUserToGame(new CSteamID(ulong.Parse(player.SteamID)), Client.Instance.GetInviteString(new VesselObjectID(ParentVessel.GUID, InSceneID)));
+					ProviderManager.MainProvider.InviteUser(player.PlayerId, Client.Instance.GetInviteString(new VesselObjectID(ParentVessel.GUID, InSceneID)));
 				}
 			}
 		}
@@ -275,24 +276,26 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
-			if (getSteamFriends && ProviderManager.MainProvider is SteamProvider)
+			if (getSteamFriends)
 			{
 				List<PlayerInviteData> list = new List<PlayerInviteData>();
-				for (int i = 0; i < SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate); i++)
+
+				// Loop through each friend and add it to the list.
+				foreach (IProvider.Friend friend in ProviderManager.MainProvider.GetFriends())
 				{
-					CSteamID friendByIndex = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
-					EPersonaState friendPersonaState = SteamFriends.GetFriendPersonaState(friendByIndex);
-					if (friendPersonaState == EPersonaState.k_EPersonaStateOnline || friendPersonaState == EPersonaState.k_EPersonaStateLookingToPlay)
+					// If friend is online.
+					if (friend.Status == IProvider.FriendStatus.ONLINE)
 					{
 						list.Add(new PlayerInviteData
 						{
-							SteamID = friendByIndex.m_SteamID.ToString(),
-							IsSteamFriend = true,
-							Name = SteamFriends.GetFriendPersonaName(friendByIndex),
+							PlayerId = friend.Id,
+							IsFriend = true,
+							Name = friend.Name,
 							AlreadyHasInvite = false
 						});
 					}
 				}
+
 				onPlayersLoaded(list);
 			}
 			if (getPlayerFromServer)
@@ -315,18 +318,17 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
-			string text = Client.Instance.SteamId;
 			List<PlayerInviteData> list = new List<PlayerInviteData>();
 			if (data.PlayersOnServer != null && data.PlayersOnServer.Count > 0)
 			{
 				foreach (PlayerOnServerData item in data.PlayersOnServer)
 				{
-					if (item.SteamID != text)
+					if (item.SteamID != ProviderManager.MainProvider.GetId())
 					{
 						list.Add(new PlayerInviteData
 						{
-							IsSteamFriend = false,
-							SteamID = item.SteamID,
+							IsFriend = false,
+							PlayerId = item.SteamID,
 							Name = item.Name,
 							AlreadyHasInvite = item.AlreadyHasInvite
 						});

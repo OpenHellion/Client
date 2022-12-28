@@ -1,3 +1,4 @@
+using OpenHellion.ProviderSystem;
 using Steamworks;
 using UnityEngine;
 using ZeroGravity.LevelDesign;
@@ -13,8 +14,6 @@ namespace ZeroGravity.Objects
 		private BaseSceneTrigger _LockedToTrigger;
 
 		public Inventory Inventory;
-
-		private Texture _Avatar;
 
 		public virtual bool IsLockedToTrigger
 		{
@@ -40,11 +39,7 @@ namespace ZeroGravity.Objects
 		{
 			get
 			{
-				if (_Avatar == null)
-				{
-					return GetAvatar(SteamId);
-				}
-				return _Avatar;
+				return ProviderManager.MainProvider.GetAvatar(SteamId);
 			}
 		}
 
@@ -102,24 +97,7 @@ namespace ZeroGravity.Objects
 
 		public static Texture GetAvatar(string SteamID)
 		{
-			for (int i = 0; i < 20; i++)
-			{
-				int largeFriendAvatar = SteamFriends.GetLargeFriendAvatar(new CSteamID(ulong.Parse(SteamID)));
-				uint pnWidth;
-				uint pnHeight;
-				if (SteamUtils.GetImageSize(largeFriendAvatar, out pnWidth, out pnHeight) && pnWidth != 0 && pnHeight != 0)
-				{
-					byte[] array = new byte[pnWidth * pnHeight * 4];
-					Texture2D texture2D = new Texture2D((int)pnWidth, (int)pnHeight, TextureFormat.RGBA32, false, false);
-					if (SteamUtils.GetImageRGBA(largeFriendAvatar, array, (int)(pnWidth * pnHeight * 4)))
-					{
-						texture2D.LoadRawTextureData(array);
-						texture2D.Apply();
-					}
-					return texture2D;
-				}
-			}
-			return Resources.Load<Texture2D>("UI/default_avatar");
+			return ProviderManager.MainProvider.GetAvatar(SteamID);
 		}
 	}
 }

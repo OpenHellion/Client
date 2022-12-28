@@ -19764,7 +19764,7 @@ MonoBehaviour:
     Source: {fileID: 0}
     PlayOnAwake: 1
     UseStringInsteadOfId: 0
-    IsPlaying: 1
+    IsPlaying: 0
     ShowRadius: 0
     AttenuationRadius: 0
   - EventID: -1455436248

@@ -99,10 +99,10 @@ namespace ZeroGravity.UI
 			InviteList.SetActive(true);
 			foreach (SceneSpawnPoint.PlayerInviteData availablePlayer in availablePlayers)
 			{
-				if (AvailablePlayersForInvite.ContainsKey(availablePlayer.SteamID))
+				if (AvailablePlayersForInvite.ContainsKey(availablePlayer.PlayerId))
 				{
-					AvailablePlayersForInvite[availablePlayer.SteamID].InGameName.text = availablePlayer.Name;
-					AvailablePlayersForInvite[availablePlayer.SteamID].InvitePlayerButton.interactable = !availablePlayer.AlreadyHasInvite;
+					AvailablePlayersForInvite[availablePlayer.PlayerId].InGameName.text = availablePlayer.Name;
+					AvailablePlayersForInvite[availablePlayer.PlayerId].InvitePlayerButton.interactable = !availablePlayer.AlreadyHasInvite;
 					continue;
 				}
 				_003COnInvitePlayersLoaded_003Ec__AnonStorey0 _003COnInvitePlayersLoaded_003Ec__AnonStorey = new _003COnInvitePlayersLoaded_003Ec__AnonStorey0();
@@ -112,19 +112,19 @@ namespace ZeroGravity.UI
 				InvitePlayerToPod component = gameObject.GetComponent<InvitePlayerToPod>();
 				component.PlayerName.text = availablePlayer.Name;
 				component.InvitePlayerButton.interactable = !availablePlayer.AlreadyHasInvite;
-				if (availablePlayer.IsSteamFriend)
+				if (availablePlayer.IsFriend)
 				{
-					component.IsSteamFriend.SetActive(false);
-					component.Avatar.texture = Player.GetAvatar(availablePlayer.SteamID);
+					component.IsFriend.SetActive(false);
+					component.Avatar.texture = Player.GetAvatar(availablePlayer.PlayerId);
 				}
 				else
 				{
-					component.IsSteamFriend.SetActive(true);
+					component.IsFriend.SetActive(true);
 					component.Avatar.gameObject.SetActive(false);
 				}
 				_003COnInvitePlayersLoaded_003Ec__AnonStorey.plForDeleg = availablePlayer;
 				component.InvitePlayerButton.onClick.AddListener(_003COnInvitePlayersLoaded_003Ec__AnonStorey._003C_003Em__0);
-				AvailablePlayersForInvite.Add(availablePlayer.SteamID, component);
+				AvailablePlayersForInvite.Add(availablePlayer.PlayerId, component);
 			}
 		}
 
@@ -150,7 +150,7 @@ namespace ZeroGravity.UI
 			}
 			else if (!SpawnPoint.InvitedPlayerName.IsNullOrEmpty())
 			{
-				PlayerImage.texture = Player.GetAvatar(SpawnPoint.InvitedPlayerSteamID);
+				PlayerImage.texture = Player.GetAvatar(SpawnPoint.InvitedPlayerId);
 				DefaultPlayerImage.gameObject.SetActive(false);
 				LockedStateText.text = Localization.InvitePending.ToUpper() + "...";
 				LockedPlayerName.text = SpawnPoint.InvitedPlayerName;
@@ -159,7 +159,7 @@ namespace ZeroGravity.UI
 			}
 			else if (SpawnPoint.State == SpawnPointState.Locked)
 			{
-				PlayerImage.texture = Player.GetAvatar(SpawnPoint.PlayerSteamID);
+				PlayerImage.texture = Player.GetAvatar(SpawnPoint.PlayerId);
 				DefaultPlayerImage.gameObject.SetActive(false);
 				LockedPlayerName.text = SpawnPoint.PlayerName.ToString();
 				LockedStateText.text = Localization.Registered.ToUpper();
@@ -168,7 +168,7 @@ namespace ZeroGravity.UI
 			}
 			else if (SpawnPoint.State == SpawnPointState.Authorized)
 			{
-				PlayerImage.texture = Player.GetAvatar(SpawnPoint.PlayerSteamID);
+				PlayerImage.texture = Player.GetAvatar(SpawnPoint.PlayerId);
 				DefaultPlayerImage.gameObject.SetActive(false);
 				LockedPlayerName.text = SpawnPoint.PlayerName.ToString();
 				LockedStateText.text = Localization.Registered.ToUpper();

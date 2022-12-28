@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Steamworks;
+using OpenHellion.ProviderSystem;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -101,7 +101,7 @@ namespace ZeroGravity.UI
 			try
 			{
 				string text = "http://api.playhellion.com/add-report.php?";
-				text = text + "reporter=" + Uri.EscapeUriString(SteamUser.GetSteamID().ToString());
+				text = text + "reporter=" + Uri.EscapeUriString(ProviderManager.MainProvider.GetId());
 				text = text + "&server=" + Uri.EscapeUriString(Client.LastConnectedServer.Name);
 				text = text + "&reason=" + Uri.EscapeUriString(reportInfo[ReportReason.value].ToString());
 				text = text + "&other=" + Uri.EscapeUriString(OtherText.textComponent.text);

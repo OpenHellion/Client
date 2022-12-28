@@ -70,7 +70,7 @@ namespace ZeroGravity
 		[NonSerialized]
 		public ZeroGravity.Network.Gender CurrentGender;
 
-		private string _userName = string.Empty;
+		private string _lastSteamId = string.Empty;
 
 		private string ServerIP;
 
@@ -316,9 +316,9 @@ namespace ZeroGravity
 
 		public int CurrentLanguageIndex;
 
-		private IEnumerator processInvitationCoroutine;
+		private IEnumerator _processInvitationCoroutine;
 
-		private IEnumerator inviteCoroutine;
+		private IEnumerator _inviteCoroutine;
 
 		public GameObject InviteScreen;
 
@@ -359,7 +359,7 @@ namespace ZeroGravity
 		[NonSerialized]
 		public float[] PlayerExposureValues;
 
-		private float _lastLatencyMessateTime = -1f;
+		private float _lastLatencyMessageTime = -1f;
 
 		private int _latencyMs;
 
@@ -467,17 +467,15 @@ namespace ZeroGravity
 			}
 		}
 
-		public string SteamId => (ProviderManager.MainProvider is not SteamProvider) ? string.Empty : SteamUser.GetSteamID().ToString();
-
 		public int LatencyMs
 		{
 			get
 			{
-				if (_lastLatencyMessateTime < 0f)
+				if (_lastLatencyMessageTime < 0f)
 				{
 					return 0;
 				}
-				float num = Time.realtimeSinceStartup - _lastLatencyMessateTime;
+				float num = Time.realtimeSinceStartup - _lastLatencyMessageTime;
 				if (_latencyMs < 0 || num > 5f)
 				{
 					return (int)(num * 1000f);
@@ -618,12 +616,12 @@ namespace ZeroGravity
 			m_GameRichPresenceJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested);
 			if (ProviderManager.MainProvider is SteamProvider)
 			{
-				Analytics.SetUserId(SteamId);
+				Analytics.SetUserId(ProviderManager.MainProvider.GetId());
 			}
-			if (InvitedToServerId > 0 && ProviderManager.MainProvider is SteamProvider)
+			if (InvitedToServerId > 0)
 			{
-				inviteCoroutine = ConnectToInvite();
-				StartCoroutine(inviteCoroutine);
+				_inviteCoroutine = ConnectToInvite();
+				StartCoroutine(_inviteCoroutine);
 			}
 			else
 			{
@@ -1190,15 +1188,15 @@ namespace ZeroGravity
 			yield return new WaitUntil(() => _invitedToServer.OnLine);
 			ConnectToServer(_invitedToServer, InvitedToServerPassword);
 			InviteScreen.SetActive(value: false);
-			inviteCoroutine = null;
+			_inviteCoroutine = null;
 		}
 
 		public void StopInviteCoroutine()
 		{
-			if (inviteCoroutine != null)
+			if (_inviteCoroutine != null)
 			{
-				StopCoroutine(inviteCoroutine);
-				inviteCoroutine = null;
+				StopCoroutine(_inviteCoroutine);
+				_inviteCoroutine = null;
 			}
 			InviteScreen.SetActive(value: false);
 		}
@@ -1242,7 +1240,6 @@ namespace ZeroGravity
 			IsRunning = false;
 			OnDestroy();
 			NetworkController.DisconnectImmediate();
-			SteamAPI.Shutdown();
 			Application.Quit();
 		}
 
@@ -1671,7 +1668,7 @@ namespace ZeroGravity
 				gameServerUI.LastUpdateTime = DateTime.UtcNow;
 				int latency = -1;
 				ServerStatusRequest serverStatusRequest = new ServerStatusRequest();
-				serverStatusRequest.SteamId = SteamId;
+				serverStatusRequest.SteamId = ProviderManager.MainProvider.GetId();
 				serverStatusRequest.SendDetails = gameServerUI.Description == null;
 				ServerStatusRequest request = serverStatusRequest;
 				ServerStatusResponse serverStatusResponse = SendRequest(request, gameServerUI.IPAddress, gameServerUI.StatusPort, out latency) as ServerStatusResponse;
@@ -2030,14 +2027,7 @@ namespace ZeroGravity
 				CreateCharacterPanel.SetActive(value: true);
 				CurrentGenderText.text = CurrentGender.ToLocalizedString();
 				InventoryCharacterPreview.instance.ResetPosition();
-				if (ProviderManager.MainProvider is SteamProvider)
-				{
-					CharacterInputField.text = ProviderManager.MainProvider.GetUsername();
-				}
-				else
-				{
-					CharacterInputField.text = string.Empty;
-				}
+				CharacterInputField.text = ProviderManager.MainProvider.GetUsername();
 				CharacterInputField.Select();
 				yield return new WaitWhile(() => CreateCharacterPanel.activeInHierarchy);
 				string newCharacterName = CharacterInputField.text.Trim();
@@ -2066,14 +2056,14 @@ namespace ZeroGravity
 			CanvasManager.LoadingTips.text = ShuffledTexts.GetNextInLoop();
 			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.ConnectingToGame);
 			LastConnectedServerPass = serverPassword;
-			if (_userName == string.Empty && LastSignInRequest != null)
+			if (_lastSteamId == string.Empty && LastSignInRequest != null)
 			{
-				_userName = LastSignInRequest.SteamId;
+				_lastSteamId = LastSignInRequest.SteamId;
 			}
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 
 			// Connect to server.
-			NetworkController.ConnectToGame(server, (ProviderManager.MainProvider is not SteamProvider) ? _userName : SteamId, _newCharacterData, serverPassword);
+			NetworkController.ConnectToGame(server, (ProviderManager.MainProvider != null) ? ProviderManager.MainProvider.GetId() : _lastSteamId, _newCharacterData, serverPassword);
 
 			// Cleanup data.
 			_newCharacterData = null;
@@ -2131,7 +2121,7 @@ namespace ZeroGravity
 				networkStream.WriteTimeout = 1000;
 				DeleteCharacterRequest deleteCharacterRequest = new DeleteCharacterRequest();
 				deleteCharacterRequest.ServerId = _deleteChararacterFromServer.Id;
-				deleteCharacterRequest.SteamId = SteamId;
+				deleteCharacterRequest.SteamId = ProviderManager.MainProvider.GetId();
 				byte[] array = Serializer.Serialize(deleteCharacterRequest);
 				DateTime dateTime = DateTime.UtcNow.ToUniversalTime();
 				networkStream.Write(array, 0, array.Length);
@@ -2151,12 +2141,12 @@ namespace ZeroGravity
 		/// </summary>
 		public void Reconnect()
 		{
-			if (_userName == string.Empty && LastSignInRequest != null)
+			if (_lastSteamId == string.Empty && LastSignInRequest != null)
 			{
-				_userName = LastSignInRequest.SteamId;
+				_lastSteamId = LastSignInRequest.SteamId;
 			}
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
-			NetworkController.ConnectToGame(LastConnectedServer, (ProviderManager.MainProvider is not SteamProvider) ? _userName : SteamId, _newCharacterData, LastConnectedServerPass);
+			NetworkController.ConnectToGame(LastConnectedServer, (ProviderManager.MainProvider == null) ? _lastSteamId : ProviderManager.MainProvider.GetId(), _newCharacterData, LastConnectedServerPass);
 		}
 
 		private void CreateServerButton(ServerData serverData)
@@ -2301,12 +2291,9 @@ namespace ZeroGravity
 
 			// Make sure that no single player games are running.
 			KillAllSPProcesses();
-			if (ProviderManager.MainProvider is SteamProvider)
-			{
-				SinglePlayerMode = false;
-				_prevSortMode = -1;
-				Connect();
-			}
+			SinglePlayerMode = false;
+			_prevSortMode = -1;
+			Connect();
 		}
 
 		/// <summary>
@@ -2315,7 +2302,7 @@ namespace ZeroGravity
 		public void Connect()
 		{
 			string property = Properties.GetProperty("server_address", "188.166.144.65:6000");
-			if (SteamId.Length > 0)
+			if (ProviderManager.MainProvider.GetId().Length > 0)
 			{
 				CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.ConnectingToMain);
 				string[] array = property.Split(':');
@@ -2325,7 +2312,7 @@ namespace ZeroGravity
 				NetworkController.MainServerPort = _port;
 				Regex regex = new Regex("[^0-9.]");
 				SignInRequest signInRequest = new SignInRequest();
-				signInRequest.SteamId = SteamId;
+				signInRequest.SteamId = ProviderManager.MainProvider.GetId();
 				signInRequest.ClientVersion = regex.Replace(Application.version, string.Empty);
 				signInRequest.ClientHash = CombinedHash;
 				LastSignInRequest = signInRequest;
@@ -2606,12 +2593,12 @@ namespace ZeroGravity
 
 		public void ProcessInvitation(InviteMessage inviteMessage)
 		{
-			if (processInvitationCoroutine != null)
+			if (_processInvitationCoroutine != null)
 			{
-				StopCoroutine(processInvitationCoroutine);
+				StopCoroutine(_processInvitationCoroutine);
 			}
-			processInvitationCoroutine = ProcessInvitationCoroutine(inviteMessage);
-			StartCoroutine(processInvitationCoroutine);
+			_processInvitationCoroutine = ProcessInvitationCoroutine(inviteMessage);
+			StartCoroutine(_processInvitationCoroutine);
 		}
 
 		public IEnumerator ProcessInvitationCoroutine(InviteMessage inviteMessage)
@@ -2739,7 +2726,7 @@ namespace ZeroGravity
 				lastSPAutosaveTime = Time.time;
 				int latency = -1;
 				ServerStatusRequest serverStatusRequest = new ServerStatusRequest();
-				serverStatusRequest.SteamId = SteamId;
+				serverStatusRequest.SteamId = ProviderManager.MainProvider.GetId();
 				serverStatusRequest.SendDetails = true;
 				ServerStatusRequest request = serverStatusRequest;
 				if (SendRequest(request, "127.0.0.1", result2, out latency) is ServerStatusResponse serverStatusResponse && serverStatusResponse.Response == ResponseResult.Success)
@@ -2754,7 +2741,7 @@ namespace ZeroGravity
 							HeadType = 1
 						};
 					}
-					NetworkController.ConnectToGameSP(result, SteamId, serverStatusResponse.CharacterData);
+					NetworkController.ConnectToGameSP(result, ProviderManager.MainProvider.GetId(), serverStatusResponse.CharacterData);
 					this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 					yield break;
 				}
@@ -2859,7 +2846,7 @@ namespace ZeroGravity
 
 		public void LatencyTestMessage()
 		{
-			_lastLatencyMessateTime = Time.realtimeSinceStartup;
+			_lastLatencyMessageTime = Time.realtimeSinceStartup;
 			new Task(delegate
 			{
 				int latency;

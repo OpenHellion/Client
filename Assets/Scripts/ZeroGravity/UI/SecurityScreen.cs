@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using Steamworks;
+using OpenHellion.ProviderSystem;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -15,45 +14,6 @@ namespace ZeroGravity.UI
 {
 	public class SecurityScreen : MonoBehaviour
 	{
-		[CompilerGenerated]
-		private sealed class _003CUpdateSecurityList_003Ec__AnonStorey0
-		{
-			internal SecuritySystem.PlayerSecurityData crewman;
-
-			internal SecurityScreen _0024this;
-
-			internal void _003C_003Em__0()
-			{
-				_0024this.CrewMemberActions(crewman);
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CGetPlayersDelegate_003Ec__AnonStorey1
-		{
-			internal SecuritySystem.PlayerSecurityData pl;
-
-			internal SecurityScreen _0024this;
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CGetPlayersDelegate_003Ec__AnonStorey2
-		{
-			internal SecuritySystem.PlayerSecurityData plForDeleg;
-
-			internal _003CGetPlayersDelegate_003Ec__AnonStorey1 _003C_003Ef__ref_00241;
-
-			internal bool _003C_003Em__0(SecuritySystem.PlayerSecurityData m)
-			{
-				return m.SteamID == _003C_003Ef__ref_00241.pl.SteamID;
-			}
-
-			internal void _003C_003Em__1()
-			{
-				_003C_003Ef__ref_00241._0024this.AddToCrew(plForDeleg);
-			}
-		}
-
 		public SecuritySystem SecuritySystem;
 
 		public GameObject FreeTerminal;
@@ -127,40 +87,37 @@ namespace ZeroGravity.UI
 
 		public Texture DefaultEmblemTexture;
 
-		[CompilerGenerated]
-		private static Predicate<SecuritySystem.PlayerSecurityData> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Predicate<SecuritySystem.PlayerSecurityData> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Predicate<SecuritySystem.PlayerSecurityData> _003C_003Ef__am_0024cache2;
-
-		[CompilerGenerated]
-		private static Predicate<SecuritySystem.PlayerSecurityData> _003C_003Ef__am_0024cache3;
-
-		[CompilerGenerated]
-		private static Predicate<SecuritySystem.PlayerSecurityData> _003C_003Ef__am_0024cache4;
-
-		[CompilerGenerated]
-		private static Predicate<SecuritySystem.PlayerSecurityData> _003C_003Ef__am_0024cache5;
-
-		[CompilerGenerated]
-		private static Predicate<SecuritySystem.PlayerSecurityData> _003C_003Ef__am_0024cache6;
-
-		[CompilerGenerated]
-		private static Predicate<SecuritySystem.PlayerSecurityData> _003C_003Ef__am_0024cache7;
-
 		private void Start()
 		{
 			UpdateUI();
-			ClaimButton.onClick.AddListener(_003CStart_003Em__0);
-			ResignButton.onClick.AddListener(_003CStart_003Em__1);
-			ChangeNameButton.onClick.AddListener(_003CStart_003Em__2);
-			ChangeEmblemButton.onClick.AddListener(_003CStart_003Em__3);
-			InviteButton.onClick.AddListener(_003CStart_003Em__4);
-			ShipCrewButton.onClick.AddListener(_003CStart_003Em__5);
-			SelfDestructButton.onClick.AddListener(_003CStart_003Em__6);
+			ClaimButton.onClick.AddListener(delegate
+			{
+				ClaimSecurityTerminal();
+			});
+			ResignButton.onClick.AddListener(delegate
+			{
+				Resign();
+			});
+			ChangeNameButton.onClick.AddListener(delegate
+			{
+				ChangeShipName();
+			});
+			ChangeEmblemButton.onClick.AddListener(delegate
+			{
+				ShowEmblemPanel(status: true);
+			});
+			InviteButton.onClick.AddListener(delegate
+			{
+				GetPlayerList();
+			});
+			ShipCrewButton.onClick.AddListener(delegate
+			{
+				ShowShipCrew(status: true);
+			});
+			SelfDestructButton.onClick.AddListener(delegate
+			{
+				SelfDestructAction();
+			});
 		}
 
 		private void OnDestroy()
@@ -190,12 +147,7 @@ namespace ZeroGravity.UI
 
 		public void SetSecurityStatus()
 		{
-			List<SecuritySystem.PlayerSecurityData> authorizedPlayers = SecuritySystem.AuthorizedPlayers;
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CSetSecurityStatus_003Em__7;
-			}
-			SecuritySystem.PlayerSecurityData playerSecurityData = authorizedPlayers.Find(_003C_003Ef__am_0024cache0);
+			SecuritySystem.PlayerSecurityData playerSecurityData = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.Rank == AuthorizedPersonRank.CommandingOfficer);
 			FreeTerminal.SetActive(playerSecurityData == null);
 			RegistredTerminal.SetActive(playerSecurityData != null);
 			if (playerSecurityData == null)
@@ -206,7 +158,7 @@ namespace ZeroGravity.UI
 			else
 			{
 				PlayerName.text = playerSecurityData.Name;
-				PlayerImage.texture = Player.GetAvatar(playerSecurityData.SteamID);
+				PlayerImage.texture = Player.GetAvatar(playerSecurityData.PlayerID);
 				float? selfDestructTimer = SecuritySystem.ParentShip.SelfDestructTimer;
 				if (!selfDestructTimer.HasValue)
 				{
@@ -218,11 +170,11 @@ namespace ZeroGravity.UI
 				}
 				else
 				{
-					ResignButton.gameObject.SetActive(false);
-					InviteButton.gameObject.SetActive(false);
-					ChangeNameButton.gameObject.SetActive(false);
-					ChangeEmblemButton.gameObject.SetActive(false);
-					ShipCrewButton.gameObject.SetActive(false);
+					ResignButton.gameObject.SetActive(value: false);
+					InviteButton.gameObject.SetActive(value: false);
+					ChangeNameButton.gameObject.SetActive(value: false);
+					ChangeEmblemButton.gameObject.SetActive(value: false);
+					ShipCrewButton.gameObject.SetActive(value: false);
 				}
 				Text selfDestructState = SelfDestructState;
 				float? selfDestructTimer2 = SecuritySystem.ParentShip.SelfDestructTimer;
@@ -262,7 +214,7 @@ namespace ZeroGravity.UI
 
 		private void ChangeShipName()
 		{
-			EnterCustomNamePopUp.SetActive(true);
+			EnterCustomNamePopUp.SetActive(value: true);
 			CustomShipNameInputField.text = CustomShipName.text;
 			CustomShipNameInputField.Select();
 			Client.Instance.CanvasManager.IsInputFieldIsActive = true;
@@ -271,13 +223,13 @@ namespace ZeroGravity.UI
 		public void CancelChangeShipName()
 		{
 			Client.Instance.CanvasManager.IsInputFieldIsActive = false;
-			EnterCustomNamePopUp.SetActive(false);
+			EnterCustomNamePopUp.SetActive(value: false);
 		}
 
 		public void ChangeEmblem(string id)
 		{
 			SecuritySystem.ParentShip.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, null, null, id);
-			ShowEmblemPanel(false);
+			ShowEmblemPanel(status: false);
 		}
 
 		public void ChangeCustomShipName()
@@ -294,7 +246,7 @@ namespace ZeroGravity.UI
 			}
 			SetShipName();
 			Client.Instance.CanvasManager.IsInputFieldIsActive = false;
-			EnterCustomNamePopUp.SetActive(false);
+			EnterCustomNamePopUp.SetActive(value: false);
 		}
 
 		private void updateShipNameTags()
@@ -309,7 +261,7 @@ namespace ZeroGravity.UI
 		private void GetPlayerList()
 		{
 			PurgeList();
-			SecuritySystem.GetPlayersForAuthorization(true, true, GetPlayersDelegate);
+			SecuritySystem.GetPlayersForAuthorization(getFriends: true, getPlayerFromServer: true, GetPlayersDelegate);
 		}
 
 		public void UpdateSecurityList()
@@ -319,49 +271,36 @@ namespace ZeroGravity.UI
 				UnityEngine.Object.Destroy(crewMembers.gameObject);
 			}
 			crewMembersList.Clear();
-			List<SecuritySystem.PlayerSecurityData> authorizedPlayers = SecuritySystem.AuthorizedPlayers;
-			if (_003C_003Ef__am_0024cache1 == null)
+			SecuritySystem.PlayerSecurityData playerSecurityData = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.GUID == MyPlayer.Instance.GUID);
+			foreach (SecuritySystem.PlayerSecurityData crewman in SecuritySystem.AuthorizedPlayers.FindAll((SecuritySystem.PlayerSecurityData m) => m.Rank == AuthorizedPersonRank.Crewman))
 			{
-				_003C_003Ef__am_0024cache1 = _003CUpdateSecurityList_003Em__8;
-			}
-			SecuritySystem.PlayerSecurityData playerSecurityData = authorizedPlayers.Find(_003C_003Ef__am_0024cache1);
-			List<SecuritySystem.PlayerSecurityData> authorizedPlayers2 = SecuritySystem.AuthorizedPlayers;
-			if (_003C_003Ef__am_0024cache2 == null)
-			{
-				_003C_003Ef__am_0024cache2 = _003CUpdateSecurityList_003Em__9;
-			}
-			using (List<SecuritySystem.PlayerSecurityData>.Enumerator enumerator2 = authorizedPlayers2.FindAll(_003C_003Ef__am_0024cache2).GetEnumerator())
-			{
-				while (enumerator2.MoveNext())
+				GameObject gameObject = UnityEngine.Object.Instantiate(CrewMemberPref, CrewMemberPref.transform.parent);
+				gameObject.SetActive(value: true);
+				CrewMembersUI component = gameObject.GetComponent<CrewMembersUI>();
+				component.Player = crewman;
+				crewMembersList.Add(component);
+				component.PlayerNameText.text = crewman.Name;
+				component.Avatar.texture = Player.GetAvatar(crewman.PlayerID);
+				if (playerSecurityData != null && playerSecurityData.Rank == AuthorizedPersonRank.CommandingOfficer)
 				{
-					_003CUpdateSecurityList_003Ec__AnonStorey0 _003CUpdateSecurityList_003Ec__AnonStorey = new _003CUpdateSecurityList_003Ec__AnonStorey0();
-					_003CUpdateSecurityList_003Ec__AnonStorey.crewman = enumerator2.Current;
-					_003CUpdateSecurityList_003Ec__AnonStorey._0024this = this;
-					GameObject gameObject = UnityEngine.Object.Instantiate(CrewMemberPref, CrewMemberPref.transform.parent);
-					gameObject.SetActive(true);
-					CrewMembersUI component = gameObject.GetComponent<CrewMembersUI>();
-					component.Player = _003CUpdateSecurityList_003Ec__AnonStorey.crewman;
-					crewMembersList.Add(component);
-					component.PlayerNameText.text = _003CUpdateSecurityList_003Ec__AnonStorey.crewman.Name;
-					component.Avatar.texture = Player.GetAvatar(_003CUpdateSecurityList_003Ec__AnonStorey.crewman.SteamID);
-					if (playerSecurityData != null && playerSecurityData.Rank == AuthorizedPersonRank.CommandingOfficer)
+					component.GetComponent<Button>().interactable = true;
+					component.GetComponent<Button>().onClick.AddListener(delegate
 					{
-						component.GetComponent<Button>().interactable = true;
-						component.GetComponent<Button>().onClick.AddListener(_003CUpdateSecurityList_003Ec__AnonStorey._003C_003Em__0);
-					}
-					else
-					{
-						component.GetComponent<Button>().interactable = false;
-						component.GetComponent<Button>().onClick.RemoveAllListeners();
-					}
+						CrewMemberActions(crewman);
+					});
+				}
+				else
+				{
+					component.GetComponent<Button>().interactable = false;
+					component.GetComponent<Button>().onClick.RemoveAllListeners();
 				}
 			}
 		}
 
 		public void CrewMemberActions(SecuritySystem.PlayerSecurityData crewman)
 		{
-			CrewMemberPanel.SetActive(true);
-			CrewMemberPanel.GetComponentInChildren<CrewMembersUI>().Avatar.texture = Player.GetAvatar(crewman.SteamID);
+			CrewMemberPanel.SetActive(value: true);
+			CrewMemberPanel.GetComponentInChildren<CrewMembersUI>().Avatar.texture = Player.GetAvatar(crewman.PlayerID);
 			CrewMemberPanel.GetComponentInChildren<CrewMembersUI>().PlayerNameText.text = crewman.Name;
 			currentCrewman = crewman;
 		}
@@ -369,18 +308,18 @@ namespace ZeroGravity.UI
 		public void CloseCrewMemberPanel()
 		{
 			currentCrewman = null;
-			CrewMemberPanel.Activate(false);
-			PromotePlayerBox.Activate(false);
+			CrewMemberPanel.Activate(value: false);
+			PromotePlayerBox.Activate(value: false);
 		}
 
 		public void PromotePlayer()
 		{
-			PromotePlayerBox.SetActive(true);
+			PromotePlayerBox.SetActive(value: true);
 		}
 
 		public void CancelPromote()
 		{
-			PromotePlayerBox.SetActive(false);
+			PromotePlayerBox.SetActive(value: false);
 		}
 
 		public void ConfirmPlayerPromotion()
@@ -388,7 +327,7 @@ namespace ZeroGravity.UI
 			Client.Instance.NetworkController.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = SecuritySystem.ParentShip.GUID,
-				AddPlayerSteamID = currentCrewman.SteamID,
+				AddPlayerSteamID = currentCrewman.PlayerID,
 				AddPlayerRank = AuthorizedPersonRank.CommandingOfficer,
 				AddPlayerName = currentCrewman.Name
 			});
@@ -403,19 +342,13 @@ namespace ZeroGravity.UI
 
 		public void ClaimSecurityTerminal()
 		{
-			CSteamID steamID = SteamUser.GetSteamID();
-			List<SecuritySystem.PlayerSecurityData> authorizedPlayers = SecuritySystem.AuthorizedPlayers;
-			if (_003C_003Ef__am_0024cache3 == null)
-			{
-				_003C_003Ef__am_0024cache3 = _003CClaimSecurityTerminal_003Em__A;
-			}
-			SecuritySystem.PlayerSecurityData playerSecurityData = authorizedPlayers.Find(_003C_003Ef__am_0024cache3);
-			if (playerSecurityData == null || playerSecurityData.SteamID == steamID.m_SteamID.ToString())
+			SecuritySystem.PlayerSecurityData playerSecurityData = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.Rank == AuthorizedPersonRank.CommandingOfficer);
+			if (playerSecurityData == null || playerSecurityData.PlayerID == ProviderManager.MainProvider.GetId())
 			{
 				Client.Instance.NetworkController.SendToGameServer(new VesselSecurityRequest
 				{
 					VesselGUID = SecuritySystem.ParentShip.GUID,
-					AddPlayerSteamID = steamID.m_SteamID.ToString(),
+					AddPlayerSteamID = ProviderManager.MainProvider.GetId(),
 					AddPlayerRank = AuthorizedPersonRank.CommandingOfficer,
 					AddPlayerName = MyPlayer.Instance.PlayerName
 				});
@@ -425,96 +358,69 @@ namespace ZeroGravity.UI
 
 		public void Resign()
 		{
-			List<SecuritySystem.PlayerSecurityData> authorizedPlayers = SecuritySystem.AuthorizedPlayers;
-			if (_003C_003Ef__am_0024cache4 == null)
+			SecuritySystem.PlayerSecurityData playerSecurityData = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.GUID == MyPlayer.Instance.GUID);
+			if (playerSecurityData.Rank == AuthorizedPersonRank.CommandingOfficer && SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.Rank == AuthorizedPersonRank.Crewman) != null)
 			{
-				_003C_003Ef__am_0024cache4 = _003CResign_003Em__B;
+				ResignAlertBox.SetActive(value: true);
 			}
-			SecuritySystem.PlayerSecurityData playerSecurityData = authorizedPlayers.Find(_003C_003Ef__am_0024cache4);
-			if (playerSecurityData.Rank == AuthorizedPersonRank.CommandingOfficer)
+			else
 			{
-				List<SecuritySystem.PlayerSecurityData> authorizedPlayers2 = SecuritySystem.AuthorizedPlayers;
-				if (_003C_003Ef__am_0024cache5 == null)
-				{
-					_003C_003Ef__am_0024cache5 = _003CResign_003Em__C;
-				}
-				if (authorizedPlayers2.Find(_003C_003Ef__am_0024cache5) != null)
-				{
-					ResignAlertBox.SetActive(true);
-					return;
-				}
+				SecuritySystem.RemovePerson(playerSecurityData);
 			}
-			SecuritySystem.RemovePerson(playerSecurityData);
 		}
 
 		public void CancelResign()
 		{
-			ResignAlertBox.SetActive(false);
+			ResignAlertBox.SetActive(value: false);
 		}
 
 		public void ConfirmCommanderResign()
 		{
-			List<SecuritySystem.PlayerSecurityData> authorizedPlayers = SecuritySystem.AuthorizedPlayers;
-			if (_003C_003Ef__am_0024cache6 == null)
-			{
-				_003C_003Ef__am_0024cache6 = _003CConfirmCommanderResign_003Em__D;
-			}
-			SecuritySystem.PlayerSecurityData player = authorizedPlayers.Find(_003C_003Ef__am_0024cache6);
+			SecuritySystem.PlayerSecurityData player = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.GUID == MyPlayer.Instance.GUID);
 			SecuritySystem.RemovePerson(player);
-			List<SecuritySystem.PlayerSecurityData> authorizedPlayers2 = SecuritySystem.AuthorizedPlayers;
-			if (_003C_003Ef__am_0024cache7 == null)
-			{
-				_003C_003Ef__am_0024cache7 = _003CConfirmCommanderResign_003Em__E;
-			}
-			SecuritySystem.PlayerSecurityData playerSecurityData = authorizedPlayers2.Find(_003C_003Ef__am_0024cache7);
+			SecuritySystem.PlayerSecurityData playerSecurityData = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.Rank == AuthorizedPersonRank.Crewman);
 			Client.Instance.NetworkController.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = SecuritySystem.ParentShip.GUID,
-				AddPlayerSteamID = playerSecurityData.SteamID,
+				AddPlayerSteamID = playerSecurityData.PlayerID,
 				AddPlayerRank = AuthorizedPersonRank.CommandingOfficer,
 				AddPlayerName = playerSecurityData.Name
 			});
-			ResignAlertBox.SetActive(false);
+			ResignAlertBox.SetActive(value: false);
 			UpdateUI();
 		}
 
 		private void GetPlayersDelegate(List<SecuritySystem.PlayerSecurityData> availablePlayers)
 		{
-			InviteList.SetActive(true);
-			InviteList.GetComponentInChildren<Scrollbar>(true).value = 1f;
-			using (List<SecuritySystem.PlayerSecurityData>.Enumerator enumerator = availablePlayers.GetEnumerator())
+			InviteList.SetActive(value: true);
+			InviteList.GetComponentInChildren<Scrollbar>(includeInactive: true).value = 1f;
+			foreach (SecuritySystem.PlayerSecurityData pl in availablePlayers)
 			{
-				while (enumerator.MoveNext())
+				if (AvailablePlayersForInvite.ContainsKey(pl.PlayerID) || pl.Rank != 0)
 				{
-					_003CGetPlayersDelegate_003Ec__AnonStorey1 _003CGetPlayersDelegate_003Ec__AnonStorey = new _003CGetPlayersDelegate_003Ec__AnonStorey1();
-					_003CGetPlayersDelegate_003Ec__AnonStorey.pl = enumerator.Current;
-					_003CGetPlayersDelegate_003Ec__AnonStorey._0024this = this;
-					if (AvailablePlayersForInvite.ContainsKey(_003CGetPlayersDelegate_003Ec__AnonStorey.pl.SteamID) || _003CGetPlayersDelegate_003Ec__AnonStorey.pl.Rank != 0)
+					continue;
+				}
+				if (SecuritySystem.AuthorizedPlayers.FirstOrDefault((SecuritySystem.PlayerSecurityData m) => m.PlayerID == pl.PlayerID) == null)
+				{
+					GameObject gameObject = UnityEngine.Object.Instantiate(PlayerToInvitePref, PlayerToInvitePref.transform.parent);
+					gameObject.SetActive(value: true);
+					InvitePlayerToPod component = gameObject.GetComponent<InvitePlayerToPod>();
+					component.PlayerName.text = pl.Name;
+					if (pl.IsFriend)
 					{
-						continue;
+						component.IsFriend.SetActive(value: false);
+						component.Avatar.texture = Player.GetAvatar(pl.PlayerID);
 					}
-					_003CGetPlayersDelegate_003Ec__AnonStorey2 _003CGetPlayersDelegate_003Ec__AnonStorey2 = new _003CGetPlayersDelegate_003Ec__AnonStorey2();
-					_003CGetPlayersDelegate_003Ec__AnonStorey2._003C_003Ef__ref_00241 = _003CGetPlayersDelegate_003Ec__AnonStorey;
-					if (SecuritySystem.AuthorizedPlayers.FirstOrDefault(_003CGetPlayersDelegate_003Ec__AnonStorey2._003C_003Em__0) == null)
+					else
 					{
-						GameObject gameObject = UnityEngine.Object.Instantiate(PlayerToInvitePref, PlayerToInvitePref.transform.parent);
-						gameObject.SetActive(true);
-						InvitePlayerToPod component = gameObject.GetComponent<InvitePlayerToPod>();
-						component.PlayerName.text = _003CGetPlayersDelegate_003Ec__AnonStorey.pl.Name;
-						if (_003CGetPlayersDelegate_003Ec__AnonStorey.pl.IsSteamFriend)
-						{
-							component.IsSteamFriend.SetActive(false);
-							component.Avatar.texture = Player.GetAvatar(_003CGetPlayersDelegate_003Ec__AnonStorey.pl.SteamID);
-						}
-						else
-						{
-							component.IsSteamFriend.SetActive(true);
-							component.Avatar.gameObject.SetActive(false);
-						}
-						_003CGetPlayersDelegate_003Ec__AnonStorey2.plForDeleg = _003CGetPlayersDelegate_003Ec__AnonStorey.pl;
-						component.InvitePlayerButton.onClick.AddListener(_003CGetPlayersDelegate_003Ec__AnonStorey2._003C_003Em__1);
-						AvailablePlayersForInvite.Add(_003CGetPlayersDelegate_003Ec__AnonStorey.pl.SteamID, component);
+						component.IsFriend.SetActive(value: true);
+						component.Avatar.gameObject.SetActive(value: false);
 					}
+					component.InvitePlayerButton.onClick.AddListener(delegate
+					{
+						AddToCrew(pl);
+					});
+					AvailablePlayersForInvite.Add(pl.PlayerID, component);
 				}
 			}
 		}
@@ -522,7 +428,7 @@ namespace ZeroGravity.UI
 		private void AddToCrew(SecuritySystem.PlayerSecurityData player)
 		{
 			SecuritySystem.AddPerson(player, AuthorizedPersonRank.Crewman);
-			InviteList.SetActive(false);
+			InviteList.SetActive(value: false);
 			UpdateSecurityList();
 		}
 
@@ -540,7 +446,7 @@ namespace ZeroGravity.UI
 			}
 			else
 			{
-				SelfDestructBox.SetActive(true);
+				SelfDestructBox.SetActive(value: true);
 			}
 		}
 
@@ -550,13 +456,13 @@ namespace ZeroGravity.UI
 			if (selfDestructTimer.HasValue)
 			{
 				SecuritySystem.ParentShip.CancelSelfDestruct();
-				SelfDestructWarning.SetActive(false);
+				SelfDestructWarning.SetActive(value: false);
 			}
 			else
 			{
 				SecuritySystem.ParentShip.ActivateSelfDestruct(300f);
-				SelfDestructWarning.SetActive(true);
-				SelfDestructBox.SetActive(false);
+				SelfDestructWarning.SetActive(value: true);
+				SelfDestructBox.SetActive(value: false);
 			}
 			RefreshSelfDestructTimer();
 			Text selfDestructState = SelfDestructState;
@@ -571,12 +477,12 @@ namespace ZeroGravity.UI
 			if (selfDestructTimer.HasValue)
 			{
 				TimeSpan timeSpan = TimeSpan.FromSeconds(SecuritySystem.ParentShip.SelfDestructTimer.Value);
-				string text = string.Format("{0:n0} : {1:n0} : {2:n0}", timeSpan.TotalHours, timeSpan.Minutes, timeSpan.Seconds);
+				string text = $"{timeSpan.TotalHours:n0} : {timeSpan.Minutes:n0} : {timeSpan.Seconds:n0}";
 				SelfDestructTimer.text = text;
 			}
 			else
 			{
-				SelfDestructWarning.SetActive(false);
+				SelfDestructWarning.SetActive(value: false);
 				SelfDestructTimer.text = string.Empty;
 			}
 		}
@@ -594,23 +500,23 @@ namespace ZeroGravity.UI
 		{
 			if (toggle)
 			{
-				Client.Instance.CanvasManager.QuickTipHolder.Activate(false);
+				Client.Instance.CanvasManager.QuickTipHolder.Activate(value: false);
 				UpdateUI();
-				SelfDestructBox.Activate(false);
-				InviteList.Activate(false);
-				ShowShipCrew(false);
-				EnterCustomNamePopUp.Activate(false);
-				ResignAlertBox.Activate(false);
-				ShowEmblemPanel(false);
+				SelfDestructBox.Activate(value: false);
+				InviteList.Activate(value: false);
+				ShowShipCrew(status: false);
+				EnterCustomNamePopUp.Activate(value: false);
+				ResignAlertBox.Activate(value: false);
+				ShowEmblemPanel(status: false);
 				CloseCrewMemberPanel();
 				RefreshSelfDestructTimer();
 				Client.Instance.CanvasManager.IsInputFieldIsActive = false;
 				UpdateEmblems();
-				base.gameObject.Activate(true);
+				base.gameObject.Activate(value: true);
 			}
 			else
 			{
-				base.gameObject.Activate(false);
+				base.gameObject.Activate(value: false);
 			}
 		}
 
@@ -622,12 +528,12 @@ namespace ZeroGravity.UI
 		public void ShowEmblemPanel(bool status)
 		{
 			ChooseEmblemPanel.SetActive(status);
-			ChooseEmblemPanel.GetComponentInChildren<Scrollbar>(true).value = 1f;
+			ChooseEmblemPanel.GetComponentInChildren<Scrollbar>(includeInactive: true).value = 1f;
 		}
 
 		public void UpdateEmblems()
 		{
-			EmblemObjectUI[] componentsInChildren = EmblemParent.GetComponentsInChildren<EmblemObjectUI>(true);
+			EmblemObjectUI[] componentsInChildren = EmblemParent.GetComponentsInChildren<EmblemObjectUI>(includeInactive: true);
 			foreach (EmblemObjectUI emblemObjectUI in componentsInChildren)
 			{
 				UnityEngine.Object.DestroyImmediate(emblemObjectUI.gameObject);
@@ -655,107 +561,17 @@ namespace ZeroGravity.UI
 
 		public void OnInteract()
 		{
-			ToggleCanvas(true);
+			ToggleCanvas(toggle: true);
 		}
 
 		public void OnDetach()
 		{
-			ToggleCanvas(false);
+			ToggleCanvas(toggle: false);
 		}
 
 		public void ExitButton()
 		{
 			MyPlayer.Instance.LockedToTrigger.CancelInteract(MyPlayer.Instance);
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__0()
-		{
-			ClaimSecurityTerminal();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__1()
-		{
-			Resign();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__2()
-		{
-			ChangeShipName();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__3()
-		{
-			ShowEmblemPanel(true);
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__4()
-		{
-			GetPlayerList();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__5()
-		{
-			ShowShipCrew(true);
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__6()
-		{
-			SelfDestructAction();
-		}
-
-		[CompilerGenerated]
-		private static bool _003CSetSecurityStatus_003Em__7(SecuritySystem.PlayerSecurityData m)
-		{
-			return m.Rank == AuthorizedPersonRank.CommandingOfficer;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CUpdateSecurityList_003Em__8(SecuritySystem.PlayerSecurityData m)
-		{
-			return m.GUID == MyPlayer.Instance.GUID;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CUpdateSecurityList_003Em__9(SecuritySystem.PlayerSecurityData m)
-		{
-			return m.Rank == AuthorizedPersonRank.Crewman;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CClaimSecurityTerminal_003Em__A(SecuritySystem.PlayerSecurityData m)
-		{
-			return m.Rank == AuthorizedPersonRank.CommandingOfficer;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CResign_003Em__B(SecuritySystem.PlayerSecurityData m)
-		{
-			return m.GUID == MyPlayer.Instance.GUID;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CResign_003Em__C(SecuritySystem.PlayerSecurityData m)
-		{
-			return m.Rank == AuthorizedPersonRank.Crewman;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CConfirmCommanderResign_003Em__D(SecuritySystem.PlayerSecurityData m)
-		{
-			return m.GUID == MyPlayer.Instance.GUID;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CConfirmCommanderResign_003Em__E(SecuritySystem.PlayerSecurityData m)
-		{
-			return m.Rank == AuthorizedPersonRank.Crewman;
 		}
 	}
 }

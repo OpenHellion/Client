@@ -2246,16 +2246,15 @@ namespace ZeroGravity.Objects
 		/// <summary>
 		/// 	Spawns a player owned by the local machine into the world.
 		/// </summary>
-		public static MyPlayer SpawnMyPlayer(LogInResponse l)
+		public static MyPlayer SpawnMyPlayer(LogInResponse res)
 		{
-			long iD = l.ID;
-			Client.Instance.NetworkController.SenderID = iD;
+			Client.Instance.NetworkController.SenderID = res.ID;
 			GameObject characterObject = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/FirstPersonCharacter")) as GameObject;
 			GenderSettings genderSettings = characterObject.GetComponent<GenderSettings>();
 			GenderSettings.GenderItem genderItem = null;
 			foreach (GenderSettings.GenderItem setting in genderSettings.settings)
 			{
-				if (setting.Gender != l.Data.Gender)
+				if (setting.Gender != res.Data.Gender)
 				{
 					GameObject.Destroy(setting.Outfit.gameObject);
 				}
@@ -2266,14 +2265,14 @@ namespace ZeroGravity.Objects
 			}
 			if (genderItem == null)
 			{
-				Dbg.Error("AAAAAAAAAAAAAA");
+				Dbg.Error("Player tried to spawn with gender.");
 				return null;
 			}
-			InventoryCharacterPreview.instance.ChangeGender(l.Data.Gender);
+			InventoryCharacterPreview.instance.ChangeGender(res.Data.Gender);
 			MyPlayer myPlayer = characterObject.GetComponent<MyPlayer>();
 			characterObject.name = "MyCharacter";
 
-			GameObject headObject = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/Heads/" + l.Data.Gender.ToString() + "/Head" + l.Data.HeadType)) as GameObject;
+			GameObject headObject = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/Heads/" + res.Data.Gender.ToString() + "/Head" + res.Data.HeadType)) as GameObject;
 			headObject.transform.parent = characterObject.transform;
 			headObject.transform.localPosition = new Vector3(0f, -1.34f, 0f);
 			headObject.transform.localRotation = Quaternion.identity;
@@ -2296,8 +2295,8 @@ namespace ZeroGravity.Objects
 			myPlayer.UpdateReferenceHead();
 			myPlayer.FpsController.CameraController.spineTransform = myPlayer.FpsController.animatorHelper.GetBone(AnimatorHelper.HumanBones.Spine2);
 			myPlayer.RefreshOutfitData();
-			myPlayer.GUID = iD;
-			myPlayer.PlayerName = l.Data.Name;
+			myPlayer.GUID = res.ID;
+			myPlayer.PlayerName = res.Data.Name;
 			myPlayer.SunCameraRoot = Client.Instance.SunCameraRootTransform;
 			myPlayer.SunCamera = Client.Instance.SunCameraTransform;
 			myPlayer.PlanetsCameraRoot = Client.Instance.PlanetsCameraRootTransform;

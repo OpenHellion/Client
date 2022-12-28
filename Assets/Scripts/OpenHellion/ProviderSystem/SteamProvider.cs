@@ -5,6 +5,7 @@ using System;
 using ZeroGravity;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace OpenHellion.ProviderSystem
 {
@@ -18,7 +19,7 @@ namespace OpenHellion.ProviderSystem
 
 		protected SteamAPIWarningMessageHook_t _SteamAPIWarningMessageHook;
 
-		public bool Initialise()
+		bool IProvider.Initialise()
 		{
 			if (!Packsize.Test())
 			{
@@ -34,9 +35,6 @@ namespace OpenHellion.ProviderSystem
 			{
 				// If Steam is not running or the game wasn't started through Steam, SteamAPI_RestartAppIfNecessary starts the
 				// Steam client and also launches this game again if the User owns it. This can act as a rudimentary form of DRM.
-
-				// Once you get a Steam AppID assigned by Valve, you need to replace AppId_t.Invalid with it and
-				// remove steam_appid.txt from the game depot. eg: "(AppId_t)480" or "new AppId_t(480)".
 				// See the Valve documentation for more information: https://partner.steamgames.com/doc/sdk/api#initialization_and_shutdown
 				if (SteamAPI.RestartAppIfNecessary((AppId_t)588210u))
 				{
@@ -63,7 +61,7 @@ namespace OpenHellion.ProviderSystem
 		}
 
 		// This should only ever get called on first load and after an Assembly reload, You should never Disable the Steamworks Manager yourself.
-		public void Enable()
+		void IProvider.Enable()
 		{
 			if (_SteamAPIWarningMessageHook == null)
 			{
@@ -82,12 +80,12 @@ namespace OpenHellion.ProviderSystem
 		// OnApplicationQuit gets called too early to shutdown the SteamAPI.
 		// Because the SteamManager should be persistent and never disabled or destroyed we can shutdown the SteamAPI here.
 		// Thus it is not recommended to perform any Steamworks work in other OnDestroy functions as the order of execution can not be garenteed upon Shutdown. Prefer OnDisable().
-		public void Destroy()
+		void IProvider.Destroy()
 		{
 			SteamAPI.Shutdown();
 		}
 
-		public void Update()
+		void IProvider.Update()
 		{
 			// Run Steam client callbacks
 			SteamAPI.RunCallbacks();
@@ -187,6 +185,61 @@ namespace OpenHellion.ProviderSystem
 		public string GetUsername()
 		{
 			return SteamFriends.GetFriendPersonaName(SteamUser.GetSteamID());
+		}
+
+		// TODO: Custom ID generation.
+		public string GetId()
+		{
+			return SteamUser.GetSteamID().ToString();
+		}
+
+		// TODO: Custom ID generation.
+		public IProvider.Friend[] GetFriends()
+		{
+			List<IProvider.Friend> friends = new();
+
+			// Get all friends.
+			for (int i = 0; i < SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate); i++)
+			{
+				// Get friend's id.
+				CSteamID id = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
+				EPersonaState friendPersonaState = SteamFriends.GetFriendPersonaState(id);
+
+				// Add friend to list of friends.
+				friends.Add(new IProvider.Friend
+				{
+					Id = id.ToString(),
+					Name = SteamFriends.GetFriendPersonaName(id),
+					Status = friendPersonaState == EPersonaState.k_EPersonaStateOnline || friendPersonaState == EPersonaState.k_EPersonaStateLookingToPlay ? IProvider.FriendStatus.ONLINE : IProvider.FriendStatus.OFFLINE
+				});
+			}
+
+			return friends.ToArray();
+		}
+
+		public Texture2D GetAvatar(string id)
+		{
+			int largeFriendAvatar = SteamFriends.GetLargeFriendAvatar(new CSteamID(ulong.Parse(id)));
+			uint pnWidth;
+			uint pnHeight;
+			if (SteamUtils.GetImageSize(largeFriendAvatar, out pnWidth, out pnHeight) && pnWidth != 0 && pnHeight != 0)
+			{
+				byte[] array = new byte[pnWidth * pnHeight * 4];
+				Texture2D texture2D = new Texture2D((int)pnWidth, (int)pnHeight, TextureFormat.RGBA32, false, false);
+				if (SteamUtils.GetImageRGBA(largeFriendAvatar, array, (int)(pnWidth * pnHeight * 4)))
+				{
+					texture2D.LoadRawTextureData(array);
+					texture2D.Apply();
+				}
+				return texture2D;
+			}
+
+			return Resources.Load<Texture2D>("UI/default_avatar");
+		}
+
+		public void InviteUser(string id, string secret)
+		{
+			SteamFriends.InviteUserToGame(new CSteamID(UInt64.Parse(id)), secret);
 		}
 
 		[AOT.MonoPInvokeCallback(typeof(SteamAPIWarningMessageHook_t))]

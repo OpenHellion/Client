@@ -17,32 +17,28 @@ namespace ZeroGravity.Network
 
 		public static CharacterData CharacterData;
 
-		public MainServerThreads mainThreads;
-
 		public EventSystem EventSystem;
-
-		private bool mainSocketReady;
 
 		public long SenderID;
 
-		public ConnectionThread gameConnectionThreads;
+		private MainServerThreads _mainServerThread;
 
-		private HashSet<long> spawnObjectsList = new HashSet<long>();
+		private ConnectionThread _connectionThread;
 
-		private HashSet<long> subscribeToObjectsList = new HashSet<long>();
+		private HashSet<long> _spawnObjectsList = new HashSet<long>();
 
-		private HashSet<long> unsubscribeFromObjectsList = new HashSet<long>();
+		private HashSet<long> _subscribeToObjectsList = new HashSet<long>();
+
+		private HashSet<long> _unsubscribeFromObjectsList = new HashSet<long>();
 
 		public static string NameOfCurrentServer = string.Empty;
 
 		private bool GetP2PPacketsThreadActive;
 
-		private SteamNetworkingMessagesSessionRequest_t _sessionRequest;
-
 		private void Awake()
 		{
 			EventSystem = new EventSystem();
-			mainThreads = new MainServerThreads();
+			_mainServerThread = new MainServerThreads();
 
 		}
 
@@ -50,26 +46,26 @@ namespace ZeroGravity.Network
 		{
 			EventSystem.InvokeQueuedData();
 
-			if (spawnObjectsList.Count > 0)
+			if (_spawnObjectsList.Count > 0)
 			{
 				SpawnObjectsRequest spawnObjectsRequest = new SpawnObjectsRequest();
-				spawnObjectsRequest.GUIDs = new List<long>(spawnObjectsList);
+				spawnObjectsRequest.GUIDs = new List<long>(_spawnObjectsList);
 				SendToGameServer(spawnObjectsRequest);
-				spawnObjectsList.Clear();
+				_spawnObjectsList.Clear();
 			}
-			if (subscribeToObjectsList.Count > 0)
+			if (_subscribeToObjectsList.Count > 0)
 			{
 				SubscribeToObjectsRequest subscribeToObjectsRequest = new SubscribeToObjectsRequest();
-				subscribeToObjectsRequest.GUIDs = new List<long>(subscribeToObjectsList);
+				subscribeToObjectsRequest.GUIDs = new List<long>(_subscribeToObjectsList);
 				SendToGameServer(subscribeToObjectsRequest);
-				subscribeToObjectsList.Clear();
+				_subscribeToObjectsList.Clear();
 			}
-			if (unsubscribeFromObjectsList.Count > 0)
+			if (_unsubscribeFromObjectsList.Count > 0)
 			{
 				UnsubscribeFromObjectsRequest unsubscribeFromObjectsRequest = new UnsubscribeFromObjectsRequest();
-				unsubscribeFromObjectsRequest.GUIDs = new List<long>(unsubscribeFromObjectsList);
+				unsubscribeFromObjectsRequest.GUIDs = new List<long>(_unsubscribeFromObjectsList);
 				SendToGameServer(unsubscribeFromObjectsRequest);
-				unsubscribeFromObjectsList.Clear();
+				_unsubscribeFromObjectsList.Clear();
 			}
 
 			// Handle Steam P2P packets.
@@ -81,85 +77,82 @@ namespace ZeroGravity.Network
 
 		public void RequestObjectSpawn(long guid)
 		{
-			spawnObjectsList.Add(guid);
+			_spawnObjectsList.Add(guid);
 		}
 
 		public void RequestObjectSubscribe(long guid)
 		{
-			subscribeToObjectsList.Add(guid);
-			unsubscribeFromObjectsList.Remove(guid);
+			_subscribeToObjectsList.Add(guid);
+			_unsubscribeFromObjectsList.Remove(guid);
 		}
 
 		public void RequestObjectUnsubscribe(long guid)
 		{
-			unsubscribeFromObjectsList.Add(guid);
-			subscribeToObjectsList.Remove(guid);
+			_unsubscribeFromObjectsList.Add(guid);
+			_subscribeToObjectsList.Remove(guid);
 		}
 
 		public void SendToMainServer(NetworkData data)
 		{
-			mainThreads.Send(data);
+			_mainServerThread.Send(data);
 		}
 
-		public void ConnectToGame(GameServerUI serverData, string steamId, CharacterData charData, string password)
+		public void ConnectToGame(GameServerUI serverData, string userId, CharacterData charData, string password)
 		{
 			CharacterData = charData;
-			if (gameConnectionThreads != null)
+			if (_connectionThread != null)
 			{
-				gameConnectionThreads.Disconnect();
+				_connectionThread.Disconnect();
 			}
-			gameConnectionThreads = new ConnectionThread();
+			_connectionThread = new ConnectionThread();
 			NameOfCurrentServer = serverData.Name;
 			if (!serverData.UseAltIPAddress)
 			{
-				gameConnectionThreads.Start(serverData.IPAddress, serverData.GamePort, serverData.Id, password, steamId);
+				_connectionThread.Start(serverData.IPAddress, serverData.GamePort, serverData.Id, password, userId);
 			}
 			else
 			{
-				gameConnectionThreads.Start(serverData.AltIPAddress, serverData.AltGamePort, serverData.Id, password, steamId);
+				_connectionThread.Start(serverData.AltIPAddress, serverData.AltGamePort, serverData.Id, password, userId);
 			}
 		}
 
-		public void ConnectToGameSP(int port, string steamId, CharacterData charData)
+		public void ConnectToGameSP(int port, string userId, CharacterData charData)
 		{
 			CharacterData = charData;
-			if (gameConnectionThreads != null)
+			if (_connectionThread != null)
 			{
-				gameConnectionThreads.Disconnect();
+				_connectionThread.Disconnect();
 			}
-			gameConnectionThreads = new ConnectionThread();
-			gameConnectionThreads.Start("127.0.0.1", port, 0L, string.Empty, steamId);
+			_connectionThread = new ConnectionThread();
+			_connectionThread.Start("127.0.0.1", port, 0L, string.Empty, userId);
 		}
 
 		public void SendToGameServer(NetworkData data)
 		{
-			if (ProviderManager.MainProvider is SteamProvider)
-			{
-				gameConnectionThreads.Send(data);
-			}
+			_connectionThread.Send(data);
 		}
 
 		private void OnDestroy()
 		{
-			if (gameConnectionThreads != null)
+			if (_connectionThread != null)
 			{
-				gameConnectionThreads.Disconnect();
+				_connectionThread.Disconnect();
 			}
 		}
 
 		public void DisconnectImmediate()
 		{
-			if (gameConnectionThreads != null)
+			if (_connectionThread != null)
 			{
-				gameConnectionThreads.DisconnectImmediate();
+				_connectionThread.DisconnectImmediate();
 			}
 		}
 
 		public void Disconnect()
 		{
-			if (gameConnectionThreads != null)
+			if (_connectionThread != null)
 			{
-				gameConnectionThreads.Disconnect();
+				_connectionThread.Disconnect();
 			}
 		}
 

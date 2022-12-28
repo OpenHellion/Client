@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -31,18 +30,11 @@ namespace ZeroGravity.UI
 
 		public Text ItemName;
 
-		[CompilerGenerated]
-		private static Func<ItemSlot, bool> _003C_003Ef__am_0024cache0;
-
-		private void Start()
+		private void Awake()
 		{
 			Recycler.RecyclerUI = this;
 			ParentVessel = GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
 			Cargo = ParentVessel.CargoBay;
-		}
-
-		private void Update()
-		{
 		}
 
 		public void UpdateUI()
@@ -69,12 +61,7 @@ namespace ZeroGravity.UI
 			}
 			if (item != null)
 			{
-				Dictionary<short, ItemSlot>.ValueCollection values = item.Slots.Values;
-				if (_003C_003Ef__am_0024cache0 == null)
-				{
-					_003C_003Ef__am_0024cache0 = _003CShowResults_003Em__0;
-				}
-				flag = values.FirstOrDefault(_003C_003Ef__am_0024cache0);
+				flag = item.Slots.Values.FirstOrDefault((ItemSlot m) => m.Item != null);
 			}
 			ResultsTransform.DestroyAll<RecycleResultUI>();
 			if (Recycler.AutoRecycle)
@@ -96,8 +83,8 @@ namespace ZeroGravity.UI
 					float num = 0f;
 					foreach (ResourceType key in recycleResources.Keys)
 					{
-						GameObject gameObject = UnityEngine.Object.Instantiate(ResultItem, ResultsTransform);
-						gameObject.SetActive(true);
+						GameObject gameObject = GameObject.Instantiate(ResultItem, ResultsTransform);
+						gameObject.SetActive(value: true);
 						gameObject.transform.Reset();
 						RecycleResultUI component = gameObject.GetComponent<RecycleResultUI>();
 						component.Resource = key;
@@ -106,20 +93,20 @@ namespace ZeroGravity.UI
 					}
 					if (num > CheckCargo())
 					{
-						ResultsTransform.gameObject.Activate(false);
+						ResultsTransform.gameObject.Activate(value: false);
 						Status.color = Colors.Red;
 						Status.text = Localization.CargoFull.ToUpper();
 					}
 					else if (flag)
 					{
-						ResultsTransform.gameObject.Activate(false);
+						ResultsTransform.gameObject.Activate(value: false);
 						Status.color = Colors.GreenText;
 						Status.text = Localization.Recycling.ToUpper();
 						ItemName.text = Localization.MultipleItems.ToUpper();
 					}
 					else
 					{
-						ResultsTransform.gameObject.Activate(true);
+						ResultsTransform.gameObject.Activate(value: true);
 					}
 				}
 				else
@@ -157,12 +144,6 @@ namespace ZeroGravity.UI
 				}
 			}
 			return CargoCapacity;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CShowResults_003Em__0(ItemSlot m)
-		{
-			return m.Item != null;
 		}
 	}
 }

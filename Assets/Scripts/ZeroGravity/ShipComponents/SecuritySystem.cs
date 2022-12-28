@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenHellion.ProviderSystem;
-using Steamworks;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -17,11 +16,11 @@ namespace ZeroGravity.ShipComponents
 		{
 			public long GUID;
 
-			public string SteamID;
+			public string PlayerID;
 
 			public string Name;
 
-			public bool IsSteamFriend;
+			public bool IsFriend;
 
 			public AuthorizedPersonRank Rank;
 		}
@@ -68,7 +67,7 @@ namespace ZeroGravity.ShipComponents
 			Client.Instance.NetworkController.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = parentShip.GUID,
-				AddPlayerSteamID = player.SteamID,
+				AddPlayerSteamID = player.PlayerID,
 				AddPlayerRank = newRank,
 				AddPlayerName = player.Name
 			});
@@ -79,7 +78,7 @@ namespace ZeroGravity.ShipComponents
 			Client.Instance.NetworkController.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = parentShip.GUID,
-				RemovePlayerSteamID = player.SteamID
+				RemovePlayerSteamID = player.PlayerID
 			});
 			UpdateUI();
 		}
@@ -96,28 +95,31 @@ namespace ZeroGravity.ShipComponents
 			}
 		}
 
-		public void GetPlayersForAuthorization(bool getSteamFriends, bool getPlayerFromServer, GetInvitedPlayersDelegate onPlayersLoaded)
+		public void GetPlayersForAuthorization(bool getFriends, bool getPlayerFromServer, GetInvitedPlayersDelegate onPlayersLoaded)
 		{
-			if (getSteamFriends && ProviderManager.MainProvider is SteamProvider)
+			if (getFriends)
 			{
 				List<PlayerSecurityData> list = new List<PlayerSecurityData>();
-				for (int i = 0; i < SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate); i++)
+
+				// Loop through each friend and add it to the list.
+				foreach (IProvider.Friend friend in ProviderManager.MainProvider.GetFriends())
 				{
-					CSteamID id = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
-					EPersonaState friendPersonaState = SteamFriends.GetFriendPersonaState(id);
-					if ((friendPersonaState == EPersonaState.k_EPersonaStateOnline || friendPersonaState == EPersonaState.k_EPersonaStateLookingToPlay) && AuthorizedPlayers.Find((PlayerSecurityData m) => m.SteamID == id.m_SteamID.ToString()) == null)
+					// If friend is online, and not already authorised.
+					if (friend.Status == IProvider.FriendStatus.ONLINE && AuthorizedPlayers.Find((PlayerSecurityData m) => m.PlayerID == friend.Id) == null)
 					{
 						list.Add(new PlayerSecurityData
 						{
-							SteamID = id.m_SteamID.ToString(),
-							IsSteamFriend = true,
-							Name = SteamFriends.GetFriendPersonaName(id),
+							PlayerID = friend.Id,
+							IsFriend = true,
+							Name = friend.Name,
 							Rank = AuthorizedPersonRank.None
 						});
 					}
 				}
+
 				onPlayersLoaded(list);
 			}
+
 			if (getPlayerFromServer)
 			{
 				Client.Instance.NetworkController.SendToGameServer(new PlayersOnServerRequest
@@ -155,10 +157,10 @@ namespace ZeroGravity.ShipComponents
 				{
 					AuthorizedPlayers.Add(new PlayerSecurityData
 					{
-						IsSteamFriend = false,
+						IsFriend = false,
 						GUID = item.GUID,
 						Name = item.Name,
-						SteamID = item.SteamID,
+						PlayerID = item.SteamID,
 						Rank = item.Rank
 					});
 				}
@@ -199,8 +201,8 @@ namespace ZeroGravity.ShipComponents
 					{
 						list.Add(new PlayerSecurityData
 						{
-							IsSteamFriend = false,
-							SteamID = item.SteamID,
+							IsFriend = false,
+							PlayerID = item.SteamID,
 							Name = item.Name,
 							Rank = AuthorizedPersonRank.None
 						});

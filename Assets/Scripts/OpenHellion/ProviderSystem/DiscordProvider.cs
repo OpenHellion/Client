@@ -7,6 +7,7 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity;
 using Discord;
+using Steamworks;
 
 namespace OpenHellion.ProviderSystem
 {
@@ -47,11 +48,12 @@ namespace OpenHellion.ProviderSystem
 		private Discord.Discord _discord;
 		private ActivityManager _activityManager;
 		private UserManager _userManager;
+		private RelationshipManager _relationshipManager;
 
 		private User _joinUser;
 		private Activity _activity = new();
 
-		public bool Initialise()
+		bool IProvider.Initialise()
 		{
 			_callbackCalls = 0;
 
@@ -70,8 +72,6 @@ namespace OpenHellion.ProviderSystem
 				Dbg.Log("Log[{0}] {1}", level, message);
 			});
 
-			_userManager = _discord.GetUserManager();
-
 			_activityManager = _discord.GetActivityManager();
 
 			// Required to work with Steam.
@@ -84,17 +84,21 @@ namespace OpenHellion.ProviderSystem
 			_activityManager.OnActivityInvite += InviteCallback;
 			_activityManager.OnActivityJoinRequest += JoinRequestCallback;
 
+			_userManager = _discord.GetUserManager();
+			_relationshipManager = _discord.GetRelationshipManager();
+
 			Dbg.Log("Discord API initialised.");
 
 			return true;
 		}
 
-		public void Enable()
+
+		void IProvider.Enable()
 		{
 			UpdateStatus();
 		}
 
-		public void Update()
+		void IProvider.Update()
 		{
 			_discord.RunCallbacks();
 		}
@@ -139,9 +143,9 @@ namespace OpenHellion.ProviderSystem
 		{
 			Dbg.Log("Discord: Responding yes to Ask to Join request");
 			_activityManager.SendRequestReply(_joinUser.Id, ActivityJoinRequestReply.Yes, res => {
-				if (res == Discord.Result.Ok)
+				if (res == Result.Ok)
 				{
-				Console.WriteLine("Responded successfully");
+					Console.WriteLine("Responded successfully");
 				}
 			});
 		}
@@ -150,14 +154,14 @@ namespace OpenHellion.ProviderSystem
 		{
 			Dbg.Log("Discord: Responding no to Ask to Join request");
 			_activityManager.SendRequestReply(_joinUser.Id, ActivityJoinRequestReply.No, res => {
-				if (res == Discord.Result.Ok)
+				if (res == Result.Ok)
 				{
-				Console.WriteLine("Responded successfully");
+					Console.WriteLine("Responded successfully");
 				}
 			});
 		}
 
-		public void Destroy()
+		void IProvider.Destroy()
 		{
 			Dbg.Log("Discord: Shutdown");
 
@@ -285,6 +289,77 @@ namespace OpenHellion.ProviderSystem
 		public string GetUsername()
 		{
 			return _userManager.GetCurrentUser().Username;
+		}
+
+		// TODO: Custom ID generation.
+		public string GetId()
+		{
+			return _userManager.GetCurrentUser().Id.ToString();
+		}
+
+		// TODO: Custom ID generation.
+		public IProvider.Friend[] GetFriends()
+		{
+			// Filter our list of relationships to users online and friends of us.
+			_relationshipManager.Filter((ref Relationship relationship) =>
+			{
+				return relationship.Type == RelationshipType.Friend;
+			});
+
+			List<IProvider.Friend> friends = new();
+
+			// Get all relationships.
+			for (uint i = 0; i < _relationshipManager.Count(); i++)
+			{
+				// Get an individual relationship from the list.
+				Relationship r = _relationshipManager.GetAt(i);
+
+				// Add the relationship to our friends list.
+				friends.Add(new IProvider.Friend
+				{
+					Id = r.User.Id.ToString(),
+					Name = r.User.Username,
+					Status = r.Presence.Status == Status.Online ? IProvider.FriendStatus.ONLINE : IProvider.FriendStatus.OFFLINE
+				});
+			}
+
+			return friends.ToArray();
+		}
+
+		public Texture2D GetAvatar(string id)
+		{
+			Texture2D texture = Resources.Load<Texture2D>("UI/default_avatar");
+
+			_discord.GetImageManager().Fetch(ImageHandle.User(Int64.Parse(id)), false, (result, handle) =>
+			{
+				if (result == Result.Ok)
+				{
+					texture = _discord.GetImageManager().GetTexture(handle);
+				}
+			});
+
+			return texture;
+		}
+
+		public void InviteUser(string id, string secret)
+		{
+			Dbg.Log("Inviting user through Discord.");
+
+			_activity.Secrets.Join = secret;
+			_activity.Secrets.Spectate = secret;
+			_activityManager.UpdateActivity(_activity, result => {});
+
+			_activityManager.SendInvite(Int64.Parse(id), ActivityActionType.Join, "You have been invited to play Hellion!", result =>
+			{
+				if (result == Result.Ok)
+				{
+					Dbg.Log("Invite sent.");
+				}
+				else
+				{
+					Dbg.Log("Invite failed.");
+				}
+			});
 		}
 	}
 }

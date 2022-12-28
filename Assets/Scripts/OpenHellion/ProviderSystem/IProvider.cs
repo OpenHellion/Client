@@ -1,25 +1,37 @@
+using UnityEngine;
+
 namespace OpenHellion.ProviderSystem
 {
-	// TODO: Make internal
 	/// <summary>
-	/// 	Abstraction of functions used by both Steam and Discord.
+	/// 	Wrapper around APIs like Steamworks and Discord Game API.
+	/// 	Everything here should be provider independent (or as independent as possible).
 	/// </summary>
 	public interface IProvider
 	{
-		/// <summary>
-		/// 	Initialize to see if provider can be used.
-		/// </summary>
-		bool Initialise();
-
-		/// <summary>
-		/// 	Enable provider, and use.
-		/// </summary>
-		void Enable();
-		void Destroy();
-		void Update();
+		internal bool Initialise();
+		internal void Enable();
+		internal void Destroy();
+		internal void Update();
 
 		// API
+		struct Friend
+		{
+			public string Id;
+			public string Name;
+			public FriendStatus Status;
+		}
+
+		enum FriendStatus
+		{
+			ONLINE,
+			OFFLINE
+		}
+
 		bool IsInitialised();
+
+		/// <summary>
+		/// 	Used by the Discord provider to update rich presence.
+		/// </summary>
 		void UpdateStatus();
 
 		bool GetAchievement(AchievementID id, out bool achieved);
@@ -28,6 +40,24 @@ namespace OpenHellion.ProviderSystem
 		void SetStat(ProviderStatID id, int value);
 		void ResetStat(ProviderStatID id);
 		void ChangeStatBy<T>(ProviderStatID id, T value);
+
+		/// <summary>
+		/// 	Get the username of our local player.
+		/// </summary>
 		string GetUsername();
+
+		/// <summary>
+		/// 	Get the id of our local player.
+		/// </summary>
+		// TODO: Not provider independent.
+		string GetId();
+
+		/// <summary>
+		/// 	Get a list of all our friends.
+		/// </summary>
+		// TODO: Not provider independent.
+		Friend[] GetFriends();
+		Texture2D GetAvatar(string id);
+		void InviteUser(string id, string secret);
 	}
 }

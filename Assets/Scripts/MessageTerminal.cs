@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using Steamworks;
+using OpenHellion.ProviderSystem;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -43,7 +43,7 @@ public class MessageTerminal : MonoBehaviour
 		try
 		{
 			string text = "http://api.playhellion.com/add-message.php?";
-			text = text + "reporter=" + Uri.EscapeUriString(SteamUser.GetSteamID().ToString());
+			text = text + "reporter=" + Uri.EscapeUriString(ProviderManager.MainProvider.GetId());
 			text = text + "&msg=" + Uri.EscapeUriString(Input.textComponent.text);
 			text = text.Replace("#", "%23");
 			UnityWebRequest req = new UnityWebRequest(text);
