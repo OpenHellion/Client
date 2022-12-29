@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Math;
 using ZeroGravity.Network;
 using ZeroGravity.ShipComponents;
+using OpenHellion.Networking;
 
 namespace ZeroGravity.Objects
 {
@@ -102,27 +102,9 @@ namespace ZeroGravity.Objects
 
 		private float shootTimer = 0.1f;
 
-		[CompilerGenerated]
-		private static Func<TargetingPoint, int> _003C_003Ef__am_0024cache0;
+		public override EquipType EquipTo => EquipType.Hands;
 
-		[CompilerGenerated]
-		private static Func<RaycastHit, float> _003C_003Ef__am_0024cache1;
-
-		public override EquipType EquipTo
-		{
-			get
-			{
-				return EquipType.Hands;
-			}
-		}
-
-		public bool IsActive
-		{
-			get
-			{
-				return _isActive && !isStunned && !isDestroyed;
-			}
-		}
+		public bool IsActive => _isActive && !isStunned && !isDestroyed;
 
 		public TargetingPoint CurrentTarget
 		{
@@ -140,7 +122,7 @@ namespace ZeroGravity.Objects
 						oldPercentage_Horizontal = turretAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1f;
 						animationPercentage_Vertical = 0f;
 						oldPercentage_Vertical = 0.25f;
-						turretAnimator.SetBool("HasTarget", true);
+						turretAnimator.SetBool("HasTarget", value: true);
 						TurretSound.Play(3);
 					}
 					else if ((!(value == null) || !(currentTarget != null)) && value != null && currentTarget != null && !(value.MainObject != currentTarget.MainObject))
@@ -165,9 +147,9 @@ namespace ZeroGravity.Objects
 		private new void Awake()
 		{
 			base.Awake();
-			turretAnimator = GetComponentInChildren<Animator>(true);
+			turretAnimator = GetComponentInChildren<Animator>(includeInactive: true);
 			shootingRaycastMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("Player")) | (1 << LayerMask.NameToLayer("DynamicObject"));
-			Client.Instance.NetworkController.EventSystem.AddListener(typeof(PortableTurretShootingMessage), PortableTurretShootingMessageListener);
+			EventSystem.AddListener(typeof(PortableTurretShootingMessage), PortableTurretShootingMessageListener);
 			radius = targettingHelper.GetComponent<SphereCollider>().radius;
 		}
 
@@ -217,7 +199,7 @@ namespace ZeroGravity.Objects
 			isDestroyed = false;
 			if (base.AttachPoint != null)
 			{
-				turretAnimator.SetBool("IsDestroyed", false);
+				turretAnimator.SetBool("IsDestroyed", value: false);
 				OnEnable();
 				canTarget = UnfoldedItem.activeInHierarchy && !isStunned;
 			}
@@ -226,7 +208,7 @@ namespace ZeroGravity.Objects
 		private void DestroyTurret()
 		{
 			isDestroyed = true;
-			turretAnimator.SetBool("IsDestroyed", true);
+			turretAnimator.SetBool("IsDestroyed", value: true);
 			StopShooting();
 		}
 
@@ -271,7 +253,7 @@ namespace ZeroGravity.Objects
 		{
 			if (GetComponentInParent<SceneAttachPoint>() != null)
 			{
-				OnAttach(false, false);
+				OnAttach(isAttached: false, isOnPlayer: false);
 			}
 		}
 
@@ -324,7 +306,7 @@ namespace ZeroGravity.Objects
 		{
 			if (!isShooting)
 			{
-				Client.Instance.NetworkController.SendToGameServer(new PortableTurretShootingMessage
+				NetworkController.Instance.SendToGameServer(new PortableTurretShootingMessage
 				{
 					IsShooting = true,
 					TurretGUID = base.GUID
@@ -340,7 +322,7 @@ namespace ZeroGravity.Objects
 			{
 				isShooting = false;
 				shootingSoundPlaying = false;
-				Client.Instance.NetworkController.SendToGameServer(new PortableTurretShootingMessage
+				NetworkController.Instance.SendToGameServer(new PortableTurretShootingMessage
 				{
 					IsShooting = false,
 					TurretGUID = base.GUID
@@ -426,12 +408,7 @@ namespace ZeroGravity.Objects
 		private void DoTargetting()
 		{
 			bool flag = true;
-			HashSet<TargetingPoint> targets = Targets;
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CDoTargetting_003Em__0;
-			}
-			List<TargetingPoint> list = targets.OrderByDescending(_003C_003Ef__am_0024cache0).ThenBy(_003CDoTargetting_003Em__1).ToList();
+			List<TargetingPoint> list = Targets.OrderByDescending((TargetingPoint y) => y.Priority).ThenBy((TargetingPoint x) => (!(x == null)) ? (x.transform.position - detectionRaycastSource.position).sqrMagnitude : float.MaxValue).ToList();
 			List<TargetingPoint> list2 = new List<TargetingPoint>();
 			foreach (TargetingPoint item in list)
 			{
@@ -446,11 +423,7 @@ namespace ZeroGravity.Objects
 					continue;
 				}
 				RaycastHit[] source = Physics.RaycastAll(detectionRaycastSource.position, item.transform.position - detectionRaycastSource.position, radius, shootingRaycastMask, QueryTriggerInteraction.Ignore);
-				if (_003C_003Ef__am_0024cache1 == null)
-				{
-					_003C_003Ef__am_0024cache1 = _003CDoTargetting_003Em__2;
-				}
-				foreach (RaycastHit item2 in source.OrderBy(_003C_003Ef__am_0024cache1))
+				foreach (RaycastHit item2 in source.OrderBy((RaycastHit x) => x.distance))
 				{
 					Player componentInParent = item2.collider.GetComponentInParent<Player>();
 					if (componentInParent != null && item.MainObject is MyPlayer)
@@ -488,7 +461,7 @@ namespace ZeroGravity.Objects
 			if (!(CurrentTarget == null))
 			{
 				CurrentTarget = null;
-				turretAnimator.SetBool("HasTarget", false);
+				turretAnimator.SetBool("HasTarget", value: false);
 				turretAnimator.CrossFade("ReconMode", 0f, 0, animationPercentage_Horizontal);
 			}
 		}
@@ -521,7 +494,7 @@ namespace ZeroGravity.Objects
 			component.Targetable = true;
 			if (Targets.Count == 0)
 			{
-				turretAnimator.SetBool("HasTarget", false);
+				turretAnimator.SetBool("HasTarget", value: false);
 				if (CurrentTarget != null && CurrentTarget.MainObject == component.MainObject)
 				{
 					turretAnimator.CrossFade("ReconMode", 0f, 0, animationPercentage_Horizontal);
@@ -569,7 +542,7 @@ namespace ZeroGravity.Objects
 
 		private void OnDestroy()
 		{
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(PortableTurretShootingMessage), PortableTurretShootingMessageListener);
+			EventSystem.RemoveListener(typeof(PortableTurretShootingMessage), PortableTurretShootingMessageListener);
 			if (BaseVesselSystem != null)
 			{
 				BaseVesselSystem.Accessories.Remove(this);
@@ -580,34 +553,16 @@ namespace ZeroGravity.Objects
 		{
 			if (BaseVesselSystem.Status == SystemStatus.OnLine)
 			{
-				turretAnimator.SetBool("IsActive", true);
+				turretAnimator.SetBool("IsActive", value: true);
 			}
 			else if (BaseVesselSystem.Status != SystemStatus.OnLine)
 			{
 				ShootingEffect.Stop();
 				canTarget = false;
-				turretAnimator.SetBool("IsActive", false);
-				turretAnimator.SetBool("CanTarget", false);
-				turretAnimator.SetBool("IsShooting", false);
+				turretAnimator.SetBool("IsActive", value: false);
+				turretAnimator.SetBool("CanTarget", value: false);
+				turretAnimator.SetBool("IsShooting", value: false);
 			}
-		}
-
-		[CompilerGenerated]
-		private static int _003CDoTargetting_003Em__0(TargetingPoint y)
-		{
-			return y.Priority;
-		}
-
-		[CompilerGenerated]
-		private float _003CDoTargetting_003Em__1(TargetingPoint x)
-		{
-			return (!(x == null)) ? (x.transform.position - detectionRaycastSource.position).sqrMagnitude : float.MaxValue;
-		}
-
-		[CompilerGenerated]
-		private static float _003CDoTargetting_003Em__2(RaycastHit x)
-		{
-			return x.distance;
 		}
 	}
 }

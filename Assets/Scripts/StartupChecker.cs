@@ -18,7 +18,7 @@ public class StartupChecker : MonoBehaviour
 	private void Start()
 	{
 		// Safety check.
-		if (SteamAPI.RestartAppIfNecessary((AppId_t)588210u) || !ProviderManager.AnyInitialised)
+		if (!ProviderManager.AnyInitialised)
 		{
 			Dbg.Error("No external provider could be found. Exiting.");
 			Application.Quit();

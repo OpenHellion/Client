@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.Networking;
 using UnityEngine;
 using ZeroGravity.Math;
 using ZeroGravity.Network;
@@ -197,7 +198,7 @@ namespace ZeroGravity.Objects
 		{
 			yield return new WaitUntil(() => SceneObjectsLoaded);
 			DelayedSubscribeRequested = false;
-			Client.Instance.NetworkController.RequestObjectSubscribe(GUID);
+			NetworkController.Instance.RequestObjectSubscribe(GUID);
 			IsSubscribedTo = true;
 			OnSubscribe();
 		}
@@ -206,7 +207,7 @@ namespace ZeroGravity.Objects
 		{
 			if (IsSubscribedTo)
 			{
-				Client.Instance.NetworkController.RequestObjectUnsubscribe(GUID);
+				NetworkController.Instance.RequestObjectUnsubscribe(GUID);
 				IsSubscribedTo = false;
 				OnUnsubscribe();
 			}
@@ -216,7 +217,7 @@ namespace ZeroGravity.Objects
 		{
 			if (!SpawnRequested)
 			{
-				Client.Instance.NetworkController.RequestObjectSpawn(GUID);
+				NetworkController.Instance.RequestObjectSpawn(GUID);
 				SpawnRequested = true;
 				OnRequestSpawn();
 			}

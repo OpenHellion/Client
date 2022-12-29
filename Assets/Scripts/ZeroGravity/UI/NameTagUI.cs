@@ -1,3 +1,4 @@
+using OpenHellion.Networking;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Network;
@@ -67,7 +68,7 @@ namespace ZeroGravity.UI
 				InSceneID = currentSceneId
 			};
 			nameTagMessage.NameTagText = CustomInputField.text;
-			Client.Instance.NetworkController.SendToGameServer(nameTagMessage);
+			NetworkController.Instance.SendToGameServer(nameTagMessage);
 			ToggleNameCanvas(thisNameTag, false, currentParentVessel, currentSceneId);
 		}
 

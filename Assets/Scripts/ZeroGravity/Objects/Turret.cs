@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using OpenHellion.Networking;
 using UnityEngine;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
@@ -46,7 +47,7 @@ namespace ZeroGravity.Objects
 			{
 				mainCamera = MyPlayer.Instance.FpsController.MainCamera.transform;
 			}
-			Client.Instance.NetworkController.EventSystem.AddListener(typeof(TurretShootingMessage), ShootingDataListener);
+			EventSystem.AddListener(typeof(TurretShootingMessage), ShootingDataListener);
 		}
 
 		private void ShootingDataListener(NetworkData data)
@@ -111,7 +112,7 @@ namespace ZeroGravity.Objects
 
 		private void OnDestroy()
 		{
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(TurretShootingMessage), ShootingDataListener);
+			EventSystem.RemoveListener(typeof(TurretShootingMessage), ShootingDataListener);
 		}
 	}
 }

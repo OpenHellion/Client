@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using OpenHellion.Networking;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -84,89 +84,33 @@ namespace ZeroGravity.Objects
 
 		public SoundEffect RockDrillingSoundEffect;
 
-		[CompilerGenerated]
-		private static Func<KeyValuePair<short, ItemSlot>, bool> _003C_003Ef__am_0024cache0;
+		public override float Quantity => (!(Canister != null)) ? 0f : Canister.Quantity;
 
-		[CompilerGenerated]
-		private static Func<KeyValuePair<short, ItemSlot>, bool> _003C_003Ef__am_0024cache1;
+		public override float MaxQuantity => (!(Canister != null)) ? 0f : Canister.MaxQuantity;
 
-		public override float Quantity
-		{
-			get
-			{
-				return (!(Canister != null)) ? 0f : Canister.Quantity;
-			}
-		}
-
-		public override float MaxQuantity
-		{
-			get
-			{
-				return (!(Canister != null)) ? 0f : Canister.MaxQuantity;
-			}
-		}
-
-		public override EquipType EquipTo
-		{
-			get
-			{
-				return EquipType.Hands;
-			}
-		}
+		public override EquipType EquipTo => EquipType.Hands;
 
 		public ItemSlot BatterySlot { get; set; }
 
-		public Battery Battery
-		{
-			get
-			{
-				return (!(BatterySlot != null)) ? null : (BatterySlot.Item as Battery);
-			}
-		}
+		public Battery Battery => (!(BatterySlot != null)) ? null : (BatterySlot.Item as Battery);
 
-		public float BatteryPower
-		{
-			get
-			{
-				return (!(Battery != null)) ? 0f : Mathf.Clamp01(Battery.CurrentPower / Battery.MaxPower);
-			}
-		}
+		public float BatteryPower => (!(Battery != null)) ? 0f : Mathf.Clamp01(Battery.CurrentPower / Battery.MaxPower);
 
-		public Canister Canister
-		{
-			get
-			{
-				return (!(canisterSlot != null)) ? null : (canisterSlot.Item as Canister);
-			}
-		}
+		public Canister Canister => (!(canisterSlot != null)) ? null : (canisterSlot.Item as Canister);
 
-		public Item DrillBit
-		{
-			get
-			{
-				return (!(drillBitSlot != null)) ? null : (drillBitSlot.Item as GenericItem);
-			}
-		}
+		public Item DrillBit => (!(drillBitSlot != null)) ? null : (drillBitSlot.Item as GenericItem);
 
-		public override Transform TipOfItem
-		{
-			get
-			{
-				return drillTip;
-			}
-		}
+		public override Transform TipOfItem => drillTip;
 
 		public bool CanDrill
 		{
 			get
 			{
-				Battery battery = Battery;
-				float? num = (((object)battery != null) ? new float?(battery.CurrentPower) : null);
+				float? num = Battery?.CurrentPower;
 				int result;
 				if (num.HasValue && num.GetValueOrDefault() > float.Epsilon && Canister.HasSpace)
 				{
-					Item drillBit = DrillBit;
-					float? num2 = (((object)drillBit != null) ? new float?(drillBit.Health) : null);
+					float? num2 = DrillBit?.Health;
 					result = ((num2.HasValue && num2.GetValueOrDefault() > float.Epsilon) ? 1 : 0);
 				}
 				else
@@ -184,7 +128,7 @@ namespace ZeroGravity.Objects
 
 		public void CreateParticle()
 		{
-			drillEffectTransform = UnityEngine.Object.Instantiate((!(DynamicObj.Parent is MyPlayer)) ? drillingParticle3rd : drillingParticle, (!(DynamicObj.Parent is MyPlayer)) ? TipOfItem : MyPlayer.Instance.MuzzleFlashTransform).transform;
+			drillEffectTransform = GameObject.Instantiate((!(DynamicObj.Parent is MyPlayer)) ? drillingParticle3rd : drillingParticle, (!(DynamicObj.Parent is MyPlayer)) ? TipOfItem : MyPlayer.Instance.MuzzleFlashTransform).transform;
 			drillEffectTransform.Reset();
 			effectScript = drillEffectTransform.GetComponent<DrillEffectScript>();
 		}
@@ -215,8 +159,7 @@ namespace ZeroGravity.Objects
 				}
 				if (asteroidMiningPoint != null && asteroidMiningPoint.Quantity > 0f)
 				{
-					RaycastHit hitInfo;
-					if (Physics.Raycast(rayTransform.position, TipOfItem.forward, out hitInfo, 1f, Client.DefaultLayerMask))
+					if (Physics.Raycast(rayTransform.position, TipOfItem.forward, out var hitInfo, 1f, Client.DefaultLayerMask))
 					{
 						drillEffectTransform.forward = hitInfo.normal;
 						effectScript.ToggleEffect(true);
@@ -252,7 +195,7 @@ namespace ZeroGravity.Objects
 							InSceneID = miningPoint.InSceneID,
 							VesselGUID = miningPoint.ParentVessel.GUID
 						};
-						Client.Instance.NetworkController.SendToGameServer(playerDrillingMessage);
+						NetworkController.Instance.SendToGameServer(playerDrillingMessage);
 						miningTime = 0f;
 					}
 				}
@@ -260,7 +203,7 @@ namespace ZeroGravity.Objects
 				{
 					if (miningTime > 0f)
 					{
-						Client.Instance.NetworkController.SendToGameServer(playerDrillingMessage);
+						NetworkController.Instance.SendToGameServer(playerDrillingMessage);
 					}
 					miningTime = 0f;
 					miningPoint = null;
@@ -276,7 +219,7 @@ namespace ZeroGravity.Objects
 				if ((double)miningTime > 0.02 || flag)
 				{
 					playerDrillingMessage.MiningTime = miningTime;
-					Client.Instance.NetworkController.SendToGameServer(playerDrillingMessage);
+					NetworkController.Instance.SendToGameServer(playerDrillingMessage);
 					miningTime = 0f;
 				}
 			}
@@ -321,7 +264,7 @@ namespace ZeroGravity.Objects
 				newReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.LeftInteractBone);
 				if (currentReloadItem != null)
 				{
-					currentReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.Hips, false);
+					currentReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.Hips, resetTransform: false);
 				}
 				break;
 			case AnimatorHelper.ReloadStepType.ReloadEnd:
@@ -348,18 +291,8 @@ namespace ZeroGravity.Objects
 		protected override void Awake()
 		{
 			base.Awake();
-			Dictionary<short, ItemSlot> slots = Slots;
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CAwake_003Em__0;
-			}
-			canisterSlot = slots.FirstOrDefault(_003C_003Ef__am_0024cache0).Value;
-			Dictionary<short, ItemSlot> slots2 = Slots;
-			if (_003C_003Ef__am_0024cache1 == null)
-			{
-				_003C_003Ef__am_0024cache1 = _003CAwake_003Em__1;
-			}
-			drillBitSlot = slots2.FirstOrDefault(_003C_003Ef__am_0024cache1).Value;
+			canisterSlot = Slots.FirstOrDefault((KeyValuePair<short, ItemSlot> m) => m.Value.ItemTypes.Contains(ItemType.AltairHandDrillCanister)).Value;
+			drillBitSlot = Slots.FirstOrDefault((KeyValuePair<short, ItemSlot> m) => m.Value.GenericSubTypes.Contains(GenericItemSubType.DiamondCoreDrillBit)).Value;
 		}
 
 		protected override void Start()
@@ -463,7 +396,7 @@ namespace ZeroGravity.Objects
 			LowPowerMask.SetActive(Battery.BatteryPrecentage <= 0.1f);
 			if (Canister != null)
 			{
-				NotAttached.SetActive(false);
+				NotAttached.SetActive(value: false);
 				ResourceBarFiller.fillAmount = Canister.ResourcePercentage;
 				CanisterFull.SetActive(Canister.ResourcePercentage >= 1f);
 				if (Canister.ResourcePercentage == 0f)
@@ -476,7 +409,7 @@ namespace ZeroGravity.Objects
 			else
 			{
 				ResourceBarFiller.fillAmount = 0f;
-				NotAttached.SetActive(true);
+				NotAttached.SetActive(value: true);
 			}
 		}
 
@@ -520,7 +453,7 @@ namespace ZeroGravity.Objects
 				playerDrillingMessage.isDrilling = false;
 				playerDrillingMessage.dontPlayEffect = true;
 				PlayerDrillingMessage data = playerDrillingMessage;
-				Client.Instance.NetworkController.SendToGameServer(data);
+				NetworkController.Instance.SendToGameServer(data);
 			}
 			UpdateUI();
 		}
@@ -536,7 +469,7 @@ namespace ZeroGravity.Objects
 				PrimaryReleased();
 				if (drillEffectTransform != null)
 				{
-					UnityEngine.Object.Destroy(drillEffectTransform.gameObject);
+					GameObject.Destroy(drillEffectTransform.gameObject);
 				}
 			}
 			else if (type == EquipTo)
@@ -558,18 +491,6 @@ namespace ZeroGravity.Objects
 		public override string QuantityCheck()
 		{
 			return (!(Canister == null)) ? FormatHelper.CurrentMax(Canister.Quantity, Canister.MaxQuantity) : "0";
-		}
-
-		[CompilerGenerated]
-		private static bool _003CAwake_003Em__0(KeyValuePair<short, ItemSlot> m)
-		{
-			return m.Value.ItemTypes.Contains(ItemType.AltairHandDrillCanister);
-		}
-
-		[CompilerGenerated]
-		private static bool _003CAwake_003Em__1(KeyValuePair<short, ItemSlot> m)
-		{
-			return m.Value.GenericSubTypes.Contains(GenericItemSubType.DiamondCoreDrillBit);
 		}
 	}
 }

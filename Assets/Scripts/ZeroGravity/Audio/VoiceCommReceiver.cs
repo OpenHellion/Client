@@ -7,6 +7,7 @@ using UnityEngine;
 using ZeroGravity.Math;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
+using OpenHellion.Networking;
 
 namespace ZeroGravity.Audio
 {
@@ -103,12 +104,12 @@ namespace ZeroGravity.Audio
 			opusDecoder = new OpusDecoder<float>(SamplingRate.Sampling48000, Channels.Mono);
 			outAudioClip = AudioClip.Create("VoiceCommAudioClip", samplerate * 10, 1, samplerate, true, OnAudioRead);
 			audioSource.clip = outAudioClip;
-			Client.Instance.NetworkController.EventSystem.AddListener(typeof(VoiceCommDataMessage), VoiceCommDataMessageListener);
+			EventSystem.AddListener(typeof(VoiceCommDataMessage), VoiceCommDataMessageListener);
 		}
 
 		private void OnDestroy()
 		{
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(VoiceCommDataMessage), VoiceCommDataMessageListener);
+			EventSystem.RemoveListener(typeof(VoiceCommDataMessage), VoiceCommDataMessageListener);
 		}
 
 		private void VoiceCommDataMessageListener(NetworkData data)

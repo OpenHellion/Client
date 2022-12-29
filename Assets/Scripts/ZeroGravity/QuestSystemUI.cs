@@ -1,30 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
+using OpenHellion.Networking;
 
 namespace ZeroGravity
 {
 	public class QuestSystemUI : MonoBehaviour
 	{
-		[CompilerGenerated]
-		private sealed class _003CSetQuestLog_003Ec__AnonStorey0
-		{
-			internal QuestTrigger qt;
-
-			internal QuestSystemUI _0024this;
-
-			internal bool _003C_003Em__0(QuestCutSceneData m)
-			{
-				return m.QuestTriggerID == qt.ID && m.QuestID == _0024this.SelectedQuest.Quest.ID;
-			}
-		}
-
 		public QuestUI QuestItem;
 
 		public TaskUI TaskItem;
@@ -122,14 +109,14 @@ namespace ZeroGravity
 				}
 				SkipQuest.Activate(!SelectedQuest.Quest.IsFinished && (SelectedQuest.Quest.CanSkip || SelectedQuest.Quest.QuestObject.Skippable));
 				SetQuestLog();
-				QuestHolder.SetActive(true);
-				QuestLog.SetActive(true);
+				QuestHolder.SetActive(value: true);
+				QuestLog.SetActive(value: true);
 			}
 			else
 			{
-				SkipQuest.Activate(false);
-				QuestHolder.SetActive(false);
-				QuestLog.SetActive(false);
+				SkipQuest.Activate(value: false);
+				QuestHolder.SetActive(value: false);
+				QuestLog.SetActive(value: false);
 			}
 		}
 
@@ -138,7 +125,7 @@ namespace ZeroGravity
 			QuestUI questUI = Object.Instantiate(QuestItem, QuestsHolder);
 			questUI.transform.Reset();
 			questUI.transform.SetAsFirstSibling();
-			questUI.gameObject.SetActive(true);
+			questUI.gameObject.SetActive(value: true);
 			questUI.QuestSystem = this;
 			questUI.Quest = quest;
 			questUI.RefreshQuestUI();
@@ -149,43 +136,37 @@ namespace ZeroGravity
 		public void SetQuestLog()
 		{
 			logElements.Clear();
-			LogHolder.DestroyAll<Transform>(true);
+			LogHolder.DestroyAll<Transform>(childrenOnly: true);
 			if (!(SelectedQuest != null))
 			{
 				return;
 			}
-			using (List<QuestTrigger>.Enumerator enumerator = SelectedQuest.Quest.QuestTriggers.GetEnumerator())
+			foreach (QuestTrigger qt in SelectedQuest.Quest.QuestTriggers)
 			{
-				while (enumerator.MoveNext())
+				if (qt.Status != QuestStatus.Completed)
 				{
-					_003CSetQuestLog_003Ec__AnonStorey0 _003CSetQuestLog_003Ec__AnonStorey = new _003CSetQuestLog_003Ec__AnonStorey0();
-					_003CSetQuestLog_003Ec__AnonStorey.qt = enumerator.Current;
-					_003CSetQuestLog_003Ec__AnonStorey._0024this = this;
-					if (_003CSetQuestLog_003Ec__AnonStorey.qt.Status != QuestStatus.Completed)
+					continue;
+				}
+				QuestCutSceneData questCutSceneData = Client.Instance.CanvasManager.CanvasUI.QuestCutScene.QuestCollection.CutScenes.FirstOrDefault((QuestCutSceneData m) => m.QuestTriggerID == qt.ID && m.QuestID == SelectedQuest.Quest.ID);
+				if (!(questCutSceneData != null))
+				{
+					continue;
+				}
+				if (qt.Name != null && qt.Name != string.Empty)
+				{
+					GameObject gameObject = Object.Instantiate(LogHeading, LogHolder);
+					gameObject.transform.Reset();
+					gameObject.GetComponent<Text>().text = qt.Name;
+				}
+				if (Client.Instance.CanvasManager.CanvasUI.QuestCutScene.DontPlayCutScenes)
+				{
+					continue;
+				}
+				foreach (QuestCutSceneData.QuestCutSceneElement element in questCutSceneData.Elements)
+				{
+					if (!element.SkipInJournal)
 					{
-						continue;
-					}
-					QuestCutSceneData questCutSceneData = Client.Instance.CanvasManager.CanvasUI.QuestCutScene.QuestCollection.CutScenes.FirstOrDefault(_003CSetQuestLog_003Ec__AnonStorey._003C_003Em__0);
-					if (!(questCutSceneData != null))
-					{
-						continue;
-					}
-					if (_003CSetQuestLog_003Ec__AnonStorey.qt.Name != null && _003CSetQuestLog_003Ec__AnonStorey.qt.Name != string.Empty)
-					{
-						GameObject gameObject = Object.Instantiate(LogHeading, LogHolder);
-						gameObject.transform.Reset();
-						gameObject.GetComponent<Text>().text = _003CSetQuestLog_003Ec__AnonStorey.qt.Name;
-					}
-					if (Client.Instance.CanvasManager.CanvasUI.QuestCutScene.DontPlayCutScenes)
-					{
-						continue;
-					}
-					foreach (QuestCutSceneData.QuestCutSceneElement element in questCutSceneData.Elements)
-					{
-						if (!element.SkipInJournal)
-						{
-							CreateLogItem(element);
-						}
+						CreateLogItem(element);
 					}
 				}
 			}
@@ -200,7 +181,7 @@ namespace ZeroGravity
 			questCutSceneUI.transform.SetAsLastSibling();
 			questCutSceneUI.GetComponent<Animator>().enabled = false;
 			questCutSceneUI.AutoDestroy = false;
-			questCutSceneUI.gameObject.SetActive(true);
+			questCutSceneUI.gameObject.SetActive(value: true);
 			questCutSceneUI.Icon.sprite = element.Character.CharacterImage;
 			questCutSceneUI.Content.text = element.Dialogue.Replace('|', ' ');
 			questCutSceneUI.CharacterName.text = element.Character.CharacterName;
@@ -209,10 +190,11 @@ namespace ZeroGravity
 
 		public void SkipQuestAction()
 		{
-			Client.Instance.NetworkController.SendToGameServer(new SkipQuestMessage
+			NetworkController.Instance.SendToGameServer(new SkipQuestMessage
 			{
 				QuestID = SelectedQuest.Quest.ID
 			});
 		}
 	}
+
 }

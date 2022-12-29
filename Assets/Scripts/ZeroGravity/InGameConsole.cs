@@ -11,6 +11,7 @@ using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
+using OpenHellion.Networking;
 
 namespace ZeroGravity
 {
@@ -150,7 +151,7 @@ namespace ZeroGravity
 
 		public void SubmitText()
 		{
-			Client.Instance.NetworkController.SendToGameServer(new ConsoleMessage
+			NetworkController.Instance.SendToGameServer(new ConsoleMessage
 			{
 				Text = Input.text
 			});
@@ -225,7 +226,7 @@ namespace ZeroGravity
 
 		public void Spawn(string itemToSpawn)
 		{
-			Client.Instance.NetworkController.SendToGameServer(new ConsoleMessage
+			NetworkController.Instance.SendToGameServer(new ConsoleMessage
 			{
 				Text = "spawn " + itemToSpawn
 			});
@@ -233,7 +234,7 @@ namespace ZeroGravity
 
 		public void Action(string actionToDo)
 		{
-			Client.Instance.NetworkController.SendToGameServer(new ConsoleMessage
+			NetworkController.Instance.SendToGameServer(new ConsoleMessage
 			{
 				Text = actionToDo
 			});
@@ -243,7 +244,7 @@ namespace ZeroGravity
 		{
 			string empty = string.Empty;
 			empty = ((!GodMode.isOn) ? "0" : "1");
-			Client.Instance.NetworkController.SendToGameServer(new ConsoleMessage
+			NetworkController.Instance.SendToGameServer(new ConsoleMessage
 			{
 				Text = "god " + empty
 			});

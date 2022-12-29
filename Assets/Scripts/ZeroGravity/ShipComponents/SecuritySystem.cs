@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.Networking;
 using OpenHellion.ProviderSystem;
 using UnityEngine;
 using ZeroGravity.Data;
@@ -49,7 +50,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (!(parentShip == null) && !newName.IsNullOrEmpty())
 			{
-				Client.Instance.NetworkController.SendToGameServer(new VesselSecurityRequest
+				NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 				{
 					VesselGUID = parentShip.GUID,
 					VesselName = newName
@@ -64,7 +65,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void AddPerson(PlayerSecurityData player, AuthorizedPersonRank newRank)
 		{
-			Client.Instance.NetworkController.SendToGameServer(new VesselSecurityRequest
+			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = parentShip.GUID,
 				AddPlayerSteamID = player.PlayerID,
@@ -75,7 +76,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void RemovePerson(PlayerSecurityData player)
 		{
-			Client.Instance.NetworkController.SendToGameServer(new VesselSecurityRequest
+			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = parentShip.GUID,
 				RemovePlayerSteamID = player.PlayerID
@@ -87,7 +88,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (!(MyPlayer.Instance.CurrentActiveItem == null) && ItemTypeRange.IsHackingTool(MyPlayer.Instance.CurrentActiveItem.Type))
 			{
-				Client.Instance.NetworkController.SendToGameServer(new VesselSecurityRequest
+				NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 				{
 					VesselGUID = parentShip.GUID,
 					HackPanel = true
@@ -122,7 +123,7 @@ namespace ZeroGravity.ShipComponents
 
 			if (getPlayerFromServer)
 			{
-				Client.Instance.NetworkController.SendToGameServer(new PlayersOnServerRequest
+				NetworkController.Instance.SendToGameServer(new PlayersOnServerRequest
 				{
 					SecuritySystemID = new VesselObjectID
 					{

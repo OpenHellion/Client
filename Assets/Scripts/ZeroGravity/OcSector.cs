@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using ZeroGravity.Network;
-using ZeroGravity.Objects;
+using OpenHellion.Networking;
 
 namespace ZeroGravity
 {
@@ -19,7 +18,7 @@ namespace ZeroGravity
 
 		private void Awake()
 		{
-			MyPlayer.Instance.EventSystem.AddListener(EventSystem.InternalEventType.OcExteriorStatus, OcExteriorStatusListener);
+			EventSystem.AddListener(EventSystem.InternalEventType.OcExteriorStatus, OcExteriorStatusListener);
 			foreach (GameObject item in GroupsToHide)
 			{
 				renderers.AddRange(item.GetComponentsInChildren<Renderer>(true));
@@ -70,7 +69,7 @@ namespace ZeroGravity
 
 		private void OnDestroy()
 		{
-			MyPlayer.Instance.EventSystem.RemoveListener(EventSystem.InternalEventType.ShowMessageBox, OcExteriorStatusListener);
+			EventSystem.RemoveListener(EventSystem.InternalEventType.ShowMessageBox, OcExteriorStatusListener);
 		}
 	}
 }

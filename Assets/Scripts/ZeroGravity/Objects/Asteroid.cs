@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using OpenHellion.Networking;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -70,12 +71,12 @@ namespace ZeroGravity.Objects
 
 		public void ConnectMessageListeners()
 		{
-			Client.Instance.NetworkController.EventSystem.AddListener(typeof(InitializeSpaceObjectMessage), InitializeSpaceObjectMessageListener);
+			EventSystem.AddListener(typeof(InitializeSpaceObjectMessage), InitializeSpaceObjectMessageListener);
 		}
 
 		public void DisconnectMessageListeners()
 		{
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(InitializeSpaceObjectMessage), InitializeSpaceObjectMessageListener);
+			EventSystem.RemoveListener(typeof(InitializeSpaceObjectMessage), InitializeSpaceObjectMessageListener);
 		}
 
 		private void InitializeSpaceObjectMessageListener(NetworkData data)

@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using OpenHellion.Networking;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;
@@ -35,292 +35,37 @@ namespace ZeroGravity.Objects
 
 		public enum SizeType
 		{
-			None = 0,
-			Rifle = 1,
-			Pistol = 2,
-			SmallItem = 3,
-			Barrel = 4,
-			Box = 5
+			None,
+			Rifle,
+			Pistol,
+			SmallItem,
+			Barrel,
+			Box
 		}
 
 		public enum EquipType
 		{
-			None = 0,
-			Hands = 1,
-			EquipInventory = 2,
-			Inventory = 3
+			None,
+			Hands,
+			EquipInventory,
+			Inventory
 		}
 
 		public enum Hand
 		{
 			Left = 1,
-			Right = 2
+			Right
 		}
 
 		public enum ItemAnimationType
 		{
 			Equip = 1,
-			Unequip = 2
+			Unequip
 		}
 
 		public enum ItemSound
 		{
-			Reload = 0
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CAttachToObjectImpl_003Ec__AnonStorey1
-		{
-			internal Transform attachToTrans;
-
-			internal SpaceObject obj;
-
-			internal BaseSceneAttachPoint attachPoint;
-
-			internal IItemSlot slot;
-
-			internal bool hideObject;
-
-			internal Item _0024this;
-
-			internal void _003C_003Em__0()
-			{
-				IItemSlot itemSlot = _0024this.Slot;
-				bool flag = attachToTrans != null;
-				if (_0024this.DynamicObj.Parent is Pivot && _0024this.DynamicObj.Parent != obj)
-				{
-					Client.Instance.SolarSystem.RemoveArtificialBody(_0024this.DynamicObj.Parent as Pivot);
-					UnityEngine.Object.Destroy(_0024this.DynamicObj.Parent.gameObject);
-				}
-				if (_0024this.AttachPoint != null && _0024this.AttachPoint != attachPoint)
-				{
-					_0024this.AttachPoint.DetachItem(_0024this);
-					_0024this.AttachPoint = null;
-				}
-				if (_0024this.DynamicObj.Parent is Player && (attachPoint != null || !flag))
-				{
-					Player player = _0024this.DynamicObj.Parent as Player;
-					if (player.Inventory.ItemInHands == _0024this)
-					{
-						player.Inventory.RemoveItemFromHands(true);
-					}
-					_0024this.ChangeEquip(EquipType.None, player);
-				}
-				if (_0024this.InvSlot != null && _0024this.InvSlot != slot)
-				{
-					if (_0024this.InvSlot.Item == _0024this)
-					{
-						if (_0024this.InvSlot.Inventory != null && _0024this.InvSlot.Inventory.Parent is Player && _0024this.InvSlot.SlotType == InventorySlot.Type.Hands)
-						{
-							_0024this.InvSlot.Inventory.RemoveItemFromHands(true);
-						}
-						else
-						{
-							_0024this.InvSlot.SetItem(null);
-						}
-					}
-					_0024this.InvSlot = null;
-				}
-				if (attachPoint != null)
-				{
-					_0024this.AttachPoint = attachPoint;
-				}
-				if (slot != null)
-				{
-					if (slot is InventorySlot)
-					{
-						_0024this.InvSlot = slot as InventorySlot;
-						if ((slot as InventorySlot).Inventory != null && (slot as InventorySlot).Inventory.Parent is SpaceObjectTransferable)
-						{
-							SpaceObjectTransferable spaceObjectTransferable = (slot as InventorySlot).Inventory.Parent as SpaceObjectTransferable;
-						}
-					}
-					else if (slot is ItemSlot)
-					{
-						(slot as ItemSlot).FitItem(_0024this);
-					}
-				}
-				SpaceObject parent = _0024this.DynamicObj.Parent;
-				_0024this.DynamicObj.Parent = obj;
-				_0024this.DynamicObj.ResetRoomTriggers();
-				_0024this.DynamicObj.ToggleKinematic(flag || parent is OtherPlayer);
-				_0024this.DynamicObj.ToggleActive(!hideObject);
-				_0024this.DynamicObj.ToggleTriggerColliders(_0024this.DynamicObj.Parent is Corpse);
-				_0024this.DynamicObj.ToggleEnabled(!flag || _0024this.AttachPoint != null || _0024this.DynamicObj.Parent is Corpse, true);
-				if (!flag)
-				{
-					_0024this.DynamicObj.CheckRoomTrigger(null);
-				}
-				if (_0024this.InvSlot != null && _0024this.InvSlot.SlotType == InventorySlot.Type.Hands)
-				{
-					_0024this.InvSlot.Inventory.ItemAddedToHands(_0024this);
-					if (_0024this.PickupSound != null)
-					{
-						_0024this.PickupSound.Play();
-					}
-				}
-				try
-				{
-					if (_0024this.AttachPoint != null)
-					{
-						_0024this.AttachPoint.AttachItem(_0024this);
-					}
-				}
-				catch (Exception ex)
-				{
-					Dbg.Error("Item attach point exception", ex.Message, ex.StackTrace);
-				}
-				if (_0024this.DynamicObj.Parent is DynamicObject)
-				{
-				}
-				if (flag)
-				{
-					_0024this.transform.SetParent(attachToTrans);
-					_0024this.transform.Reset(true);
-					_0024this.OnAttach(_0024this.AttachPoint == null, _0024this.DynamicObj.Parent is Player);
-				}
-				else
-				{
-					_0024this.OnAttach(true, _0024this.DynamicObj.Parent is Player);
-					if (_0024this.DynamicObj.Parent is SpaceObjectVessel)
-					{
-						_0024this.transform.SetParent(_0024this.DynamicObj.Parent.TransferableObjectsRoot.transform);
-						_0024this.DynamicObj.CheckRoomTrigger(null);
-					}
-					else if (_0024this.DynamicObj.Parent is Pivot && _0024this.DynamicObj.Parent.Type == SpaceObjectType.DynamicObjectPivot)
-					{
-						_0024this.transform.SetParent(_0024this.DynamicObj.Parent.TransferableObjectsRoot.transform);
-					}
-					else
-					{
-						Dbg.Error("Dynamic object cannot be attached to DynamicObjectRoot");
-					}
-				}
-				Client.Instance.CanvasManager.CanvasUI.HelmetHud.HandsSlotUpdate();
-				if (itemSlot != null && itemSlot is BaseSceneAttachPoint && _0024this.Slot != null && _0024this.Slot.Parent.GetComponentInParent<MyPlayer>() != null)
-				{
-					SceneQuestTrigger.Check((itemSlot as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.DetachItem);
-				}
-				else if (itemSlot != null && itemSlot.Parent.GetComponentInParent<MyPlayer>() != null && _0024this.Slot != null && _0024this.Slot is BaseSceneAttachPoint)
-				{
-					SceneQuestTrigger.Check((_0024this.Slot as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.AttachItem);
-				}
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CProcessAttachData_003Ec__AnonStorey2
-		{
-			internal bool myPlayerIsParent;
-
-			internal DynamicObjectAttachData data;
-
-			internal SpaceObject prevParent;
-
-			internal Item _0024this;
-
-			internal void _003C_003Em__0()
-			{
-				if (_0024this.DynamicObj.IsAttached)
-				{
-					return;
-				}
-				if (!myPlayerIsParent || !_0024this.DynamicObj.Master)
-				{
-					if (data.LocalPosition != null)
-					{
-						_0024this.transform.localPosition = data.LocalPosition.ToVector3();
-					}
-					if (data.LocalRotation != null)
-					{
-						_0024this.transform.localRotation = data.LocalRotation.ToQuaternion();
-					}
-				}
-				if (_0024this.DynamicObj.Master)
-				{
-					if (data.Velocity != null)
-					{
-						_0024this.DynamicObj.rigidBody.velocity = data.Velocity.ToVector3();
-					}
-					if (data.Torque != null)
-					{
-						_0024this.AddTorque(data.Torque.ToVector3(), ForceMode.Impulse);
-					}
-					if (data.ThrowForce != null)
-					{
-						Vector3 vector = data.ThrowForce.ToVector3();
-						if ((MyPlayer.Instance.CurrentRoomTrigger == null || !MyPlayer.Instance.CurrentRoomTrigger.UseGravity || MyPlayer.Instance.CurrentRoomTrigger.GravityForce == Vector3.zero) && prevParent == MyPlayer.Instance)
-						{
-							float num = MyPlayer.Instance.rigidBody.mass + _0024this.DynamicObj.Mass;
-							_0024this.AddForce(vector * (MyPlayer.Instance.rigidBody.mass / num), ForceMode.VelocityChange);
-							MyPlayer.Instance.rigidBody.AddForce(-vector * (_0024this.DynamicObj.Mass / num), ForceMode.VelocityChange);
-						}
-						else
-						{
-							_0024this.AddForce(vector, ForceMode.Impulse);
-						}
-					}
-				}
-				if (_0024this.ThrowSound != null)
-				{
-					_0024this.ThrowSound.Play();
-				}
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CGetRecycleResources_003Ec__AnonStorey3
-		{
-			internal ItemType itemType;
-
-			internal GenericItemSubType subType;
-
-			internal MachineryPartType partType;
-
-			internal int tier;
-
-			internal bool _003C_003Em__0(ItemIngredientsData m)
-			{
-				return m.Type == itemType && m.SubType == subType && m.PartType == partType;
-			}
-
-			internal bool _003C_003Em__1(KeyValuePair<int, ItemIngredientsTierData> m)
-			{
-				return m.Key <= tier;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CGetCraftingResources_003Ec__AnonStorey4
-		{
-			internal ItemType itemType;
-
-			internal GenericItemSubType subType;
-
-			internal MachineryPartType partType;
-
-			internal int tier;
-
-			internal bool _003C_003Em__0(ItemIngredientsData m)
-			{
-				return m.Type == itemType && m.SubType == subType && m.PartType == partType;
-			}
-
-			internal bool _003C_003Em__1(KeyValuePair<int, ItemIngredientsTierData> m)
-			{
-				return m.Key <= tier;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CRequestAttach_003Ec__AnonStorey5
-		{
-			internal Item swapItem;
-
-			internal bool _003C_003Em__0(ItemSlot m)
-			{
-				return m.CanFitItem(swapItem);
-			}
+			Reload
 		}
 
 		public bool DefaultBlueprint;
@@ -486,90 +231,6 @@ namespace ZeroGravity.Objects
 
 		private int explosionRaycastMask;
 
-		[CompilerGenerated]
-		private static Func<ItemSlot, short> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<ItemSlot, ItemSlot> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<short, ItemSlot>, bool> _003C_003Ef__am_0024cache2;
-
-		[CompilerGenerated]
-		private static Func<ItemIngredient, bool> _003C_003Ef__am_0024cache3;
-
-		[CompilerGenerated]
-		private static Func<ItemIngredient, bool> _003C_003Ef__am_0024cache4;
-
-		[CompilerGenerated]
-		private static Func<Renderer, bool> _003C_003Ef__am_0024cache5;
-
-		[CompilerGenerated]
-		private static Func<Renderer, bool> _003C_003Ef__am_0024cache6;
-
-		[CompilerGenerated]
-		private static Func<Renderer, bool> _003C_003Ef__am_0024cache7;
-
-		[CompilerGenerated]
-		private static Func<Renderer, bool> _003C_003Ef__am_0024cache8;
-
-		[CompilerGenerated]
-		private static Func<Renderer, bool> _003C_003Ef__am_0024cache9;
-
-		[CompilerGenerated]
-		private static Func<Renderer, bool> _003C_003Ef__am_0024cacheA;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<int, ItemIngredientsTierData>, int> _003C_003Ef__am_0024cacheB;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<ResourceType, float>, bool> _003C_003Ef__am_0024cacheC;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<ResourceType, float>, ResourceType> _003C_003Ef__am_0024cacheD;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<ResourceType, float>, float> _003C_003Ef__am_0024cacheE;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<int, ItemIngredientsTierData>, int> _003C_003Ef__am_0024cacheF;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<ResourceType, float>, bool> _003C_003Ef__am_0024cache10;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<ResourceType, float>, ResourceType> _003C_003Ef__am_0024cache11;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<ResourceType, float>, float> _003C_003Ef__am_0024cache12;
-
-		[CompilerGenerated]
-		private static Func<ItemIngredientsData, bool> _003C_003Ef__am_0024cache13;
-
-		[CompilerGenerated]
-		private static Func<SceneQuestTrigger, bool> _003C_003Ef__am_0024cache14;
-
-		[CompilerGenerated]
-		private static Func<SceneQuestTrigger, bool> _003C_003Ef__am_0024cache15;
-
-		[CompilerGenerated]
-		private static Func<SceneQuestTrigger, bool> _003C_003Ef__am_0024cache16;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<int, VesselRepairPoint>, VesselRepairPoint> _003C_003Ef__am_0024cache17;
-
-		[CompilerGenerated]
-		private static Func<RaycastHit, float> _003C_003Ef__am_0024cache18;
-
-		[CompilerGenerated]
-		private static Func<RaycastHit, float> _003C_003Ef__am_0024cache19;
-
-		[CompilerGenerated]
-		private static Func<RaycastHit, float> _003C_003Ef__am_0024cache1A;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<int, ItemIngredientsTierData>, bool> _003C_003Ef__am_0024cache1B;
-
 		public Sprite Icon
 		{
 			get
@@ -586,21 +247,9 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public virtual float Quantity
-		{
-			get
-			{
-				return 0f;
-			}
-		}
+		public virtual float Quantity => 0f;
 
-		public virtual float MaxQuantity
-		{
-			get
-			{
-				return 0f;
-			}
-		}
+		public virtual float MaxQuantity => 0f;
 
 		public IItemSlot Slot
 		{
@@ -653,21 +302,9 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public long GUID
-		{
-			get
-			{
-				return DynamicObj.GUID;
-			}
-		}
+		public long GUID => DynamicObj.GUID;
 
-		public bool IsInsideSpaceObject
-		{
-			get
-			{
-				return DynamicObj.IsInsideSpaceObject;
-			}
-		}
+		public bool IsInsideSpaceObject => DynamicObj.IsInsideSpaceObject;
 
 		public BaseSceneAttachPoint AttachPoint
 		{
@@ -693,37 +330,13 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public short InvSlotID
-		{
-			get
-			{
-				return (short)((InvSlot == null) ? (-1111) : InvSlot.SlotID);
-			}
-		}
+		public short InvSlotID => (short)((InvSlot == null) ? (-1111) : InvSlot.SlotID);
 
-		public virtual Transform TipOfItem
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public virtual Transform TipOfItem => null;
 
-		public virtual bool IsInvetoryEquipable
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public virtual bool IsInvetoryEquipable => false;
 
-		public virtual EquipType EquipTo
-		{
-			get
-			{
-				return EquipType.Hands;
-			}
-		}
+		public virtual EquipType EquipTo => EquipType.Hands;
 
 		public float MaxHealth
 		{
@@ -761,29 +374,11 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public bool Damageable
-		{
-			get
-			{
-				return _Damageable;
-			}
-		}
+		public bool Damageable => _Damageable;
 
-		public bool Expendable
-		{
-			get
-			{
-				return _Expendable;
-			}
-		}
+		public bool Expendable => _Expendable;
 
-		public bool Repairable
-		{
-			get
-			{
-				return _Repairable;
-			}
-		}
+		public bool Repairable => _Repairable;
 
 		public float UsageWear
 		{
@@ -862,30 +457,14 @@ namespace ZeroGravity.Objects
 
 		protected virtual void Awake()
 		{
-			ItemSlot[] componentsInChildren = GetComponentsInChildren<ItemSlot>();
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CAwake_003Em__0;
-			}
-			Func<ItemSlot, short> keySelector = _003C_003Ef__am_0024cache0;
-			if (_003C_003Ef__am_0024cache1 == null)
-			{
-				_003C_003Ef__am_0024cache1 = _003CAwake_003Em__1;
-			}
-			Slots = componentsInChildren.ToDictionary(keySelector, _003C_003Ef__am_0024cache1);
+			Slots = GetComponentsInChildren<ItemSlot>().ToDictionary((ItemSlot k) => k.ID, (ItemSlot v) => v);
 			foreach (ItemSlot value in Slots.Values)
 			{
 				value.Parent = DynamicObj;
 			}
 			if (this is IBatteryConsumer)
 			{
-				IBatteryConsumer obj = this as IBatteryConsumer;
-				Dictionary<short, ItemSlot> slots = Slots;
-				if (_003C_003Ef__am_0024cache2 == null)
-				{
-					_003C_003Ef__am_0024cache2 = _003CAwake_003Em__2;
-				}
-				obj.BatterySlot = slots.FirstOrDefault(_003C_003Ef__am_0024cache2).Value;
+				(this as IBatteryConsumer).BatterySlot = Slots.FirstOrDefault((KeyValuePair<short, ItemSlot> m) => m.Value.ItemTypes.Contains(ItemType.AltairHandDrillBattery)).Value;
 			}
 			DynamicObj = GetComponent<DynamicObject>();
 			if (Type == ItemType.MachineryPart)
@@ -946,7 +525,7 @@ namespace ZeroGravity.Objects
 		{
 			if (obj != null && (obj is Pivot || obj is SpaceObjectVessel))
 			{
-				AttachToObjectImpl(obj, null, null, null, false, sendAttachMessage);
+				AttachToObjectImpl(obj, null, null, null, hideObject: false, sendAttachMessage);
 				return;
 			}
 			Dbg.Error("Cannot attach item to object", base.name, GUID, obj, obj.GUID);
@@ -954,14 +533,14 @@ namespace ZeroGravity.Objects
 
 		public virtual void AttachToBone(Player pl, AnimatorHelper.HumanBones bone, bool resetTransform = true, bool hide = false)
 		{
-			OnAttach(true, true);
+			OnAttach(isAttached: true, isOnPlayer: true);
 			DynamicObj.transform.parent = pl.AnimHelper.GetBone(bone);
-			DynamicObj.ToggleKinematic(true);
+			DynamicObj.ToggleKinematic(value: true);
 			DynamicObj.ToggleActive(!hide);
-			DynamicObj.ToggleEnabled(false, true);
+			DynamicObj.ToggleEnabled(isEnabled: false, toggleColliders: true);
 			if (resetTransform)
 			{
-				DynamicObj.transform.Reset(true);
+				DynamicObj.transform.Reset(resetScale: true);
 			}
 			else
 			{
@@ -971,16 +550,131 @@ namespace ZeroGravity.Objects
 
 		protected virtual void AttachToObjectImpl(SpaceObject obj, Transform attachToTrans, IItemSlot slot, BaseSceneAttachPoint attachPoint, bool hideObject, bool sendAttachMessage)
 		{
-			_003CAttachToObjectImpl_003Ec__AnonStorey1 _003CAttachToObjectImpl_003Ec__AnonStorey = new _003CAttachToObjectImpl_003Ec__AnonStorey1();
-			_003CAttachToObjectImpl_003Ec__AnonStorey.attachToTrans = attachToTrans;
-			_003CAttachToObjectImpl_003Ec__AnonStorey.obj = obj;
-			_003CAttachToObjectImpl_003Ec__AnonStorey.attachPoint = attachPoint;
-			_003CAttachToObjectImpl_003Ec__AnonStorey.slot = slot;
-			_003CAttachToObjectImpl_003Ec__AnonStorey.hideObject = hideObject;
-			_003CAttachToObjectImpl_003Ec__AnonStorey._0024this = this;
 			bool flag = DynamicObj.Parent is Player && (DynamicObj.Parent as Player).Inventory.ItemInHands == this;
-			Task task = new Task(_003CAttachToObjectImpl_003Ec__AnonStorey._003C_003Em__0);
-			if (flag && _003CAttachToObjectImpl_003Ec__AnonStorey.slot == null && _003CAttachToObjectImpl_003Ec__AnonStorey.attachPoint == null && DynamicObj.Parent is MyPlayer)
+			Task task = new Task(delegate
+			{
+				IItemSlot slot2 = Slot;
+				bool flag2 = attachToTrans != null;
+				if (DynamicObj.Parent is Pivot && DynamicObj.Parent != obj)
+				{
+					Client.Instance.SolarSystem.RemoveArtificialBody(DynamicObj.Parent as Pivot);
+					UnityEngine.Object.Destroy(DynamicObj.Parent.gameObject);
+				}
+				if (AttachPoint != null && AttachPoint != attachPoint)
+				{
+					AttachPoint.DetachItem(this);
+					AttachPoint = null;
+				}
+				if (DynamicObj.Parent is Player && (attachPoint != null || !flag2))
+				{
+					Player player = DynamicObj.Parent as Player;
+					if (player.Inventory.ItemInHands == this)
+					{
+						player.Inventory.RemoveItemFromHands(resetStance: true);
+					}
+					ChangeEquip(EquipType.None, player);
+				}
+				if (InvSlot != null && InvSlot != slot)
+				{
+					if (InvSlot.Item == this)
+					{
+						if (InvSlot.Inventory != null && InvSlot.Inventory.Parent is Player && InvSlot.SlotType == InventorySlot.Type.Hands)
+						{
+							InvSlot.Inventory.RemoveItemFromHands(resetStance: true);
+						}
+						else
+						{
+							InvSlot.SetItem(null);
+						}
+					}
+					InvSlot = null;
+				}
+				if (attachPoint != null)
+				{
+					AttachPoint = attachPoint;
+				}
+				if (slot != null)
+				{
+					if (slot is InventorySlot)
+					{
+						InvSlot = slot as InventorySlot;
+						if ((slot as InventorySlot).Inventory != null && (slot as InventorySlot).Inventory.Parent is SpaceObjectTransferable)
+						{
+							SpaceObjectTransferable spaceObjectTransferable = (slot as InventorySlot).Inventory.Parent as SpaceObjectTransferable;
+						}
+					}
+					else if (slot is ItemSlot)
+					{
+						(slot as ItemSlot).FitItem(this);
+					}
+				}
+				SpaceObject parent = DynamicObj.Parent;
+				DynamicObj.Parent = obj;
+				DynamicObj.ResetRoomTriggers();
+				DynamicObj.ToggleKinematic(flag2 || parent is OtherPlayer);
+				DynamicObj.ToggleActive(!hideObject);
+				DynamicObj.ToggleTriggerColliders(DynamicObj.Parent is Corpse);
+				DynamicObj.ToggleEnabled(!flag2 || AttachPoint != null || DynamicObj.Parent is Corpse, toggleColliders: true);
+				if (!flag2)
+				{
+					DynamicObj.CheckRoomTrigger(null);
+				}
+				if (InvSlot != null && InvSlot.SlotType == InventorySlot.Type.Hands)
+				{
+					InvSlot.Inventory.ItemAddedToHands(this);
+					if (PickupSound != null)
+					{
+						PickupSound.Play();
+					}
+				}
+				try
+				{
+					if (AttachPoint != null)
+					{
+						AttachPoint.AttachItem(this);
+					}
+				}
+				catch (Exception ex)
+				{
+					Dbg.Error("Item attach point exception", ex.Message, ex.StackTrace);
+				}
+				if (DynamicObj.Parent is DynamicObject)
+				{
+				}
+				if (flag2)
+				{
+					base.transform.SetParent(attachToTrans);
+					base.transform.Reset(resetScale: true);
+					OnAttach(AttachPoint == null, DynamicObj.Parent is Player);
+				}
+				else
+				{
+					OnAttach(isAttached: true, DynamicObj.Parent is Player);
+					if (DynamicObj.Parent is SpaceObjectVessel)
+					{
+						base.transform.SetParent(DynamicObj.Parent.TransferableObjectsRoot.transform);
+						DynamicObj.CheckRoomTrigger(null);
+					}
+					else if (DynamicObj.Parent is Pivot && DynamicObj.Parent.Type == SpaceObjectType.DynamicObjectPivot)
+					{
+						base.transform.SetParent(DynamicObj.Parent.TransferableObjectsRoot.transform);
+					}
+					else
+					{
+						Dbg.Error("Dynamic object cannot be attached to DynamicObjectRoot");
+					}
+				}
+				Client.Instance.CanvasManager.CanvasUI.HelmetHud.HandsSlotUpdate();
+				if (slot2 != null && slot2 is BaseSceneAttachPoint && Slot != null && Slot.Parent.GetComponentInParent<MyPlayer>() != null)
+				{
+					SceneQuestTrigger.Check((slot2 as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.DetachItem);
+				}
+				else if (slot2 != null && slot2.Parent.GetComponentInParent<MyPlayer>() != null && Slot != null && Slot is BaseSceneAttachPoint)
+				{
+					SceneQuestTrigger.Check((Slot as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.AttachItem);
+				}
+			});
+			if (flag && slot == null && attachPoint == null && DynamicObj.Parent is MyPlayer)
 			{
 				MyPlayer.Instance.AnimHelper.SetDropTask(task);
 			}
@@ -1020,32 +714,28 @@ namespace ZeroGravity.Objects
 
 		public void ProcessAttachData(DynamicObjectAttachData data, SpaceObject prevParent = null)
 		{
-			_003CProcessAttachData_003Ec__AnonStorey2 _003CProcessAttachData_003Ec__AnonStorey = new _003CProcessAttachData_003Ec__AnonStorey2();
-			_003CProcessAttachData_003Ec__AnonStorey.data = data;
-			_003CProcessAttachData_003Ec__AnonStorey.prevParent = prevParent;
-			_003CProcessAttachData_003Ec__AnonStorey._0024this = this;
-			SpaceObject @object = Client.Instance.GetObject(_003CProcessAttachData_003Ec__AnonStorey.data.ParentGUID, _003CProcessAttachData_003Ec__AnonStorey.data.ParentType);
+			SpaceObject @object = Client.Instance.GetObject(data.ParentGUID, data.ParentType);
 			if (@object == null)
 			{
-				Dbg.Error("Could not find space object to attach item to.", base.name, _003CProcessAttachData_003Ec__AnonStorey.data.ParentGUID, _003CProcessAttachData_003Ec__AnonStorey.data.ParentType);
+				Dbg.Error("Could not find space object to attach item to.", base.name, data.ParentGUID, data.ParentType);
 				return;
 			}
 			if (@object is OtherPlayer)
 			{
 				DynamicObj.Master = false;
-				DynamicObj.ToggleKinematic(true);
+				DynamicObj.ToggleKinematic(value: true);
 			}
 			if (Slot != null && Slot is ItemSlot && Slot.Item == this)
 			{
 				(Slot as ItemSlot).RemoveItem();
 			}
-			if (this is Outfit && (InvSlotID != _003CProcessAttachData_003Ec__AnonStorey.data.InventorySlotID || DynamicObj.Parent != @object))
+			if (this is Outfit && (InvSlotID != data.InventorySlotID || DynamicObj.Parent != @object))
 			{
-				if (_003CProcessAttachData_003Ec__AnonStorey.data.InventorySlotID == -2)
+				if (data.InventorySlotID == -2)
 				{
 					if (@object is MyPlayer)
 					{
-						(this as Outfit).EquipOutfit(MyPlayer.Instance, false);
+						(this as Outfit).EquipOutfit(MyPlayer.Instance, checkHands: false);
 					}
 					else if (@object is OtherPlayer)
 					{
@@ -1061,7 +751,7 @@ namespace ZeroGravity.Objects
 				{
 					if (DynamicObj.Parent is MyPlayer)
 					{
-						(this as Outfit).TakeOffOutfit(MyPlayer.Instance, false);
+						(this as Outfit).TakeOffOutfit(MyPlayer.Instance, sendToServer: false);
 					}
 					else if (DynamicObj.Parent is OtherPlayer && (DynamicObj.Parent as OtherPlayer).Inventory.Outfit == this)
 					{
@@ -1073,49 +763,93 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
-			if (_003CProcessAttachData_003Ec__AnonStorey.data.InventorySlotID != -1111 && _003CProcessAttachData_003Ec__AnonStorey.data.InventorySlotID != -2)
+			if (data.InventorySlotID != -1111 && data.InventorySlotID != -2)
 			{
 				InventorySlot inventorySlot = null;
 				if (@object is Player)
 				{
-					inventorySlot = (@object as Player).Inventory.GetSlotByID(_003CProcessAttachData_003Ec__AnonStorey.data.InventorySlotID);
+					inventorySlot = (@object as Player).Inventory.GetSlotByID(data.InventorySlotID);
 				}
 				else if (@object is DynamicObject && (@object as DynamicObject).Item is Outfit)
 				{
-					inventorySlot = ((@object as DynamicObject).Item as Outfit).GetSlotByID(_003CProcessAttachData_003Ec__AnonStorey.data.InventorySlotID);
+					inventorySlot = ((@object as DynamicObject).Item as Outfit).GetSlotByID(data.InventorySlotID);
 				}
 				else if (@object is Corpse && (@object as Corpse).Inventory != null)
 				{
-					inventorySlot = (@object as Corpse).Inventory.GetSlotByID(_003CProcessAttachData_003Ec__AnonStorey.data.InventorySlotID);
+					inventorySlot = (@object as Corpse).Inventory.GetSlotByID(data.InventorySlotID);
 				}
 				if (inventorySlot != null)
 				{
-					inventorySlot.SetItem(this, false);
+					inventorySlot.SetItem(this, sendMessage: false);
 					return;
 				}
 			}
-			if (_003CProcessAttachData_003Ec__AnonStorey.data.APDetails != null && @object is SpaceObjectVessel)
+			if (data.APDetails != null && @object is SpaceObjectVessel)
 			{
-				BaseSceneAttachPoint structureObject = (@object as SpaceObjectVessel).GetStructureObject<BaseSceneAttachPoint>(_003CProcessAttachData_003Ec__AnonStorey.data.APDetails.InSceneID);
+				BaseSceneAttachPoint structureObject = (@object as SpaceObjectVessel).GetStructureObject<BaseSceneAttachPoint>(data.APDetails.InSceneID);
 				if (structureObject != null)
 				{
-					AttachToObject(structureObject, false, false);
+					AttachToObject(structureObject, hideObject: false, sendAttachMessage: false);
 					return;
 				}
 			}
 			if (@object is DynamicObject && (@object as DynamicObject).Item != null)
 			{
-				ItemSlot value;
-				if ((@object as DynamicObject).Item.Slots.Count > 0 && (@object as DynamicObject).Item.Slots.TryGetValue(_003CProcessAttachData_003Ec__AnonStorey.data.ItemSlotID, out value))
+				if ((@object as DynamicObject).Item.Slots.Count > 0 && (@object as DynamicObject).Item.Slots.TryGetValue(data.ItemSlotID, out var value))
 				{
-					AttachToObject(value, false);
+					AttachToObject(value, sendAttachMessage: false);
 				}
 				(@object as DynamicObject).Item.UpdateUI();
 				return;
 			}
-			AttachToObject(@object, false);
-			_003CProcessAttachData_003Ec__AnonStorey.myPlayerIsParent = DynamicObj.Parent is MyPlayer;
-			Task task = new Task(_003CProcessAttachData_003Ec__AnonStorey._003C_003Em__0);
+			AttachToObject(@object, sendAttachMessage: false);
+			bool myPlayerIsParent = DynamicObj.Parent is MyPlayer;
+			Task task = new Task(delegate
+			{
+				if (!DynamicObj.IsAttached)
+				{
+					if (!myPlayerIsParent || !DynamicObj.Master)
+					{
+						if (data.LocalPosition != null)
+						{
+							base.transform.localPosition = data.LocalPosition.ToVector3();
+						}
+						if (data.LocalRotation != null)
+						{
+							base.transform.localRotation = data.LocalRotation.ToQuaternion();
+						}
+					}
+					if (DynamicObj.Master)
+					{
+						if (data.Velocity != null)
+						{
+							DynamicObj.rigidBody.velocity = data.Velocity.ToVector3();
+						}
+						if (data.Torque != null)
+						{
+							AddTorque(data.Torque.ToVector3(), ForceMode.Impulse);
+						}
+						if (data.ThrowForce != null)
+						{
+							Vector3 vector = data.ThrowForce.ToVector3();
+							if ((MyPlayer.Instance.CurrentRoomTrigger == null || !MyPlayer.Instance.CurrentRoomTrigger.UseGravity || MyPlayer.Instance.CurrentRoomTrigger.GravityForce == Vector3.zero) && prevParent == MyPlayer.Instance)
+							{
+								float num = MyPlayer.Instance.rigidBody.mass + DynamicObj.Mass;
+								AddForce(vector * (MyPlayer.Instance.rigidBody.mass / num), ForceMode.VelocityChange);
+								MyPlayer.Instance.rigidBody.AddForce(-vector * (DynamicObj.Mass / num), ForceMode.VelocityChange);
+							}
+							else
+							{
+								AddForce(vector, ForceMode.Impulse);
+							}
+						}
+					}
+					if (ThrowSound != null)
+					{
+						ThrowSound.Play();
+					}
+				}
+			});
 			if (DynamicObj.Parent is MyPlayer && MyPlayer.Instance.AnimHelper.DropTask != null)
 			{
 				MyPlayer.Instance.AnimHelper.AfterDropTask = task;
@@ -1198,9 +932,7 @@ namespace ZeroGravity.Objects
 			{
 				TakeDamage(dos.Damages);
 			}
-			IItemSlot slot = Slot;
-			Inventory inventory = MyPlayer.Instance.Inventory;
-			if (slot == ((inventory != null) ? inventory.HandsSlot : null) || (DynamicObj.Parent is DynamicObject && (DynamicObj.Parent as DynamicObject).Item.Slot == MyPlayer.Instance.Inventory.HandsSlot))
+			if (Slot == MyPlayer.Instance.Inventory?.HandsSlot || (DynamicObj.Parent is DynamicObject && (DynamicObj.Parent as DynamicObject).Item.Slot == MyPlayer.Instance.Inventory.HandsSlot))
 			{
 				Client.Instance.CanvasManager.CanvasUI.HelmetHud.HandsSlotUpdate();
 			}
@@ -1236,7 +968,7 @@ namespace ZeroGravity.Objects
 		public T GetBaseAuxData<T>() where T : DynamicObjectAuxData
 		{
 			List<ItemSlotData> list = new List<ItemSlotData>();
-			ItemSlot[] componentsInChildren = GetComponentsInChildren<ItemSlot>(true);
+			ItemSlot[] componentsInChildren = GetComponentsInChildren<ItemSlot>(includeInactive: true);
 			foreach (ItemSlot itemSlot in componentsInChildren)
 			{
 				list.Add(itemSlot.GetData());
@@ -1293,12 +1025,7 @@ namespace ZeroGravity.Objects
 				if (itemIngredientLists.Recycle.Length > 0)
 				{
 					itemIngredientsTierData2.Recycle = new Dictionary<ResourceType, float>();
-					ItemIngredient[] recycle = itemIngredientLists.Recycle;
-					if (_003C_003Ef__am_0024cache3 == null)
-					{
-						_003C_003Ef__am_0024cache3 = _003CGetIngredientsData_003Em__3;
-					}
-					foreach (ItemIngredient item in recycle.Where(_003C_003Ef__am_0024cache3))
+					foreach (ItemIngredient item in itemIngredientLists.Recycle.Where((ItemIngredient m) => m.Quantity > 0f && m.ResourceType != ResourceType.None))
 					{
 						itemIngredientsTierData2.Recycle[item.ResourceType] = item.Quantity;
 					}
@@ -1306,12 +1033,7 @@ namespace ZeroGravity.Objects
 				if (itemIngredientLists.Craft.Length > 0)
 				{
 					itemIngredientsTierData2.Craft = new Dictionary<ResourceType, float>();
-					ItemIngredient[] craft = itemIngredientLists.Craft;
-					if (_003C_003Ef__am_0024cache4 == null)
-					{
-						_003C_003Ef__am_0024cache4 = _003CGetIngredientsData_003Em__4;
-					}
-					foreach (ItemIngredient item2 in craft.Where(_003C_003Ef__am_0024cache4))
+					foreach (ItemIngredient item2 in itemIngredientLists.Craft.Where((ItemIngredient m) => m.Quantity > 0f && m.ResourceType != ResourceType.None))
 					{
 						itemIngredientsTierData2.Craft[item2.ResourceType] = item2.Quantity;
 					}
@@ -1362,7 +1084,7 @@ namespace ZeroGravity.Objects
 			}
 			base.transform.position = dropPosition;
 			ResetRoomTriggers();
-			ToggleTriggersEnabled(true);
+			ToggleTriggersEnabled(value: true);
 			Vector3 vector = new Vector3(UnityEngine.Random.Range(0.001f, 0.01f), UnityEngine.Random.Range(0.001f, 0.01f), UnityEngine.Random.Range(0.001f, 0.01f));
 			sendVelocity = velocity;
 			sendTorque = vector;
@@ -1373,11 +1095,11 @@ namespace ZeroGravity.Objects
 			base.transform.localRotation = Quaternion.identity;
 			if (MyPlayer.Instance.Parent is Pivot)
 			{
-				DynamicObj.ExitVessel(true);
+				DynamicObj.ExitVessel(forceExit: true);
 			}
 			else
 			{
-				AttachToObject(MyPlayer.Instance.Parent, true);
+				AttachToObject(MyPlayer.Instance.Parent, sendAttachMessage: true);
 			}
 			AddForce(velocity, ForceMode.VelocityChange);
 			AddTorque(vector, ForceMode.Impulse);
@@ -1493,50 +1215,34 @@ namespace ZeroGravity.Objects
 				{
 					value = TierColors[Tier - 1];
 				}
-				List<Renderer> list = GetComponentsInChildren<Renderer>(true).Where(_003CApplyTierColor_003Em__5).ToList();
+				List<Renderer> list = (from m in GetComponentsInChildren<Renderer>(includeInactive: true)
+					where m.GetComponentInParent<Item>() == this
+					select m).ToList();
 				if (this is Outfit)
 				{
 					if (DynamicObj.Parent is MyPlayer && MyPlayer.Instance.CurrentOutfit == this)
 					{
-						Renderer[] componentsInChildren = MyPlayer.Instance.Outfit.GetComponentsInChildren<Renderer>(true);
-						if (_003C_003Ef__am_0024cache5 == null)
-						{
-							_003C_003Ef__am_0024cache5 = _003CApplyTierColor_003Em__6;
-						}
-						list.AddRange(componentsInChildren.Where(_003C_003Ef__am_0024cache5).ToList());
-						Renderer[] componentsInChildren2 = MyPlayer.Instance.CurrentOutfit.FoldedOutfitTrans.GetComponentsInChildren<Renderer>(true);
-						if (_003C_003Ef__am_0024cache6 == null)
-						{
-							_003C_003Ef__am_0024cache6 = _003CApplyTierColor_003Em__7;
-						}
-						list.AddRange(componentsInChildren2.Where(_003C_003Ef__am_0024cache6).ToList());
-						Renderer[] componentsInChildren3 = MyPlayer.Instance.CurrentOutfit.OutfitTrans.GetComponentsInChildren<Renderer>(true);
-						if (_003C_003Ef__am_0024cache7 == null)
-						{
-							_003C_003Ef__am_0024cache7 = _003CApplyTierColor_003Em__8;
-						}
-						list.AddRange(componentsInChildren3.Where(_003C_003Ef__am_0024cache7).ToList());
+						list.AddRange((from m in MyPlayer.Instance.Outfit.GetComponentsInChildren<Renderer>(includeInactive: true)
+							where m.GetComponentInParent<Item>() == null
+							select m).ToList());
+						list.AddRange((from m in MyPlayer.Instance.CurrentOutfit.FoldedOutfitTrans.GetComponentsInChildren<Renderer>(includeInactive: true)
+							where m.GetComponentInParent<Item>() == null
+							select m).ToList());
+						list.AddRange((from m in MyPlayer.Instance.CurrentOutfit.OutfitTrans.GetComponentsInChildren<Renderer>(includeInactive: true)
+							where m.GetComponentInParent<Item>() == null
+							select m).ToList());
 					}
 					else if (DynamicObj.Parent is OtherPlayer && (DynamicObj.Parent as OtherPlayer).tpsController.CurrentOutfit == this)
 					{
-						Renderer[] componentsInChildren4 = (DynamicObj.Parent as OtherPlayer).tpsController.Outfit.GetComponentsInChildren<Renderer>(true);
-						if (_003C_003Ef__am_0024cache8 == null)
-						{
-							_003C_003Ef__am_0024cache8 = _003CApplyTierColor_003Em__9;
-						}
-						list.AddRange(componentsInChildren4.Where(_003C_003Ef__am_0024cache8).ToList());
-						Renderer[] componentsInChildren5 = (DynamicObj.Parent as OtherPlayer).tpsController.CurrentOutfit.FoldedOutfitTrans.GetComponentsInChildren<Renderer>(true);
-						if (_003C_003Ef__am_0024cache9 == null)
-						{
-							_003C_003Ef__am_0024cache9 = _003CApplyTierColor_003Em__A;
-						}
-						list.AddRange(componentsInChildren5.Where(_003C_003Ef__am_0024cache9).ToList());
-						Renderer[] componentsInChildren6 = (DynamicObj.Parent as OtherPlayer).tpsController.CurrentOutfit.OutfitTrans.GetComponentsInChildren<Renderer>(true);
-						if (_003C_003Ef__am_0024cacheA == null)
-						{
-							_003C_003Ef__am_0024cacheA = _003CApplyTierColor_003Em__B;
-						}
-						list.AddRange(componentsInChildren6.Where(_003C_003Ef__am_0024cacheA).ToList());
+						list.AddRange((from m in (DynamicObj.Parent as OtherPlayer).tpsController.Outfit.GetComponentsInChildren<Renderer>(includeInactive: true)
+							where m.GetComponentInParent<Item>() == null
+							select m).ToList());
+						list.AddRange((from m in (DynamicObj.Parent as OtherPlayer).tpsController.CurrentOutfit.FoldedOutfitTrans.GetComponentsInChildren<Renderer>(includeInactive: true)
+							where m.GetComponentInParent<Item>() == null
+							select m).ToList());
+						list.AddRange((from m in (DynamicObj.Parent as OtherPlayer).tpsController.CurrentOutfit.OutfitTrans.GetComponentsInChildren<Renderer>(includeInactive: true)
+							where m.GetComponentInParent<Item>() == null
+							select m).ToList());
 					}
 				}
 				foreach (Renderer item in list.Distinct())
@@ -1564,7 +1270,7 @@ namespace ZeroGravity.Objects
 				{
 					if (i == Tier - 1)
 					{
-						gameObject.Activate(true);
+						gameObject.Activate(value: true);
 					}
 					else
 					{
@@ -1594,38 +1300,13 @@ namespace ZeroGravity.Objects
 
 		public static Dictionary<ResourceType, float> GetRecycleResources(ItemType itemType, GenericItemSubType subType, MachineryPartType partType, int tier)
 		{
-			_003CGetRecycleResources_003Ec__AnonStorey3 _003CGetRecycleResources_003Ec__AnonStorey = new _003CGetRecycleResources_003Ec__AnonStorey3();
-			_003CGetRecycleResources_003Ec__AnonStorey.itemType = itemType;
-			_003CGetRecycleResources_003Ec__AnonStorey.subType = subType;
-			_003CGetRecycleResources_003Ec__AnonStorey.partType = partType;
-			_003CGetRecycleResources_003Ec__AnonStorey.tier = tier;
-			ItemIngredientsData itemIngredientsData = Client.Instance.ItemsIngredients.FirstOrDefault(_003CGetRecycleResources_003Ec__AnonStorey._003C_003Em__0);
+			ItemIngredientsData itemIngredientsData = Client.Instance.ItemsIngredients.FirstOrDefault((ItemIngredientsData m) => m.Type == itemType && m.SubType == subType && m.PartType == partType);
 			if (itemIngredientsData != null)
 			{
-				Dictionary<int, ItemIngredientsTierData> ingredientsTiers = itemIngredientsData.IngredientsTiers;
-				if (_003C_003Ef__am_0024cacheB == null)
-				{
-					_003C_003Ef__am_0024cacheB = _003CGetRecycleResources_003Em__C;
-				}
-				KeyValuePair<int, ItemIngredientsTierData>? keyValuePair = ingredientsTiers.OrderBy(_003C_003Ef__am_0024cacheB).Reverse().FirstOrDefault(_003CGetRecycleResources_003Ec__AnonStorey._003C_003Em__1);
+				KeyValuePair<int, ItemIngredientsTierData>? keyValuePair = itemIngredientsData.IngredientsTiers.OrderBy((KeyValuePair<int, ItemIngredientsTierData> m) => m.Key).Reverse().FirstOrDefault((KeyValuePair<int, ItemIngredientsTierData> m) => m.Key <= tier);
 				if (keyValuePair.HasValue && keyValuePair.Value.Value.Recycle != null && keyValuePair.Value.Value.Recycle.Count > 0)
 				{
-					Dictionary<ResourceType, float> recycle = keyValuePair.Value.Value.Recycle;
-					if (_003C_003Ef__am_0024cacheC == null)
-					{
-						_003C_003Ef__am_0024cacheC = _003CGetRecycleResources_003Em__D;
-					}
-					IEnumerable<KeyValuePair<ResourceType, float>> source = recycle.Where(_003C_003Ef__am_0024cacheC);
-					if (_003C_003Ef__am_0024cacheD == null)
-					{
-						_003C_003Ef__am_0024cacheD = _003CGetRecycleResources_003Em__E;
-					}
-					Func<KeyValuePair<ResourceType, float>, ResourceType> keySelector = _003C_003Ef__am_0024cacheD;
-					if (_003C_003Ef__am_0024cacheE == null)
-					{
-						_003C_003Ef__am_0024cacheE = _003CGetRecycleResources_003Em__F;
-					}
-					return source.ToDictionary(keySelector, _003C_003Ef__am_0024cacheE);
+					return keyValuePair.Value.Value.Recycle.Where((KeyValuePair<ResourceType, float> m) => m.Key != 0 && m.Value > 0f).ToDictionary((KeyValuePair<ResourceType, float> k) => k.Key, (KeyValuePair<ResourceType, float> v) => v.Value);
 				}
 			}
 			return null;
@@ -1643,38 +1324,13 @@ namespace ZeroGravity.Objects
 
 		public static Dictionary<ResourceType, float> GetCraftingResources(ItemType itemType, GenericItemSubType subType, MachineryPartType partType, int tier)
 		{
-			_003CGetCraftingResources_003Ec__AnonStorey4 _003CGetCraftingResources_003Ec__AnonStorey = new _003CGetCraftingResources_003Ec__AnonStorey4();
-			_003CGetCraftingResources_003Ec__AnonStorey.itemType = itemType;
-			_003CGetCraftingResources_003Ec__AnonStorey.subType = subType;
-			_003CGetCraftingResources_003Ec__AnonStorey.partType = partType;
-			_003CGetCraftingResources_003Ec__AnonStorey.tier = tier;
-			ItemIngredientsData itemIngredientsData = Client.Instance.ItemsIngredients.FirstOrDefault(_003CGetCraftingResources_003Ec__AnonStorey._003C_003Em__0);
+			ItemIngredientsData itemIngredientsData = Client.Instance.ItemsIngredients.FirstOrDefault((ItemIngredientsData m) => m.Type == itemType && m.SubType == subType && m.PartType == partType);
 			if (itemIngredientsData != null)
 			{
-				Dictionary<int, ItemIngredientsTierData> ingredientsTiers = itemIngredientsData.IngredientsTiers;
-				if (_003C_003Ef__am_0024cacheF == null)
-				{
-					_003C_003Ef__am_0024cacheF = _003CGetCraftingResources_003Em__10;
-				}
-				KeyValuePair<int, ItemIngredientsTierData>? keyValuePair = ingredientsTiers.OrderBy(_003C_003Ef__am_0024cacheF).Reverse().FirstOrDefault(_003CGetCraftingResources_003Ec__AnonStorey._003C_003Em__1);
+				KeyValuePair<int, ItemIngredientsTierData>? keyValuePair = itemIngredientsData.IngredientsTiers.OrderBy((KeyValuePair<int, ItemIngredientsTierData> m) => m.Key).Reverse().FirstOrDefault((KeyValuePair<int, ItemIngredientsTierData> m) => m.Key <= tier);
 				if (keyValuePair.HasValue && keyValuePair.Value.Value.Craft != null && keyValuePair.Value.Value.Craft.Count > 0)
 				{
-					Dictionary<ResourceType, float> craft = keyValuePair.Value.Value.Craft;
-					if (_003C_003Ef__am_0024cache10 == null)
-					{
-						_003C_003Ef__am_0024cache10 = _003CGetCraftingResources_003Em__11;
-					}
-					IEnumerable<KeyValuePair<ResourceType, float>> source = craft.Where(_003C_003Ef__am_0024cache10);
-					if (_003C_003Ef__am_0024cache11 == null)
-					{
-						_003C_003Ef__am_0024cache11 = _003CGetCraftingResources_003Em__12;
-					}
-					Func<KeyValuePair<ResourceType, float>, ResourceType> keySelector = _003C_003Ef__am_0024cache11;
-					if (_003C_003Ef__am_0024cache12 == null)
-					{
-						_003C_003Ef__am_0024cache12 = _003CGetCraftingResources_003Em__13;
-					}
-					return source.ToDictionary(keySelector, _003C_003Ef__am_0024cache12);
+					return keyValuePair.Value.Value.Craft.Where((KeyValuePair<ResourceType, float> m) => m.Key != 0 && m.Value > 0f).ToDictionary((KeyValuePair<ResourceType, float> k) => k.Key, (KeyValuePair<ResourceType, float> v) => v.Value);
 				}
 			}
 			return null;
@@ -1682,12 +1338,7 @@ namespace ZeroGravity.Objects
 
 		public static List<ItemIngredientsData> GetCraftableItems()
 		{
-			List<ItemIngredientsData> itemsIngredients = Client.Instance.ItemsIngredients;
-			if (_003C_003Ef__am_0024cache13 == null)
-			{
-				_003C_003Ef__am_0024cache13 = _003CGetCraftableItems_003Em__14;
-			}
-			return itemsIngredients.Where(_003C_003Ef__am_0024cache13).ToList();
+			return Client.Instance.ItemsIngredients.Where((ItemIngredientsData m) => m.IngredientsTiers != null && m.IngredientsTiers.Count((KeyValuePair<int, ItemIngredientsTierData> n) => n.Value.Recycle != null && n.Value.Recycle.Count > 0) > 0).ToList();
 		}
 
 		public static string GetName(ItemCompoundType item)
@@ -1752,12 +1403,7 @@ namespace ZeroGravity.Objects
 		{
 			if (Slot is BaseSceneAttachPoint && (Slot as BaseSceneAttachPoint).SceneQuestTriggers != null)
 			{
-				List<SceneQuestTrigger> sceneQuestTriggers = (Slot as BaseSceneAttachPoint).SceneQuestTriggers;
-				if (_003C_003Ef__am_0024cache14 == null)
-				{
-					_003C_003Ef__am_0024cache14 = _003CRequestPickUp_003Em__15;
-				}
-				SceneQuestTrigger sceneQuestTrigger = sceneQuestTriggers.FirstOrDefault(_003C_003Ef__am_0024cache14);
+				SceneQuestTrigger sceneQuestTrigger = (Slot as BaseSceneAttachPoint).SceneQuestTriggers.FirstOrDefault((SceneQuestTrigger m) => m.TriggerEvent == SceneQuestTriggerEvent.DetachItem);
 				if (sceneQuestTrigger != null && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Active && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Completed)
 				{
 					return;
@@ -1784,12 +1430,7 @@ namespace ZeroGravity.Objects
 		{
 			if (Slot is BaseSceneAttachPoint && (Slot as BaseSceneAttachPoint).SceneQuestTriggers != null)
 			{
-				List<SceneQuestTrigger> sceneQuestTriggers = (Slot as BaseSceneAttachPoint).SceneQuestTriggers;
-				if (_003C_003Ef__am_0024cache15 == null)
-				{
-					_003C_003Ef__am_0024cache15 = _003CRequestDrop_003Em__16;
-				}
-				SceneQuestTrigger sceneQuestTrigger = sceneQuestTriggers.FirstOrDefault(_003C_003Ef__am_0024cache15);
+				SceneQuestTrigger sceneQuestTrigger = (Slot as BaseSceneAttachPoint).SceneQuestTriggers.FirstOrDefault((SceneQuestTrigger m) => m.TriggerEvent == SceneQuestTriggerEvent.DetachItem);
 				if (sceneQuestTrigger != null && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Active && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Completed)
 				{
 					return;
@@ -1807,57 +1448,51 @@ namespace ZeroGravity.Objects
 
 		public void RequestAttach(IItemSlot slot)
 		{
-			_003CRequestAttach_003Ec__AnonStorey5 _003CRequestAttach_003Ec__AnonStorey = new _003CRequestAttach_003Ec__AnonStorey5();
 			if (slot is InventorySlot && (slot as InventorySlot).SlotType == InventorySlot.Type.Hands && (slot as InventorySlot).Inventory.Parent is MyPlayer)
 			{
 				((slot as InventorySlot).Inventory.Parent as MyPlayer).ChangeStance(MyPlayer.PlayerStance.Passive, 1f);
 			}
 			if (Slot is BaseSceneAttachPoint && (Slot as BaseSceneAttachPoint).SceneQuestTriggers != null)
 			{
-				List<SceneQuestTrigger> sceneQuestTriggers = (Slot as BaseSceneAttachPoint).SceneQuestTriggers;
-				if (_003C_003Ef__am_0024cache16 == null)
-				{
-					_003C_003Ef__am_0024cache16 = _003CRequestAttach_003Em__17;
-				}
-				SceneQuestTrigger sceneQuestTrigger = sceneQuestTriggers.FirstOrDefault(_003C_003Ef__am_0024cache16);
+				SceneQuestTrigger sceneQuestTrigger = (Slot as BaseSceneAttachPoint).SceneQuestTriggers.FirstOrDefault((SceneQuestTrigger m) => m.TriggerEvent == SceneQuestTriggerEvent.DetachItem);
 				if (sceneQuestTrigger != null && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Active && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Completed)
 				{
 					return;
 				}
 			}
-			_003CRequestAttach_003Ec__AnonStorey.swapItem = slot.Item;
+			Item swapItem = slot.Item;
 			IItemSlot slot2 = Slot;
 			if (slot.Item != null && slot2 != null)
 			{
-				if (!slot2.CanFitItem(_003CRequestAttach_003Ec__AnonStorey.swapItem) && slot2.Parent is DynamicObject)
+				if (!slot2.CanFitItem(swapItem) && slot2.Parent is DynamicObject)
 				{
-					ItemSlot itemSlot = (slot2.Parent as DynamicObject).Item.Slots.Values.FirstOrDefault(_003CRequestAttach_003Ec__AnonStorey._003C_003Em__0);
+					ItemSlot itemSlot = (slot2.Parent as DynamicObject).Item.Slots.Values.FirstOrDefault((ItemSlot m) => m.CanFitItem(swapItem));
 					if (itemSlot == null)
 					{
-						if (MyPlayer.Instance.Inventory.CanAddToInventory(_003CRequestAttach_003Ec__AnonStorey.swapItem))
+						if (MyPlayer.Instance.Inventory.CanAddToInventory(swapItem))
 						{
-							_003CRequestAttach_003Ec__AnonStorey.swapItem.RequestPickUp();
+							swapItem.RequestPickUp();
 						}
 						else
 						{
-							_003CRequestAttach_003Ec__AnonStorey.swapItem.RequestDrop();
+							swapItem.RequestDrop();
 						}
 					}
 				}
 				else
 				{
-					_003CRequestAttach_003Ec__AnonStorey.swapItem.DynamicObj.SendAttachMessage(slot2.Parent, slot2);
+					swapItem.DynamicObj.SendAttachMessage(slot2.Parent, slot2);
 				}
 			}
-			else if (_003CRequestAttach_003Ec__AnonStorey.swapItem != null && slot2 == null)
+			else if (swapItem != null && slot2 == null)
 			{
-				if (MyPlayer.Instance.Inventory.CanAddToInventory(_003CRequestAttach_003Ec__AnonStorey.swapItem))
+				if (MyPlayer.Instance.Inventory.CanAddToInventory(swapItem))
 				{
-					_003CRequestAttach_003Ec__AnonStorey.swapItem.RequestPickUp();
+					swapItem.RequestPickUp();
 				}
 				else
 				{
-					_003CRequestAttach_003Ec__AnonStorey.swapItem.RequestDrop();
+					swapItem.RequestDrop();
 				}
 			}
 			DynamicObj.SendAttachMessage(slot.Parent, slot);
@@ -1943,18 +1578,17 @@ namespace ZeroGravity.Objects
 				}
 				if (DynamicObj.Parent is SpaceObjectVessel)
 				{
-					IOrderedEnumerable<KeyValuePair<int, VesselRepairPoint>> source = (DynamicObj.Parent as SpaceObjectVessel).RepairPoints.Where(_003CExplode_003Em__18).OrderBy(_003CExplode_003Em__19);
-					if (_003C_003Ef__am_0024cache17 == null)
-					{
-						_003C_003Ef__am_0024cache17 = _003CExplode_003Em__1A;
-					}
-					foreach (VesselRepairPoint item in source.Select(_003C_003Ef__am_0024cache17))
+					foreach (VesselRepairPoint item in from m in (DynamicObj.Parent as SpaceObjectVessel).RepairPoints
+						where (base.transform.position - m.Value.transform.position).magnitude <= ExplosionRadius
+						orderby (base.transform.position - m.Value.transform.position).magnitude
+						select m into kvp
+						select kvp.Value)
 					{
 						hashSet2.Add(new VesselObjectID(item.ParentVessel.GUID, item.InSceneID));
 					}
 				}
 			}
-			Client.Instance.NetworkController.SendToGameServer(new ExplosionMessage
+			NetworkController.Instance.SendToGameServer(new ExplosionMessage
 			{
 				AffectedGUIDs = hashSet.ToArray(),
 				ItemGUID = GUID,
@@ -1969,7 +1603,7 @@ namespace ZeroGravity.Objects
 			{
 				ExplosionSound.Play();
 			}
-			base.gameObject.Activate(false);
+			base.gameObject.Activate(value: false);
 			exploded = true;
 			if (Slot != null)
 			{
@@ -2001,12 +1635,9 @@ namespace ZeroGravity.Objects
 				foreach (Vector3 target in GetTargets(colliderOverlaped.transform.position, 0.1f))
 				{
 					Debug.DrawRay(base.transform.position, target - base.transform.position, Color.green, 100f);
-					RaycastHit[] source = Physics.RaycastAll(base.transform.position, target - base.transform.position, ExplosionRadius, explosionRaycastMask, QueryTriggerInteraction.Collide);
-					if (_003C_003Ef__am_0024cache18 == null)
-					{
-						_003C_003Ef__am_0024cache18 = _003CCheckDamageables_003Em__1B;
-					}
-					RaycastHit[] array = source.OrderBy(_003C_003Ef__am_0024cache18).ToArray();
+					RaycastHit[] array = (from m in Physics.RaycastAll(base.transform.position, target - base.transform.position, ExplosionRadius, explosionRaycastMask, QueryTriggerInteraction.Collide)
+						orderby m.distance
+						select m).ToArray();
 					RaycastHit[] array2 = array;
 					for (int i = 0; i < array2.Length; i++)
 					{
@@ -2041,12 +1672,9 @@ namespace ZeroGravity.Objects
 				TargetingPoint[] array = componentsInChildren;
 				foreach (TargetingPoint targetingPoint in array)
 				{
-					RaycastHit[] source = Physics.RaycastAll(base.transform.position, targetingPoint.transform.position - base.transform.position, ExplosionRadius, explosionRaycastMask, QueryTriggerInteraction.Collide);
-					if (_003C_003Ef__am_0024cache19 == null)
-					{
-						_003C_003Ef__am_0024cache19 = _003CCheckPlayers_003Em__1C;
-					}
-					RaycastHit[] array2 = source.OrderBy(_003C_003Ef__am_0024cache19).ToArray();
+					RaycastHit[] array2 = (from m in Physics.RaycastAll(base.transform.position, targetingPoint.transform.position - base.transform.position, ExplosionRadius, explosionRaycastMask, QueryTriggerInteraction.Collide)
+						orderby m.distance
+						select m).ToArray();
 					RaycastHit[] array3 = array2;
 					for (int j = 0; j < array3.Length; j++)
 					{
@@ -2084,12 +1712,9 @@ namespace ZeroGravity.Objects
 			}
 			foreach (Vector3 target in GetTargets(colliderOverlaped.transform.position, 0.35f))
 			{
-				RaycastHit[] source = Physics.RaycastAll(base.transform.position, target - base.transform.position, ExplosionRadius, explosionRaycastMask, QueryTriggerInteraction.Collide);
-				if (_003C_003Ef__am_0024cache1A == null)
-				{
-					_003C_003Ef__am_0024cache1A = _003CCheckRepairPoints_003Em__1D;
-				}
-				RaycastHit[] array = source.OrderBy(_003C_003Ef__am_0024cache1A).ToArray();
+				RaycastHit[] array = (from m in Physics.RaycastAll(base.transform.position, target - base.transform.position, ExplosionRadius, explosionRaycastMask, QueryTriggerInteraction.Collide)
+					orderby m.distance
+					select m).ToArray();
 				RaycastHit[] array2 = array;
 				for (int i = 0; i < array2.Length; i++)
 				{
@@ -2117,206 +1742,6 @@ namespace ZeroGravity.Objects
 			list.Add(targetPos + quaternion * quaternion2 * new Vector3(0f - radius, radius, 0f));
 			list.Add(targetPos + quaternion * quaternion2 * new Vector3(0f - radius, 0f - radius, 0f));
 			return list;
-		}
-
-		[CompilerGenerated]
-		private static short _003CAwake_003Em__0(ItemSlot k)
-		{
-			return k.ID;
-		}
-
-		[CompilerGenerated]
-		private static ItemSlot _003CAwake_003Em__1(ItemSlot v)
-		{
-			return v;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CAwake_003Em__2(KeyValuePair<short, ItemSlot> m)
-		{
-			return m.Value.ItemTypes.Contains(ItemType.AltairHandDrillBattery);
-		}
-
-		[CompilerGenerated]
-		private static bool _003CGetIngredientsData_003Em__3(ItemIngredient m)
-		{
-			return m.Quantity > 0f && m.ResourceType != ResourceType.None;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CGetIngredientsData_003Em__4(ItemIngredient m)
-		{
-			return m.Quantity > 0f && m.ResourceType != ResourceType.None;
-		}
-
-		[CompilerGenerated]
-		private bool _003CApplyTierColor_003Em__5(Renderer m)
-		{
-			return m.GetComponentInParent<Item>() == this;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CApplyTierColor_003Em__6(Renderer m)
-		{
-			return m.GetComponentInParent<Item>() == null;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CApplyTierColor_003Em__7(Renderer m)
-		{
-			return m.GetComponentInParent<Item>() == null;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CApplyTierColor_003Em__8(Renderer m)
-		{
-			return m.GetComponentInParent<Item>() == null;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CApplyTierColor_003Em__9(Renderer m)
-		{
-			return m.GetComponentInParent<Item>() == null;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CApplyTierColor_003Em__A(Renderer m)
-		{
-			return m.GetComponentInParent<Item>() == null;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CApplyTierColor_003Em__B(Renderer m)
-		{
-			return m.GetComponentInParent<Item>() == null;
-		}
-
-		[CompilerGenerated]
-		private static int _003CGetRecycleResources_003Em__C(KeyValuePair<int, ItemIngredientsTierData> m)
-		{
-			return m.Key;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CGetRecycleResources_003Em__D(KeyValuePair<ResourceType, float> m)
-		{
-			return m.Key != 0 && m.Value > 0f;
-		}
-
-		[CompilerGenerated]
-		private static ResourceType _003CGetRecycleResources_003Em__E(KeyValuePair<ResourceType, float> k)
-		{
-			return k.Key;
-		}
-
-		[CompilerGenerated]
-		private static float _003CGetRecycleResources_003Em__F(KeyValuePair<ResourceType, float> v)
-		{
-			return v.Value;
-		}
-
-		[CompilerGenerated]
-		private static int _003CGetCraftingResources_003Em__10(KeyValuePair<int, ItemIngredientsTierData> m)
-		{
-			return m.Key;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CGetCraftingResources_003Em__11(KeyValuePair<ResourceType, float> m)
-		{
-			return m.Key != 0 && m.Value > 0f;
-		}
-
-		[CompilerGenerated]
-		private static ResourceType _003CGetCraftingResources_003Em__12(KeyValuePair<ResourceType, float> k)
-		{
-			return k.Key;
-		}
-
-		[CompilerGenerated]
-		private static float _003CGetCraftingResources_003Em__13(KeyValuePair<ResourceType, float> v)
-		{
-			return v.Value;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CGetCraftableItems_003Em__14(ItemIngredientsData m)
-		{
-			int result;
-			if (m.IngredientsTiers != null)
-			{
-				Dictionary<int, ItemIngredientsTierData> ingredientsTiers = m.IngredientsTiers;
-				if (_003C_003Ef__am_0024cache1B == null)
-				{
-					_003C_003Ef__am_0024cache1B = _003CGetCraftableItems_003Em__1E;
-				}
-				result = ((ingredientsTiers.Count(_003C_003Ef__am_0024cache1B) > 0) ? 1 : 0);
-			}
-			else
-			{
-				result = 0;
-			}
-			return (byte)result != 0;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CRequestPickUp_003Em__15(SceneQuestTrigger m)
-		{
-			return m.TriggerEvent == SceneQuestTriggerEvent.DetachItem;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CRequestDrop_003Em__16(SceneQuestTrigger m)
-		{
-			return m.TriggerEvent == SceneQuestTriggerEvent.DetachItem;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CRequestAttach_003Em__17(SceneQuestTrigger m)
-		{
-			return m.TriggerEvent == SceneQuestTriggerEvent.DetachItem;
-		}
-
-		[CompilerGenerated]
-		private bool _003CExplode_003Em__18(KeyValuePair<int, VesselRepairPoint> m)
-		{
-			return (base.transform.position - m.Value.transform.position).magnitude <= ExplosionRadius;
-		}
-
-		[CompilerGenerated]
-		private float _003CExplode_003Em__19(KeyValuePair<int, VesselRepairPoint> m)
-		{
-			return (base.transform.position - m.Value.transform.position).magnitude;
-		}
-
-		[CompilerGenerated]
-		private static VesselRepairPoint _003CExplode_003Em__1A(KeyValuePair<int, VesselRepairPoint> kvp)
-		{
-			return kvp.Value;
-		}
-
-		[CompilerGenerated]
-		private static float _003CCheckDamageables_003Em__1B(RaycastHit m)
-		{
-			return m.distance;
-		}
-
-		[CompilerGenerated]
-		private static float _003CCheckPlayers_003Em__1C(RaycastHit m)
-		{
-			return m.distance;
-		}
-
-		[CompilerGenerated]
-		private static float _003CCheckRepairPoints_003Em__1D(RaycastHit m)
-		{
-			return m.distance;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CGetCraftableItems_003Em__1E(KeyValuePair<int, ItemIngredientsTierData> n)
-		{
-			return n.Value.Recycle != null && n.Value.Recycle.Count > 0;
 		}
 	}
 }

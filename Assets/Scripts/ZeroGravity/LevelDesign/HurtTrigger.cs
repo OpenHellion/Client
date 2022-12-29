@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using OpenHellion.Networking;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
@@ -131,7 +132,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (!(duration <= float.Epsilon))
 			{
-				Client.Instance.NetworkController.SendToGameServer(new HurtPlayerMessage
+				NetworkController.Instance.SendToGameServer(new HurtPlayerMessage
 				{
 					Damage = new PlayerDamage
 					{

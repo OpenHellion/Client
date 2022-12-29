@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.UI;
+using OpenHellion.Networking;
 
 namespace ZeroGravity.Objects
 {
@@ -47,73 +47,17 @@ namespace ZeroGravity.Objects
 
 		private List<ICargoCompartment> _Compartments;
 
-		[CompilerGenerated]
-		private static Func<CargoResourceData, float> _003C_003Ef__am_0024cache0;
+		string ICargo.Name => Localization.RepairTool;
 
-		[CompilerGenerated]
-		private static Func<RaycastHit, float> _003C_003Ef__am_0024cache1;
+		public List<ICargoCompartment> Compartments => _Compartments;
 
-		string ICargo.Name
-		{
-			get
-			{
-				return Localization.RepairTool;
-			}
-		}
+		public SpaceObjectVessel ParentVessel => null;
 
-		public List<ICargoCompartment> Compartments
-		{
-			get
-			{
-				return _Compartments;
-			}
-		}
+		public override float MaxQuantity => FuelCompartment.Capacity;
 
-		public SpaceObjectVessel ParentVessel
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public override float Quantity => (FuelCompartment.Resources == null) ? 0f : FuelCompartment.Resources.Sum((CargoResourceData m) => m.Quantity);
 
-		public override float MaxQuantity
-		{
-			get
-			{
-				return FuelCompartment.Capacity;
-			}
-		}
-
-		public override float Quantity
-		{
-			get
-			{
-				float result;
-				if (FuelCompartment.Resources != null)
-				{
-					List<CargoResourceData> resources = FuelCompartment.Resources;
-					if (_003C_003Ef__am_0024cache0 == null)
-					{
-						_003C_003Ef__am_0024cache0 = _003Cget_Quantity_003Em__0;
-					}
-					result = resources.Sum(_003C_003Ef__am_0024cache0);
-				}
-				else
-				{
-					result = 0f;
-				}
-				return result;
-			}
-		}
-
-		public float ResourcePercentage
-		{
-			get
-			{
-				return Quantity / MaxQuantity;
-			}
-		}
+		public float ResourcePercentage => Quantity / MaxQuantity;
 
 		private new void Awake()
 		{
@@ -136,7 +80,7 @@ namespace ZeroGravity.Objects
 		public override void PrimaryReleased()
 		{
 			active = false;
-			StopRepairEffect(true);
+			StopRepairEffect(sendStats: true);
 			MyPlayer.Instance.ChangeStance(MyPlayer.PlayerStance.Passive, StanceChangeSpeedMultiplier);
 		}
 
@@ -208,12 +152,9 @@ namespace ZeroGravity.Objects
 			bool flag = false;
 			Vector3 position = MyPlayer.Instance.FpsController.MainCamera.transform.position;
 			Vector3 direction = MyPlayer.Instance.FpsController.MainCamera.transform.rotation * Vector3.forward;
-			RaycastHit[] source = Physics.RaycastAll(position, direction, Range, raycastMask, QueryTriggerInteraction.Collide);
-			if (_003C_003Ef__am_0024cache1 == null)
-			{
-				_003C_003Ef__am_0024cache1 = _003CUpdate_003Em__1;
-			}
-			RaycastHit[] array = source.OrderBy(_003C_003Ef__am_0024cache1).ToArray();
+			RaycastHit[] array = (from x in Physics.RaycastAll(position, direction, Range, raycastMask, QueryTriggerInteraction.Collide)
+				orderby x.distance
+				select x).ToArray();
 			RaycastHit[] array2 = array;
 			for (int i = 0; i < array2.Length; i++)
 			{
@@ -221,7 +162,7 @@ namespace ZeroGravity.Objects
 				Item componentInParent = raycastHit.collider.gameObject.GetComponentInParent<Item>();
 				if (Type != ItemType.FireExtinguisher && componentInParent != null && componentInParent.Repairable && componentInParent.MaxHealth - componentInParent.Health > float.Epsilon && FuelCompartment.Resources[0].Quantity > float.Epsilon)
 				{
-					Client.Instance.NetworkController.SendToGameServer(new RepairItemMessage
+					NetworkController.Instance.SendToGameServer(new RepairItemMessage
 					{
 						GUID = componentInParent.GUID
 					});
@@ -232,7 +173,7 @@ namespace ZeroGravity.Objects
 				VesselRepairPoint componentInParent2 = raycastHit.collider.gameObject.GetComponentInParent<VesselRepairPoint>();
 				if (componentInParent2 != null && componentInParent2.MaxHealth - componentInParent2.Health > float.Epsilon && FuelCompartment.Resources[0].Quantity > float.Epsilon && (Type != ItemType.FireExtinguisher || (Type == ItemType.FireExtinguisher && componentInParent2.DamageType == RepairPointDamageType.Fire && componentInParent2.SecondaryDamageActive)))
 				{
-					Client.Instance.NetworkController.SendToGameServer(new RepairVesselMessage
+					NetworkController.Instance.SendToGameServer(new RepairVesselMessage
 					{
 						ID = new VesselObjectID(componentInParent2.ParentVessel.GUID, componentInParent2.InSceneID)
 					});
@@ -250,7 +191,7 @@ namespace ZeroGravity.Objects
 			}
 			if (!flag && Type == ItemType.FireExtinguisher && FuelCompartment.Resources[0].Quantity > float.Epsilon)
 			{
-				Client.Instance.NetworkController.SendToGameServer(new RepairItemMessage
+				NetworkController.Instance.SendToGameServer(new RepairItemMessage
 				{
 					GUID = -1L
 				});
@@ -263,11 +204,11 @@ namespace ZeroGravity.Objects
 				{
 					animHelper.SetParameterTrigger(AnimatorHelperTrigger);
 				}
-				PlayRepairEffect(true);
+				PlayRepairEffect(sendStats: true);
 			}
 			else
 			{
-				StopRepairEffect(true);
+				StopRepairEffect(sendStats: true);
 			}
 		}
 
@@ -306,18 +247,6 @@ namespace ZeroGravity.Objects
 		public override string QuantityCheck()
 		{
 			return FormatHelper.Percentage(Quantity / MaxQuantity);
-		}
-
-		[CompilerGenerated]
-		private static float _003Cget_Quantity_003Em__0(CargoResourceData m)
-		{
-			return m.Quantity;
-		}
-
-		[CompilerGenerated]
-		private static float _003CUpdate_003Em__1(RaycastHit x)
-		{
-			return x.distance;
 		}
 	}
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,14 +10,14 @@ namespace OpenHellion.ProviderSystem
 	/// 	A system to make the underlying connections to external game providers, such as Steam and Discord.
 	/// 	The point is to make the game be interoperable with any provider of gaming services.
 	/// </summary>
-	public class ProviderManager : MonoBehaviour
+	internal class ProviderManager : MonoBehaviour
 	{
-		private static ProviderManager _instance;
+		private static ProviderManager s_instance;
 		private static ProviderManager Instance
 		{
 			get
 			{
-				if (_instance != null) return _instance;
+				if (s_instance != null) return s_instance;
 
 				return new GameObject("ExternalProvider").AddComponent<ProviderManager>();
 			}
@@ -36,6 +37,22 @@ namespace OpenHellion.ProviderSystem
 			}
 		}
 
+		public static string SteamId
+		{
+			get
+			{
+				foreach (IProvider provider in Instance._allProviders)
+				{
+					if (provider is SteamProvider)
+					{
+						return (provider as SteamProvider).GetNativeId();
+					}
+				}
+
+				return String.Empty;
+			}
+		}
+
 		/// <summary>
 		/// 	If any of the underlying providers is initialized.
 		/// </summary>
@@ -51,12 +68,12 @@ namespace OpenHellion.ProviderSystem
 		void Awake()
 		{
 			// Only one instance can exist at a time.
-			if (_instance != null)
+			if (s_instance != null)
 			{
 				GameObject.Destroy(gameObject, 0f);
 				Dbg.Error("Tried to create new ProviderManager, but there already exists another manager.");
 			}
-			_instance = this;
+			s_instance = this;
 
 			DontDestroyOnLoad(gameObject);
 

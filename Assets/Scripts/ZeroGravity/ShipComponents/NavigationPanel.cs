@@ -12,6 +12,7 @@ using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
+using OpenHellion.Networking;
 
 namespace ZeroGravity.ShipComponents
 {
@@ -279,11 +280,13 @@ namespace ZeroGravity.ShipComponents
 			}
 		}
 
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
 		[DllImport("user32.dll")]
 		private static extern bool SetCursorPos(int x, int y);
 
 		[DllImport("user32.dll")]
-		public static extern bool GetCursorPos(out POINT lpPoint);
+		private static extern bool GetCursorPos(out POINT lpPoint);
+#endif
 
 		private void Start()
 		{
@@ -323,8 +326,8 @@ namespace ZeroGravity.ShipComponents
 			ApoapsisHeight.onEndEdit.AddListener(SetApoapsis);
 			LongitudeOfAscendingNode.onEndEdit.AddListener(SetLoan);
 			PositionOnOrbit.onEndEdit.AddListener(SetOrbitPosition);
-			Client.Instance.NetworkController.EventSystem.AddListener(typeof(AuthorizedVesselsResponse), AuthorizedVesselsResponseListener);
-			Client.Instance.NetworkController.SendToGameServer(new AuthorizedVesselsRequest());
+			EventSystem.AddListener(typeof(AuthorizedVesselsResponse), AuthorizedVesselsResponseListener);
+			NetworkController.Instance.SendToGameServer(new AuthorizedVesselsRequest());
 			WarpButton.gameObject.Activate(ParentVessel.SubSystems.Values.FirstOrDefault((SubSystem m) => m.Type == SubSystemType.FTL) != null);
 		}
 
@@ -337,7 +340,7 @@ namespace ZeroGravity.ShipComponents
 			ApoapsisHeight.onEndEdit.RemoveAllListeners();
 			LongitudeOfAscendingNode.onEndEdit.RemoveAllListeners();
 			PositionOnOrbit.onEndEdit.RemoveAllListeners();
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(AuthorizedVesselsResponse), AuthorizedVesselsResponseListener);
+			EventSystem.RemoveListener(typeof(AuthorizedVesselsResponse), AuthorizedVesselsResponseListener);
 		}
 
 		private void Update()
@@ -739,16 +742,20 @@ namespace ZeroGravity.ShipComponents
 				int num = (int)PitchSlider.handleRect.position.x;
 				SetScanningConePitch(359f);
 				int num2 = (int)PitchSlider.handleRect.position.x;
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
 				GetCursorPos(out var lpPoint);
 				SetCursorPos(lpPoint.x + (num2 - num), lpPoint.y);
+#endif
 			}
 			else if (val == 360f)
 			{
 				int num3 = (int)PitchSlider.handleRect.position.x;
 				SetScanningConePitch(0f);
 				int num4 = (int)PitchSlider.handleRect.position.x;
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
 				GetCursorPos(out var lpPoint2);
 				SetCursorPos(lpPoint2.x + (num4 - num3), lpPoint2.y);
+#endif
 			}
 			else
 			{
@@ -776,16 +783,20 @@ namespace ZeroGravity.ShipComponents
 				int num = (int)YawSlider.handleRect.position.x;
 				SetScanningConeYaw(359f);
 				int num2 = (int)YawSlider.handleRect.position.x;
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
 				GetCursorPos(out var lpPoint);
 				SetCursorPos(lpPoint.x + (num2 - num), lpPoint.y);
+#endif
 			}
 			else if (val == 360f)
 			{
 				int num3 = (int)YawSlider.handleRect.position.x;
 				SetScanningConeYaw(0f);
 				int num4 = (int)YawSlider.handleRect.position.x;
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
 				GetCursorPos(out var lpPoint2);
 				SetCursorPos(lpPoint2.x + (num4 - num3), lpPoint2.y);
+#endif
 			}
 			else
 			{

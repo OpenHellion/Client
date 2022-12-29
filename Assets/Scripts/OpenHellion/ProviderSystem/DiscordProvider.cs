@@ -14,9 +14,9 @@ namespace OpenHellion.ProviderSystem
 	/// <summary>
 	/// 	This class handles everything related to Discord. Acts as a bridge between the game and the API.
 	/// </summary>
-	public class DiscordProvider : IProvider
+	internal class DiscordProvider : IProvider
 	{
-		private static Dictionary<long, string> planets = new Dictionary<long, string>
+		private static Dictionary<long, string> s_planets = new Dictionary<long, string>
 		{
 			{ 1L, "Hellion" },
 			{ 2L, "Nimath" },
@@ -39,10 +39,10 @@ namespace OpenHellion.ProviderSystem
 			{ 19L, "Ia" }
 		};
 
-		private static List<string> descriptions = new List<string> { "Building a huuuuuge station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job", "Repairing a hull breach" };
+		private static List<string> s_descriptions = new List<string> { "Building a huuuuuge station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job", "Repairing a hull breach" };
 
-		public long ClientID = 349114016968474626L;
-		public uint OptionalSteamId = 588210;
+		private long _clientId = 349114016968474626L;
+		private uint _optionalSteamId = 588210;
 
 		private int _callbackCalls;
 		private Discord.Discord _discord;
@@ -60,7 +60,7 @@ namespace OpenHellion.ProviderSystem
 			// Init Discord API.
 			try
 			{
-				_discord = new(ClientID, (UInt64)CreateFlags.NoRequireDiscord);
+				_discord = new(_clientId, (UInt64)CreateFlags.NoRequireDiscord);
 			}
 			catch (ResultException)
 			{
@@ -75,7 +75,7 @@ namespace OpenHellion.ProviderSystem
 			_activityManager = _discord.GetActivityManager();
 
 			// Required to work with Steam.
-			_activityManager.RegisterSteam(OptionalSteamId);
+			_activityManager.RegisterSteam(_optionalSteamId);
 			_activityManager.RegisterCommand();
 
 			// Callbacks.
@@ -198,12 +198,12 @@ namespace OpenHellion.ProviderSystem
 				{
 					_activity.Secrets.Join = Client.Instance.GetInviteString(null);
 					_activity.Assets.LargeText = Localization.InGameDescription + ": " + Client.LastConnectedServer.Name;
-					_activity.Details = descriptions[UnityEngine.Random.Range(0, descriptions.Count - 1)];
+					_activity.Details = s_descriptions[UnityEngine.Random.Range(0, s_descriptions.Count - 1)];
 					ArtificialBody artificialBody = MyPlayer.Instance.Parent as ArtificialBody;
 					if (artificialBody != null && artificialBody.ParentCelesitalBody != null)
 					{
 						string value;
-						if (planets.TryGetValue(artificialBody.ParentCelesitalBody.GUID, out value))
+						if (s_planets.TryGetValue(artificialBody.ParentCelesitalBody.GUID, out value))
 						{
 							_activity.Assets.LargeImage = artificialBody.ParentCelesitalBody.GUID.ToString();
 						}

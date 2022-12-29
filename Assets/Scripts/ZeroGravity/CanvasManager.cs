@@ -12,6 +12,7 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
 using OpenHellion.ProviderSystem;
+using OpenHellion.Networking;
 
 namespace ZeroGravity
 {
@@ -814,7 +815,7 @@ namespace ZeroGravity
 			Client.Instance.ClearServerList();
 			Client.Instance.UpdateServers = false;
 			SelectScreen(Screen.OnLoad);
-			Client.Instance.NetworkController.Disconnect();
+			NetworkController.Instance.Disconnect();
 		}
 
 		/// <summary>

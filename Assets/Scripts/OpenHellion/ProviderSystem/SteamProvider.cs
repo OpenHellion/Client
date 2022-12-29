@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace OpenHellion.ProviderSystem
 {
-	public class SteamProvider : IProvider
+	internal class SteamProvider : IProvider
 	{
 		private bool _currentStatsRequested;
 		private bool _userStatsReceived;
@@ -18,6 +18,17 @@ namespace OpenHellion.ProviderSystem
 		private ConcurrentQueue<Task> _pendingTasks = new ConcurrentQueue<Task>();
 
 		protected SteamAPIWarningMessageHook_t _SteamAPIWarningMessageHook;
+
+		[AOT.MonoPInvokeCallback(typeof(SteamAPIWarningMessageHook_t))]
+		protected static void SteamAPIDebugTextHook(int nSeverity, System.Text.StringBuilder pchDebugText)
+		{
+			Dbg.Warning(pchDebugText);
+		}
+
+		internal string GetNativeId()
+		{
+			return SteamUser.GetSteamID().ToString();
+		}
 
 		bool IProvider.Initialise()
 		{
@@ -31,27 +42,9 @@ namespace OpenHellion.ProviderSystem
 				Dbg.Error("[Steamworks.NET] DllCheck Test returned false, One or more of the Steamworks binaries seems to be the wrong version.", this);
 			}
 
-			try
-			{
-				// If Steam is not running or the game wasn't started through Steam, SteamAPI_RestartAppIfNecessary starts the
-				// Steam client and also launches this game again if the User owns it. This can act as a rudimentary form of DRM.
-				// See the Valve documentation for more information: https://partner.steamgames.com/doc/sdk/api#initialization_and_shutdown
-				if (SteamAPI.RestartAppIfNecessary((AppId_t)588210u))
-				{
-					Application.Quit();
-					return false;
-				}
-			}
-			catch (System.DllNotFoundException e)
-			{ // We catch this exception here, as it will be the first occurrence of it.
-				Dbg.Error("[Steamworks.NET] Could not load [lib]steam_api.dll/so/dylib. It's likely not in the correct location. Refer to the README for more details.\n" + e, this);
-
-				Application.Quit();
-				return false;
-			}
-
 			// https://partner.steamgames.com/doc/sdk/api#initialization_and_shutdown
 			bool success = SteamAPI.Init();
+
 			if (success)
 			{
 				Dbg.Log("Steamworks API initialised.");
@@ -94,11 +87,6 @@ namespace OpenHellion.ProviderSystem
 			{
 				_userStatsReceivedCallback = Callback<UserStatsReceived_t>.Create(callback => {
 					_userStatsReceived = true;
-					foreach (object value3 in Enum.GetValues(typeof(ProviderStatID)))
-					{
-						if (!GetStat((ProviderStatID)value3, out int _) && !GetStat((ProviderStatID)value3, out int x))
-						{}
-					}
 				});
 				_currentStatsRequested = SteamUserStats.RequestCurrentStats();
 			}
@@ -240,12 +228,6 @@ namespace OpenHellion.ProviderSystem
 		public void InviteUser(string id, string secret)
 		{
 			SteamFriends.InviteUserToGame(new CSteamID(UInt64.Parse(id)), secret);
-		}
-
-		[AOT.MonoPInvokeCallback(typeof(SteamAPIWarningMessageHook_t))]
-		protected static void SteamAPIDebugTextHook(int nSeverity, System.Text.StringBuilder pchDebugText)
-		{
-			Dbg.Warning(pchDebugText);
 		}
 	}
 }

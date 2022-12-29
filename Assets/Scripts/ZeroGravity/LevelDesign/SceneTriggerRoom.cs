@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.Networking;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.CharacterMovement;
@@ -349,7 +350,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void ChangeAirPressure(float pressure)
 		{
-			Client.Instance.NetworkController.SendToGameServer(new RoomPressureMessage
+			NetworkController.Instance.SendToGameServer(new RoomPressureMessage
 			{
 				ID = new VesselObjectID(ParentVessel.GUID, InSceneID),
 				TargetPressure = pressure
@@ -358,7 +359,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void ChangeAirPressure(SceneTriggerRoom room)
 		{
-			Client.Instance.NetworkController.SendToGameServer(new RoomPressureMessage
+			NetworkController.Instance.SendToGameServer(new RoomPressureMessage
 			{
 				ID = new VesselObjectID(ParentVessel.GUID, InSceneID),
 				TargetRoomID = ((!(room == null)) ? new VesselObjectID(room.ParentVessel.GUID, room.InSceneID) : null)

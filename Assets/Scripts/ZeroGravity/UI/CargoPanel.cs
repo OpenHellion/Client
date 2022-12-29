@@ -8,6 +8,7 @@ using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
+using OpenHellion.Networking;
 
 namespace ZeroGravity.UI
 {
@@ -934,7 +935,7 @@ namespace ZeroGravity.UI
 						transferResourceMessage.FromCompartmentID = compartment.ID;
 						if (transferResourceMessage != null)
 						{
-							Client.Instance.NetworkController.SendToGameServer(transferResourceMessage);
+							NetworkController.Instance.SendToGameServer(transferResourceMessage);
 						}
 						flag = true;
 					}
@@ -979,7 +980,7 @@ namespace ZeroGravity.UI
 								transferResourceMessage.FromCompartmentID = CurrentlySelectedCargoBay.Compartments[0].ID;
 								if (transferResourceMessage != null)
 								{
-									Client.Instance.NetworkController.SendToGameServer(transferResourceMessage);
+									NetworkController.Instance.SendToGameServer(transferResourceMessage);
 								}
 								flag = true;
 							}
@@ -1007,7 +1008,7 @@ namespace ZeroGravity.UI
 							transferResourceMessage3.FromCompartmentID = CurrentlySelectedCargoBay.Compartments[0].ID;
 							if (transferResourceMessage3 != null)
 							{
-								Client.Instance.NetworkController.SendToGameServer(transferResourceMessage3);
+								NetworkController.Instance.SendToGameServer(transferResourceMessage3);
 							}
 							flag = true;
 						}
@@ -1044,7 +1045,7 @@ namespace ZeroGravity.UI
 					transferResourceMessage.FromCompartmentID = Refinery.Compartments[0].ID;
 					if (transferResourceMessage != null)
 					{
-						Client.Instance.NetworkController.SendToGameServer(transferResourceMessage);
+						NetworkController.Instance.SendToGameServer(transferResourceMessage);
 					}
 					flag = true;
 				}
@@ -1079,7 +1080,7 @@ namespace ZeroGravity.UI
 					transferResourceMessage.FromCompartmentID = Fabricator.Compartments[0].ID;
 					if (transferResourceMessage != null)
 					{
-						Client.Instance.NetworkController.SendToGameServer(transferResourceMessage);
+						NetworkController.Instance.SendToGameServer(transferResourceMessage);
 					}
 					flag = true;
 				}
@@ -1237,7 +1238,7 @@ namespace ZeroGravity.UI
 			}
 			if (transferResourceMessage != null)
 			{
-				Client.Instance.NetworkController.SendToGameServer(transferResourceMessage);
+				NetworkController.Instance.SendToGameServer(transferResourceMessage);
 			}
 			CancelTransfer();
 			if (RefineryActive.activeInHierarchy)

@@ -6,6 +6,7 @@ using UnityEngine.Rendering;
 using ZeroGravity.CharacterMovement;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
+using OpenHellion.Networking;
 
 namespace ZeroGravity.Objects
 {
@@ -105,9 +106,9 @@ namespace ZeroGravity.Objects
 
 		protected void Awake()
 		{
-			Client.Instance.NetworkController.EventSystem.AddListener(typeof(KillPlayerMessage), KillPlayerMessageListener);
-			Client.Instance.NetworkController.EventSystem.AddListener(typeof(PlayerDrillingMessage), PlayerDrillingMessageListener);
-			Client.Instance.NetworkController.EventSystem.AddListener(typeof(PlayerStatsMessage), PlayerStatsMessageListener);
+			EventSystem.AddListener(typeof(KillPlayerMessage), KillPlayerMessageListener);
+			EventSystem.AddListener(typeof(PlayerDrillingMessage), PlayerDrillingMessageListener);
+			EventSystem.AddListener(typeof(PlayerStatsMessage), PlayerStatsMessageListener);
 			if (tpsController == null)
 			{
 				tpsController = base.transform.GetComponent<OtherCharacterController>();
@@ -540,9 +541,9 @@ namespace ZeroGravity.Objects
 		protected override void OnDestroy()
 		{
 			base.OnDestroy();
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(KillPlayerMessage), KillPlayerMessageListener);
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(PlayerDrillingMessage), PlayerDrillingMessageListener);
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(PlayerStatsMessage), PlayerStatsMessageListener);
+			EventSystem.RemoveListener(typeof(KillPlayerMessage), KillPlayerMessageListener);
+			EventSystem.RemoveListener(typeof(PlayerDrillingMessage), PlayerDrillingMessageListener);
+			EventSystem.RemoveListener(typeof(PlayerStatsMessage), PlayerStatsMessageListener);
 			Client.Instance.RemovePlayer(base.GUID);
 		}
 

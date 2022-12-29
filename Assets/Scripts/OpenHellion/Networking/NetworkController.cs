@@ -6,8 +6,9 @@ using Steamworks;
 using System;
 using System.Runtime.InteropServices;
 using OpenHellion.ProviderSystem;
+using ZeroGravity.Network;
 
-namespace ZeroGravity.Network
+namespace OpenHellion.Networking
 {
 	public class NetworkController : MonoBehaviour
 	{
@@ -17,13 +18,11 @@ namespace ZeroGravity.Network
 
 		public static CharacterData CharacterData;
 
-		public EventSystem EventSystem;
-
 		public long SenderID;
 
 		private MainServerThreads _mainServerThread;
 
-		private ConnectionThread _connectionThread;
+		private GameServerThread _connectionThread;
 
 		private HashSet<long> _spawnObjectsList = new HashSet<long>();
 
@@ -35,16 +34,32 @@ namespace ZeroGravity.Network
 
 		private bool GetP2PPacketsThreadActive;
 
+		private static NetworkController s_instance;
+		public static NetworkController Instance
+		{
+			get
+			{
+				return s_instance;
+			}
+		}
+
 		private void Awake()
 		{
-			EventSystem = new EventSystem();
+			// Only one instance allowed.
+			if (s_instance != null)
+			{
+				Destroy(this);
+				return;
+			}
+
+			s_instance = this;
 			_mainServerThread = new MainServerThreads();
 
 		}
 
 		private void FixedUpdate()
 		{
-			EventSystem.InvokeQueuedData();
+			EventSystem.Instance.InvokeQueuedData();
 
 			if (_spawnObjectsList.Count > 0)
 			{
@@ -104,7 +119,7 @@ namespace ZeroGravity.Network
 			{
 				_connectionThread.Disconnect();
 			}
-			_connectionThread = new ConnectionThread();
+			_connectionThread = new GameServerThread();
 			NameOfCurrentServer = serverData.Name;
 			if (!serverData.UseAltIPAddress)
 			{
@@ -123,7 +138,7 @@ namespace ZeroGravity.Network
 			{
 				_connectionThread.Disconnect();
 			}
-			_connectionThread = new ConnectionThread();
+			_connectionThread = new GameServerThread();
 			_connectionThread.Start("127.0.0.1", port, 0L, string.Empty, userId);
 		}
 

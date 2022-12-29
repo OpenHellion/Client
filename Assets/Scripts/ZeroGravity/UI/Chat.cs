@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using OpenHellion.Networking;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Network;
@@ -148,7 +149,7 @@ namespace ZeroGravity.UI
 			TextChatMessage textChatMessage = new TextChatMessage();
 			textChatMessage.MessageText = msg;
 			textChatMessage.Local = local;
-			Client.Instance.NetworkController.SendToGameServer(textChatMessage);
+			NetworkController.Instance.SendToGameServer(textChatMessage);
 		}
 
 		private IEnumerator ResetInputAndShowChat(bool show)

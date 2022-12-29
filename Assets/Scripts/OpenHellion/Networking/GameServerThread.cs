@@ -2,10 +2,13 @@ using System;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Threading;
+using ZeroGravity;
+using ZeroGravity.Network;
 
-namespace ZeroGravity.Network
+namespace OpenHellion.Networking
 {
-	public sealed class ConnectionThread
+	// TODO: Rewrite this.
+	internal sealed class GameServerThread
 	{
 		private volatile bool gameSocketReady;
 
@@ -116,11 +119,11 @@ namespace ZeroGravity.Network
 				{
 					if (!networkDataQueue.TryDequeue(out result))
 					{
-						Client.Instance.NetworkController.EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.RemoveLoadingCanvas));
+						EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.RemoveLoadingCanvas));
 						Dbg.Info("Problem occured while dequeueing network data");
 						socket.Close();
 						gameSocketReady = false;
-						Client.Instance.NetworkController.EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.OpenMainScreen));
+						EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.OpenMainScreen));
 						return;
 					}
 					try
@@ -130,19 +133,19 @@ namespace ZeroGravity.Network
 					}
 					catch (ArgumentNullException)
 					{
-						Client.Instance.NetworkController.EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.RemoveLoadingCanvas));
+						EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.RemoveLoadingCanvas));
 						Dbg.Error("Serialized data buffer is null", result.GetType().ToString(), result);
 					}
 					catch (Exception ex2)
 					{
-						Client.Instance.NetworkController.EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.RemoveLoadingCanvas));
+						EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.RemoveLoadingCanvas));
 						if (!(ex2 is SocketException) && !(ex2 is ObjectDisposedException))
 						{
 							Dbg.Error("SendToGameServer exception", ex2.Message, ex2.StackTrace);
 						}
 						socket.Close();
 						gameSocketReady = false;
-						Client.Instance.NetworkController.EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.OpenMainScreen));
+						EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.OpenMainScreen));
 						return;
 					}
 				}
@@ -223,7 +226,7 @@ namespace ZeroGravity.Network
 					if (retryAttempt == 0)
 					{
 						FinalizeConnecting();
-						Client.Instance.NetworkController.EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.ConnectionFailed));
+						EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.ConnectionFailed));
 					}
 					return;
 				}
@@ -235,7 +238,7 @@ namespace ZeroGravity.Network
 				}
 			}
 			FinalizeConnecting();
-			Client.Instance.NetworkController.EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.ConnectionFailed));
+			EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.ConnectionFailed));
 		}
 
 		private void FinalizeConnecting()
@@ -256,7 +259,7 @@ namespace ZeroGravity.Network
 			else
 			{
 				Disconnect();
-				Client.Instance.NetworkController.EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.ConnectionFailed));
+				EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.ConnectionFailed));
 			}
 		}
 
@@ -271,9 +274,9 @@ namespace ZeroGravity.Network
 				try
 				{
 					NetworkData networkData = Serializer.ReceiveData(socket);
-					if (networkData != null && Client.Instance.NetworkController != null)
+					if (networkData != null && NetworkController.Instance != null)
 					{
-						Client.Instance.NetworkController.EventSystem.Invoke(networkData);
+						EventSystem.Invoke(networkData);
 						Client.Instance.LogReceivedNetworkData(networkData.GetType());
 						continue;
 					}
@@ -285,7 +288,7 @@ namespace ZeroGravity.Network
 					{
 						if (!Client.Instance.LogInResponseReceived)
 						{
-							Client.Instance.NetworkController.EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.ShowMessageBox, Localization.ConnectionError, Localization.TryAgainLater));
+							EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.ShowMessageBox, Localization.ConnectionError, Localization.TryAgainLater));
 						}
 						else if (Client.Instance.LogoutRequestSent)
 						{

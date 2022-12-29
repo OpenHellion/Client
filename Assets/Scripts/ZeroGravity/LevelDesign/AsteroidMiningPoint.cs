@@ -4,6 +4,7 @@ using UnityEngine.Playables;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
+using OpenHellion.Networking;
 
 namespace ZeroGravity.LevelDesign
 {
@@ -74,7 +75,7 @@ namespace ZeroGravity.LevelDesign
 
 		private void Awake()
 		{
-			Client.Instance.NetworkController.EventSystem.AddListener(typeof(MiningPointStatsMessage), MiningPointStatsMessageListener);
+			EventSystem.AddListener(typeof(MiningPointStatsMessage), MiningPointStatsMessageListener);
 		}
 
 		private void MiningPointStatsMessageListener(NetworkData data)
@@ -113,7 +114,7 @@ namespace ZeroGravity.LevelDesign
 
 		private void OnDestroy()
 		{
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(MiningPointStatsMessage), MiningPointStatsMessageListener);
+			EventSystem.RemoveListener(typeof(MiningPointStatsMessage), MiningPointStatsMessageListener);
 		}
 	}
 }

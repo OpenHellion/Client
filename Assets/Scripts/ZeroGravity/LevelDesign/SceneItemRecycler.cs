@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using OpenHellion.Networking;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
@@ -98,7 +99,7 @@ namespace ZeroGravity.LevelDesign
 			yield return new WaitForSeconds(RecycleDelay);
 			if (BaseVesselSystem.Status == SystemStatus.OnLine && !(Item == null))
 			{
-				Client.Instance.NetworkController.SendToGameServer(new RecycleItemMessage
+				NetworkController.Instance.SendToGameServer(new RecycleItemMessage
 				{
 					ID = new VesselObjectID(ParentVessel.GUID, base.InSceneID),
 					GUID = Item.GUID,
@@ -177,7 +178,7 @@ namespace ZeroGravity.LevelDesign
 				RecycleSound.Play();
 			}
 			RecyclerUI.ShowResults(item);
-			Client.Instance.NetworkController.SendToGameServer(new RecycleItemMessage
+			NetworkController.Instance.SendToGameServer(new RecycleItemMessage
 			{
 				ID = new VesselObjectID(ParentVessel.GUID, base.InSceneID),
 				GUID = item.GUID

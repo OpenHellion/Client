@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.Networking;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -1011,7 +1012,7 @@ namespace ZeroGravity.ShipComponents
 					SpawnRuleID = (m.Key as SpaceObjectVessel).VesselData.SpawnRuleID,
 					LastKnownOrbit = (m.Key as SpaceObjectVessel).LastKnownMapOrbit.GetOrbitData(m.Key as SpaceObjectVessel)
 				}).ToList();
-			Client.Instance.NetworkController.SendToGameServer(new NavigationMapDetailsMessage
+			NetworkController.Instance.SendToGameServer(new NavigationMapDetailsMessage
 			{
 				NavMapDetails = navigationMapDetails
 			});

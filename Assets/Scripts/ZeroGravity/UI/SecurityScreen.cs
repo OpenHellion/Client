@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.Networking;
 using OpenHellion.ProviderSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -324,7 +325,7 @@ namespace ZeroGravity.UI
 
 		public void ConfirmPlayerPromotion()
 		{
-			Client.Instance.NetworkController.SendToGameServer(new VesselSecurityRequest
+			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = SecuritySystem.ParentShip.GUID,
 				AddPlayerSteamID = currentCrewman.PlayerID,
@@ -345,7 +346,7 @@ namespace ZeroGravity.UI
 			SecuritySystem.PlayerSecurityData playerSecurityData = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.Rank == AuthorizedPersonRank.CommandingOfficer);
 			if (playerSecurityData == null || playerSecurityData.PlayerID == ProviderManager.MainProvider.GetId())
 			{
-				Client.Instance.NetworkController.SendToGameServer(new VesselSecurityRequest
+				NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 				{
 					VesselGUID = SecuritySystem.ParentShip.GUID,
 					AddPlayerSteamID = ProviderManager.MainProvider.GetId(),
@@ -379,7 +380,7 @@ namespace ZeroGravity.UI
 			SecuritySystem.PlayerSecurityData player = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.GUID == MyPlayer.Instance.GUID);
 			SecuritySystem.RemovePerson(player);
 			SecuritySystem.PlayerSecurityData playerSecurityData = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.Rank == AuthorizedPersonRank.Crewman);
-			Client.Instance.NetworkController.SendToGameServer(new VesselSecurityRequest
+			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = SecuritySystem.ParentShip.GUID,
 				AddPlayerSteamID = playerSecurityData.PlayerID,

@@ -7,6 +7,7 @@ using ZeroGravity.Data;
 using ZeroGravity.Math;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
+using OpenHellion.Networking;
 
 public class AnimatorHelper : MonoBehaviour
 {
@@ -1576,7 +1577,7 @@ public class AnimatorHelper : MonoBehaviour
 		if (player is MyPlayer)
 		{
 			EventSystem.InternalEventData data = new EventSystem.InternalEventData(EventSystem.InternalEventType.EquipAnimationEnd, equipping);
-			Client.Instance.NetworkController.EventSystem.Invoke(data);
+			EventSystem.Invoke(data);
 		}
 	}
 

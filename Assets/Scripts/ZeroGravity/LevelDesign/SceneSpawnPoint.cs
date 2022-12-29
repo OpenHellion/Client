@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using OpenHellion.Networking;
 using OpenHellion.ProviderSystem;
 using ThreeEyedGames;
 using UnityEngine;
@@ -300,7 +301,7 @@ namespace ZeroGravity.LevelDesign
 			}
 			if (getPlayerFromServer)
 			{
-				Client.Instance.NetworkController.SendToGameServer(new PlayersOnServerRequest
+				NetworkController.Instance.SendToGameServer(new PlayersOnServerRequest
 				{
 					SpawnPointID = new VesselObjectID
 					{

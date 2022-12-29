@@ -10,7 +10,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Steamworks;
-using TMPro;
 using TriInspector;
 using UnityEditor;
 using UnityEngine;
@@ -26,6 +25,7 @@ using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
 using ZeroGravity.UI;
 using OpenHellion.ProviderSystem;
+using OpenHellion.Networking;
 
 namespace ZeroGravity
 {
@@ -165,8 +165,6 @@ namespace ZeroGravity
 		public static int ControlsVersion = 1;
 
 		public static volatile bool IsRunning = false;
-
-		public NetworkController NetworkController;
 
 		public SceneLoader SceneLoader;
 
@@ -567,8 +565,8 @@ namespace ZeroGravity
 				Localization.RevertToDefault();
 			}
 			InGamePanels.LocalizePanels();
-			NetworkController.EventSystem.AddListener(typeof(SignInResponse), SignInResponseListener);
-			NetworkController.EventSystem.AddListener(typeof(LogInResponse), LogInResponseListener);
+			EventSystem.AddListener(typeof(SignInResponse), SignInResponseListener);
+			EventSystem.AddListener(typeof(LogInResponse), LogInResponseListener);
 			playerServersData = null;
 			if (File.Exists(Path.Combine(Application.persistentDataPath, "ServersData.json")))
 			{
@@ -595,24 +593,24 @@ namespace ZeroGravity
 			CommunityActive.SetActive(CurrentServerFilter == ServerCategories.Community);
 			FavoritesActive.SetActive(CurrentServerFilter == ServerCategories.Favorites);
 			collisionLayerMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("PlayerCollision"));
-			NetworkController.EventSystem.AddListener(typeof(KillPlayerMessage), KillPlayerMessageListener);
-			NetworkController.EventSystem.AddListener(typeof(LogOutResponse), LogOutResponseListener);
-			NetworkController.EventSystem.AddListener(typeof(DestroyObjectMessage), DestroyObjectMessageListener);
-			NetworkController.EventSystem.AddListener(typeof(PlayerSpawnResponse), PlayerSpawnResponseListener);
-			NetworkController.EventSystem.AddListener(typeof(SpawnObjectsResponse), SpawnObjectsReponseListener);
-			NetworkController.EventSystem.AddListener(typeof(MovementMessage), MovementMessageListener);
-			NetworkController.EventSystem.AddListener(typeof(DynamicObjectsInfoMessage), DynamicObjectsInfoMessageListener);
-			NetworkController.EventSystem.AddListener(typeof(PlayersOnServerResponse), PlayersOnServerResponseListener);
-			NetworkController.EventSystem.AddListener(typeof(AvailableSpawnPointsResponse), AvailableSpawnPointsResponseListener);
-			NetworkController.EventSystem.AddListener(typeof(ConsoleMessage), ConsoleMessageListener);
-			NetworkController.EventSystem.AddListener(typeof(ShipCollisionMessage), ShipCollisionMessageListener);
-			NetworkController.EventSystem.AddListener(typeof(UpdateVesselDataMessage), UpdateVesselDataMessageListener);
-			NetworkController.EventSystem.AddListener(EventSystem.InternalEventType.ShowMessageBox, ShowMessageBoxListener);
-			NetworkController.EventSystem.AddListener(EventSystem.InternalEventType.OpenMainScreen, OpenMainScreneListener);
-			NetworkController.EventSystem.AddListener(EventSystem.InternalEventType.ReconnectAuto, ReconnectAutoListener);
-			NetworkController.EventSystem.AddListener(EventSystem.InternalEventType.RemoveLoadingCanvas, RemoveLoadingCanvasListener);
-			NetworkController.EventSystem.AddListener(EventSystem.InternalEventType.ConnectionFailed, ConnectionFailedListener);
-			NetworkController.EventSystem.AddListener(EventSystem.InternalEventType.CloseAllLoadingScreens, CloseAllLoadingScreensListener);
+			EventSystem.AddListener(typeof(KillPlayerMessage), KillPlayerMessageListener);
+			EventSystem.AddListener(typeof(LogOutResponse), LogOutResponseListener);
+			EventSystem.AddListener(typeof(DestroyObjectMessage), DestroyObjectMessageListener);
+			EventSystem.AddListener(typeof(PlayerSpawnResponse), PlayerSpawnResponseListener);
+			EventSystem.AddListener(typeof(SpawnObjectsResponse), SpawnObjectsReponseListener);
+			EventSystem.AddListener(typeof(MovementMessage), MovementMessageListener);
+			EventSystem.AddListener(typeof(DynamicObjectsInfoMessage), DynamicObjectsInfoMessageListener);
+			EventSystem.AddListener(typeof(PlayersOnServerResponse), PlayersOnServerResponseListener);
+			EventSystem.AddListener(typeof(AvailableSpawnPointsResponse), AvailableSpawnPointsResponseListener);
+			EventSystem.AddListener(typeof(ConsoleMessage), ConsoleMessageListener);
+			EventSystem.AddListener(typeof(ShipCollisionMessage), ShipCollisionMessageListener);
+			EventSystem.AddListener(typeof(UpdateVesselDataMessage), UpdateVesselDataMessageListener);
+			EventSystem.AddListener(EventSystem.InternalEventType.ShowMessageBox, ShowMessageBoxListener);
+			EventSystem.AddListener(EventSystem.InternalEventType.OpenMainScreen, OpenMainScreneListener);
+			EventSystem.AddListener(EventSystem.InternalEventType.ReconnectAuto, ReconnectAutoListener);
+			EventSystem.AddListener(EventSystem.InternalEventType.RemoveLoadingCanvas, RemoveLoadingCanvasListener);
+			EventSystem.AddListener(EventSystem.InternalEventType.ConnectionFailed, ConnectionFailedListener);
+			EventSystem.AddListener(EventSystem.InternalEventType.CloseAllLoadingScreens, CloseAllLoadingScreensListener);
 			m_GameRichPresenceJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested);
 			if (ProviderManager.MainProvider is SteamProvider)
 			{
@@ -642,7 +640,7 @@ namespace ZeroGravity
 					else
 					{
 						CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.ConnectingToGame);
-						NetworkController.EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.ReconnectAuto));
+						EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.ReconnectAuto));
 					}
 				}
 			}
@@ -1004,7 +1002,7 @@ namespace ZeroGravity
 			if (!LogoutRequestSent)
 			{
 				LogoutRequestSent = true;
-				NetworkController.SendToGameServer(new LogOutRequest());
+				NetworkController.Instance.SendToGameServer(new LogOutRequest());
 			}
 		}
 
@@ -1066,7 +1064,7 @@ namespace ZeroGravity
 				PlayerSpawnRequest playerSpawnRequest = new PlayerSpawnRequest();
 				playerSpawnRequest.SpawnSetupType = details.SpawnSetupType;
 				playerSpawnRequest.SpawPointParentID = details.SpawnPointParentID;
-				NetworkController.SendToGameServer(playerSpawnRequest);
+				NetworkController.Instance.SendToGameServer(playerSpawnRequest);
 			}
 		}
 
@@ -1078,7 +1076,7 @@ namespace ZeroGravity
 				Dbg.Error("Failed to log out properly");
 			}
 			LogCustomEvent("log_out", flush: true);
-			NetworkController.Disconnect();
+			NetworkController.Instance.Disconnect();
 			if (SinglePlayerMode)
 			{
 				KillAllSPProcesses();
@@ -1096,19 +1094,19 @@ namespace ZeroGravity
 		private void DestroyObjectMessageListener(NetworkData data)
 		{
 			DestroyObjectMessage destroyObjectMessage = data as DestroyObjectMessage;
-			SpaceObject @object = GetObject(destroyObjectMessage.ID, destroyObjectMessage.ObjectType);
-			if (@object != null && @object.Type != SpaceObjectType.PlayerPivot && @object.Type != SpaceObjectType.DynamicObjectPivot && @object.Type != SpaceObjectType.CorpsePivot)
+			SpaceObject obj = GetObject(destroyObjectMessage.ID, destroyObjectMessage.ObjectType);
+			if (obj != null && obj.Type != SpaceObjectType.PlayerPivot && obj.Type != SpaceObjectType.DynamicObjectPivot && obj.Type != SpaceObjectType.CorpsePivot)
 			{
-				@object.DestroyGeometry();
-				if (@object is DynamicObject && (@object as DynamicObject).Item != null && (@object as DynamicObject).Item.AttachPoint != null)
+				obj.DestroyGeometry();
+				if (obj is DynamicObject && (obj as DynamicObject).Item != null && (obj as DynamicObject).Item.AttachPoint != null)
 				{
-					(@object as DynamicObject).Item.AttachPoint.DetachItem((@object as DynamicObject).Item);
+					(obj as DynamicObject).Item.AttachPoint.DetachItem((obj as DynamicObject).Item);
 				}
-				if (MyPlayer.Instance != null && MyPlayer.Instance.CurrentActiveItem != null && MyPlayer.Instance.CurrentActiveItem.GUID == @object.GUID)
+				if (MyPlayer.Instance != null && MyPlayer.Instance.CurrentActiveItem != null && MyPlayer.Instance.CurrentActiveItem.GUID == obj.GUID)
 				{
 					MyPlayer.Instance.Inventory.RemoveItemFromHands(resetStance: true);
 				}
-				UnityEngine.Object.Destroy(@object.gameObject);
+				UnityEngine.Object.Destroy(obj.gameObject);
 			}
 		}
 
@@ -1220,7 +1218,7 @@ namespace ZeroGravity
 			}
 			else
 			{
-				NetworkController.DisconnectImmediate();
+				NetworkController.Instance.DisconnectImmediate();
 			}
 		}
 
@@ -1239,28 +1237,28 @@ namespace ZeroGravity
 			UpdateServers = false;
 			IsRunning = false;
 			OnDestroy();
-			NetworkController.DisconnectImmediate();
+			NetworkController.Instance.DisconnectImmediate();
 			Application.Quit();
 		}
 
 		private void OnDestroy()
 		{
-			NetworkController.EventSystem.RemoveListener(typeof(KillPlayerMessage), KillPlayerMessageListener);
-			NetworkController.EventSystem.RemoveListener(typeof(LogOutResponse), LogOutResponseListener);
-			NetworkController.EventSystem.RemoveListener(typeof(DestroyObjectMessage), DestroyObjectMessageListener);
-			NetworkController.EventSystem.RemoveListener(typeof(PlayerSpawnResponse), PlayerSpawnResponseListener);
-			NetworkController.EventSystem.RemoveListener(typeof(MovementMessage), MovementMessageListener);
-			NetworkController.EventSystem.RemoveListener(typeof(PlayersOnServerResponse), PlayersOnServerResponseListener);
-			NetworkController.EventSystem.RemoveListener(typeof(AvailableSpawnPointsResponse), AvailableSpawnPointsResponseListener);
-			NetworkController.EventSystem.RemoveListener(typeof(ShipCollisionMessage), ShipCollisionMessageListener);
-			NetworkController.EventSystem.RemoveListener(typeof(UpdateVesselDataMessage), UpdateVesselDataMessageListener);
-			NetworkController.EventSystem.RemoveListener(EventSystem.InternalEventType.ShowMessageBox, ShowMessageBoxListener);
-			NetworkController.EventSystem.RemoveListener(EventSystem.InternalEventType.OpenMainScreen, OpenMainScreneListener);
-			NetworkController.EventSystem.RemoveListener(EventSystem.InternalEventType.ReconnectAuto, ReconnectAutoListener);
-			NetworkController.EventSystem.RemoveListener(EventSystem.InternalEventType.RemoveLoadingCanvas, RemoveLoadingCanvasListener);
-			NetworkController.EventSystem.RemoveListener(EventSystem.InternalEventType.ConnectionFailed, ConnectionFailedListener);
-			NetworkController.EventSystem.RemoveListener(typeof(SignInResponse), SignInResponseListener);
-			NetworkController.EventSystem.RemoveListener(typeof(LogInResponse), LogInResponseListener);
+			EventSystem.RemoveListener(typeof(KillPlayerMessage), KillPlayerMessageListener);
+			EventSystem.RemoveListener(typeof(LogOutResponse), LogOutResponseListener);
+			EventSystem.RemoveListener(typeof(DestroyObjectMessage), DestroyObjectMessageListener);
+			EventSystem.RemoveListener(typeof(PlayerSpawnResponse), PlayerSpawnResponseListener);
+			EventSystem.RemoveListener(typeof(MovementMessage), MovementMessageListener);
+			EventSystem.RemoveListener(typeof(PlayersOnServerResponse), PlayersOnServerResponseListener);
+			EventSystem.RemoveListener(typeof(AvailableSpawnPointsResponse), AvailableSpawnPointsResponseListener);
+			EventSystem.RemoveListener(typeof(ShipCollisionMessage), ShipCollisionMessageListener);
+			EventSystem.RemoveListener(typeof(UpdateVesselDataMessage), UpdateVesselDataMessageListener);
+			EventSystem.RemoveListener(EventSystem.InternalEventType.ShowMessageBox, ShowMessageBoxListener);
+			EventSystem.RemoveListener(EventSystem.InternalEventType.OpenMainScreen, OpenMainScreneListener);
+			EventSystem.RemoveListener(EventSystem.InternalEventType.ReconnectAuto, ReconnectAutoListener);
+			EventSystem.RemoveListener(EventSystem.InternalEventType.RemoveLoadingCanvas, RemoveLoadingCanvasListener);
+			EventSystem.RemoveListener(EventSystem.InternalEventType.ConnectionFailed, ConnectionFailedListener);
+			EventSystem.RemoveListener(typeof(SignInResponse), SignInResponseListener);
+			EventSystem.RemoveListener(typeof(LogInResponse), LogInResponseListener);
 			Localization.RevertToDefault();
 		}
 
@@ -1540,7 +1538,7 @@ namespace ZeroGravity
 
 		public void SendVesselRequest(SpaceObjectVessel obj, float time, GameScenes.SceneID sceneID, string tag)
 		{
-			NetworkController.SendToGameServer(new VesselRequest
+			NetworkController.Instance.SendToGameServer(new VesselRequest
 			{
 				GUID = obj.GUID,
 				Time = time,
@@ -1551,7 +1549,7 @@ namespace ZeroGravity
 
 		public void SendDistressCall(ArtificialBody obj, bool isDistressActive)
 		{
-			NetworkController.SendToGameServer(new DistressCallRequest
+			NetworkController.Instance.SendToGameServer(new DistressCallRequest
 			{
 				GUID = obj.GUID,
 				IsDistressActive = isDistressActive
@@ -1580,7 +1578,7 @@ namespace ZeroGravity
 
 		public void SendAvailableSpawnPointsRequest()
 		{
-			NetworkController.SendToGameServer(new AvailableSpawnPointsRequest());
+			NetworkController.Instance.SendToGameServer(new AvailableSpawnPointsRequest());
 		}
 
 		private void AvailableSpawnPointsResponseListener(NetworkData data)
@@ -2063,7 +2061,7 @@ namespace ZeroGravity
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 
 			// Connect to server.
-			NetworkController.ConnectToGame(server, (ProviderManager.MainProvider != null) ? ProviderManager.MainProvider.GetId() : _lastSteamId, _newCharacterData, serverPassword);
+			NetworkController.Instance.ConnectToGame(server, (ProviderManager.MainProvider != null) ? ProviderManager.MainProvider.GetId() : _lastSteamId, _newCharacterData, serverPassword);
 
 			// Cleanup data.
 			_newCharacterData = null;
@@ -2146,7 +2144,7 @@ namespace ZeroGravity
 				_lastSteamId = LastSignInRequest.SteamId;
 			}
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
-			NetworkController.ConnectToGame(LastConnectedServer, (ProviderManager.MainProvider == null) ? _lastSteamId : ProviderManager.MainProvider.GetId(), _newCharacterData, LastConnectedServerPass);
+			NetworkController.Instance.ConnectToGame(LastConnectedServer, (ProviderManager.MainProvider == null) ? _lastSteamId : ProviderManager.MainProvider.GetId(), _newCharacterData, LastConnectedServerPass);
 		}
 
 		private void CreateServerButton(ServerData serverData)
@@ -2240,14 +2238,14 @@ namespace ZeroGravity
 				{
 					PlayerSpawnRequest playerSpawnRequest = new PlayerSpawnRequest();
 					playerSpawnRequest.SpawPointParentID = 0L;
-					NetworkController.SendToGameServer(playerSpawnRequest);
+					NetworkController.Instance.SendToGameServer(playerSpawnRequest);
 				}
 				else if (InvitedToServerSpawnPointId != null)
 				{
 					PlayerSpawnRequest playerSpawnRequest2 = new PlayerSpawnRequest();
 					playerSpawnRequest2.SpawPointParentID = InvitedToServerSpawnPointId.VesselGUID;
 					PlayerSpawnRequest data2 = playerSpawnRequest2;
-					NetworkController.SendToGameServer(data2);
+					NetworkController.Instance.SendToGameServer(data2);
 					InvitedToServerSpawnPointId = null;
 				}
 				else
@@ -2312,14 +2310,14 @@ namespace ZeroGravity
 				NetworkController.MainServerPort = _port;
 				Regex regex = new Regex("[^0-9.]");
 				SignInRequest signInRequest = new SignInRequest();
-				signInRequest.SteamId = ProviderManager.MainProvider.GetId();
+				signInRequest.SteamId = ProviderManager.SteamId;
 				signInRequest.ClientVersion = regex.Replace(Application.version, string.Empty);
 				signInRequest.ClientHash = CombinedHash;
 				LastSignInRequest = signInRequest;
 				UpdateServers = false;
 				try
 				{
-					NetworkController.SendToMainServer(signInRequest);
+					NetworkController.Instance.SendToMainServer(signInRequest);
 
 					// Response will be handled by the SignInResponseListener method.
 				}
@@ -2741,7 +2739,7 @@ namespace ZeroGravity
 							HeadType = 1
 						};
 					}
-					NetworkController.ConnectToGameSP(result, ProviderManager.MainProvider.GetId(), serverStatusResponse.CharacterData);
+					NetworkController.Instance.ConnectToGameSP(result, ProviderManager.MainProvider.GetId(), serverStatusResponse.CharacterData);
 					this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 					yield break;
 				}
@@ -2782,7 +2780,7 @@ namespace ZeroGravity
 				OpenMainScreen();
 				return;
 			}
-			NetworkController.SendToGameServer(new ServerShutDownMessage
+			NetworkController.Instance.SendToGameServer(new ServerShutDownMessage
 			{
 				Restrat = false,
 				CleanRestart = false
@@ -2792,7 +2790,7 @@ namespace ZeroGravity
 		public void QuickSave()
 		{
 			CanvasManager.TextChat.CreateMessage(null, "SAVING GAME.", local: false);
-			NetworkController.SendToGameServer(new SaveGameMessage
+			NetworkController.Instance.SendToGameServer(new SaveGameMessage
 			{
 				FileName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".save",
 				AuxData = MyPlayer.Instance.GetSaveFileAuxData()
@@ -2803,7 +2801,7 @@ namespace ZeroGravity
 		{
 			lastSPAutosaveTime = Time.time;
 			CanvasManager.TextChat.CreateMessage(null, "SAVING GAME.", local: false);
-			NetworkController.SendToGameServer(new SaveGameMessage
+			NetworkController.Instance.SendToGameServer(new SaveGameMessage
 			{
 				FileName = "autosave.save",
 				AuxData = MyPlayer.Instance.GetSaveFileAuxData()
@@ -2930,7 +2928,7 @@ namespace ZeroGravity
 			StartCoroutine(FixPlayerInCryo());
 			_loadingFinishedTask.RunSynchronously();
 			EnvironmentReady = true;
-			NetworkController.SendToGameServer(new EnvironmentReadyMessage());
+			NetworkController.Instance.SendToGameServer(new EnvironmentReadyMessage());
 		}
 
 		private IEnumerator FixPlayerInCryo()

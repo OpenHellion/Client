@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OpenHellion.Networking;
 using OpenHellion.ProviderSystem;
 using ThreeEyedGames;
 using UnityEngine;
@@ -365,7 +366,7 @@ namespace ZeroGravity.Objects
 			}
 			if (shipStatsChanged)
 			{
-				Client.Instance.NetworkController.SendToGameServer(shipStatsMsg);
+				NetworkController.Instance.SendToGameServer(shipStatsMsg);
 				CreateNewStatsMessage();
 			}
 			SmoothRotation(Time.fixedDeltaTime);
@@ -473,25 +474,25 @@ namespace ZeroGravity.Objects
 		{
 			if (!listenersConnected)
 			{
-				Client.Instance.NetworkController.EventSystem.AddListener(typeof(ShipStatsMessage), ShipStatsMessageListener);
-				Client.Instance.NetworkController.EventSystem.AddListener(typeof(InitializeSpaceObjectMessage), InitializeSpaceObjectsMessageListener);
-				Client.Instance.NetworkController.EventSystem.AddListener(typeof(ManeuverCourseResponse), ManeuverCourseResponseListener);
-				Client.Instance.NetworkController.EventSystem.AddListener(typeof(VesselSecurityResponse), VesselSecurityResponseListener);
-				Client.Instance.NetworkController.EventSystem.AddListener(typeof(NameTagMessage), NameTagMessageListener);
-				Client.Instance.NetworkController.EventSystem.AddListener(typeof(VesselRequestResponse), VesselRequestResponseListener);
-				Client.Instance.NetworkController.EventSystem.AddListener(typeof(DestroyVesselMessage), DestroyVesselMessageListener);
+				EventSystem.AddListener(typeof(ShipStatsMessage), ShipStatsMessageListener);
+				EventSystem.AddListener(typeof(InitializeSpaceObjectMessage), InitializeSpaceObjectsMessageListener);
+				EventSystem.AddListener(typeof(ManeuverCourseResponse), ManeuverCourseResponseListener);
+				EventSystem.AddListener(typeof(VesselSecurityResponse), VesselSecurityResponseListener);
+				EventSystem.AddListener(typeof(NameTagMessage), NameTagMessageListener);
+				EventSystem.AddListener(typeof(VesselRequestResponse), VesselRequestResponseListener);
+				EventSystem.AddListener(typeof(DestroyVesselMessage), DestroyVesselMessageListener);
 			}
 		}
 
 		public void DisconnectMessageListeners()
 		{
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(ShipStatsMessage), ShipStatsMessageListener);
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(InitializeSpaceObjectMessage), InitializeSpaceObjectsMessageListener);
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(ManeuverCourseResponse), ManeuverCourseResponseListener);
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(VesselSecurityResponse), VesselSecurityResponseListener);
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(NameTagMessage), NameTagMessageListener);
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(VesselRequestResponse), VesselRequestResponseListener);
-			Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(DestroyVesselMessage), DestroyVesselMessageListener);
+			EventSystem.RemoveListener(typeof(ShipStatsMessage), ShipStatsMessageListener);
+			EventSystem.RemoveListener(typeof(InitializeSpaceObjectMessage), InitializeSpaceObjectsMessageListener);
+			EventSystem.RemoveListener(typeof(ManeuverCourseResponse), ManeuverCourseResponseListener);
+			EventSystem.RemoveListener(typeof(VesselSecurityResponse), VesselSecurityResponseListener);
+			EventSystem.RemoveListener(typeof(NameTagMessage), NameTagMessageListener);
+			EventSystem.RemoveListener(typeof(VesselRequestResponse), VesselRequestResponseListener);
+			EventSystem.RemoveListener(typeof(DestroyVesselMessage), DestroyVesselMessageListener);
 		}
 
 		private void DestroyVesselMessageListener(NetworkData data)
@@ -551,7 +552,7 @@ namespace ZeroGravity.Objects
 			{
 				maneuverCourseRequestData.ShipGUID = base.GUID;
 				maneuverCourseRequestData.Activate = false;
-				Client.Instance.NetworkController.SendToGameServer(maneuverCourseRequestData);
+				NetworkController.Instance.SendToGameServer(maneuverCourseRequestData);
 			}
 		}
 
@@ -561,7 +562,7 @@ namespace ZeroGravity.Objects
 			if (maneuverCourseRequestData != null)
 			{
 				maneuverCourseRequestData.ShipGUID = base.GUID;
-				Client.Instance.NetworkController.SendToGameServer(maneuverCourseRequestData);
+				NetworkController.Instance.SendToGameServer(maneuverCourseRequestData);
 			}
 		}
 
@@ -569,7 +570,7 @@ namespace ZeroGravity.Objects
 		{
 			if (CourseWaitingActivation > 0)
 			{
-				Client.Instance.NetworkController.SendToGameServer(new ManeuverCourseRequest
+				NetworkController.Instance.SendToGameServer(new ManeuverCourseRequest
 				{
 					CourseGUID = CourseWaitingActivation,
 					ShipGUID = base.GUID,

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.Networking;
 using UnityEngine;
 using UnityEngine.Events;
 using ZeroGravity.Data;
@@ -113,14 +114,14 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
-			Client.Instance.NetworkController.SendToGameServer(new QuestTriggerMessage
+			NetworkController.Instance.SendToGameServer(new QuestTriggerMessage
 			{
 				QuestID = QuestID,
 				TriggerID = QuestTriggerID
 			});
 			foreach (QuestTaskObject item in AdditionalTasksToComplete)
 			{
-				Client.Instance.NetworkController.SendToGameServer(new QuestTriggerMessage
+				NetworkController.Instance.SendToGameServer(new QuestTriggerMessage
 				{
 					QuestID = item.QuestID,
 					TriggerID = item.QuestTriggerID

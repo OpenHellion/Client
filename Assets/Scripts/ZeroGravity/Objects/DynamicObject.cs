@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using OpenHellion.Networking;
 using UnityEngine;
 using ZeroGravity.CharacterMovement;
 using ZeroGravity.Data;
@@ -124,7 +125,7 @@ namespace ZeroGravity.Objects
 			Item = GetComponent<Item>();
 			if (Client.IsGameBuild)
 			{
-				Client.Instance.NetworkController.EventSystem.AddListener(typeof(DynamicObjectStatsMessage), DynamicObjectStatsMessageListener);
+				EventSystem.AddListener(typeof(DynamicObjectStatsMessage), DynamicObjectStatsMessageListener);
 			}
 		}
 
@@ -147,7 +148,7 @@ namespace ZeroGravity.Objects
 				{
 					dynamicObjectStatsMessage.Info.Stats = statsData;
 				}
-				Client.Instance.NetworkController.SendToGameServer(dynamicObjectStatsMessage);
+				NetworkController.Instance.SendToGameServer(dynamicObjectStatsMessage);
 			}
 		}
 
@@ -338,7 +339,7 @@ namespace ZeroGravity.Objects
 			dynamicObectMovementMessage.ImpactVelocity = ImpactVelocity;
 			dynamicObectMovementMessage.Timestamp = Time.fixedTime;
 			DynamicObectMovementMessage data = dynamicObectMovementMessage;
-			Client.Instance.NetworkController.SendToGameServer(data);
+			NetworkController.Instance.SendToGameServer(data);
 			ImpactVelocity = 0f;
 			base.transform.hasChanged = false;
 		}
@@ -593,7 +594,7 @@ namespace ZeroGravity.Objects
 			base.OnDestroy();
 			if (Client.IsGameBuild)
 			{
-				Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(DynamicObjectStatsMessage), DynamicObjectStatsMessageListener);
+				EventSystem.RemoveListener(typeof(DynamicObjectStatsMessage), DynamicObjectStatsMessageListener);
 				Client.Instance.RemoveDynamicObject(base.GUID);
 				if (MyPlayer.Instance.Inventory != null && (((object)Item != null) ? Item.Slot : null) == MyPlayer.Instance.Inventory.HandsSlot)
 				{

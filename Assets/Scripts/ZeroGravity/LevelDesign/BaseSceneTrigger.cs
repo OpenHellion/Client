@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using OpenHellion.Networking;
 using UnityEngine;
 using UnityEngine.Events;
 using ZeroGravity.Data;
@@ -98,7 +99,7 @@ namespace ZeroGravity.LevelDesign
 			if (!CheckAuthorization())
 			{
 				Client.Instance.CanvasManager.CanvasUI.Alert(Localization.UnauthorizedAccess.ToUpper());
-				Client.Instance.NetworkController.SendToGameServer(new LockToTriggerMessage
+				NetworkController.Instance.SendToGameServer(new LockToTriggerMessage
 				{
 					TriggerID = null
 				});

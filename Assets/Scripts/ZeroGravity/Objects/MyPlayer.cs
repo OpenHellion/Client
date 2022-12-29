@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using OpenHellion.Networking;
 using OpenHellion.ProviderSystem;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -79,9 +80,6 @@ namespace ZeroGravity.Objects
 		public bool SittingOnPilotSeat;
 
 		public float MeleeRange;
-
-		[HideInInspector]
-		public EventSystem EventSystem;
 
 		[HideInInspector]
 		public Vector3 OldGravity;
@@ -555,23 +553,21 @@ namespace ZeroGravity.Objects
 			highlightAttachPointMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("InteractiveTriggers"));
 			if (Client.IsGameBuild)
 			{
-				EventSystem = Client.Instance.NetworkController.EventSystem;
 				Client.Instance.CanvasManager.CanvasUI.ToggleCroshair(show: false);
 			}
 			else
 			{
-				EventSystem = new EventSystem();
 				SetGravity(new Vector3(0f, -9.81f, 0f));
 			}
 			if (Client.IsGameBuild)
 			{
-				Client.Instance.NetworkController.EventSystem.AddListener(typeof(PlayerShootingMessage), PlayerShootingMessageListener);
-				Client.Instance.NetworkController.EventSystem.AddListener(typeof(PlayerStatsMessage), PlayerStatMessageListener);
-				Client.Instance.NetworkController.EventSystem.AddListener(typeof(TextChatMessage), TextChatMessageListener);
-				Client.Instance.NetworkController.EventSystem.AddListener(EventSystem.InternalEventType.EquipAnimationEnd, EquipAnimationEndListener);
-				Client.Instance.NetworkController.EventSystem.AddListener(typeof(LockToTriggerMessage), LockToTriggerMessageListener);
-				Client.Instance.NetworkController.EventSystem.AddListener(typeof(QuestStatsMessage), QuestStatsMessageListener);
-				Client.Instance.NetworkController.EventSystem.AddListener(typeof(UpdateBlueprintsMessage), UpdateBlueprintsMessageListener);
+				EventSystem.AddListener(typeof(PlayerShootingMessage), PlayerShootingMessageListener);
+				EventSystem.AddListener(typeof(PlayerStatsMessage), PlayerStatMessageListener);
+				EventSystem.AddListener(typeof(TextChatMessage), TextChatMessageListener);
+				EventSystem.AddListener(EventSystem.InternalEventType.EquipAnimationEnd, EquipAnimationEndListener);
+				EventSystem.AddListener(typeof(LockToTriggerMessage), LockToTriggerMessageListener);
+				EventSystem.AddListener(typeof(QuestStatsMessage), QuestStatsMessageListener);
+				EventSystem.AddListener(typeof(UpdateBlueprintsMessage), UpdateBlueprintsMessageListener);
 			}
 			DefaultBloodEffects = Resources.LoadAll<GameObject>("Effects/DefaultBloodEffects/");
 			bloodCloudEffect = Resources.Load<GameObject>("Test/Effekc/BloodCloud");
@@ -787,7 +783,7 @@ namespace ZeroGravity.Objects
 				playerShootingMessage.ShotData = shotData;
 				playerShootingMessage.GUID = base.GUID;
 				PlayerShootingMessage data = playerShootingMessage;
-				Client.Instance.NetworkController.SendToGameServer(data);
+				NetworkController.Instance.SendToGameServer(data);
 			}
 		}
 
@@ -831,7 +827,7 @@ namespace ZeroGravity.Objects
 				{
 					playerStatsMessage.LockedToTriggerID = null;
 				}
-				Client.Instance.NetworkController.SendToGameServer(playerStatsMessage);
+				NetworkController.Instance.SendToGameServer(playerStatsMessage);
 			}
 			ResetTriggerBools();
 			if (PivotReset || ImpactVelocity > 0f || SendDockUndockMsg || (FpsController.StickToVessel != null && prevStickToVessel != FpsController.StickToVessel) || sendMovementTime + SendMovementInterval <= Time.fixedTime)
@@ -904,11 +900,11 @@ namespace ZeroGravity.Objects
 				}
 				try
 				{
-					Client.Instance.NetworkController.SendToGameServer(characterMovementMessage);
+					NetworkController.Instance.SendToGameServer(characterMovementMessage);
 				}
 				catch (Exception)
 				{
-					Client.Instance.NetworkController.Disconnect();
+					NetworkController.Instance.Disconnect();
 					Client.Instance.OpenMainScreen();
 				}
 			}
@@ -1625,7 +1621,7 @@ namespace ZeroGravity.Objects
 			{
 				if (LookingAtTrigger.ExclusivePlayerLocking)
 				{
-					Client.Instance.NetworkController.SendToGameServer(new LockToTriggerMessage
+					NetworkController.Instance.SendToGameServer(new LockToTriggerMessage
 					{
 						TriggerID = LookingAtTrigger.GetID(),
 						IsPilotingVessel = (LookingAtTrigger.TriggerType == SceneTriggerType.ShipControl || LookingAtTrigger.TriggerType == SceneTriggerType.DockingPanel)
@@ -2248,7 +2244,7 @@ namespace ZeroGravity.Objects
 		/// </summary>
 		public static MyPlayer SpawnMyPlayer(LogInResponse res)
 		{
-			Client.Instance.NetworkController.SenderID = res.ID;
+			NetworkController.Instance.SenderID = res.ID;
 			GameObject characterObject = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/FirstPersonCharacter")) as GameObject;
 			GenderSettings genderSettings = characterObject.GetComponent<GenderSettings>();
 			GenderSettings.GenderItem genderItem = null;
@@ -2306,7 +2302,7 @@ namespace ZeroGravity.Objects
 			myPlayer.gameObject.SetActive(value: false);
 			myPlayer.rigidBody.isKinematic = true;
 			AkSoundEngine.SetRTPCValue(SoundManager.instance.InGameVolume, 0f);
-			Client.Instance.NetworkController.SendToGameServer(new ConsoleMessage
+			NetworkController.Instance.SendToGameServer(new ConsoleMessage
 			{
 				Text = "god"
 			});
@@ -2328,7 +2324,7 @@ namespace ZeroGravity.Objects
 				{
 					playerRoomMessage.ID = null;
 				}
-				Client.Instance.NetworkController.SendToGameServer(playerRoomMessage);
+				NetworkController.Instance.SendToGameServer(playerRoomMessage);
 			}
 		}
 
@@ -2337,13 +2333,13 @@ namespace ZeroGravity.Objects
 			base.OnDestroy();
 			if (Client.IsGameBuild)
 			{
-				Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(PlayerShootingMessage), PlayerShootingMessageListener);
-				Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(PlayerStatsMessage), PlayerStatMessageListener);
-				Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(TextChatMessage), TextChatMessageListener);
-				Client.Instance.NetworkController.EventSystem.RemoveListener(EventSystem.InternalEventType.EquipAnimationEnd, EquipAnimationEndListener);
-				Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(LockToTriggerMessage), LockToTriggerMessageListener);
-				Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(QuestStatsMessage), QuestStatsMessageListener);
-				Client.Instance.NetworkController.EventSystem.RemoveListener(typeof(UpdateBlueprintsMessage), UpdateBlueprintsMessageListener);
+				EventSystem.RemoveListener(typeof(PlayerShootingMessage), PlayerShootingMessageListener);
+				EventSystem.RemoveListener(typeof(PlayerStatsMessage), PlayerStatMessageListener);
+				EventSystem.RemoveListener(typeof(TextChatMessage), TextChatMessageListener);
+				EventSystem.RemoveListener(EventSystem.InternalEventType.EquipAnimationEnd, EquipAnimationEndListener);
+				EventSystem.RemoveListener(typeof(LockToTriggerMessage), LockToTriggerMessageListener);
+				EventSystem.RemoveListener(typeof(QuestStatsMessage), QuestStatsMessageListener);
+				EventSystem.RemoveListener(typeof(UpdateBlueprintsMessage), UpdateBlueprintsMessageListener);
 			}
 		}
 
@@ -3205,7 +3201,7 @@ namespace ZeroGravity.Objects
 
 		public void Suicide()
 		{
-			Client.Instance.NetworkController.SendToGameServer(new SuicideRequest());
+			NetworkController.Instance.SendToGameServer(new SuicideRequest());
 		}
 
 		public void CheckCameraShake()

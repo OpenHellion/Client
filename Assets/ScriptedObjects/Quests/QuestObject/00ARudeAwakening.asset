@@ -4,13 +4,14 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 045e95257a910444eb0dcca09e1f84cf, type: 3}
   m_Name: 00ARudeAwakening
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   ParentQuest: {fileID: 0}
   DependencyQuests: []
   ID: 2
@@ -93,4 +94,4 @@ MonoBehaviour:
   AutoActivate: 0
   QuestToTrackWhenCompleted: {fileID: 0}
   TrackOnPickUp: 0
-  Skippable: 1
+  Skippable: 0
