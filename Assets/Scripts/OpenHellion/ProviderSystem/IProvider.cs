@@ -17,6 +17,7 @@ namespace OpenHellion.ProviderSystem
 		struct Friend
 		{
 			public string Id;
+			public string NativeId;
 			public string Name;
 			public FriendStatus Status;
 		}
@@ -49,7 +50,6 @@ namespace OpenHellion.ProviderSystem
 		/// <summary>
 		/// 	Get the id of our local player.
 		/// </summary>
-		// TODO: Not provider independent.
 		string GetId();
 
 		/// <summary>

@@ -14,6 +14,7 @@ namespace OpenHellion.ProviderSystem
 		private bool _currentStatsRequested;
 		private bool _userStatsReceived;
 		private bool _storeStats;
+		private string _generatedId;
 		private Callback<UserStatsReceived_t> _userStatsReceivedCallback;
 		private ConcurrentQueue<Task> _pendingTasks = new ConcurrentQueue<Task>();
 
@@ -56,6 +57,9 @@ namespace OpenHellion.ProviderSystem
 		// This should only ever get called on first load and after an Assembly reload, You should never Disable the Steamworks Manager yourself.
 		void IProvider.Enable()
 		{
+
+			// Check if a player id is stored in the cloud, then locally, then generate.
+
 			if (_SteamAPIWarningMessageHook == null)
 			{
 				// Set up our callback to receive warning messages from Steam.
@@ -175,10 +179,10 @@ namespace OpenHellion.ProviderSystem
 			return SteamFriends.GetFriendPersonaName(SteamUser.GetSteamID());
 		}
 
-		// TODO: Custom ID generation.
 		public string GetId()
 		{
-			return SteamUser.GetSteamID().ToString();
+
+			return _generatedId;
 		}
 
 		// TODO: Custom ID generation.
@@ -196,7 +200,9 @@ namespace OpenHellion.ProviderSystem
 				// Add friend to list of friends.
 				friends.Add(new IProvider.Friend
 				{
+					// Get id from main server.
 					Id = id.ToString(),
+					NativeId = id.ToString(),
 					Name = SteamFriends.GetFriendPersonaName(id),
 					Status = friendPersonaState == EPersonaState.k_EPersonaStateOnline || friendPersonaState == EPersonaState.k_EPersonaStateLookingToPlay ? IProvider.FriendStatus.ONLINE : IProvider.FriendStatus.OFFLINE
 				});

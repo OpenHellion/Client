@@ -13,7 +13,7 @@ namespace ZeroGravity.LevelDesign
 	{
 		public class PlayerInviteData
 		{
-			public string PlayerId;
+			public string PlayerNativeId;
 
 			public string Name;
 
@@ -258,7 +258,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					InSceneID = InSceneID,
 					PlayerInvite = true,
-					InvitedPlayerSteamID = player.PlayerId,
+					InvitedPlayerSteamID = player.PlayerNativeId,
 					InvitedPlayerName = player.Name
 				};
 				parentVessel2.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, spawnPoint);
@@ -266,7 +266,7 @@ namespace ZeroGravity.LevelDesign
 				// Send invite.
 				if (!Client.Instance.SinglePlayerMode)
 				{
-					ProviderManager.MainProvider.InviteUser(player.PlayerId, Client.Instance.GetInviteString(new VesselObjectID(ParentVessel.GUID, InSceneID)));
+					ProviderManager.MainProvider.InviteUser(player.PlayerNativeId, Client.Instance.GetInviteString(new VesselObjectID(ParentVessel.GUID, InSceneID)));
 				}
 			}
 		}
@@ -289,7 +289,7 @@ namespace ZeroGravity.LevelDesign
 					{
 						list.Add(new PlayerInviteData
 						{
-							PlayerId = friend.Id,
+							PlayerNativeId = friend.NativeId,
 							IsFriend = true,
 							Name = friend.Name,
 							AlreadyHasInvite = false
@@ -329,7 +329,7 @@ namespace ZeroGravity.LevelDesign
 						list.Add(new PlayerInviteData
 						{
 							IsFriend = false,
-							PlayerId = item.SteamID,
+							PlayerNativeId = item.SteamID,
 							Name = item.Name,
 							AlreadyHasInvite = item.AlreadyHasInvite
 						});

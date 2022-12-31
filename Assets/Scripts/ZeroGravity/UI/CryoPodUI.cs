@@ -99,10 +99,10 @@ namespace ZeroGravity.UI
 			InviteList.SetActive(true);
 			foreach (SceneSpawnPoint.PlayerInviteData availablePlayer in availablePlayers)
 			{
-				if (AvailablePlayersForInvite.ContainsKey(availablePlayer.PlayerId))
+				if (AvailablePlayersForInvite.ContainsKey(availablePlayer.PlayerNativeId))
 				{
-					AvailablePlayersForInvite[availablePlayer.PlayerId].InGameName.text = availablePlayer.Name;
-					AvailablePlayersForInvite[availablePlayer.PlayerId].InvitePlayerButton.interactable = !availablePlayer.AlreadyHasInvite;
+					AvailablePlayersForInvite[availablePlayer.PlayerNativeId].InGameName.text = availablePlayer.Name;
+					AvailablePlayersForInvite[availablePlayer.PlayerNativeId].InvitePlayerButton.interactable = !availablePlayer.AlreadyHasInvite;
 					continue;
 				}
 				_003COnInvitePlayersLoaded_003Ec__AnonStorey0 _003COnInvitePlayersLoaded_003Ec__AnonStorey = new _003COnInvitePlayersLoaded_003Ec__AnonStorey0();
@@ -115,7 +115,7 @@ namespace ZeroGravity.UI
 				if (availablePlayer.IsFriend)
 				{
 					component.IsFriend.SetActive(false);
-					component.Avatar.texture = Player.GetAvatar(availablePlayer.PlayerId);
+					component.Avatar.texture = Player.GetAvatar(availablePlayer.PlayerNativeId);
 				}
 				else
 				{
@@ -124,7 +124,7 @@ namespace ZeroGravity.UI
 				}
 				_003COnInvitePlayersLoaded_003Ec__AnonStorey.plForDeleg = availablePlayer;
 				component.InvitePlayerButton.onClick.AddListener(_003COnInvitePlayersLoaded_003Ec__AnonStorey._003C_003Em__0);
-				AvailablePlayersForInvite.Add(availablePlayer.PlayerId, component);
+				AvailablePlayersForInvite.Add(availablePlayer.PlayerNativeId, component);
 			}
 		}
 

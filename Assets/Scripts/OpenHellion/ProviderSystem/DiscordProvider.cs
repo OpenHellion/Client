@@ -53,6 +53,8 @@ namespace OpenHellion.ProviderSystem
 		private User _joinUser;
 		private Activity _activity = new();
 
+		private string _generatedId;
+
 		bool IProvider.Initialise()
 		{
 			_callbackCalls = 0;
@@ -95,6 +97,8 @@ namespace OpenHellion.ProviderSystem
 
 		void IProvider.Enable()
 		{
+			// Check if a player id is stored in the cloud, then locally, then generate.
+
 			UpdateStatus();
 		}
 
@@ -291,10 +295,9 @@ namespace OpenHellion.ProviderSystem
 			return _userManager.GetCurrentUser().Username;
 		}
 
-		// TODO: Custom ID generation.
 		public string GetId()
 		{
-			return _userManager.GetCurrentUser().Id.ToString();
+			return _generatedId;
 		}
 
 		// TODO: Custom ID generation.
@@ -317,7 +320,9 @@ namespace OpenHellion.ProviderSystem
 				// Add the relationship to our friends list.
 				friends.Add(new IProvider.Friend
 				{
+					// Get id from main server.
 					Id = r.User.Id.ToString(),
+					NativeId = r.User.Id.ToString(),
 					Name = r.User.Username,
 					Status = r.Presence.Status == Status.Online ? IProvider.FriendStatus.ONLINE : IProvider.FriendStatus.OFFLINE
 				});
