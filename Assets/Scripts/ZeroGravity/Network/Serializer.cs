@@ -9,7 +9,7 @@ using ZeroGravity.Objects;
 namespace ZeroGravity.Network
 {
 	/// <summary>
-	/// 	Wrapper around ProtoBuf.Serializer; customised for sending game NetworkData.
+	/// 	Class for deserialisation of network messages. Handles safe deserialsation of packets from the server.
 	/// </summary>
 	public static class Serializer
 	{
@@ -57,6 +57,9 @@ namespace ZeroGravity.Network
 
 		private static Dictionary<Type, StatisticsHelper> receivedStatistics = new Dictionary<Type, StatisticsHelper>();
 
+		/// <summary>
+		/// 	For deserialisation of data not sent through network.
+		/// </summary>
 		public static NetworkData Deserialize(MemoryStream ms)
 		{
 			NetworkData networkData = null;
