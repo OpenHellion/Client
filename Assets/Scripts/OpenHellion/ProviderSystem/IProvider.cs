@@ -50,7 +50,7 @@ namespace OpenHellion.ProviderSystem
 		/// <summary>
 		/// 	Get the id of our local player.
 		/// </summary>
-		string GetId();
+		string GetNativeId();
 
 		/// <summary>
 		/// 	Get a list of all our friends.

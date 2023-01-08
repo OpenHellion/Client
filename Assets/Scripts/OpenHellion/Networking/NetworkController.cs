@@ -12,15 +12,9 @@ namespace OpenHellion.Networking
 {
 	public class NetworkController : MonoBehaviour
 	{
-		public static string MainServerAddress;
-
-		public static int MainServerPort;
-
 		public static CharacterData CharacterData;
 
 		public long SenderID;
-
-		private MainServerThreads _mainServerThread;
 
 		private GameServerThread _connectionThread;
 
@@ -53,8 +47,6 @@ namespace OpenHellion.Networking
 			}
 
 			s_instance = this;
-			_mainServerThread = new MainServerThreads();
-
 		}
 
 		private void FixedUpdate()
@@ -105,11 +97,6 @@ namespace OpenHellion.Networking
 		{
 			_unsubscribeFromObjectsList.Add(guid);
 			_subscribeToObjectsList.Remove(guid);
-		}
-
-		public void SendToMainServer(NetworkData data)
-		{
-			_mainServerThread.Send(data);
 		}
 
 		public void ConnectToGame(GameServerUI serverData, string userId, CharacterData charData, string password)

@@ -5,11 +5,11 @@ namespace ZeroGravity.Network
 	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 	public class LogOutResponse : NetworkData
 	{
-		public ResponseResult Response = ResponseResult.Success;
+		public OldResponseResult Response = OldResponseResult.Success;
 
 		public LogOutResponse()
 		{
-			Response = ResponseResult.Success;
+			Response = OldResponseResult.Success;
 		}
 	}
 }

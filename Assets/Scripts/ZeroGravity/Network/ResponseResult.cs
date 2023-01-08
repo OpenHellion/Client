@@ -1,6 +1,6 @@
 namespace ZeroGravity.Network
 {
-	public enum ResponseResult : short
+	public enum OldResponseResult : short
 	{
 		OwnershipIssue = -5,
 		WrongPassword = -4,

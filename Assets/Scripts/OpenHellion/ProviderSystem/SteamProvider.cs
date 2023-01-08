@@ -12,7 +12,6 @@ namespace OpenHellion.ProviderSystem
 		private bool _currentStatsRequested;
 		private bool _userStatsReceived;
 		private bool _storeStats;
-		private string _generatedId;
 		private Callback<UserStatsReceived_t> _userStatsReceivedCallback;
 		private ConcurrentQueue<Task> _pendingTasks = new ConcurrentQueue<Task>();
 
@@ -22,11 +21,6 @@ namespace OpenHellion.ProviderSystem
 		protected static void SteamAPIDebugTextHook(int nSeverity, System.Text.StringBuilder pchDebugText)
 		{
 			Dbg.Warning(pchDebugText);
-		}
-
-		internal string GetNativeId()
-		{
-			return SteamUser.GetSteamID().ToString();
 		}
 
 		bool IProvider.Initialise()
@@ -177,10 +171,10 @@ namespace OpenHellion.ProviderSystem
 			return SteamFriends.GetFriendPersonaName(SteamUser.GetSteamID());
 		}
 
-		public string GetId()
+		public string GetNativeId()
 		{
 
-			return _generatedId;
+			return SteamUser.GetSteamID().ToString();
 		}
 
 		// TODO: Custom ID generation.

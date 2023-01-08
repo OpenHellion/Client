@@ -7,7 +7,7 @@ namespace ZeroGravity.Network
 	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 	public class LogInResponse : NetworkData
 	{
-		public ResponseResult Response = ResponseResult.Success;
+		public OldResponseResult Response = OldResponseResult.Success;
 
 		public long ID;
 

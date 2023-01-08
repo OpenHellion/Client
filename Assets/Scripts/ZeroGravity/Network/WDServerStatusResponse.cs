@@ -5,7 +5,7 @@ namespace ZeroGravity.Network
 	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 	public class WDServerStatusResponse : NetworkData
 	{
-		public ResponseResult Response = ResponseResult.Success;
+		public OldResponseResult Response = OldResponseResult.Success;
 
 		public int ProcessId;
 

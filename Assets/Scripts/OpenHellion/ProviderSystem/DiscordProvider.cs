@@ -51,8 +51,6 @@ namespace OpenHellion.ProviderSystem
 		private User _joinUser;
 		private Activity _activity = new();
 
-		private string _generatedId;
-
 		bool IProvider.Initialise()
 		{
 			_callbackCalls = 0;
@@ -293,9 +291,9 @@ namespace OpenHellion.ProviderSystem
 			return _userManager.GetCurrentUser().Username;
 		}
 
-		public string GetId()
+		public string GetNativeId()
 		{
-			return _generatedId;
+			return _userManager.GetCurrentUser().Id.ToString();
 		}
 
 		// TODO: Custom ID generation.

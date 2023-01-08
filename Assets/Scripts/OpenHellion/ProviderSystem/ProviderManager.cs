@@ -45,7 +45,23 @@ namespace OpenHellion.ProviderSystem
 				{
 					if (provider is SteamProvider)
 					{
-						return (provider as SteamProvider).GetNativeId();
+						return provider.GetNativeId();
+					}
+				}
+
+				return String.Empty;
+			}
+		}
+
+		public static string DiscordId
+		{
+			get
+			{
+				foreach (IProvider provider in Instance._allProviders)
+				{
+					if (provider is DiscordProvider)
+					{
+						return provider.GetNativeId();
 					}
 				}
 

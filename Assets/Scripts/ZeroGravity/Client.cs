@@ -26,6 +26,7 @@ using ZeroGravity.ShipComponents;
 using ZeroGravity.UI;
 using OpenHellion.ProviderSystem;
 using OpenHellion.Networking;
+using OpenHellion.Networking.MainServerMessage;
 
 namespace ZeroGravity
 {
@@ -70,11 +71,7 @@ namespace ZeroGravity
 		[NonSerialized]
 		public ZeroGravity.Network.Gender CurrentGender;
 
-		private string _lastSteamId = string.Empty;
-
-		private string ServerIP;
-
-		private int _port;
+		private string _lastPlayerId = string.Empty;
 
 		private SignInResponse _currentResponse;
 
@@ -565,7 +562,6 @@ namespace ZeroGravity
 				Localization.RevertToDefault();
 			}
 			InGamePanels.LocalizePanels();
-			EventSystem.AddListener(typeof(SignInResponse), SignInResponseListener);
 			EventSystem.AddListener(typeof(LogInResponse), LogInResponseListener);
 			playerServersData = null;
 			if (File.Exists(Path.Combine(Application.persistentDataPath, "ServersData.json")))
@@ -775,7 +771,7 @@ namespace ZeroGravity
 		private void PlayerSpawnResponseListener(NetworkData data)
 		{
 			PlayerSpawnResponse s = data as PlayerSpawnResponse;
-			if (s.Response == ResponseResult.Success)
+			if (s.Response == OldResponseResult.Success)
 			{
 				CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.Loading);
 				SolarSystemRoot.SetActive(value: true);
@@ -1071,7 +1067,7 @@ namespace ZeroGravity
 		private void LogOutResponseListener(NetworkData data)
 		{
 			LogOutResponse logOutResponse = data as LogOutResponse;
-			if (logOutResponse.Response == ResponseResult.Error)
+			if (logOutResponse.Response == OldResponseResult.Error)
 			{
 				Dbg.Error("Failed to log out properly");
 			}
@@ -1257,7 +1253,6 @@ namespace ZeroGravity
 			EventSystem.RemoveListener(EventSystem.InternalEventType.ReconnectAuto, ReconnectAutoListener);
 			EventSystem.RemoveListener(EventSystem.InternalEventType.RemoveLoadingCanvas, RemoveLoadingCanvasListener);
 			EventSystem.RemoveListener(EventSystem.InternalEventType.ConnectionFailed, ConnectionFailedListener);
-			EventSystem.RemoveListener(typeof(SignInResponse), SignInResponseListener);
 			EventSystem.RemoveListener(typeof(LogInResponse), LogInResponseListener);
 			Localization.RevertToDefault();
 		}
@@ -2054,14 +2049,14 @@ namespace ZeroGravity
 			CanvasManager.LoadingTips.text = ShuffledTexts.GetNextInLoop();
 			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.ConnectingToGame);
 			LastConnectedServerPass = serverPassword;
-			if (_lastSteamId == string.Empty && LastSignInRequest != null)
+			if (_lastPlayerId == string.Empty && LastSignInRequest != null)
 			{
-				_lastSteamId = LastSignInRequest.SteamId;
+				_lastPlayerId = LastSignInRequest.playerId;
 			}
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 
 			// Connect to server.
-			NetworkController.Instance.ConnectToGame(server, (ProviderManager.MainProvider != null) ? ProviderManager.MainProvider.GetId() : _lastSteamId, _newCharacterData, serverPassword);
+			NetworkController.Instance.ConnectToGame(server, (ProviderManager.MainProvider != null) ? ProviderManager.MainProvider.GetId() : _lastPlayerId, _newCharacterData, serverPassword);
 
 			// Cleanup data.
 			_newCharacterData = null;
@@ -2139,12 +2134,12 @@ namespace ZeroGravity
 		/// </summary>
 		public void Reconnect()
 		{
-			if (_lastSteamId == string.Empty && LastSignInRequest != null)
+			if (_lastPlayerId == string.Empty && LastSignInRequest != null)
 			{
-				_lastSteamId = LastSignInRequest.SteamId;
+				_lastPlayerId = LastSignInRequest.playerId;
 			}
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
-			NetworkController.Instance.ConnectToGame(LastConnectedServer, (ProviderManager.MainProvider == null) ? _lastSteamId : ProviderManager.MainProvider.GetId(), _newCharacterData, LastConnectedServerPass);
+			NetworkController.Instance.ConnectToGame(LastConnectedServer, (ProviderManager.MainProvider == null) ? _lastPlayerId : ProviderManager.MainProvider.GetId(), _newCharacterData, LastConnectedServerPass);
 		}
 
 		private void CreateServerButton(ServerData serverData)
@@ -2153,34 +2148,15 @@ namespace ZeroGravity
 			GameServerUI server = gameObject.GetComponent<GameServerUI>();
 
 			// Assign variables.
-			server.Id = serverData.Id;
-			server.Name = serverData.Name;
-			server.IPAddress = serverData.IPAddress;
-			server.GamePort = serverData.GamePort;
-			server.StatusPort = serverData.StatusPort;
-			server.AltIPAddress = serverData.AltIPAddress;
-			server.AltGamePort = serverData.AltGamePort;
-			server.AltStatusPort = serverData.AltStatusPort;
-			server.Locked = serverData.Locked;
-			server.Hash = serverData.Hash;
-			server.NameText.text = serverData.Name;
+			server.Id = serverData.id;
+			server.IPAddress = serverData.ipAddress;
+			server.GamePort = serverData.port;
+			server.Hash = serverData.hash;
+			server.NameText.text = serverData.id;
 			server.PingText.text = Localization.UpdatingStatus;
-
-			// Whether to show that the server is locked or not.
-			server.Private.SetActive(serverData.Locked);
 
 			// Add button to list.
 			ServerListElements.Add(server);
-
-			// Add button to correct server catergory.
-			if (serverData.Tag == ServerTag.Official)
-			{
-				server.FilterType = ServerCategories.Official;
-			}
-			else
-			{
-				server.FilterType = ServerCategories.Community;
-			}
 
 			// Check if the server hash matches our local hash.
 			if (server.Hash != CombinedHash)
@@ -2192,22 +2168,6 @@ namespace ZeroGravity
 				server.PingText.text = Localization.Disabled.ToUpper();
 				server.PingText.color = Colors.Gray;
 			}
-
-			// Add a click action to the favourite button.
-			server.FavouriteButton.onClick.AddListener(delegate
-			{
-				ToggleFavouriteServer(server);
-			});
-
-			// Make the button visibly show as a favourite.
-			bool existsInFavouriteServers = playerServersData.FavoriteServers.Contains(serverData.Id);
-			server.IsFavoriteServer.Activate(existsInFavouriteServers);
-			server.IsFavourite = existsInFavouriteServers;
-
-			// Whether to show the button.
-			bool shouldShow = CurrentServerFilter == server.FilterType || (CurrentServerFilter == ServerCategories.Favorites && server.IsFavourite);
-			gameObject.SetActive(shouldShow);
-			server.IsVisible = shouldShow;
 		}
 
 		public void ClearServerList()
@@ -2227,7 +2187,7 @@ namespace ZeroGravity
 			{
 				ReconnectAutomatically = false;
 			}
-			if (logInResponse.Response == ResponseResult.Success)
+			if (logInResponse.Response == OldResponseResult.Success)
 			{
 				_deleteChararacterFromServer = null;
 				SolarSystem.Set(SolarSystemRoot.transform.Find("SunRoot"), SolarSystemRoot.transform.Find("PlanetsRoot"), logInResponse.ServerTime);
@@ -2264,7 +2224,7 @@ namespace ZeroGravity
 				VesselExposureValues = logInResponse.VesselExposureValues;
 				PlayerExposureValues = logInResponse.PlayerExposureValues;
 			}
-			else if (logInResponse.Response == ResponseResult.WrongPassword)
+			else if (logInResponse.Response == OldResponseResult.WrongPassword)
 			{
 				CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
 				ShowMessageBox(Localization.ConnectionError, Localization.WrongPassword);
@@ -2299,27 +2259,24 @@ namespace ZeroGravity
 		/// </summary>
 		public void Connect()
 		{
-			string property = Properties.GetProperty("server_address", "188.166.144.65:6000");
 			if (ProviderManager.MainProvider.GetId().Length > 0)
 			{
 				CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.ConnectingToMain);
-				string[] array = property.Split(':');
-				ServerIP = array[0];
-				_port = int.Parse(array[1]);
-				NetworkController.MainServerAddress = ServerIP;
-				NetworkController.MainServerPort = _port;
 				Regex regex = new Regex("[^0-9.]");
-				SignInRequest signInRequest = new SignInRequest();
-				signInRequest.SteamId = ProviderManager.SteamId;
-				signInRequest.ClientVersion = regex.Replace(Application.version, string.Empty);
-				signInRequest.ClientHash = CombinedHash;
+
+				SignInRequest signInRequest = new SignInRequest()
+				{
+					playerId = ProviderManager.MainProvider.GetId(),
+					version = regex.Replace(Application.version, string.Empty),
+					hash = CombinedHash,
+					joiningId = null
+				};
+
 				LastSignInRequest = signInRequest;
 				UpdateServers = false;
 				try
 				{
-					NetworkController.Instance.SendToMainServer(signInRequest);
-
-					// Response will be handled by the SignInResponseListener method.
+					MainServer.SendMessage(signInRequest, SignInResponseListener);
 				}
 				catch (Exception)
 				{
@@ -2335,20 +2292,19 @@ namespace ZeroGravity
 		/// <summary>
 		/// 	Check for errors and get server list.
 		/// </summary>
-		private void SignInResponseListener(NetworkData data)
+		private void SignInResponseListener(DataContainer data)
 		{
 			SignInResponse signInResponse = data as SignInResponse;
 			if (ReconnectAutomatically)
 			{
 				return;
 			}
-			if (signInResponse.Response == ResponseResult.Error)
+			if (signInResponse.result == ResponseResult.Error)
 			{
-				Dbg.Warning("Unable to sign in", signInResponse.Message);
 				CanvasManager.SelectScreen(CanvasManager.Screen.OnLoad);
 				ShowMessageBox(Localization.ConnectionError, Localization.LogInError);
 			}
-			else if (signInResponse.Response == ResponseResult.ClientVersionError)
+			else if (signInResponse.result == ResponseResult.ClientVersionError)
 			{
 				ShowMessageBox(Localization.VersionError, Localization.VersionErrorMessage);
 			}
@@ -2358,11 +2314,7 @@ namespace ZeroGravity
 				CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
 				ClearServerList();
 
-				Dbg.Log("Found " + signInResponse.Servers.Count + " servers.");
-				foreach (ServerData value in signInResponse.Servers.Values)
-				{
-					CreateServerButton(value);
-				}
+				CreateServerButton(signInResponse.server);
 				// Set order buttons by name.
 				OrderByButton(0);
 				UpdateServers = true;
@@ -2727,7 +2679,7 @@ namespace ZeroGravity
 				serverStatusRequest.SteamId = ProviderManager.MainProvider.GetId();
 				serverStatusRequest.SendDetails = true;
 				ServerStatusRequest request = serverStatusRequest;
-				if (SendRequest(request, "127.0.0.1", result2, out latency) is ServerStatusResponse serverStatusResponse && serverStatusResponse.Response == ResponseResult.Success)
+				if (SendRequest(request, "127.0.0.1", result2, out latency) is ServerStatusResponse serverStatusResponse && serverStatusResponse.Response == OldResponseResult.Success)
 				{
 					if (serverStatusResponse.CharacterData == null)
 					{
