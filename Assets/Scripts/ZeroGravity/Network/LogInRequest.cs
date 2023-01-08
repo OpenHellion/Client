@@ -5,7 +5,7 @@ namespace ZeroGravity.Network
 	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 	public class LogInRequest : NetworkData
 	{
-		public long ServerID;
+		public string ServerID;
 
 		public string Password;
 

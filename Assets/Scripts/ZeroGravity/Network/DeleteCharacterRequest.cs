@@ -7,6 +7,6 @@ namespace ZeroGravity.Network
 	{
 		public string SteamId;
 
-		public long ServerId;
+		public string ServerId;
 	}
 }

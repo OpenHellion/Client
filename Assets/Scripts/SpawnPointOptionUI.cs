@@ -80,7 +80,7 @@ public class SpawnPointOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerE
 			Client.Instance.ShowMessageBox(Localization.Warning, Localization.WrongSavegameVersion);
 			return;
 		}
-		Client.Instance.CanvasManager.SpawnOptionsScreen.SetActive(false);
+		Client.Instance.CanvasManager.StartingPointScreen.SetActive(false);
 		Client.Instance.CanvasManager.SelectSpawnPointScreen.SetActive(false);
 		Client.Instance.StartCoroutine(Client.Instance.PlaySPCoroutine(SaveFile.Name));
 	}

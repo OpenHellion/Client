@@ -26,7 +26,7 @@ namespace ZeroGravity.Network
 
 		public override bool Equals(object obj)
 		{
-			if (obj == null || !(obj is VesselObjectID))
+			if (obj is null or not VesselObjectID)
 			{
 				return false;
 			}

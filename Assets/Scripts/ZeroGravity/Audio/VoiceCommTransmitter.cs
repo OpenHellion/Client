@@ -149,7 +149,7 @@ namespace ZeroGravity.Audio
 				voiceCommDataMessage.SourceGUID = MyPlayer.Instance.GUID;
 				voiceCommDataMessage.IsRadioComm = radio;
 				voiceCommDataMessage.AudioPackets = list;
-				byte[] msgBytes = Serializer.Serialize(voiceCommDataMessage);
+				byte[] msgBytes = Serializer.Package(voiceCommDataMessage);
 				HashSet<OtherPlayer> hashSet = new HashSet<OtherPlayer>();
 				hashSet.UnionWith(GetAllPlayersFromSameVessel());
 				if (radio)

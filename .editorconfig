@@ -5,6 +5,12 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 charset = utf-8
 
+[*.cs]
+dotnet_diagnostic.IDE0090.severity = none
+dotnet_diagnostic.IDE0074.severity = none
+dotnet_diagnostic.IDE0018.severity = none
+dotnet_diagnostic.IDE0030.severity = none
+
 [**.{cs,shader}]
 indent_style = tab
 indent_size = tab

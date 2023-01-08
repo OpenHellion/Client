@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using OpenHellion;
 using OpenHellion.ProviderSystem;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -43,7 +44,7 @@ public class MessageTerminal : MonoBehaviour
 		try
 		{
 			string text = "http://api.playhellion.com/add-message.php?";
-			text = text + "reporter=" + Uri.EscapeUriString(ProviderManager.MainProvider.GetId());
+			text = text + "reporter=" + Uri.EscapeUriString(IdManager.PlayerId);
 			text = text + "&msg=" + Uri.EscapeUriString(Input.textComponent.text);
 			text = text.Replace("#", "%23");
 			UnityWebRequest req = new UnityWebRequest(text);

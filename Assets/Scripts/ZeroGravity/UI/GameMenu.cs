@@ -128,16 +128,15 @@ namespace ZeroGravity.UI
 				ServerInfoScreen.SetActive(false);
 				InGameMenuScreen.SetActive(true);
 				Client.Instance.InputModule.UseCustomCursorPosition = false;
-				ServerNameText.text = ((!Client.Instance.SinglePlayerMode) ? Client.LastConnectedServer.Name : Localization.SinglePlayer);
-				ServerDescriptionText.text = ((!Client.Instance.SinglePlayerMode) ? Client.LastConnectedServer.Description : Localization.SinglePlayerModeDescription);
+				ServerNameText.text = (!Client.Instance.SinglePlayerMode) ? Client.LastConnectedServer.Name : Localization.SinglePlayer;
+				ServerDescriptionText.text = (!Client.Instance.SinglePlayerMode) ? Client.LastConnectedServer.Description : Localization.SinglePlayerModeDescription;
 				SaveButton.SetActive(Client.Instance.SinglePlayerMode);
 				LoadButton.SetActive(Client.Instance.SinglePlayerMode);
 				ReportServerButton.SetActive(!Client.Instance.SinglePlayerMode);
-				LogoutMainMenu.text = ((!Client.Instance.SinglePlayerMode) ? Localization.Logout.ToUpper() : Localization.MainMenu.ToUpper());
+				LogoutMainMenu.text = (!Client.Instance.SinglePlayerMode) ? Localization.Logout.ToUpper() : Localization.MainMenu.ToUpper();
 			}
 			else
 			{
-				BaseSceneTrigger lockedToTrigger = MyPlayer.Instance.LockedToTrigger;
 				if (MyPlayer.Instance.IsLockedToTrigger)
 				{
 					Client.Instance.InputModule.UseCustomCursorPosition = true;

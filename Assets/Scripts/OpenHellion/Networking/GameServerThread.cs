@@ -24,7 +24,7 @@ namespace OpenHellion.Networking
 
 		private int gameServerPort;
 
-		private long gameServerID;
+		private string gameServerID;
 
 		private string gameServerPassword;
 
@@ -37,15 +37,15 @@ namespace OpenHellion.Networking
 		private EventWaitHandle waitHandle;
 
 		// TODO: Replace this with a custom generated id, and save this in an external provider.
-		private string steamId;
+		private string _playerid;
 
-		public void Start(string address, int port, long id, string password, string steamId, int retryAttempt = 3)
+		public void Start(string address, int port, string id, string password, string playerId, int retryAttempt = 3)
 		{
 			gameServerAddress = address;
 			gameServerPort = port;
 			gameServerID = id;
 			gameServerPassword = password;
-			this.steamId = steamId;
+			_playerid = playerId;
 			this.retryAttempt = retryAttempt;
 			runThread = true;
 			networkDataQueue = new ConcurrentQueue<NetworkData>();
@@ -128,7 +128,7 @@ namespace OpenHellion.Networking
 					}
 					try
 					{
-						socket.Send(Serializer.Serialize(result));
+						socket.Send(Serializer.Package(result));
 						Client.Instance.LogSentNetworkData(result.GetType());
 					}
 					catch (ArgumentNullException)
@@ -245,15 +245,19 @@ namespace OpenHellion.Networking
 		{
 			if (gameSocketReady)
 			{
-				listeningThread = new Thread(Listen);
-				listeningThread.IsBackground = true;
+				listeningThread = new Thread(Listen)
+				{
+					IsBackground = true
+				};
 				listeningThread.Start();
-				LogInRequest logInRequest = new LogInRequest();
-				logInRequest.SteamId = steamId;
-				logInRequest.CharacterData = NetworkController.CharacterData;
-				logInRequest.ServerID = gameServerID;
-				logInRequest.Password = gameServerPassword;
-				logInRequest.ClientHash = Client.CombinedHash;
+				LogInRequest logInRequest = new LogInRequest
+				{
+					SteamId = _playerid,
+					CharacterData = NetworkController.CharacterData,
+					ServerID = gameServerID,
+					Password = gameServerPassword,
+					ClientHash = Client.CombinedHash
+				};
 				Send(logInRequest);
 			}
 			else

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using OpenHellion;
 using OpenHellion.Networking;
 using OpenHellion.ProviderSystem;
 using UnityEngine;
@@ -101,11 +102,11 @@ namespace ZeroGravity.UI
 			try
 			{
 				string text = "http://api.playhellion.com/add-report.php?";
-				text = text + "reporter=" + Uri.EscapeUriString(ProviderManager.MainProvider.GetId());
+				text = text + "reporter=" + Uri.EscapeUriString(IdManager.PlayerId);
 				text = text + "&server=" + Uri.EscapeUriString(Client.LastConnectedServer.Name);
 				text = text + "&reason=" + Uri.EscapeUriString(reportInfo[ReportReason.value].ToString());
 				text = text + "&other=" + Uri.EscapeUriString(OtherText.textComponent.text);
-				text = text + "&ping=" + Uri.EscapeUriString(((!(Client.Instance.CanvasManager.currentlySelectedServer != null)) ? Client.LastConnectedServer : Client.Instance.CanvasManager.currentlySelectedServer).PingText.text);
+				text = text + "&ping=" + Uri.EscapeUriString(Client.LastConnectedServer.Ping.ToString());
 				text = text.Replace("#", "%23");
 				UnityWebRequest request = new UnityWebRequest(text);
 				StartCoroutine(WaitForRequest(request));

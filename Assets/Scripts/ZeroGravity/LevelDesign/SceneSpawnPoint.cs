@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using OpenHellion;
 using OpenHellion.Networking;
 using OpenHellion.ProviderSystem;
 using ThreeEyedGames;
@@ -324,7 +325,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				foreach (PlayerOnServerData item in data.PlayersOnServer)
 				{
-					if (item.SteamID != ProviderManager.MainProvider.GetId())
+					if (item.SteamID != IdManager.PlayerId)
 					{
 						list.Add(new PlayerInviteData
 						{

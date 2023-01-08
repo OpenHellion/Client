@@ -2,20 +2,26 @@
 	"search.exclude": {
 		"Packages": true
 	},
-    "files.exclude":
-    {
-        "**/.DS_Store":true,
-        "**/.git":true,
-        "build/":true,
-        "Build/":true,
-        "Library/":true,
-        "library/":true,
-        "Hellion_Data/":true,
-        "obj/":true,
-        "Obj/":true,
-        "ProjectSettings/":true,
-        "temp/":true,
-        "Temp/":true,
+	"files.exclude":
+	{
+		"**/*.csproj":true,
+		"**/.DS_Store":true,
+		"**/.git":true,
+		"**/*.zip":true,
+		"build/":true,
+		"Build/":true,
+		"Library/":true,
+		"library/":true,
+		"Hellion_Data/":true,
+		"obj/":true,
+		"Obj/":true,
+		"ProjectSettings/":true,
+		".github/":true,
+		"temp/":true,
+		"Temp/":true,
+		"NodeDependencyCache/":true,
+		"NuGet/":true,
+		"Logs/":true,
 		"Assets/Test":true,
 		"Assets/Wwise":true,
 		"Assets/Scene":true,
@@ -34,6 +40,7 @@
 		"Packages":true,
 		"UserSettings":true,
 		"WwiseProject":true
-    },
-	"diffEditor.diffAlgorithm": "experimental"
+	},
+	"diffEditor.diffAlgorithm": "experimental",
+	"omnisharp.useModernNet": false
 }

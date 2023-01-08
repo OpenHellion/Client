@@ -49,7 +49,7 @@ namespace OpenHellion.ProviderSystem
 					}
 				}
 
-				return String.Empty;
+				return null;
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace OpenHellion.ProviderSystem
 					}
 				}
 
-				return String.Empty;
+				return null;
 			}
 		}
 

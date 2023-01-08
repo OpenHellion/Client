@@ -70,7 +70,6 @@ namespace ZeroGravity.Network
 	[ProtoInclude(339, typeof(RepairItemMessage))]
 	[ProtoInclude(340, typeof(RepairVesselMessage))]
 	[ProtoInclude(341, typeof(HurtPlayerMessage))]
-	[ProtoInclude(342, typeof(InviteMessage))]
 	[ProtoInclude(343, typeof(RoomPressureMessage))]
 	[ProtoInclude(344, typeof(RecycleItemMessage))]
 	[ProtoInclude(345, typeof(CancelFabricationMessage))]

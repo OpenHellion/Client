@@ -13,6 +13,7 @@ using ZeroGravity.Objects;
 using ZeroGravity.UI;
 using OpenHellion.ProviderSystem;
 using OpenHellion.Networking;
+using TriInspector;
 
 namespace ZeroGravity
 {
@@ -26,9 +27,9 @@ namespace ZeroGravity
 		public enum Screen
 		{
 			None,
-			OnLoad,
-			CharacterSelect,
-			ChooseShip,
+			MainMenu,
+			StartingPoint,
+			SpawnOptions,
 			Loading
 		}
 
@@ -37,6 +38,9 @@ namespace ZeroGravity
 			None,
 			Loading,
 			ConnectingToMain,
+			FindingPlayer,
+			NewPlayer,
+			SigningIn,
 			ConnectingToGame
 		}
 
@@ -57,10 +61,10 @@ namespace ZeroGravity
 		[HideInInspector]
 		public Canvas Canvas;
 
-		[Header("Start sceen")]
+		[Title("Start sceen")]
 		public SplashScreen SplashScreen;
 
-		public GameObject OnLoadPanel;
+		public GameObject MainMenu;
 
 		public GameObject Disclamer;
 
@@ -68,14 +72,14 @@ namespace ZeroGravity
 
 		public Text Version;
 
-		[Header("Loading screen")]
+		[Title("Loading screen")]
 		public GameObject LoadingCanvas;
 
 		public Text LoadingScreenText;
 
 		public Text LoadingTips;
 
-		[Header("Dead screen")]
+		[Title("Dead screen")]
 		public GameObject DeadScreen;
 
 		public GameObject PressAnyKey;
@@ -84,22 +88,22 @@ namespace ZeroGravity
 
 		public GameObject DisconectScreen;
 
-		[Header("Character and server screen")]
-		public GameObject CharacterAndServerGroup;
+		[Title("Character screen")]
+		public GameObject CharacterGroup;
 
-		public GameServerUI currentlySelectedServer;
-
-		[Header("Pop up")]
+		[Title("Pop up")]
 		public GameObject CanvasMessageBox;
 
 		public ReportServerUI ReportServerBox;
 
 		public GameObject ConfirmMessageBox;
 
-		[Header("Spawn point selection screen")]
+		[Title("Spawn point selection screen")]
+		[ReadOnly]
+		[ListDrawerSettings(Draggable = false, HideAddButton = true, HideRemoveButton = true, AlwaysExpanded = true)]
 		public List<StartingPointOptionData> StartingPointData = new List<StartingPointOptionData>();
 
-		public GameObject SpawnOptionsScreen;
+		public GameObject StartingPointScreen;
 
 		public Transform SpawnOptions;
 
@@ -117,14 +121,14 @@ namespace ZeroGravity
 
 		public Text CurrentSpawnPointDescription;
 
-		public bool CanChooseSpown = true;
+		public bool CanChooseSpawn = true;
 
-		[Header("Single player")]
+		[Title("Single player")]
 		public GameObject SinglePlayerModeScreen;
 
 		public GameObject SinglePlayerDeadOptions;
 
-		[Header("In game screens")]
+		[Title("In game screens")]
 		public GameMenu GameMenuScript;
 
 		public CanvasUI CanvasUI;
@@ -145,10 +149,10 @@ namespace ZeroGravity
 
 		public GameObject ScreenShootMod;
 
-		[Header("Sound")]
+		[Title("Sound")]
 		public SoundEffect SoundEffect;
 
-		[Header("My player")]
+		[Title("My player")]
 		public PlayerOverview PlayerOverview;
 
 		private float hitCanvasTime;
@@ -185,13 +189,13 @@ namespace ZeroGravity
 
 		public HelmetOverlayModel HelmetOverlayModel;
 
-		[Header("Console")]
+		[Title("Console")]
 		public InGameConsole Console;
 
-		[Header("Connection notifications")]
+		[Title("Connection notifications")]
 		public Image Latency;
 
-		[Header("Quick tips")]
+		[Title("Quick tips")]
 		public bool DefaultInteractionTipSeen;
 
 		public GameObject DefaultInteractionTip;
@@ -224,7 +228,7 @@ namespace ZeroGravity
 
 			if (Client.IsLogout || Client.IsDisconected)
 			{
-				SelectScreen(Screen.CharacterSelect);
+				SelectScreen(Screen.StartingPoint);
 			}
 			else if (Client.ReconnectAutomatically || Client.ForceRespawn)
 			{
@@ -232,7 +236,7 @@ namespace ZeroGravity
 			}
 			else
 			{
-				SelectScreen(Screen.OnLoad);
+				SelectScreen(Screen.MainMenu);
 			}
 
 			Cursor.visible = true;
@@ -288,7 +292,7 @@ namespace ZeroGravity
 				{
 					return;
 				}
-				if (OnLoadPanel.activeInHierarchy && !InGameMenuCanvas.activeInHierarchy)
+				if (MainMenu.activeInHierarchy && !InGameMenuCanvas.activeInHierarchy)
 				{
 					Client.Instance.SignInButton();
 				}
@@ -299,10 +303,6 @@ namespace ZeroGravity
 				else if (Client.Instance.CreateCharacterPanel.activeInHierarchy)
 				{
 					Client.Instance.CreateCharacterButton();
-				}
-				else if (CharacterAndServerGroup.activeInHierarchy && currentlySelectedServer != null)
-				{
-					Client.Instance.ConnectToServer(currentlySelectedServer);
 				}
 			}
 
@@ -333,11 +333,11 @@ namespace ZeroGravity
 				{
 					Client.Instance.CreateCharacterExit();
 				}
-				else if (CharacterAndServerGroup.activeInHierarchy)
+				else if (CharacterGroup.activeInHierarchy)
 				{
 					BackButton();
 				}
-				else if (SpawnOptionsScreen.activeInHierarchy)
+				else if (StartingPointScreen.activeInHierarchy)
 				{
 					ExitSpawnOptionsScreen();
 				}
@@ -412,14 +412,14 @@ namespace ZeroGravity
 
 			// Create default entry for creating new game.
 			// TODO: Shouldn't this be a static gui element?
-			SpawnPointOptionUI newWorldEntry = GameObject.Instantiate(SpawnPointOptionUI, SpawnPointsHolder);
+			SpawnPointOptionUI newWorldEntry = Instantiate(SpawnPointOptionUI, SpawnPointsHolder);
 			newWorldEntry.CreateNewGameButton();
 
 			DirectoryInfo directoryInfo = new DirectoryInfo(Client.Instance.GetSPPath());
 			bool flag = true;
 			foreach (FileInfo item in from m in directoryInfo.GetFiles("*.save") orderby m.LastWriteTime descending select m)
 			{
-				SpawnPointOptionUI spawnPointOptionUI2 = GameObject.Instantiate(SpawnPointOptionUI, SpawnPointsHolder);
+				SpawnPointOptionUI spawnPointOptionUI2 = Instantiate(SpawnPointOptionUI, SpawnPointsHolder);
 				spawnPointOptionUI2.SaveFile = item;
 				spawnPointOptionUI2.CreateSaveGameButton();
 				flag = false;
@@ -429,11 +429,6 @@ namespace ZeroGravity
 			{
 				Client.Instance.PlayNewSPGame();
 			}
-		}
-
-		public void VisitForumLink()
-		{
-			Application.OpenURL("https://www.playhellion.com/forum/");
 		}
 
 		public void RentYourServerLink()
@@ -477,7 +472,7 @@ namespace ZeroGravity
 				Client.Instance.CanvasManager.CanvasUI.QuestCutScene.OnCutSceneFinished();
 				Client.Instance.InGamePanels.Detach();
 				DisconectScreen.SetActive(value: true);
-				StartCoroutine(invokeDeath());
+				StartCoroutine(InvokeDeath());
 				Client.IsDisconected = true;
 			}
 			else
@@ -486,7 +481,7 @@ namespace ZeroGravity
 			}
 		}
 
-		private IEnumerator invokeDeath()
+		private IEnumerator InvokeDeath()
 		{
 			yield return new WaitForSeconds(4f);
 			TogglePlayerDisconect(val: false);
@@ -688,7 +683,7 @@ namespace ZeroGravity
 		private void InstantiateSpawnButton(SpawnPointDetails spawnPoint, int posIndex, OnSpawnPointClicked onSpawnClicked)
 		{
 			SpawnPointOptionUI spawnPointOptionUI = GameObject.Instantiate(SpawnPointOptionUI, SpawnPointsHolder);
-			string text = ((!spawnPoint.Name.IsNullOrEmpty()) ? spawnPoint.Name : spawnPoint.SpawnSetupType.ToLocalizedString());
+			string text = (!spawnPoint.Name.IsNullOrEmpty()) ? spawnPoint.Name : spawnPoint.SpawnSetupType.ToLocalizedString();
 			spawnPointOptionUI.Name.text = text + ((spawnPoint.PlayersOnShip == null || spawnPoint.PlayersOnShip.Count <= 0) ? string.Empty : ("\n" + string.Join(", ", spawnPoint.PlayersOnShip.ToArray())));
 			spawnPointOptionUI.GetComponent<Button>().onClick.AddListener(delegate
 			{
@@ -724,44 +719,49 @@ namespace ZeroGravity
 			InteractionCanvas.ShowCanvas(text, hideTime);
 		}
 
+		/// <summary>
+		/// 	Select one of the screens used in the start of the game, from the title menu to the loading screen.<br/>
+		/// 	Contains: None, main menu, character select, spawn options, and loading screens.<br/>
+		/// 	It is from before singleplayer was added.
+		/// 	TODO: Remove this.
+		/// </summary>
 		public void SelectScreen(Screen screen)
 		{
 			switch (screen)
 			{
 			case Screen.None:
-				OnLoadPanel.SetActive(value: false);
-				CharacterAndServerGroup.SetActive(value: false);
-				SpawnOptionsScreen.SetActive(value: false);
+				MainMenu.SetActive(value: false);
+				CharacterGroup.SetActive(value: false);
+				StartingPointScreen.SetActive(value: false);
 				ToggleLoadingScreen(LoadingScreenType.None);
 				break;
-			case Screen.OnLoad:
-				OnLoadPanel.SetActive(value: true);
-				CharacterAndServerGroup.SetActive(value: false);
-				SpawnOptionsScreen.SetActive(value: false);
+			case Screen.MainMenu:
+				MainMenu.SetActive(value: true);
+				CharacterGroup.SetActive(value: false);
+				StartingPointScreen.SetActive(value: false);
 				ToggleLoadingScreen(Client.SinglePlayerQuickLoad ? LoadingScreenType.Loading : LoadingScreenType.None);
 				break;
-			case Screen.CharacterSelect:
-				CharacterAndServerGroup.SetActive(value: true);
-				OnLoadPanel.SetActive(value: false);
-				SpawnOptionsScreen.SetActive(value: false);
+			case Screen.StartingPoint:
+				CharacterGroup.SetActive(value: true);
+				MainMenu.SetActive(value: false);
+				StartingPointScreen.SetActive(value: false);
 				ToggleLoadingScreen(LoadingScreenType.None);
 				Client.IsLogout = false;
 				Client.IsDisconected = false;
-				currentlySelectedServer = null;
 				break;
-			case Screen.ChooseShip:
-				OnLoadPanel.SetActive(value: false);
-				CharacterAndServerGroup.SetActive(value: false);
+			case Screen.SpawnOptions:
+				MainMenu.SetActive(value: false);
+				CharacterGroup.SetActive(value: false);
 				SinglePlayerModeScreen.SetActive(value: false);
-				SpawnOptionsScreen.SetActive(value: true);
+				StartingPointScreen.SetActive(value: true);
 				ToggleLoadingScreen(LoadingScreenType.None);
-				CanChooseSpown = true;
+				CanChooseSpawn = true;
 				break;
 			case Screen.Loading:
-				OnLoadPanel.SetActive(value: false);
-				CharacterAndServerGroup.SetActive(value: false);
+				MainMenu.SetActive(value: false);
+				CharacterGroup.SetActive(value: false);
 				SinglePlayerModeScreen.SetActive(value: false);
-				SpawnOptionsScreen.SetActive(value: false);
+				StartingPointScreen.SetActive(value: false);
 				ToggleLoadingScreen(LoadingScreenType.Loading);
 				break;
 			}
@@ -812,9 +812,7 @@ namespace ZeroGravity
 		/// </summary>
 		public void BackButton()
 		{
-			Client.Instance.ClearServerList();
-			Client.Instance.UpdateServers = false;
-			SelectScreen(Screen.OnLoad);
+			SelectScreen(Screen.MainMenu);
 			NetworkController.Instance.Disconnect();
 		}
 
@@ -832,7 +830,7 @@ namespace ZeroGravity
 			else
 			{
 				// Exit screen completely, and go back to server list.
-				SelectScreen(Screen.CharacterSelect);
+				SelectScreen(Screen.StartingPoint);
 			}
 		}
 

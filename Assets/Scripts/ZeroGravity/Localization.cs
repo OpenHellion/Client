@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using UnityEngine;
 using ZeroGravity.Data;
@@ -555,7 +554,9 @@ namespace ZeroGravity
 
 		public static string Chat;
 
-		public static string LogInError;
+		public static string SignInError;
+
+		public static string ServerNotFound;
 
 		public static string HoldToLoot;
 
@@ -2182,6 +2183,7 @@ namespace ZeroGravity
 		public static string SystemShipArrive;
 
 		public static string SystemServerRestart;
+		public static string NoProvider;
 
 		public static Dictionary<Enum, string> Enums;
 
@@ -2198,9 +2200,6 @@ namespace ZeroGravity
 		public static Dictionary<ItemType, string> ItemsDescriptions;
 
 		public static Dictionary<ItemCategory, string> ItemCategoryNames;
-
-		[CompilerGenerated]
-		private static Func<CustomAttributeData, bool> _003C_003Ef__am_0024cache0;
 
 		static Localization()
 		{
@@ -2482,7 +2481,8 @@ namespace ZeroGravity
 			InventoryFull = "Full";
 			Melee = "Melee";
 			Chat = "Chat";
-			LogInError = "Unable to sign in. Check your Steam account.";
+			SignInError = "Unable to sign in.";
+			ServerNotFound = "The server you tried to join does not exist.";
 			HoldToLoot = "Hold [{0}] to loot";
 			PressToInteract = "'{0}' to interact";
 			HoldToEquip = "Hold [{0}] to equip";
@@ -3293,6 +3293,7 @@ namespace ZeroGravity
 			SystemShipInRange = "Ship is already in range.";
 			SystemShipArrive = "Ship will arrive in {0}";
 			SystemServerRestart = "Server will restart in {0} {1}";
+			NoProvider = "No provider is available. Try launching steam or discord.";
 			defaultValues = GetJsonString();
 			Initialize();
 			ControlsRebinder.Initialize();
@@ -3300,16 +3301,18 @@ namespace ZeroGravity
 
 		public static void Initialize()
 		{
-			Dictionary<int, string> dictionary = new Dictionary<int, string>();
-			dictionary.Add(0, Tut_Undefined);
-			dictionary.Add(1, Tut_1);
-			dictionary.Add(2, Tut_2);
-			dictionary.Add(3, Tut_3);
-			dictionary.Add(4, Tut_4);
-			dictionary.Add(5, Tut_5);
-			dictionary.Add(6, Tut_6);
-			dictionary.Add(7, Tut_7);
-			TutorialText = dictionary;
+			TutorialText = new Dictionary<int, string>
+			{
+				{ 0, Tut_Undefined },
+				{ 1, Tut_1 },
+				{ 2, Tut_2 },
+				{ 3, Tut_3 },
+				{ 4, Tut_4 },
+				{ 5, Tut_5 },
+				{ 6, Tut_6 },
+				{ 7, Tut_7 }
+			};
+
 			PreloadText = new string[48]
 			{
 				Preload01, Preload02, Preload03, Preload04, Preload05, Preload06, Preload07, Preload08, Preload09, Preload10,
@@ -3318,807 +3321,825 @@ namespace ZeroGravity
 				Preload31, Preload32, Preload33, Preload34, Preload35, Preload36, Preload37, Preload38, Preload39, Preload40,
 				Preload41, Preload42, Preload43, Preload44, Preload45, Preload46, Preload47, Preload48
 			};
+
 			SystemChatName = new string[6] { AutomatedDistress, System, System, System, System, System };
-			Dictionary<GenericItemSubType, string> dictionary2 = new Dictionary<GenericItemSubType, string>();
-			dictionary2.Add(GenericItemSubType.None, None);
-			dictionary2.Add(GenericItemSubType.Flag, FlagDescription);
-			dictionary2.Add(GenericItemSubType.BasketBall, BasketBallDescription);
-			dictionary2.Add(GenericItemSubType.BookHolder, BookHolderDescription);
-			dictionary2.Add(GenericItemSubType.Hoop, HoopDescription);
-			dictionary2.Add(GenericItemSubType.LavaLamp, LavaLampDescription);
-			dictionary2.Add(GenericItemSubType.PlantRing, PlantRingDescription);
-			dictionary2.Add(GenericItemSubType.PlantZikaLeaf, PlantZikaLeafDescription);
-			dictionary2.Add(GenericItemSubType.PlantCanister, PlantCanisterDescription);
-			dictionary2.Add(GenericItemSubType.PosterBethyr, PosterDescription);
-			dictionary2.Add(GenericItemSubType.PosterBurner, PosterDescription);
-			dictionary2.Add(GenericItemSubType.PosterEverest, PosterDescription);
-			dictionary2.Add(GenericItemSubType.PosterHellion, PosterDescription);
-			dictionary2.Add(GenericItemSubType.PosterTurret, PosterDescription);
-			dictionary2.Add(GenericItemSubType.PosterCrewQuarters, PosterDescription);
-			dictionary2.Add(GenericItemSubType.PosterSonsOfEarth, PosterDescription);
-			dictionary2.Add(GenericItemSubType.TeslaBall, TeslaBallDescription);
-			dictionary2.Add(GenericItemSubType.Picture, PictureDescription);
-			dictionary2.Add(GenericItemSubType.AltCorp_Cup, AltCorp_CupDescription);
-			dictionary2.Add(GenericItemSubType.CoffeeMachine, CoffeeMachineDescription);
-			dictionary2.Add(GenericItemSubType.BrokenArmature, ScrapDescription);
-			dictionary2.Add(GenericItemSubType.ShatteredPlating, ScrapDescription);
-			dictionary2.Add(GenericItemSubType.FriedElectronics, ScrapDescription);
-			dictionary2.Add(GenericItemSubType.DamagedTransmiter, ScrapDescription);
-			dictionary2.Add(GenericItemSubType.RupturedInsulation, ScrapDescription);
-			dictionary2.Add(GenericItemSubType.BurnedPDU, ScrapDescription);
-			dictionary2.Add(GenericItemSubType.DiamondCoreDrillBit, DiamondCoreDescription);
-			GenericItemsDescriptions = dictionary2;
-			Dictionary<ItemCategory, string> dictionary3 = new Dictionary<ItemCategory, string>();
-			dictionary3.Add(ItemCategory.Containers, Containers);
-			dictionary3.Add(ItemCategory.General, General);
-			dictionary3.Add(ItemCategory.Magazines, Magazines);
-			dictionary3.Add(ItemCategory.Medical, Medical);
-			dictionary3.Add(ItemCategory.Parts, Parts);
-			dictionary3.Add(ItemCategory.Suits, Suits);
-			dictionary3.Add(ItemCategory.Tools, Tools);
-			dictionary3.Add(ItemCategory.Utility, Utility);
-			dictionary3.Add(ItemCategory.Weapons, Weapons);
-			ItemCategoryNames = dictionary3;
-			Dictionary<MachineryPartType, string> dictionary4 = new Dictionary<MachineryPartType, string>();
-			dictionary4.Add(MachineryPartType.ThermonuclearCatalyst, ThermonuclearCatalystDescription);
-			dictionary4.Add(MachineryPartType.ResourceInjector, ResourceInjectorDescription);
-			dictionary4.Add(MachineryPartType.CoreContainmentFieldGenerator, CoreContainmentFieldGeneratorDescription);
-			dictionary4.Add(MachineryPartType.EMFieldController, EMFieldControllerDescription);
-			dictionary4.Add(MachineryPartType.ServoMotor, ServoMotorDescription);
-			dictionary4.Add(MachineryPartType.AirProcessingController, AirProcessingControllerDescription);
-			dictionary4.Add(MachineryPartType.CarbonFilters, CarbonFiltersDescription);
-			dictionary4.Add(MachineryPartType.AirFilterUnit, AirFilterUnitDescription);
-			dictionary4.Add(MachineryPartType.PressureRegulator, PressureRegulatorDescription);
-			dictionary4.Add(MachineryPartType.NaniteCore, NaniteCoreDescription);
-			dictionary4.Add(MachineryPartType.HighEnergyLaser, PlasmaAcceleratorDescription);
-			dictionary4.Add(MachineryPartType.SingularityCellDetonator, SingularityCellDetonatorDescription);
-			dictionary4.Add(MachineryPartType.WarpCell, WarpCellDescription);
-			dictionary4.Add(MachineryPartType.MillitaryNaniteCore, MilitaryNaniteCoreDescription);
-			MachineryPartsDescriptions = dictionary4;
-			Dictionary<ItemType, string> dictionary5 = new Dictionary<ItemType, string>();
-			dictionary5.Add(ItemType.None, None);
-			dictionary5.Add(ItemType.AltairRifle, AltairRifleDescription);
-			dictionary5.Add(ItemType.MilitaryAssaultRifle, MilitaryAssaultRifleDescription);
-			dictionary5.Add(ItemType.MilitarySniperRifle, MilitarySniperRifleDescription);
-			dictionary5.Add(ItemType.MilitaryHandGun01, MilitaryHandGun01Description);
-			dictionary5.Add(ItemType.MilitaryHandGun02, MilitaryHandGun02Description);
-			dictionary5.Add(ItemType.AltairRifleAmmo, AltairRifleAmmoDescription);
-			dictionary5.Add(ItemType.MilitaryAssaultRifleAmmo, MilitaryAssaultRifleAmmoDescription);
-			dictionary5.Add(ItemType.MilitarySniperRifleAmmo, MilitarySniperRifleAmmoDescription);
-			dictionary5.Add(ItemType.MilitaryHandGunAmmo01, MilitaryHandGunAmmo01Description);
-			dictionary5.Add(ItemType.AltairPressurisedSuit, AltairPressurisedSuitDescription);
-			dictionary5.Add(ItemType.AltairEVASuit, AltairEVASuitDescription);
-			dictionary5.Add(ItemType.AltairPressurisedHelmet, AltairPressurisedHelmetDescription);
-			dictionary5.Add(ItemType.AltairEVAHelmet, AltairEVAHelmetDescription);
-			dictionary5.Add(ItemType.AltairPressurisedJetpack, AltairPressurisedJetpackDescription);
-			dictionary5.Add(ItemType.AltairEVAJetpack, AltairEVAJetpackDescription);
-			dictionary5.Add(ItemType.MachineryPart, MachineryPartDescription);
-			dictionary5.Add(ItemType.AltairHandDrill, AltairHandDrillDescription);
-			dictionary5.Add(ItemType.AltairHandDrillBattery, AltairHandDrillBatteryDescription);
-			dictionary5.Add(ItemType.AltairHandDrillCanister, AltairHandDrillCanisterDescription);
-			dictionary5.Add(ItemType.AltairResourceContainer, AltairResourceContainerDescription);
-			dictionary5.Add(ItemType.AltairRefinedCanister, AltairRefinedCanisterDescription);
-			dictionary5.Add(ItemType.AltairCrowbar, AltairCrowbarDescription);
-			dictionary5.Add(ItemType.AltairGlowStick, AltairGlowStickDescription);
-			dictionary5.Add(ItemType.AltairMedpackSmall, AltairMedpackSmallDescription);
-			dictionary5.Add(ItemType.AltairMedpackBig, AltairMedpackBigDescription);
-			dictionary5.Add(ItemType.AltairDisposableHackingTool, AltairDisposableHackingToolDescription);
-			dictionary5.Add(ItemType.AltairHandheldAsteroidScanningTool, AltairHandheldAsteroidScanningToolDescription);
-			dictionary5.Add(ItemType.LogItem, LogItemDescription);
-			dictionary5.Add(ItemType.GenericItem, GenericItemDescription);
-			dictionary5.Add(ItemType.APGrenade, APGrenadeDescription);
-			dictionary5.Add(ItemType.EMPGrenade, EMPGrenadeDescription);
-			dictionary5.Add(ItemType.PortableTurret, PortableTurretDescription);
-			dictionary5.Add(ItemType.Welder, RepairTool);
-			dictionary5.Add(ItemType.FireExtinguisher, FireExtinguisherDescription);
-			dictionary5.Add(ItemType.SoePressurisedSuit, SoeSuitDescription);
-			dictionary5.Add(ItemType.SoePressurisedJetpack, SoeJetpackDescription);
-			dictionary5.Add(ItemType.SoePressurisedHelmet, SoeHelmetDescription);
-			dictionary5.Add(ItemType.AegisAssaultRifle, AegisAssaultRifleDescription);
-			ItemsDescriptions = dictionary5;
+
+			GenericItemsDescriptions = new Dictionary<GenericItemSubType, string>
+			{
+				{ GenericItemSubType.None, None },
+				{ GenericItemSubType.Flag, FlagDescription },
+				{ GenericItemSubType.BasketBall, BasketBallDescription },
+				{ GenericItemSubType.BookHolder, BookHolderDescription },
+				{ GenericItemSubType.Hoop, HoopDescription },
+				{ GenericItemSubType.LavaLamp, LavaLampDescription },
+				{ GenericItemSubType.PlantRing, PlantRingDescription },
+				{ GenericItemSubType.PlantZikaLeaf, PlantZikaLeafDescription },
+				{ GenericItemSubType.PlantCanister, PlantCanisterDescription },
+				{ GenericItemSubType.PosterBethyr, PosterDescription },
+				{ GenericItemSubType.PosterBurner, PosterDescription },
+				{ GenericItemSubType.PosterEverest, PosterDescription },
+				{ GenericItemSubType.PosterHellion, PosterDescription },
+				{ GenericItemSubType.PosterTurret, PosterDescription },
+				{ GenericItemSubType.PosterCrewQuarters, PosterDescription },
+				{ GenericItemSubType.PosterSonsOfEarth, PosterDescription },
+				{ GenericItemSubType.TeslaBall, TeslaBallDescription },
+				{ GenericItemSubType.Picture, PictureDescription },
+				{ GenericItemSubType.AltCorp_Cup, AltCorp_CupDescription },
+				{ GenericItemSubType.CoffeeMachine, CoffeeMachineDescription },
+				{ GenericItemSubType.BrokenArmature, ScrapDescription },
+				{ GenericItemSubType.ShatteredPlating, ScrapDescription },
+				{ GenericItemSubType.FriedElectronics, ScrapDescription },
+				{ GenericItemSubType.DamagedTransmiter, ScrapDescription },
+				{ GenericItemSubType.RupturedInsulation, ScrapDescription },
+				{ GenericItemSubType.BurnedPDU, ScrapDescription },
+				{ GenericItemSubType.DiamondCoreDrillBit, DiamondCoreDescription }
+			};
+
+			ItemCategoryNames = new Dictionary<ItemCategory, string>
+			{
+				{ ItemCategory.Containers, Containers },
+				{ ItemCategory.General, General },
+				{ ItemCategory.Magazines, Magazines },
+				{ ItemCategory.Medical, Medical },
+				{ ItemCategory.Parts, Parts },
+				{ ItemCategory.Suits, Suits },
+				{ ItemCategory.Tools, Tools },
+				{ ItemCategory.Utility, Utility },
+				{ ItemCategory.Weapons, Weapons }
+			};
+
+			MachineryPartsDescriptions = new Dictionary<MachineryPartType, string>
+			{
+				{ MachineryPartType.ThermonuclearCatalyst, ThermonuclearCatalystDescription },
+				{ MachineryPartType.ResourceInjector, ResourceInjectorDescription },
+				{ MachineryPartType.CoreContainmentFieldGenerator, CoreContainmentFieldGeneratorDescription },
+				{ MachineryPartType.EMFieldController, EMFieldControllerDescription },
+				{ MachineryPartType.ServoMotor, ServoMotorDescription },
+				{ MachineryPartType.AirProcessingController, AirProcessingControllerDescription },
+				{ MachineryPartType.CarbonFilters, CarbonFiltersDescription },
+				{ MachineryPartType.AirFilterUnit, AirFilterUnitDescription },
+				{ MachineryPartType.PressureRegulator, PressureRegulatorDescription },
+				{ MachineryPartType.NaniteCore, NaniteCoreDescription },
+				{ MachineryPartType.HighEnergyLaser, PlasmaAcceleratorDescription },
+				{ MachineryPartType.SingularityCellDetonator, SingularityCellDetonatorDescription },
+				{ MachineryPartType.WarpCell, WarpCellDescription },
+				{ MachineryPartType.MillitaryNaniteCore, MilitaryNaniteCoreDescription }
+			};
+
+			ItemsDescriptions = new Dictionary<ItemType, string>
+			{
+				{ ItemType.None, None },
+				{ ItemType.AltairRifle, AltairRifleDescription },
+				{ ItemType.MilitaryAssaultRifle, MilitaryAssaultRifleDescription },
+				{ ItemType.MilitarySniperRifle, MilitarySniperRifleDescription },
+				{ ItemType.MilitaryHandGun01, MilitaryHandGun01Description },
+				{ ItemType.MilitaryHandGun02, MilitaryHandGun02Description },
+				{ ItemType.AltairRifleAmmo, AltairRifleAmmoDescription },
+				{ ItemType.MilitaryAssaultRifleAmmo, MilitaryAssaultRifleAmmoDescription },
+				{ ItemType.MilitarySniperRifleAmmo, MilitarySniperRifleAmmoDescription },
+				{ ItemType.MilitaryHandGunAmmo01, MilitaryHandGunAmmo01Description },
+				{ ItemType.AltairPressurisedSuit, AltairPressurisedSuitDescription },
+				{ ItemType.AltairEVASuit, AltairEVASuitDescription },
+				{ ItemType.AltairPressurisedHelmet, AltairPressurisedHelmetDescription },
+				{ ItemType.AltairEVAHelmet, AltairEVAHelmetDescription },
+				{ ItemType.AltairPressurisedJetpack, AltairPressurisedJetpackDescription },
+				{ ItemType.AltairEVAJetpack, AltairEVAJetpackDescription },
+				{ ItemType.MachineryPart, MachineryPartDescription },
+				{ ItemType.AltairHandDrill, AltairHandDrillDescription },
+				{ ItemType.AltairHandDrillBattery, AltairHandDrillBatteryDescription },
+				{ ItemType.AltairHandDrillCanister, AltairHandDrillCanisterDescription },
+				{ ItemType.AltairResourceContainer, AltairResourceContainerDescription },
+				{ ItemType.AltairRefinedCanister, AltairRefinedCanisterDescription },
+				{ ItemType.AltairCrowbar, AltairCrowbarDescription },
+				{ ItemType.AltairGlowStick, AltairGlowStickDescription },
+				{ ItemType.AltairMedpackSmall, AltairMedpackSmallDescription },
+				{ ItemType.AltairMedpackBig, AltairMedpackBigDescription },
+				{ ItemType.AltairDisposableHackingTool, AltairDisposableHackingToolDescription },
+				{ ItemType.AltairHandheldAsteroidScanningTool, AltairHandheldAsteroidScanningToolDescription },
+				{ ItemType.LogItem, LogItemDescription },
+				{ ItemType.GenericItem, GenericItemDescription },
+				{ ItemType.APGrenade, APGrenadeDescription },
+				{ ItemType.EMPGrenade, EMPGrenadeDescription },
+				{ ItemType.PortableTurret, PortableTurretDescription },
+				{ ItemType.Welder, RepairTool },
+				{ ItemType.FireExtinguisher, FireExtinguisherDescription },
+				{ ItemType.SoePressurisedSuit, SoeSuitDescription },
+				{ ItemType.SoePressurisedJetpack, SoeJetpackDescription },
+				{ ItemType.SoePressurisedHelmet, SoeHelmetDescription },
+				{ ItemType.AegisAssaultRifle, AegisAssaultRifleDescription }
+			};
+
 			SystemChat = new string[6] { SystemNothing, SystemUnstable, SystemShipCalled, SystemShipInRange, SystemShipArrive, SystemServerRestart };
-			Dictionary<Enum, string> dictionary6 = new Dictionary<Enum, string>();
-			dictionary6.Add(ZeroGravity.UI.Settings.SettingsType.All, All);
-			dictionary6.Add(ZeroGravity.UI.Settings.SettingsType.Audio, Audio);
-			dictionary6.Add(ZeroGravity.UI.Settings.SettingsType.Controls, Controls);
-			dictionary6.Add(ZeroGravity.UI.Settings.SettingsType.Video, Video);
-			dictionary6.Add(ZeroGravity.UI.Settings.SettingsType.Game, Game);
-			dictionary6.Add(Gender.Male, Male.ToUpper());
-			dictionary6.Add(Gender.Female, Female.ToUpper());
-			dictionary6.Add(SpawnPointState.Authorized, Authorized);
-			dictionary6.Add(SpawnPointState.Locked, Locked);
-			dictionary6.Add(SpawnPointState.Unlocked, Unlocked);
-			dictionary6.Add(HurtType.None, CODNone);
-			dictionary6.Add(HurtType.Pressure, CODPressure);
-			dictionary6.Add(HurtType.Frost, CODFrost);
-			dictionary6.Add(HurtType.Heat, CODHeat);
-			dictionary6.Add(HurtType.Impact, CODImpact);
-			dictionary6.Add(HurtType.Shot, CODShot);
-			dictionary6.Add(HurtType.Suffocate, CODSuffocate);
-			dictionary6.Add(HurtType.Suicide, CODSuicide);
-			dictionary6.Add(HurtType.Shipwreck, CODShipwrecked);
-			dictionary6.Add(HurtType.Shred, CODShredded);
-			dictionary6.Add(HurtType.Explosion, CODExplosion);
-			dictionary6.Add(HurtType.SpaceExposure, CODSpaceExposure);
-			dictionary6.Add(VesselDamageType.None, CODNone);
-			dictionary6.Add(VesselDamageType.Decay, CODVesselDacay);
-			dictionary6.Add(VesselDamageType.Collision, CODShipwrecked);
-			dictionary6.Add(VesselDamageType.LargeDebrisHit, CODVesselLargeDebrisHit);
-			dictionary6.Add(VesselDamageType.SmallDebrisHit, CODVesselSmallDebrisHit);
-			dictionary6.Add(VesselDamageType.GrenadeExplosion, CODVesselGrenadeExplosion);
-			dictionary6.Add(VesselDamageType.NearbyVesselExplosion, CODVesselProximityExplosion);
-			dictionary6.Add(VesselDamageType.SelfDestruct, CODVesselSelfDestruct);
-			dictionary6.Add(SystemStatus.OffLine, Offline);
-			dictionary6.Add(SystemStatus.OnLine, Online);
-			dictionary6.Add(SystemStatus.CoolDown, Cooldown);
-			dictionary6.Add(SystemStatus.PowerUp, Powerup);
-			dictionary6.Add(SystemStatus.None, None);
-			dictionary6.Add(ResourceType.Air, Air);
-			dictionary6.Add(ResourceType.Ice, Ice);
-			dictionary6.Add(ResourceType.Regolith, Regolith);
-			dictionary6.Add(ResourceType.DryIce, DryIce);
-			dictionary6.Add(ResourceType.NitrateMinerals, Nitrates);
-			dictionary6.Add(ResourceType.Hydrogen, Hydrogen);
-			dictionary6.Add(ResourceType.Oxygen, Oxygen);
-			dictionary6.Add(ResourceType.Helium3, Helium3);
-			dictionary6.Add(ResourceType.Nitro, Nitro);
-			dictionary6.Add(ResourceType.Nitrogen, Nitrogen);
-			dictionary6.Add(ResourceType.CarbonFibers, CarbonFibers);
-			dictionary6.Add(ResourceType.Alloys, Alloys);
-			dictionary6.Add(ResourceType.Circuits, Circuits);
-			dictionary6.Add(ResourceType.Reserved, Reserved);
-			dictionary6.Add(ItemType.None, None);
-			dictionary6.Add(ItemType.AltairRifle, AltairRifle);
-			dictionary6.Add(ItemType.MilitaryAssaultRifle, MilitaryAssaultRifle);
-			dictionary6.Add(ItemType.MilitarySniperRifle, MilitarySniperRifle);
-			dictionary6.Add(ItemType.MilitaryHandGun01, MilitaryHandGun01);
-			dictionary6.Add(ItemType.MilitaryHandGun02, MilitaryHandGun02);
-			dictionary6.Add(ItemType.AltairRifleAmmo, AltairRifleAmmo);
-			dictionary6.Add(ItemType.MilitaryAssaultRifleAmmo, MilitaryAssaultRifleAmmo);
-			dictionary6.Add(ItemType.MilitarySniperRifleAmmo, MilitarySniperRifleAmmo);
-			dictionary6.Add(ItemType.MilitaryHandGunAmmo01, MilitaryHandGunAmmo01);
-			dictionary6.Add(ItemType.AltairPressurisedSuit, AltairPressurisedSuit);
-			dictionary6.Add(ItemType.AltairEVASuit, AltairEVASuit);
-			dictionary6.Add(ItemType.AltairPressurisedHelmet, AltairPressurisedHelmet);
-			dictionary6.Add(ItemType.AltairEVAHelmet, AltairEVAHelmet);
-			dictionary6.Add(ItemType.AltairPressurisedJetpack, AltairPressurisedJetpack);
-			dictionary6.Add(ItemType.AltairEVAJetpack, AltairEVAJetpack);
-			dictionary6.Add(ItemType.MachineryPart, MachineryPart);
-			dictionary6.Add(ItemType.AltairHandDrill, AltairHandDrill);
-			dictionary6.Add(ItemType.AltairHandDrillBattery, AltairHandDrillBattery);
-			dictionary6.Add(ItemType.AltairHandDrillCanister, AltairHandDrillCanister);
-			dictionary6.Add(ItemType.AltairResourceContainer, AltairResourceContainer);
-			dictionary6.Add(ItemType.AltairRefinedCanister, AltairRefinedCanister);
-			dictionary6.Add(ItemType.AltairCrowbar, AltairCrowbar);
-			dictionary6.Add(ItemType.AltairGlowStick, AltairGlowStick);
-			dictionary6.Add(ItemType.AltairMedpackSmall, AltairMedpackSmall);
-			dictionary6.Add(ItemType.AltairMedpackBig, AltairMedpackBig);
-			dictionary6.Add(ItemType.AltairDisposableHackingTool, AltairDisposableHackingTool);
-			dictionary6.Add(ItemType.AltairHandheldAsteroidScanningTool, AltairHandheldAsteroidScanningTool);
-			dictionary6.Add(ItemType.LogItem, LogItem);
-			dictionary6.Add(ItemType.GenericItem, GenericItem);
-			dictionary6.Add(ItemType.APGrenade, APGrenade);
-			dictionary6.Add(ItemType.EMPGrenade, EMPGrenade);
-			dictionary6.Add(ItemType.PortableTurret, PortableTurret);
-			dictionary6.Add(ItemType.FireExtinguisher, FireExtingusher);
-			dictionary6.Add(ItemType.Welder, RepairTool);
-			dictionary6.Add(ItemType.SoePressurisedSuit, SoeSuit);
-			dictionary6.Add(ItemType.SoePressurisedJetpack, SoeJetpack);
-			dictionary6.Add(ItemType.SoePressurisedHelmet, SoeHelmet);
-			dictionary6.Add(ItemType.AegisAssaultRifle, AegisAssaultRifle);
-			dictionary6.Add(MachineryPartType.None, None);
-			dictionary6.Add(MachineryPartType.Fuse, Fuse);
-			dictionary6.Add(MachineryPartType.ServoMotor, ServoMotor);
-			dictionary6.Add(MachineryPartType.SolarPanel, SolarPanel);
-			dictionary6.Add(MachineryPartType.ExternalAirVent, ExternalAirVent);
-			dictionary6.Add(MachineryPartType.AirProcessingController, AirProcessingController);
-			dictionary6.Add(MachineryPartType.CarbonFilters, CarbonFilters);
-			dictionary6.Add(MachineryPartType.AirFilterUnit, AirFilterUnit);
-			dictionary6.Add(MachineryPartType.PressureRegulator, PressureRegulator);
-			dictionary6.Add(MachineryPartType.RadarSignalAmplifier, RadarSignalAmplifier);
-			dictionary6.Add(MachineryPartType.CoreContainmentFieldGenerator, CoreContainmentFieldGenerator);
-			dictionary6.Add(MachineryPartType.ResourceInjector, ResourceInjector);
-			dictionary6.Add(MachineryPartType.ThermonuclearCatalyst, ThermonuclearCatalyst);
-			dictionary6.Add(MachineryPartType.ExternalDeuteriumExhaust, ExternalDeuteriumExhaust);
-			dictionary6.Add(MachineryPartType.PowerCollector, PowerCollector);
-			dictionary6.Add(MachineryPartType.PowerDiffuser, PowerDiffuser);
-			dictionary6.Add(MachineryPartType.GrapheneNanotubes, GrapheneNanotubes);
-			dictionary6.Add(MachineryPartType.PowerDisipator, PowerDisipator);
-			dictionary6.Add(MachineryPartType.NaniteCore, NaniteCore);
-			dictionary6.Add(MachineryPartType.MillitaryNaniteCore, MilitaryNaniteCore);
-			dictionary6.Add(MachineryPartType.EmShieldGenerator, EmShieldGenerator);
-			dictionary6.Add(MachineryPartType.HighEnergyLaser, HighEnergyLaser);
-			dictionary6.Add(MachineryPartType.RcsThrusters, RcsThrusters);
-			dictionary6.Add(MachineryPartType.SingularityCellDetonator, SingularityCellDetonator);
-			dictionary6.Add(MachineryPartType.WarpFieldGenerator, WarpFieldGenerator);
-			dictionary6.Add(MachineryPartType.HighEnergyConverter, HighEnergyConverter);
-			dictionary6.Add(MachineryPartType.SingularityContainmentField, SingularityContainmentField);
-			dictionary6.Add(MachineryPartType.WarpInductor, WarpInductor);
-			dictionary6.Add(MachineryPartType.WarpCell, WarpCell);
-			dictionary6.Add(MachineryPartType.EMFieldController, EMFieldController);
-			dictionary6.Add(GenericItemSubType.None, None);
-			dictionary6.Add(GenericItemSubType.Flag, Flag);
-			dictionary6.Add(GenericItemSubType.BasketBall, BasketBall);
-			dictionary6.Add(GenericItemSubType.BookHolder, BookHolder);
-			dictionary6.Add(GenericItemSubType.Hoop, Hoop);
-			dictionary6.Add(GenericItemSubType.LavaLamp, LavaLamp);
-			dictionary6.Add(GenericItemSubType.PlantRing, PlantRing);
-			dictionary6.Add(GenericItemSubType.PlantZikaLeaf, PlantZikaLeaf);
-			dictionary6.Add(GenericItemSubType.PlantCanister, PlantCanister);
-			dictionary6.Add(GenericItemSubType.PosterBethyr, PosterBethyr);
-			dictionary6.Add(GenericItemSubType.PosterBurner, PosterBurner);
-			dictionary6.Add(GenericItemSubType.PosterEverest, PosterEverest);
-			dictionary6.Add(GenericItemSubType.PosterHellion, PosterHellion);
-			dictionary6.Add(GenericItemSubType.PosterTurret, PosterTurret);
-			dictionary6.Add(GenericItemSubType.PosterCrewQuarters, PosterCrewQuarters);
-			dictionary6.Add(GenericItemSubType.PosterSonsOfEarth, PosterSonsOfEarth);
-			dictionary6.Add(GenericItemSubType.TeslaBall, TeslaBall);
-			dictionary6.Add(GenericItemSubType.Picture, Picture);
-			dictionary6.Add(GenericItemSubType.AltCorp_Cup, AltCorp_Cup);
-			dictionary6.Add(GenericItemSubType.CoffeeMachine, CoffeeMachine);
-			dictionary6.Add(GenericItemSubType.BrokenArmature, BrokenArmature);
-			dictionary6.Add(GenericItemSubType.ShatteredPlating, ShatteredPlating);
-			dictionary6.Add(GenericItemSubType.FriedElectronics, FriedElectronics);
-			dictionary6.Add(GenericItemSubType.DamagedTransmiter, DamagedTransmiter);
-			dictionary6.Add(GenericItemSubType.RupturedInsulation, RupturedInsulation);
-			dictionary6.Add(GenericItemSubType.BurnedPDU, BurnedPDU);
-			dictionary6.Add(GenericItemSubType.DiamondCoreDrillBit, DiamondCore);
-			dictionary6.Add(CanvasManager.LoadingScreenType.None, None);
-			dictionary6.Add(CanvasManager.LoadingScreenType.Loading, Loading.ToUpper());
-			dictionary6.Add(CanvasManager.LoadingScreenType.ConnectingToMain, ConnectingToMain.ToUpper());
-			dictionary6.Add(CanvasManager.LoadingScreenType.ConnectingToGame, ConnectingToGame.ToUpper());
-			dictionary6.Add(SpawnSetupType.Continue, Continue.ToUpper());
-			dictionary6.Add(SpawnSetupType.FreeRoamArges, FreeRoamArges);
-			dictionary6.Add(SpawnSetupType.FreeRoamSteropes, FreeRoamSteropes);
-			dictionary6.Add(SpawnSetupType.MiningArges, MiningArges);
-			dictionary6.Add(SpawnSetupType.MiningSteropes, MiningSteropes);
-			dictionary6.Add(SpawnSetupType.SteropesNearRandomStation, SteropesNearRandomStation);
-			dictionary6.Add(SpawnSetupType.SteropesNearDoomedOutpost, SteropesNearDoomedOutpost);
-			dictionary6.Add(RepairPointDamageType.Breach, Breach);
-			dictionary6.Add(RepairPointDamageType.Fire, Fire);
-			dictionary6.Add(RepairPointDamageType.System, System);
-			dictionary6.Add(RepairPointDamageType.Gravity, GravityMalfunction);
-			dictionary6.Add(GeneratorType.Power, FusionReactor);
-			dictionary6.Add(GeneratorType.Air, AirGenerator);
-			dictionary6.Add(GeneratorType.AirScrubber, AirFilter);
-			dictionary6.Add(GeneratorType.Capacitor, Capacitor);
-			dictionary6.Add(GeneratorType.Solar, SolarPanel);
-			dictionary6.Add(SubSystemType.Light, Light);
-			dictionary6.Add(SubSystemType.EmergencyLight, EmergencyLight);
-			dictionary6.Add(SubSystemType.RCS, RCS);
-			dictionary6.Add(SubSystemType.FTL, FTL);
-			dictionary6.Add(SubSystemType.Engine, Engine);
-			dictionary6.Add(SubSystemType.Refinery, Refinery);
-			dictionary6.Add(SubSystemType.Fabricator, Fabricator);
-			dictionary6.Add(MachineryPartSlotScope.Output, Output);
-			dictionary6.Add(MachineryPartSlotScope.PowerOutput, PowerOutput);
-			dictionary6.Add(MachineryPartSlotScope.ResourcesConsumption, ResourcesConsumption);
-			dictionary6.Add(MachineryPartSlotScope.PowerConsumption, PowerConsumption);
-			dictionary6.Add(MachineryPartSlotScope.Capacity, Capacity);
-			dictionary6.Add(MachineryPartSlotScope.PowerCapacity, PowerCapacity);
-			dictionary6.Add(MachineryPartSlotScope.PowerUpTime, PowerUpTime);
-			dictionary6.Add(MachineryPartSlotScope.CoolDownTime, CoolDownTime);
-			dictionary6.Add(DistributionSystemType.Air, Air);
-			dictionary6.Add(DistributionSystemType.Helium3, Helium3);
-			dictionary6.Add(DistributionSystemType.Hydrogen, Hydrogen);
-			dictionary6.Add(DistributionSystemType.Nitrogen, Nitrogen);
-			dictionary6.Add(DistributionSystemType.Oxygen, Oxygen);
-			dictionary6.Add(DistributionSystemType.Power, Power);
-			dictionary6.Add(DistributionSystemType.RCS, RCS);
-			dictionary6.Add(CargoCompartmentType.AirGeneratorNitrogen, AirGenerator + " " + Nitrogen);
-			dictionary6.Add(CargoCompartmentType.AirGeneratorOxygen, AirGenerator + " " + Oxygen);
-			dictionary6.Add(CargoCompartmentType.AirTank, AirTank);
-			dictionary6.Add(CargoCompartmentType.Canister, Canister);
-			dictionary6.Add(CargoCompartmentType.CargoBayResources, Cargo);
-			dictionary6.Add(CargoCompartmentType.CraftingResources, Crafting);
-			dictionary6.Add(CargoCompartmentType.Engine, Engine);
-			dictionary6.Add(CargoCompartmentType.JetpackOxygen, Jetpack + " " + Oxygen);
-			dictionary6.Add(CargoCompartmentType.JetpackPropellant, Jetpack + " " + Propellant);
-			dictionary6.Add(CargoCompartmentType.PowerGenerator, Power + " " + Generator);
-			dictionary6.Add(CargoCompartmentType.RawResources, Raw);
-			dictionary6.Add(CargoCompartmentType.RCS, RCS);
-			dictionary6.Add(CargoCompartmentType.RefinedCanister, Refined + " " + Canister);
-			dictionary6.Add(SceneTriggerType.CargoPanel, CargoPanel);
-			dictionary6.Add(SceneTriggerType.CryoPodPanel, CryoPanel);
-			dictionary6.Add(SceneTriggerType.LifeSupportPanel, LifeSupportPanel);
-			dictionary6.Add(SceneTriggerType.PowerSupplyPanel, PowerSupplyPanel);
-			dictionary6.Add(SceneTriggerType.SecurityScreen, SecurityTerminal);
-			dictionary6.Add(SceneTriggerType.DockingPanel, DockingPanel);
-			dictionary6.Add(SceneTriggerType.AirlockPanel, AirlockPanel);
-			dictionary6.Add(SceneTriggerType.NavigationPanel, NavigationPanel);
-			dictionary6.Add(SceneTriggerType.DockingPortController, DockingPortController);
-			dictionary6.Add(SceneTriggerType.MessageTerminal, MessageTerminal);
-			dictionary6.Add(StandardInteractionTip.Ammo, Ammo);
-			dictionary6.Add(StandardInteractionTip.Grenades, Grenades);
-			dictionary6.Add(StandardInteractionTip.Suits, Suits);
-			dictionary6.Add(StandardInteractionTip.Handguns, Handguns);
-			dictionary6.Add(StandardInteractionTip.Jetpacks, Jetpack);
-			dictionary6.Add(StandardInteractionTip.Helmets, Helmets);
-			dictionary6.Add(StandardInteractionTip.Rifles, Rifles);
-			dictionary6.Add(StandardInteractionTip.Gravity, ToggleGravity);
-			dictionary6.Add(StandardInteractionTip.ExitCryo, ExitCryo);
-			dictionary6.Add(StandardInteractionTip.EnterCryo, EnterCryo);
-			dictionary6.Add(StandardInteractionTip.Recycler, RecyclerSlot);
-			dictionary6.Add(StandardInteractionTip.ResearchTable, ResearchSlot);
-			dictionary6.Add(StandardInteractionTip.Piloting, Piloting);
-			dictionary6.Add(StandardInteractionTip.Turret, PortableTurret);
-			dictionary6.Add(StandardInteractionTip.Medpack, Medpack);
-			dictionary6.Add(StandardInteractionTip.Small, SmallItems);
-			dictionary6.Add(StandardInteractionTip.Medium, MediumItems);
-			dictionary6.Add(StandardInteractionTip.Large, LargeItems);
-			dictionary6.Add(StandardInteractionTip.FireExtinguisher, FireExtingusher);
-			dictionary6.Add(StandardInteractionTip.BasketballHoop, BasketballHoop);
-			dictionary6.Add(StandardInteractionTip.Poster, Poster);
-			dictionary6.Add(StandardInteractionTip.HackingDescription, HackingDescription);
-			dictionary6.Add(StandardInteractionTip.Undock, PullToUndock);
-			dictionary6.Add(StandardInteractionTip.Docking, DockingPanel);
-			dictionary6.Add(ManeuverCourse.FeasibilityErrorType.Acceleration_High, AccelerationHigh);
-			dictionary6.Add(ManeuverCourse.FeasibilityErrorType.Acceleration_Low, AccelerationLow);
-			dictionary6.Add(ManeuverCourse.FeasibilityErrorType.Course_Impossible, CourseImpossible);
-			dictionary6.Add(ManeuverCourse.FeasibilityErrorType.FTL_Capacity, FTLCapacity);
-			dictionary6.Add(ManeuverCourse.FeasibilityErrorType.FTL_CellFuel, FTLCellFuel);
-			dictionary6.Add(ManeuverCourse.FeasibilityErrorType.FTL_ManeuverIndex, FTLManeuverIndex);
-			dictionary6.Add(ManeuverCourse.FeasibilityErrorType.FTL_Online, FTLOffline);
-			dictionary6.Add(ManeuverCourse.FeasibilityErrorType.ToManyDockedVessels, ToManyDockedVessels);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_Shuttle_SARA, AltCorp_Shuttle_SARA);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_Shuttle_CECA, AltCorp_Shuttle_CECA);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_CorridorModule, AltCorp_CorridorModule);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_CorridorIntersectionModule, AltCorp_CorridorIntersectionModule);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_Corridor45TurnModule, AltCorp_Corridor45TurnModule);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_Corridor45TurnRightModule, AltCorp_Corridor45TurnRightModule);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_CorridorVertical, AltCorp_CorridorVertical);
-			dictionary6.Add(GameScenes.SceneID.ALtCorp_PowerSupply_Module, ALtCorp_PowerSupply_Module);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_LifeSupportModule, AltCorp_LifeSupportModule);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_Cargo_Module, AltCorp_Cargo_Module);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_Command_Module, AltCorp_Command_Module);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_StartingModule, AltCorp_StartingModule);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_AirLock, AltCorp_AirLock);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_DockableContainer, AltCorp_DockableContainer);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_CrewQuarters_Module, AltCorp_CrewQuarters_Module);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_SolarPowerModule, AltCorp_SolarPowerModule);
-			dictionary6.Add(GameScenes.SceneID.AltCorp_FabricatorModule, AltCorp_FabricatorModule);
-			dictionary6.Add(WeaponMod.FireMode.Auto, AutoFireMode);
-			dictionary6.Add(WeaponMod.FireMode.Single, SingleFireMode);
-			dictionary6.Add(InventorySlot.Group.Ammo, Ammo);
-			dictionary6.Add(InventorySlot.Group.Consumable, Consumable);
-			dictionary6.Add(InventorySlot.Group.Hands, Hands);
-			dictionary6.Add(InventorySlot.Group.Helmet, Helmet);
-			dictionary6.Add(InventorySlot.Group.Jetpack, Jetpack);
-			dictionary6.Add(InventorySlot.Group.Outfit, Outfit);
-			dictionary6.Add(InventorySlot.Group.Primary, Primary);
-			dictionary6.Add(InventorySlot.Group.Secondary, Secondary);
-			dictionary6.Add(InventorySlot.Group.Tool, Tool);
-			dictionary6.Add(InventorySlot.Group.Utility, Utility);
-			Enums = dictionary6;
-			Dictionary<string, string> dictionary7 = new Dictionary<string, string>();
-			dictionary7.Add("SinglePlayerText", SinglePlayer.ToUpper());
-			dictionary7.Add("MultiplayerText", Multiplayer.ToUpper());
-			dictionary7.Add("NameText", Name.ToUpper());
-			dictionary7.Add("JoinDiscordText", JoinDiscord.ToUpper());
-			dictionary7.Add("GamepediaText", Gamepedia.ToUpper());
-			dictionary7.Add("ActionsText", Actions.ToUpper());
-			dictionary7.Add("MovementText", Movement.ToUpper());
-			dictionary7.Add("ShipText", Ship.ToUpper());
-			dictionary7.Add("SuitText", Suit.ToUpper());
-			dictionary7.Add("CommunicationsText", Communications.ToUpper());
-			dictionary7.Add("QuickActionsText", QuickActions.ToUpper());
-			dictionary7.Add("AdvancedVideoSettingsText", AdvancedVideoSettings.ToUpper());
-			dictionary7.Add("ApplyText", Apply.ToUpper());
-			dictionary7.Add("AltKeyText", AltKey);
-			dictionary7.Add("AmbientOcclusionText", AmbientOcclusion.ToUpper());
-			dictionary7.Add("AntiAliasingText", AntiAliasing.ToUpper());
-			dictionary7.Add("AudioText", Audio.ToUpper());
-			dictionary7.Add("AutoStabilizationText", AutoStabilization.ToUpper());
-			dictionary7.Add("BackText", Back.ToUpper());
-			dictionary7.Add("BasicVideoSettingsText", BasicVideoSettings.ToUpper());
-			dictionary7.Add("BasicAudioSettingsText", BasicAudioSettings.ToUpper());
-			dictionary7.Add("BloomText", Bloom.ToUpper());
-			dictionary7.Add("CancelText", Cancel.ToUpper());
-			dictionary7.Add("CharacterText", Character.ToUpper());
-			dictionary7.Add("ChooseStartingPointText", ChooseStartingPoint.ToUpper());
-			dictionary7.Add("ChromaticAberrationText", ChromaticAberration.ToUpper());
-			dictionary7.Add("CommunityText", Community.ToUpper());
-			dictionary7.Add("ConfirmText", Confirm.ToUpper());
-			dictionary7.Add("ControlsText", Controls.ToUpper());
-			dictionary7.Add("CreateCharacterText", CreateCharacter.ToUpper());
-			dictionary7.Add("CurrentServerText", CurrentServer.ToUpper());
-			dictionary7.Add("DefaultText", Default.ToUpper());
-			dictionary7.Add("DisclaimerText", Disclaimer);
-			dictionary7.Add("EADisclaimerText", EADisclaimer);
-			dictionary7.Add("EnterCustomBoxNameText", EnterCustomBoxName.ToUpper());
-			dictionary7.Add("EnterPasswordText", EnterPassword.ToUpper());
-			dictionary7.Add("ExitText", Exit.ToUpper());
-			dictionary7.Add("EyeAdaptationText", EyeAdaptation.ToUpper());
-			dictionary7.Add("F1ForHelpText", F1ForHelp.ToUpper());
-			dictionary7.Add("FavoritesText", Favorites.ToUpper());
-			dictionary7.Add("FreshStartText", FreshStart);
-			dictionary7.Add("FullscreenText", FullScreen.ToUpper());
-			dictionary7.Add("FullText", Full);
-			dictionary7.Add("GameSettingsText", GameSettings.ToUpper());
-			dictionary7.Add("GeneralSettingsText", GeneralSettings.ToUpper());
-			dictionary7.Add("GlossaryText", Glossary.ToUpper());
-			dictionary7.Add("HeadBobStrengthText", HeadBobStrength.ToUpper());
-			dictionary7.Add("HideTipsText", HideTips.ToUpper());
-			dictionary7.Add("HideTutorialText", HideTutorial.ToUpper());
-			dictionary7.Add("InteractText", Interact);
-			dictionary7.Add("KeyText", Key);
-			dictionary7.Add("LoadingText", Loading.ToUpper());
-			dictionary7.Add("LogoutText", Logout.ToUpper());
-			dictionary7.Add("MainMenuText", MainMenu.ToUpper());
-			dictionary7.Add("MasterVolumeText", MasterVolume.ToUpper());
-			dictionary7.Add("MotionBlurText", MotionBlur.ToUpper());
-			dictionary7.Add("OfficialText", Official.ToUpper());
-			dictionary7.Add("OptionsText", Options.ToUpper());
-			dictionary7.Add("PingText", Ping.ToUpper());
-			dictionary7.Add("PlayText", Play.ToUpper());
-			dictionary7.Add("PlaySPText", PlaySP.ToUpper());
-			dictionary7.Add("PlayersText", Players.ToUpper());
-			dictionary7.Add("PreAplhaText", PreAplha);
-			dictionary7.Add("QualityText", Quality.ToUpper());
-			dictionary7.Add("QuitText", Quit.ToUpper());
-			dictionary7.Add("RefreshText", Refresh.ToUpper());
-			dictionary7.Add("ResolutionText", Resolution.ToUpper());
-			dictionary7.Add("RespawnText", Respawn.ToUpper());
-			dictionary7.Add("ResumeText", Resume.ToUpper());
-			dictionary7.Add("SaveText", Save.ToUpper());
-			dictionary7.Add("SearchText", Search.ToUpper());
-			dictionary7.Add("ServerBrowserText", ServerBrowser.ToUpper());
-			dictionary7.Add("ServerText", Server.ToUpper());
-			dictionary7.Add("SettingsText", Settings.ToUpper());
-			dictionary7.Add("ShadowsText", Shadows.ToUpper());
-			dictionary7.Add("ShipSettingsText", ShipSettings.ToUpper());
-			dictionary7.Add("ShowCrosshairText", ShowCrosshair.ToUpper());
-			dictionary7.Add("TextureQualityText", TextureQuality.ToUpper());
-			dictionary7.Add("ThrowingText", Throwing.ToUpper());
-			dictionary7.Add("MouseSettingsText", MouseSettings.ToUpper());
-			dictionary7.Add("SensitivityText", Sensitivity.ToUpper());
-			dictionary7.Add("InvertMouseWhileDrivingText", InvertMouseWhileDriving.ToUpper());
-			dictionary7.Add("InvertMouseText", InvertMouse.ToUpper());
-			dictionary7.Add("UnderstandText", Understand.ToUpper());
-			dictionary7.Add("UseText", Use);
-			dictionary7.Add("UsernameText", Username);
-			dictionary7.Add("VSyncText", VSync);
-			dictionary7.Add("VideoText", Video.ToUpper());
-			dictionary7.Add("VoiceVolumeText", VoiceVolume.ToUpper());
-			dictionary7.Add("WelcomeText", Welcome.ToUpper());
-			dictionary7.Add("PressAnyKeyText", PressAnyKeyToContinue.ToUpper());
-			dictionary7.Add("KeyboardSettingsText", KeyboardSettings.ToUpper());
-			dictionary7.Add("LanguageSettingsText", LanguageSettings.ToUpper());
-			dictionary7.Add("ChooseLanguageText", ChooseLanguage.ToUpper());
-			dictionary7.Add("ReportServerText", ReportServer.ToUpper());
-			dictionary7.Add("OtherText", Other.ToUpper());
-			dictionary7.Add("SendReportText", SendReport.ToUpper());
-			dictionary7.Add("DeleteCharacterText", DeleteCharacter.ToUpper());
-			dictionary7.Add("ReportText", ReportServer.ToUpper());
-			dictionary7.Add("ConnectText", Connect.ToUpper());
-			dictionary7.Add("ReadMoreText", ReadMore.ToUpper());
-			dictionary7.Add("LatestNewsText", LatestNews.ToUpper());
-			dictionary7.Add("ServerSettingsText", ServerSettings.ToUpper());
-			dictionary7.Add("PlayerSettingsText", PlayerSettings.ToUpper());
-			dictionary7.Add("GlobalSettingsText", GlobalSettings.ToUpper());
-			dictionary7.Add("DisconectedText", Disconnected.ToUpper());
-			dictionary7.Add("ConnectionErrorText", ConnectionError.ToUpper());
-			dictionary7.Add("UnavailableFromInGameMenuText", UnavailableFromInGameMenu.ToUpper());
-			dictionary7.Add("ConnectingToInviteText", ConnectingToInvite.ToUpper());
-			dictionary7.Add("RecyclingOutputText", RecyclingOutput.ToUpper());
-			dictionary7.Add("VolumetricLightingText", VolumetricLighting.ToUpper());
-			dictionary7.Add("JoinHellionOnDiscordText", JoinHellionOnDiscord.ToUpper());
-			dictionary7.Add("ServerRestartInText", ServerRestartIn.ToUpper());
-			dictionary7.Add("RentYourOwnServerText", RentYourOwnServer.ToUpper());
-			dictionary7.Add("SaveGameText", SaveGame.ToUpper());
-			dictionary7.Add("LoadGameText", LoadGame.ToUpper());
-			dictionary7.Add("ConsoleText", Console.ToUpper());
-			dictionary7.Add("ItemsText", Items.ToUpper());
-			dictionary7.Add("ModulesText", Modules.ToUpper());
-			dictionary7.Add("CommandListText", CommandList.ToUpper());
-			dictionary7.Add("LoadText", Load.ToUpper());
-			dictionary7.Add("DataPrivacySettingsText", DataPrivacySettings.ToUpper());
-			dictionary7.Add("EditText", Edit.ToUpper());
-			dictionary7.Add("ServerInfoText", ServerInfo.ToUpper());
-			dictionary7.Add("AmbienceVolumeText", AmbienceVolume.ToUpper());
-			dictionary7.Add("ExternalBrowserPageText", ExternalBrowserPage.ToUpper());
-			dictionary7.Add("RollText", Roll.ToUpper());
-			dictionary7.Add("HideTipsFromMenuText", HideTipsFromMenu.ToUpper());
-			dictionary7.Add("CreateCharacterLoreText", CreateCharacterLore);
-			dictionary7.Add("NetworkingText", Networking.ToUpper());
-			dictionary7.Add("SentText", Sent.ToUpper());
-			dictionary7.Add("ReceivedText", Received.ToUpper());
-			dictionary7.Add("ResetText", Reset.ToUpper());
-			dictionary7.Add("RCSFuelText", RCS.ToUpper() + " " + Fuel.ToUpper());
-			dictionary7.Add("OxygenText", Oxygen.ToUpper());
-			dictionary7.Add("NoJetpackText", Jetpack.ToUpper() + " " + Missing.ToUpper());
-			dictionary7.Add("WarningText", Warning.ToUpper());
-			dictionary7.Add("PressureText", Pressure.ToUpper());
-			dictionary7.Add("SuitPowerText", SuitPower.ToUpper());
-			dictionary7.Add("StabilizationText", Stabilization.ToUpper());
-			dictionary7.Add("LateralText", HelmetOffSpeed.ToUpper());
-			dictionary7.Add("DirectionalText", HelmetOnSpeed.ToUpper());
-			dictionary7.Add("JetpackOfflineText", JetpackOffline.ToUpper());
-			dictionary7.Add("OxygenLowText", OxygenLow.ToUpper());
-			dictionary7.Add("SelectionText", Selection.ToUpper());
-			dictionary7.Add("ZeroGravityMovementText", ZeroGravityMovement.ToUpper());
-			dictionary7.Add("UpText", Up.ToUpper());
-			dictionary7.Add("DownText", Down.ToUpper());
-			dictionary7.Add("GrabStabilizeText", Grab.ToUpper() + " / " + Stabilization.ToUpper());
-			dictionary7.Add("BatteryMissingText", BatteryMissing.ToUpper());
-			dictionary7.Add("LootAllText", LootAll.ToUpper());
-			dictionary7.Add("InventoryText", Inventory.ToUpper());
-			dictionary7.Add("JournalText", Journal.ToUpper());
-			dictionary7.Add("BlueprintsText", Blueprints.ToUpper());
-			dictionary7.Add("WeaponsText", Weapons.ToUpper());
-			dictionary7.Add("MagazinesText", Magazines.ToUpper());
-			dictionary7.Add("ToolsText", Tools.ToUpper());
-			dictionary7.Add("UtilityText", Utility.ToUpper());
-			dictionary7.Add("SuitsText", Suits.ToUpper());
-			dictionary7.Add("MediacalText", Medical.ToUpper());
-			dictionary7.Add("PartsText", Parts.ToUpper());
-			dictionary7.Add("ContainersText", Containers.ToUpper());
-			dictionary7.Add("ToggleTrackingText", ToggleTracking.ToUpper());
-			dictionary7.Add("NoSuitEquippedText", NoSuitEquipped.ToUpper());
-			dictionary7.Add("DropText", Drop.ToUpper());
-			dictionary7.Add("RemoveOutfitText", RemoveOutfit.ToUpper());
-			dictionary7.Add("ObjectivesText", Objectives.ToUpper());
-			dictionary7.Add("QuestLogText", QuestLog.ToUpper());
-			dictionary7.Add("NoLogAvailableText", NoLogAvailable.ToUpper());
-			dictionary7.Add("ShowContainerSlotsText", ShowContainerSlots.ToUpper());
-			dictionary7.Add("QuestTerminalHintText", QuestTerminalHint.ToUpper());
-			dictionary7.Add("ToBeContinuedText", ToBeContinued.ToUpper());
-			dictionary7.Add("EquipmentText", Equipment.ToUpper());
-			dictionary7.Add("ResourcesText", ResourcesLabel.ToUpper());
-			CanvasManagerLocalization = dictionary7;
-			dictionary7 = new Dictionary<string, string>();
-			dictionary7.Add("ConfirmText", Confirm.ToUpper());
-			dictionary7.Add("CancelText", Cancel.ToUpper());
-			dictionary7.Add("TurnOffText", TurnOff.ToUpper());
-			dictionary7.Add("TurnOnText", TurnOn.ToUpper());
-			dictionary7.Add("OutputText", Output.ToUpper());
-			dictionary7.Add("BackText", Back.ToUpper());
-			dictionary7.Add("ZeroGravityMovementText", ZeroGravityMovement.ToUpper());
-			dictionary7.Add("RotationText", Rotation.ToUpper());
-			dictionary7.Add("UpText", Up.ToUpper());
-			dictionary7.Add("DownText", Down.ToUpper());
-			dictionary7.Add("GrabStabilizeText", Grab.ToUpper() + " / " + Stabilization.ToUpper());
-			dictionary7.Add("InfoScreenText", InfoScreen.ToUpper());
-			dictionary7.Add("ExitPanelText", ExitPanel.ToUpper());
-			dictionary7.Add("PowerSupplyPanelText", PowerSupplyScreen.ToUpper());
-			dictionary7.Add("TotalOutputText", TotalOutput.ToUpper());
-			dictionary7.Add("PowerCapacityText", PowerCapacity.ToUpper());
-			dictionary7.Add("TotalConsumptionText", TotalConsumption.ToUpper());
-			dictionary7.Add("NoPowerSupplyConnectedText", NoPowerSupplyConnected.ToUpper());
-			dictionary7.Add("UnauthorizedAccessText", UnauthorizedAccess.ToUpper());
-			dictionary7.Add("PowerOutputText", PowerOutput.ToUpper());
-			dictionary7.Add("DeuteriumTankText", DeuteriumTank.ToUpper());
-			dictionary7.Add("SystemPartsText", SystemParts.ToUpper());
-			dictionary7.Add("SolarPanelsText", SolarPanels.ToUpper());
-			dictionary7.Add("CapacitorText", Capacitor.ToUpper());
-			dictionary7.Add("CapacityText", Capacity.ToUpper());
-			dictionary7.Add("ConsumptionText", Consumption.ToUpper());
-			dictionary7.Add("CapacitorsTotalText", CapacitorsTotal.ToUpper());
-			dictionary7.Add("ModuleOutputText", Module.ToUpper() + " " + Output.ToUpper());
-			dictionary7.Add("BaseConsumptionText", BaseConsumption.ToUpper());
-			dictionary7.Add("NoSunExposureText", NoSunExposure.ToUpper());
-			dictionary7.Add("PowerSupplySystemText", PowerSupplySystem.ToUpper());
-			dictionary7.Add("PowerSupplyInfoText", PowerSupplyInfo);
-			dictionary7.Add("CapacitorDescriptionText", CapacitorDescription);
-			dictionary7.Add("SolarPanelDescriptionText", SolarPanelDescription);
-			dictionary7.Add("FusionReactorDescriptionText", FusionReactorDescription);
-			dictionary7.Add("CurrentVesselConsumtionText", CurrentVesselConsumtion);
-			dictionary7.Add("ConnectedVesselDescriptionText", ConnectedVesselDescription);
-			dictionary7.Add("ToggleBaseConsumptionText", ToggleBaseConsumption);
-			dictionary7.Add("LifeSupportPanelText", LifeSupportPanelLabel.ToUpper());
-			dictionary7.Add("LifeSupportSystemText", LifeSupportSystem.ToUpper());
-			dictionary7.Add("TotalCapacityText", TotalCapacity.ToUpper());
-			dictionary7.Add("AirTankText", AirTank.ToUpper());
-			dictionary7.Add("NoLifeSupportConnectedText", NoLifeSupportConnected.ToUpper());
-			dictionary7.Add("NoAirGeneratorsText", NoAirGenerator.ToUpper());
-			dictionary7.Add("NoAirFiltersText", NoAirFilter.ToUpper());
-			dictionary7.Add("AirGeneratorText", AirGenerator.ToUpper());
-			dictionary7.Add("OxygenTankText", OxygenTank.ToUpper());
-			dictionary7.Add("NitrogenTankText", NitrogenTank.ToUpper());
-			dictionary7.Add("AirFilterText", AirFilter.ToUpper());
-			dictionary7.Add("PressureText", Pressure.ToUpper());
-			dictionary7.Add("AirQualityText", AirQuality.ToUpper());
-			dictionary7.Add("AirFilteringText", AirFiltering.ToUpper());
-			dictionary7.Add("PressureRegulationText", PressureRegulation.ToUpper());
-			dictionary7.Add("AirlockText", Airlock.ToUpper());
-			dictionary7.Add("AirOutputText", AirOutput.ToUpper());
-			dictionary7.Add("AirCapacityText", AirCapacity.ToUpper());
-			dictionary7.Add("ConnectedLifeSupportSystemsText", ConnectedLifeSupportSystems.ToUpper());
-			dictionary7.Add("ConnectedPowerSupplySystemsText", ConnectedPowerSupplySystems.ToUpper());
-			dictionary7.Add("ConnectedVesselsText", ConnectedVessels.ToUpper());
-			dictionary7.Add("SunExposureText", SunExposure.ToUpper());
-			dictionary7.Add("ModuleVolumeText", ModuleVolume.ToUpper());
-			dictionary7.Add("FilteringRateText", FilteringRate.ToUpper());
-			dictionary7.Add("LifeSupportInfoText", LifeSupportInfo);
-			dictionary7.Add("AirGeneratorDescriptionText", AirGeneratorDescription);
-			dictionary7.Add("AirFilterDescriptionText", AirFilterDescription);
-			dictionary7.Add("AirTankDescriptionText", AirTankDescription);
-			dictionary7.Add("AirTankNotConnectedText", AirTankNotConnected.ToUpper());
-			dictionary7.Add("ConnectedCargosText", ConnectedCargos.ToUpper());
-			dictionary7.Add("VesselSystemsText", VesselSystems.ToUpper());
-			dictionary7.Add("FabricatorText", Fabricator.ToUpper());
-			dictionary7.Add("RefineryText", Refinery.ToUpper());
-			dictionary7.Add("AttachPointText", AttachPoint.ToUpper());
-			dictionary7.Add("CargoPanelText", CargoHeading.ToUpper());
-			dictionary7.Add("RawText", Raw.ToUpper());
-			dictionary7.Add("RefinedText", Refined.ToUpper());
-			dictionary7.Add("CraftingText", Crafting.ToUpper());
-			dictionary7.Add("CargoText", Cargo.ToUpper());
-			dictionary7.Add("RefiningText", Refining.ToUpper());
-			dictionary7.Add("SlotText", Slot.ToUpper());
-			dictionary7.Add("ActiveSystemsText", ActiveSystems.ToUpper());
-			dictionary7.Add("NoSlotConnectionText", NothingConnectedToSlot.ToUpper());
-			dictionary7.Add("OxygenText", Oxygen.ToUpper());
-			dictionary7.Add("PropellantText", Propellant.ToUpper());
-			dictionary7.Add("NoRafineryText", NoRafineryAvailable.ToUpper());
-			dictionary7.Add("EnergyConsumptionText", EnergyConsumption.ToUpper());
-			dictionary7.Add("ProcessingTimeText", ProcessingTime.ToUpper());
-			dictionary7.Add("RefineText", Refine.ToUpper());
-			dictionary7.Add("NoOtherCargoAttachedText", NoOtherCargoAvailable.ToUpper());
-			dictionary7.Add("VentText", Vent.ToUpper());
-			dictionary7.Add("VentDescriptionText", VentDescription.ToUpper());
-			dictionary7.Add("UnloadText", Unload.ToUpper());
-			dictionary7.Add("NoItemAttachedToCargoText", NoItemAttachedToCargo.ToUpper());
-			dictionary7.Add("NoRefineryAvailableText", NoRefineryAvailable.ToUpper());
-			dictionary7.Add("AmountToTransferText", AmountToTransfer.ToUpper());
-			dictionary7.Add("PowerConsumptionText", PowerConsumption.ToUpper());
-			dictionary7.Add("RefiningTimeText", RefiningTime.ToUpper());
-			dictionary7.Add("TransferResourcesText", TransferResources.ToUpper());
-			dictionary7.Add("ChooseAnItemToCraftText", ChooseAnItemToCraft.ToUpper());
-			dictionary7.Add("NoFabricatorAvailableText", NoFabricatorAvailable.ToUpper());
-			dictionary7.Add("TransferFromText", TransferFrom.ToUpper());
-			dictionary7.Add("TransferToText", TransferTo.ToUpper());
-			dictionary7.Add("DragResourcesForCraftingText", DragResourcesForCrafting.ToUpper());
-			dictionary7.Add("RefillText", Refill.ToUpper());
-			dictionary7.Add("CraftText", Craft.ToUpper());
-			dictionary7.Add("CraftingTimeText", CraftingTime.ToUpper());
-			dictionary7.Add("CancelCraftingText", CancelCrafting.ToUpper());
-			dictionary7.Add("CancelingCraftingText", CancelCraftingDescription.ToUpper());
-			dictionary7.Add("CancelingCraftingWarningText", CancelCraftingWarning.ToUpper());
-			dictionary7.Add("RegisterText", Register.ToUpper());
-			dictionary7.Add("SetAsPointText", SetAsPoint.ToUpper());
-			dictionary7.Add("InvitePlayerText", InviteFriend.ToUpper());
-			dictionary7.Add("UnregisterText", Unregister.ToUpper());
-			dictionary7.Add("CryoChamberText", CryoChamber.ToUpper());
-			dictionary7.Add("SelectFriendText", SelectFriend.ToUpper());
-			dictionary7.Add("ActionRequiredText", ActionRequired.ToUpper());
-			dictionary7.Add("AreYouSureCryoText", AreYouSureCryo.ToUpper());
-			dictionary7.Add("DangerCryoText", DangerCryo.ToUpper());
-			dictionary7.Add("SecurityTermninalText", SecurityTerminal.ToUpper());
-			dictionary7.Add("ClaimText", Claim.ToUpper());
-			dictionary7.Add("AddCrewMemberText", AddCrewMember.ToUpper());
-			dictionary7.Add("ResignText", Resign.ToUpper());
-			dictionary7.Add("AuthPersonnelListText", AuthorizedPersonnelList.ToUpper());
-			dictionary7.Add("CommandingOfficerText", CommandingOfficer.ToUpper());
-			dictionary7.Add("CrewText", Crew.ToUpper());
-			dictionary7.Add("ChangeShipNameText", ChangeShipName.ToUpper());
-			dictionary7.Add("CustomShipNameText", EnterCustomShipName.ToUpper());
-			dictionary7.Add("ShipCrewText", ShipCrew.ToUpper());
-			dictionary7.Add("AreYouSureResignText", AreYouSureResign.ToUpper());
-			dictionary7.Add("PromoteText", Promote.ToUpper());
-			dictionary7.Add("RemoveText", Remove.ToUpper());
-			dictionary7.Add("AreYouSurePromoteText", AreYouSurePromote.ToUpper());
-			dictionary7.Add("AreYouSureSelfDestructText", AreYouSureSelfDestruct.ToUpper());
-			dictionary7.Add("SelfDestructActiveText", SelfDestruct.ToUpper() + " " + Active.ToUpper());
-			dictionary7.Add("ChangeShipEmblemText", ChangeShipEmblem.ToUpper());
-			dictionary7.Add("AirlockControlText", AirLockcontrols.ToUpper());
-			dictionary7.Add("PressurizeText", RePressurize.ToUpper());
-			dictionary7.Add("DepressurizeText", Depressurize.ToUpper());
-			dictionary7.Add("InnerDoorText", InnerDoor.ToUpper());
-			dictionary7.Add("OuterDoorText", OuterDoor.ToUpper());
-			dictionary7.Add("WarningAirlockText", WarningArilock);
-			dictionary7.Add("AreYouSureAirlockText", AreYouSureAirlock.ToUpper());
-			dictionary7.Add("DangerAirlockText", DangerAirlock.ToUpper());
-			dictionary7.Add("StopText", Stop.ToUpper());
-			dictionary7.Add("AirlockPressureText", AirlockPressure.ToUpper());
-			dictionary7.Add("DoorControlText", DoorControl.ToUpper());
-			dictionary7.Add("BarText", Bar.ToUpper());
-			dictionary7.Add("NoAirTankAvailableText", NoAirTankAvailable.ToUpper());
-			dictionary7.Add("VolumeDescriptionText", VolumeDescription.ToUpper());
-			dictionary7.Add("PressurizeDescriptionText", PressurizeDescription.ToUpper());
-			dictionary7.Add("DepressurizeDescriptionText", DepressurizeDescription.ToUpper());
-			dictionary7.Add("VentActionDescriptionText", VentActionDescription.ToUpper());
-			dictionary7.Add("HoldToStabilizeText", HoldToStabilize.ToUpper());
-			dictionary7.Add("ObjectsInClusterText", ObjectsInGroup.ToUpper());
-			dictionary7.Add("ObjectClusterText", MultipleObjects.ToUpper());
-			dictionary7.Add("AddCustomOrbitText", AddCustomOrbit.ToUpper());
-			dictionary7.Add("RemoveCustomOrbitText", RemoveOrbit.ToUpper());
-			dictionary7.Add("WarpToObjectText", WarpTo.ToUpper());
-			dictionary7.Add("ManeuverInitiatedText", ManeuverInitiated.ToUpper());
-			dictionary7.Add("PleaseAlignText", AlignShip.ToUpper());
-			dictionary7.Add("ZoomOutText", ZoomOut.ToUpper());
-			dictionary7.Add("HomeStationText", HomeStation.ToUpper());
-			dictionary7.Add("MyShipText", MyShip.ToUpper());
-			dictionary7.Add("ScanText", Scan.ToUpper());
-			dictionary7.Add("SignalAmplificationText", SignalAmplification.ToUpper());
-			dictionary7.Add("AutorizedVesselsText", AuthorizedVessels.ToUpper());
-			dictionary7.Add("DistressSignalsText", DistressSignal.ToUpper());
-			dictionary7.Add("FTLManeuverText", FtlManeuver.ToUpper());
-			dictionary7.Add("CellsSelectedText", CellsSelected.ToUpper());
-			dictionary7.Add("WarpDistanceText", WarpDistance.ToUpper());
-			dictionary7.Add("ManeuverStatusText", ManeuverStatus.ToUpper());
-			dictionary7.Add("ManeuverTimeAdjustmentText", ManeuverTimeAdjustment.ToUpper());
-			dictionary7.Add("ActivationTimeText", ActivationTime.ToUpper());
-			dictionary7.Add("ArrivalTimeText", ArrivalTime.ToUpper());
-			dictionary7.Add("InitializeText", InitializeNavigation.ToUpper());
-			dictionary7.Add("ClusterText", MultipleObjects.ToUpper());
-			dictionary7.Add("RcsCancelManeuverText", RcsCancelManeuver);
-			dictionary7.Add("UnstableOrbitText", UnstableOrbit.ToUpper());
-			dictionary7.Add("ArgumentOfPeriapsisText", ArgumentOfPeriapsis.ToUpper());
-			dictionary7.Add("LongitudeOfAscendingNodeText", LongitudeOfAscendingNode.ToUpper());
-			dictionary7.Add("InclinationText", Inclination.ToUpper());
-			dictionary7.Add("PeriapsisText", Periapsis.ToUpper());
-			dictionary7.Add("ApoapsisText", Apoapsis.ToUpper());
-			dictionary7.Add("PositionOnOrbitText", PositionOnOrbit.ToUpper());
-			dictionary7.Add("OrbitalPeriodText", OrbitalPeriod.ToUpper());
-			dictionary7.Add("StageText", Stage.ToUpper());
-			dictionary7.Add("WarpSettingsText", WarpSettings.ToUpper());
-			dictionary7.Add("PleaseSelectManeuverText", SelectManeuver.ToUpper());
-			dictionary7.Add("RadiationText", Radiation.ToUpper());
-			dictionary7.Add("CellConsumptionText", CellConsumption.ToUpper());
-			dictionary7.Add("SignatureText", Signature.ToUpper());
-			dictionary7.Add("ModuleText", Module.ToUpper());
-			dictionary7.Add("AvilableDockingPortsText", AvailbaleDockingPorts.ToUpper());
-			dictionary7.Add("SelectedText", Selected.ToUpper());
-			dictionary7.Add("RCSFuelLevelText", RCSFuelLevel.ToUpper());
-			dictionary7.Add("ModulesInRangeText", ModulesInRange.ToUpper());
-			dictionary7.Add("AvailableModulesText", AvailableModules.ToUpper());
-			dictionary7.Add("TargetedModuleText", TargetedModule.ToUpper());
-			dictionary7.Add("AvailablePortsText", AvailablePorts.ToUpper());
-			dictionary7.Add("DistanceText", Distance.ToUpper());
-			dictionary7.Add("DirectionalSpeedText", DirectionalSpeed.ToUpper());
-			dictionary7.Add("ResourceInjectorText", ResourceInjector.ToUpper() + " :");
-			dictionary7.Add("ResourceInjectorMissingText", ResourceInjector.ToUpper() + " " + Missing.ToUpper());
-			dictionary7.Add("CheckRcsUtilityAccessText", CheckRcsUtilityAccess.ToUpper());
-			dictionary7.Add("ChangeDockingPortText", ChangeDockingPort.ToUpper());
-			dictionary7.Add("ChangeTargetText", ChangeTarget.ToUpper());
-			dictionary7.Add("ChangeTargetPortText", ChangeTargetPort.ToUpper());
-			dictionary7.Add("NoTargetModulesInRangeText", NoTargetModulesInRange.ToUpper());
-			dictionary7.Add("EngineStatusText", EngineStatus.ToUpper());
-			dictionary7.Add("FuelText", Fuel.ToUpper());
-			dictionary7.Add("ENGText", ENG.ToUpper());
-			dictionary7.Add("RCSText", RCS.ToUpper());
-			dictionary7.Add("FTLText", FTL.ToUpper());
-			dictionary7.Add("HealthText", Health.ToUpper());
-			dictionary7.Add("ContactsText", Contacts.ToUpper());
-			dictionary7.Add("RadarRangeText", RadarRange.ToUpper());
-			dictionary7.Add("MatchedText", Matched.ToUpper());
-			dictionary7.Add("AvailableText", Available.ToUpper());
-			dictionary7.Add("EtaText", ETA.ToUpper());
-			dictionary7.Add("SystemsText", Systems.ToUpper());
-			dictionary7.Add("EngineText", Engine.ToUpper());
-			dictionary7.Add("FuelLevelsText", FuelLevels.ToUpper());
-			dictionary7.Add("MatchVelocityText", MatchVelocity.ToUpper());
-			dictionary7.Add("ToggleEngineText", ToggleEngine.ToUpper());
-			dictionary7.Add("MatchTargetsVelocityText", MatchTargetsVelocity.ToUpper());
-			dictionary7.Add("CollisionImminentText", CollisionWarning.ToUpper());
-			dictionary7.Add("OffSpeedAssistantText", OffSpeedAssistant.ToUpper());
-			dictionary7.Add("ChangeRadarRangeText", ChangeRadarRange.ToUpper());
-			dictionary7.Add("OffTargetText", OffTarget.ToUpper());
-			dictionary7.Add("WarningText", Warning.ToUpper());
-			dictionary7.Add("DrivingTipsText", DrivingTips.ToUpper());
-			dictionary7.Add("RollText", Roll.ToUpper());
-			dictionary7.Add("StabilizeText", Stabilize.ToUpper());
-			dictionary7.Add("HideTipsFromMenuText", HideTipsFromMenu.ToUpper());
-			PanelsLocalization = dictionary7;
-			dictionary7 = new Dictionary<string, string>();
-			dictionary7.Add("EnvironmentalMonitorText", EnvironmentalMonitor.ToUpper());
-			dictionary7.Add("GravityText", Gravity.ToUpper());
-			dictionary7.Add("PressureText", Pressure.ToUpper());
-			dictionary7.Add("BarText", Bar.ToUpper());
-			dictionary7.Add("AirQualityText", AirQuality.ToUpper());
-			dictionary7.Add("TemperatureText", Temperature.ToUpper());
-			dictionary7.Add("UnbreathableDangerText", UnbreathableAtmosphere.ToUpper());
-			dictionary7.Add("VesselStatusText", VesselStatus.ToUpper());
-			dictionary7.Add("GravityFailText", GravityFail.ToUpper());
-			dictionary7.Add("FireText", FireHazard.ToUpper());
-			dictionary7.Add("BreachText", Breach.ToUpper());
-			dictionary7.Add("DistressCallActiveText", DistressCallActive.ToUpper());
-			dictionary7.Add("InDebrisFieldText", InDebrisField.ToUpper());
-			dictionary7.Add("SelfDestructActiveText", SelfDestruct.ToUpper() + " " + Active.ToUpper());
-			dictionary7.Add("SystemFailiureText", SystemFailiure.ToUpper());
-			dictionary7.Add("WarningText", Warning.ToUpper());
-			EnvironmentPanelLocalization = dictionary7;
+
+			Enums = new Dictionary<Enum, string>
+			{
+				{ UI.Settings.SettingsType.All, All },
+				{ UI.Settings.SettingsType.Audio, Audio },
+				{ UI.Settings.SettingsType.Controls, Controls },
+				{ UI.Settings.SettingsType.Video, Video },
+				{ UI.Settings.SettingsType.Game, Game },
+				{ Gender.Male, Male.ToUpper() },
+				{ Gender.Female, Female.ToUpper() },
+				{ SpawnPointState.Authorized, Authorized },
+				{ SpawnPointState.Locked, Locked },
+				{ SpawnPointState.Unlocked, Unlocked },
+				{ HurtType.None, CODNone },
+				{ HurtType.Pressure, CODPressure },
+				{ HurtType.Frost, CODFrost },
+				{ HurtType.Heat, CODHeat },
+				{ HurtType.Impact, CODImpact },
+				{ HurtType.Shot, CODShot },
+				{ HurtType.Suffocate, CODSuffocate },
+				{ HurtType.Suicide, CODSuicide },
+				{ HurtType.Shipwreck, CODShipwrecked },
+				{ HurtType.Shred, CODShredded },
+				{ HurtType.Explosion, CODExplosion },
+				{ HurtType.SpaceExposure, CODSpaceExposure },
+				{ VesselDamageType.None, CODNone },
+				{ VesselDamageType.Decay, CODVesselDacay },
+				{ VesselDamageType.Collision, CODShipwrecked },
+				{ VesselDamageType.LargeDebrisHit, CODVesselLargeDebrisHit },
+				{ VesselDamageType.SmallDebrisHit, CODVesselSmallDebrisHit },
+				{ VesselDamageType.GrenadeExplosion, CODVesselGrenadeExplosion },
+				{ VesselDamageType.NearbyVesselExplosion, CODVesselProximityExplosion },
+				{ VesselDamageType.SelfDestruct, CODVesselSelfDestruct },
+				{ SystemStatus.OffLine, Offline },
+				{ SystemStatus.OnLine, Online },
+				{ SystemStatus.CoolDown, Cooldown },
+				{ SystemStatus.PowerUp, Powerup },
+				{ SystemStatus.None, None },
+				{ ResourceType.Air, Air },
+				{ ResourceType.Ice, Ice },
+				{ ResourceType.Regolith, Regolith },
+				{ ResourceType.DryIce, DryIce },
+				{ ResourceType.NitrateMinerals, Nitrates },
+				{ ResourceType.Hydrogen, Hydrogen },
+				{ ResourceType.Oxygen, Oxygen },
+				{ ResourceType.Helium3, Helium3 },
+				{ ResourceType.Nitro, Nitro },
+				{ ResourceType.Nitrogen, Nitrogen },
+				{ ResourceType.CarbonFibers, CarbonFibers },
+				{ ResourceType.Alloys, Alloys },
+				{ ResourceType.Circuits, Circuits },
+				{ ResourceType.Reserved, Reserved },
+				{ ItemType.None, None },
+				{ ItemType.AltairRifle, AltairRifle },
+				{ ItemType.MilitaryAssaultRifle, MilitaryAssaultRifle },
+				{ ItemType.MilitarySniperRifle, MilitarySniperRifle },
+				{ ItemType.MilitaryHandGun01, MilitaryHandGun01 },
+				{ ItemType.MilitaryHandGun02, MilitaryHandGun02 },
+				{ ItemType.AltairRifleAmmo, AltairRifleAmmo },
+				{ ItemType.MilitaryAssaultRifleAmmo, MilitaryAssaultRifleAmmo },
+				{ ItemType.MilitarySniperRifleAmmo, MilitarySniperRifleAmmo },
+				{ ItemType.MilitaryHandGunAmmo01, MilitaryHandGunAmmo01 },
+				{ ItemType.AltairPressurisedSuit, AltairPressurisedSuit },
+				{ ItemType.AltairEVASuit, AltairEVASuit },
+				{ ItemType.AltairPressurisedHelmet, AltairPressurisedHelmet },
+				{ ItemType.AltairEVAHelmet, AltairEVAHelmet },
+				{ ItemType.AltairPressurisedJetpack, AltairPressurisedJetpack },
+				{ ItemType.AltairEVAJetpack, AltairEVAJetpack },
+				{ ItemType.MachineryPart, MachineryPart },
+				{ ItemType.AltairHandDrill, AltairHandDrill },
+				{ ItemType.AltairHandDrillBattery, AltairHandDrillBattery },
+				{ ItemType.AltairHandDrillCanister, AltairHandDrillCanister },
+				{ ItemType.AltairResourceContainer, AltairResourceContainer },
+				{ ItemType.AltairRefinedCanister, AltairRefinedCanister },
+				{ ItemType.AltairCrowbar, AltairCrowbar },
+				{ ItemType.AltairGlowStick, AltairGlowStick },
+				{ ItemType.AltairMedpackSmall, AltairMedpackSmall },
+				{ ItemType.AltairMedpackBig, AltairMedpackBig },
+				{ ItemType.AltairDisposableHackingTool, AltairDisposableHackingTool },
+				{ ItemType.AltairHandheldAsteroidScanningTool, AltairHandheldAsteroidScanningTool },
+				{ ItemType.LogItem, LogItem },
+				{ ItemType.GenericItem, GenericItem },
+				{ ItemType.APGrenade, APGrenade },
+				{ ItemType.EMPGrenade, EMPGrenade },
+				{ ItemType.PortableTurret, PortableTurret },
+				{ ItemType.FireExtinguisher, FireExtingusher },
+				{ ItemType.Welder, RepairTool },
+				{ ItemType.SoePressurisedSuit, SoeSuit },
+				{ ItemType.SoePressurisedJetpack, SoeJetpack },
+				{ ItemType.SoePressurisedHelmet, SoeHelmet },
+				{ ItemType.AegisAssaultRifle, AegisAssaultRifle },
+				{ MachineryPartType.None, None },
+				{ MachineryPartType.Fuse, Fuse },
+				{ MachineryPartType.ServoMotor, ServoMotor },
+				{ MachineryPartType.SolarPanel, SolarPanel },
+				{ MachineryPartType.ExternalAirVent, ExternalAirVent },
+				{ MachineryPartType.AirProcessingController, AirProcessingController },
+				{ MachineryPartType.CarbonFilters, CarbonFilters },
+				{ MachineryPartType.AirFilterUnit, AirFilterUnit },
+				{ MachineryPartType.PressureRegulator, PressureRegulator },
+				{ MachineryPartType.RadarSignalAmplifier, RadarSignalAmplifier },
+				{ MachineryPartType.CoreContainmentFieldGenerator, CoreContainmentFieldGenerator },
+				{ MachineryPartType.ResourceInjector, ResourceInjector },
+				{ MachineryPartType.ThermonuclearCatalyst, ThermonuclearCatalyst },
+				{ MachineryPartType.ExternalDeuteriumExhaust, ExternalDeuteriumExhaust },
+				{ MachineryPartType.PowerCollector, PowerCollector },
+				{ MachineryPartType.PowerDiffuser, PowerDiffuser },
+				{ MachineryPartType.GrapheneNanotubes, GrapheneNanotubes },
+				{ MachineryPartType.PowerDisipator, PowerDisipator },
+				{ MachineryPartType.NaniteCore, NaniteCore },
+				{ MachineryPartType.MillitaryNaniteCore, MilitaryNaniteCore },
+				{ MachineryPartType.EmShieldGenerator, EmShieldGenerator },
+				{ MachineryPartType.HighEnergyLaser, HighEnergyLaser },
+				{ MachineryPartType.RcsThrusters, RcsThrusters },
+				{ MachineryPartType.SingularityCellDetonator, SingularityCellDetonator },
+				{ MachineryPartType.WarpFieldGenerator, WarpFieldGenerator },
+				{ MachineryPartType.HighEnergyConverter, HighEnergyConverter },
+				{ MachineryPartType.SingularityContainmentField, SingularityContainmentField },
+				{ MachineryPartType.WarpInductor, WarpInductor },
+				{ MachineryPartType.WarpCell, WarpCell },
+				{ MachineryPartType.EMFieldController, EMFieldController },
+				{ GenericItemSubType.None, None },
+				{ GenericItemSubType.Flag, Flag },
+				{ GenericItemSubType.BasketBall, BasketBall },
+				{ GenericItemSubType.BookHolder, BookHolder },
+				{ GenericItemSubType.Hoop, Hoop },
+				{ GenericItemSubType.LavaLamp, LavaLamp },
+				{ GenericItemSubType.PlantRing, PlantRing },
+				{ GenericItemSubType.PlantZikaLeaf, PlantZikaLeaf },
+				{ GenericItemSubType.PlantCanister, PlantCanister },
+				{ GenericItemSubType.PosterBethyr, PosterBethyr },
+				{ GenericItemSubType.PosterBurner, PosterBurner },
+				{ GenericItemSubType.PosterEverest, PosterEverest },
+				{ GenericItemSubType.PosterHellion, PosterHellion },
+				{ GenericItemSubType.PosterTurret, PosterTurret },
+				{ GenericItemSubType.PosterCrewQuarters, PosterCrewQuarters },
+				{ GenericItemSubType.PosterSonsOfEarth, PosterSonsOfEarth },
+				{ GenericItemSubType.TeslaBall, TeslaBall },
+				{ GenericItemSubType.Picture, Picture },
+				{ GenericItemSubType.AltCorp_Cup, AltCorp_Cup },
+				{ GenericItemSubType.CoffeeMachine, CoffeeMachine },
+				{ GenericItemSubType.BrokenArmature, BrokenArmature },
+				{ GenericItemSubType.ShatteredPlating, ShatteredPlating },
+				{ GenericItemSubType.FriedElectronics, FriedElectronics },
+				{ GenericItemSubType.DamagedTransmiter, DamagedTransmiter },
+				{ GenericItemSubType.RupturedInsulation, RupturedInsulation },
+				{ GenericItemSubType.BurnedPDU, BurnedPDU },
+				{ GenericItemSubType.DiamondCoreDrillBit, DiamondCore },
+				{ CanvasManager.LoadingScreenType.None, None },
+				{ CanvasManager.LoadingScreenType.Loading, Loading.ToUpper() },
+				{ CanvasManager.LoadingScreenType.ConnectingToMain, ConnectingToMain.ToUpper() },
+				{ CanvasManager.LoadingScreenType.ConnectingToGame, ConnectingToGame.ToUpper() },
+				{ SpawnSetupType.Continue, Continue.ToUpper() },
+				{ SpawnSetupType.FreeRoamArges, FreeRoamArges },
+				{ SpawnSetupType.FreeRoamSteropes, FreeRoamSteropes },
+				{ SpawnSetupType.MiningArges, MiningArges },
+				{ SpawnSetupType.MiningSteropes, MiningSteropes },
+				{ SpawnSetupType.SteropesNearRandomStation, SteropesNearRandomStation },
+				{ SpawnSetupType.SteropesNearDoomedOutpost, SteropesNearDoomedOutpost },
+				{ RepairPointDamageType.Breach, Breach },
+				{ RepairPointDamageType.Fire, Fire },
+				{ RepairPointDamageType.System, System },
+				{ RepairPointDamageType.Gravity, GravityMalfunction },
+				{ GeneratorType.Power, FusionReactor },
+				{ GeneratorType.Air, AirGenerator },
+				{ GeneratorType.AirScrubber, AirFilter },
+				{ GeneratorType.Capacitor, Capacitor },
+				{ GeneratorType.Solar, SolarPanel },
+				{ SubSystemType.Light, Light },
+				{ SubSystemType.EmergencyLight, EmergencyLight },
+				{ SubSystemType.RCS, RCS },
+				{ SubSystemType.FTL, FTL },
+				{ SubSystemType.Engine, Engine },
+				{ SubSystemType.Refinery, Refinery },
+				{ SubSystemType.Fabricator, Fabricator },
+				{ MachineryPartSlotScope.Output, Output },
+				{ MachineryPartSlotScope.PowerOutput, PowerOutput },
+				{ MachineryPartSlotScope.ResourcesConsumption, ResourcesConsumption },
+				{ MachineryPartSlotScope.PowerConsumption, PowerConsumption },
+				{ MachineryPartSlotScope.Capacity, Capacity },
+				{ MachineryPartSlotScope.PowerCapacity, PowerCapacity },
+				{ MachineryPartSlotScope.PowerUpTime, PowerUpTime },
+				{ MachineryPartSlotScope.CoolDownTime, CoolDownTime },
+				{ DistributionSystemType.Air, Air },
+				{ DistributionSystemType.Helium3, Helium3 },
+				{ DistributionSystemType.Hydrogen, Hydrogen },
+				{ DistributionSystemType.Nitrogen, Nitrogen },
+				{ DistributionSystemType.Oxygen, Oxygen },
+				{ DistributionSystemType.Power, Power },
+				{ DistributionSystemType.RCS, RCS },
+				{ CargoCompartmentType.AirGeneratorNitrogen, AirGenerator + " " + Nitrogen },
+				{ CargoCompartmentType.AirGeneratorOxygen, AirGenerator + " " + Oxygen },
+				{ CargoCompartmentType.AirTank, AirTank },
+				{ CargoCompartmentType.Canister, Canister },
+				{ CargoCompartmentType.CargoBayResources, Cargo },
+				{ CargoCompartmentType.CraftingResources, Crafting },
+				{ CargoCompartmentType.Engine, Engine },
+				{ CargoCompartmentType.JetpackOxygen, Jetpack + " " + Oxygen },
+				{ CargoCompartmentType.JetpackPropellant, Jetpack + " " + Propellant },
+				{ CargoCompartmentType.PowerGenerator, Power + " " + Generator },
+				{ CargoCompartmentType.RawResources, Raw },
+				{ CargoCompartmentType.RCS, RCS },
+				{ CargoCompartmentType.RefinedCanister, Refined + " " + Canister },
+				{ SceneTriggerType.CargoPanel, CargoPanel },
+				{ SceneTriggerType.CryoPodPanel, CryoPanel },
+				{ SceneTriggerType.LifeSupportPanel, LifeSupportPanel },
+				{ SceneTriggerType.PowerSupplyPanel, PowerSupplyPanel },
+				{ SceneTriggerType.SecurityScreen, SecurityTerminal },
+				{ SceneTriggerType.DockingPanel, DockingPanel },
+				{ SceneTriggerType.AirlockPanel, AirlockPanel },
+				{ SceneTriggerType.NavigationPanel, NavigationPanel },
+				{ SceneTriggerType.DockingPortController, DockingPortController },
+				{ SceneTriggerType.MessageTerminal, MessageTerminal },
+				{ StandardInteractionTip.Ammo, Ammo },
+				{ StandardInteractionTip.Grenades, Grenades },
+				{ StandardInteractionTip.Suits, Suits },
+				{ StandardInteractionTip.Handguns, Handguns },
+				{ StandardInteractionTip.Jetpacks, Jetpack },
+				{ StandardInteractionTip.Helmets, Helmets },
+				{ StandardInteractionTip.Rifles, Rifles },
+				{ StandardInteractionTip.Gravity, ToggleGravity },
+				{ StandardInteractionTip.ExitCryo, ExitCryo },
+				{ StandardInteractionTip.EnterCryo, EnterCryo },
+				{ StandardInteractionTip.Recycler, RecyclerSlot },
+				{ StandardInteractionTip.ResearchTable, ResearchSlot },
+				{ StandardInteractionTip.Piloting, Piloting },
+				{ StandardInteractionTip.Turret, PortableTurret },
+				{ StandardInteractionTip.Medpack, Medpack },
+				{ StandardInteractionTip.Small, SmallItems },
+				{ StandardInteractionTip.Medium, MediumItems },
+				{ StandardInteractionTip.Large, LargeItems },
+				{ StandardInteractionTip.FireExtinguisher, FireExtingusher },
+				{ StandardInteractionTip.BasketballHoop, BasketballHoop },
+				{ StandardInteractionTip.Poster, Poster },
+				{ StandardInteractionTip.HackingDescription, HackingDescription },
+				{ StandardInteractionTip.Undock, PullToUndock },
+				{ StandardInteractionTip.Docking, DockingPanel },
+				{ ManeuverCourse.FeasibilityErrorType.Acceleration_High, AccelerationHigh },
+				{ ManeuverCourse.FeasibilityErrorType.Acceleration_Low, AccelerationLow },
+				{ ManeuverCourse.FeasibilityErrorType.Course_Impossible, CourseImpossible },
+				{ ManeuverCourse.FeasibilityErrorType.FTL_Capacity, FTLCapacity },
+				{ ManeuverCourse.FeasibilityErrorType.FTL_CellFuel, FTLCellFuel },
+				{ ManeuverCourse.FeasibilityErrorType.FTL_ManeuverIndex, FTLManeuverIndex },
+				{ ManeuverCourse.FeasibilityErrorType.FTL_Online, FTLOffline },
+				{ ManeuverCourse.FeasibilityErrorType.ToManyDockedVessels, ToManyDockedVessels },
+				{ GameScenes.SceneID.AltCorp_Shuttle_SARA, AltCorp_Shuttle_SARA },
+				{ GameScenes.SceneID.AltCorp_Shuttle_CECA, AltCorp_Shuttle_CECA },
+				{ GameScenes.SceneID.AltCorp_CorridorModule, AltCorp_CorridorModule },
+				{ GameScenes.SceneID.AltCorp_CorridorIntersectionModule, AltCorp_CorridorIntersectionModule },
+				{ GameScenes.SceneID.AltCorp_Corridor45TurnModule, AltCorp_Corridor45TurnModule },
+				{ GameScenes.SceneID.AltCorp_Corridor45TurnRightModule, AltCorp_Corridor45TurnRightModule },
+				{ GameScenes.SceneID.AltCorp_CorridorVertical, AltCorp_CorridorVertical },
+				{ GameScenes.SceneID.ALtCorp_PowerSupply_Module, ALtCorp_PowerSupply_Module },
+				{ GameScenes.SceneID.AltCorp_LifeSupportModule, AltCorp_LifeSupportModule },
+				{ GameScenes.SceneID.AltCorp_Cargo_Module, AltCorp_Cargo_Module },
+				{ GameScenes.SceneID.AltCorp_Command_Module, AltCorp_Command_Module },
+				{ GameScenes.SceneID.AltCorp_StartingModule, AltCorp_StartingModule },
+				{ GameScenes.SceneID.AltCorp_AirLock, AltCorp_AirLock },
+				{ GameScenes.SceneID.AltCorp_DockableContainer, AltCorp_DockableContainer },
+				{ GameScenes.SceneID.AltCorp_CrewQuarters_Module, AltCorp_CrewQuarters_Module },
+				{ GameScenes.SceneID.AltCorp_SolarPowerModule, AltCorp_SolarPowerModule },
+				{ GameScenes.SceneID.AltCorp_FabricatorModule, AltCorp_FabricatorModule },
+				{ WeaponMod.FireMode.Auto, AutoFireMode },
+				{ WeaponMod.FireMode.Single, SingleFireMode },
+				{ InventorySlot.Group.Ammo, Ammo },
+				{ InventorySlot.Group.Consumable, Consumable },
+				{ InventorySlot.Group.Hands, Hands },
+				{ InventorySlot.Group.Helmet, Helmet },
+				{ InventorySlot.Group.Jetpack, Jetpack },
+				{ InventorySlot.Group.Outfit, Outfit },
+				{ InventorySlot.Group.Primary, Primary },
+				{ InventorySlot.Group.Secondary, Secondary },
+				{ InventorySlot.Group.Tool, Tool },
+				{ InventorySlot.Group.Utility, Utility }
+			};
+
+			CanvasManagerLocalization = new Dictionary<string, string>
+			{
+				{ "SinglePlayerText", SinglePlayer.ToUpper() },
+				{ "MultiplayerText", Multiplayer.ToUpper() },
+				{ "NameText", Name.ToUpper() },
+				{ "JoinDiscordText", JoinDiscord.ToUpper() },
+				{ "GamepediaText", Gamepedia.ToUpper() },
+				{ "ActionsText", Actions.ToUpper() },
+				{ "MovementText", Movement.ToUpper() },
+				{ "ShipText", Ship.ToUpper() },
+				{ "SuitText", Suit.ToUpper() },
+				{ "CommunicationsText", Communications.ToUpper() },
+				{ "QuickActionsText", QuickActions.ToUpper() },
+				{ "AdvancedVideoSettingsText", AdvancedVideoSettings.ToUpper() },
+				{ "ApplyText", Apply.ToUpper() },
+				{ "AltKeyText", AltKey },
+				{ "AmbientOcclusionText", AmbientOcclusion.ToUpper() },
+				{ "AntiAliasingText", AntiAliasing.ToUpper() },
+				{ "AudioText", Audio.ToUpper() },
+				{ "AutoStabilizationText", AutoStabilization.ToUpper() },
+				{ "BackText", Back.ToUpper() },
+				{ "BasicVideoSettingsText", BasicVideoSettings.ToUpper() },
+				{ "BasicAudioSettingsText", BasicAudioSettings.ToUpper() },
+				{ "BloomText", Bloom.ToUpper() },
+				{ "CancelText", Cancel.ToUpper() },
+				{ "CharacterText", Character.ToUpper() },
+				{ "ChooseStartingPointText", ChooseStartingPoint.ToUpper() },
+				{ "ChromaticAberrationText", ChromaticAberration.ToUpper() },
+				{ "CommunityText", Community.ToUpper() },
+				{ "ConfirmText", Confirm.ToUpper() },
+				{ "ControlsText", Controls.ToUpper() },
+				{ "CreateCharacterText", CreateCharacter.ToUpper() },
+				{ "CurrentServerText", CurrentServer.ToUpper() },
+				{ "DefaultText", Default.ToUpper() },
+				{ "DisclaimerText", Disclaimer },
+				{ "EADisclaimerText", EADisclaimer },
+				{ "EnterCustomBoxNameText", EnterCustomBoxName.ToUpper() },
+				{ "EnterPasswordText", EnterPassword.ToUpper() },
+				{ "ExitText", Exit.ToUpper() },
+				{ "EyeAdaptationText", EyeAdaptation.ToUpper() },
+				{ "F1ForHelpText", F1ForHelp.ToUpper() },
+				{ "FavoritesText", Favorites.ToUpper() },
+				{ "FreshStartText", FreshStart },
+				{ "FullscreenText", FullScreen.ToUpper() },
+				{ "FullText", Full },
+				{ "GameSettingsText", GameSettings.ToUpper() },
+				{ "GeneralSettingsText", GeneralSettings.ToUpper() },
+				{ "GlossaryText", Glossary.ToUpper() },
+				{ "HeadBobStrengthText", HeadBobStrength.ToUpper() },
+				{ "HideTipsText", HideTips.ToUpper() },
+				{ "HideTutorialText", HideTutorial.ToUpper() },
+				{ "InteractText", Interact },
+				{ "KeyText", Key },
+				{ "LoadingText", Loading.ToUpper() },
+				{ "LogoutText", Logout.ToUpper() },
+				{ "MainMenuText", MainMenu.ToUpper() },
+				{ "MasterVolumeText", MasterVolume.ToUpper() },
+				{ "MotionBlurText", MotionBlur.ToUpper() },
+				{ "OfficialText", Official.ToUpper() },
+				{ "OptionsText", Options.ToUpper() },
+				{ "PingText", Ping.ToUpper() },
+				{ "PlayText", Play.ToUpper() },
+				{ "PlaySPText", PlaySP.ToUpper() },
+				{ "PlayersText", Players.ToUpper() },
+				{ "PreAplhaText", PreAplha },
+				{ "QualityText", Quality.ToUpper() },
+				{ "QuitText", Quit.ToUpper() },
+				{ "RefreshText", Refresh.ToUpper() },
+				{ "ResolutionText", Resolution.ToUpper() },
+				{ "RespawnText", Respawn.ToUpper() },
+				{ "ResumeText", Resume.ToUpper() },
+				{ "SaveText", Save.ToUpper() },
+				{ "SearchText", Search.ToUpper() },
+				{ "ServerBrowserText", ServerBrowser.ToUpper() },
+				{ "ServerText", Server.ToUpper() },
+				{ "SettingsText", Settings.ToUpper() },
+				{ "ShadowsText", Shadows.ToUpper() },
+				{ "ShipSettingsText", ShipSettings.ToUpper() },
+				{ "ShowCrosshairText", ShowCrosshair.ToUpper() },
+				{ "TextureQualityText", TextureQuality.ToUpper() },
+				{ "ThrowingText", Throwing.ToUpper() },
+				{ "MouseSettingsText", MouseSettings.ToUpper() },
+				{ "SensitivityText", Sensitivity.ToUpper() },
+				{ "InvertMouseWhileDrivingText", InvertMouseWhileDriving.ToUpper() },
+				{ "InvertMouseText", InvertMouse.ToUpper() },
+				{ "UnderstandText", Understand.ToUpper() },
+				{ "UseText", Use },
+				{ "UsernameText", Username },
+				{ "VSyncText", VSync },
+				{ "VideoText", Video.ToUpper() },
+				{ "VoiceVolumeText", VoiceVolume.ToUpper() },
+				{ "WelcomeText", Welcome.ToUpper() },
+				{ "PressAnyKeyText", PressAnyKeyToContinue.ToUpper() },
+				{ "KeyboardSettingsText", KeyboardSettings.ToUpper() },
+				{ "LanguageSettingsText", LanguageSettings.ToUpper() },
+				{ "ChooseLanguageText", ChooseLanguage.ToUpper() },
+				{ "ReportServerText", ReportServer.ToUpper() },
+				{ "OtherText", Other.ToUpper() },
+				{ "SendReportText", SendReport.ToUpper() },
+				{ "DeleteCharacterText", DeleteCharacter.ToUpper() },
+				{ "ReportText", ReportServer.ToUpper() },
+				{ "ConnectText", Connect.ToUpper() },
+				{ "ReadMoreText", ReadMore.ToUpper() },
+				{ "LatestNewsText", LatestNews.ToUpper() },
+				{ "ServerSettingsText", ServerSettings.ToUpper() },
+				{ "PlayerSettingsText", PlayerSettings.ToUpper() },
+				{ "GlobalSettingsText", GlobalSettings.ToUpper() },
+				{ "DisconectedText", Disconnected.ToUpper() },
+				{ "ConnectionErrorText", ConnectionError.ToUpper() },
+				{ "UnavailableFromInGameMenuText", UnavailableFromInGameMenu.ToUpper() },
+				{ "ConnectingToInviteText", ConnectingToInvite.ToUpper() },
+				{ "RecyclingOutputText", RecyclingOutput.ToUpper() },
+				{ "VolumetricLightingText", VolumetricLighting.ToUpper() },
+				{ "JoinHellionOnDiscordText", JoinHellionOnDiscord.ToUpper() },
+				{ "ServerRestartInText", ServerRestartIn.ToUpper() },
+				{ "RentYourOwnServerText", RentYourOwnServer.ToUpper() },
+				{ "SaveGameText", SaveGame.ToUpper() },
+				{ "LoadGameText", LoadGame.ToUpper() },
+				{ "ConsoleText", Console.ToUpper() },
+				{ "ItemsText", Items.ToUpper() },
+				{ "ModulesText", Modules.ToUpper() },
+				{ "CommandListText", CommandList.ToUpper() },
+				{ "LoadText", Load.ToUpper() },
+				{ "DataPrivacySettingsText", DataPrivacySettings.ToUpper() },
+				{ "EditText", Edit.ToUpper() },
+				{ "ServerInfoText", ServerInfo.ToUpper() },
+				{ "AmbienceVolumeText", AmbienceVolume.ToUpper() },
+				{ "ExternalBrowserPageText", ExternalBrowserPage.ToUpper() },
+				{ "RollText", Roll.ToUpper() },
+				{ "HideTipsFromMenuText", HideTipsFromMenu.ToUpper() },
+				{ "CreateCharacterLoreText", CreateCharacterLore },
+				{ "NetworkingText", Networking.ToUpper() },
+				{ "SentText", Sent.ToUpper() },
+				{ "ReceivedText", Received.ToUpper() },
+				{ "ResetText", Reset.ToUpper() },
+				{ "RCSFuelText", RCS.ToUpper() + " " + Fuel.ToUpper() },
+				{ "OxygenText", Oxygen.ToUpper() },
+				{ "NoJetpackText", Jetpack.ToUpper() + " " + Missing.ToUpper() },
+				{ "WarningText", Warning.ToUpper() },
+				{ "PressureText", Pressure.ToUpper() },
+				{ "SuitPowerText", SuitPower.ToUpper() },
+				{ "StabilizationText", Stabilization.ToUpper() },
+				{ "LateralText", HelmetOffSpeed.ToUpper() },
+				{ "DirectionalText", HelmetOnSpeed.ToUpper() },
+				{ "JetpackOfflineText", JetpackOffline.ToUpper() },
+				{ "OxygenLowText", OxygenLow.ToUpper() },
+				{ "SelectionText", Selection.ToUpper() },
+				{ "ZeroGravityMovementText", ZeroGravityMovement.ToUpper() },
+				{ "UpText", Up.ToUpper() },
+				{ "DownText", Down.ToUpper() },
+				{ "GrabStabilizeText", Grab.ToUpper() + " / " + Stabilization.ToUpper() },
+				{ "BatteryMissingText", BatteryMissing.ToUpper() },
+				{ "LootAllText", LootAll.ToUpper() },
+				{ "InventoryText", Inventory.ToUpper() },
+				{ "JournalText", Journal.ToUpper() },
+				{ "BlueprintsText", Blueprints.ToUpper() },
+				{ "WeaponsText", Weapons.ToUpper() },
+				{ "MagazinesText", Magazines.ToUpper() },
+				{ "ToolsText", Tools.ToUpper() },
+				{ "UtilityText", Utility.ToUpper() },
+				{ "SuitsText", Suits.ToUpper() },
+				{ "MediacalText", Medical.ToUpper() },
+				{ "PartsText", Parts.ToUpper() },
+				{ "ContainersText", Containers.ToUpper() },
+				{ "ToggleTrackingText", ToggleTracking.ToUpper() },
+				{ "NoSuitEquippedText", NoSuitEquipped.ToUpper() },
+				{ "DropText", Drop.ToUpper() },
+				{ "RemoveOutfitText", RemoveOutfit.ToUpper() },
+				{ "ObjectivesText", Objectives.ToUpper() },
+				{ "QuestLogText", QuestLog.ToUpper() },
+				{ "NoLogAvailableText", NoLogAvailable.ToUpper() },
+				{ "ShowContainerSlotsText", ShowContainerSlots.ToUpper() },
+				{ "QuestTerminalHintText", QuestTerminalHint.ToUpper() },
+				{ "ToBeContinuedText", ToBeContinued.ToUpper() },
+				{ "EquipmentText", Equipment.ToUpper() },
+				{ "ResourcesText", ResourcesLabel.ToUpper() }
+			};
+
+			PanelsLocalization = new Dictionary<string, string>
+			{
+				{ "ConfirmText", Confirm.ToUpper() },
+				{ "CancelText", Cancel.ToUpper() },
+				{ "TurnOffText", TurnOff.ToUpper() },
+				{ "TurnOnText", TurnOn.ToUpper() },
+				{ "OutputText", Output.ToUpper() },
+				{ "BackText", Back.ToUpper() },
+				{ "ZeroGravityMovementText", ZeroGravityMovement.ToUpper() },
+				{ "RotationText", Rotation.ToUpper() },
+				{ "UpText", Up.ToUpper() },
+				{ "DownText", Down.ToUpper() },
+				{ "GrabStabilizeText", Grab.ToUpper() + " / " + Stabilization.ToUpper() },
+				{ "InfoScreenText", InfoScreen.ToUpper() },
+				{ "ExitPanelText", ExitPanel.ToUpper() },
+				{ "PowerSupplyPanelText", PowerSupplyScreen.ToUpper() },
+				{ "TotalOutputText", TotalOutput.ToUpper() },
+				{ "PowerCapacityText", PowerCapacity.ToUpper() },
+				{ "TotalConsumptionText", TotalConsumption.ToUpper() },
+				{ "NoPowerSupplyConnectedText", NoPowerSupplyConnected.ToUpper() },
+				{ "UnauthorizedAccessText", UnauthorizedAccess.ToUpper() },
+				{ "PowerOutputText", PowerOutput.ToUpper() },
+				{ "DeuteriumTankText", DeuteriumTank.ToUpper() },
+				{ "SystemPartsText", SystemParts.ToUpper() },
+				{ "SolarPanelsText", SolarPanels.ToUpper() },
+				{ "CapacitorText", Capacitor.ToUpper() },
+				{ "CapacityText", Capacity.ToUpper() },
+				{ "ConsumptionText", Consumption.ToUpper() },
+				{ "CapacitorsTotalText", CapacitorsTotal.ToUpper() },
+				{ "ModuleOutputText", Module.ToUpper() + " " + Output.ToUpper() },
+				{ "BaseConsumptionText", BaseConsumption.ToUpper() },
+				{ "NoSunExposureText", NoSunExposure.ToUpper() },
+				{ "PowerSupplySystemText", PowerSupplySystem.ToUpper() },
+				{ "PowerSupplyInfoText", PowerSupplyInfo },
+				{ "CapacitorDescriptionText", CapacitorDescription },
+				{ "SolarPanelDescriptionText", SolarPanelDescription },
+				{ "FusionReactorDescriptionText", FusionReactorDescription },
+				{ "CurrentVesselConsumtionText", CurrentVesselConsumtion },
+				{ "ConnectedVesselDescriptionText", ConnectedVesselDescription },
+				{ "ToggleBaseConsumptionText", ToggleBaseConsumption },
+				{ "LifeSupportPanelText", LifeSupportPanelLabel.ToUpper() },
+				{ "LifeSupportSystemText", LifeSupportSystem.ToUpper() },
+				{ "TotalCapacityText", TotalCapacity.ToUpper() },
+				{ "AirTankText", AirTank.ToUpper() },
+				{ "NoLifeSupportConnectedText", NoLifeSupportConnected.ToUpper() },
+				{ "NoAirGeneratorsText", NoAirGenerator.ToUpper() },
+				{ "NoAirFiltersText", NoAirFilter.ToUpper() },
+				{ "AirGeneratorText", AirGenerator.ToUpper() },
+				{ "OxygenTankText", OxygenTank.ToUpper() },
+				{ "NitrogenTankText", NitrogenTank.ToUpper() },
+				{ "AirFilterText", AirFilter.ToUpper() },
+				{ "PressureText", Pressure.ToUpper() },
+				{ "AirQualityText", AirQuality.ToUpper() },
+				{ "AirFilteringText", AirFiltering.ToUpper() },
+				{ "PressureRegulationText", PressureRegulation.ToUpper() },
+				{ "AirlockText", Airlock.ToUpper() },
+				{ "AirOutputText", AirOutput.ToUpper() },
+				{ "AirCapacityText", AirCapacity.ToUpper() },
+				{ "ConnectedLifeSupportSystemsText", ConnectedLifeSupportSystems.ToUpper() },
+				{ "ConnectedPowerSupplySystemsText", ConnectedPowerSupplySystems.ToUpper() },
+				{ "ConnectedVesselsText", ConnectedVessels.ToUpper() },
+				{ "SunExposureText", SunExposure.ToUpper() },
+				{ "ModuleVolumeText", ModuleVolume.ToUpper() },
+				{ "FilteringRateText", FilteringRate.ToUpper() },
+				{ "LifeSupportInfoText", LifeSupportInfo },
+				{ "AirGeneratorDescriptionText", AirGeneratorDescription },
+				{ "AirFilterDescriptionText", AirFilterDescription },
+				{ "AirTankDescriptionText", AirTankDescription },
+				{ "AirTankNotConnectedText", AirTankNotConnected.ToUpper() },
+				{ "ConnectedCargosText", ConnectedCargos.ToUpper() },
+				{ "VesselSystemsText", VesselSystems.ToUpper() },
+				{ "FabricatorText", Fabricator.ToUpper() },
+				{ "RefineryText", Refinery.ToUpper() },
+				{ "AttachPointText", AttachPoint.ToUpper() },
+				{ "CargoPanelText", CargoHeading.ToUpper() },
+				{ "RawText", Raw.ToUpper() },
+				{ "RefinedText", Refined.ToUpper() },
+				{ "CraftingText", Crafting.ToUpper() },
+				{ "CargoText", Cargo.ToUpper() },
+				{ "RefiningText", Refining.ToUpper() },
+				{ "SlotText", Slot.ToUpper() },
+				{ "ActiveSystemsText", ActiveSystems.ToUpper() },
+				{ "NoSlotConnectionText", NothingConnectedToSlot.ToUpper() },
+				{ "OxygenText", Oxygen.ToUpper() },
+				{ "PropellantText", Propellant.ToUpper() },
+				{ "NoRafineryText", NoRafineryAvailable.ToUpper() },
+				{ "EnergyConsumptionText", EnergyConsumption.ToUpper() },
+				{ "ProcessingTimeText", ProcessingTime.ToUpper() },
+				{ "RefineText", Refine.ToUpper() },
+				{ "NoOtherCargoAttachedText", NoOtherCargoAvailable.ToUpper() },
+				{ "VentText", Vent.ToUpper() },
+				{ "VentDescriptionText", VentDescription.ToUpper() },
+				{ "UnloadText", Unload.ToUpper() },
+				{ "NoItemAttachedToCargoText", NoItemAttachedToCargo.ToUpper() },
+				{ "NoRefineryAvailableText", NoRefineryAvailable.ToUpper() },
+				{ "AmountToTransferText", AmountToTransfer.ToUpper() },
+				{ "PowerConsumptionText", PowerConsumption.ToUpper() },
+				{ "RefiningTimeText", RefiningTime.ToUpper() },
+				{ "TransferResourcesText", TransferResources.ToUpper() },
+				{ "ChooseAnItemToCraftText", ChooseAnItemToCraft.ToUpper() },
+				{ "NoFabricatorAvailableText", NoFabricatorAvailable.ToUpper() },
+				{ "TransferFromText", TransferFrom.ToUpper() },
+				{ "TransferToText", TransferTo.ToUpper() },
+				{ "DragResourcesForCraftingText", DragResourcesForCrafting.ToUpper() },
+				{ "RefillText", Refill.ToUpper() },
+				{ "CraftText", Craft.ToUpper() },
+				{ "CraftingTimeText", CraftingTime.ToUpper() },
+				{ "CancelCraftingText", CancelCrafting.ToUpper() },
+				{ "CancelingCraftingText", CancelCraftingDescription.ToUpper() },
+				{ "CancelingCraftingWarningText", CancelCraftingWarning.ToUpper() },
+				{ "RegisterText", Register.ToUpper() },
+				{ "SetAsPointText", SetAsPoint.ToUpper() },
+				{ "InvitePlayerText", InviteFriend.ToUpper() },
+				{ "UnregisterText", Unregister.ToUpper() },
+				{ "CryoChamberText", CryoChamber.ToUpper() },
+				{ "SelectFriendText", SelectFriend.ToUpper() },
+				{ "ActionRequiredText", ActionRequired.ToUpper() },
+				{ "AreYouSureCryoText", AreYouSureCryo.ToUpper() },
+				{ "DangerCryoText", DangerCryo.ToUpper() },
+				{ "SecurityTermninalText", SecurityTerminal.ToUpper() },
+				{ "ClaimText", Claim.ToUpper() },
+				{ "AddCrewMemberText", AddCrewMember.ToUpper() },
+				{ "ResignText", Resign.ToUpper() },
+				{ "AuthPersonnelListText", AuthorizedPersonnelList.ToUpper() },
+				{ "CommandingOfficerText", CommandingOfficer.ToUpper() },
+				{ "CrewText", Crew.ToUpper() },
+				{ "ChangeShipNameText", ChangeShipName.ToUpper() },
+				{ "CustomShipNameText", EnterCustomShipName.ToUpper() },
+				{ "ShipCrewText", ShipCrew.ToUpper() },
+				{ "AreYouSureResignText", AreYouSureResign.ToUpper() },
+				{ "PromoteText", Promote.ToUpper() },
+				{ "RemoveText", Remove.ToUpper() },
+				{ "AreYouSurePromoteText", AreYouSurePromote.ToUpper() },
+				{ "AreYouSureSelfDestructText", AreYouSureSelfDestruct.ToUpper() },
+				{ "SelfDestructActiveText", SelfDestruct.ToUpper() + " " + Active.ToUpper() },
+				{ "ChangeShipEmblemText", ChangeShipEmblem.ToUpper() },
+				{ "AirlockControlText", AirLockcontrols.ToUpper() },
+				{ "PressurizeText", RePressurize.ToUpper() },
+				{ "DepressurizeText", Depressurize.ToUpper() },
+				{ "InnerDoorText", InnerDoor.ToUpper() },
+				{ "OuterDoorText", OuterDoor.ToUpper() },
+				{ "WarningAirlockText", WarningArilock },
+				{ "AreYouSureAirlockText", AreYouSureAirlock.ToUpper() },
+				{ "DangerAirlockText", DangerAirlock.ToUpper() },
+				{ "StopText", Stop.ToUpper() },
+				{ "AirlockPressureText", AirlockPressure.ToUpper() },
+				{ "DoorControlText", DoorControl.ToUpper() },
+				{ "BarText", Bar.ToUpper() },
+				{ "NoAirTankAvailableText", NoAirTankAvailable.ToUpper() },
+				{ "VolumeDescriptionText", VolumeDescription.ToUpper() },
+				{ "PressurizeDescriptionText", PressurizeDescription.ToUpper() },
+				{ "DepressurizeDescriptionText", DepressurizeDescription.ToUpper() },
+				{ "VentActionDescriptionText", VentActionDescription.ToUpper() },
+				{ "HoldToStabilizeText", HoldToStabilize.ToUpper() },
+				{ "ObjectsInClusterText", ObjectsInGroup.ToUpper() },
+				{ "ObjectClusterText", MultipleObjects.ToUpper() },
+				{ "AddCustomOrbitText", AddCustomOrbit.ToUpper() },
+				{ "RemoveCustomOrbitText", RemoveOrbit.ToUpper() },
+				{ "WarpToObjectText", WarpTo.ToUpper() },
+				{ "ManeuverInitiatedText", ManeuverInitiated.ToUpper() },
+				{ "PleaseAlignText", AlignShip.ToUpper() },
+				{ "ZoomOutText", ZoomOut.ToUpper() },
+				{ "HomeStationText", HomeStation.ToUpper() },
+				{ "MyShipText", MyShip.ToUpper() },
+				{ "ScanText", Scan.ToUpper() },
+				{ "SignalAmplificationText", SignalAmplification.ToUpper() },
+				{ "AutorizedVesselsText", AuthorizedVessels.ToUpper() },
+				{ "DistressSignalsText", DistressSignal.ToUpper() },
+				{ "FTLManeuverText", FtlManeuver.ToUpper() },
+				{ "CellsSelectedText", CellsSelected.ToUpper() },
+				{ "WarpDistanceText", WarpDistance.ToUpper() },
+				{ "ManeuverStatusText", ManeuverStatus.ToUpper() },
+				{ "ManeuverTimeAdjustmentText", ManeuverTimeAdjustment.ToUpper() },
+				{ "ActivationTimeText", ActivationTime.ToUpper() },
+				{ "ArrivalTimeText", ArrivalTime.ToUpper() },
+				{ "InitializeText", InitializeNavigation.ToUpper() },
+				{ "ClusterText", MultipleObjects.ToUpper() },
+				{ "RcsCancelManeuverText", RcsCancelManeuver },
+				{ "UnstableOrbitText", UnstableOrbit.ToUpper() },
+				{ "ArgumentOfPeriapsisText", ArgumentOfPeriapsis.ToUpper() },
+				{ "LongitudeOfAscendingNodeText", LongitudeOfAscendingNode.ToUpper() },
+				{ "InclinationText", Inclination.ToUpper() },
+				{ "PeriapsisText", Periapsis.ToUpper() },
+				{ "ApoapsisText", Apoapsis.ToUpper() },
+				{ "PositionOnOrbitText", PositionOnOrbit.ToUpper() },
+				{ "OrbitalPeriodText", OrbitalPeriod.ToUpper() },
+				{ "StageText", Stage.ToUpper() },
+				{ "WarpSettingsText", WarpSettings.ToUpper() },
+				{ "PleaseSelectManeuverText", SelectManeuver.ToUpper() },
+				{ "RadiationText", Radiation.ToUpper() },
+				{ "CellConsumptionText", CellConsumption.ToUpper() },
+				{ "SignatureText", Signature.ToUpper() },
+				{ "ModuleText", Module.ToUpper() },
+				{ "AvilableDockingPortsText", AvailbaleDockingPorts.ToUpper() },
+				{ "SelectedText", Selected.ToUpper() },
+				{ "RCSFuelLevelText", RCSFuelLevel.ToUpper() },
+				{ "ModulesInRangeText", ModulesInRange.ToUpper() },
+				{ "AvailableModulesText", AvailableModules.ToUpper() },
+				{ "TargetedModuleText", TargetedModule.ToUpper() },
+				{ "AvailablePortsText", AvailablePorts.ToUpper() },
+				{ "DistanceText", Distance.ToUpper() },
+				{ "DirectionalSpeedText", DirectionalSpeed.ToUpper() },
+				{ "ResourceInjectorText", ResourceInjector.ToUpper() + " :" },
+				{ "ResourceInjectorMissingText", ResourceInjector.ToUpper() + " " + Missing.ToUpper() },
+				{ "CheckRcsUtilityAccessText", CheckRcsUtilityAccess.ToUpper() },
+				{ "ChangeDockingPortText", ChangeDockingPort.ToUpper() },
+				{ "ChangeTargetText", ChangeTarget.ToUpper() },
+				{ "ChangeTargetPortText", ChangeTargetPort.ToUpper() },
+				{ "NoTargetModulesInRangeText", NoTargetModulesInRange.ToUpper() },
+				{ "EngineStatusText", EngineStatus.ToUpper() },
+				{ "FuelText", Fuel.ToUpper() },
+				{ "ENGText", ENG.ToUpper() },
+				{ "RCSText", RCS.ToUpper() },
+				{ "FTLText", FTL.ToUpper() },
+				{ "HealthText", Health.ToUpper() },
+				{ "ContactsText", Contacts.ToUpper() },
+				{ "RadarRangeText", RadarRange.ToUpper() },
+				{ "MatchedText", Matched.ToUpper() },
+				{ "AvailableText", Available.ToUpper() },
+				{ "EtaText", ETA.ToUpper() },
+				{ "SystemsText", Systems.ToUpper() },
+				{ "EngineText", Engine.ToUpper() },
+				{ "FuelLevelsText", FuelLevels.ToUpper() },
+				{ "MatchVelocityText", MatchVelocity.ToUpper() },
+				{ "ToggleEngineText", ToggleEngine.ToUpper() },
+				{ "MatchTargetsVelocityText", MatchTargetsVelocity.ToUpper() },
+				{ "CollisionImminentText", CollisionWarning.ToUpper() },
+				{ "OffSpeedAssistantText", OffSpeedAssistant.ToUpper() },
+				{ "ChangeRadarRangeText", ChangeRadarRange.ToUpper() },
+				{ "OffTargetText", OffTarget.ToUpper() },
+				{ "WarningText", Warning.ToUpper() },
+				{ "DrivingTipsText", DrivingTips.ToUpper() },
+				{ "RollText", Roll.ToUpper() },
+				{ "StabilizeText", Stabilize.ToUpper() },
+				{ "HideTipsFromMenuText", HideTipsFromMenu.ToUpper() }
+			};
+
+			EnvironmentPanelLocalization = new Dictionary<string, string>
+			{
+				{ "EnvironmentalMonitorText", EnvironmentalMonitor.ToUpper() },
+				{ "GravityText", Gravity.ToUpper() },
+				{ "PressureText", Pressure.ToUpper() },
+				{ "BarText", Bar.ToUpper() },
+				{ "AirQualityText", AirQuality.ToUpper() },
+				{ "TemperatureText", Temperature.ToUpper() },
+				{ "UnbreathableDangerText", UnbreathableAtmosphere.ToUpper() },
+				{ "VesselStatusText", VesselStatus.ToUpper() },
+				{ "GravityFailText", GravityFail.ToUpper() },
+				{ "FireText", FireHazard.ToUpper() },
+				{ "BreachText", Breach.ToUpper() },
+				{ "DistressCallActiveText", DistressCallActive.ToUpper() },
+				{ "InDebrisFieldText", InDebrisField.ToUpper() },
+				{ "SelfDestructActiveText", SelfDestruct.ToUpper() + " " + Active.ToUpper() },
+				{ "SystemFailiureText", SystemFailiure.ToUpper() },
+				{ "WarningText", Warning.ToUpper() }
+			};
 		}
 
 		public static void RevertToDefault()
@@ -4223,12 +4244,7 @@ namespace ZeroGravity
 					FieldInfo[] fields2 = scriptableObject.GetType().GetFields();
 					foreach (FieldInfo fieldInfo2 in fields2)
 					{
-						IEnumerable<CustomAttributeData> customAttributes = fieldInfo2.CustomAttributes;
-						if (_003C_003Ef__am_0024cache0 == null)
-						{
-							_003C_003Ef__am_0024cache0 = _003CGetJsonString_003Em__0;
-						}
-						if (customAttributes.FirstOrDefault(_003C_003Ef__am_0024cache0) != null && fieldInfo2.FieldType == typeof(string) && (string)fieldInfo2.GetValue(scriptableObject) != string.Empty)
+						if (fieldInfo2.CustomAttributes.FirstOrDefault((CustomAttributeData m) => m.AttributeType == typeof(LocalizeField)) != null && fieldInfo2.FieldType == typeof(string) && (string)fieldInfo2.GetValue(scriptableObject) != string.Empty)
 						{
 							dictionary["SO_" + scriptableObject.GetType().Name + "." + scriptableObject.name + "." + fieldInfo2.Name] = (string)fieldInfo2.GetValue(scriptableObject);
 						}
@@ -4253,12 +4269,6 @@ namespace ZeroGravity
 			{
 				return (!useDefault) ? null : fieldName;
 			}
-		}
-
-		[CompilerGenerated]
-		private static bool _003CGetJsonString_003Em__0(CustomAttributeData m)
-		{
-			return m.AttributeType == typeof(LocalizeField);
 		}
 	}
 }

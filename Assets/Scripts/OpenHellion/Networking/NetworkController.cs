@@ -33,6 +33,11 @@ namespace OpenHellion.Networking
 		{
 			get
 			{
+				if (s_instance == null)
+				{
+					Dbg.Error("Tried to get network controller before it has been initialised.");
+				}
+
 				return s_instance;
 			}
 		}
@@ -99,7 +104,7 @@ namespace OpenHellion.Networking
 			_subscribeToObjectsList.Remove(guid);
 		}
 
-		public void ConnectToGame(GameServerUI serverData, string userId, CharacterData charData, string password)
+		public void ConnectToGame(ServerData serverData, string userId, CharacterData charData, string password)
 		{
 			CharacterData = charData;
 			if (_connectionThread != null)
@@ -107,15 +112,9 @@ namespace OpenHellion.Networking
 				_connectionThread.Disconnect();
 			}
 			_connectionThread = new GameServerThread();
+
 			NameOfCurrentServer = serverData.Name;
-			if (!serverData.UseAltIPAddress)
-			{
-				_connectionThread.Start(serverData.IPAddress, serverData.GamePort, serverData.Id, password, userId);
-			}
-			else
-			{
-				_connectionThread.Start(serverData.AltIPAddress, serverData.AltGamePort, serverData.Id, password, userId);
-			}
+			_connectionThread.Start(serverData.IPAddress, serverData.GamePort, serverData.Id, password, userId);
 		}
 
 		public void ConnectToGameSP(int port, string userId, CharacterData charData)
@@ -126,7 +125,7 @@ namespace OpenHellion.Networking
 				_connectionThread.Disconnect();
 			}
 			_connectionThread = new GameServerThread();
-			_connectionThread.Start("127.0.0.1", port, 0L, string.Empty, userId);
+			_connectionThread.Start("127.0.0.1", port, String.Empty, String.Empty, userId);
 		}
 
 		public void SendToGameServer(NetworkData data)
@@ -182,7 +181,7 @@ namespace OpenHellion.Networking
 					Marshal.Copy(netMessage.m_pData, message, 0, message.Length);
 
 					// Deseralise data and invoke code.
-					NetworkData networkData = Serializer.ReceiveData(new MemoryStream(message));
+					NetworkData networkData = Serializer.Unpackage((Stream)new MemoryStream(message));
 					Debug.Log(networkData);
 					if (networkData is ISteamP2PMessage)
 					{

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion;
 using OpenHellion.Networking;
 using OpenHellion.ProviderSystem;
 using UnityEngine;
@@ -344,12 +345,12 @@ namespace ZeroGravity.UI
 		public void ClaimSecurityTerminal()
 		{
 			SecuritySystem.PlayerSecurityData playerSecurityData = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.Rank == AuthorizedPersonRank.CommandingOfficer);
-			if (playerSecurityData == null || playerSecurityData.PlayerID == ProviderManager.MainProvider.GetId())
+			if (playerSecurityData == null || playerSecurityData.PlayerID == IdManager.PlayerId)
 			{
 				NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 				{
 					VesselGUID = SecuritySystem.ParentShip.GUID,
-					AddPlayerSteamID = ProviderManager.MainProvider.GetId(),
+					AddPlayerSteamID = IdManager.PlayerId,
 					AddPlayerRank = AuthorizedPersonRank.CommandingOfficer,
 					AddPlayerName = MyPlayer.Instance.PlayerName
 				});

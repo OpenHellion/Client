@@ -6,6 +6,7 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity;
 using Discord;
+using OpenHellion.Networking.Message;
 
 namespace OpenHellion.ProviderSystem
 {
@@ -109,7 +110,7 @@ namespace OpenHellion.ProviderSystem
 			_callbackCalls++;
 			try
 			{
-				InviteMessage inviteMessage = Serializer.ReceiveData(new MemoryStream(Convert.FromBase64String(secret))) as InviteMessage;
+				InviteMessage inviteMessage = Json.Deserialize<InviteMessage>(secret);
 				Client.Instance.ProcessInvitation(inviteMessage);
 			}
 			catch (Exception ex)

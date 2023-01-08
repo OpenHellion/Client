@@ -1,0 +1,49 @@
+{
+	"FormattingOptions": {
+		"EnableEditorConfigSupport": true,
+		"OrganizeImports": true
+	},
+	"RoslynExtensionsOptions": {
+		"EnableEditorConfigSupport": true,
+		"EnableAnalyzersSupport": true,
+		"LocationPaths": ["./NuGet/microsoft.unity.analyzers.1.15.0/analyzers/dotnet/cs"]
+	},
+	"fileOptions": {
+		"excludeSearchPatterns": [
+			"**/.DS_Store**/*",
+			"**/.git**/*",
+			"**.zip",
+			"**/build/**/*",
+			"**/Build/**/*",
+			"**/Library/**/*",
+			"**/library/**/*",
+			"**/Hellion_Data/**/*",
+			"**/obj/**/*",
+			"**/Obj/**/*",
+			"**/ProjectSettings/**/*",
+			"**/.github/**/*",
+			"**/temp/**/*",
+			"**/Temp/**/*",
+			"**/NodeDependencyCache/**/*",
+			"**/Logs/**/*",
+			"**/Assets/Test**/*",
+			"**/Assets/Wwise**/*",
+			"**/Assets/Scene**/*",
+			"**/Assets/StreamingAssets**/*",
+			"**/Assets/TextMesh Pro**/*",
+			"**/Assets/Textures**/*",
+			"**/Assets/Materials**/*",
+			"**/Assets/BulletUnity**/*",
+			"**/Assets/Generic**/*",
+			"**/Assets/Photon**/*",
+			"**/Assets/Resources**/*",
+			"**/Assets/Fonts**/*",
+			"**/Assets/FontsTMPro**/*",
+			"**/Assets/ScriptedObjects**/*",
+			"**.meta",
+			"**/Packages**/*",
+			"**/UserSettings**/*",
+			"**/WwiseProject**/*"
+		]
+	}
+  }

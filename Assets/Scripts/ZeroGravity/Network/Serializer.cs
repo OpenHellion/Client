@@ -21,14 +21,6 @@ namespace ZeroGravity.Network
 			}
 		}
 
-		public class CorruptedPackageException : Exception
-		{
-			public CorruptedPackageException(string message)
-				: base(message)
-			{
-			}
-		}
-
 		public class StatisticsHelper
 		{
 			public long ByteSum;
@@ -44,8 +36,6 @@ namespace ZeroGravity.Network
 				BytesSinceLastCheck = bytes;
 			}
 		}
-
-		public const int SizeOfMessageLength = 4;
 
 		private static DateTime statisticUpdateResetTime = DateTime.UtcNow;
 
@@ -93,14 +83,14 @@ namespace ZeroGravity.Network
 			{
 				return null;
 			}
-			return ReceiveData(new NetworkStream(soc));
+			return Unpackage(new NetworkStream(soc));
 		}
 
-		public static NetworkData ReceiveData(Stream str)
+		public static NetworkData Unpackage(Stream str)
 		{
 			byte[] array = new byte[4];
-			int num = 0;
 			int num2 = 0;
+			int num;
 			do
 			{
 				num = str.Read(array, num2, array.Length - num2);
@@ -128,14 +118,16 @@ namespace ZeroGravity.Network
 			return Deserialize(ms);
 		}
 
-		public static byte[] Serialize(NetworkData data)
+		public static byte[] Package(NetworkData data)
 		{
 			using MemoryStream memoryStream2 = new MemoryStream();
 			using MemoryStream memoryStream = new MemoryStream();
 			try
 			{
-				NetworkDataTransportWrapper networkDataTransportWrapper = new NetworkDataTransportWrapper();
-				networkDataTransportWrapper.data = data;
+				NetworkDataTransportWrapper networkDataTransportWrapper = new NetworkDataTransportWrapper
+				{
+					data = data
+				};
 				NetworkDataTransportWrapper instance = networkDataTransportWrapper;
 				ProtoBuf.Serializer.Serialize(memoryStream, instance);
 			}
