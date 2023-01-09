@@ -1,3 +1,4 @@
+using OpenHellion.Networking.Message.MainServer;
 using ProtoBuf;
 
 namespace ZeroGravity.Network
@@ -5,11 +6,11 @@ namespace ZeroGravity.Network
 	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 	public class LogOutResponse : NetworkData
 	{
-		public OldResponseResult Response = OldResponseResult.Success;
+		public ResponseResult Response = ResponseResult.Success;
 
 		public LogOutResponse()
 		{
-			Response = OldResponseResult.Success;
+			Response = ResponseResult.Success;
 		}
 	}
 }

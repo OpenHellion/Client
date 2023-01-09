@@ -208,6 +208,13 @@
       },
       "url": "https://packages.unity.com"
     },
+    "net.tomweiland.riptide": {
+      "version": "https://github.com/RiptideNetworking/Riptide.git?path=/Packages/Core#2.0.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "bb252ba2ea4bd1314d3f8f60bea490418635d06e"
+    },
     "org.nuget.protobuf-net": {
       "version": "3.1.25",
       "depth": 0,

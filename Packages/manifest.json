@@ -21,6 +21,7 @@
     "com.unity.ugui": "1.0.0",
     "com.unity.vfx-toolbox": "https://github.com/Unity-Technologies/VFXToolbox.git#2.1.0-preview",
     "com.unity.xr.legacyinputhelpers": "2.1.10",
+    "net.tomweiland.riptide": "https://github.com/RiptideNetworking/Riptide.git?path=/Packages/Core#2.0.0",
     "org.nuget.protobuf-net": "3.1.25",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.animation": "1.0.0",

@@ -703,7 +703,7 @@ namespace ZeroGravity
 		private void PlayerSpawnResponseListener(NetworkData data)
 		{
 			PlayerSpawnResponse s = data as PlayerSpawnResponse;
-			if (s.Response == OldResponseResult.Success)
+			if (s.Response == ResponseResult.Success)
 			{
 				CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.Loading);
 				SolarSystemRoot.SetActive(value: true);
@@ -1001,7 +1001,7 @@ namespace ZeroGravity
 		private void LogOutResponseListener(NetworkData data)
 		{
 			LogOutResponse logOutResponse = data as LogOutResponse;
-			if (logOutResponse.Response == OldResponseResult.Error)
+			if (logOutResponse.Response == ResponseResult.Error)
 			{
 				Dbg.Error("Failed to log out properly");
 			}
@@ -2000,7 +2000,7 @@ namespace ZeroGravity
 			{
 				ReconnectAutomatically = false;
 			}
-			if (logInResponse.Response == OldResponseResult.Success)
+			if (logInResponse.Response == ResponseResult.Success)
 			{
 				SolarSystem.Set(SolarSystemRoot.transform.Find("SunRoot"), SolarSystemRoot.transform.Find("PlanetsRoot"), logInResponse.ServerTime);
 				SolarSystem.LoadDataFromResources();
@@ -2039,7 +2039,7 @@ namespace ZeroGravity
 				VesselExposureValues = logInResponse.VesselExposureValues;
 				PlayerExposureValues = logInResponse.PlayerExposureValues;
 			}
-			else if (logInResponse.Response == OldResponseResult.WrongPassword)
+			else if (logInResponse.Response == ResponseResult.WrongPassword)
 			{
 				CanvasManager.SelectScreen(CanvasManager.Screen.StartingPoint);
 				ShowMessageBox(Localization.ConnectionError, Localization.WrongPassword);
@@ -2088,7 +2088,7 @@ namespace ZeroGravity
 			LastSignInRequest = signInRequest;
 			try
 			{
-				MainServer.Get<SignInResponse>(signInRequest, SignInResponseListener);
+				MSConnection.Get<SignInResponse>(signInRequest, SignInResponseListener);
 			}
 			catch (Exception)
 			{
@@ -2106,7 +2106,7 @@ namespace ZeroGravity
 				return;
 			}
 
-			if (signInResponse.Result == ResponseResult.Success)
+			if (signInResponse.Result == OpenHellion.Networking.Message.MainServer.ResponseResult.Success)
 			{
 				CanvasManager.SelectScreen(CanvasManager.Screen.StartingPoint);
 
@@ -2120,20 +2120,20 @@ namespace ZeroGravity
 					Online = true
 				};
 			}
-			else if (signInResponse.Result is ResponseResult.Error or ResponseResult.AlreadyLoggedInError)
+			else if (signInResponse.Result is OpenHellion.Networking.Message.MainServer.ResponseResult.Error or OpenHellion.Networking.Message.MainServer.ResponseResult.AlreadyLoggedInError)
 			{
 				CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
 				ShowMessageBox(Localization.ConnectionError, Localization.SignInError);
 			}
-			else if (signInResponse.Result == ResponseResult.ServerNotFound)
+			else if (signInResponse.Result == OpenHellion.Networking.Message.MainServer.ResponseResult.ServerNotFound)
 			{
 				ShowMessageBox(Localization.Error, Localization.ServerNotFound);
 			}
-			else if (signInResponse.Result == ResponseResult.ClientVersionError)
+			else if (signInResponse.Result == OpenHellion.Networking.Message.MainServer.ResponseResult.ClientVersionError)
 			{
 				ShowMessageBox(Localization.VersionError, Localization.VersionErrorMessage);
 			}
-			else if (signInResponse.Result == ResponseResult.AccountNotFound)
+			else if (signInResponse.Result == OpenHellion.Networking.Message.MainServer.ResponseResult.AccountNotFound)
 			{
 				FindPlayerId();
 			}
@@ -2155,17 +2155,17 @@ namespace ZeroGravity
 			};
 
 			// First time booting, so we need to download id from the main server.
-			MainServer.Get<PlayerIdResponse>(idRequest, (data) =>
+			MSConnection.Get<PlayerIdResponse>(idRequest, (data) =>
 			{
 				CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.FindingPlayer);
 
 				// Get id from server and save it as a PlayerPref.
-				if (data.Result == ResponseResult.Success)
+				if (data.Result == OpenHellion.Networking.Message.MainServer.ResponseResult.Success)
 				{
 					PlayerPrefs.SetString("player_id", data.PlayerId);
 					SignIn();
 				}
-				else if (data.Result == ResponseResult.AccountNotFound)
+				else if (data.Result == OpenHellion.Networking.Message.MainServer.ResponseResult.AccountNotFound)
 				{
 					// No account exists with that id, so we need to create a new player account.
 					CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.NewPlayer);
@@ -2179,9 +2179,9 @@ namespace ZeroGravity
 					};
 
 					// Send request to server.
-					MainServer.Get<PlayerIdResponse>(createRequest, (data) =>
+					MSConnection.Get<PlayerIdResponse>(createRequest, (data) =>
 					{
-						if (data.Result == ResponseResult.Success)
+						if (data.Result == OpenHellion.Networking.Message.MainServer.ResponseResult.Success)
 						{
 							PlayerPrefs.SetString("player_id", data.PlayerId);
 							SignIn();
@@ -2391,7 +2391,7 @@ namespace ZeroGravity
 					SteamId = IdManager.PlayerId,
 					SendDetails = true
 				};
-				if (SendRequest(serverStatusRequest, "127.0.0.1", result2, out latency) is ServerStatusResponse serverStatusResponse && serverStatusResponse.Response == OldResponseResult.Success)
+				if (SendRequest(serverStatusRequest, "127.0.0.1", result2, out latency) is ServerStatusResponse serverStatusResponse && serverStatusResponse.Response == ResponseResult.Success)
 				{
 					if (serverStatusResponse.CharacterData == null)
 					{

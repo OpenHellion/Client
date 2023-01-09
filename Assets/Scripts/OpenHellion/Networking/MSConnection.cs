@@ -1,16 +1,32 @@
+// MSConnection.cs
+//
+// Copyright (C) 2023, OpenHellion contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 using System.Security.Cryptography.X509Certificates;
 using OpenHellion.Networking.Message.MainServer;
-using OpenHellion.Networking.Message;
 using UnityEngine.Networking;
 using ZeroGravity;
 
 namespace OpenHellion.Networking
 {
 	// TODO: Use HTTPS.
-	public class MainServer
+	public class MSConnection
 	{
 		public const string IpAddress = "localhost";
-		public const ushort Port = 6000;
+		public const ushort Port = 6001;
 
 		public static string Address {
 			get {
@@ -53,6 +69,8 @@ namespace OpenHellion.Networking
 						callback(Json.Deserialize<T>(operation.webRequest.downloadHandler.text));
 						break;
 				}
+
+				request.Dispose();
 			};
 		}
 
