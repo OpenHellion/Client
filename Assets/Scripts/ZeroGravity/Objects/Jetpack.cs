@@ -377,7 +377,7 @@ namespace ZeroGravity.Objects
 						Helmet.Jetpack = this;
 					}
 					myPlayer.FpsController.RefreshMaxAngularVelocity();
-					Client.LogCustomEvent("equip_item", new Dictionary<string, object> { { base.TypeName, base.Tier } });
+
 					MyPlayer.Instance.CheckEquipmentAchievement();
 				}
 				else if (myPlayer.FpsController.CurrentJetpack == this)
@@ -393,7 +393,6 @@ namespace ZeroGravity.Objects
 					}
 					StartNozzles(Vector4.zero);
 					myPlayer.FpsController.RefreshMaxAngularVelocity();
-					Client.LogCustomEvent("unequip_item", new Dictionary<string, object> { { base.TypeName, base.Tier } });
 				}
 			}
 		}

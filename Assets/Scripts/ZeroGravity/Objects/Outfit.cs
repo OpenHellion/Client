@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.UI;
@@ -73,17 +72,6 @@ namespace ZeroGravity.Objects
 			public float MaxAngularVelocity = 20f;
 		}
 
-		[CompilerGenerated]
-		private sealed class _003CGetSlotsByGroup_003Ec__AnonStorey0
-		{
-			internal InventorySlot.Group group;
-
-			internal bool _003C_003Em__0(KeyValuePair<short, InventorySlot> m)
-			{
-				return m.Value.SlotGroup == group;
-			}
-		}
-
 		public Transform OutfitTrans;
 
 		public Transform FoldedOutfitTrans;
@@ -101,27 +89,9 @@ namespace ZeroGravity.Objects
 
 		public int MaximumCycleIndex;
 
-		[CompilerGenerated]
-		private static Func<KeyValuePair<short, InventorySlot>, short> _003C_003Ef__am_0024cache0;
+		public override bool IsInvetoryEquipable => true;
 
-		[CompilerGenerated]
-		private static Func<KeyValuePair<short, InventorySlot>, InventorySlot> _003C_003Ef__am_0024cache1;
-
-		public override bool IsInvetoryEquipable
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override EquipType EquipTo
-		{
-			get
-			{
-				return EquipType.None;
-			}
-		}
+		public override EquipType EquipTo => EquipType.None;
 
 		private new void Awake()
 		{
@@ -189,19 +159,9 @@ namespace ZeroGravity.Objects
 
 		public Dictionary<short, InventorySlot> GetSlotsByGroup(InventorySlot.Group group)
 		{
-			_003CGetSlotsByGroup_003Ec__AnonStorey0 _003CGetSlotsByGroup_003Ec__AnonStorey = new _003CGetSlotsByGroup_003Ec__AnonStorey0();
-			_003CGetSlotsByGroup_003Ec__AnonStorey.group = group;
-			IEnumerable<KeyValuePair<short, InventorySlot>> source = GetAllSlots().Where(_003CGetSlotsByGroup_003Ec__AnonStorey._003C_003Em__0);
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CGetSlotsByGroup_003Em__0;
-			}
-			Func<KeyValuePair<short, InventorySlot>, short> keySelector = _003C_003Ef__am_0024cache0;
-			if (_003C_003Ef__am_0024cache1 == null)
-			{
-				_003C_003Ef__am_0024cache1 = _003CGetSlotsByGroup_003Em__1;
-			}
-			return source.ToDictionary(keySelector, _003C_003Ef__am_0024cache1);
+			return (from m in GetAllSlots()
+				where m.Value.SlotGroup == @group
+				select m).ToDictionary((KeyValuePair<short, InventorySlot> k) => k.Key, (KeyValuePair<short, InventorySlot> v) => v.Value);
 		}
 
 		public bool CanRemoveOutfit()
@@ -220,18 +180,17 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
-			Client.LogCustomEvent("equip_item", new Dictionary<string, object> { { base.TypeName, base.Tier } });
-			FoldedOutfitTrans.gameObject.SetActive(false);
+			FoldedOutfitTrans.gameObject.SetActive(value: false);
 			if (pl is MyPlayer)
 			{
 				MyPlayer myPlayer = pl as MyPlayer;
 				if (checkHands)
 				{
-					myPlayer.Inventory.RemoveItemFromHands(true);
+					myPlayer.Inventory.RemoveItemFromHands(resetStance: true);
 				}
 				ReparentCurrentOutfit();
 				myPlayer.CurrentOutfit = this;
-				SetOutfitParent(OutfitTrans.GetChildren(), myPlayer.Outfit, true);
+				SetOutfitParent(OutfitTrans.GetChildren(), myPlayer.Outfit, activateGeometry: true);
 				myPlayer.RefreshOutfitData();
 				myPlayer.Inventory.SetOutfit(this);
 				myPlayer.FpsController.RefreshMaxAngularVelocity();
@@ -240,16 +199,16 @@ namespace ZeroGravity.Objects
 				{
 					Helmet helmet = inventorySlot.Item as Helmet;
 					helmet.ChangeEquip(EquipType.EquipInventory, myPlayer);
-					helmet.gameObject.SetActive(true);
+					helmet.gameObject.SetActive(value: true);
 				}
 				InventorySlot inventorySlot2 = myPlayer.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Jetpack).Values.FirstOrDefault();
 				if (inventorySlot2 != null && inventorySlot2.Item != null)
 				{
 					Jetpack jetpack = inventorySlot2.Item as Jetpack;
 					jetpack.ChangeEquip(EquipType.EquipInventory, myPlayer);
-					jetpack.gameObject.SetActive(true);
+					jetpack.gameObject.SetActive(value: true);
 				}
-				ImpactDetector componentInChildren = MyPlayer.Instance.GetComponentInChildren<ImpactDetector>(true);
+				ImpactDetector componentInChildren = MyPlayer.Instance.GetComponentInChildren<ImpactDetector>(includeInactive: true);
 				if (componentInChildren != null)
 				{
 					ImpactDetector impactDetector = MyPlayer.Instance.FpsController.ragdollChestRigidbody.gameObject.AddComponent<ImpactDetector>();
@@ -268,17 +227,17 @@ namespace ZeroGravity.Objects
 		private void ReparentCurrentOutfit()
 		{
 			MyPlayer instance = MyPlayer.Instance;
-			instance.ToggleMeshRendereres(true);
+			instance.ToggleMeshRendereres(enableMesh: true);
 			if (instance.CurrentOutfit != null)
 			{
-				instance.CurrentOutfit.SetOutfitParent(instance.Outfit.GetChildren(), instance.CurrentOutfit.OutfitTrans, false);
-				instance.CurrentOutfit.FoldedOutfitTrans.gameObject.SetActive(true);
+				instance.CurrentOutfit.SetOutfitParent(instance.Outfit.GetChildren(), instance.CurrentOutfit.OutfitTrans, activateGeometry: false);
+				instance.CurrentOutfit.FoldedOutfitTrans.gameObject.SetActive(value: true);
 				return;
 			}
 			foreach (Transform child in instance.Outfit.GetChildren())
 			{
 				child.parent = instance.BasicOutfitHolder;
-				child.gameObject.SetActive(false);
+				child.gameObject.SetActive(value: false);
 			}
 		}
 
@@ -316,7 +275,7 @@ namespace ZeroGravity.Objects
 				{
 					Helmet helmet = inventorySlot.Item as Helmet;
 					helmet.ChangeEquip(EquipType.Inventory, myPlayer);
-					helmet.gameObject.SetActive(false);
+					helmet.gameObject.SetActive(value: false);
 					helmet.transform.parent = base.transform;
 				}
 				InventorySlot inventorySlot2 = myPlayer.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Jetpack).Values.FirstOrDefault();
@@ -324,7 +283,7 @@ namespace ZeroGravity.Objects
 				{
 					Jetpack jetpack = inventorySlot2.Item as Jetpack;
 					jetpack.ChangeEquip(EquipType.Inventory, myPlayer);
-					jetpack.gameObject.SetActive(false);
+					jetpack.gameObject.SetActive(value: false);
 					jetpack.transform.parent = base.transform;
 				}
 				ReparentCurrentOutfit();
@@ -333,7 +292,7 @@ namespace ZeroGravity.Objects
 					child.parent = myPlayer.Outfit;
 					child.localPosition = Vector3.zero;
 					child.localRotation = ((!(child.name == "Root")) ? Quaternion.identity : rootRotation);
-					child.gameObject.SetActive(true);
+					child.gameObject.SetActive(value: true);
 				}
 				if (!isDeath && myPlayer.Inventory.ItemInHands != null)
 				{
@@ -401,18 +360,6 @@ namespace ZeroGravity.Objects
 				return null;
 			}
 			return list;
-		}
-
-		[CompilerGenerated]
-		private static short _003CGetSlotsByGroup_003Em__0(KeyValuePair<short, InventorySlot> k)
-		{
-			return k.Key;
-		}
-
-		[CompilerGenerated]
-		private static InventorySlot _003CGetSlotsByGroup_003Em__1(KeyValuePair<short, InventorySlot> v)
-		{
-			return v.Value;
 		}
 	}
 }

@@ -11,7 +11,7 @@ namespace ZeroGravity.Network
 
 		public uint ClientHash;
 
-		public string SteamId;
+		public string PlayerId;
 
 		public CharacterData CharacterData;
 	}

@@ -20,13 +20,13 @@ namespace OpenHellion.Networking
 
 		public Thread listeningThread;
 
-		private string gameServerAddress;
+		private string _serverAddress;
 
-		private int gameServerPort;
+		private int _serverPort;
 
-		private string gameServerID;
+		private string _serverId;
 
-		private string gameServerPassword;
+		private string _serverPassword;
 
 		private int retryAttempt;
 
@@ -36,15 +36,14 @@ namespace OpenHellion.Networking
 
 		private EventWaitHandle waitHandle;
 
-		// TODO: Replace this with a custom generated id, and save this in an external provider.
 		private string _playerid;
 
-		public void Start(string address, int port, string id, string password, string playerId, int retryAttempt = 3)
+		public void Start(string address, int port, string serverId, string password, string playerId, int retryAttempt = 3)
 		{
-			gameServerAddress = address;
-			gameServerPort = port;
-			gameServerID = id;
-			gameServerPassword = password;
+			_serverAddress = address;
+			_serverPort = port;
+			_serverId = serverId;
+			_serverPassword = password;
 			_playerid = playerId;
 			this.retryAttempt = retryAttempt;
 			runThread = true;
@@ -205,7 +204,7 @@ namespace OpenHellion.Networking
 			{
 				try
 				{
-					IAsyncResult asyncResult = socket.BeginConnect(gameServerAddress, gameServerPort, null, null);
+					IAsyncResult asyncResult = socket.BeginConnect(_serverAddress, _serverPort, null, null);
 					if (!asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5.0), false))
 					{
 						socket.Close();
@@ -252,10 +251,10 @@ namespace OpenHellion.Networking
 				listeningThread.Start();
 				LogInRequest logInRequest = new LogInRequest
 				{
-					SteamId = _playerid,
+					PlayerId = _playerid,
 					CharacterData = NetworkController.CharacterData,
-					ServerID = gameServerID,
-					Password = gameServerPassword,
+					ServerID = _serverId,
+					Password = _serverPassword,
 					ClientHash = Client.CombinedHash
 				};
 				Send(logInRequest);

@@ -28,8 +28,8 @@ namespace ZeroGravity
 		{
 			None,
 			MainMenu,
+			CharacterSelect,
 			StartingPoint,
-			SpawnOptions,
 			Loading
 		}
 
@@ -228,7 +228,7 @@ namespace ZeroGravity
 
 			if (Client.IsLogout || Client.IsDisconected)
 			{
-				SelectScreen(Screen.StartingPoint);
+				SelectScreen(Screen.CharacterSelect);
 			}
 			else if (Client.ReconnectAutomatically || Client.ForceRespawn)
 			{
@@ -429,12 +429,6 @@ namespace ZeroGravity
 			{
 				Client.Instance.PlayNewSPGame();
 			}
-		}
-
-		public void RentYourServerLink()
-		{
-			Application.OpenURL("https://nitra.do/hellion");
-			Client.LogCustomEvent("mb_rent_server");
 		}
 
 		public void DiscordButton()
@@ -741,7 +735,7 @@ namespace ZeroGravity
 				StartingPointScreen.SetActive(value: false);
 				ToggleLoadingScreen(Client.SinglePlayerQuickLoad ? LoadingScreenType.Loading : LoadingScreenType.None);
 				break;
-			case Screen.StartingPoint:
+			case Screen.CharacterSelect:
 				CharacterGroup.SetActive(value: true);
 				MainMenu.SetActive(value: false);
 				StartingPointScreen.SetActive(value: false);
@@ -749,7 +743,7 @@ namespace ZeroGravity
 				Client.IsLogout = false;
 				Client.IsDisconected = false;
 				break;
-			case Screen.SpawnOptions:
+			case Screen.StartingPoint:
 				MainMenu.SetActive(value: false);
 				CharacterGroup.SetActive(value: false);
 				SinglePlayerModeScreen.SetActive(value: false);
@@ -830,7 +824,7 @@ namespace ZeroGravity
 			else
 			{
 				// Exit screen completely, and go back to server list.
-				SelectScreen(Screen.StartingPoint);
+				SelectScreen(Screen.CharacterSelect);
 			}
 		}
 

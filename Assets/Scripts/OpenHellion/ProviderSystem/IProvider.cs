@@ -30,6 +30,12 @@ namespace OpenHellion.ProviderSystem
 		internal void Destroy();
 		internal void Update();
 
+		public enum ProviderType
+		{
+			STEAM,
+			DISCORD
+		}
+
 		// API
 		struct Friend
 		{

@@ -17,7 +17,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			public long GUID;
 
-			public string PlayerID;
+			public string PlayerNativeId;
 
 			public string Name;
 
@@ -68,7 +68,7 @@ namespace ZeroGravity.ShipComponents
 			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = parentShip.GUID,
-				AddPlayerSteamID = player.PlayerID,
+				AddPlayerSteamID = player.PlayerNativeId,
 				AddPlayerRank = newRank,
 				AddPlayerName = player.Name
 			});
@@ -79,7 +79,7 @@ namespace ZeroGravity.ShipComponents
 			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = parentShip.GUID,
-				RemovePlayerSteamID = player.PlayerID
+				RemovePlayerSteamID = player.PlayerNativeId
 			});
 			UpdateUI();
 		}
@@ -106,11 +106,11 @@ namespace ZeroGravity.ShipComponents
 				foreach (IProvider.Friend friend in ProviderManager.MainProvider.GetFriends())
 				{
 					// If friend is online, and not already authorised.
-					if (friend.Status == IProvider.FriendStatus.ONLINE && AuthorizedPlayers.Find((PlayerSecurityData m) => m.PlayerID == friend.Id) == null)
+					if (friend.Status == IProvider.FriendStatus.ONLINE && AuthorizedPlayers.Find((PlayerSecurityData m) => m.PlayerNativeId == friend.Id) == null)
 					{
 						list.Add(new PlayerSecurityData
 						{
-							PlayerID = friend.Id,
+							PlayerNativeId = friend.Id,
 							IsFriend = true,
 							Name = friend.Name,
 							Rank = AuthorizedPersonRank.None
@@ -161,7 +161,7 @@ namespace ZeroGravity.ShipComponents
 						IsFriend = false,
 						GUID = item.GUID,
 						Name = item.Name,
-						PlayerID = item.SteamID,
+						PlayerNativeId = item.SteamID,
 						Rank = item.Rank
 					});
 				}
@@ -203,7 +203,7 @@ namespace ZeroGravity.ShipComponents
 						list.Add(new PlayerSecurityData
 						{
 							IsFriend = false,
-							PlayerID = item.SteamID,
+							PlayerNativeId = item.SteamID,
 							Name = item.Name,
 							Rank = AuthorizedPersonRank.None
 						});

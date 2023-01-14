@@ -26,7 +26,6 @@ public class StartupChecker : MonoBehaviour
 		else
 		{
 			// This is if we sucessfully started the game.
-			Client.LogCustomEvent("application_start", true);
 			StartClient();
 		}
 	}

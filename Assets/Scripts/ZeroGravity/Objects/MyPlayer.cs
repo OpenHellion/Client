@@ -422,7 +422,7 @@ namespace ZeroGravity.Objects
 			set
 			{
 				pressure = value;
-				AkSoundEngine.SetRTPCValue(SoundManager.instance.Pressure, value);
+				AkSoundEngine.SetRTPCValue(SoundManager.Instance.Pressure, value);
 			}
 		}
 
@@ -571,7 +571,7 @@ namespace ZeroGravity.Objects
 			}
 			DefaultBloodEffects = Resources.LoadAll<GameObject>("Effects/DefaultBloodEffects/");
 			bloodCloudEffect = Resources.Load<GameObject>("Test/Effekc/BloodCloud");
-			Client.Instance.AmbientSounds.SwitchAmbience(SoundManager.instance.SpaceAmbience);
+			Client.Instance.AmbientSounds.SwitchAmbience(SoundManager.Instance.SpaceAmbience);
 		}
 
 		private void TextChatMessageListener(NetworkData data)
@@ -1049,7 +1049,7 @@ namespace ZeroGravity.Objects
 			}
 			Health = playerStatsMessage.Health;
 			healthEffect.Health = Health;
-			AkSoundEngine.SetRTPCValue(SoundManager.instance.Health, Health);
+			AkSoundEngine.SetRTPCValue(SoundManager.Instance.Health, Health);
 			if (inventoryUI.gameObject.activeInHierarchy)
 			{
 				inventoryUI.UpdateArmorAndHealth();
@@ -2214,7 +2214,7 @@ namespace ZeroGravity.Objects
 			Health = s.Health;
 			IsAdmin = s.IsAdmin;
 			healthEffect.Health = Health;
-			AkSoundEngine.SetRTPCValue(SoundManager.instance.Health, Health);
+			AkSoundEngine.SetRTPCValue(SoundManager.Instance.Health, Health);
 			equipSpawnDynamicObjects = s.DynamicObjects;
 			base.gameObject.SetActive(value: true);
 			rigidBody.isKinematic = false;
@@ -2244,7 +2244,7 @@ namespace ZeroGravity.Objects
 		/// </summary>
 		public static MyPlayer SpawnMyPlayer(LogInResponse res)
 		{
-			NetworkController.Instance.SenderID = res.ID;
+			NetworkController.Instance.PlayerGUID = res.GUID;
 			GameObject characterObject = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/FirstPersonCharacter")) as GameObject;
 			GenderSettings genderSettings = characterObject.GetComponent<GenderSettings>();
 			GenderSettings.GenderItem genderItem = null;
@@ -2291,7 +2291,7 @@ namespace ZeroGravity.Objects
 			myPlayer.UpdateReferenceHead();
 			myPlayer.FpsController.CameraController.spineTransform = myPlayer.FpsController.animatorHelper.GetBone(AnimatorHelper.HumanBones.Spine2);
 			myPlayer.RefreshOutfitData();
-			myPlayer.GUID = res.ID;
+			myPlayer.GUID = res.GUID;
 			myPlayer.PlayerName = res.Data.Name;
 			myPlayer.SunCameraRoot = Client.Instance.SunCameraRootTransform;
 			myPlayer.SunCamera = Client.Instance.SunCameraTransform;
@@ -2301,7 +2301,7 @@ namespace ZeroGravity.Objects
 			myPlayer.shipExteriorSunLight = Client.Instance.ShipSunLightTransform.GetComponent<Light>();
 			myPlayer.gameObject.SetActive(value: false);
 			myPlayer.rigidBody.isKinematic = true;
-			AkSoundEngine.SetRTPCValue(SoundManager.instance.InGameVolume, 0f);
+			AkSoundEngine.SetRTPCValue(SoundManager.Instance.InGameVolume, 0f);
 			NetworkController.Instance.SendToGameServer(new ConsoleMessage
 			{
 				Text = "god"
@@ -2576,22 +2576,7 @@ namespace ZeroGravity.Objects
 			if (Parent is Pivot)
 			{
 				Client.Instance.SolarSystem.RemoveArtificialBody(Parent as Pivot);
-				UnityEngine.Object.Destroy(Parent.gameObject);
-				if (vessel.IsMainVessel)
-				{
-					Client.LogCustomEvent("enter_vessel", new Dictionary<string, object> { { "name", vessel.Name } });
-				}
-				else
-				{
-					Client.LogCustomEvent("enter_vessel", new Dictionary<string, object>
-					{
-						{ "name", vessel.Name },
-						{
-							"main_vessel_name",
-							vessel.MainVessel.Name
-						}
-					});
-				}
+				Destroy(Parent.gameObject);
 				SceneQuestTrigger.CheckInChildren(vessel.MainVessel.gameObject, SceneQuestTriggerEvent.EnterStation);
 			}
 			else if (spaceObjectVessel != null && spaceObjectVessel != spaceObjectVessel2 && spaceObjectVessel.transform.parent != Client.Instance.ShipExteriorRoot.transform)
@@ -2717,21 +2702,6 @@ namespace ZeroGravity.Objects
 			if (Parent is SpaceObjectVessel)
 			{
 				SpaceObjectVessel spaceObjectVessel = Parent as SpaceObjectVessel;
-				if (spaceObjectVessel.IsMainVessel)
-				{
-					Client.LogCustomEvent("exit_vessel", new Dictionary<string, object> { { "name", spaceObjectVessel.Name } });
-				}
-				else
-				{
-					Client.LogCustomEvent("exit_vessel", new Dictionary<string, object>
-					{
-						{ "name", spaceObjectVessel.Name },
-						{
-							"main_vessel_name",
-							spaceObjectVessel.MainVessel.Name
-						}
-					});
-				}
 				SceneQuestTrigger.CheckInChildren(spaceObjectVessel.GeometryRoot, SceneQuestTriggerEvent.ExitVessel);
 				SceneQuestTrigger.CheckInChildren(spaceObjectVessel.MainVessel.gameObject, SceneQuestTriggerEvent.ExitStation);
 			}

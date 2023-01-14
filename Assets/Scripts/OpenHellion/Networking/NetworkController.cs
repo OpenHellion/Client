@@ -7,6 +7,7 @@ using System;
 using System.Runtime.InteropServices;
 using OpenHellion.ProviderSystem;
 using ZeroGravity.Network;
+using TriInspector;
 
 namespace OpenHellion.Networking
 {
@@ -14,7 +15,8 @@ namespace OpenHellion.Networking
 	{
 		public static CharacterData CharacterData;
 
-		public long SenderID;
+		[ReadOnly]
+		public long PlayerGUID;
 
 		private GameServerThread _connectionThread;
 
@@ -39,6 +41,32 @@ namespace OpenHellion.Networking
 				}
 
 				return s_instance;
+			}
+		}
+
+		[ReadOnly]
+		[SerializeField]
+		private string _playerId = null;
+		public static string PlayerId
+		{
+			get
+			{
+				if (Instance._playerId is null or "")
+				{
+					Instance._playerId = PlayerPrefs.GetString("player_id", null);
+
+					if (Instance._playerId == null)
+					{
+						Dbg.Error("Player id could not be found.");
+					}
+				}
+
+				return Instance._playerId;
+			}
+			set
+			{
+				Instance._playerId = value;
+				PlayerPrefs.SetString("player_id", value);
 			}
 		}
 
@@ -104,7 +132,7 @@ namespace OpenHellion.Networking
 			_subscribeToObjectsList.Remove(guid);
 		}
 
-		public void ConnectToGame(ServerData serverData, string userId, CharacterData charData, string password)
+		public void ConnectToGame(ServerData serverData, string playerId, CharacterData charData, string password)
 		{
 			CharacterData = charData;
 			if (_connectionThread != null)
@@ -114,10 +142,10 @@ namespace OpenHellion.Networking
 			_connectionThread = new GameServerThread();
 
 			NameOfCurrentServer = serverData.Name;
-			_connectionThread.Start(serverData.IPAddress, serverData.GamePort, serverData.Id, password, userId);
+			_connectionThread.Start(serverData.IpAddress, serverData.GamePort, serverData.Id, password, playerId);
 		}
 
-		public void ConnectToGameSP(int port, string userId, CharacterData charData)
+		public void ConnectToGameSP(int port, string playerId, CharacterData charData)
 		{
 			CharacterData = charData;
 			if (_connectionThread != null)
@@ -125,7 +153,7 @@ namespace OpenHellion.Networking
 				_connectionThread.Disconnect();
 			}
 			_connectionThread = new GameServerThread();
-			_connectionThread.Start("127.0.0.1", port, String.Empty, String.Empty, userId);
+			_connectionThread.Start("127.0.0.1", port, String.Empty, String.Empty, playerId);
 		}
 
 		public void SendToGameServer(NetworkData data)

@@ -101,20 +101,21 @@ namespace OpenHellion.ProviderSystem
 			// Only one instance can exist at a time.
 			if (s_instance != null)
 			{
-				GameObject.Destroy(gameObject, 0f);
+				Destroy(gameObject, 0f);
 				Dbg.Error("Tried to create new ProviderManager, but there already exists another manager.");
 			}
 			s_instance = this;
 
 			DontDestroyOnLoad(gameObject);
 
-			_allProviders = new();
-
-			_allProviders.Add(new SteamProvider());
-			_allProviders.Add(new DiscordProvider());
+			_allProviders = new()
+			{
+				new SteamProvider(),
+				new DiscordProvider()
+			};
 
 			// Initialise our providers.
-			// Loop backwards to prevent InvalidOperationException.
+			// Loop backwards to prevent an InvalidOperationException.
 			for (int i = _allProviders.Count - 1; i >= 0; i--)
 			{
 				if (!_allProviders[i].Initialise())

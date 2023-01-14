@@ -26,7 +26,8 @@ namespace OpenHellion.Networking.Message.MainServer
 	{
 		public string Id;
 		public string IpAddress;
-		public ushort Port;
+		public ushort GamePort;
+		public ushort StatusPort;
 		public uint Hash;
 		public Region Region;
 	}

@@ -35,14 +35,6 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public Texture Avatar
-		{
-			get
-			{
-				return ProviderManager.MainProvider.GetAvatar(SteamId);
-			}
-		}
-
 		public bool IsUsingItemInHands { get; set; }
 
 		public Item CurrentActiveItem
@@ -95,9 +87,9 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public static Texture GetAvatar(string SteamID)
+		public static Texture GetAvatar(string ProviderId)
 		{
-			return ProviderManager.MainProvider.GetAvatar(SteamID);
+			return ProviderManager.MainProvider.GetAvatar(ProviderId);
 		}
 	}
 }

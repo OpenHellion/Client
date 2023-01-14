@@ -102,7 +102,7 @@ namespace ZeroGravity.UI
 			try
 			{
 				string text = "http://api.playhellion.com/add-report.php?";
-				text = text + "reporter=" + Uri.EscapeUriString(IdManager.PlayerId);
+				text = text + "reporter=" + Uri.EscapeUriString(NetworkController.PlayerId);
 				text = text + "&server=" + Uri.EscapeUriString(Client.LastConnectedServer.Name);
 				text = text + "&reason=" + Uri.EscapeUriString(reportInfo[ReportReason.value].ToString());
 				text = text + "&other=" + Uri.EscapeUriString(OtherText.textComponent.text);

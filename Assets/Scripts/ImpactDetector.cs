@@ -34,7 +34,7 @@ public class ImpactDetector : MonoBehaviour
 
 	public void PlayImpactSound(float velocity)
 	{
-		ImpactSound.SetRTPCValue(SoundManager.instance.ImpactVelocity, velocity);
+		ImpactSound.SetRTPCValue(SoundManager.Instance.ImpactVelocity, velocity);
 		ImpactSound.Play();
 	}
 }

@@ -159,7 +159,7 @@ namespace ZeroGravity.UI
 			}
 			else if (SpawnPoint.State == SpawnPointState.Locked)
 			{
-				PlayerImage.texture = Player.GetAvatar(SpawnPoint.PlayerId);
+				PlayerImage.texture = Player.GetAvatar(SpawnPoint.PlayerNativeId);
 				DefaultPlayerImage.gameObject.SetActive(false);
 				LockedPlayerName.text = SpawnPoint.PlayerName.ToString();
 				LockedStateText.text = Localization.Registered.ToUpper();
@@ -168,7 +168,7 @@ namespace ZeroGravity.UI
 			}
 			else if (SpawnPoint.State == SpawnPointState.Authorized)
 			{
-				PlayerImage.texture = Player.GetAvatar(SpawnPoint.PlayerId);
+				PlayerImage.texture = Player.GetAvatar(SpawnPoint.PlayerNativeId);
 				DefaultPlayerImage.gameObject.SetActive(false);
 				LockedPlayerName.text = SpawnPoint.PlayerName.ToString();
 				LockedStateText.text = Localization.Registered.ToUpper();

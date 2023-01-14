@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-	public static SoundManager instance;
+	public static SoundManager Instance;
 
 	public string MasterVolume;
 
@@ -28,9 +28,9 @@ public class SoundManager : MonoBehaviour
 
 	private void Awake()
 	{
-		if (instance == null)
+		if (Instance == null)
 		{
-			instance = this;
+			Instance = this;
 		}
 	}
 }

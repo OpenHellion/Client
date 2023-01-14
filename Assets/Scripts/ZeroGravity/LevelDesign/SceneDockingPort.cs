@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
@@ -49,6 +48,8 @@ namespace ZeroGravity.LevelDesign
 
 		public bool Locked;
 
+		private bool dockStarted;
+
 		[Space(5f)]
 		[SerializeField]
 		public List<SceneTriggerExecuter> mergeExecuters;
@@ -70,18 +71,6 @@ namespace ZeroGravity.LevelDesign
 		public bool LeverPulse;
 
 		public const string AirlockTag = "airlock";
-
-		[CompilerGenerated]
-		private static Predicate<SceneDockingPortController> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Predicate<SceneDockingPortController> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Predicate<SceneDockingPortController> _003C_003Ef__am_0024cache2;
-
-		[CompilerGenerated]
-		private static Predicate<SceneDockingPortController> _003C_003Ef__am_0024cache3;
 
 		public int InSceneID
 		{
@@ -123,7 +112,7 @@ namespace ZeroGravity.LevelDesign
 			}
 			foreach (SceneDockingPortController portController in portControllers)
 			{
-				portController.ToggleLock(false, isInstant);
+				portController.ToggleLock(isLocked: false, isInstant);
 			}
 		}
 
@@ -163,19 +152,6 @@ namespace ZeroGravity.LevelDesign
 				ParentShip.DockToShip(this, ship, DockedToPort, details, isInitialize);
 				if (!isInitialize && MyPlayer.Instance.Parent == ParentShip && MyPlayer.Instance.LockedToTrigger != null && MyPlayer.Instance.LockedToTrigger.TriggerType == SceneTriggerType.DockingPanel)
 				{
-					Client.LogCustomEvent("dock_vessel", new Dictionary<string, object>
-					{
-						{ "name", ParentShip.Name },
-						{ "to_vessel_name", ship.Name },
-						{
-							"main_vessel_name",
-							ParentShip.MainVessel.Name
-						},
-						{
-							"total_vessels_count",
-							ParentShip.MainVessel.AllDockedVessels.Count + 1
-						}
-					});
 					Client.Instance.InGamePanels.Docking.UpdateDockingPorts();
 				}
 			}
@@ -196,6 +172,8 @@ namespace ZeroGravity.LevelDesign
 		{
 			ToggleDock(true, isInitialize);
 			DockedToPort.ToggleDock(true, isInitialize);
+			dockStarted = false;
+			DockedToPort.dockStarted = false;
 			foreach (SceneDockingPortController portController in portControllers)
 			{
 				portController.OnLeverStateChange();
@@ -206,6 +184,8 @@ namespace ZeroGravity.LevelDesign
 		{
 			ToggleDock(false, isInitialize);
 			DockedToPort.ToggleDock(false, isInitialize);
+			dockStarted = false;
+			DockedToPort.dockStarted = false;
 			DockedToPort.DockedToPort = null;
 			DockedToPort = null;
 		}
@@ -216,11 +196,11 @@ namespace ZeroGravity.LevelDesign
 			{
 				if (IsSlave)
 				{
-					ToggleDockTo(DockedToPort, false);
+					ToggleDockTo(DockedToPort, toggle: false);
 				}
 				else
 				{
-					DockedToPort.ToggleDockTo(this, false);
+					DockedToPort.ToggleDockTo(this, toggle: false);
 				}
 			}
 		}
@@ -262,10 +242,12 @@ namespace ZeroGravity.LevelDesign
 				return false;
 			}
 			Ship parentShip = sdc.ParentShip;
-			SceneDockingPortDetails sceneDockingPortDetails = new SceneDockingPortDetails();
-			sceneDockingPortDetails.ID = new VesselObjectID(ParentShip.GUID, InSceneID);
-			sceneDockingPortDetails.DockedToID = new VesselObjectID(parentShip.GUID, sdc.InSceneID);
-			sceneDockingPortDetails.DockingStatus = toggle;
+			SceneDockingPortDetails sceneDockingPortDetails = new SceneDockingPortDetails
+			{
+				ID = new VesselObjectID(ParentShip.GUID, InSceneID),
+				DockedToID = new VesselObjectID(parentShip.GUID, sdc.InSceneID),
+				DockingStatus = toggle
+			};
 			Ship parentShip2 = ParentShip;
 			SceneDockingPortDetails dockingPort = sceneDockingPortDetails;
 			parentShip2.ChangeStats(null, null, null, null, null, null, null, null, null, dockingPort);
@@ -288,62 +270,35 @@ namespace ZeroGravity.LevelDesign
 			{
 				if (IsSlave)
 				{
-					ToggleDockTo(DockedToPort, false, false);
+					ToggleDockTo(DockedToPort, toggle: false, checkTogglePossibility: false);
 				}
 				else
 				{
-					DockedToPort.ToggleDockTo(this, false, false);
+					DockedToPort.ToggleDockTo(this, toggle: false, checkTogglePossibility: false);
 				}
 			}
 			else if (DockType.ExtractTags().Contains("airlock") && DockedToPort.DockType.TagCount() < 4)
 			{
 				if (IsSlave)
 				{
-					ToggleDockTo(DockedToPort, false, false);
+					ToggleDockTo(DockedToPort, toggle: false, checkTogglePossibility: false);
 				}
 				else
 				{
-					DockedToPort.ToggleDockTo(this, false, false);
+					DockedToPort.ToggleDockTo(this, toggle: false, checkTogglePossibility: false);
 				}
 			}
-			else
+			else if (DockedToPort == null || (portControllers.Count > 0 && portControllers.Find((SceneDockingPortController m) => !m.IsLocked) != null) || (DockedToPort.portControllers.Count > 0 && DockedToPort.portControllers.Find((SceneDockingPortController m) => !m.IsLocked) != null))
 			{
-				if (DockedToPort == null)
-				{
-					return;
-				}
-				if (portControllers.Count > 0)
-				{
-					List<SceneDockingPortController> list = portControllers;
-					if (_003C_003Ef__am_0024cache0 == null)
-					{
-						_003C_003Ef__am_0024cache0 = _003CTryToUndock_003Em__0;
-					}
-					if (list.Find(_003C_003Ef__am_0024cache0) != null)
-					{
-						return;
-					}
-				}
-				if (DockedToPort.portControllers.Count > 0)
-				{
-					List<SceneDockingPortController> list2 = DockedToPort.portControllers;
-					if (_003C_003Ef__am_0024cache1 == null)
-					{
-						_003C_003Ef__am_0024cache1 = _003CTryToUndock_003Em__1;
-					}
-					if (list2.Find(_003C_003Ef__am_0024cache1) != null)
-					{
-						return;
-					}
-				}
+				return;
 			}
 			if (IsSlave)
 			{
-				ToggleDockTo(DockedToPort, false);
+				ToggleDockTo(DockedToPort, toggle: false);
 			}
 			else
 			{
-				DockedToPort.ToggleDockTo(this, false);
+				DockedToPort.ToggleDockTo(this, toggle: false);
 			}
 		}
 
@@ -351,29 +306,13 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (!isDocking)
 			{
-				if (portControllers.Count > 0)
+				if (portControllers.Count > 0 && portControllers.Find((SceneDockingPortController m) => !m.IsLocked) != null)
 				{
-					List<SceneDockingPortController> list = portControllers;
-					if (_003C_003Ef__am_0024cache2 == null)
-					{
-						_003C_003Ef__am_0024cache2 = _003CIsDockTogglePossibleWith_003Em__2;
-					}
-					if (list.Find(_003C_003Ef__am_0024cache2) != null)
-					{
-						return false;
-					}
+					return false;
 				}
-				if (sdp.portControllers.Count > 0)
+				if (sdp.portControllers.Count > 0 && sdp.portControllers.Find((SceneDockingPortController m) => !m.IsLocked) != null)
 				{
-					List<SceneDockingPortController> list2 = sdp.portControllers;
-					if (_003C_003Ef__am_0024cache3 == null)
-					{
-						_003C_003Ef__am_0024cache3 = _003CIsDockTogglePossibleWith_003Em__3;
-					}
-					if (list2.Find(_003C_003Ef__am_0024cache3) != null)
-					{
-						return false;
-					}
+					return false;
 				}
 			}
 			return true;
@@ -410,30 +349,6 @@ namespace ZeroGravity.LevelDesign
 			{
 				(MyPlayer.Instance.LockedToTrigger as SceneTriggerShipControl2).CancelInteract(MyPlayer.Instance);
 			}
-		}
-
-		[CompilerGenerated]
-		private static bool _003CTryToUndock_003Em__0(SceneDockingPortController m)
-		{
-			return !m.IsLocked;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CTryToUndock_003Em__1(SceneDockingPortController m)
-		{
-			return !m.IsLocked;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CIsDockTogglePossibleWith_003Em__2(SceneDockingPortController m)
-		{
-			return !m.IsLocked;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CIsDockTogglePossibleWith_003Em__3(SceneDockingPortController m)
-		{
-			return !m.IsLocked;
 		}
 	}
 }

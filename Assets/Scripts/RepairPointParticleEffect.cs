@@ -53,7 +53,7 @@ public class RepairPointParticleEffect : MonoBehaviour
 		Play();
 		if (SoundEffect != null)
 		{
-			SoundEffect.SetRTPCValue(SoundManager.instance.RepairPointIntensity, intensity);
+			SoundEffect.SetRTPCValue(SoundManager.Instance.RepairPointIntensity, intensity);
 		}
 		ParticleSystem.MainModule main = Effect.Particle.main;
 		ParticleSystem.EmissionModule emission = Effect.Particle.emission;

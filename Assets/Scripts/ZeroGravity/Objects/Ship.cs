@@ -632,7 +632,7 @@ namespace ZeroGravity.Objects
 					{
 						warpEffect.SetActive(value: true);
 					}
-					Client.LogCustomEvent("warp_start", new Dictionary<string, object> { { "celestial_body", ParentCelesitalBody.Name } });
+
 					foreach (SoundEffect warpSound in FTLEngine.WarpSounds)
 					{
 						warpSound.Play(0, dontPlayIfPlaying: true);
@@ -642,14 +642,6 @@ namespace ZeroGravity.Objects
 			else
 			{
 				CancelManeuver();
-				Client.LogCustomEvent("warp_end", new Dictionary<string, object>
-				{
-					{ "celestial_body", ParentCelesitalBody.Name },
-					{
-						"finished",
-						maneuverCourseResponse.IsFinished.HasValue && maneuverCourseResponse.IsFinished.Value
-					}
-				});
 				if (maneuverCourseResponse.IsFinished.HasValue && maneuverCourseResponse.IsFinished.Value && !MyPlayer.Instance.IsInVesselHierarchy(this))
 				{
 					WarpEndEffectTask = new Task(delegate

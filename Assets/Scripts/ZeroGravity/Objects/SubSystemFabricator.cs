@@ -143,11 +143,6 @@ namespace ZeroGravity.Objects
 					Tier = tier
 				}
 			});
-			Client.LogCustomEvent("fabricate", new Dictionary<string, object> {
-			{
-				Item.GetName(type, subType, partType, localized: false),
-				tier
-			} });
 		}
 
 		public void CancelFabrication(bool currentItemOnly = false)
@@ -157,7 +152,6 @@ namespace ZeroGravity.Objects
 				ID = new VesselObjectID(base.ParentVessel.GUID, base.InSceneID),
 				CurrentItemOnly = currentItemOnly
 			});
-			Client.LogCustomEvent("cancel_fabrication", null);
 		}
 
 		public bool HasEnoughResources(ItemType itemType, GenericItemSubType subType, MachineryPartType partType, int tier)

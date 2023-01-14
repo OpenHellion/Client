@@ -495,7 +495,7 @@ namespace ZeroGravity.CharacterMovement
 
 		private void PlayImpactSound(float velocity)
 		{
-			ImpactSounds.SetRTPCValue(SoundManager.instance.ImpactVelocity, velocity);
+			ImpactSounds.SetRTPCValue(SoundManager.Instance.ImpactVelocity, velocity);
 			ImpactSounds.Play(0);
 		}
 	}

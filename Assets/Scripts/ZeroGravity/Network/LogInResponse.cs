@@ -10,7 +10,7 @@ namespace ZeroGravity.Network
 	{
 		public ResponseResult Response = ResponseResult.Success;
 
-		public long ID;
+		public long GUID;
 
 		public CharacterData Data;
 

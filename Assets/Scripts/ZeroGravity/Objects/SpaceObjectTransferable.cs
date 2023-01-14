@@ -71,8 +71,8 @@ namespace ZeroGravity.Objects
 					}
 					else
 					{
-						Client.Instance.AmbientSounds.SwitchAmbience(SoundManager.instance.SpaceAmbience);
-						Client.Instance.AmbientSounds.SetEnvironment(SoundManager.instance.SpaceEnvironment);
+						Client.Instance.AmbientSounds.SwitchAmbience(SoundManager.Instance.SpaceAmbience);
+						Client.Instance.AmbientSounds.SetEnvironment(SoundManager.Instance.SpaceEnvironment);
 					}
 					Client.Instance.CanvasManager.CanvasUI.HelmetHud.WarningsUpdate();
 				}

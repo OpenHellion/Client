@@ -538,11 +538,6 @@ namespace ZeroGravity
 			EventSystem.AddListener(EventSystem.InternalEventType.CloseAllLoadingScreens, CloseAllLoadingScreensListener);
 			m_GameRichPresenceJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested);
 
-			if (IdManager.PlayerId != null)
-			{
-				Analytics.SetUserId(IdManager.PlayerId);
-			}
-
 			if (InvitedToServerId != null)
 			{
 				_inviteCoroutine = ConnectToInvite();
@@ -555,7 +550,7 @@ namespace ZeroGravity
 				if (IsLogout || IsDisconected)
 				{
 					CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.ConnectingToMain);
-					CanvasManager.SelectScreen(CanvasManager.Screen.StartingPoint);
+					CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
 				}
 				if (ReconnectAutomatically)
 				{
@@ -936,7 +931,7 @@ namespace ZeroGravity
 
 		public void ShowSpawnPointSelection(List<SpawnPointDetails> spawnPoints, bool canContinue)
 		{
-			CanvasManager.SelectScreen(CanvasManager.Screen.SpawnOptions);
+			CanvasManager.SelectScreen(CanvasManager.Screen.StartingPoint);
 			if (spawnPoints == null)
 			{
 				spawnPoints = new List<SpawnPointDetails>();
@@ -1005,7 +1000,7 @@ namespace ZeroGravity
 			{
 				Dbg.Error("Failed to log out properly");
 			}
-			LogCustomEvent("log_out", flush: true);
+
 			NetworkController.Instance.Disconnect();
 			if (SinglePlayerMode)
 			{
@@ -1081,7 +1076,7 @@ namespace ZeroGravity
 
 		public void ConnectionFailedListener(EventSystem.InternalEventData data)
 		{
-			CanvasManager.SelectScreen(CanvasManager.Screen.StartingPoint);
+			CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
 			ReconnectAutomatically = false;
 			SignInResponseListener(LastSignInResponse);
 		}
@@ -1166,7 +1161,6 @@ namespace ZeroGravity
 
 		private void QuitApplication()
 		{
-			LogCustomEvent("application_exit", flush: true);
 			IsRunning = false;
 			OnDestroy();
 			NetworkController.Instance.DisconnectImmediate();
@@ -1309,11 +1303,6 @@ namespace ZeroGravity
 			{
 				CanvasManager.DeadMsgText.text = killPlayerMessage.CauseOfDeath.ToLocalizedString().ToUpper();
 			}
-			LogCustomEvent("death", new Dictionary<string, object> {
-			{
-				"cause_of_death",
-				killPlayerMessage.CauseOfDeath.ToString()
-			} });
 		}
 
 		public void AddPlayer(long guid, OtherPlayer pl)
@@ -1849,7 +1838,7 @@ namespace ZeroGravity
 			trans.localPosition = new Vector3(x, y, trans.localPosition.z);
 		}
 
-		public void ConnectToServer(OpenHellion.Networking.ServerData server, string serverPassword = null)
+		public void ConnectToServer(ServerData server, string serverPassword = null)
 		{
 			_connectToServerCoroutine = ConnectToServerCoroutine(server, serverPassword);
 			StartCoroutine(_connectToServerCoroutine);
@@ -1858,7 +1847,7 @@ namespace ZeroGravity
 		/// <summary>
 		/// 	Connect to a remote server.
 		/// </summary>
-		public IEnumerator ConnectToServerCoroutine(OpenHellion.Networking.ServerData server, string serverPassword = null)
+		public IEnumerator ConnectToServerCoroutine(ServerData server, string serverPassword = null)
 		{
 
 			// Cancel if server is offline.
@@ -1918,7 +1907,7 @@ namespace ZeroGravity
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 
 			// Connect to server.
-			NetworkController.Instance.ConnectToGame(server, IdManager.PlayerId, _newCharacterData, serverPassword);
+			NetworkController.Instance.ConnectToGame(server, NetworkController.PlayerId, _newCharacterData, serverPassword);
 
 			// Cleanup data.
 			_newCharacterData = null;
@@ -1943,7 +1932,7 @@ namespace ZeroGravity
 			ShowConfirmMessageBox(Localization.DeleteCharacter, Localization.AreYouSureDeleteCharacter, Localization.Yes, Localization.No, () =>
 			{
 				TcpClient tcpClient = new TcpClient();
-				IAsyncResult asyncResult = tcpClient.BeginConnect(gs.IPAddress, gs.StatusPort, null, null);
+				IAsyncResult asyncResult = tcpClient.BeginConnect(gs.IpAddress, gs.StatusPort, null, null);
 				WaitHandle asyncWaitHandle = asyncResult.AsyncWaitHandle;
 				try
 				{
@@ -1967,7 +1956,7 @@ namespace ZeroGravity
 					DeleteCharacterRequest deleteCharacterRequest = new DeleteCharacterRequest
 					{
 						ServerId = gs.Id,
-						SteamId = IdManager.PlayerId
+						SteamId = NetworkController.PlayerId
 					};
 					byte[] array = Serializer.Package(deleteCharacterRequest);
 					DateTime dateTime = DateTime.UtcNow.ToUniversalTime();
@@ -1982,14 +1971,13 @@ namespace ZeroGravity
 			});
 		}
 
-
 		/// <summary>
 		/// 	Reconnect after we have been disconnected.
 		/// </summary>
 		public void Reconnect()
 		{
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
-			NetworkController.Instance.ConnectToGame(LastConnectedServer, IdManager.PlayerId, _newCharacterData, LastConnectedServerPass);
+			NetworkController.Instance.ConnectToGame(LastConnectedServer, NetworkController.PlayerId, _newCharacterData, LastConnectedServerPass);
 		}
 
 		private void LogInResponseListener(NetworkData data)
@@ -2041,13 +2029,13 @@ namespace ZeroGravity
 			}
 			else if (logInResponse.Response == ResponseResult.WrongPassword)
 			{
-				CanvasManager.SelectScreen(CanvasManager.Screen.StartingPoint);
+				CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
 				ShowMessageBox(Localization.ConnectionError, Localization.WrongPassword);
 			}
 			else
 			{
 				Dbg.Info("Server dropped connection.");
-				CanvasManager.SelectScreen(CanvasManager.Screen.StartingPoint);
+				CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
 				ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
 			}
 		}
@@ -2066,20 +2054,30 @@ namespace ZeroGravity
 		{
 			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.ConnectingToMain);
 
-			// If id is unknown, attempt to get it.
-			// This will call this function when done.
-			if (IdManager.PlayerId == null)
+			// If id is unknown, attempt to get it...
+			if (NetworkController.PlayerId is null or "")
 			{
-				FindPlayerId();
-				return;
+				FindPlayerId((playerIdResponse) =>
+				{
+					SendSignInRequest();
+				});
 			}
+			else
+			{
+				// Or if we already know our id, just sign in.
+				SendSignInRequest();
+			}
+		}
 
+		// Handles the sending of the request itself.
+		private void SendSignInRequest()
+		{
 			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.SigningIn);
 			Regex regex = new Regex("[^0-9.]");
 
 			SignInRequest signInRequest = new SignInRequest()
 			{
-				PlayerId = IdManager.PlayerId,
+				PlayerId = NetworkController.PlayerId,
 				Version = regex.Replace(Application.version, string.Empty),
 				Hash = CombinedHash,
 				JoiningId = InvitedToServerId
@@ -2096,9 +2094,7 @@ namespace ZeroGravity
 			}
 		}
 
-		/// <summary>
-		/// 	Check for errors and get server list.
-		/// </summary>
+		// Set the settings for the server to connect to later.
 		private void SignInResponseListener(SignInResponse signInResponse)
 		{
 			if (ReconnectAutomatically)
@@ -2106,36 +2102,40 @@ namespace ZeroGravity
 				return;
 			}
 
-			if (signInResponse.Result == OpenHellion.Networking.Message.MainServer.ResponseResult.Success)
+			if (signInResponse.Result == ResponseResult.Success)
 			{
-				CanvasManager.SelectScreen(CanvasManager.Screen.StartingPoint);
+				CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
 
-
+				// Save connection details for later use.
 				LastConnectedServer = new()
 				{
 					Id = signInResponse.Server.Id,
-					IPAddress = signInResponse.Server.IpAddress,
-					GamePort = signInResponse.Server.Port,
+					IpAddress = signInResponse.Server.IpAddress,
+					GamePort = signInResponse.Server.GamePort,
+					StatusPort = signInResponse.Server.StatusPort,
 					Hash = signInResponse.Server.Hash,
 					Online = true
 				};
+
+				// Connect to server!
+				ConnectToServer(LastConnectedServer);
 			}
-			else if (signInResponse.Result is OpenHellion.Networking.Message.MainServer.ResponseResult.Error or OpenHellion.Networking.Message.MainServer.ResponseResult.AlreadyLoggedInError)
+			else if (signInResponse.Result is ResponseResult.Error or ResponseResult.AlreadyLoggedInError)
 			{
 				CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
 				ShowMessageBox(Localization.ConnectionError, Localization.SignInError);
 			}
-			else if (signInResponse.Result == OpenHellion.Networking.Message.MainServer.ResponseResult.ServerNotFound)
+			else if (signInResponse.Result == ResponseResult.ServerNotFound)
 			{
 				ShowMessageBox(Localization.Error, Localization.ServerNotFound);
 			}
-			else if (signInResponse.Result == OpenHellion.Networking.Message.MainServer.ResponseResult.ClientVersionError)
+			else if (signInResponse.Result == ResponseResult.ClientVersionError)
 			{
 				ShowMessageBox(Localization.VersionError, Localization.VersionErrorMessage);
 			}
-			else if (signInResponse.Result == OpenHellion.Networking.Message.MainServer.ResponseResult.AccountNotFound)
+			else if (signInResponse.Result == ResponseResult.AccountNotFound)
 			{
-				FindPlayerId();
+				FindPlayerId((res) => SendSignInRequest());
 			}
 			else
 			{
@@ -2146,7 +2146,7 @@ namespace ZeroGravity
 			_receivedSignInResponse = true;
 		}
 
-		public void FindPlayerId()
+		public void FindPlayerId(Action<PlayerIdResponse> callback)
 		{
 			GetPlayerIdRequest idRequest = new()
 			{
@@ -2160,12 +2160,12 @@ namespace ZeroGravity
 				CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.FindingPlayer);
 
 				// Get id from server and save it as a PlayerPref.
-				if (data.Result == OpenHellion.Networking.Message.MainServer.ResponseResult.Success)
+				if (data.Result == ResponseResult.Success)
 				{
-					PlayerPrefs.SetString("player_id", data.PlayerId);
-					SignIn();
+					NetworkController.PlayerId = data.PlayerId;
+					callback(data);
 				}
-				else if (data.Result == OpenHellion.Networking.Message.MainServer.ResponseResult.AccountNotFound)
+				else if (data.Result == ResponseResult.AccountNotFound)
 				{
 					// No account exists with that id, so we need to create a new player account.
 					CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.NewPlayer);
@@ -2181,10 +2181,10 @@ namespace ZeroGravity
 					// Send request to server.
 					MSConnection.Get<PlayerIdResponse>(createRequest, (data) =>
 					{
-						if (data.Result == OpenHellion.Networking.Message.MainServer.ResponseResult.Success)
+						if (data.Result == ResponseResult.Success)
 						{
-							PlayerPrefs.SetString("player_id", data.PlayerId);
-							SignIn();
+							NetworkController.PlayerId = data.PlayerId;
+							callback(data);
 						}
 						else
 						{
@@ -2269,44 +2269,6 @@ namespace ZeroGravity
 			OpenMainScreen();
 		}
 
-		public static AnalyticsResult LogCustomEvent(string customEventName, bool flush = false)
-		{
-			AnalyticsResult result = Analytics.CustomEvent(customEventName);
-			if (flush)
-			{
-				Analytics.FlushEvents();
-			}
-			return result;
-		}
-
-		public static AnalyticsResult LogCustomEvent(string customEventName, Vector3 position, bool flush = false)
-		{
-			AnalyticsResult result = Analytics.CustomEvent(customEventName, position);
-			if (flush)
-			{
-				Analytics.FlushEvents();
-			}
-			return result;
-		}
-
-		public static AnalyticsResult LogCustomEvent(string customEventName, IDictionary<string, object> eventData, bool flush = false)
-		{
-			try
-			{
-				AnalyticsResult result = Analytics.CustomEvent(customEventName, eventData);
-				if (flush)
-				{
-					Analytics.FlushEvents();
-				}
-				return result;
-			}
-			catch (Exception ex)
-			{
-				Dbg.Error(ex.Message, ex.StackTrace);
-			}
-			return AnalyticsResult.InvalidData;
-		}
-
 		public void PlayNewSPGame()
 		{
 			StartCoroutine(PlaySPCoroutine());
@@ -2357,9 +2319,11 @@ namespace ZeroGravity
 					throw new Exception("Process.Start function returned FALSE");
 				}
 
-				// Scary loop.
-				int result = 6104;
-				int result2 = 6105;
+				Dbg.Log("Started single player server process with name", _spServerProcess.ProcessName);
+
+				// Get ports to connect to.
+				int gamePort = 6104;
+				int statusPort = 6105;
 				while (true)
 				{
 					string text2 = _spServerProcess.StandardOutput.ReadLine();
@@ -2373,25 +2337,28 @@ namespace ZeroGravity
 						{
 							string[] array = text2.Split(':');
 							string[] array2 = array[1].Split(',');
-							int.TryParse(array2[0], out result);
-							int.TryParse(array2[1], out result2);
+							int.TryParse(array2[0], out gamePort);
+							int.TryParse(array2[1], out statusPort);
 						}
 						catch
 						{
 						}
 					}
 				}
+
 				SinglePlayerQuickLoad = false;
 				SinglePlayerRespawn = false;
 				SinglePlayerMode = true;
 				lastSPAutosaveTime = Time.time;
 				int latency = -1;
+
 				ServerStatusRequest serverStatusRequest = new ServerStatusRequest
 				{
-					SteamId = IdManager.PlayerId,
+					SteamId = NetworkController.PlayerId,
 					SendDetails = true
 				};
-				if (SendRequest(serverStatusRequest, "127.0.0.1", result2, out latency) is ServerStatusResponse serverStatusResponse && serverStatusResponse.Response == ResponseResult.Success)
+
+				if (SendRequest(serverStatusRequest, "127.0.0.1", statusPort, out latency) is ServerStatusResponse serverStatusResponse && serverStatusResponse.Response == ResponseResult.Success)
 				{
 					if (serverStatusResponse.CharacterData == null)
 					{
@@ -2404,7 +2371,18 @@ namespace ZeroGravity
 						};
 					}
 
-					NetworkController.Instance.ConnectToGameSP(result, IdManager.PlayerId, serverStatusResponse.CharacterData);
+					// If id is unknown, attempt to get it.
+					if (NetworkController.PlayerId is null or "")
+					{
+						FindPlayerId((playerIdResponse) =>
+						{
+							NetworkController.Instance.ConnectToGameSP(gamePort, NetworkController.PlayerId, serverStatusResponse.CharacterData);
+						});
+					}
+					else
+					{
+						NetworkController.Instance.ConnectToGameSP(gamePort, NetworkController.PlayerId, serverStatusResponse.CharacterData);
+					}
 
 					this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 
@@ -2515,7 +2493,7 @@ namespace ZeroGravity
 			new Task(delegate
 			{
 				int latency;
-				SendRequest(new LatencyTestMessage(), LastConnectedServer.IPAddress, LastConnectedServer.StatusPort, out latency);
+				SendRequest(new LatencyTestMessage(), LastConnectedServer.IpAddress, LastConnectedServer.StatusPort, out latency);
 
 				_latencyMs = latency;
 			}).Start();
@@ -2564,19 +2542,11 @@ namespace ZeroGravity
 		private void ClearCanvasesAndStartGame()
 		{
 			this.CancelInvoke(CheckLoadingComplete);
-			AkSoundEngine.SetRTPCValue(SoundManager.instance.InGameVolume, 1f);
+			AkSoundEngine.SetRTPCValue(SoundManager.Instance.InGameVolume, 1f);
 			MyPlayer.Instance.PlayerReady = true;
 			ProviderManager.MainProvider.UpdateStatus();
 			MyPlayer.Instance.InitializeCameraEffects();
-			if (Instance.SinglePlayerMode)
-			{
-				LogCustomEvent("game_start_sp_" + SinglePlayerGameMode.ToString().ToLower());
-				Instance.CanvasManager.TextChat.CreateMessage(null, "Use [F5] to quicksave and [F9] to quickload game.", local: false);
-			}
-			else
-			{
-				LogCustomEvent("game_start");
-			}
+
 			Instance.CanvasManager.SelectSpawnPointScreen.Activate(value: false);
 			IsInGame = true;
 			lastSPAutosaveTime = Time.time;

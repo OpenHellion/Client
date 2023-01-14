@@ -12,7 +12,7 @@ namespace OpenHellion.Networking {
 
 		public string Name;
 
-		public string IPAddress;
+		public string IpAddress;
 
 		public int GamePort;
 

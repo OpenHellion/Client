@@ -66,7 +66,7 @@ namespace ZeroGravity.LevelDesign
 
 		public string PlayerName { get; private set; }
 
-		public string PlayerId { get; private set; }
+		public string PlayerNativeId { get; private set; }
 
 		public SpawnPointState State { get; private set; }
 
@@ -99,7 +99,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					PlayerGUID = details.PlayerGUID.Value;
 					PlayerName = ((PlayerGUID <= 0) ? string.Empty : details.PlayerName);
-					PlayerId = details.PlayerSteamID;
+					PlayerNativeId = details.PlayerSteamID;
 				}
 				InvitedPlayerName = details.InvitedPlayerName;
 				if (InvitedPlayerName == null)
@@ -325,7 +325,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				foreach (PlayerOnServerData item in data.PlayersOnServer)
 				{
-					if (item.SteamID != IdManager.PlayerId)
+					if (item.SteamID != NetworkController.PlayerId)
 					{
 						list.Add(new PlayerInviteData
 						{

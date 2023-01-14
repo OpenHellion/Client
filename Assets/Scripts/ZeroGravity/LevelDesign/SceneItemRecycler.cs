@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using OpenHellion.Networking;
 using UnityEngine;
 using ZeroGravity.Data;
@@ -105,7 +104,7 @@ namespace ZeroGravity.LevelDesign
 					GUID = Item.GUID,
 					RecycleMode = RecycleMode
 				});
-				Client.LogCustomEvent("recycle", new Dictionary<string, object> { { Item.TypeName, Item.Tier } });
+
 				if (RecycleSound != null)
 				{
 					RecycleSound.Play();
@@ -183,7 +182,7 @@ namespace ZeroGravity.LevelDesign
 				ID = new VesselObjectID(ParentVessel.GUID, base.InSceneID),
 				GUID = item.GUID
 			});
-			Client.LogCustomEvent("shred", new Dictionary<string, object> { { item.TypeName, item.Tier } });
+
 			if (RecycleParticles != null)
 			{
 				RecycleParticles.Play();

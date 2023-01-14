@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.LevelDesign;
@@ -47,29 +45,9 @@ namespace ZeroGravity.UI
 
 		public Text PowerDiff;
 
-		[CompilerGenerated]
-		private static Func<IPowerProvider, bool> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<IPowerProvider, bool> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Func<IPowerProvider, bool> _003C_003Ef__am_0024cache2;
-
-		[CompilerGenerated]
-		private static Func<IPowerConsumer, bool> _003C_003Ef__am_0024cache3;
-
-		[CompilerGenerated]
-		private static Func<ResourceContainer, bool> _003C_003Ef__am_0024cache4;
-
 		public virtual void OnInteract()
 		{
-			Client.Instance.CanvasManager.QuickTipHolder.Activate(false);
-			Client.LogCustomEvent("use_panel", new Dictionary<string, object> { 
-			{
-				"type",
-				GetType().Name
-			} });
+			Client.Instance.CanvasManager.QuickTipHolder.Activate(value: false);
 		}
 
 		public virtual void OnDetach()
@@ -105,27 +83,15 @@ namespace ZeroGravity.UI
 				IPowerProvider[] componentsInChildren = allVessel.GeometryRoot.GetComponentsInChildren<IPowerProvider>();
 				if (componentsInChildren != null && componentsInChildren.Length > 0)
 				{
-					if (_003C_003Ef__am_0024cache0 == null)
-					{
-						_003C_003Ef__am_0024cache0 = _003CInitialize_003Em__0;
-					}
-					foreach (GeneratorCapacitor item7 in componentsInChildren.Where(_003C_003Ef__am_0024cache0))
+					foreach (GeneratorCapacitor item7 in componentsInChildren.Where((IPowerProvider m) => m is GeneratorCapacitor))
 					{
 						Capacitors.Add(item7);
 					}
-					if (_003C_003Ef__am_0024cache1 == null)
-					{
-						_003C_003Ef__am_0024cache1 = _003CInitialize_003Em__1;
-					}
-					foreach (GeneratorPower item8 in componentsInChildren.Where(_003C_003Ef__am_0024cache1))
+					foreach (GeneratorPower item8 in componentsInChildren.Where((IPowerProvider m) => m is GeneratorPower))
 					{
 						PowerGenerators.Add(item8);
 					}
-					if (_003C_003Ef__am_0024cache2 == null)
-					{
-						_003C_003Ef__am_0024cache2 = _003CInitialize_003Em__2;
-					}
-					foreach (GeneratorSolar item9 in componentsInChildren.Where(_003C_003Ef__am_0024cache2))
+					foreach (GeneratorSolar item9 in componentsInChildren.Where((IPowerProvider m) => m is GeneratorSolar))
 					{
 						SolarGenerators.Add(item9);
 					}
@@ -140,12 +106,9 @@ namespace ZeroGravity.UI
 						LifeGenerators.Add(item4);
 					}
 				}
-				IPowerConsumer[] componentsInChildren3 = allVessel.GeometryRoot.GetComponentsInChildren<IPowerConsumer>();
-				if (_003C_003Ef__am_0024cache3 == null)
-				{
-					_003C_003Ef__am_0024cache3 = _003CInitialize_003Em__3;
-				}
-				foreach (IPowerConsumer item10 in componentsInChildren3.Where(_003C_003Ef__am_0024cache3))
+				foreach (IPowerConsumer item10 in from m in allVessel.GeometryRoot.GetComponentsInChildren<IPowerConsumer>()
+					where !(m is VesselBaseSystem)
+					select m)
 				{
 					if (!(item10 is GeneratorCapacitor))
 					{
@@ -153,17 +116,14 @@ namespace ZeroGravity.UI
 						Consumers.Add(item5);
 					}
 				}
-				ResourceContainer[] componentsInChildren4 = allVessel.GeometryRoot.GetComponentsInChildren<ResourceContainer>();
-				if (_003C_003Ef__am_0024cache4 == null)
-				{
-					_003C_003Ef__am_0024cache4 = _003CInitialize_003Em__4;
-				}
-				foreach (ResourceContainer item11 in componentsInChildren4.Where(_003C_003Ef__am_0024cache4))
+				foreach (ResourceContainer item11 in from m in allVessel.GeometryRoot.GetComponentsInChildren<ResourceContainer>()
+					where m.DistributionSystemType == DistributionSystemType.Air
+					select m)
 				{
 					AirTanks.Add(item11);
 				}
-				SceneCargoBay[] componentsInChildren5 = allVessel.GeometryRoot.GetComponentsInChildren<SceneCargoBay>();
-				foreach (SceneCargoBay item6 in componentsInChildren5)
+				SceneCargoBay[] componentsInChildren3 = allVessel.GeometryRoot.GetComponentsInChildren<SceneCargoBay>();
+				foreach (SceneCargoBay item6 in componentsInChildren3)
 				{
 					Cargos.Add(item6);
 				}
@@ -223,50 +183,20 @@ namespace ZeroGravity.UI
 				if (powDiff >= 0f)
 				{
 					PowerDiff.color = Colors.Green;
-					PowerDiff.text = "+" + FormatHelper.FormatValue(powDiff, true);
+					PowerDiff.text = "+" + FormatHelper.FormatValue(powDiff, round: true);
 				}
 				else
 				{
 					PowerDiff.color = Colors.PowerRed;
-					PowerDiff.text = FormatHelper.FormatValue(powDiff, true);
+					PowerDiff.text = FormatHelper.FormatValue(powDiff, round: true);
 				}
 			}
 		}
 
 		public void PanelExit()
 		{
-			base.gameObject.SetActive(false);
+			base.gameObject.SetActive(value: false);
 			MyPlayer.Instance.DetachFromPanel();
-		}
-
-		[CompilerGenerated]
-		private static bool _003CInitialize_003Em__0(IPowerProvider m)
-		{
-			return m is GeneratorCapacitor;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CInitialize_003Em__1(IPowerProvider m)
-		{
-			return m is GeneratorPower;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CInitialize_003Em__2(IPowerProvider m)
-		{
-			return m is GeneratorSolar;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CInitialize_003Em__3(IPowerConsumer m)
-		{
-			return !(m is VesselBaseSystem);
-		}
-
-		[CompilerGenerated]
-		private static bool _003CInitialize_003Em__4(ResourceContainer m)
-		{
-			return m.DistributionSystemType == DistributionSystemType.Air;
 		}
 	}
 }

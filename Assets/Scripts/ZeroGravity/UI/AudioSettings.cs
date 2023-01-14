@@ -78,7 +78,7 @@ namespace ZeroGravity.UI
 		public void VolumeSlider(float val)
 		{
 			VolumeSetter = val;
-			AkSoundEngine.SetRTPCValue(SoundManager.instance.MasterVolume, VolumeSetter);
+			AkSoundEngine.SetRTPCValue(SoundManager.Instance.MasterVolume, VolumeSetter);
 			AudioData.Volume = VolumeSetter;
 		}
 
@@ -92,7 +92,7 @@ namespace ZeroGravity.UI
 		public void AmbienceVolumeSlider(float val)
 		{
 			AmbienceVolumeSetter = val;
-			AkSoundEngine.SetRTPCValue(SoundManager.instance.AmbienceVolume, AmbienceVolumeSetter);
+			AkSoundEngine.SetRTPCValue(SoundManager.Instance.AmbienceVolume, AmbienceVolumeSetter);
 			AudioData.AmbienceVolume = AmbienceVolumeSetter;
 		}
 
@@ -117,8 +117,8 @@ namespace ZeroGravity.UI
 			VolumeSetter = AudioData.Volume;
 			VoiceVolumeSetter = AudioData.VoiceVolume;
 			AmbienceVolumeSetter = AudioData.AmbienceVolume;
-			AkSoundEngine.SetRTPCValue(SoundManager.instance.MasterVolume, AudioData.Volume);
-			AkSoundEngine.SetRTPCValue(SoundManager.instance.AmbienceVolume, AudioData.AmbienceVolume);
+			AkSoundEngine.SetRTPCValue(SoundManager.Instance.MasterVolume, AudioData.Volume);
+			AkSoundEngine.SetRTPCValue(SoundManager.Instance.AmbienceVolume, AudioData.AmbienceVolume);
 			AudioListener.volume = AudioData.VoiceVolume / 100f;
 		}
 
@@ -128,8 +128,8 @@ namespace ZeroGravity.UI
 
 		public void SaveAudioSettings()
 		{
-			AkSoundEngine.SetRTPCValue(SoundManager.instance.MasterVolume, AudioData.Volume);
-			AkSoundEngine.SetRTPCValue(SoundManager.instance.AmbienceVolume, AudioData.AmbienceVolume);
+			AkSoundEngine.SetRTPCValue(SoundManager.Instance.MasterVolume, AudioData.Volume);
+			AkSoundEngine.SetRTPCValue(SoundManager.Instance.AmbienceVolume, AudioData.AmbienceVolume);
 			AudioData.VoiceVolume = VoiceVolumeSetter;
 			AudioData.Volume = VolumeSetter;
 			AudioData.AmbienceVolume = AmbienceVolumeSetter;

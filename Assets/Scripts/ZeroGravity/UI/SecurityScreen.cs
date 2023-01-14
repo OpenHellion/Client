@@ -160,7 +160,7 @@ namespace ZeroGravity.UI
 			else
 			{
 				PlayerName.text = playerSecurityData.Name;
-				PlayerImage.texture = Player.GetAvatar(playerSecurityData.PlayerID);
+				PlayerImage.texture = Player.GetAvatar(playerSecurityData.PlayerNativeId);
 				float? selfDestructTimer = SecuritySystem.ParentShip.SelfDestructTimer;
 				if (!selfDestructTimer.HasValue)
 				{
@@ -282,7 +282,7 @@ namespace ZeroGravity.UI
 				component.Player = crewman;
 				crewMembersList.Add(component);
 				component.PlayerNameText.text = crewman.Name;
-				component.Avatar.texture = Player.GetAvatar(crewman.PlayerID);
+				component.Avatar.texture = Player.GetAvatar(crewman.PlayerNativeId);
 				if (playerSecurityData != null && playerSecurityData.Rank == AuthorizedPersonRank.CommandingOfficer)
 				{
 					component.GetComponent<Button>().interactable = true;
@@ -302,7 +302,7 @@ namespace ZeroGravity.UI
 		public void CrewMemberActions(SecuritySystem.PlayerSecurityData crewman)
 		{
 			CrewMemberPanel.SetActive(value: true);
-			CrewMemberPanel.GetComponentInChildren<CrewMembersUI>().Avatar.texture = Player.GetAvatar(crewman.PlayerID);
+			CrewMemberPanel.GetComponentInChildren<CrewMembersUI>().Avatar.texture = Player.GetAvatar(crewman.PlayerNativeId);
 			CrewMemberPanel.GetComponentInChildren<CrewMembersUI>().PlayerNameText.text = crewman.Name;
 			currentCrewman = crewman;
 		}
@@ -329,7 +329,7 @@ namespace ZeroGravity.UI
 			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = SecuritySystem.ParentShip.GUID,
-				AddPlayerSteamID = currentCrewman.PlayerID,
+				AddPlayerSteamID = currentCrewman.PlayerNativeId,
 				AddPlayerRank = AuthorizedPersonRank.CommandingOfficer,
 				AddPlayerName = currentCrewman.Name
 			});
@@ -345,12 +345,12 @@ namespace ZeroGravity.UI
 		public void ClaimSecurityTerminal()
 		{
 			SecuritySystem.PlayerSecurityData playerSecurityData = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.Rank == AuthorizedPersonRank.CommandingOfficer);
-			if (playerSecurityData == null || playerSecurityData.PlayerID == IdManager.PlayerId)
+			if (playerSecurityData == null || playerSecurityData.PlayerNativeId == NetworkController.PlayerId)
 			{
 				NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 				{
 					VesselGUID = SecuritySystem.ParentShip.GUID,
-					AddPlayerSteamID = IdManager.PlayerId,
+					AddPlayerSteamID = NetworkController.PlayerId,
 					AddPlayerRank = AuthorizedPersonRank.CommandingOfficer,
 					AddPlayerName = MyPlayer.Instance.PlayerName
 				});
@@ -384,7 +384,7 @@ namespace ZeroGravity.UI
 			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = SecuritySystem.ParentShip.GUID,
-				AddPlayerSteamID = playerSecurityData.PlayerID,
+				AddPlayerSteamID = playerSecurityData.PlayerNativeId,
 				AddPlayerRank = AuthorizedPersonRank.CommandingOfficer,
 				AddPlayerName = playerSecurityData.Name
 			});
@@ -398,11 +398,11 @@ namespace ZeroGravity.UI
 			InviteList.GetComponentInChildren<Scrollbar>(includeInactive: true).value = 1f;
 			foreach (SecuritySystem.PlayerSecurityData pl in availablePlayers)
 			{
-				if (AvailablePlayersForInvite.ContainsKey(pl.PlayerID) || pl.Rank != 0)
+				if (AvailablePlayersForInvite.ContainsKey(pl.PlayerNativeId) || pl.Rank != 0)
 				{
 					continue;
 				}
-				if (SecuritySystem.AuthorizedPlayers.FirstOrDefault((SecuritySystem.PlayerSecurityData m) => m.PlayerID == pl.PlayerID) == null)
+				if (SecuritySystem.AuthorizedPlayers.FirstOrDefault((SecuritySystem.PlayerSecurityData m) => m.PlayerNativeId == pl.PlayerNativeId) == null)
 				{
 					GameObject gameObject = UnityEngine.Object.Instantiate(PlayerToInvitePref, PlayerToInvitePref.transform.parent);
 					gameObject.SetActive(value: true);
@@ -411,7 +411,7 @@ namespace ZeroGravity.UI
 					if (pl.IsFriend)
 					{
 						component.IsFriend.SetActive(value: false);
-						component.Avatar.texture = Player.GetAvatar(pl.PlayerID);
+						component.Avatar.texture = Player.GetAvatar(pl.PlayerNativeId);
 					}
 					else
 					{
@@ -422,7 +422,7 @@ namespace ZeroGravity.UI
 					{
 						AddToCrew(pl);
 					});
-					AvailablePlayersForInvite.Add(pl.PlayerID, component);
+					AvailablePlayersForInvite.Add(pl.PlayerNativeId, component);
 				}
 			}
 		}

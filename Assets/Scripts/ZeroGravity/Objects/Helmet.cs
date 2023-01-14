@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -210,7 +209,7 @@ namespace ZeroGravity.Objects
 					base.transform.localPosition = Vector3.zero;
 					base.transform.localRotation = Quaternion.identity;
 					ToggleVisor(IsVisorActive, false, true);
-					Client.LogCustomEvent("equip_item", new Dictionary<string, object> { { base.TypeName, base.Tier } });
+
 					if (HudUI.CurrentHelmet == this)
 					{
 						HudUI.gameObject.SetActive(true);
@@ -226,7 +225,7 @@ namespace ZeroGravity.Objects
 						Jetpack = null;
 					}
 					myPlayer.FpsController.HelmetGlassEffect.Raise();
-					Client.LogCustomEvent("unequip_item", new Dictionary<string, object> { { base.TypeName, base.Tier } });
+
 					if (HudUI.CurrentHelmet == this)
 					{
 						HudUI.gameObject.SetActive(false);
@@ -265,11 +264,7 @@ namespace ZeroGravity.Objects
 					return;
 				}
 				IsVisorActive = isActive.Value;
-				Client.LogCustomEvent("helmet_visor", new Dictionary<string, object> { 
-				{
-					"state",
-					(!IsVisorActive) ? "up" : "down"
-				} });
+
 				if (DynamicObj.Parent is MyPlayer)
 				{
 					MyPlayer myPlayer = DynamicObj.Parent as MyPlayer;
