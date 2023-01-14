@@ -9,7 +9,9 @@ namespace ZeroGravity.Objects
 	{
 		public string PlayerName;
 
-		public string SteamId;
+		public string NativeId;
+
+		public string PlayerId;
 
 		private BaseSceneTrigger _LockedToTrigger;
 
@@ -89,6 +91,7 @@ namespace ZeroGravity.Objects
 
 		public static Texture GetAvatar(string ProviderId)
 		{
+			Dbg.Log(ProviderId);
 			return ProviderManager.MainProvider.GetAvatar(ProviderId);
 		}
 	}

@@ -155,11 +155,6 @@ namespace ZeroGravity.LevelDesign
 			return serverCollisionData;
 		}
 
-		public static SecuritySystem GetSecuritySystem(GameObject sceneRoot)
-		{
-			return null;
-		}
-
 		public static void FillSubSystems(GameObject sceneRoot, Dictionary<int, SubSystem> subSystemsDict, List<SubSystemDetails> subSystemsDetails)
 		{
 			SubSystem[] componentsInChildren = sceneRoot.GetComponentsInChildren<SubSystem>();

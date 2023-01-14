@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.LevelDesign;
@@ -11,7 +12,7 @@ namespace ZeroGravity.UI
 {
 	public class PowerSupply : AbstractPanelUI
 	{
-		[Header("POWER SUPPLY UI")]
+		[Title("POWER SUPPLY UI")]
 		public GameObject MainScreen;
 
 		public GameObject InfoScreen;

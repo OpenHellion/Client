@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;
@@ -23,7 +23,7 @@ namespace ZeroGravity.ShipComponents
 			}
 		};
 
-		[Header("Sensivity")]
+		[Title("Sensivity")]
 		public double ActiveScanSensitivity = 3600.0;
 
 		public double ActiveScanFuzzySensitivity = 7200.0;
@@ -44,21 +44,9 @@ namespace ZeroGravity.ShipComponents
 
 		private MachineryPart SignalAmplifier;
 
-		public override SubSystemType Type
-		{
-			get
-			{
-				return SubSystemType.Radar;
-			}
-		}
+		public override SubSystemType Type => SubSystemType.Radar;
 
-		public override ResourceRequirement[] ResourceRequirements
-		{
-			get
-			{
-				return _ResourceRequirements;
-			}
-		}
+		public override ResourceRequirement[] ResourceRequirements => _ResourceRequirements;
 
 		public float SignalAmplification
 		{
@@ -165,26 +153,22 @@ namespace ZeroGravity.ShipComponents
 			bool flag = magnitude < num2;
 			bool flag2 = magnitude < num3;
 			SpaceObjectVessel spaceObjectVessel = target as SpaceObjectVessel;
-			if (target.RadarVisibilityType != RadarVisibilityType.Warp)
+			if (target.RadarVisibilityType != RadarVisibilityType.Warp && target.Maneuver?.Type == ManeuverType.Warp)
 			{
-				ManeuverData maneuver = target.Maneuver;
-				if (((maneuver != null) ? new ManeuverType?(maneuver.Type) : null) == ManeuverType.Warp)
+				target.RadarVisibilityType = RadarVisibilityType.Warp;
+				if (spaceObjectVessel != null)
 				{
-					target.RadarVisibilityType = RadarVisibilityType.Warp;
-					if (spaceObjectVessel != null)
-					{
-						spaceObjectVessel.ResetLastKnownMapOrbit();
-					}
-					if (flag2 && !flag)
-					{
-						Client.Instance.Map.InitializeMapObjectStartWarpFar(target.Position, (magnitude - num2) / (num3 - num2));
-					}
-					else if (flag)
-					{
-						Client.Instance.Map.InitializeMapObjectStartWarpNear(target.Position, Quaternion.LookRotation(target.Forward, target.Up));
-					}
-					return true;
+					spaceObjectVessel.ResetLastKnownMapOrbit();
 				}
+				if (flag2 && !flag)
+				{
+					Client.Instance.Map.InitializeMapObjectStartWarpFar(target.Position, (magnitude - num2) / (num3 - num2));
+				}
+				else if (flag)
+				{
+					Client.Instance.Map.InitializeMapObjectStartWarpNear(target.Position, Quaternion.LookRotation(target.Forward, target.Up));
+				}
+				return true;
 			}
 			if (target.RadarVisibilityType == RadarVisibilityType.Warp && target.Maneuver == null && flag2 && !flag)
 			{
@@ -214,14 +198,14 @@ namespace ZeroGravity.ShipComponents
 				if (target.RadarVisibilityType != RadarVisibilityType.Visible && flag)
 				{
 					target.RadarVisibilityType = RadarVisibilityType.Visible;
-					if ((((object)spaceObjectVessel != null) ? spaceObjectVessel.VesselData : null) != null && spaceObjectVessel.VesselData.SpawnRuleID != 0)
+					if (spaceObjectVessel?.VesselData != null && spaceObjectVessel.VesselData.SpawnRuleID != 0)
 					{
 						Client.Instance.Map.UnknownVisibilityOrbits.Remove(spaceObjectVessel.VesselData.SpawnRuleID);
 						spaceObjectVessel.ResetLastKnownMapOrbit();
 					}
 					return true;
 				}
-				if (target.RadarVisibilityType == RadarVisibilityType.Unknown && (((object)spaceObjectVessel != null) ? spaceObjectVessel.LastKnownMapOrbit : null) != null && (spaceObjectVessel.LastKnownMapOrbit.Position - base.ParentVessel.Position).Magnitude < num2)
+				if (target.RadarVisibilityType == RadarVisibilityType.Unknown && spaceObjectVessel?.LastKnownMapOrbit != null && (spaceObjectVessel.LastKnownMapOrbit.Position - base.ParentVessel.Position).Magnitude < num2)
 				{
 					target.RadarVisibilityType = RadarVisibilityType.Invisible;
 					if (spaceObjectVessel != null)
@@ -230,8 +214,7 @@ namespace ZeroGravity.ShipComponents
 					}
 					return true;
 				}
-				OrbitParameters value;
-				if (target.RadarVisibilityType == RadarVisibilityType.Invisible && (((object)spaceObjectVessel != null) ? spaceObjectVessel.VesselData : null) != null && spaceObjectVessel.VesselData.SpawnRuleID != 0 && Client.Instance.Map.UnknownVisibilityOrbits.TryGetValue(spaceObjectVessel.VesselData.SpawnRuleID, out value))
+				if (target.RadarVisibilityType == RadarVisibilityType.Invisible && spaceObjectVessel?.VesselData != null && spaceObjectVessel.VesselData.SpawnRuleID != 0 && Client.Instance.Map.UnknownVisibilityOrbits.TryGetValue(spaceObjectVessel.VesselData.SpawnRuleID, out var value))
 				{
 					target.RadarVisibilityType = RadarVisibilityType.Unknown;
 					spaceObjectVessel.LastKnownMapOrbit = value;
@@ -283,7 +266,7 @@ namespace ZeroGravity.ShipComponents
 				return;
 			}
 			bool flag = false;
-			foreach (ArtificialBody item in Client.Instance.SolarSystem.ArtificialBodies.OrderBy(_003CActiveScan_003Em__0).Reverse())
+			foreach (ArtificialBody item in Client.Instance.SolarSystem.ArtificialBodies.OrderBy((ArtificialBody m) => (m.Position - base.ParentVessel.Position).SqrMagnitude).Reverse())
 			{
 				if (!(item is Pivot) && (!(item is SpaceObjectVessel) || (item as SpaceObjectVessel).IsMainVessel) && ActiveScanObject(item, angle, scanDirection))
 				{
@@ -363,12 +346,6 @@ namespace ZeroGravity.ShipComponents
 			{
 				SignalAmplifier = null;
 			}
-		}
-
-		[CompilerGenerated]
-		private double _003CActiveScan_003Em__0(ArtificialBody m)
-		{
-			return (m.Position - base.ParentVessel.Position).SqrMagnitude;
 		}
 	}
 }

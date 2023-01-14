@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Math;
@@ -13,7 +13,7 @@ namespace ZeroGravity.UI
 {
 	public class AirlockUI : MonoBehaviour
 	{
-		[Header("AIRLOCK UI")]
+		[Title("AIRLOCK UI")]
 		public AirLockControls MyAirlock;
 
 		public GameObject MainScreen;
@@ -71,9 +71,6 @@ namespace ZeroGravity.UI
 		private int forceOpen;
 
 		private float currentPressure;
-
-		[CompilerGenerated]
-		private static Func<ResourceContainer, bool> _003C_003Ef__am_0024cache0;
 
 		private void Start()
 		{
@@ -164,8 +161,8 @@ namespace ZeroGravity.UI
 			{
 				if (!MyAirlock.InnerDoor.IsSafeToOpen())
 				{
-					AlertBox.SetActive(true);
-					MainScreen.SetActive(false);
+					AlertBox.SetActive(value: true);
+					MainScreen.SetActive(value: false);
 					forceOpen = 1;
 				}
 				else
@@ -185,8 +182,8 @@ namespace ZeroGravity.UI
 			{
 				if (!MyAirlock.OuterDoor.IsSafeToOpen())
 				{
-					AlertBox.SetActive(true);
-					MainScreen.SetActive(false);
+					AlertBox.SetActive(value: true);
+					MainScreen.SetActive(value: false);
 					forceOpen = 2;
 				}
 				else
@@ -210,15 +207,15 @@ namespace ZeroGravity.UI
 			{
 				MyAirlock.OuterDoorExecuter.ChangeState(MyAirlock.OuterDoorForceOpen);
 			}
-			AlertBox.SetActive(false);
-			MainScreen.SetActive(true);
+			AlertBox.SetActive(value: false);
+			MainScreen.SetActive(value: true);
 			forceOpen = 0;
 		}
 
 		public void CancelWarningDoor()
 		{
-			AlertBox.SetActive(false);
-			MainScreen.SetActive(true);
+			AlertBox.SetActive(value: false);
+			MainScreen.SetActive(value: true);
 		}
 
 		public void StopActions()
@@ -267,15 +264,15 @@ namespace ZeroGravity.UI
 			currentPressure = MyAirlock.Room.AirPressure;
 			PressureValue.text = FormatHelper.FormatValue(currentPressure);
 			AirlockPressureFiller.fillAmount = currentPressure;
-			AlertBox.SetActive(false);
-			MainScreen.SetActive(true);
+			AlertBox.SetActive(value: false);
+			MainScreen.SetActive(value: true);
 			Unauthorized.Activate(!MyAirlock.MySceneTrigger.CheckAuthorization());
-			base.gameObject.SetActive(true);
+			base.gameObject.SetActive(value: true);
 		}
 
 		public void OnDetach()
 		{
-			base.gameObject.SetActive(false);
+			base.gameObject.SetActive(value: false);
 		}
 
 		public void GetVesselAndAirTanks()
@@ -290,12 +287,9 @@ namespace ZeroGravity.UI
 			}
 			foreach (SpaceObjectVessel allVessel in AllVessels)
 			{
-				ResourceContainer[] componentsInChildren = allVessel.GeometryRoot.GetComponentsInChildren<ResourceContainer>();
-				if (_003C_003Ef__am_0024cache0 == null)
-				{
-					_003C_003Ef__am_0024cache0 = _003CGetVesselAndAirTanks_003Em__0;
-				}
-				foreach (ResourceContainer item in componentsInChildren.Where(_003C_003Ef__am_0024cache0))
+				foreach (ResourceContainer item in from m in allVessel.GeometryRoot.GetComponentsInChildren<ResourceContainer>()
+					where m.DistributionSystemType == DistributionSystemType.Air
+					select m)
 				{
 					AirTanks.Add(item);
 				}
@@ -305,12 +299,6 @@ namespace ZeroGravity.UI
 		public void ExitButton()
 		{
 			MyPlayer.Instance.LockedToTrigger.CancelInteract(MyPlayer.Instance);
-		}
-
-		[CompilerGenerated]
-		private static bool _003CGetVesselAndAirTanks_003Em__0(ResourceContainer m)
-		{
-			return m.DistributionSystemType == DistributionSystemType.Air;
 		}
 	}
 }

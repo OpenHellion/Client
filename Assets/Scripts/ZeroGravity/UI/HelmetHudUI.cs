@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -11,36 +11,7 @@ namespace ZeroGravity.UI
 {
 	public class HelmetHudUI : MonoBehaviour
 	{
-		[CompilerGenerated]
-		private sealed class _003CUpdateQuickSlots_003Ec__AnonStorey0
-		{
-			internal List<ItemType> gre;
-
-			internal List<ItemType> con;
-
-			internal bool _003C_003Em__0(InventorySlot m)
-			{
-				return m.Item != null && gre.Contains(m.Item.Type);
-			}
-
-			internal bool _003C_003Em__1(InventorySlot m)
-			{
-				return m.Item != null && con.Contains(m.Item.Type);
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CWarningsUpdate_003Ec__AnonStorey1
-		{
-			internal SceneTriggerRoom currentRoom;
-
-			internal bool _003C_003Em__0(SceneTriggerRoom m)
-			{
-				return m.CompoundRoomID == currentRoom.CompoundRoomID;
-			}
-		}
-
-		[Header("Main")]
+		[Title("Main")]
 		public GameObject HelmetRoot;
 
 		public GameObject Active;
@@ -51,7 +22,7 @@ namespace ZeroGravity.UI
 
 		public HelmetOverlayModel HelmetOverlayModel;
 
-		[Header("Quick switch")]
+		[Title("Quick switch")]
 		public GameObject QuickSlotsHolder;
 
 		public GameObject PrimarySlot;
@@ -62,7 +33,7 @@ namespace ZeroGravity.UI
 
 		public GameObject ConsumableSlot;
 
-		[Header("General info")]
+		[Title("General info")]
 		public Text PressureValue;
 
 		public Text HealthValue;
@@ -87,7 +58,7 @@ namespace ZeroGravity.UI
 
 		public Image FireMod;
 
-		[Header("Battery")]
+		[Title("Battery")]
 		public GameObject BatteryMissing;
 
 		public GameObject BatteryDetails;
@@ -96,7 +67,7 @@ namespace ZeroGravity.UI
 
 		public GameObject LightsOn;
 
-		[Header("Jetpack")]
+		[Title("Jetpack")]
 		public GameObject JetpackHud;
 
 		public GameObject NoJetpack;
@@ -123,7 +94,7 @@ namespace ZeroGravity.UI
 
 		public GameObject ZeroGravityTips;
 
-		[Header("Warnings")]
+		[Title("Warnings")]
 		public GameObject WarningsHolder;
 
 		public GameObject DebrisWarning;
@@ -142,21 +113,15 @@ namespace ZeroGravity.UI
 
 		public GameObject Gravity;
 
-		[Header("Radar")]
+		[Title("Radar")]
 		public RadarUI Radar;
 
-		[Header("Targeting")]
+		[Title("Targeting")]
 		public GameObject TargetInfo;
 
 		public Text TargetInfoName;
 
-		public Helmet CurrentHelmet
-		{
-			get
-			{
-				return (!(MyPlayer.Instance != null)) ? null : MyPlayer.Instance.CurrentHelmet;
-			}
-		}
+		public Helmet CurrentHelmet => (!(MyPlayer.Instance != null)) ? null : MyPlayer.Instance.CurrentHelmet;
 
 		private float currentPressure
 		{
@@ -202,13 +167,7 @@ namespace ZeroGravity.UI
 			}
 		}
 
-		public bool UiActive
-		{
-			get
-			{
-				return !MyPlayer.Instance.IsLockedToTrigger;
-			}
-		}
+		public bool UiActive => !MyPlayer.Instance.IsLockedToTrigger;
 
 		private void Start()
 		{
@@ -233,16 +192,16 @@ namespace ZeroGravity.UI
 		{
 			if (CurrentHelmet == null)
 			{
-				Active.Activate(false);
-				JetpackInfo.Activate(false);
-				HelmetRoot.Activate(false);
+				Active.Activate(value: false);
+				JetpackInfo.Activate(value: false);
+				HelmetRoot.Activate(value: false);
 				if (MyPlayer.Instance.FpsController.StarDustParticle != null && MyPlayer.Instance.FpsController.StarDustParticle.gameObject.activeInHierarchy)
 				{
 					TurnOffStardust();
 				}
 				return;
 			}
-			HelmetRoot.Activate(true);
+			HelmetRoot.Activate(value: true);
 			Active.Activate(CurrentHelmet.IsVisorActive && UiActive);
 			if (HelmetOverlayModel.gameObject.activeSelf)
 			{
@@ -251,8 +210,8 @@ namespace ZeroGravity.UI
 			}
 			if (CurrentHelmet.Battery != null)
 			{
-				BatteryMissing.Activate(false);
-				BatteryDetails.Activate(true);
+				BatteryMissing.Activate(value: false);
+				BatteryDetails.Activate(value: true);
 				PowerFiller.fillAmount = CurrentHelmet.BatteryPower;
 				if (CurrentHelmet.BatteryPower < 0.7f && CurrentHelmet.BatteryPower > 0.3f)
 				{
@@ -269,25 +228,25 @@ namespace ZeroGravity.UI
 				BatteryWarning.Activate(CurrentHelmet.BatteryPower < 0.21f);
 				if (CurrentHelmet.BatteryPower > 0f)
 				{
-					GeneralInfo.Activate(true);
+					GeneralInfo.Activate(value: true);
 					HandsUI();
 					JetpackDetailsUI();
 					WarningsHolder.Activate(BatteryWarning.activeSelf || Breach.activeSelf || Fire.activeSelf || Gravity.activeSelf || DebrisWarning.activeSelf || OxygenWarning.activeSelf || RcsWarning.activeSelf || RadiationWarning.activeSelf);
 				}
 				else
 				{
-					GeneralInfo.Activate(false);
-					JetpackInfo.Activate(false);
-					WarningsHolder.Activate(false);
+					GeneralInfo.Activate(value: false);
+					JetpackInfo.Activate(value: false);
+					WarningsHolder.Activate(value: false);
 				}
 			}
 			else
 			{
-				GeneralInfo.Activate(false);
-				JetpackInfo.Activate(false);
-				BatteryDetails.Activate(false);
-				WarningsHolder.Activate(false);
-				BatteryMissing.Activate(true);
+				GeneralInfo.Activate(value: false);
+				JetpackInfo.Activate(value: false);
+				BatteryDetails.Activate(value: false);
+				WarningsHolder.Activate(value: false);
+				BatteryMissing.Activate(value: true);
 			}
 		}
 
@@ -334,15 +293,15 @@ namespace ZeroGravity.UI
 
 		private void JetpackDetailsUI()
 		{
-			JetpackInfo.Activate(true);
+			JetpackInfo.Activate(value: true);
 			if (MyPlayer.Instance.FpsController.CurrentJetpack == null)
 			{
-				NoJetpack.Activate(true);
-				JetpackDetails.Activate(false);
+				NoJetpack.Activate(value: true);
+				JetpackDetails.Activate(value: false);
 				return;
 			}
-			NoJetpack.Activate(false);
-			JetpackDetails.Activate(true);
+			NoJetpack.Activate(value: false);
+			JetpackDetails.Activate(value: true);
 			JetpackHud.Activate(Radar.CanRadarWork && CurrentHelmet.IsVisorActive && UiActive);
 			Radar.gameObject.Activate(Radar.CanRadarWork && CurrentHelmet.IsVisorActive);
 			ToggleTargetingInfo.gameObject.Activate(Radar.CanRadarWork && CurrentHelmet.IsVisorActive);
@@ -352,7 +311,7 @@ namespace ZeroGravity.UI
 			}
 			else if (TargetInfo.activeInHierarchy)
 			{
-				TargetInfo.SetActive(false);
+				TargetInfo.SetActive(value: false);
 			}
 			if (MyPlayer.Instance.FpsController.IsJetpackOn)
 			{
@@ -360,7 +319,7 @@ namespace ZeroGravity.UI
 			}
 			else if (StabilityOn.activeInHierarchy)
 			{
-				StabilityOn.Activate(false);
+				StabilityOn.Activate(value: false);
 			}
 			if (MyPlayer.Instance.CurrentRoomTrigger != null && MyPlayer.Instance.CurrentRoomTrigger.UseGravity && MyPlayer.Instance.CurrentRoomTrigger.GravityForce != Vector3.zero)
 			{
@@ -384,7 +343,7 @@ namespace ZeroGravity.UI
 			}
 			else
 			{
-				ZeroGravityTips.Activate(false);
+				ZeroGravityTips.Activate(value: false);
 			}
 		}
 
@@ -398,14 +357,14 @@ namespace ZeroGravity.UI
 				RectTransformUtility.ScreenPointToLocalPointInRectangle(TargetInfo.transform.parent.GetComponent<RectTransform>(), vector, Client.Instance.CanvasManager.Canvas.worldCamera, out localPoint);
 				TargetInfo.transform.localPosition = localPoint;
 				TargetInfo.transform.rotation = Quaternion.identity;
-				TargetInfo.SetActive(true);
+				TargetInfo.SetActive(value: true);
 				TargetInfoName.text = target.PlayerName;
 			}
 		}
 
 		private void TurnOffStardust()
 		{
-			MyPlayer.Instance.FpsController.StarDustParticle.gameObject.SetActive(false);
+			MyPlayer.Instance.FpsController.StarDustParticle.gameObject.SetActive(value: false);
 			MyPlayer.Instance.FpsController.StarDustParticle.Stop();
 		}
 
@@ -414,11 +373,11 @@ namespace ZeroGravity.UI
 			if (CurrentItem != null && CurrentItem is Weapon && (CurrentItem as Weapon).Mods.Count > 0)
 			{
 				FireMod.sprite = Client.Instance.SpriteManager.GetSprite((CurrentItem as Weapon).CurrentWeaponMod.ModsFireMode);
-				WeaponInfo.SetActive(true);
+				WeaponInfo.SetActive(value: true);
 			}
 			else
 			{
-				WeaponInfo.SetActive(false);
+				WeaponInfo.SetActive(value: false);
 			}
 		}
 
@@ -441,7 +400,7 @@ namespace ZeroGravity.UI
 						ItemInfo.color = Colors.White;
 					}
 					ItemInfo.text = MyPlayer.Instance.Inventory.ItemInHands.Quantity.ToString("0");
-					ItemQuantity.Activate(true);
+					ItemQuantity.Activate(value: true);
 				}
 				else if (MyPlayer.Instance.Inventory.ItemInHands is DisposableHackingTool)
 				{
@@ -449,11 +408,11 @@ namespace ZeroGravity.UI
 					QuantityFiller.fillAmount = fillAmount;
 					ItemInfo.color = Colors.White;
 					ItemInfo.text = MyPlayer.Instance.Inventory.ItemInHands.Health.ToString("0");
-					ItemQuantity.Activate(true);
+					ItemQuantity.Activate(value: true);
 				}
 				else
 				{
-					ItemQuantity.Activate(false);
+					ItemQuantity.Activate(value: false);
 				}
 				CheckFireMod();
 			}
@@ -461,8 +420,8 @@ namespace ZeroGravity.UI
 			{
 				HandsSlotIcon.color = Colors.WhiteHalfTransparent;
 				HandsSlotIcon.sprite = HandsSlotSprite;
-				ItemQuantity.Activate(false);
-				WeaponInfo.Activate(false);
+				ItemQuantity.Activate(value: false);
+				WeaponInfo.Activate(value: false);
 			}
 		}
 
@@ -470,65 +429,61 @@ namespace ZeroGravity.UI
 		{
 			if (MyPlayer.Instance.CurrentOutfit != null)
 			{
-				_003CUpdateQuickSlots_003Ec__AnonStorey0 _003CUpdateQuickSlots_003Ec__AnonStorey = new _003CUpdateQuickSlots_003Ec__AnonStorey0();
-				QuickSlotsHolder.Activate(true);
-				_003CUpdateQuickSlots_003Ec__AnonStorey.gre = new List<ItemType>
+				QuickSlotsHolder.Activate(value: true);
+				List<ItemType> gre = new List<ItemType>
 				{
 					ItemType.APGrenade,
 					ItemType.EMPGrenade
 				};
-				_003CUpdateQuickSlots_003Ec__AnonStorey.con = new List<ItemType>
+				List<ItemType> con = new List<ItemType>
 				{
 					ItemType.AltairMedpackBig,
 					ItemType.AltairMedpackSmall,
 					ItemType.AltairResourceContainer
 				};
-				GameObject primarySlot = PrimarySlot;
-				InventorySlot inventorySlot = MyPlayer.Instance.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Primary).Values.FirstOrDefault();
-				primarySlot.SetActive(((inventorySlot != null) ? inventorySlot.Item : null) != null);
-				GameObject secondarySlot = SecondarySlot;
-				InventorySlot inventorySlot2 = MyPlayer.Instance.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Secondary).Values.FirstOrDefault();
-				secondarySlot.SetActive(((inventorySlot2 != null) ? inventorySlot2.Item : null) != null);
-				GranadeSlot.SetActive(MyPlayer.Instance.CurrentOutfit.GetAllSlots().Values.FirstOrDefault(_003CUpdateQuickSlots_003Ec__AnonStorey._003C_003Em__0) != null);
-				ConsumableSlot.SetActive(MyPlayer.Instance.CurrentOutfit.GetAllSlots().Values.FirstOrDefault(_003CUpdateQuickSlots_003Ec__AnonStorey._003C_003Em__1) != null);
+				PrimarySlot.SetActive(MyPlayer.Instance.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Primary).Values.FirstOrDefault()?.Item != null);
+				SecondarySlot.SetActive(MyPlayer.Instance.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Secondary).Values.FirstOrDefault()?.Item != null);
+				GranadeSlot.SetActive(MyPlayer.Instance.CurrentOutfit.GetAllSlots().Values.FirstOrDefault((InventorySlot m) => m.Item != null && gre.Contains(m.Item.Type)) != null);
+				ConsumableSlot.SetActive(MyPlayer.Instance.CurrentOutfit.GetAllSlots().Values.FirstOrDefault((InventorySlot m) => m.Item != null && con.Contains(m.Item.Type)) != null);
 			}
 			else
 			{
-				QuickSlotsHolder.Activate(false);
+				QuickSlotsHolder.Activate(value: false);
 			}
 		}
 
 		public void WarningsUpdate()
 		{
-			_003CWarningsUpdate_003Ec__AnonStorey1 _003CWarningsUpdate_003Ec__AnonStorey = new _003CWarningsUpdate_003Ec__AnonStorey1();
 			if (Breach.activeInHierarchy)
 			{
-				Breach.SetActive(false);
+				Breach.SetActive(value: false);
 			}
 			if (Fire.activeInHierarchy)
 			{
-				Fire.SetActive(false);
+				Fire.SetActive(value: false);
 			}
 			if (Gravity.activeInHierarchy)
 			{
-				Gravity.SetActive(false);
+				Gravity.SetActive(value: false);
 			}
-			_003CWarningsUpdate_003Ec__AnonStorey.currentRoom = MyPlayer.Instance.CurrentRoomTrigger;
-			if (_003CWarningsUpdate_003Ec__AnonStorey.currentRoom != null)
+			SceneTriggerRoom currentRoom = MyPlayer.Instance.CurrentRoomTrigger;
+			if (currentRoom != null)
 			{
-				foreach (SceneTriggerRoom item in _003CWarningsUpdate_003Ec__AnonStorey.currentRoom.ParentVessel.MainVessel.GetComponentsInChildren<SceneTriggerRoom>().Where(_003CWarningsUpdate_003Ec__AnonStorey._003C_003Em__0))
+				foreach (SceneTriggerRoom item in from m in currentRoom.ParentVessel.MainVessel.GetComponentsInChildren<SceneTriggerRoom>()
+					where m.CompoundRoomID == currentRoom.CompoundRoomID
+					select m)
 				{
 					if (item.Breach)
 					{
-						Breach.SetActive(true);
+						Breach.SetActive(value: true);
 					}
 					if (item.Fire)
 					{
-						Fire.SetActive(true);
+						Fire.SetActive(value: true);
 					}
 					if (item.GravityMalfunction)
 					{
-						Gravity.SetActive(true);
+						Gravity.SetActive(value: true);
 					}
 				}
 			}

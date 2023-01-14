@@ -1,3 +1,4 @@
+using TriInspector;
 using UnityEngine;
 
 public abstract class LightOverride : MonoBehaviour
@@ -11,7 +12,7 @@ public abstract class LightOverride : MonoBehaviour
 		Directional = 4
 	}
 
-	[Header("Overrides")]
+	[Title("Overrides")]
 	public float m_IntensityMult = 1f;
 
 	[MinValue(0f)]

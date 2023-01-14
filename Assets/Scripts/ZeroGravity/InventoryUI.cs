@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.LevelDesign;
@@ -12,25 +12,6 @@ namespace ZeroGravity
 {
 	public class InventoryUI : MonoBehaviour
 	{
-		[CompilerGenerated]
-		private sealed class _003CLootAll_003Ec__AnonStorey1
-		{
-			internal List<InventorySlot> skipSlots;
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CLootAll_003Ec__AnonStorey0
-		{
-			internal AbstractSlotUI slot;
-
-			internal _003CLootAll_003Ec__AnonStorey1 _003C_003Ef__ref_00241;
-
-			internal bool _003C_003Em__0(InventorySlot m)
-			{
-				return m.CanFitItem(slot.Item) && m.Item == null && !_003C_003Ef__ref_00241.skipSlots.Contains(m);
-			}
-		}
-
 		public GameObject NoSuit;
 
 		public GameObject ItemsHolder;
@@ -51,7 +32,7 @@ namespace ZeroGravity
 
 		public InventoryGroupUI SlotGroup;
 
-		[Header("Slots")]
+		[Title("Slots")]
 		public Transform GroupsHolder;
 
 		public InventoryGroupUI GroupPrefab;
@@ -62,7 +43,7 @@ namespace ZeroGravity
 
 		public AttachPointSlotUI AttachPointPrefab;
 
-		[Header("PlayerInfo")]
+		[Title("PlayerInfo")]
 		public Text PlayerName;
 
 		public Image CharacterPreview;
@@ -75,7 +56,7 @@ namespace ZeroGravity
 
 		public Text HealthValue;
 
-		[Header("CharacterSlots")]
+		[Title("CharacterSlots")]
 		public Transform HandSlot;
 
 		public Transform PrimarySlot;
@@ -88,7 +69,7 @@ namespace ZeroGravity
 
 		public Transform JetpackSlot;
 
-		[Header("SelectedItem")]
+		[Title("SelectedItem")]
 		public Item SelectedItem;
 
 		public GameObject SelectedItemHolder;
@@ -103,21 +84,21 @@ namespace ZeroGravity
 
 		public Transform ItemSlotsHolder;
 
-		[Header("Tooltip")]
+		[Title("Tooltip")]
 		public AbstractSlotUI HoveredSlot;
 
 		public TooltipInventory ToolTip;
 
 		public bool CanShowTooltip;
 
-		[Header("Dragging")]
+		[Title("Dragging")]
 		public bool IsDragging;
 
 		public Item DraggingItem;
 
 		public GameObject DraggingObject;
 
-		[Header("Other")]
+		[Title("Other")]
 		public GameObject OtherHolder;
 
 		public Transform OtherGroupsHolder;
@@ -128,28 +109,10 @@ namespace ZeroGravity
 
 		private float lootRadius = 1.65f;
 
-		[Header("ItemSlots")]
+		[Title("ItemSlots")]
 		public bool ShowItemSlots;
 
-		[CompilerGenerated]
-		private static Func<InventorySlot, InventorySlot.Group> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<BaseSceneAttachPoint, Localization.StandardInteractionTip> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Func<AbstractSlotUI, bool> _003C_003Ef__am_0024cache2;
-
-		[CompilerGenerated]
-		private static Func<InventorySlot, bool> _003C_003Ef__am_0024cache3;
-
-		public Inventory Inventory
-		{
-			get
-			{
-				return MyPlayer.Instance.Inventory;
-			}
-		}
+		public Inventory Inventory => MyPlayer.Instance.Inventory;
 
 		private void Start()
 		{
@@ -164,11 +127,11 @@ namespace ZeroGravity
 			}
 			if (OtherHolder.activeInHierarchy && LootSlots.Count <= 0 && ApSlots.Count <= 0 && ContainerItemSlots.Count <= 0)
 			{
-				OtherHolder.SetActive(false);
+				OtherHolder.SetActive(value: false);
 			}
 			else if (!OtherHolder.activeInHierarchy && (LootSlots.Count > 0 || (ApSlots.Count > 0 && ContainerItemSlots.Count > 0)))
 			{
-				OtherHolder.SetActive(true);
+				OtherHolder.SetActive(value: true);
 			}
 			if (ApSlots.Count > 0)
 			{
@@ -204,7 +167,7 @@ namespace ZeroGravity
 			LootSlots.Clear();
 			ApSlots.Clear();
 			ContainerItemSlots.Clear();
-			OtherHolder.SetActive(false);
+			OtherHolder.SetActive(value: false);
 		}
 
 		public void UpdateUI()
@@ -214,7 +177,7 @@ namespace ZeroGravity
 			DeselectItem();
 			HideTooltip();
 			DraggingItem = null;
-			DraggingObject.SetActive(false);
+			DraggingObject.SetActive(value: false);
 			IsDragging = false;
 		}
 
@@ -228,8 +191,8 @@ namespace ZeroGravity
 		{
 			SelectedItem = itm;
 			SelectedItemData.CurrentItem = itm;
-			SelectedItemData.FillData(itm, true);
-			SelectedItemHolder.Activate(true);
+			SelectedItemData.FillData(itm, recycle: true);
+			SelectedItemHolder.Activate(value: true);
 			RemoveOutfitButton.SetActive(SelectedItem == SuitSlot.GetComponentInChildren<InventorySlotUI>().Item);
 			RemoveOutfitButton.GetComponent<Button>().interactable = itm is Outfit && (itm as Outfit).CanRemoveOutfit();
 			DropButton.SetActive(SelectedItem != SuitSlot.GetComponentInChildren<InventorySlotUI>().Item);
@@ -255,7 +218,7 @@ namespace ZeroGravity
 			SelectedItem = null;
 			ShowItemSlots = false;
 			CheckItemSlots();
-			SelectedItemHolder.SetActive(false);
+			SelectedItemHolder.SetActive(value: false);
 			RefreshSlots();
 		}
 
@@ -263,13 +226,13 @@ namespace ZeroGravity
 		{
 			if (!IsDragging && CanShowTooltip && !(HoveredSlot == null) && !(HoveredSlot.Item == null))
 			{
-				ToolTip.gameObject.SetActive(false);
+				ToolTip.gameObject.SetActive(value: false);
 				ToolTip.SetTooltip(HoveredSlot.Item);
 				float x = ((HoveredSlot.GetComponent<RectTransform>().position.x > 0f) ? 1 : 0);
 				float y = ((HoveredSlot.GetComponent<RectTransform>().position.y > 0f) ? 1 : 0);
 				ToolTip.GetComponent<RectTransform>().pivot = new Vector2(x, y);
 				ToolTip.GetComponent<RectTransform>().position = HoveredSlot.GetComponent<RectTransform>().position;
-				ToolTip.gameObject.SetActive(true);
+				ToolTip.gameObject.SetActive(value: true);
 			}
 		}
 
@@ -277,7 +240,7 @@ namespace ZeroGravity
 		{
 			CanShowTooltip = false;
 			HoveredSlot = null;
-			ToolTip.gameObject.SetActive(false);
+			ToolTip.gameObject.SetActive(value: false);
 		}
 
 		public void RemoveOutfit()
@@ -302,11 +265,11 @@ namespace ZeroGravity
 				{
 					if (SelectedItem != null && allSlot.Item == SelectedItem)
 					{
-						allSlot.Selected.SetActive(true);
+						allSlot.Selected.SetActive(value: true);
 					}
 					else
 					{
-						allSlot.Selected.SetActive(false);
+						allSlot.Selected.SetActive(value: false);
 					}
 				}
 			}
@@ -317,12 +280,7 @@ namespace ZeroGravity
 			base.transform.DestroyAll<InventorySlotUI>();
 			base.transform.DestroyAll<InventoryGroupUI>();
 			AllSlots.Clear();
-			Dictionary<short, InventorySlot>.ValueCollection values = Inventory.GetAllSlots().Values;
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CInitializeSlots_003Em__0;
-			}
-			foreach (InventorySlot.Group item in values.Select(_003C_003Ef__am_0024cache0).Distinct())
+			foreach (InventorySlot.Group item in Inventory.GetAllSlots().Values.Select((InventorySlot m) => m.SlotGroup).Distinct())
 			{
 				switch (item)
 				{
@@ -345,7 +303,7 @@ namespace ZeroGravity
 					CreateInventorySlot(Inventory.GetSlotsByGroup(item).First().Value, SecondarySlot);
 					continue;
 				}
-				InventoryGroupUI inventoryGroupUI = UnityEngine.Object.Instantiate(GroupPrefab, GroupsHolder);
+				InventoryGroupUI inventoryGroupUI = Instantiate(GroupPrefab, GroupsHolder);
 				inventoryGroupUI.transform.Reset();
 				inventoryGroupUI.Name.text = item.ToLocalizedString().ToUpper();
 				inventoryGroupUI.Inventory = this;
@@ -366,7 +324,7 @@ namespace ZeroGravity
 
 		private void CreateInventorySlot(InventorySlot slot, Transform holder, bool lootSlot = false)
 		{
-			GameObject gameObject = UnityEngine.Object.Instantiate(SlotPrefab.gameObject, holder);
+			GameObject gameObject = Instantiate(SlotPrefab.gameObject, holder);
 			gameObject.transform.Reset();
 			InventorySlotUI componentInChildren = gameObject.GetComponentInChildren<InventorySlotUI>();
 			componentInChildren.Draggable = slot.SlotGroup != InventorySlot.Group.Outfit || !(slot.Parent is MyPlayer);
@@ -375,8 +333,7 @@ namespace ZeroGravity
 			componentInChildren.UpdateSlot();
 			slot.UI = componentInChildren;
 			slot.UI.IsLootSlot = lootSlot;
-			Color value;
-			if (Colors.ItemSlot.TryGetValue(slot.SlotGroup, out value))
+			if (Colors.ItemSlot.TryGetValue(slot.SlotGroup, out var value))
 			{
 				slot.UI.GetComponent<Image>().color = value;
 			}
@@ -390,7 +347,7 @@ namespace ZeroGravity
 
 		private void CreateItemSlot(ItemSlot slot, Transform holder, bool looting = false, bool isContainer = false)
 		{
-			GameObject gameObject = UnityEngine.Object.Instantiate(ItemSlotPrefab.gameObject, holder);
+			GameObject gameObject = Instantiate(ItemSlotPrefab.gameObject, holder);
 			gameObject.transform.Reset();
 			ItemSlotUI componentInChildren = gameObject.GetComponentInChildren<ItemSlotUI>();
 			componentInChildren.InventoryUI = this;
@@ -416,7 +373,7 @@ namespace ZeroGravity
 
 		private void CreateAPSlot(BaseSceneAttachPoint ap, Transform holder, bool lootSlot = false)
 		{
-			GameObject gameObject = UnityEngine.Object.Instantiate(AttachPointPrefab.gameObject, holder);
+			GameObject gameObject = Instantiate(AttachPointPrefab.gameObject, holder);
 			gameObject.transform.Reset();
 			AttachPointSlotUI componentInChildren = gameObject.GetComponentInChildren<AttachPointSlotUI>();
 			componentInChildren.InventoryUI = this;
@@ -424,8 +381,7 @@ namespace ZeroGravity
 			componentInChildren.UpdateSlot();
 			ap.UI = componentInChildren;
 			ap.UI.IsLootSlot = lootSlot;
-			Color value;
-			if (Colors.AttachPointSlotColor.TryGetValue(ap.GetType(), out value))
+			if (Colors.AttachPointSlotColor.TryGetValue(ap.GetType(), out var value))
 			{
 				ap.UI.GetComponent<Image>().color = value;
 			}
@@ -442,7 +398,7 @@ namespace ZeroGravity
 			if (LootGroup != null)
 			{
 				LootGroup.SlotHolder.DestroyAll<AbstractSlotUI>();
-				UnityEngine.Object.Destroy(LootGroup.gameObject);
+				Destroy(LootGroup.gameObject);
 				LootGroup = null;
 			}
 			foreach (AbstractSlotUI lootSlot in LootSlots)
@@ -454,12 +410,12 @@ namespace ZeroGravity
 			{
 				return;
 			}
-			InventoryGroupUI inventoryGroupUI = UnityEngine.Object.Instantiate(GroupPrefab, OtherGroupsHolder.transform);
+			InventoryGroupUI inventoryGroupUI = Instantiate(GroupPrefab, OtherGroupsHolder.transform);
 			inventoryGroupUI.transform.Reset();
 			inventoryGroupUI.transform.SetAsFirstSibling();
 			inventoryGroupUI.Name.text = Localization.Loot.ToUpper();
 			inventoryGroupUI.Inventory = this;
-			inventoryGroupUI.LootAllButton.SetActive(true);
+			inventoryGroupUI.LootAllButton.SetActive(value: true);
 			LootGroup = inventoryGroupUI;
 			if (LootingTarget is ISlotContainer)
 			{
@@ -467,7 +423,7 @@ namespace ZeroGravity
 				{
 					if (!(value.Item == null))
 					{
-						CreateInventorySlot(value, LootGroup.SlotHolder, true);
+						CreateInventorySlot(value, LootGroup.SlotHolder, lootSlot: true);
 					}
 				}
 			}
@@ -475,10 +431,10 @@ namespace ZeroGravity
 			{
 				foreach (ItemSlot value2 in (LootingTarget as Item).Slots.Values)
 				{
-					CreateItemSlot(value2, LootGroup.SlotHolder, true);
+					CreateItemSlot(value2, LootGroup.SlotHolder, looting: true);
 				}
 			}
-			OtherHolder.SetActive(true);
+			OtherHolder.SetActive(value: true);
 		}
 
 		public void CheckItemSlots()
@@ -486,7 +442,7 @@ namespace ZeroGravity
 			if (SlotGroup != null)
 			{
 				SlotGroup.SlotHolder.DestroyAll<AbstractSlotUI>();
-				UnityEngine.Object.Destroy(SlotGroup.gameObject);
+				Destroy(SlotGroup.gameObject);
 				SlotGroup = null;
 			}
 			foreach (AbstractSlotUI containerItemSlot in ContainerItemSlots)
@@ -498,18 +454,18 @@ namespace ZeroGravity
 			{
 				return;
 			}
-			InventoryGroupUI inventoryGroupUI = UnityEngine.Object.Instantiate(GroupPrefab, OtherGroupsHolder.transform);
+			InventoryGroupUI inventoryGroupUI = Instantiate(GroupPrefab, OtherGroupsHolder.transform);
 			inventoryGroupUI.transform.Reset();
 			inventoryGroupUI.transform.SetAsFirstSibling();
 			inventoryGroupUI.Name.text = SelectedItem.Name;
 			inventoryGroupUI.Inventory = this;
-			inventoryGroupUI.LootAllButton.SetActive(true);
+			inventoryGroupUI.LootAllButton.SetActive(value: true);
 			SlotGroup = inventoryGroupUI;
 			foreach (ItemSlot value in SelectedItem.Slots.Values)
 			{
-				CreateItemSlot(value, SlotGroup.SlotHolder, false, true);
+				CreateItemSlot(value, SlotGroup.SlotHolder, looting: false, isContainer: true);
 			}
-			OtherHolder.SetActive(true);
+			OtherHolder.SetActive(value: true);
 		}
 
 		public void CheckProximityAttachPoints()
@@ -517,7 +473,7 @@ namespace ZeroGravity
 			if (ProximityGroup != null)
 			{
 				ProximityGroup.SlotHolder.DestroyAll<AbstractSlotUI>();
-				UnityEngine.Object.Destroy(ProximityGroup.gameObject);
+				Destroy(ProximityGroup.gameObject);
 				ProximityGroup = null;
 			}
 			foreach (AttachPointSlotUI apSlot in ApSlots)
@@ -531,26 +487,21 @@ namespace ZeroGravity
 			{
 				return;
 			}
-			InventoryGroupUI inventoryGroupUI = UnityEngine.Object.Instantiate(GroupPrefab, OtherGroupsHolder.transform);
+			InventoryGroupUI inventoryGroupUI = Instantiate(GroupPrefab, OtherGroupsHolder.transform);
 			inventoryGroupUI.transform.Reset();
 			inventoryGroupUI.transform.SetAsFirstSibling();
 			inventoryGroupUI.Name.text = Localization.ProximityLoot.ToUpper();
-			inventoryGroupUI.LootAllButton.SetActive(true);
+			inventoryGroupUI.LootAllButton.SetActive(value: true);
 			inventoryGroupUI.Inventory = this;
 			ProximityGroup = inventoryGroupUI;
-			HashSet<BaseSceneAttachPoint> aPLootingList = APLootingList;
-			if (_003C_003Ef__am_0024cache1 == null)
-			{
-				_003C_003Ef__am_0024cache1 = _003CCheckProximityAttachPoints_003Em__1;
-			}
-			foreach (BaseSceneAttachPoint item in aPLootingList.OrderBy(_003C_003Ef__am_0024cache1))
+			foreach (BaseSceneAttachPoint item in APLootingList.OrderBy((BaseSceneAttachPoint m) => m.StandardTip))
 			{
 				if (item.Item == null || (Inventory.Parent is MyPlayer && item.Item.CanPlayerPickUp(Inventory.Parent as MyPlayer)))
 				{
 					CreateAPSlot(item, ProximityGroup.SlotHolder);
 				}
 			}
-			OtherHolder.SetActive(true);
+			OtherHolder.SetActive(value: true);
 		}
 
 		private void ProximityLootRefresh()
@@ -573,7 +524,7 @@ namespace ZeroGravity
 				{
 					continue;
 				}
-				Transform[] componentsInChildren = componentInParent.GetComponentsInChildren<Transform>(true);
+				Transform[] componentsInChildren = componentInParent.GetComponentsInChildren<Transform>(includeInactive: true);
 				foreach (Transform transform in componentsInChildren)
 				{
 					Vector3 rhs = transform.position - MyPlayer.Instance.FpsController.MainCamera.transform.position;
@@ -588,31 +539,16 @@ namespace ZeroGravity
 
 		public void LootAll(Transform holder)
 		{
-			_003CLootAll_003Ec__AnonStorey1 _003CLootAll_003Ec__AnonStorey = new _003CLootAll_003Ec__AnonStorey1();
-			_003CLootAll_003Ec__AnonStorey.skipSlots = new List<InventorySlot>();
-			AbstractSlotUI[] componentsInChildren = holder.GetComponentsInChildren<AbstractSlotUI>();
-			if (_003C_003Ef__am_0024cache2 == null)
+			List<InventorySlot> skipSlots = new List<InventorySlot>();
+			foreach (AbstractSlotUI slot in from m in holder.GetComponentsInChildren<AbstractSlotUI>()
+				where m.Item != null
+				select m)
 			{
-				_003C_003Ef__am_0024cache2 = _003CLootAll_003Em__2;
-			}
-			using (IEnumerator<AbstractSlotUI> enumerator = componentsInChildren.Where(_003C_003Ef__am_0024cache2).GetEnumerator())
-			{
-				while (enumerator.MoveNext())
+				InventorySlot inventorySlot = Inventory.GetAllSlots().Values.OrderBy((InventorySlot m) => m.SlotType == InventorySlot.Type.Hands).FirstOrDefault((InventorySlot m) => m.CanFitItem(slot.Item) && m.Item == null && !skipSlots.Contains(m));
+				if (inventorySlot != null)
 				{
-					_003CLootAll_003Ec__AnonStorey0 _003CLootAll_003Ec__AnonStorey2 = new _003CLootAll_003Ec__AnonStorey0();
-					_003CLootAll_003Ec__AnonStorey2._003C_003Ef__ref_00241 = _003CLootAll_003Ec__AnonStorey;
-					_003CLootAll_003Ec__AnonStorey2.slot = enumerator.Current;
-					Dictionary<short, InventorySlot>.ValueCollection values = Inventory.GetAllSlots().Values;
-					if (_003C_003Ef__am_0024cache3 == null)
-					{
-						_003C_003Ef__am_0024cache3 = _003CLootAll_003Em__3;
-					}
-					InventorySlot inventorySlot = values.OrderBy(_003C_003Ef__am_0024cache3).FirstOrDefault(_003CLootAll_003Ec__AnonStorey2._003C_003Em__0);
-					if (inventorySlot != null)
-					{
-						_003CLootAll_003Ec__AnonStorey2.slot.Item.RequestAttach(inventorySlot);
-						_003CLootAll_003Ec__AnonStorey.skipSlots.Add(inventorySlot);
-					}
+					slot.Item.RequestAttach(inventorySlot);
+					skipSlots.Add(inventorySlot);
 				}
 			}
 		}
@@ -646,30 +582,6 @@ namespace ZeroGravity
 			{
 				HeartBeat.color = Colors.White;
 			}
-		}
-
-		[CompilerGenerated]
-		private static InventorySlot.Group _003CInitializeSlots_003Em__0(InventorySlot m)
-		{
-			return m.SlotGroup;
-		}
-
-		[CompilerGenerated]
-		private static Localization.StandardInteractionTip _003CCheckProximityAttachPoints_003Em__1(BaseSceneAttachPoint m)
-		{
-			return m.StandardTip;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CLootAll_003Em__2(AbstractSlotUI m)
-		{
-			return m.Item != null;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CLootAll_003Em__3(InventorySlot m)
-		{
-			return m.SlotType == InventorySlot.Type.Hands;
 		}
 	}
 }

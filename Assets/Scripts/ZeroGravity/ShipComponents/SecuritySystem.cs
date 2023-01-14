@@ -8,16 +8,20 @@ using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
+using TriInspector;
 
 namespace ZeroGravity.ShipComponents
 {
 	public class SecuritySystem : MonoBehaviour
 	{
+		[Serializable]
 		public class PlayerSecurityData
 		{
 			public long GUID;
 
 			public string PlayerNativeId;
+
+			public string PlayerId;
 
 			public string Name;
 
@@ -28,6 +32,7 @@ namespace ZeroGravity.ShipComponents
 
 		public delegate void GetInvitedPlayersDelegate(List<PlayerSecurityData> availablePlayers);
 
+		[ReadOnly]
 		public List<PlayerSecurityData> AuthorizedPlayers = new List<PlayerSecurityData>();
 
 		private Ship parentShip;
@@ -60,7 +65,7 @@ namespace ZeroGravity.ShipComponents
 
 		public AuthorizedPersonRank GetPlayerRank(Player pl)
 		{
-			return AuthorizedPlayers.Find((PlayerSecurityData m) => m.GUID == pl.GUID)?.Rank ?? AuthorizedPersonRank.None;
+			return AuthorizedPlayers.Find((PlayerSecurityData m) => m.PlayerId == pl.PlayerId)?.Rank ?? AuthorizedPersonRank.None;
 		}
 
 		public void AddPerson(PlayerSecurityData player, AuthorizedPersonRank newRank)
@@ -68,7 +73,7 @@ namespace ZeroGravity.ShipComponents
 			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = parentShip.GUID,
-				AddPlayerSteamID = player.PlayerNativeId,
+				AddPlayerId = player.PlayerId,
 				AddPlayerRank = newRank,
 				AddPlayerName = player.Name
 			});
@@ -79,7 +84,7 @@ namespace ZeroGravity.ShipComponents
 			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = parentShip.GUID,
-				RemovePlayerSteamID = player.PlayerNativeId
+				RemovePlayerId = player.PlayerId
 			});
 			UpdateUI();
 		}
@@ -106,11 +111,11 @@ namespace ZeroGravity.ShipComponents
 				foreach (IProvider.Friend friend in ProviderManager.MainProvider.GetFriends())
 				{
 					// If friend is online, and not already authorised.
-					if (friend.Status == IProvider.FriendStatus.ONLINE && AuthorizedPlayers.Find((PlayerSecurityData m) => m.PlayerNativeId == friend.Id) == null)
+					if (friend.Status == IProvider.FriendStatus.ONLINE && AuthorizedPlayers.Find((PlayerSecurityData m) => m.PlayerNativeId == friend.NativeId) == null)
 					{
 						list.Add(new PlayerSecurityData
 						{
-							PlayerNativeId = friend.Id,
+							PlayerNativeId = friend.NativeId,
 							IsFriend = true,
 							Name = friend.Name,
 							Rank = AuthorizedPersonRank.None
@@ -161,7 +166,8 @@ namespace ZeroGravity.ShipComponents
 						IsFriend = false,
 						GUID = item.GUID,
 						Name = item.Name,
-						PlayerNativeId = item.SteamID,
+						PlayerNativeId = item.PlayerNativeId,
+						PlayerId = item.PlayerId,
 						Rank = item.Rank
 					});
 				}
@@ -203,7 +209,8 @@ namespace ZeroGravity.ShipComponents
 						list.Add(new PlayerSecurityData
 						{
 							IsFriend = false,
-							PlayerNativeId = item.SteamID,
+							PlayerNativeId = item.PlayerNativeId,
+							PlayerId = item.PlayerId,
 							Name = item.Name,
 							Rank = AuthorizedPersonRank.None
 						});

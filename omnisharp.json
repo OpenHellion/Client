@@ -28,6 +28,8 @@
 			"**/Logs/**/*",
 			"**/Assets/Test**/*",
 			"**/Assets/Wwise**/*",
+			"**/Assets/Plugins**/*",
+			"**/Assets/InputManager**/*",
 			"**/Assets/Scene**/*",
 			"**/Assets/StreamingAssets**/*",
 			"**/Assets/TextMesh Pro**/*",

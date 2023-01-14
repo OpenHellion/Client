@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -132,7 +133,7 @@ namespace ZeroGravity.ShipComponents
 
 		public GameObject DockingTips;
 
-		[Header("Target module")]
+		[Title("Target module")]
 		public GameObject NoTargetModule;
 
 		public GameObject AvailablePortsHolder;

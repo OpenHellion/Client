@@ -313,7 +313,7 @@ namespace ZeroGravity
 
 		private int _latencyMs;
 
-		[Header("Cursor")]
+		[Title("Cursor")]
 		public Texture2D DefaultCursor;
 
 		public Texture2D HoverCursor;
@@ -1907,7 +1907,7 @@ namespace ZeroGravity
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 
 			// Connect to server.
-			NetworkController.Instance.ConnectToGame(server, NetworkController.PlayerId, _newCharacterData, serverPassword);
+			NetworkController.Instance.ConnectToGame(server, _newCharacterData, serverPassword);
 
 			// Cleanup data.
 			_newCharacterData = null;
@@ -1977,7 +1977,7 @@ namespace ZeroGravity
 		public void Reconnect()
 		{
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
-			NetworkController.Instance.ConnectToGame(LastConnectedServer, NetworkController.PlayerId, _newCharacterData, LastConnectedServerPass);
+			NetworkController.Instance.ConnectToGame(LastConnectedServer, _newCharacterData, LastConnectedServerPass);
 		}
 
 		private void LogInResponseListener(NetworkData data)
@@ -2376,12 +2376,12 @@ namespace ZeroGravity
 					{
 						FindPlayerId((playerIdResponse) =>
 						{
-							NetworkController.Instance.ConnectToGameSP(gamePort, NetworkController.PlayerId, serverStatusResponse.CharacterData);
+							NetworkController.Instance.ConnectToGameSP(gamePort, serverStatusResponse.CharacterData);
 						});
 					}
 					else
 					{
-						NetworkController.Instance.ConnectToGameSP(gamePort, NetworkController.PlayerId, serverStatusResponse.CharacterData);
+						NetworkController.Instance.ConnectToGameSP(gamePort, serverStatusResponse.CharacterData);
 					}
 
 					this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);

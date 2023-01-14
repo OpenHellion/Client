@@ -194,7 +194,6 @@ namespace OpenHellion.ProviderSystem
 			return SteamUser.GetSteamID().ToString();
 		}
 
-		// TODO: Custom ID generation.
 		public IProvider.Friend[] GetFriends()
 		{
 			List<IProvider.Friend> friends = new();
@@ -209,8 +208,6 @@ namespace OpenHellion.ProviderSystem
 				// Add friend to list of friends.
 				friends.Add(new IProvider.Friend
 				{
-					// Get id from main server.
-					Id = id.ToString(),
 					NativeId = id.ToString(),
 					Name = SteamFriends.GetFriendPersonaName(id),
 					Status = friendPersonaState == EPersonaState.k_EPersonaStateOnline || friendPersonaState == EPersonaState.k_EPersonaStateLookingToPlay ? IProvider.FriendStatus.ONLINE : IProvider.FriendStatus.OFFLINE
@@ -242,7 +239,9 @@ namespace OpenHellion.ProviderSystem
 
 		public void InviteUser(string id, string secret)
 		{
-			SteamFriends.InviteUserToGame(new CSteamID(UInt64.Parse(id)), secret);
+			Dbg.Log("Inviting user through Steam.");
+
+			SteamFriends.InviteUserToGame(new CSteamID(ulong.Parse(id)), secret);
 		}
 	}
 }

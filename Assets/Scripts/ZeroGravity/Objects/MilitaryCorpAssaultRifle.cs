@@ -1,3 +1,4 @@
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,7 +6,7 @@ namespace ZeroGravity.Objects
 {
 	public class MilitaryCorpAssaultRifle : Weapon
 	{
-		[Header("UI")]
+		[Title("UI")]
 		public GameObject regular;
 
 		public GameObject stance;

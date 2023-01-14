@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OpenHellion.Networking;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;
@@ -72,12 +73,11 @@ namespace ZeroGravity.Objects
 
 		public ItemCategory Category;
 
-		[SerializeField]
 		public ItemType Type;
 
 		public List<ItemType> ReloadWithTypes;
 
-		[Header("General")]
+		[Title("General")]
 		public string Name = string.Empty;
 
 		[HideInInspector]
@@ -138,7 +138,7 @@ namespace ZeroGravity.Objects
 
 		public float MeleeRange;
 
-		[Header("ITEM DESTRUCTION")]
+		[Title("ITEM DESTRUCTION")]
 		public bool DestructAt0HP;
 
 		[FormerlySerializedAs("BlastRadius")]
@@ -205,7 +205,7 @@ namespace ZeroGravity.Objects
 		[Range(0f, 1f)]
 		public float TestHealthPercentage = 1f;
 
-		[Header("SOUND")]
+		[Title("SOUND")]
 		public SoundEffect ThrowSound;
 
 		public SoundEffect PickupSound;
@@ -216,7 +216,7 @@ namespace ZeroGravity.Objects
 
 		private Vector3? sendThrowForce;
 
-		[Header("ANIMATIONS")]
+		[Title("ANIMATIONS")]
 		public ItemAnimations ItemAnimations;
 
 		[HideInInspector]

@@ -198,7 +198,7 @@ namespace ZeroGravity.Audio
 					{
 						// Get player's steam identity.
 						SteamNetworkingIdentity sni = new SteamNetworkingIdentity();
-						sni.SetSteamID(new CSteamID(ulong.Parse(otherPlayer.SteamId)));
+						sni.SetSteamID(new CSteamID(ulong.Parse(otherPlayer.NativeId)));
 
 						// https://partner.steamgames.com/doc/api/steamnetworkingtypes#message_sending_flags
 						SteamNetworkingMessages.SendMessageToUser(ref sni, msg, (uint) msgBytes.Length, 8, 0);

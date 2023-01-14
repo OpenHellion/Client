@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenHellion.Networking;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.CharacterMovement;
@@ -80,12 +81,12 @@ namespace ZeroGravity.LevelDesign
 		public PressureAmbientGameObjects PressureGOsp;
 
 		[Space(10f)]
-		[Header("EFFECTS")]
+		[Title("EFFECTS")]
 		public List<ParticleSystem> PressurizationParticles;
 
 		public List<ParticleSystem> DepressurizationParticles;
 
-		[Header("SOUND")]
+		[Title("SOUND")]
 		public List<SoundEffect> PressurizationSounds;
 
 		[HideInInspector]

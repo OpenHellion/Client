@@ -413,7 +413,8 @@ namespace ZeroGravity.Objects
 			otherPlayer.tpsController.SetPlayer(otherPlayer);
 			otherPlayer.GUID = characterDetails.GUID;
 			otherPlayer.PlayerName = characterDetails.Name;
-			otherPlayer.SteamId = characterDetails.SteamId;
+			otherPlayer.NativeId = characterDetails.NativeId;
+			otherPlayer.PlayerId = characterDetails.PlayerId;
 			gameObject.name = "Character_" + otherPlayer.GUID;
 			otherPlayer.Parent = parent;
 			TargetingPoint[] componentsInChildren = otherPlayer.GetComponentsInChildren<TargetingPoint>();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -21,7 +22,7 @@ namespace ZeroGravity.UI
 		[NonSerialized]
 		public PowerSupply PowerPanel;
 
-		[Header("POWER SUPPLY")]
+		[Title("POWER SUPPLY")]
 		public Text PS_Output;
 
 		public GameObject CapacitorHolder;
@@ -31,7 +32,7 @@ namespace ZeroGravity.UI
 		[NonSerialized]
 		public LifeSupportPanel LifePanel;
 
-		[Header("LIFE SUPPORT")]
+		[Title("LIFE SUPPORT")]
 		public Image AirTankFiller;
 
 		[NonSerialized]
@@ -40,7 +41,7 @@ namespace ZeroGravity.UI
 		[NonSerialized]
 		public CargoPanel MyCargoPanel;
 
-		[Header("CARGO")]
+		[Title("CARGO")]
 		public SceneCargoBay Cargo;
 
 		public Image CapacityFiller;

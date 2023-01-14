@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -10,19 +9,6 @@ namespace ZeroGravity.UI
 {
 	public class CryoPodUI : MonoBehaviour
 	{
-		[CompilerGenerated]
-		private sealed class _003COnInvitePlayersLoaded_003Ec__AnonStorey0
-		{
-			internal SceneSpawnPoint.PlayerInviteData plForDeleg;
-
-			internal CryoPodUI _0024this;
-
-			internal void _003C_003Em__0()
-			{
-				_0024this.InvitePlayer(plForDeleg);
-			}
-		}
-
 		public SceneSpawnPoint SpawnPoint;
 
 		public GameObject PlayerToInvitePref;
@@ -57,11 +43,26 @@ namespace ZeroGravity.UI
 
 		private void Start()
 		{
-			RegisterPodButton.onClick.AddListener(_003CStart_003Em__0);
-			UnregisterPodButton.onClick.AddListener(_003CStart_003Em__1);
-			CancelInviteButton.onClick.AddListener(_003CStart_003Em__2);
-			AuthorizePodButton.onClick.AddListener(_003CStart_003Em__3);
-			InviteToPodButton.onClick.AddListener(_003CStart_003Em__4);
+			RegisterPodButton.onClick.AddListener(delegate
+			{
+				ToggleLock(val: true);
+			});
+			UnregisterPodButton.onClick.AddListener(delegate
+			{
+				ToggleLock(val: false);
+			});
+			CancelInviteButton.onClick.AddListener(delegate
+			{
+				CancelInvite();
+			});
+			AuthorizePodButton.onClick.AddListener(delegate
+			{
+				AssignOnCryo();
+			});
+			InviteToPodButton.onClick.AddListener(delegate
+			{
+				OpenPlayerList();
+			});
 		}
 
 		private void OnDestroy()
@@ -81,22 +82,22 @@ namespace ZeroGravity.UI
 		{
 			if (toggle)
 			{
-				Client.Instance.CanvasManager.QuickTipHolder.Activate(false);
+				Client.Instance.CanvasManager.QuickTipHolder.Activate(value: false);
 				UpdateUI();
-				InviteList.Activate(false);
-				AlertBox.Activate(false);
-				ActionHolder.Activate(true);
-				base.gameObject.Activate(true);
+				InviteList.Activate(value: false);
+				AlertBox.Activate(value: false);
+				ActionHolder.Activate(value: true);
+				base.gameObject.Activate(value: true);
 			}
 			else
 			{
-				base.gameObject.Activate(false);
+				base.gameObject.Activate(value: false);
 			}
 		}
 
 		private void OnInvitePlayersLoaded(List<SceneSpawnPoint.PlayerInviteData> availablePlayers)
 		{
-			InviteList.SetActive(true);
+			InviteList.SetActive(value: true);
 			foreach (SceneSpawnPoint.PlayerInviteData availablePlayer in availablePlayers)
 			{
 				if (AvailablePlayersForInvite.ContainsKey(availablePlayer.PlayerNativeId))
@@ -105,35 +106,36 @@ namespace ZeroGravity.UI
 					AvailablePlayersForInvite[availablePlayer.PlayerNativeId].InvitePlayerButton.interactable = !availablePlayer.AlreadyHasInvite;
 					continue;
 				}
-				_003COnInvitePlayersLoaded_003Ec__AnonStorey0 _003COnInvitePlayersLoaded_003Ec__AnonStorey = new _003COnInvitePlayersLoaded_003Ec__AnonStorey0();
-				_003COnInvitePlayersLoaded_003Ec__AnonStorey._0024this = this;
 				GameObject gameObject = Object.Instantiate(PlayerToInvitePref, PlayerToInvitePref.transform.parent);
-				gameObject.SetActive(true);
+				gameObject.SetActive(value: true);
 				InvitePlayerToPod component = gameObject.GetComponent<InvitePlayerToPod>();
 				component.PlayerName.text = availablePlayer.Name;
 				component.InvitePlayerButton.interactable = !availablePlayer.AlreadyHasInvite;
 				if (availablePlayer.IsFriend)
 				{
-					component.IsFriend.SetActive(false);
+					component.IsFriend.SetActive(value: false);
 					component.Avatar.texture = Player.GetAvatar(availablePlayer.PlayerNativeId);
 				}
 				else
 				{
-					component.IsFriend.SetActive(true);
-					component.Avatar.gameObject.SetActive(false);
+					component.IsFriend.SetActive(value: true);
+					component.Avatar.gameObject.SetActive(value: false);
 				}
-				_003COnInvitePlayersLoaded_003Ec__AnonStorey.plForDeleg = availablePlayer;
-				component.InvitePlayerButton.onClick.AddListener(_003COnInvitePlayersLoaded_003Ec__AnonStorey._003C_003Em__0);
+				SceneSpawnPoint.PlayerInviteData plForDeleg = availablePlayer;
+				component.InvitePlayerButton.onClick.AddListener(delegate
+				{
+					InvitePlayer(plForDeleg);
+				});
 				AvailablePlayersForInvite.Add(availablePlayer.PlayerNativeId, component);
 			}
 		}
 
 		public void CloseInviteList()
 		{
-			InviteList.SetActive(false);
-			UnregisterPodButton.gameObject.SetActive(true);
-			InviteToPodButton.gameObject.SetActive(true);
-			AuthorizePodButton.gameObject.SetActive(true);
+			InviteList.SetActive(value: false);
+			UnregisterPodButton.gameObject.SetActive(value: true);
+			InviteToPodButton.gameObject.SetActive(value: true);
+			AuthorizePodButton.gameObject.SetActive(value: true);
 		}
 
 		public void UpdateUI()
@@ -142,7 +144,7 @@ namespace ZeroGravity.UI
 			if (SpawnPoint.State == SpawnPointState.Unlocked)
 			{
 				PlayerImage.texture = null;
-				DefaultPlayerImage.gameObject.SetActive(true);
+				DefaultPlayerImage.gameObject.SetActive(value: true);
 				LockedPlayerName.text = Localization.Free.ToUpper();
 				LockedStateText.text = "-";
 				Description.text = Localization.RegisterToAccess.ToUpper();
@@ -151,7 +153,7 @@ namespace ZeroGravity.UI
 			else if (!SpawnPoint.InvitedPlayerName.IsNullOrEmpty())
 			{
 				PlayerImage.texture = Player.GetAvatar(SpawnPoint.InvitedPlayerId);
-				DefaultPlayerImage.gameObject.SetActive(false);
+				DefaultPlayerImage.gameObject.SetActive(value: false);
 				LockedStateText.text = Localization.InvitePending.ToUpper() + "...";
 				LockedPlayerName.text = SpawnPoint.InvitedPlayerName;
 				Description.text = Localization.InviteSent.ToUpper() + "!";
@@ -160,7 +162,7 @@ namespace ZeroGravity.UI
 			else if (SpawnPoint.State == SpawnPointState.Locked)
 			{
 				PlayerImage.texture = Player.GetAvatar(SpawnPoint.PlayerNativeId);
-				DefaultPlayerImage.gameObject.SetActive(false);
+				DefaultPlayerImage.gameObject.SetActive(value: false);
 				LockedPlayerName.text = SpawnPoint.PlayerName.ToString();
 				LockedStateText.text = Localization.Registered.ToUpper();
 				Description.text = Localization.SpawnPointNotSet.ToUpper();
@@ -169,7 +171,7 @@ namespace ZeroGravity.UI
 			else if (SpawnPoint.State == SpawnPointState.Authorized)
 			{
 				PlayerImage.texture = Player.GetAvatar(SpawnPoint.PlayerNativeId);
-				DefaultPlayerImage.gameObject.SetActive(false);
+				DefaultPlayerImage.gameObject.SetActive(value: false);
 				LockedPlayerName.text = SpawnPoint.PlayerName.ToString();
 				LockedStateText.text = Localization.Registered.ToUpper();
 				Description.text = Localization.SpawnPointSet.ToUpper();
@@ -181,38 +183,38 @@ namespace ZeroGravity.UI
 		{
 			if (SpawnPoint.State == SpawnPointState.Unlocked)
 			{
-				RegisterPodButton.gameObject.SetActive(true);
-				CancelInviteButton.gameObject.SetActive(false);
-				AuthorizePodButton.gameObject.SetActive(false);
-				InviteToPodButton.gameObject.SetActive(false);
-				UnregisterPodButton.gameObject.SetActive(false);
+				RegisterPodButton.gameObject.SetActive(value: true);
+				CancelInviteButton.gameObject.SetActive(value: false);
+				AuthorizePodButton.gameObject.SetActive(value: false);
+				InviteToPodButton.gameObject.SetActive(value: false);
+				UnregisterPodButton.gameObject.SetActive(value: false);
 			}
 			else if (SpawnPoint.State == SpawnPointState.Locked && SpawnPoint.PlayerGUID == MyPlayer.Instance.GUID)
 			{
 				if (!SpawnPoint.InvitedPlayerName.IsNullOrEmpty())
 				{
-					RegisterPodButton.gameObject.SetActive(false);
-					CancelInviteButton.gameObject.SetActive(true);
-					AuthorizePodButton.gameObject.SetActive(false);
-					InviteToPodButton.gameObject.SetActive(false);
-					UnregisterPodButton.gameObject.SetActive(false);
+					RegisterPodButton.gameObject.SetActive(value: false);
+					CancelInviteButton.gameObject.SetActive(value: true);
+					AuthorizePodButton.gameObject.SetActive(value: false);
+					InviteToPodButton.gameObject.SetActive(value: false);
+					UnregisterPodButton.gameObject.SetActive(value: false);
 				}
 				else
 				{
-					RegisterPodButton.gameObject.SetActive(false);
-					CancelInviteButton.gameObject.SetActive(false);
-					AuthorizePodButton.gameObject.SetActive(true);
-					InviteToPodButton.gameObject.SetActive(true);
-					UnregisterPodButton.gameObject.SetActive(true);
+					RegisterPodButton.gameObject.SetActive(value: false);
+					CancelInviteButton.gameObject.SetActive(value: false);
+					AuthorizePodButton.gameObject.SetActive(value: true);
+					InviteToPodButton.gameObject.SetActive(value: true);
+					UnregisterPodButton.gameObject.SetActive(value: true);
 				}
 			}
 			else if (SpawnPoint.State == SpawnPointState.Locked || SpawnPoint.State == SpawnPointState.Authorized)
 			{
-				RegisterPodButton.gameObject.SetActive(false);
-				CancelInviteButton.gameObject.SetActive(false);
-				AuthorizePodButton.gameObject.SetActive(false);
-				InviteToPodButton.gameObject.SetActive(false);
-				UnregisterPodButton.gameObject.SetActive(false);
+				RegisterPodButton.gameObject.SetActive(value: false);
+				CancelInviteButton.gameObject.SetActive(value: false);
+				AuthorizePodButton.gameObject.SetActive(value: false);
+				InviteToPodButton.gameObject.SetActive(value: false);
+				UnregisterPodButton.gameObject.SetActive(value: false);
 			}
 		}
 
@@ -223,77 +225,47 @@ namespace ZeroGravity.UI
 
 		public void CancelInvite()
 		{
-			SpawnPoint.ToggleLock(false);
+			SpawnPoint.ToggleLock(isLocked: false);
 			SpawnPoint.InvitePlayer(null);
 		}
 
 		public void AssignOnCryo()
 		{
-			AlertBox.SetActive(true);
-			ActionHolder.SetActive(false);
+			AlertBox.SetActive(value: true);
+			ActionHolder.SetActive(value: false);
 		}
 
 		public void ConfirmAssignOnCryo()
 		{
-			AlertBox.SetActive(false);
-			ActionHolder.SetActive(true);
+			AlertBox.SetActive(value: false);
+			ActionHolder.SetActive(value: true);
 			SpawnPoint.AuthorizeToSpawnPoint();
 		}
 
 		public void CancelAssignOnCryo()
 		{
-			AlertBox.SetActive(false);
-			ActionHolder.SetActive(true);
+			AlertBox.SetActive(value: false);
+			ActionHolder.SetActive(value: true);
 		}
 
 		public void OpenPlayerList()
 		{
-			UnregisterPodButton.gameObject.SetActive(false);
-			InviteToPodButton.gameObject.SetActive(false);
-			AuthorizePodButton.gameObject.SetActive(false);
+			UnregisterPodButton.gameObject.SetActive(value: false);
+			InviteToPodButton.gameObject.SetActive(value: false);
+			AuthorizePodButton.gameObject.SetActive(value: false);
 			foreach (InvitePlayerToPod value in AvailablePlayersForInvite.Values)
 			{
-				Object.Destroy(value.gameObject);
+				Destroy(value.gameObject);
 			}
 			AvailablePlayersForInvite.Clear();
-			SpawnPoint.GetPlayersForInvite(true, true, OnInvitePlayersLoaded);
+			SpawnPoint.GetPlayersForInvite(getSteamFriends: true, getPlayerFromServer: true, OnInvitePlayersLoaded);
 		}
 
 		public void InvitePlayer(SceneSpawnPoint.PlayerInviteData pl)
 		{
 			SpawnPoint.InvitePlayer(pl);
-			InviteList.SetActive(false);
+			InviteList.SetActive(value: false);
 			UpdateUI();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__0()
-		{
-			ToggleLock(true);
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__1()
-		{
-			ToggleLock(false);
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__2()
-		{
-			CancelInvite();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__3()
-		{
-			AssignOnCryo();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__4()
-		{
-			OpenPlayerList();
 		}
 	}
 }

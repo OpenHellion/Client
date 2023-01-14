@@ -1,3 +1,4 @@
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,7 @@ namespace ZeroGravity.Objects
 
 		private bool _IsSingleFire;
 
-		[Header("UI")]
+		[Title("UI")]
 		[SerializeField]
 		private Text AmmoCount;
 

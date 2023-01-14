@@ -132,7 +132,7 @@ namespace OpenHellion.Networking
 			_subscribeToObjectsList.Remove(guid);
 		}
 
-		public void ConnectToGame(ServerData serverData, string playerId, CharacterData charData, string password)
+		public void ConnectToGame(ServerData serverData, CharacterData charData, string password)
 		{
 			CharacterData = charData;
 			if (_connectionThread != null)
@@ -142,10 +142,10 @@ namespace OpenHellion.Networking
 			_connectionThread = new GameServerThread();
 
 			NameOfCurrentServer = serverData.Name;
-			_connectionThread.Start(serverData.IpAddress, serverData.GamePort, serverData.Id, password, playerId);
+			_connectionThread.Start(serverData.IpAddress, serverData.GamePort, serverData.Id, password);
 		}
 
-		public void ConnectToGameSP(int port, string playerId, CharacterData charData)
+		public void ConnectToGameSP(int port, CharacterData charData)
 		{
 			CharacterData = charData;
 			if (_connectionThread != null)
@@ -153,7 +153,7 @@ namespace OpenHellion.Networking
 				_connectionThread.Disconnect();
 			}
 			_connectionThread = new GameServerThread();
-			_connectionThread.Start("127.0.0.1", port, String.Empty, String.Empty, playerId);
+			_connectionThread.Start("127.0.0.1", port, String.Empty, String.Empty);
 		}
 
 		public void SendToGameServer(NetworkData data)
@@ -187,7 +187,7 @@ namespace OpenHellion.Networking
 
 		/// <summary>
 		/// 	Read and invoke P2P packets sent though Steam.<br/>
-		/// 	TODO: Integrate this into <c>ZeroGravity.Network.ConnectionThread</c> or create a new class.
+		/// 	TODO: Create a new class.
 		/// </summary>
 		private void P2PPacketListener() {
 			GetP2PPacketsThreadActive = true;

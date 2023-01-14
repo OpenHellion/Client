@@ -1,3 +1,4 @@
+using TriInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ namespace ZeroGravity.UI
 	{
 		public AbstractGlossaryElement Element;
 
-		[Header("UI")]
+		[Title("UI")]
 		public GlossaryUI Screen;
 
 		public Image Icon;

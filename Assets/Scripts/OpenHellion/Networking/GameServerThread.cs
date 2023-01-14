@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Threading;
+using OpenHellion.ProviderSystem;
 using ZeroGravity;
 using ZeroGravity.Network;
 
@@ -36,15 +37,12 @@ namespace OpenHellion.Networking
 
 		private EventWaitHandle waitHandle;
 
-		private string _playerid;
-
-		public void Start(string address, int port, string serverId, string password, string playerId, int retryAttempt = 3)
+		public void Start(string address, int port, string serverId, string password, int retryAttempt = 3)
 		{
 			_serverAddress = address;
 			_serverPort = port;
 			_serverId = serverId;
 			_serverPassword = password;
-			_playerid = playerId;
 			this.retryAttempt = retryAttempt;
 			runThread = true;
 			networkDataQueue = new ConcurrentQueue<NetworkData>();
@@ -113,7 +111,7 @@ namespace OpenHellion.Networking
 				{
 					break;
 				}
-				NetworkData result = null;
+				NetworkData result;
 				while (networkDataQueue.Count > 0)
 				{
 					if (!networkDataQueue.TryDequeue(out result))
@@ -251,7 +249,8 @@ namespace OpenHellion.Networking
 				listeningThread.Start();
 				LogInRequest logInRequest = new LogInRequest
 				{
-					PlayerId = _playerid,
+					PlayerId = NetworkController.PlayerId,
+					NativeId = ProviderManager.MainProvider.GetNativeId(),
 					CharacterData = NetworkController.CharacterData,
 					ServerID = _serverId,
 					Password = _serverPassword,

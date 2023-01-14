@@ -22,7 +22,7 @@ namespace ZeroGravity.ShipComponents
 		[HideInInspector]
 		public Dictionary<IMapMainObject, MapObject> AllMapObjects = new Dictionary<IMapMainObject, MapObject>();
 
-		[Header("PREFABS")]
+		[Title("PREFABS")]
 		public GameObject MapObjectCelestial;
 
 		public GameObject MapObjectAsteroid;
@@ -62,7 +62,7 @@ namespace ZeroGravity.ShipComponents
 		[ReadOnly]
 		public MapObject Sun;
 
-		[Header("ZOOM")]
+		[Title("ZOOM")]
 		public AnimationCurve PanCurve;
 
 		public AnimationCurve ZoomCurve;
@@ -106,7 +106,7 @@ namespace ZeroGravity.ShipComponents
 		[SerializeField]
 		private float planetMaxZoom = 1f;
 
-		[Header("ROTATE")]
+		[Title("ROTATE")]
 		public GameObject CameraPitch;
 
 		[SerializeField]

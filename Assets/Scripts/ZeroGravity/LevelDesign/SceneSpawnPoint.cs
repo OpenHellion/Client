@@ -325,12 +325,12 @@ namespace ZeroGravity.LevelDesign
 			{
 				foreach (PlayerOnServerData item in data.PlayersOnServer)
 				{
-					if (item.SteamID != NetworkController.PlayerId)
+					if (item.PlayerNativeId != NetworkController.PlayerId)
 					{
 						list.Add(new PlayerInviteData
 						{
 							IsFriend = false,
-							PlayerNativeId = item.SteamID,
+							PlayerNativeId = item.PlayerNativeId,
 							Name = item.Name,
 							AlreadyHasInvite = item.AlreadyHasInvite
 						});

@@ -1,4 +1,5 @@
 using System.Collections;
+using TriInspector;
 using UnityEngine;
 using ZeroGravity.Math;
 using ZeroGravity.UI;
@@ -7,7 +8,7 @@ namespace ZeroGravity.Objects
 {
 	public class MilitaryCorpRailgunSniper : Weapon
 	{
-		[Header("UI")]
+		[Title("UI")]
 		public GameObject zoomCamera;
 
 		public GameObject rTexture;

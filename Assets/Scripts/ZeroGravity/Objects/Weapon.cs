@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TriInspector;
 using UnityEngine;
 using ZeroGravity.CharacterMovement;
 using ZeroGravity.Data;
@@ -26,7 +27,7 @@ namespace ZeroGravity.Objects
 
 		private ItemSlot magazineSlot;
 
-		[Header("Effects and anims")]
+		[Title("Effects and anims")]
 		public GameObject MuzzleFlash;
 
 		public GameObject ImpactEffects;
@@ -35,7 +36,7 @@ namespace ZeroGravity.Objects
 
 		public MuzzleActivator currentMuzzle;
 
-		[Header("Mods")]
+		[Title("Mods")]
 		public List<WeaponMod> Mods;
 
 		[HideInInspector]
@@ -45,7 +46,7 @@ namespace ZeroGravity.Objects
 
 		private bool isSpecialStance;
 
-		[Header("Sounds")]
+		[Title("Sounds")]
 		public SoundEffect SoundEffect;
 
 		private int shootingLayerMask;

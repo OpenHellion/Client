@@ -30,7 +30,7 @@ namespace OpenHellion.ProviderSystem
 	/// </summary>
 	internal class DiscordProvider : IProvider
 	{
-		private static Dictionary<long, string> s_planets = new Dictionary<long, string>
+		private static readonly Dictionary<long, string> s_planets = new Dictionary<long, string>
 		{
 			{ 1L, "Hellion" },
 			{ 2L, "Nimath" },
@@ -53,10 +53,10 @@ namespace OpenHellion.ProviderSystem
 			{ 19L, "Ia" }
 		};
 
-		private static List<string> s_descriptions = new List<string> { "Building a huuuuuge station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job", "Repairing a hull breach" };
+		private static readonly List<string> s_descriptions = new List<string> { "Building a huuuuuge station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job", "Repairing a hull breach" };
 
-		private long _clientId = 349114016968474626L;
-		private uint _optionalSteamId = 588210;
+		private const long _clientId = 349114016968474626L;
+		private const uint _optionalSteamId = 588210;
 
 		private int _callbackCalls;
 		private Discord.Discord _discord;
@@ -81,7 +81,7 @@ namespace OpenHellion.ProviderSystem
 				return false;
 			}
 
-			_discord.SetLogHook(Discord.LogLevel.Debug, (level, message) =>
+			_discord.SetLogHook(LogLevel.Debug, (level, message) =>
 			{
 				Dbg.Log("Log[{0}] {1}", level, message);
 			});
@@ -109,8 +109,6 @@ namespace OpenHellion.ProviderSystem
 
 		void IProvider.Enable()
 		{
-			// Check if a player id is stored in the cloud, then locally, then generate.
-
 			UpdateStatus();
 		}
 
@@ -140,7 +138,8 @@ namespace OpenHellion.ProviderSystem
 			_callbackCalls++;
 
 			// TODO: Make this safer.
-			_activityManager.AcceptInvite(user.Id, result => {
+			_activityManager.AcceptInvite(user.Id, result =>
+			{
 				Dbg.Log("AcceptInvite {0}", result);
 			});
 		}
@@ -158,7 +157,8 @@ namespace OpenHellion.ProviderSystem
 		public void RequestRespondYes()
 		{
 			Dbg.Log("Discord: Responding yes to Ask to Join request");
-			_activityManager.SendRequestReply(_joinUser.Id, ActivityJoinRequestReply.Yes, res => {
+			_activityManager.SendRequestReply(_joinUser.Id, ActivityJoinRequestReply.Yes, res =>
+			{
 				if (res == Result.Ok)
 				{
 					Console.WriteLine("Responded successfully");
@@ -169,7 +169,8 @@ namespace OpenHellion.ProviderSystem
 		public void RequestRespondNo()
 		{
 			Dbg.Log("Discord: Responding no to Ask to Join request");
-			_activityManager.SendRequestReply(_joinUser.Id, ActivityJoinRequestReply.No, res => {
+			_activityManager.SendRequestReply(_joinUser.Id, ActivityJoinRequestReply.No, res =>
+			{
 				if (res == Result.Ok)
 				{
 					Console.WriteLine("Responded successfully");
@@ -332,8 +333,6 @@ namespace OpenHellion.ProviderSystem
 				// Add the relationship to our friends list.
 				friends.Add(new IProvider.Friend
 				{
-					// Get id from main server.
-					Id = r.User.Id.ToString(),
 					NativeId = r.User.Id.ToString(),
 					Name = r.User.Username,
 					Status = r.Presence.Status == Status.Online ? IProvider.FriendStatus.ONLINE : IProvider.FriendStatus.OFFLINE
@@ -366,7 +365,7 @@ namespace OpenHellion.ProviderSystem
 			_activity.Secrets.Spectate = secret;
 			_activityManager.UpdateActivity(_activity, result => {});
 
-			_activityManager.SendInvite(Int64.Parse(id), ActivityActionType.Join, "You have been invited to play Hellion!", result =>
+			_activityManager.SendInvite(long.Parse(id), ActivityActionType.Join, "You have been invited to play Hellion!", result =>
 			{
 				if (result == Result.Ok)
 				{
@@ -374,7 +373,7 @@ namespace OpenHellion.ProviderSystem
 				}
 				else
 				{
-					Dbg.Log("Invite failed.");
+					Dbg.Log("Invite failed.", result);
 				}
 			});
 		}

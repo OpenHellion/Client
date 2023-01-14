@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.LevelDesign;
@@ -13,7 +13,7 @@ namespace ZeroGravity.UI
 {
 	public class LifeSupportPanel : AbstractPanelUI
 	{
-		[Header("LIFE SUPPORT UI")]
+		[Title("LIFE SUPPORT UI")]
 		public GameObject MainScreen;
 
 		public GameObject InfoScreen;
@@ -76,9 +76,6 @@ namespace ZeroGravity.UI
 
 		private static Dictionary<SceneTriggerRoom, LSRoomsUI> LSRooms = new Dictionary<SceneTriggerRoom, LSRoomsUI>();
 
-		[CompilerGenerated]
-		private static Func<SceneTriggerRoom, float> _003C_003Ef__am_0024cache0;
-
 		private void Start()
 		{
 		}
@@ -94,15 +91,15 @@ namespace ZeroGravity.UI
 		{
 			base.OnInteract();
 			RefreshLifeSupport();
-			MainScreen.SetActive(true);
-			InfoScreen.SetActive(false);
-			base.gameObject.SetActive(true);
+			MainScreen.SetActive(value: true);
+			InfoScreen.SetActive(value: false);
+			base.gameObject.SetActive(value: true);
 		}
 
 		public override void OnDetach()
 		{
 			base.OnDetach();
-			base.gameObject.SetActive(false);
+			base.gameObject.SetActive(value: false);
 		}
 
 		public void RefreshLifeSupport()
@@ -111,10 +108,10 @@ namespace ZeroGravity.UI
 			LSGenerators.Clear();
 			LSRooms.Clear();
 			SelectedVessel = null;
-			VesselObjectScript[] componentsInChildren = vesselListTransform.GetComponentsInChildren<VesselObjectScript>(true);
+			VesselObjectScript[] componentsInChildren = vesselListTransform.GetComponentsInChildren<VesselObjectScript>(includeInactive: true);
 			foreach (VesselObjectScript vesselObjectScript in componentsInChildren)
 			{
-				UnityEngine.Object.DestroyImmediate(vesselObjectScript.gameObject);
+				DestroyImmediate(vesselObjectScript.gameObject);
 			}
 			Initialize();
 			CreateVesselsAndGenerators();
@@ -140,23 +137,23 @@ namespace ZeroGravity.UI
 
 		private void CreateVesselsAndGenerators()
 		{
-			LSResourceTank[] componentsInChildren = VesselObjectsTransform.GetComponentsInChildren<LSResourceTank>(true);
+			LSResourceTank[] componentsInChildren = VesselObjectsTransform.GetComponentsInChildren<LSResourceTank>(includeInactive: true);
 			foreach (LSResourceTank lSResourceTank in componentsInChildren)
 			{
-				UnityEngine.Object.DestroyImmediate(lSResourceTank.gameObject);
+				DestroyImmediate(lSResourceTank.gameObject);
 			}
-			LSGeneratorUI[] componentsInChildren2 = GeneratorsTransform.GetComponentsInChildren<LSGeneratorUI>(true);
+			LSGeneratorUI[] componentsInChildren2 = GeneratorsTransform.GetComponentsInChildren<LSGeneratorUI>(includeInactive: true);
 			foreach (LSGeneratorUI lSGeneratorUI in componentsInChildren2)
 			{
-				UnityEngine.Object.DestroyImmediate(lSGeneratorUI.gameObject);
+				DestroyImmediate(lSGeneratorUI.gameObject);
 			}
 			foreach (SpaceObjectVessel allVessel in AllVessels)
 			{
 				ILifeProvider[] componentsInChildren3 = allVessel.GeometryRoot.GetComponentsInChildren<ILifeProvider>();
 				if (componentsInChildren3 != null && componentsInChildren3.Length > 0)
 				{
-					GameObject gameObject = UnityEngine.Object.Instantiate(VesselObject, vesselListTransform);
-					gameObject.SetActive(true);
+					GameObject gameObject = Instantiate(VesselObject, vesselListTransform);
+					gameObject.SetActive(value: true);
 					gameObject.transform.Reset();
 					VesselObjectScript component = gameObject.GetComponent<VesselObjectScript>();
 					component.LifePanel = this;
@@ -168,8 +165,8 @@ namespace ZeroGravity.UI
 			{
 				if (lifeGenerator.Type == GeneratorType.Air)
 				{
-					GameObject gameObject2 = UnityEngine.Object.Instantiate(AirGeneratorObject, GeneratorsTransform);
-					gameObject2.SetActive(true);
+					GameObject gameObject2 = Instantiate(AirGeneratorObject, GeneratorsTransform);
+					gameObject2.SetActive(value: true);
 					gameObject2.transform.Reset();
 					LSGeneratorUI component2 = gameObject2.GetComponent<LSGeneratorUI>();
 					component2.Generator = lifeGenerator;
@@ -179,8 +176,8 @@ namespace ZeroGravity.UI
 				}
 				else
 				{
-					GameObject gameObject3 = UnityEngine.Object.Instantiate(AirFilterObject, GeneratorsTransform);
-					gameObject3.SetActive(true);
+					GameObject gameObject3 = Instantiate(AirFilterObject, GeneratorsTransform);
+					gameObject3.SetActive(value: true);
 					gameObject3.transform.Reset();
 					LSGeneratorUI component3 = gameObject3.GetComponent<LSGeneratorUI>();
 					component3.Generator = lifeGenerator;
@@ -195,11 +192,11 @@ namespace ZeroGravity.UI
 		{
 			if (AirTanks.Count == 0)
 			{
-				TankNotConnected.SetActive(true);
-				AirTankDanger.SetActive(false);
+				TankNotConnected.SetActive(value: true);
+				AirTankDanger.SetActive(value: false);
 				return;
 			}
-			TankNotConnected.SetActive(false);
+			TankNotConnected.SetActive(value: false);
 			float num = 0f;
 			float num2 = 0f;
 			foreach (ResourceContainer airTank in AirTanks)
@@ -230,15 +227,15 @@ namespace ZeroGravity.UI
 
 		public void CreateConnectedVessels()
 		{
-			ConnectedVessel[] componentsInChildren = ConnectedListTransform.GetComponentsInChildren<ConnectedVessel>(true);
+			ConnectedVessel[] componentsInChildren = ConnectedListTransform.GetComponentsInChildren<ConnectedVessel>(includeInactive: true);
 			foreach (ConnectedVessel connectedVessel in componentsInChildren)
 			{
-				UnityEngine.Object.DestroyImmediate(connectedVessel.gameObject);
+				DestroyImmediate(connectedVessel.gameObject);
 			}
 			foreach (SpaceObjectVessel allVessel in AllVessels)
 			{
-				GameObject gameObject = UnityEngine.Object.Instantiate(ConnectedVesselObject, ConnectedListTransform);
-				gameObject.SetActive(true);
+				GameObject gameObject = Instantiate(ConnectedVesselObject, ConnectedListTransform);
+				gameObject.SetActive(value: true);
 				gameObject.transform.Reset();
 				ConnectedVessel component = gameObject.GetComponent<ConnectedVessel>();
 				component.LifePanel = this;
@@ -250,18 +247,14 @@ namespace ZeroGravity.UI
 		private void CreateRoom(ConnectedVessel ConsumerVessel)
 		{
 			SceneTriggerRoom[] componentsInChildren = ConsumerVessel.Vessel.GeometryRoot.GetComponentsInChildren<SceneTriggerRoom>();
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CCreateRoom_003Em__0;
-			}
-			float val = componentsInChildren.Sum(_003C_003Ef__am_0024cache0);
+			float val = componentsInChildren.Sum((SceneTriggerRoom m) => m.Volume);
 			SceneTriggerRoom[] array = componentsInChildren;
 			foreach (SceneTriggerRoom sceneTriggerRoom in array)
 			{
 				if (!sceneTriggerRoom.RoomName.IsNullOrEmpty())
 				{
-					GameObject gameObject = UnityEngine.Object.Instantiate(RoomObject, ConsumerVessel.gameObject.transform);
-					gameObject.SetActive(true);
+					GameObject gameObject = Instantiate(RoomObject, ConsumerVessel.gameObject.transform);
+					gameObject.SetActive(value: true);
 					gameObject.transform.Reset();
 					LSRoomsUI component = gameObject.GetComponent<LSRoomsUI>();
 					component.Panel = this;
@@ -276,8 +269,7 @@ namespace ZeroGravity.UI
 
 		public void UpdateRoom(SceneTriggerRoom room)
 		{
-			LSRoomsUI value;
-			if (LSRooms.TryGetValue(room, out value) && !(value == null))
+			if (LSRooms.TryGetValue(room, out var value) && !(value == null))
 			{
 				value.RefreshUI();
 			}
@@ -285,8 +277,7 @@ namespace ZeroGravity.UI
 
 		public void UpdateVesselObjects(SpaceObjectVessel vessel)
 		{
-			VesselObjectScript value;
-			if (LSVessels.TryGetValue(vessel, out value))
+			if (LSVessels.TryGetValue(vessel, out var value))
 			{
 				if (value == null)
 				{
@@ -301,9 +292,9 @@ namespace ZeroGravity.UI
 		{
 			if (vessel == null)
 			{
-				NotConnected.SetActive(true);
-				SelectedVesselTank.SetActive(false);
-				SelectedVesselHeader.SetActive(false);
+				NotConnected.SetActive(value: true);
+				SelectedVesselTank.SetActive(value: false);
+				SelectedVesselHeader.SetActive(value: false);
 				return;
 			}
 			foreach (VesselObjectScript value in LSVessels.Values)
@@ -311,11 +302,11 @@ namespace ZeroGravity.UI
 				if (vessel == value.Vessel)
 				{
 					SelectedVessel = value;
-					value.Selected.SetActive(true);
+					value.Selected.SetActive(value: true);
 				}
 				else
 				{
-					value.Selected.SetActive(false);
+					value.Selected.SetActive(value: false);
 				}
 			}
 			foreach (KeyValuePair<Generator, LSGeneratorUI> lSGenerator in LSGenerators)
@@ -324,9 +315,9 @@ namespace ZeroGravity.UI
 			}
 			if (SelectedVessel != null)
 			{
-				NotConnected.SetActive(false);
-				SelectedVesselTank.SetActive(true);
-				SelectedVesselHeader.SetActive(true);
+				NotConnected.SetActive(value: false);
+				SelectedVesselTank.SetActive(value: true);
+				SelectedVesselHeader.SetActive(value: true);
 				SelectedVesselName.text = SelectedVessel.Vessel.CustomName;
 				SelectedVesselIcon.sprite = Client.Instance.SpriteManager.GetSprite(SelectedVessel.Vessel);
 				AuthorizationFail.SetActive(!SelectedVessel.IsAuthorized);
@@ -335,18 +326,17 @@ namespace ZeroGravity.UI
 			}
 			else
 			{
-				NotConnected.SetActive(true);
-				SelectedVesselTank.SetActive(false);
-				SelectedVesselHeader.SetActive(false);
-				AuthorizationFail.SetActive(false);
+				NotConnected.SetActive(value: true);
+				SelectedVesselTank.SetActive(value: false);
+				SelectedVesselHeader.SetActive(value: false);
+				AuthorizationFail.SetActive(value: false);
 			}
 			UpdateVesselObjects(vessel);
 		}
 
 		public void UpdateGenerator(Generator gen)
 		{
-			LSGeneratorUI value;
-			if (LSGenerators.TryGetValue(gen, out value) && !(value == null))
+			if (LSGenerators.TryGetValue(gen, out var value) && !(value == null))
 			{
 				UpdateGeneratorUI(value);
 			}
@@ -354,8 +344,7 @@ namespace ZeroGravity.UI
 
 		private void UpdateGeneratorUI(LSGeneratorUI LG)
 		{
-			Color color;
-			LG.Status.text = LG.Generator.GetStatus(out color);
+			LG.Status.text = LG.Generator.GetStatus(out var color);
 			LG.Status.color = color;
 			LG.IsOnline.SetActive(LG.Generator.Status == SystemStatus.OnLine);
 			if (LG.DisablePattern != null)
@@ -374,8 +363,8 @@ namespace ZeroGravity.UI
 			SceneMachineryPartSlot[] machineryPartSlots = generator.Generator.MachineryPartSlots;
 			foreach (SceneMachineryPartSlot partSlot in machineryPartSlots)
 			{
-				GameObject gameObject = UnityEngine.Object.Instantiate(generator.PartPref, generator.PartsTransform);
-				gameObject.SetActive(true);
+				GameObject gameObject = Instantiate(generator.PartPref, generator.PartsTransform);
+				gameObject.SetActive(value: true);
 				gameObject.transform.Reset();
 				PartSlotUI component = gameObject.GetComponent<PartSlotUI>();
 				component.Panel = gameObject;
@@ -404,17 +393,11 @@ namespace ZeroGravity.UI
 
 		public void UpdateConnectedVesselsHealth()
 		{
-			ConnectedVessel[] componentsInChildren = ConnectedListTransform.GetComponentsInChildren<ConnectedVessel>(true);
+			ConnectedVessel[] componentsInChildren = ConnectedListTransform.GetComponentsInChildren<ConnectedVessel>(includeInactive: true);
 			foreach (ConnectedVessel connectedVessel in componentsInChildren)
 			{
 				connectedVessel.HealthAndArmorUpdate();
 			}
-		}
-
-		[CompilerGenerated]
-		private static float _003CCreateRoom_003Em__0(SceneTriggerRoom m)
-		{
-			return m.Volume;
 		}
 	}
 }

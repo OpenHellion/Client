@@ -1,3 +1,4 @@
+using TriInspector;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Flexible UI Data")]
@@ -7,7 +8,7 @@ public class FlexibleUIData : ScriptableObject
 
 	public Sprite menuButtonSprite;
 
-	[Header("TRANSITION COLORS")]
+	[Title("TRANSITION COLORS")]
 	public Color normal;
 
 	public Color highlight;
@@ -16,7 +17,7 @@ public class FlexibleUIData : ScriptableObject
 
 	public Color disabled;
 
-	[Header("TYPE COLORS")]
+	[Title("TYPE COLORS")]
 	public Color defaultColor;
 
 	public Color iconColor;

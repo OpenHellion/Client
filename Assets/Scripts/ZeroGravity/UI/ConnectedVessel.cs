@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -31,7 +31,7 @@ namespace ZeroGravity.UI
 		[NonSerialized]
 		public VesselBaseSystem Base;
 
-		[Header("POWER SUPPLY")]
+		[Title("POWER SUPPLY")]
 		public Text BaseConsumption;
 
 		public Text Consumption;
@@ -43,7 +43,7 @@ namespace ZeroGravity.UI
 		[NonSerialized]
 		public LifeSupportPanel LifePanel;
 
-		[Header("LIFE SUPPORT")]
+		[Title("LIFE SUPPORT")]
 		public Text Volume;
 
 		public Text ArmorValue;
@@ -61,20 +61,11 @@ namespace ZeroGravity.UI
 		[NonSerialized]
 		public CargoPanel CargoPanel;
 
-		[CompilerGenerated]
-		private static Func<SceneMachineryPartSlot, bool> _003C_003Ef__am_0024cache0;
-
-		public bool IsAuthorized
-		{
-			get
-			{
-				return Vessel.IsPlayerAuthorizedOrNoSecurity(MyPlayer.Instance);
-			}
-		}
+		public bool IsAuthorized => Vessel.IsPlayerAuthorizedOrNoSecurity(MyPlayer.Instance);
 
 		private void Start()
 		{
-			Text[] componentsInChildren = GetComponentsInChildren<Text>(true);
+			Text[] componentsInChildren = GetComponentsInChildren<Text>(includeInactive: true);
 			foreach (Text text in componentsInChildren)
 			{
 				string value = null;
@@ -86,12 +77,7 @@ namespace ZeroGravity.UI
 			VesselName.text = Vessel.CustomName;
 			Icon.sprite = Client.Instance.SpriteManager.GetSprite(Vessel);
 			Authorized.SetActive(!IsAuthorized);
-			SceneMachineryPartSlot[] machineryPartSlots = Vessel.VesselBaseSystem.MachineryPartSlots;
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CStart_003Em__0;
-			}
-			ArmorSlots = machineryPartSlots.Where(_003C_003Ef__am_0024cache0).ToList();
+			ArmorSlots = Vessel.VesselBaseSystem.MachineryPartSlots.Where((SceneMachineryPartSlot m) => m.Scope == MachineryPartSlotScope.Armor).ToList();
 			if (LifePanel != null)
 			{
 				HealthAndArmorUpdate();
@@ -109,7 +95,7 @@ namespace ZeroGravity.UI
 
 		public void ToggleRooms()
 		{
-			LSRoomsUI[] componentsInChildren = GetComponentsInChildren<LSRoomsUI>(true);
+			LSRoomsUI[] componentsInChildren = GetComponentsInChildren<LSRoomsUI>(includeInactive: true);
 			foreach (LSRoomsUI lSRoomsUI in componentsInChildren)
 			{
 				lSRoomsUI.gameObject.SetActive(!lSRoomsUI.gameObject.activeInHierarchy);
@@ -118,7 +104,7 @@ namespace ZeroGravity.UI
 
 		public void ToggleConsumers()
 		{
-			PowerSupplyPowerConsumer[] componentsInChildren = GetComponentsInChildren<PowerSupplyPowerConsumer>(true);
+			PowerSupplyPowerConsumer[] componentsInChildren = GetComponentsInChildren<PowerSupplyPowerConsumer>(includeInactive: true);
 			foreach (PowerSupplyPowerConsumer powerSupplyPowerConsumer in componentsInChildren)
 			{
 				powerSupplyPowerConsumer.gameObject.SetActive(!powerSupplyPowerConsumer.gameObject.activeInHierarchy);
@@ -136,7 +122,7 @@ namespace ZeroGravity.UI
 			{
 				foreach (SceneMachineryPartSlot armorSlot in ArmorSlots)
 				{
-					if ((((object)armorSlot != null) ? armorSlot.Item : null) != null)
+					if (armorSlot?.Item != null)
 					{
 						num += armorSlot.Item.MaxHealth;
 						num2 += armorSlot.Item.Health;
@@ -145,12 +131,6 @@ namespace ZeroGravity.UI
 			}
 			NaniteFiller.fillAmount = num2 / num;
 			NaniteValue.text = FormatHelper.FormatValue(num2);
-		}
-
-		[CompilerGenerated]
-		private static bool _003CStart_003Em__0(SceneMachineryPartSlot m)
-		{
-			return m.Scope == MachineryPartSlotScope.Armor;
 		}
 	}
 }

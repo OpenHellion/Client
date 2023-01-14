@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -21,7 +21,7 @@ namespace ZeroGravity.UI
 			Alert
 		}
 
-		[Header("CROSHAIRS")]
+		[Title("CROSHAIRS")]
 		public bool IsCroshairActive;
 
 		public Image Croshair;
@@ -32,7 +32,7 @@ namespace ZeroGravity.UI
 
 		public Text ItemName;
 
-		[Header("TOOLTIP")]
+		[Title("TOOLTIP")]
 		public GameObject TooltipEquip;
 
 		public GameObject Tooltip;
@@ -47,22 +47,22 @@ namespace ZeroGravity.UI
 
 		public GameObject Help;
 
-		[Header("TUTORIAL")]
+		[Title("TUTORIAL")]
 		public List<int> ShownTutorials = new List<int>();
 
 		public GameObject TutorialUIPref;
 
 		public GameObject TutorialAdditionalInfo;
 
-		[Header("ALERT")]
+		[Title("ALERT")]
 		public GameObject AlertObject;
 
 		public Text AlertMessage;
 
-		[Header("Helmet hud")]
+		[Title("Helmet hud")]
 		public HelmetHudUI HelmetHud;
 
-		[Header("NOTIFICATIONS")]
+		[Title("NOTIFICATIONS")]
 		public NotificationUI NotificationUI;
 
 		private bool isNotificationActive;
@@ -73,7 +73,7 @@ namespace ZeroGravity.UI
 
 		public Transform NotificationsHolder;
 
-		[Header("QUEST NOTIFICATIONS")]
+		[Title("QUEST NOTIFICATIONS")]
 		public QuestCutScene QuestCutScene;
 
 		public GameObject TrackingQuest;

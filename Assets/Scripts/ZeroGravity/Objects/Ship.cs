@@ -1046,9 +1046,9 @@ namespace ZeroGravity.Objects
 							(MyPlayer.Instance.LockedToTrigger as SceneTriggerAirlockPanel).AirlockUI.GetVesselAndAirTanks();
 						}
 					}
-					catch (Exception ex8)
+					catch (Exception ex)
 					{
-						Dbg.Error("SceneDockingPortDetails exception", base.GUID, base.SceneID.ToString(), dockingPort.ID, ex8.Message, ex8.StackTrace);
+						Dbg.Error("SceneDockingPortDetails exception", base.GUID, base.SceneID.ToString(), dockingPort.ID, ex.Message, ex.StackTrace);
 					}
 				}
 			}
@@ -1067,9 +1067,9 @@ namespace ZeroGravity.Objects
 						cargoPanel.UpdateVesselObjects(CargoBay.ParentVessel);
 					}
 				}
-				catch (Exception ex9)
+				catch (Exception ex)
 				{
-					Dbg.Error("CargoBayDetails exception", base.GUID, base.SceneID.ToString(), shipObjects.CargoBay.InSceneID, ex9.Message, ex9.StackTrace);
+					Dbg.Error("CargoBayDetails exception", base.GUID, base.SceneID.ToString(), shipObjects.CargoBay.InSceneID, ex.Message, ex.StackTrace);
 				}
 			}
 			if (shipObjects.SpawnWithChance != null)
@@ -1092,9 +1092,9 @@ namespace ZeroGravity.Objects
 						}
 						structureObject9.SetStats(spawnPoint);
 					}
-					catch (Exception ex10)
+					catch (Exception ex)
 					{
-						Dbg.Error("SpawnPointStats exception", base.GUID, base.SceneID.ToString(), spawnPoint.InSceneID, ex10.Message, ex10.StackTrace);
+						Dbg.Error("SpawnPointStats exception", base.GUID, base.SceneID.ToString(), spawnPoint.InSceneID, ex.Message, ex.StackTrace);
 					}
 				}
 			}
@@ -1107,9 +1107,9 @@ namespace ZeroGravity.Objects
 						VesselRepairPoint structureObject10 = GetStructureObject<VesselRepairPoint>(repairPoint.InSceneID);
 						structureObject10.SetDetails(repairPoint);
 					}
-					catch (Exception ex11)
+					catch (Exception ex)
 					{
-						Dbg.Error("VesselRepairPoint exception", base.GUID, base.SceneID.ToString(), repairPoint.InSceneID, ex11.Message, ex11.StackTrace);
+						Dbg.Error("VesselRepairPoint exception", base.GUID, base.SceneID.ToString(), repairPoint.InSceneID, ex.Message, ex.StackTrace);
 					}
 				}
 			}
@@ -1126,9 +1126,9 @@ namespace ZeroGravity.Objects
 						SecuritySystem.UpdateUI();
 					}
 				}
-				catch (Exception ex12)
+				catch (Exception ex)
 				{
-					Dbg.Error("Emblem exception", base.GUID, base.SceneID.ToString(), ex12.Message, ex12.StackTrace);
+					Dbg.Error("Emblem exception", base.GUID, base.SceneID.ToString(), ex.Message, ex.StackTrace);
 				}
 			}
 			if (flag && MyPlayer.Instance.LockedToTrigger is SceneTriggerLifeSupportPanel)

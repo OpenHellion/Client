@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TriInspector;
 using UnityEngine;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
@@ -48,13 +49,12 @@ namespace ZeroGravity.LevelDesign
 
 		public bool Locked;
 
-		private bool dockStarted;
+		[ReadOnly]
+		public bool DockStarted = false;
 
 		[Space(5f)]
-		[SerializeField]
 		public List<SceneTriggerExecuter> mergeExecuters;
 
-		[SerializeField]
 		public float mergeExecutersDistance = 1f;
 
 		[Space(5f)]
@@ -172,8 +172,8 @@ namespace ZeroGravity.LevelDesign
 		{
 			ToggleDock(true, isInitialize);
 			DockedToPort.ToggleDock(true, isInitialize);
-			dockStarted = false;
-			DockedToPort.dockStarted = false;
+			DockStarted = false;
+			DockedToPort.DockStarted = false;
 			foreach (SceneDockingPortController portController in portControllers)
 			{
 				portController.OnLeverStateChange();
@@ -184,8 +184,8 @@ namespace ZeroGravity.LevelDesign
 		{
 			ToggleDock(false, isInitialize);
 			DockedToPort.ToggleDock(false, isInitialize);
-			dockStarted = false;
-			DockedToPort.dockStarted = false;
+			DockStarted = false;
+			DockedToPort.DockStarted = false;
 			DockedToPort.DockedToPort = null;
 			DockedToPort = null;
 		}

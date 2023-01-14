@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using OpenHellion.Networking;
 using OpenHellion.ProviderSystem;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Rendering;
@@ -142,7 +143,7 @@ namespace ZeroGravity.Objects
 
 		public float HideCanvasDistance = 5f;
 
-		[Header("Outfit")]
+		[Title("Outfit")]
 		public InventoryUI inventoryUI;
 
 		public Outfit CurrentOutfit;

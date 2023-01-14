@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Math;
@@ -12,26 +12,6 @@ namespace ZeroGravity.ShipComponents
 {
 	public class PilotOverlayUI : MonoBehaviour
 	{
-		[CompilerGenerated]
-		private sealed class _003CUpdateRadarList_003Ec__AnonStorey0
-		{
-			internal Vector3D myPos;
-
-			internal List<ArtificialBody> list;
-
-			internal PilotOverlayUI _0024this;
-
-			internal bool _003C_003Em__0(TargetObject m)
-			{
-				return m.AB == null || !(m.AB is SpaceObjectVessel) || !(m.AB as SpaceObjectVessel).IsMainVessel || (m.AB as SpaceObjectVessel).MainVessel == _0024this.ParentShip.MainVessel || m.Distance > _0024this.RadarRange[_0024this.currentRadarRange];
-			}
-
-			internal bool _003C_003Em__1(ArtificialBody m)
-			{
-				return m is SpaceObjectVessel && (m as SpaceObjectVessel).VesselData != null && (m as SpaceObjectVessel).IsMainVessel && !(m as SpaceObjectVessel).IsWarpOnline && _0024this.ParentShip.MainVessel != (m as SpaceObjectVessel).MainVessel && (myPos - m.Position).Magnitude <= (double)_0024this.RadarRange[_0024this.currentRadarRange] && !list.Contains(m) && m as SpaceObjectVessel != _0024this.ParentShip;
-			}
-		}
-
 		public Ship ParentShip;
 
 		public List<float> RadarRange = new List<float>();
@@ -92,16 +72,16 @@ namespace ZeroGravity.ShipComponents
 
 		public Text MapObjectDistance;
 
-		[Header("TARGET LIST")]
+		[Title("TARGET LIST")]
 		public PilotTargetList CurrentTargetList;
 
-		[Header("STATUS SCREEN")]
+		[Title("STATUS SCREEN")]
 		public PilotStatusScreen CurrentStatusScreen;
 
-		[Header("RADAR")]
+		[Title("RADAR")]
 		public PilotRadar CurrentRadar;
 
-		[Header("INDICATORS")]
+		[Title("INDICATORS")]
 		private float distance;
 
 		private float onSpeed;
@@ -142,7 +122,7 @@ namespace ZeroGravity.ShipComponents
 
 		public Text MatchedTo;
 
-		[Header("WARP")]
+		[Title("WARP")]
 		public Image ManeuverObject;
 
 		public OffScreenTargetArrow ManeuverOffScreen;
@@ -161,15 +141,6 @@ namespace ZeroGravity.ShipComponents
 
 		public GameObject DrivingTips;
 
-		[CompilerGenerated]
-		private static Func<TargetObject, ArtificialBody> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<TargetObject, float> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Func<TargetObject, bool> _003C_003Ef__am_0024cache2;
-
 		private void Start()
 		{
 		}
@@ -182,12 +153,12 @@ namespace ZeroGravity.ShipComponents
 			{
 				SelectedTarget = null;
 				NoTargetAvailable();
-				MatchedToTarget.SetActive(false);
-				CanMatchTarget.SetActive(false);
+				MatchedToTarget.SetActive(value: false);
+				CanMatchTarget.SetActive(value: false);
 			}
 			else if (AllTargets.Count > 0 && SelectedTarget == null)
 			{
-				ParametersHolder.SetActive(true);
+				ParametersHolder.SetActive(value: true);
 				if (SelectedTarget == null)
 				{
 					SelectedTarget = AllTargets[0];
@@ -195,11 +166,11 @@ namespace ZeroGravity.ShipComponents
 			}
 			if (MyPlayer.Instance.FpsController.IsFreeLook && CentralPanel.activeInHierarchy)
 			{
-				CentralPanel.SetActive(false);
+				CentralPanel.SetActive(value: false);
 			}
 			else if (!MyPlayer.Instance.FpsController.IsFreeLook && !CentralPanel.activeInHierarchy)
 			{
-				CentralPanel.SetActive(true);
+				CentralPanel.SetActive(value: true);
 			}
 			if (CurrentTargetList.TargetListHolder != null)
 			{
@@ -343,20 +314,20 @@ namespace ZeroGravity.ShipComponents
 				CurrentTargetList.RadarRangeCurrent.text = Localization.RadarRange.ToUpper() + " " + FormatHelper.DistanceFormat(RadarRange[currentRadarRange]);
 			}
 			DrivingTips.Activate(Client.Instance.CanvasManager.ShowTips);
-			base.gameObject.SetActive(true);
+			base.gameObject.SetActive(value: true);
 		}
 
 		public void OnDetach()
 		{
 			AllTargets.Clear();
-			TargetOverlayUI[] componentsInChildren = OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(true);
+			TargetOverlayUI[] componentsInChildren = OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(includeInactive: true);
 			foreach (TargetOverlayUI targetOverlayUI in componentsInChildren)
 			{
 				UnityEngine.Object.Destroy(targetOverlayUI.gameObject);
 			}
 			if (CurrentTargetList != null)
 			{
-				TargetInListUI[] componentsInChildren2 = CurrentTargetList.TargetListHolder.GetComponentsInChildren<TargetInListUI>(true);
+				TargetInListUI[] componentsInChildren2 = CurrentTargetList.TargetListHolder.GetComponentsInChildren<TargetInListUI>(includeInactive: true);
 				foreach (TargetInListUI targetInListUI in componentsInChildren2)
 				{
 					UnityEngine.Object.Destroy(targetInListUI.gameObject);
@@ -364,39 +335,37 @@ namespace ZeroGravity.ShipComponents
 			}
 			if (CurrentRadar != null)
 			{
-				RadarShipElement[] componentsInChildren3 = CurrentRadar.Root.GetComponentsInChildren<RadarShipElement>(true);
+				RadarShipElement[] componentsInChildren3 = CurrentRadar.Root.GetComponentsInChildren<RadarShipElement>(includeInactive: true);
 				foreach (RadarShipElement radarShipElement in componentsInChildren3)
 				{
 					UnityEngine.Object.Destroy(radarShipElement.gameObject);
 				}
 			}
-			base.gameObject.SetActive(false);
+			base.gameObject.SetActive(value: false);
 		}
 
 		public void UpdateRadarList()
 		{
-			_003CUpdateRadarList_003Ec__AnonStorey0 _003CUpdateRadarList_003Ec__AnonStorey = new _003CUpdateRadarList_003Ec__AnonStorey0();
-			_003CUpdateRadarList_003Ec__AnonStorey._0024this = this;
-			_003CUpdateRadarList_003Ec__AnonStorey.myPos = MyPlayer.Instance.Parent.Position;
-			List<TargetObject> list = AllTargets.Where(_003CUpdateRadarList_003Ec__AnonStorey._003C_003Em__0).ToList();
-			foreach (TargetObject item in list)
+			Vector3D myPos = MyPlayer.Instance.Parent.Position;
+			List<TargetObject> list2 = AllTargets.Where((TargetObject m) => m.AB == null || !(m.AB is SpaceObjectVessel) || !(m.AB as SpaceObjectVessel).IsMainVessel || (m.AB as SpaceObjectVessel).MainVessel == ParentShip.MainVessel || m.Distance > RadarRange[currentRadarRange]).ToList();
+			foreach (TargetObject item in list2)
 			{
 				AllTargets.Remove(item);
 			}
-			TargetOverlayUI[] componentsInChildren = OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(true);
+			TargetOverlayUI[] componentsInChildren = OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(includeInactive: true);
 			foreach (TargetOverlayUI targetOverlayUI in componentsInChildren)
 			{
-				if (list.Contains(targetOverlayUI.Target))
+				if (list2.Contains(targetOverlayUI.Target))
 				{
 					UnityEngine.Object.Destroy(targetOverlayUI.gameObject);
 				}
 			}
 			if (CurrentTargetList != null)
 			{
-				TargetInListUI[] componentsInChildren2 = CurrentTargetList.TargetListHolder.GetComponentsInChildren<TargetInListUI>(true);
+				TargetInListUI[] componentsInChildren2 = CurrentTargetList.TargetListHolder.GetComponentsInChildren<TargetInListUI>(includeInactive: true);
 				foreach (TargetInListUI targetInListUI in componentsInChildren2)
 				{
-					if (list.Contains(targetInListUI.Target))
+					if (list2.Contains(targetInListUI.Target))
 					{
 						UnityEngine.Object.Destroy(targetInListUI.gameObject);
 					}
@@ -404,22 +373,17 @@ namespace ZeroGravity.ShipComponents
 			}
 			if (CurrentRadar != null)
 			{
-				RadarShipElement[] componentsInChildren3 = CurrentRadar.Root.GetComponentsInChildren<RadarShipElement>(true);
+				RadarShipElement[] componentsInChildren3 = CurrentRadar.Root.GetComponentsInChildren<RadarShipElement>(includeInactive: true);
 				foreach (RadarShipElement radarShipElement in componentsInChildren3)
 				{
-					if (list.Contains(radarShipElement.Target))
+					if (list2.Contains(radarShipElement.Target))
 					{
 						UnityEngine.Object.Destroy(radarShipElement.gameObject);
 					}
 				}
 			}
-			List<TargetObject> allTargets = AllTargets;
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CUpdateRadarList_003Em__0;
-			}
-			_003CUpdateRadarList_003Ec__AnonStorey.list = allTargets.Select(_003C_003Ef__am_0024cache0).ToList();
-			foreach (ArtificialBody item2 in Client.Instance.SolarSystem.ArtificialBodies.Where(_003CUpdateRadarList_003Ec__AnonStorey._003C_003Em__1))
+			List<ArtificialBody> list = AllTargets.Select((TargetObject m) => m.AB).ToList();
+			foreach (ArtificialBody item2 in Client.Instance.SolarSystem.ArtificialBodies.Where((ArtificialBody m) => m is SpaceObjectVessel && (m as SpaceObjectVessel).VesselData != null && (m as SpaceObjectVessel).IsMainVessel && !(m as SpaceObjectVessel).IsWarpOnline && ParentShip.MainVessel != (m as SpaceObjectVessel).MainVessel && (myPos - m.Position).Magnitude <= (double)RadarRange[currentRadarRange] && !list.Contains(m) && m as SpaceObjectVessel != ParentShip))
 			{
 				TargetObject targetObject = new TargetObject();
 				targetObject.AB = item2;
@@ -446,72 +410,61 @@ namespace ZeroGravity.ShipComponents
 
 		public void UpdateOverlayTargets()
 		{
-			TargetOverlayUI[] componentsInChildren = OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(true);
+			TargetOverlayUI[] componentsInChildren = OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(includeInactive: true);
 			foreach (TargetOverlayUI targetOverlayUI in componentsInChildren)
 			{
 				Vector3 pos = ((!targetOverlayUI.Target.AB.IsDummyObject) ? targetOverlayUI.Target.AB.transform.position : (Quaternion.LookRotation(ParentShip.MainVessel.Forward, ParentShip.MainVessel.Up).Inverse() * (targetOverlayUI.Target.AB.Position - ParentShip.Position).ToVector3() + ParentShip.GeometryRoot.transform.position));
-				Vector3 arrowUp;
-				targetOverlayUI.transform.position = GetPositionOnOverlay(pos, out arrowUp);
+				targetOverlayUI.transform.position = GetPositionOnOverlay(pos, out var arrowUp);
 				targetOverlayUI.transform.rotation = Quaternion.identity;
 				if (!targetOverlayUI.gameObject.activeInHierarchy)
 				{
-					targetOverlayUI.gameObject.SetActive(true);
+					targetOverlayUI.gameObject.SetActive(value: true);
 				}
 				if (arrowUp != Vector3.zero)
 				{
-					targetOverlayUI.Distance.gameObject.Activate(false);
-					targetOverlayUI.OffScreenTarget.gameObject.Activate(true);
+					targetOverlayUI.Distance.gameObject.Activate(value: false);
+					targetOverlayUI.OffScreenTarget.gameObject.Activate(value: true);
 					targetOverlayUI.OffScreenTarget.transform.up = arrowUp;
 				}
 				else
 				{
 					if (!targetOverlayUI.Distance.gameObject.activeInHierarchy)
 					{
-						targetOverlayUI.Distance.gameObject.SetActive(true);
+						targetOverlayUI.Distance.gameObject.SetActive(value: true);
 					}
 					if (targetOverlayUI.OffScreenTarget.gameObject.activeInHierarchy)
 					{
-						targetOverlayUI.OffScreenTarget.gameObject.SetActive(false);
+						targetOverlayUI.OffScreenTarget.gameObject.SetActive(value: false);
 					}
 				}
-				List<TargetObject> allTargets = AllTargets;
-				if (_003C_003Ef__am_0024cache1 == null)
-				{
-					_003C_003Ef__am_0024cache1 = _003CUpdateOverlayTargets_003Em__1;
-				}
-				IOrderedEnumerable<TargetObject> source = allTargets.OrderBy(_003C_003Ef__am_0024cache1);
-				if (_003C_003Ef__am_0024cache2 == null)
-				{
-					_003C_003Ef__am_0024cache2 = _003CUpdateOverlayTargets_003Em__2;
-				}
-				HoveredTarget = source.FirstOrDefault(_003C_003Ef__am_0024cache2);
+				HoveredTarget = AllTargets.OrderBy((TargetObject m) => m.AngleFromCameraForward).FirstOrDefault((TargetObject m) => m.AngleFromCameraForward < 3f);
 				if (HoveredTarget != targetOverlayUI.Target && targetOverlayUI.Hovered.activeInHierarchy)
 				{
-					targetOverlayUI.Hovered.SetActive(false);
+					targetOverlayUI.Hovered.SetActive(value: false);
 				}
 				if (HoveredTarget != null && HoveredTarget == targetOverlayUI.Target && !targetOverlayUI.Hovered.activeInHierarchy)
 				{
-					targetOverlayUI.Hovered.SetActive(true);
+					targetOverlayUI.Hovered.SetActive(value: true);
 				}
 				if (SelectedTarget != targetOverlayUI.Target && targetOverlayUI.Selected.activeInHierarchy)
 				{
-					targetOverlayUI.Default.SetActive(true);
-					targetOverlayUI.Selected.SetActive(false);
+					targetOverlayUI.Default.SetActive(value: true);
+					targetOverlayUI.Selected.SetActive(value: false);
 					targetOverlayUI.Distance.color = Colors.GrayDefault;
 				}
 				if (SelectedTarget != null && SelectedTarget == targetOverlayUI.Target && !targetOverlayUI.Selected.activeInHierarchy)
 				{
-					targetOverlayUI.Default.SetActive(false);
-					targetOverlayUI.Selected.SetActive(true);
+					targetOverlayUI.Default.SetActive(value: false);
+					targetOverlayUI.Selected.SetActive(value: true);
 					targetOverlayUI.Distance.color = Colors.White;
 				}
 				if ((targetOverlayUI.Target == SelectedTarget || targetOverlayUI.Target == HoveredTarget) && !targetOverlayUI.NameHolder.activeInHierarchy)
 				{
-					targetOverlayUI.NameHolder.SetActive(true);
+					targetOverlayUI.NameHolder.SetActive(value: true);
 				}
 				if (targetOverlayUI.Target != SelectedTarget && targetOverlayUI.Target != HoveredTarget && targetOverlayUI.NameHolder.activeInHierarchy)
 				{
-					targetOverlayUI.NameHolder.SetActive(false);
+					targetOverlayUI.NameHolder.SetActive(value: false);
 				}
 				Vector3 vector = (targetOverlayUI.AB.Position - ParentShip.Position).ToVector3();
 				Vector3 vector2 = Quaternion.LookRotation(ParentShip.Forward, ParentShip.Up).Inverse() * vector;
@@ -539,27 +492,25 @@ namespace ZeroGravity.ShipComponents
 				{
 					Vector3 pos = Quaternion.LookRotation(ParentShip.MainVessel.Forward, ParentShip.MainVessel.Up).Inverse() * (SelectedMapObject.MainObject.Position - ParentShip.Position).ToVector3() + ParentShip.GeometryRoot.transform.position;
 					double magnitude = (SelectedMapObject.MainObject.Position - ParentShip.MainVessel.Position).Magnitude;
-					Vector3 arrowUp;
-					MapObject.transform.position = GetPositionOnOverlay(pos, out arrowUp);
+					MapObject.transform.position = GetPositionOnOverlay(pos, out var _);
 					MapObjectName.text = SelectedMapObject.Name.ToUpper();
 					MapObjectDistance.text = FormatHelper.DistanceFormat(magnitude);
-					MapObject.Activate(true);
+					MapObject.Activate(value: true);
 				}
 				else
 				{
 					Vector3D position = SelectedMapObject.Orbit.Position;
 					Vector3 pos2 = Quaternion.LookRotation(ParentShip.MainVessel.Forward, ParentShip.MainVessel.Up).Inverse() * (position - ParentShip.Position).ToVector3() + ParentShip.GeometryRoot.transform.position;
 					double magnitude2 = (position - ParentShip.MainVessel.Position).Magnitude;
-					Vector3 arrowUp2;
-					MapObject.transform.position = GetPositionOnOverlay(pos2, out arrowUp2);
+					MapObject.transform.position = GetPositionOnOverlay(pos2, out var _);
 					MapObjectName.text = SelectedMapObject.Name.ToUpper();
 					MapObjectDistance.text = FormatHelper.DistanceFormat(magnitude2);
-					MapObject.Activate(true);
+					MapObject.Activate(value: true);
 				}
 			}
 			else
 			{
-				MapObject.Activate(false);
+				MapObject.Activate(value: false);
 			}
 		}
 
@@ -567,37 +518,36 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (ParentShip.IsWarpOnline)
 			{
-				ManeuverStatusHolder.Activate(true);
+				ManeuverStatusHolder.Activate(value: true);
 				ManeuverTimer.text = Localization.ETA + " " + FormatHelper.PeriodFormat(ParentShip.EndWarpTime - Client.Instance.SolarSystem.CurrentTime);
-				ManeuverWarning.Activate(true);
-				ManeuverObject.gameObject.Activate(false);
+				ManeuverWarning.Activate(value: true);
+				ManeuverObject.gameObject.Activate(value: false);
 			}
 			else if (ParentShip.CourseStartTime > 0.0 && ParentShip.CourseWaitingActivation > 0)
 			{
-				ManeuverObject.gameObject.Activate(true);
-				ManeuverWarning.Activate(true);
+				ManeuverObject.gameObject.Activate(value: true);
+				ManeuverWarning.Activate(value: true);
 				double num = ParentShip.CourseStartTime - Client.Instance.SolarSystem.CurrentTime;
 				if (num > 0.0)
 				{
-					ManeuverStatusHolder.Activate(true);
+					ManeuverStatusHolder.Activate(value: true);
 					ManeuverTimer.text = FormatHelper.Timer((float)num);
 				}
 				else
 				{
-					ManeuverStatusHolder.Activate(false);
+					ManeuverStatusHolder.Activate(value: false);
 					ManeuverTimer.text = string.Empty;
 				}
 				Vector3 pos = Quaternion.LookRotation(ParentShip.MainVessel.Forward, ParentShip.MainVessel.Up).Inverse() * ParentShip.CourseStartDirection * 10000f + ParentShip.GeometryRoot.transform.position;
-				Vector3 arrowUp;
-				ManeuverObject.transform.position = GetPositionOnOverlay(pos, out arrowUp);
+				ManeuverObject.transform.position = GetPositionOnOverlay(pos, out var arrowUp);
 				if (arrowUp != Vector3.zero)
 				{
-					ManeuverOffScreen.gameObject.Activate(true);
+					ManeuverOffScreen.gameObject.Activate(value: true);
 					ManeuverOffScreen.transform.up = arrowUp;
 				}
 				else
 				{
-					ManeuverOffScreen.gameObject.Activate(false);
+					ManeuverOffScreen.gameObject.Activate(value: false);
 				}
 				if (Vector3.Angle(ParentShip.Forward, ParentShip.CourseStartDirection) < 5f)
 				{
@@ -610,9 +560,9 @@ namespace ZeroGravity.ShipComponents
 			}
 			else
 			{
-				ManeuverObject.gameObject.Activate(false);
-				ManeuverStatusHolder.Activate(false);
-				ManeuverWarning.Activate(false);
+				ManeuverObject.gameObject.Activate(value: false);
+				ManeuverStatusHolder.Activate(value: false);
+				ManeuverWarning.Activate(value: false);
 			}
 		}
 
@@ -628,7 +578,7 @@ namespace ZeroGravity.ShipComponents
 				{
 					vector3 = Quaternion.Euler(0f, 0f, 180f) * vector3;
 				}
-				vector = ((!(System.Math.Abs(vector3.x / (float)Screen.width) > System.Math.Abs(vector3.y / (float)Screen.height))) ? (vector3 / System.Math.Abs(vector3.y / ((float)Screen.height / 2f)) + vector2) : (vector3 / System.Math.Abs(vector3.x / ((float)Screen.width / 2f)) + vector2));
+				vector = (!(Mathf.Abs(vector3.x / (float)Screen.width) > Mathf.Abs(vector3.y / (float)Screen.height))) ? (vector3 / MathF.Abs(vector3.y / ((float)Screen.height / 2f)) + vector2) : (vector3 / Mathf.Abs(vector3.x / ((float)Screen.width / 2f)) + vector2);
 				arrowUp = (vector2 - vector).normalized;
 				arrowUp.z = 0f;
 			}
@@ -646,7 +596,7 @@ namespace ZeroGravity.ShipComponents
 				float num = Mathf.Clamp(shipRotationCursor.magnitude * 4f, 0f, RotationIndicator.rect.height);
 				if (!RotationIndicatorArrow.gameObject.activeInHierarchy)
 				{
-					RotationIndicatorArrow.gameObject.SetActive(true);
+					RotationIndicatorArrow.gameObject.SetActive(value: true);
 				}
 				RotationIndicator.localRotation = Quaternion.Euler(0f, 0f, MathHelper.AngleSigned(Vector3.right, shipRotationCursor, Vector3.forward));
 				RotationIndicatorArrow.transform.localPosition = new Vector3(0f, 0f - num, 0f);
@@ -657,7 +607,7 @@ namespace ZeroGravity.ShipComponents
 				if (Client.Instance.CanvasManager.AutoStabilization && !ParentShip.IsRotationStabilized)
 				{
 					StabilizeRotationTimer += Time.deltaTime;
-					if (shipRotationCursor.magnitude > 5f || (double)shipRotationCursor.magnitude < 0.5 || System.Math.Abs(MyPlayer.Instance.FpsController.MouseRightAxis) > float.Epsilon || System.Math.Abs(MyPlayer.Instance.FpsController.MouseUpAxis) > float.Epsilon)
+					if (shipRotationCursor.magnitude > 5f || (double)shipRotationCursor.magnitude < 0.5 || Mathf.Abs(MyPlayer.Instance.FpsController.MouseRightAxis) > float.Epsilon || Mathf.Abs(MyPlayer.Instance.FpsController.MouseUpAxis) > float.Epsilon)
 					{
 						StabilizeRotationTimer = 0f;
 					}
@@ -672,7 +622,7 @@ namespace ZeroGravity.ShipComponents
 			}
 			else if (RotationIndicatorArrow.gameObject.activeInHierarchy)
 			{
-				RotationIndicatorArrow.gameObject.SetActive(false);
+				RotationIndicatorArrow.gameObject.SetActive(value: false);
 			}
 		}
 
@@ -767,22 +717,22 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (ParentShip.MainVessel.IsStabilized || SelectedTarget == null || (SelectedTarget.AB.Velocity - ParentShip.Velocity).Magnitude > stabilizeToTargetMaxVelocityDiff || (SelectedTarget.AB.Position - ParentShip.Position).Magnitude - SelectedTarget.AB.Radius > stabilizeToTargetMaxPositionDiff)
 			{
-				CanMatchTarget.SetActive(false);
+				CanMatchTarget.SetActive(value: false);
 			}
 			else
 			{
-				CanMatchTarget.SetActive(true);
+				CanMatchTarget.SetActive(value: true);
 			}
 			if (ParentShip.MainVessel.IsStabilized && !MatchedToTarget.activeInHierarchy)
 			{
 				SpaceObjectVessel spaceObjectVessel = ParentShip.MainVessel.StabilizeToTargetObj as SpaceObjectVessel;
 				MatchedTo.text = Localization.Matched.ToUpper() + " - " + ((spaceObjectVessel.StabilizedChildren.Count > 1) ? Localization.ClusterOfVessels.ToUpper() : spaceObjectVessel.CustomName);
-				MatchedToTarget.SetActive(true);
+				MatchedToTarget.SetActive(value: true);
 			}
 			else if (!ParentShip.MainVessel.IsStabilized && MatchedToTarget.activeInHierarchy)
 			{
 				MatchedTo.text = string.Empty;
-				MatchedToTarget.SetActive(false);
+				MatchedToTarget.SetActive(value: false);
 			}
 		}
 
@@ -795,7 +745,7 @@ namespace ZeroGravity.ShipComponents
 
 		private void NoTargetAvailable()
 		{
-			ParametersHolder.SetActive(false);
+			ParametersHolder.SetActive(value: false);
 			LatLeft.fillAmount = 0f;
 			LatRight.fillAmount = 0f;
 			LatUp.fillAmount = 0f;
@@ -823,30 +773,12 @@ namespace ZeroGravity.ShipComponents
 
 		public void OffSpeedHelperActive()
 		{
-			OffSpeedHelper.Activate(true);
+			OffSpeedHelper.Activate(value: true);
 		}
 
 		public void OffSpeedHelperInactive()
 		{
-			OffSpeedHelper.Activate(false);
-		}
-
-		[CompilerGenerated]
-		private static ArtificialBody _003CUpdateRadarList_003Em__0(TargetObject m)
-		{
-			return m.AB;
-		}
-
-		[CompilerGenerated]
-		private static float _003CUpdateOverlayTargets_003Em__1(TargetObject m)
-		{
-			return m.AngleFromCameraForward;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CUpdateOverlayTargets_003Em__2(TargetObject m)
-		{
-			return m.AngleFromCameraForward < 3f;
+			OffSpeedHelper.Activate(value: false);
 		}
 	}
 }

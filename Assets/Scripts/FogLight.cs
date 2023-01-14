@@ -1,3 +1,4 @@
+using TriInspector;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -14,7 +15,7 @@ public class FogLight : LightOverride
 	public bool m_ForceOnForFog;
 
 	[Tooltip("Only one shadowed fog AreaLight at a time.")]
-	[Header("Shadows")]
+	[Title("Shadows")]
 	public bool m_Shadows;
 
 	[Tooltip("Always at most half the res of the AreaLight's shadowmap.")]

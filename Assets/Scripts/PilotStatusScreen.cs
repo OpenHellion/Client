@@ -1,6 +1,5 @@
-using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity;
@@ -56,7 +55,7 @@ public class PilotStatusScreen : MonoBehaviour
 
 	public Image NaniteFiller;
 
-	[Header("Warinngs")]
+	[Title("Warinngs")]
 	public GameObject WarningActive;
 
 	public Text WarningLabel;
@@ -71,20 +70,11 @@ public class PilotStatusScreen : MonoBehaviour
 
 	public GameObject System;
 
-	[CompilerGenerated]
-	private static Func<SceneMachineryPartSlot, bool> _003C_003Ef__am_0024cache0;
-
-	public PilotOverlayUI ParentPilot
-	{
-		get
-		{
-			return Client.Instance.InGamePanels.Pilot;
-		}
-	}
+	public PilotOverlayUI ParentPilot => Client.Instance.InGamePanels.Pilot;
 
 	private void Start()
 	{
-		NotActive.SetActive(true);
+		NotActive.SetActive(value: true);
 		WarningLabel.text = Localization.Warning.ToUpper();
 		EngNotAvailableLabel.text = Localization.EngineNotAvailable.ToUpper();
 	}
@@ -93,12 +83,7 @@ public class PilotStatusScreen : MonoBehaviour
 	{
 		if (ArmorSlot == null)
 		{
-			SceneMachineryPartSlot[] machineryPartSlots = ParentPilot.ParentShip.VesselBaseSystem.MachineryPartSlots;
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CUpdateSystemsInfo_003Em__0;
-			}
-			ArmorSlot = machineryPartSlots.Where(_003C_003Ef__am_0024cache0).FirstOrDefault();
+			ArmorSlot = ParentPilot.ParentShip.VesselBaseSystem.MachineryPartSlots.Where((SceneMachineryPartSlot m) => m.Scope == MachineryPartSlotScope.Armor).FirstOrDefault();
 		}
 		OffTargetAssistant.Activate(Client.Instance.OffSpeedHelper);
 		float num = ParentPilot.ParentShip.Health / ParentPilot.ParentShip.MaxHealth;
@@ -121,17 +106,16 @@ public class PilotStatusScreen : MonoBehaviour
 			float capacity2 = ParentPilot.ParentShip.Engine.ResourceContainers[0].Compartments[0].Capacity;
 			float val = num4 / capacity2;
 			EngineValue.text = FormatHelper.Percentage(val);
-			Color color;
-			EngineStatus.text = ParentPilot.ParentShip.Engine.GetStatus(out color);
+			EngineStatus.text = ParentPilot.ParentShip.Engine.GetStatus(out var color);
 			EngineStatus.color = color;
 			ENGStatus.color = ((ParentPilot.ParentShip.Engine.Status != SystemStatus.OnLine) ? Colors.GrayDefault : Colors.White);
 			EngPowerUp.SetActive(ParentPilot.ParentShip.Engine.Status == SystemStatus.PowerUp);
-			EngineNotAvailable.Activate(false);
+			EngineNotAvailable.Activate(value: false);
 		}
 		else
 		{
 			EngineStatus.text = string.Empty;
-			EngineNotAvailable.Activate(true);
+			EngineNotAvailable.Activate(value: true);
 		}
 		if (ParentPilot.ParentShip.Capacitor != null)
 		{
@@ -166,9 +150,9 @@ public class PilotStatusScreen : MonoBehaviour
 
 	public void WarningsUpdate()
 	{
-		Breach.Activate(false);
-		Fire.Activate(false);
-		Gravity.Activate(false);
+		Breach.Activate(value: false);
+		Fire.Activate(value: false);
+		Gravity.Activate(value: false);
 		CheckSystems();
 		if (ParentPilot.ParentShip != null)
 		{
@@ -177,15 +161,15 @@ public class PilotStatusScreen : MonoBehaviour
 			{
 				if (sceneTriggerRoom.Breach)
 				{
-					Breach.Activate(true);
+					Breach.Activate(value: true);
 				}
 				if (sceneTriggerRoom.Fire)
 				{
-					Fire.Activate(true);
+					Fire.Activate(value: true);
 				}
 				if (sceneTriggerRoom.GravityMalfunction)
 				{
-					Gravity.Activate(true);
+					Gravity.Activate(value: true);
 				}
 			}
 		}
@@ -219,11 +203,5 @@ public class PilotStatusScreen : MonoBehaviour
 			}
 		}
 		System.Activate(value);
-	}
-
-	[CompilerGenerated]
-	private static bool _003CUpdateSystemsInfo_003Em__0(SceneMachineryPartSlot m)
-	{
-		return m.Scope == MachineryPartSlotScope.Armor;
 	}
 }

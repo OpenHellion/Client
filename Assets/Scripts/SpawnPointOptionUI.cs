@@ -2,6 +2,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -18,7 +19,7 @@ public class SpawnPointOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerE
 
 	public string Description;
 
-	[Header("Save")]
+	[Title("Save")]
 	public FileInfo SaveFile;
 
 	public Button DeleteButton;

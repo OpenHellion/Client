@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -26,7 +27,7 @@ public class AreaLight : MonoBehaviour
 
 	public Color m_Color = Color.white;
 
-	[Header("Shadows")]
+	[Title("Shadows")]
 	public bool m_Shadows;
 
 	public LayerMask m_ShadowCullingMask = -1;

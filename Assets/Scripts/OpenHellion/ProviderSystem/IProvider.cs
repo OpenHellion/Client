@@ -30,16 +30,9 @@ namespace OpenHellion.ProviderSystem
 		internal void Destroy();
 		internal void Update();
 
-		public enum ProviderType
-		{
-			STEAM,
-			DISCORD
-		}
-
 		// API
 		struct Friend
 		{
-			public string Id;
 			public string NativeId;
 			public string Name;
 			public FriendStatus Status;

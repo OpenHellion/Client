@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
-using ZeroGravity.LevelDesign;
 using ZeroGravity.Objects;
 
 namespace ZeroGravity.UI
@@ -31,14 +31,14 @@ namespace ZeroGravity.UI
 
 		public Text LogoutMainMenu;
 
-		[Header("Game menu options")]
+		[Title("Game menu options")]
 		public GameObject InGameMenuScreen;
 
 		public GameObject SaveButton;
 
 		public GameObject LoadButton;
 
-		[Header("Server info")]
+		[Title("Server info")]
 		public GameObject ServerInfoScreen;
 
 		public GameObject ReportServerButton;

@@ -13,6 +13,7 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
 using OpenHellion.Networking;
+using TriInspector;
 
 namespace ZeroGravity.ShipComponents
 {
@@ -30,7 +31,7 @@ namespace ZeroGravity.ShipComponents
 			}
 		}
 
-		[Header("Navigation")]
+		[Title("Navigation")]
 		public Map Map;
 
 		public Ship ParentVessel;
@@ -39,7 +40,7 @@ namespace ZeroGravity.ShipComponents
 
 		public GameObject RightHolder;
 
-		[Header("Selected object info")]
+		[Title("Selected object info")]
 		public GameObject SelectedMapObject;
 
 		public Text NameOfSelectedObjectText;
@@ -64,7 +65,7 @@ namespace ZeroGravity.ShipComponents
 
 		public Text SignatureValue;
 
-		[Header("Orbit parameters")]
+		[Title("Orbit parameters")]
 		public GameObject OrbitParametersHolder;
 
 		public InputField Inclination;
@@ -81,7 +82,7 @@ namespace ZeroGravity.ShipComponents
 
 		public Text OrbitalPeriod;
 
-		[Header("Buttons")]
+		[Title("Buttons")]
 		public Button HomeStationButton;
 
 		public Button MyShipButton;
@@ -94,7 +95,7 @@ namespace ZeroGravity.ShipComponents
 
 		public Button WarpButton;
 
-		[Header("Actions")]
+		[Title("Actions")]
 		public GameObject CurrentItemScreen;
 
 		public GameObject CurrentItemActive;
@@ -131,14 +132,14 @@ namespace ZeroGravity.ShipComponents
 
 		public Text WarningText;
 
-		[Header("Lists values")]
+		[Title("Lists values")]
 		public Text GroupObjectsValue;
 
 		public Text DistressSignalsValue;
 
 		public Text AuthorizedVesselsValue;
 
-		[Header("FTL")]
+		[Title("FTL")]
 		public GameObject ManeuverDetails;
 
 		public GameObject ManeuverInProgress;
@@ -197,12 +198,12 @@ namespace ZeroGravity.ShipComponents
 
 		public Text DockedVesselsMass;
 
-		[Header("Warp Summary")]
+		[Title("Warp Summary")]
 		public Text WarpConsumptionSummary;
 
 		public Text PowerConsumptionSummary;
 
-		[Header("SCAN")]
+		[Title("SCAN")]
 		public GameObject SelectedDetails;
 
 		public Text ActiveSens;
@@ -233,7 +234,7 @@ namespace ZeroGravity.ShipComponents
 
 		public Text SignalAmplificationValue;
 
-		[Header("Pitch & Yaw")]
+		[Title("Pitch & Yaw")]
 		public Text PitchValue;
 
 		public Slider PitchSlider;
