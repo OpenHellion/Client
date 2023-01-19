@@ -1,21 +1,22 @@
 using System;
 using System.Collections.Generic;
-using TeamUtility.IO;
+using Luminosity.IO;
 
 namespace ZeroGravity.UI
 {
 	public class InputDefaultLoaderJSON : IInputLoader
 	{
-		public SaveLoadParameters Load()
+		SaveData IInputLoader.Load()
 		{
-			List<InputConfiguration> list = new List<InputConfiguration>();
-			list = Json.LoadResource<List<InputConfiguration>>("Data/ControlsDefault");
-			SaveLoadParameters saveLoadParameters = new SaveLoadParameters();
-			saveLoadParameters.inputConfigurations = list;
+			List<ControlScheme> list = Json.LoadResource<List<ControlScheme>>("Data/ControlsDefault");
+			SaveData saveLoadParameters = new SaveData
+			{
+				ControlSchemes = list
+			};
 			return saveLoadParameters;
 		}
 
-		public InputConfiguration LoadSelective(string inputConfigName)
+		public ControlScheme Load(string schemeName)
 		{
 			throw new NotImplementedException();
 		}

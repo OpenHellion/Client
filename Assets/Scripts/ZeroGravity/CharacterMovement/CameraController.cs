@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using TeamUtility.IO;
 using UnityEngine;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Math;
@@ -11,7 +10,6 @@ namespace ZeroGravity.CharacterMovement
 {
 	public class CameraController : MonoBehaviour
 	{
-		[SerializeField]
 		public AnimatorHelper animatorHelper;
 
 		[SerializeField]
@@ -29,7 +27,6 @@ namespace ZeroGravity.CharacterMovement
 		[SerializeField]
 		private Transform freeLookXTransform;
 
-		[SerializeField]
 		public Transform spineTransform;
 
 		[SerializeField]
@@ -140,10 +137,6 @@ namespace ZeroGravity.CharacterMovement
 		private Quaternion lerpControllerBackStartRot;
 
 		private bool doLateUpdate = true;
-
-		private float lerpHelper;
-
-		public float maxLerpDuration = 1f;
 
 		private bool doInertia;
 
@@ -312,15 +305,15 @@ namespace ZeroGravity.CharacterMovement
 
 		private void GetMouseAxis()
 		{
-			mouseRightAxis = TeamUtility.IO.InputManager.GetAxis("LookHorizontal") * mouseSensitivity;
-			mouseUpAxis = (0f - TeamUtility.IO.InputManager.GetAxis("LookVertical")) * mouseSensitivity;
+			mouseRightAxis = InputManager.GetAxis(InputManager.AxisNames.LookVertical) * mouseSensitivity;
+			mouseUpAxis = (0f - InputManager.GetAxis(InputManager.AxisNames.LookVertical)) * mouseSensitivity;
 			if (Client.IsGameBuild)
 			{
-				mouseUpAxis = (float)(-((!Client.Instance.InvertedMouse) ? 1 : (-1))) * (TeamUtility.IO.InputManager.GetAxis("LookVertical") * mouseSensitivity);
+				mouseUpAxis = -((!Client.Instance.InvertedMouse) ? 1 : (-1)) * (InputManager.GetAxis(InputManager.AxisNames.LookVertical) * mouseSensitivity);
 			}
 			else
 			{
-				mouseUpAxis = -1f * (TeamUtility.IO.InputManager.GetAxis("LookVertical") * mouseSensitivity);
+				mouseUpAxis = -1f * (InputManager.GetAxis(InputManager.AxisNames.LookVertical) * mouseSensitivity);
 			}
 		}
 
@@ -452,11 +445,11 @@ namespace ZeroGravity.CharacterMovement
 			{
 				if (!autoFreeLook || !isFreeLook)
 				{
-					if (ZeroGravity.UI.InputManager.GetButtonDown(ZeroGravity.UI.InputManager.AxisNames.LeftAlt))
+					if (InputManager.GetButtonDown(InputManager.AxisNames.LeftAlt))
 					{
 						ToggleFreeLook(true);
 					}
-					if (ZeroGravity.UI.InputManager.GetButtonUp(ZeroGravity.UI.InputManager.AxisNames.LeftAlt) && isFreeLook)
+					if (InputManager.GetButtonUp(InputManager.AxisNames.LeftAlt) && isFreeLook)
 					{
 						ToggleFreeLook(false);
 					}
@@ -508,17 +501,13 @@ namespace ZeroGravity.CharacterMovement
 		public void ResetCameraPositionAndRotation()
 		{
 			resetLerpTime = 0f;
-			freeLookAngleX = (freeLookAngleY = 0f);
-			freeLookAngleXZero = (freeLookAngleYZero = 0f);
+			freeLookAngleX = freeLookAngleY = 0f;
+			freeLookAngleXZero = freeLookAngleYZero = 0f;
 			angleX = 0f;
-			mouseLookYTransform.localPosition = Vector3.zero;
-			mouseLookYTransform.localRotation = Quaternion.identity;
-			mouseLookXTransform.localPosition = Vector3.zero;
-			mouseLookXTransform.localRotation = Quaternion.identity;
-			freeLookXTransform.localPosition = Vector3.zero;
-			freeLookXTransform.localRotation = Quaternion.identity;
-			freeLookYTransform.localPosition = freeLookYTransformPos;
-			freeLookYTransform.localRotation = Quaternion.identity;
+			mouseLookYTransform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+			mouseLookXTransform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+			freeLookXTransform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+			freeLookYTransform.SetLocalPositionAndRotation(freeLookYTransformPos, Quaternion.identity);
 		}
 
 		public void ResetLookAt(float? duration = null)
@@ -645,8 +634,7 @@ namespace ZeroGravity.CharacterMovement
 		private void LerpCameraControllerBackWorker()
 		{
 			float num = (Time.time - lerpControllerBackStartTime) * lerpControllerBackStrength;
-			mouseLookXTransform.localPosition = Vector3.Lerp(lerpControllerBackStartPos, lerpControllerBackZeroPos, num);
-			mouseLookXTransform.localRotation = Quaternion.Lerp(lerpControllerBackStartRot, lerpControllerBackZeroRot, num);
+			mouseLookXTransform.SetLocalPositionAndRotation(Vector3.Lerp(lerpControllerBackStartPos, lerpControllerBackZeroPos, num), Quaternion.Lerp(lerpControllerBackStartRot, lerpControllerBackZeroRot, num));
 			if (num >= 1f)
 			{
 				lerpControllerBack = false;
@@ -663,15 +651,13 @@ namespace ZeroGravity.CharacterMovement
 		{
 			if (doLateUpdate && !isCameraAttachedToHeadBone)
 			{
-				spineTransform.position = spineFollowerTransform.position;
-				spineTransform.rotation = spineFollowerTransform.rotation;
+				spineTransform.SetPositionAndRotation(spineFollowerTransform.position, spineFollowerTransform.rotation);
 			}
 		}
 
 		public void AddCameraInertia()
 		{
-			InertiaCameraHolder.localPosition = Vector3.Lerp(InertiaCameraHolder.localPosition, translationInertion, Time.deltaTime * lerpCoef);
-			InertiaCameraHolder.localRotation = Quaternion.Slerp(InertiaCameraHolder.localRotation, Quaternion.Euler(new Vector3(rotationInertion.x, rotationInertion.y, 0f - rotationInertion.z)), Time.deltaTime * lerpCoef);
+			InertiaCameraHolder.SetLocalPositionAndRotation(Vector3.Lerp(InertiaCameraHolder.localPosition, translationInertion, Time.deltaTime * lerpCoef), Quaternion.Slerp(InertiaCameraHolder.localRotation, Quaternion.Euler(new Vector3(rotationInertion.x, rotationInertion.y, 0f - rotationInertion.z)), Time.deltaTime * lerpCoef));
 		}
 
 		public void SetCameraInertia(Vector3? tranInertia = null, Vector3? rotInertia = null)

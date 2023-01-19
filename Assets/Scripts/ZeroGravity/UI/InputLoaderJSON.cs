@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using TeamUtility.IO;
+using Luminosity.IO;
 using UnityEngine;
 using ZeroGravity.Data;
 
@@ -12,46 +12,42 @@ namespace ZeroGravity.UI
 	{
 		private SettingsData SettingsData = new SettingsData();
 
-		public SaveLoadParameters Load()
+		SaveData IInputLoader.Load()
 		{
-			List<InputConfiguration> list = new List<InputConfiguration>();
-			List<InputConfiguration> list2 = new List<InputConfiguration>();
-			list2.Add(TeamUtility.IO.InputManager.GetInputConfiguration(PlayerID.One));
-			list = Json.LoadResource<List<InputConfiguration>>("Data/ControlsDefault");
+			List<ControlScheme> defaultControls = Json.LoadResource<List<ControlScheme>>("Data/ControlsDefault");
+			List<ControlScheme> settingsControls;
 			if (File.Exists(Path.Combine(Application.persistentDataPath, "Settings.json")))
 			{
 				SettingsData = Json.LoadPersistent<SettingsData>("Settings.json");
-				list2 = ((SettingsData == null) ? list : SettingsData.ControlsSettings.InputConfigurations);
+				settingsControls = (SettingsData == null) ? defaultControls : SettingsData.ControlsSettings.InputConfigurations.ControlSchemes;
 			}
 			else
 			{
-				list2 = list;
+				settingsControls = defaultControls;
 			}
-			if (list2.Count > 0)
+			if (settingsControls.Count > 0)
 			{
 				List<string> list3 = new List<string>();
 				List<string> list4 = new List<string>();
-				List<string> list5 = new List<string>();
-				List<string> list6 = new List<string>();
-				for (int i = 0; i < list2[0].axes.Count; i++)
+				for (int i = 0; i < settingsControls[0].Actions.Count; i++)
 				{
-					list3.Add(list2[0].axes[i].name);
+					list3.Add(settingsControls[0].Actions[i].Name);
 				}
-				for (int j = 0; j < list[0].axes.Count; j++)
+				for (int j = 0; j < defaultControls[0].Actions.Count; j++)
 				{
-					list4.Add(list[0].axes[j].name);
+					list4.Add(defaultControls[0].Actions[j].Name);
 				}
-				list5 = list4.Except(list3).ToList();
-				list6 = list3.Except(list4).ToList();
+				List<string> list5 = list4.Except(list3).ToList();
+				List<string> list6 = list3.Except(list4).ToList();
 				if (list6.Count > 0)
 				{
 					for (int k = 0; k < list6.Count; k++)
 					{
-						for (int l = 0; l < list2[0].axes.Count; l++)
+						for (int l = 0; l < settingsControls[0].Actions.Count; l++)
 						{
-							if (list2[0].axes[l].name == list6[k])
+							if (settingsControls[0].Actions[l].Name == list6[k])
 							{
-								list2[0].axes.Remove(list2[0].axes[l]);
+								settingsControls[0].DeleteAction(settingsControls[0].Actions[l]);
 							}
 						}
 					}
@@ -60,23 +56,29 @@ namespace ZeroGravity.UI
 				{
 					foreach (string item in list5)
 					{
-						for (int m = 0; m < list[0].axes.Count; m++)
+						for (int m = 0; m < defaultControls[0].Actions.Count; m++)
 						{
-							if (list[0].axes[m].name == item)
+							if (defaultControls[0].Actions[m].Name == item)
 							{
-								list2[0].axes.Add(list[0].axes[m]);
+								InputAction action = settingsControls[0].CreateNewAction(defaultControls[0].Actions[m].Name);
+								foreach (InputBinding binding in defaultControls[0].Actions[m].Bindings)
+								{
+									action.CreateNewBinding(binding);
+								}
 							}
 						}
 					}
 				}
 			}
-			SaveLoadParameters saveLoadParameters = new SaveLoadParameters();
-			saveLoadParameters.playerOneDefault = "KeyboardAndMouse";
-			saveLoadParameters.inputConfigurations = list2;
+			SaveData saveLoadParameters = new SaveData
+			{
+				PlayerOneScheme = "KeyboardAndMouse",
+				ControlSchemes = settingsControls
+			};
 			return saveLoadParameters;
 		}
 
-		public InputConfiguration LoadSelective(string inputConfigName)
+		public ControlScheme Load(string schemeName)
 		{
 			throw new NotImplementedException();
 		}

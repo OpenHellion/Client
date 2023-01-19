@@ -1,12 +1,11 @@
-using TeamUtility.IO;
-
+using Luminosity.IO;
 namespace ZeroGravity.UI
 {
 	public class InputSaverJSON : IInputSaver
 	{
-		public void Save(SaveLoadParameters parameters)
+		void IInputSaver.Save(SaveData saveData)
 		{
-			Json.SerializePersistent(parameters.inputConfigurations, "Controls.json");
+			Json.SerializePersistent(saveData.ControlSchemes, "Controls.json");
 		}
 	}
 }

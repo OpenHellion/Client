@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
-using ZeroGravity.CharacterMovement;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
@@ -49,36 +47,6 @@ namespace ZeroGravity
 
 		private bool NetworkingActive;
 
-		[CompilerGenerated]
-		private static Func<SceneSpawnPoint, bool> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<DynamicObjectData, bool> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Func<DynamicObjectData, bool> _003C_003Ef__am_0024cache2;
-
-		[CompilerGenerated]
-		private static Func<DynamicObjectData, bool> _003C_003Ef__am_0024cache3;
-
-		[CompilerGenerated]
-		private static Func<DynamicObjectData, bool> _003C_003Ef__am_0024cache4;
-
-		[CompilerGenerated]
-		private static Func<DynamicObjectData, bool> _003C_003Ef__am_0024cache5;
-
-		[CompilerGenerated]
-		private static Func<DynamicObjectData, bool> _003C_003Ef__am_0024cache6;
-
-		[CompilerGenerated]
-		private static Func<DynamicObjectData, bool> _003C_003Ef__am_0024cache7;
-
-		[CompilerGenerated]
-		private static Func<DynamicObjectData, bool> _003C_003Ef__am_0024cache8;
-
-		[CompilerGenerated]
-		private static Func<DynamicObjectData, bool> _003C_003Ef__am_0024cache9;
-
 		private void Start()
 		{
 			CreateItemSpawnOptions();
@@ -95,7 +63,7 @@ namespace ZeroGravity
 				}
 				else if (InputManager.GetKeyDown(KeyCode.UpArrow) && Elements.Count > 0)
 				{
-					lastSelectedStackItem = Elements.FindLast(_003CUpdate_003Em__0);
+					lastSelectedStackItem = Elements.FindLast((Tuple<GameObject, bool> m) => m.Item2 && (Elements.IndexOf(lastSelectedStackItem) > Elements.IndexOf(m) || lastSelectedStackItem == null));
 					if (lastSelectedStackItem != null)
 					{
 						Input.text = lastSelectedStackItem.Item1.GetComponent<Text>().text;
@@ -105,7 +73,7 @@ namespace ZeroGravity
 				}
 				else if (InputManager.GetKeyDown(KeyCode.DownArrow) && Elements.Count > 0)
 				{
-					lastSelectedStackItem = Elements.FindLast(_003CUpdate_003Em__1);
+					lastSelectedStackItem = Elements.FindLast((Tuple<GameObject, bool> m) => m.Item2 && (Elements.IndexOf(lastSelectedStackItem) < Elements.IndexOf(m) || lastSelectedStackItem == null));
 					if (lastSelectedStackItem != null)
 					{
 						Input.text = lastSelectedStackItem.Item1.GetComponent<Text>().text;
@@ -138,7 +106,7 @@ namespace ZeroGravity
 			{
 				gameObject.GetComponent<Text>().color = color.Value;
 			}
-			gameObject.SetActive(true);
+			gameObject.SetActive(value: true);
 			gameObject.transform.Reset();
 			Scroll.normalizedPosition = new Vector2(0f, 0f);
 			Canvas.ForceUpdateCanvases();
@@ -155,7 +123,7 @@ namespace ZeroGravity
 			{
 				Text = Input.text
 			});
-			CreateTextElement(Input.text, null, true);
+			CreateTextElement(Input.text, null, userEntry: true);
 			Input.text = string.Empty;
 			Input.ActivateInputField();
 			Input.Select();
@@ -166,7 +134,7 @@ namespace ZeroGravity
 			Client.Instance.CanvasManager.IsInputFieldIsActive = true;
 			SetScreen(0);
 			Client.Instance.ToggleCursor(true);
-			Client.Instance.InputModule.ToggleCustomCursorPosition(false);
+			Client.Instance.InputModule.ToggleCustomCursorPosition(val: false);
 			MyPlayer.Instance.FpsController.ToggleMovement(false);
 			MyPlayer.Instance.FpsController.ToggleAttached(true);
 			if (!MyPlayer.Instance.FpsController.IsZeroG)
@@ -175,52 +143,30 @@ namespace ZeroGravity
 			}
 			lastSelectedStackItem = null;
 			Canvas.ForceUpdateCanvases();
-			base.gameObject.SetActive(true);
+			base.gameObject.SetActive(value: true);
 			Input.ActivateInputField();
 		}
 
 		public void Close()
 		{
 			Client.Instance.CanvasManager.IsInputFieldIsActive = false;
-			base.gameObject.SetActive(false);
+			base.gameObject.SetActive(value: false);
 			if (!MyPlayer.Instance.IsLockedToTrigger)
 			{
 				Client.Instance.ToggleCursor(false);
-				Client.Instance.InputModule.ToggleCustomCursorPosition(true);
+				Client.Instance.InputModule.ToggleCustomCursorPosition(val: true);
 				MyPlayer.Instance.FpsController.ToggleAttached(false);
 				MyPlayer.Instance.FpsController.ToggleMovement(!MyPlayer.Instance.SittingOnPilotSeat);
 				if (MyPlayer.Instance.SittingOnPilotSeat)
 				{
 					MyPlayer.Instance.FpsController.ToggleCameraAttachToHeadBone(true);
 				}
-				MyCharacterController fpsController = MyPlayer.Instance.FpsController;
-				int isActive;
-				if (!MyPlayer.Instance.SittingOnPilotSeat && !MyPlayer.Instance.InLadderTrigger)
-				{
-					if (MyPlayer.Instance.InLockState && !MyPlayer.Instance.IsLockedToTrigger && MyPlayer.Instance.Parent is SpaceObjectVessel)
-					{
-						Dictionary<int, SceneSpawnPoint>.ValueCollection values = (MyPlayer.Instance.Parent as SpaceObjectVessel).SpawnPoints.Values;
-						if (_003C_003Ef__am_0024cache0 == null)
-						{
-							_003C_003Ef__am_0024cache0 = _003CClose_003Em__2;
-						}
-						isActive = ((values.FirstOrDefault(_003C_003Ef__am_0024cache0) != null) ? 1 : 0);
-					}
-					else
-					{
-						isActive = 0;
-					}
-				}
-				else
-				{
-					isActive = 1;
-				}
-				fpsController.ToggleAutoFreeLook((byte)isActive != 0);
+				MyPlayer.Instance.FpsController.ToggleAutoFreeLook(MyPlayer.Instance.SittingOnPilotSeat || MyPlayer.Instance.InLadderTrigger || (MyPlayer.Instance.InLockState && !MyPlayer.Instance.IsLockedToTrigger && MyPlayer.Instance.Parent is SpaceObjectVessel && (MyPlayer.Instance.Parent as SpaceObjectVessel).SpawnPoints.Values.FirstOrDefault((SceneSpawnPoint m) => m.PlayerGUID == MyPlayer.Instance.GUID) != null));
 			}
 			else if (MyPlayer.Instance.IsDrivingShip || MyPlayer.Instance.ShipControlMode == ShipControlMode.Docking)
 			{
 				Client.Instance.ToggleCursor(false);
-				Client.Instance.InputModule.ToggleCustomCursorPosition(true);
+				Client.Instance.InputModule.ToggleCustomCursorPosition(val: true);
 			}
 		}
 
@@ -255,14 +201,14 @@ namespace ZeroGravity
 			NetworkingActive = false;
 			foreach (GameObject option2 in Options)
 			{
-				option2.Activate(false);
+				option2.Activate(value: false);
 			}
 			foreach (GameObject screen in Screens)
 			{
-				screen.Activate(false);
+				screen.Activate(value: false);
 			}
-			Screens[option].Activate(true);
-			Options[option].Activate(true);
+			Screens[option].Activate(value: true);
+			Options[option].Activate(value: true);
 			CurrentScreen = option;
 			if (option == 0)
 			{
@@ -279,60 +225,15 @@ namespace ZeroGravity
 
 		private void CreateItemSpawnOptions()
 		{
-			Dictionary<short, DynamicObjectData>.ValueCollection values = StaticData.DynamicObjectsDataList.Values;
-			if (_003C_003Ef__am_0024cache1 == null)
-			{
-				_003C_003Ef__am_0024cache1 = _003CCreateItemSpawnOptions_003Em__3;
-			}
-			List<DynamicObjectData> list = new List<DynamicObjectData>(values.Where(_003C_003Ef__am_0024cache1));
-			Dictionary<short, DynamicObjectData>.ValueCollection values2 = StaticData.DynamicObjectsDataList.Values;
-			if (_003C_003Ef__am_0024cache2 == null)
-			{
-				_003C_003Ef__am_0024cache2 = _003CCreateItemSpawnOptions_003Em__4;
-			}
-			List<DynamicObjectData> list2 = new List<DynamicObjectData>(values2.Where(_003C_003Ef__am_0024cache2));
-			Dictionary<short, DynamicObjectData>.ValueCollection values3 = StaticData.DynamicObjectsDataList.Values;
-			if (_003C_003Ef__am_0024cache3 == null)
-			{
-				_003C_003Ef__am_0024cache3 = _003CCreateItemSpawnOptions_003Em__5;
-			}
-			List<DynamicObjectData> list3 = new List<DynamicObjectData>(values3.Where(_003C_003Ef__am_0024cache3));
-			Dictionary<short, DynamicObjectData>.ValueCollection values4 = StaticData.DynamicObjectsDataList.Values;
-			if (_003C_003Ef__am_0024cache4 == null)
-			{
-				_003C_003Ef__am_0024cache4 = _003CCreateItemSpawnOptions_003Em__6;
-			}
-			List<DynamicObjectData> list4 = new List<DynamicObjectData>(values4.Where(_003C_003Ef__am_0024cache4));
-			Dictionary<short, DynamicObjectData>.ValueCollection values5 = StaticData.DynamicObjectsDataList.Values;
-			if (_003C_003Ef__am_0024cache5 == null)
-			{
-				_003C_003Ef__am_0024cache5 = _003CCreateItemSpawnOptions_003Em__7;
-			}
-			List<DynamicObjectData> list5 = new List<DynamicObjectData>(values5.Where(_003C_003Ef__am_0024cache5));
-			Dictionary<short, DynamicObjectData>.ValueCollection values6 = StaticData.DynamicObjectsDataList.Values;
-			if (_003C_003Ef__am_0024cache6 == null)
-			{
-				_003C_003Ef__am_0024cache6 = _003CCreateItemSpawnOptions_003Em__8;
-			}
-			List<DynamicObjectData> list6 = new List<DynamicObjectData>(values6.Where(_003C_003Ef__am_0024cache6));
-			Dictionary<short, DynamicObjectData>.ValueCollection values7 = StaticData.DynamicObjectsDataList.Values;
-			if (_003C_003Ef__am_0024cache7 == null)
-			{
-				_003C_003Ef__am_0024cache7 = _003CCreateItemSpawnOptions_003Em__9;
-			}
-			List<DynamicObjectData> list7 = new List<DynamicObjectData>(values7.Where(_003C_003Ef__am_0024cache7));
-			Dictionary<short, DynamicObjectData>.ValueCollection values8 = StaticData.DynamicObjectsDataList.Values;
-			if (_003C_003Ef__am_0024cache8 == null)
-			{
-				_003C_003Ef__am_0024cache8 = _003CCreateItemSpawnOptions_003Em__A;
-			}
-			List<DynamicObjectData> list8 = new List<DynamicObjectData>(values8.Where(_003C_003Ef__am_0024cache8));
-			Dictionary<short, DynamicObjectData>.ValueCollection values9 = StaticData.DynamicObjectsDataList.Values;
-			if (_003C_003Ef__am_0024cache9 == null)
-			{
-				_003C_003Ef__am_0024cache9 = _003CCreateItemSpawnOptions_003Em__B;
-			}
-			List<DynamicObjectData> list9 = new List<DynamicObjectData>(values9.Where(_003C_003Ef__am_0024cache9));
+			List<DynamicObjectData> list = new List<DynamicObjectData>(StaticData.DynamicObjectsDataList.Values.Where((DynamicObjectData m) => m.DefaultAuxData.Category == ItemCategory.Weapons));
+			List<DynamicObjectData> list2 = new List<DynamicObjectData>(StaticData.DynamicObjectsDataList.Values.Where((DynamicObjectData m) => m.DefaultAuxData.Category == ItemCategory.Magazines));
+			List<DynamicObjectData> list3 = new List<DynamicObjectData>(StaticData.DynamicObjectsDataList.Values.Where((DynamicObjectData m) => m.DefaultAuxData.Category == ItemCategory.Medical));
+			List<DynamicObjectData> list4 = new List<DynamicObjectData>(StaticData.DynamicObjectsDataList.Values.Where((DynamicObjectData m) => m.DefaultAuxData.Category == ItemCategory.Suits));
+			List<DynamicObjectData> list5 = new List<DynamicObjectData>(StaticData.DynamicObjectsDataList.Values.Where((DynamicObjectData m) => m.DefaultAuxData.Category == ItemCategory.Tools));
+			List<DynamicObjectData> list6 = new List<DynamicObjectData>(StaticData.DynamicObjectsDataList.Values.Where((DynamicObjectData m) => m.DefaultAuxData.Category == ItemCategory.Parts));
+			List<DynamicObjectData> list7 = new List<DynamicObjectData>(StaticData.DynamicObjectsDataList.Values.Where((DynamicObjectData m) => m.DefaultAuxData.Category == ItemCategory.Utility));
+			List<DynamicObjectData> list8 = new List<DynamicObjectData>(StaticData.DynamicObjectsDataList.Values.Where((DynamicObjectData m) => m.DefaultAuxData.Category == ItemCategory.Containers));
+			List<DynamicObjectData> list9 = new List<DynamicObjectData>(StaticData.DynamicObjectsDataList.Values.Where((DynamicObjectData m) => m.DefaultAuxData.Category == ItemCategory.General));
 			InstantiateItems(list, Colors.Red);
 			InstantiateItems(list2, Colors.Red);
 			InstantiateItems(list3, Colors.Green);
@@ -382,78 +283,6 @@ namespace ZeroGravity
 		public void RestartNetworking()
 		{
 			MyPlayer.Instance.ResetStatistics();
-		}
-
-		[CompilerGenerated]
-		private bool _003CUpdate_003Em__0(Tuple<GameObject, bool> m)
-		{
-			return m.Item2 && (Elements.IndexOf(lastSelectedStackItem) > Elements.IndexOf(m) || lastSelectedStackItem == null);
-		}
-
-		[CompilerGenerated]
-		private bool _003CUpdate_003Em__1(Tuple<GameObject, bool> m)
-		{
-			return m.Item2 && (Elements.IndexOf(lastSelectedStackItem) < Elements.IndexOf(m) || lastSelectedStackItem == null);
-		}
-
-		[CompilerGenerated]
-		private static bool _003CClose_003Em__2(SceneSpawnPoint m)
-		{
-			return m.PlayerGUID == MyPlayer.Instance.GUID;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CCreateItemSpawnOptions_003Em__3(DynamicObjectData m)
-		{
-			return m.DefaultAuxData.Category == ItemCategory.Weapons;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CCreateItemSpawnOptions_003Em__4(DynamicObjectData m)
-		{
-			return m.DefaultAuxData.Category == ItemCategory.Magazines;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CCreateItemSpawnOptions_003Em__5(DynamicObjectData m)
-		{
-			return m.DefaultAuxData.Category == ItemCategory.Medical;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CCreateItemSpawnOptions_003Em__6(DynamicObjectData m)
-		{
-			return m.DefaultAuxData.Category == ItemCategory.Suits;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CCreateItemSpawnOptions_003Em__7(DynamicObjectData m)
-		{
-			return m.DefaultAuxData.Category == ItemCategory.Tools;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CCreateItemSpawnOptions_003Em__8(DynamicObjectData m)
-		{
-			return m.DefaultAuxData.Category == ItemCategory.Parts;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CCreateItemSpawnOptions_003Em__9(DynamicObjectData m)
-		{
-			return m.DefaultAuxData.Category == ItemCategory.Utility;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CCreateItemSpawnOptions_003Em__A(DynamicObjectData m)
-		{
-			return m.DefaultAuxData.Category == ItemCategory.Containers;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CCreateItemSpawnOptions_003Em__B(DynamicObjectData m)
-		{
-			return m.DefaultAuxData.Category == ItemCategory.General;
 		}
 	}
 }

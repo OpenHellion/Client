@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using TeamUtility.IO;
+using Luminosity.IO;
 using UnityEngine;
 
 namespace ZeroGravity.UI
@@ -65,72 +65,72 @@ namespace ZeroGravity.UI
 
 		public static bool GetButton(AxisNames key)
 		{
-			return TeamUtility.IO.InputManager.GetButton(key.ToString());
+			return Luminosity.IO.InputManager.GetButton(key.ToString());
 		}
 
 		public static bool GetButtonDown(AxisNames key)
 		{
-			return TeamUtility.IO.InputManager.GetButtonDown(key.ToString());
+			return Luminosity.IO.InputManager.GetButtonDown(key.ToString());
 		}
 
 		public static bool GetButtonUp(AxisNames key)
 		{
-			return TeamUtility.IO.InputManager.GetButtonUp(key.ToString());
+			return Luminosity.IO.InputManager.GetButtonUp(key.ToString());
 		}
 
 		public static float GetAxis(AxisNames name)
 		{
-			return TeamUtility.IO.InputManager.GetAxis(name.ToString());
+			return Luminosity.IO.InputManager.GetAxis(name.ToString());
 		}
 
 		public static float GetAxisRaw(AxisNames name)
 		{
-			return TeamUtility.IO.InputManager.GetAxisRaw(name.ToString());
+			return Luminosity.IO.InputManager.GetAxisRaw(name.ToString());
 		}
 
 		public static bool GetKey(KeyCode key)
 		{
-			return TeamUtility.IO.InputManager.GetKey(key);
+			return Luminosity.IO.InputManager.GetKey(key);
 		}
 
 		public static bool GetKeyDown(KeyCode key)
 		{
-			return TeamUtility.IO.InputManager.GetKeyDown(key);
+			return Luminosity.IO.InputManager.GetKeyDown(key);
 		}
 
 		public static bool GetKeyUp(KeyCode key)
 		{
-			return TeamUtility.IO.InputManager.GetKeyUp(key);
+			return Luminosity.IO.InputManager.GetKeyUp(key);
 		}
 
 		public static AccelerationEvent GetAccelerationEvent(int index)
 		{
-			return TeamUtility.IO.InputManager.GetAccelerationEvent(index);
+			return Luminosity.IO.InputManager.GetAccelerationEvent(index);
 		}
 
 		public static bool GetMouseButton(int index)
 		{
-			return TeamUtility.IO.InputManager.GetMouseButton(index);
+			return Luminosity.IO.InputManager.GetMouseButton(index);
 		}
 
 		public static bool GetMouseButtonDown(int index)
 		{
-			return TeamUtility.IO.InputManager.GetMouseButtonDown(index);
+			return Luminosity.IO.InputManager.GetMouseButtonDown(index);
 		}
 
 		public static bool GetMouseButtonUp(int index)
 		{
-			return TeamUtility.IO.InputManager.GetMouseButtonUp(index);
+			return Luminosity.IO.InputManager.GetMouseButtonUp(index);
 		}
 
 		public static void LoadJSON()
 		{
-			TeamUtility.IO.InputManager.Load(new InputLoaderJSON());
+			Luminosity.IO.InputManager.Load(new InputLoaderJSON());
 		}
 
 		public static void LoadDefaultJSON()
 		{
-			TeamUtility.IO.InputManager.Load(new InputDefaultLoaderJSON());
+			Luminosity.IO.InputManager.Load(new InputDefaultLoaderJSON());
 		}
 
 		public static void SaveJSON()
@@ -139,68 +139,52 @@ namespace ZeroGravity.UI
 
 		public static void SaveDefaultJSON()
 		{
-			TeamUtility.IO.InputManager.Save(new InputDefaultSaverJSON());
+			Luminosity.IO.InputManager.Save(new InputDefaultSaverJSON());
 		}
 
 		public static void ResetInputAxis()
 		{
-			TeamUtility.IO.InputManager.ResetInputAxes();
+			Luminosity.IO.InputManager.ResetInputAxes();
 		}
 
 		public static string GetAxisKeyName(AxisNames key, bool getPositive = true, bool getNegative = true, bool getAlt = false)
 		{
-			AxisConfiguration axisConfiguration = TeamUtility.IO.InputManager.GetAxisConfiguration("KeyboardAndMouse", key.ToString());
-			if (axisConfiguration.type == InputType.DigitalAxis)
+			InputAction axisConfiguration = Luminosity.IO.InputManager.GetAction("KeyboardAndMouse", key.ToString());
+			foreach (InputBinding binding in axisConfiguration.Bindings)
 			{
-				if (getPositive && getNegative && !getAlt)
+				if (binding.Type == InputType.DigitalAxis)
 				{
-					return axisConfiguration.positive.ToString() + "/" + axisConfiguration.negative;
+					if (getPositive && getNegative && !getAlt)
+					{
+						return binding.Positive.ToString() + "/" + binding.Negative;
+					}
+					if (getPositive && !getNegative && !getAlt)
+					{
+						return binding.Positive.ToString();
+					}
+					if (!getPositive && getNegative && !getAlt)
+					{
+						return binding.Negative.ToString();
+					}
+					return string.Empty;
 				}
-				if (getPositive && getNegative && getAlt)
+				if (!getAlt)
 				{
-					return axisConfiguration.altPositive.ToString() + "/" + axisConfiguration.altNegative;
+					return binding.Positive.ToString();
 				}
-				if (getPositive && !getNegative && !getAlt)
-				{
-					return axisConfiguration.positive.ToString();
-				}
-				if (getPositive && !getNegative && getAlt)
-				{
-					return axisConfiguration.altPositive.ToString();
-				}
-				if (!getPositive && getNegative && !getAlt)
-				{
-					return axisConfiguration.negative.ToString();
-				}
-				if (!getPositive && getNegative && getAlt)
-				{
-					return axisConfiguration.altNegative.ToString();
-				}
-				return string.Empty;
 			}
-			if (!getAlt)
-			{
-				return axisConfiguration.positive.ToString();
-			}
-			return axisConfiguration.altPositive.ToString();
+			return string.Empty;
 		}
 
-		public static void SaveDefault(TeamUtility.IO.InputManager inputManager)
+		public static void SaveDefault(Luminosity.IO.InputManager inputManager)
 		{
-			for (int i = 0; i < inputManager.inputConfigurations[0].axes.Count; i++)
-			{
-			}
-			List<InputConfiguration> list = new List<InputConfiguration>();
-			list = inputManager.inputConfigurations;
+			List<ControlScheme> list = inputManager.ControlSchemes;
 			Json.SerializeDataPath(list, "Resources/Data/ControlsDefault.json");
 		}
 
-		public static void LoadDefault(TeamUtility.IO.InputManager inputManager)
+		public static void LoadDefault(Luminosity.IO.InputManager inputManager)
 		{
-			InputDefaultLoaderJSON inputDefaultLoaderJSON = new InputDefaultLoaderJSON();
-			TeamUtility.IO.InputManager inputManager2 = Object.FindObjectOfType(typeof(TeamUtility.IO.InputManager)) as TeamUtility.IO.InputManager;
-			SaveLoadParameters saveLoadParameters = inputDefaultLoaderJSON.Load();
-			inputManager2.inputConfigurations = saveLoadParameters.inputConfigurations;
+			Luminosity.IO.InputManager.Load(new InputDefaultLoaderJSON());
 		}
 	}
 }

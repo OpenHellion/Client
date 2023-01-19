@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using TeamUtility.IO;
+using Luminosity.IO;
 
 namespace ZeroGravity.Data
 {
 	public class ControlsSettingsData
 	{
-		public List<InputConfiguration> InputConfigurations;
+		public SaveData InputConfigurations;
 
 		public float MouseSensitivity;
 

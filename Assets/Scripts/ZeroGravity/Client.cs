@@ -13,7 +13,6 @@ using Steamworks;
 using TriInspector;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Analytics;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -28,7 +27,6 @@ using OpenHellion.ProviderSystem;
 using OpenHellion.Networking;
 using OpenHellion.Networking.Message.MainServer;
 using OpenHellion.Networking.Message;
-using OpenHellion;
 
 namespace ZeroGravity
 {
@@ -133,6 +131,8 @@ namespace ZeroGravity
 		public CanvasManager CanvasManager;
 
 		public CustomInputModule InputModule;
+
+		public Luminosity.IO.InputManager InputManager;
 
 		public static SignInRequest LastSignInRequest = null;
 
@@ -350,8 +350,8 @@ namespace ZeroGravity
 			set
 			{
 				mouseSensitivity = value;
-				TeamUtility.IO.InputManager.GetAxisConfiguration("KeyboardAndMouse", "LookVertical").sensitivity = mouseSensitivity / 10f;
-				TeamUtility.IO.InputManager.GetAxisConfiguration("KeyboardAndMouse", "LookHorizontal").sensitivity = mouseSensitivity / 10f;
+				Luminosity.IO.InputManager.GetAction("KeyboardAndMouse", "LookVertical").GetBinding(0).Sensitivity = mouseSensitivity / 10f;
+				Luminosity.IO.InputManager.GetAction("KeyboardAndMouse", "LookHorizontal").GetBinding(0).Sensitivity = mouseSensitivity / 10f;
 			}
 		}
 

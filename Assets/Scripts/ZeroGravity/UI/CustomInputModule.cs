@@ -1,10 +1,10 @@
-using TeamUtility.IO;
+using Luminosity.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace ZeroGravity.UI
 {
-	public class CustomInputModule : TeamUtility.IO.StandaloneInputModule
+	public class CustomInputModule : Luminosity.IO.StandaloneInputModule
 	{
 		private Vector2 customCursorPos;
 
@@ -47,10 +47,15 @@ namespace ZeroGravity.UI
 			data.position = vector;
 			data.scrollDelta = Input.mouseScrollDelta;
 			data.button = PointerEventData.InputButton.Left;
-			base.eventSystem.RaycastAll(data, m_RaycastResultCache);
-			RaycastResult raycastResult2 = (data.pointerCurrentRaycast = BaseInputModule.FindFirstRaycast(m_RaycastResultCache));
+
+			// Raycast.
+			eventSystem.RaycastAll(data, m_RaycastResultCache);
+			RaycastResult raycastResult2 = FindFirstRaycast(m_RaycastResultCache);
 			m_RaycastResultCache.Clear();
+
+			data.pointerCurrentRaycast = raycastResult2;
 			overGameObject = raycastResult2.gameObject;
+
 			PointerEventData data2;
 			GetPointerData(-2, out data2, true);
 			CopyFromTo(data, data2);
@@ -59,6 +64,7 @@ namespace ZeroGravity.UI
 			GetPointerData(-3, out data3, true);
 			CopyFromTo(data, data3);
 			data3.button = PointerEventData.InputButton.Middle;
+
 			mouseState.SetButtonState(PointerEventData.InputButton.Left, StateForMouseButton(0), data);
 			mouseState.SetButtonState(PointerEventData.InputButton.Right, StateForMouseButton(1), data2);
 			mouseState.SetButtonState(PointerEventData.InputButton.Middle, StateForMouseButton(2), data3);
@@ -78,7 +84,7 @@ namespace ZeroGravity.UI
 			}
 			else
 			{
-				Invoke("DelayTurnOff", 0.1f);
+				Invoke(nameof(DelayTurnOff), 0.1f);
 			}
 		}
 

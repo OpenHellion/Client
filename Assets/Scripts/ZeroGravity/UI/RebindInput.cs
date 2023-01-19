@@ -1,5 +1,5 @@
 using System.Collections;
-using TeamUtility.IO;
+using Luminosity.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -37,7 +37,7 @@ namespace ZeroGravity.UI
 		private string m_axisConfigName;
 
 		[SerializeField]
-		private string m_cancelButton;
+		private KeyCode m_cancelButton;
 
 		[SerializeField]
 		private float m_timeout;
@@ -58,7 +58,7 @@ namespace ZeroGravity.UI
 		[SerializeField]
 		private RebindType m_rebindType;
 
-		public AxisConfiguration m_axisConfig;
+		public InputAction m_axisConfig;
 
 		private Image m_image;
 
@@ -70,7 +70,7 @@ namespace ZeroGravity.UI
 			m_axisConfigName = contItem.Axis.ToString();
 			m_changePositiveKey = contItem.IsPositive;
 			m_changeAltKey = isAlt;
-			m_cancelButton = "Escape";
+			m_cancelButton = KeyCode.Escape;
 			MainPanel = mainPanel;
 			m_keyDescription = buttonText;
 			ControlItem = contItem;
@@ -87,22 +87,19 @@ namespace ZeroGravity.UI
 			m_image = GetComponent<Image>();
 			m_image.overrideSprite = m_normalState;
 			InitializeAxisConfig();
-			TeamUtility.IO.InputManager.Instance.Loaded += InitializeAxisConfig;
-			TeamUtility.IO.InputManager.Instance.ConfigurationDirty += HandleConfigurationDirty;
+			Luminosity.IO.InputManager.Loaded += InitializeAxisConfig;
+			Luminosity.IO.InputManager.PlayerControlsChanged += HandleConfigurationDirty;
 		}
 
 		private void OnDestroy()
 		{
-			if (TeamUtility.IO.InputManager.Instance != null)
-			{
-				TeamUtility.IO.InputManager.Instance.Loaded -= InitializeAxisConfig;
-				TeamUtility.IO.InputManager.Instance.ConfigurationDirty -= HandleConfigurationDirty;
-			}
+			Luminosity.IO.InputManager.Loaded -= InitializeAxisConfig;
+			Luminosity.IO.InputManager.PlayerControlsChanged -= HandleConfigurationDirty;
 		}
 
 		private void InitializeAxisConfig()
 		{
-			m_axisConfig = TeamUtility.IO.InputManager.GetAxisConfiguration(m_inputConfigName, m_axisConfigName);
+			m_axisConfig = Luminosity.IO.InputManager.GetAction(m_inputConfigName, m_axisConfigName);
 			if (m_axisConfig != null)
 			{
 				if (m_rebindType == RebindType.Keyboard || m_rebindType == RebindType.GamepadButton)
@@ -111,25 +108,25 @@ namespace ZeroGravity.UI
 					{
 						if (m_changeAltKey)
 						{
-							m_keyDescription.text = ((m_axisConfig.altPositive != 0) ? m_axisConfig.altPositive.ToString() : string.Empty);
+							m_keyDescription.text = ((m_axisConfig.Bindings[1].Positive != 0) ? m_axisConfig.Bindings[1].Positive.ToString() : string.Empty);
 						}
 						else
 						{
-							m_keyDescription.text = ((m_axisConfig.positive != 0) ? m_axisConfig.positive.ToString() : string.Empty);
+							m_keyDescription.text = ((m_axisConfig.Bindings[0].Positive != 0) ? m_axisConfig.Bindings[0].Positive.ToString() : string.Empty);
 						}
 					}
 					else if (m_changeAltKey)
 					{
-						m_keyDescription.text = ((m_axisConfig.altNegative != 0) ? m_axisConfig.altNegative.ToString() : string.Empty);
+						m_keyDescription.text = ((m_axisConfig.Bindings[1].Negative != 0) ? m_axisConfig.Bindings[1].Negative.ToString() : string.Empty);
 					}
 					else
 					{
-						m_keyDescription.text = ((m_axisConfig.negative != 0) ? m_axisConfig.negative.ToString() : string.Empty);
+						m_keyDescription.text = ((m_axisConfig.Bindings[0].Negative != 0) ? m_axisConfig.Bindings[0].Negative.ToString() : string.Empty);
 					}
 				}
 				else
 				{
-					m_keyDescription.text = m_axisNames[m_axisConfig.axis];
+					m_keyDescription.text = m_axisNames[m_axisConfig.Bindings[0].Axis];
 				}
 			}
 			else
@@ -139,9 +136,9 @@ namespace ZeroGravity.UI
 			}
 		}
 
-		private void HandleConfigurationDirty(string configName)
+		private void HandleConfigurationDirty(PlayerID configName)
 		{
-			if (configName == m_inputConfigName)
+			if (Luminosity.IO.InputManager.GetControlScheme(configName).Name == m_inputConfigName)
 			{
 				InitializeAxisConfig();
 			}
@@ -155,11 +152,11 @@ namespace ZeroGravity.UI
 		{
 			if (MainPanel.GetComponent<ControlsRebinder>().WhoIsScanning == string.Empty)
 			{
-				MainPanel.GetComponent<ControlsRebinder>().oldKeyRev_p = m_axisConfig.positive;
-				MainPanel.GetComponent<ControlsRebinder>().oldKeyRev_n = m_axisConfig.negative;
-				MainPanel.GetComponent<ControlsRebinder>().oldKeyRev_ap = m_axisConfig.altPositive;
-				MainPanel.GetComponent<ControlsRebinder>().oldKeyRev_an = m_axisConfig.altNegative;
-				MainPanel.GetComponent<ControlsRebinder>().axesRev = m_axisConfig;
+				MainPanel.GetComponent<ControlsRebinder>().oldKeyRev_p = m_axisConfig.Bindings[0].Positive;
+				MainPanel.GetComponent<ControlsRebinder>().oldKeyRev_n = m_axisConfig.Bindings[0].Negative;
+				MainPanel.GetComponent<ControlsRebinder>().oldKeyRev_ap = m_axisConfig.Bindings[1].Positive;
+				MainPanel.GetComponent<ControlsRebinder>().oldKeyRev_an = m_axisConfig.Bindings[1].Negative;
+				MainPanel.GetComponent<ControlsRebinder>().actionsRev = m_axisConfig;
 				MainPanel.GetComponent<ControlsRebinder>().EnableAllButtons(false);
 				MainPanel.GetComponent<ControlsRebinder>().isScanning = true;
 				MainPanel.GetComponent<ControlsRebinder>().WhoIsScanning = base.transform.name;
@@ -170,71 +167,71 @@ namespace ZeroGravity.UI
 		private IEnumerator StartInputScanDelayed()
 		{
 			yield return null;
-			if (TeamUtility.IO.InputManager.IsScanning || m_axisConfig == null)
+			if (Luminosity.IO.InputManager.IsScanning || m_axisConfig == null)
 			{
 				yield break;
 			}
 			m_image.overrideSprite = m_scanningState;
 			m_keyDescription.text = "...";
-			ScanSettings settings = default(ScanSettings);
-			settings.joystick = m_joystick;
-			settings.cancelScanButton = m_cancelButton;
-			settings.timeout = m_timeout;
-			settings.userData = null;
+			ScanSettings settings = default;
+			settings.Joystick = m_joystick;
+			settings.CancelScanKey = m_cancelButton;
+			settings.Timeout = m_timeout;
+			settings.UserData = null;
 			if (m_rebindType == RebindType.GamepadAxis)
 			{
-				settings.scanFlags = ScanFlags.JoystickAxis;
-				TeamUtility.IO.InputManager.StartScan(settings, HandleJoystickAxisScan);
+				settings.ScanFlags = ScanFlags.JoystickAxis;
+				Luminosity.IO.InputManager.StartInputScan(settings, HandleJoystickAxisScan);
 			}
 			else if (m_rebindType == RebindType.GamepadButton)
 			{
-				settings.scanFlags = (ScanFlags)6;
+				settings.ScanFlags = (ScanFlags)6;
 				if (m_rebindType == RebindType.GamepadButton && m_allowAnalogButton)
 				{
-					settings.scanFlags |= ScanFlags.JoystickAxis;
+					settings.ScanFlags |= ScanFlags.JoystickAxis;
 				}
-				TeamUtility.IO.InputManager.StartScan(settings, HandleJoystickButtonScan);
+				Luminosity.IO.InputManager.StartInputScan(settings, HandleJoystickButtonScan);
 			}
 			else
 			{
-				settings.scanFlags = ScanFlags.Key;
-				TeamUtility.IO.InputManager.StartScan(settings, HandleKeyScan);
+				settings.ScanFlags = ScanFlags.Key;
+				Luminosity.IO.InputManager.StartInputScan(settings, HandleKeyScan);
 			}
 		}
 
 		private bool HandleKeyScan(ScanResult result)
 		{
-			if (!IsKeyValid(result.key))
+			if (!IsKeyValid(result.Key))
 			{
 				return false;
 			}
-			MainPanel.GetComponent<ControlsRebinder>().OnKeyChange(result.key, m_axisConfigName, m_changePositiveKey, m_changeAltKey, ControlItem);
+			MainPanel.GetComponent<ControlsRebinder>().OnKeyChange(result.Key, m_axisConfigName, m_changePositiveKey, m_changeAltKey, ControlItem);
 			StartCoroutine(WaitAfterScan(0.4f));
 			MainPanel.GetComponent<ControlsRebinder>().isScanning = false;
 			MainPanel.GetComponent<ControlsRebinder>().WhoIsScanning = string.Empty;
-			if (result.key != 0)
+			if (result.Key != 0)
 			{
-				result.key = ((result.key != KeyCode.Backspace) ? result.key : KeyCode.None);
+				result.Key = (result.Key != KeyCode.Backspace) ? result.Key : KeyCode.None;
 				if (m_changePositiveKey)
 				{
 					if (m_changeAltKey)
 					{
-						m_axisConfig.altPositive = result.key;
+						m_axisConfig.Bindings[1].Positive = result.Key;
 					}
 					else
 					{
-						m_axisConfig.positive = result.key;
+						m_axisConfig.Bindings[0].Positive = result.Key;
 					}
 				}
 				else if (m_changeAltKey)
 				{
-					m_axisConfig.altNegative = result.key;
+					m_axisConfig.Bindings[1].Negative = result.Key;
 				}
 				else
 				{
-					m_axisConfig.negative = result.key;
+					m_axisConfig.Bindings[0].Negative = result.Key;
 				}
-				m_keyDescription.text = ((result.key != 0) ? result.key.ToString() : string.Empty);
+				m_keyDescription.text = (result.Key != 0) ? result.Key.ToString() : string.Empty;
 			}
 			else
 			{
@@ -286,61 +283,61 @@ namespace ZeroGravity.UI
 
 		private bool HandleJoystickButtonScan(ScanResult result)
 		{
-			if (result.scanFlags == ScanFlags.Key || result.scanFlags == ScanFlags.JoystickButton)
+			if (result.ScanFlags == ScanFlags.Key || result.ScanFlags == ScanFlags.JoystickButton)
 			{
-				if (!IsJoytickButtonValid(result.key))
+				if (!IsJoytickButtonValid(result.Key))
 				{
 					return false;
 				}
-				if (result.key != 0)
+				if (result.Key != 0)
 				{
-					result.key = ((result.key != KeyCode.Backspace) ? result.key : KeyCode.None);
-					m_axisConfig.type = InputType.Button;
+					result.Key = ((result.Key != KeyCode.Backspace) ? result.Key : KeyCode.None);
+					m_axisConfig.Bindings[0].Type = InputType.Button;
 					if (m_changePositiveKey)
 					{
 						if (m_changeAltKey)
 						{
-							m_axisConfig.altPositive = result.key;
+							m_axisConfig.Bindings[1].Positive = result.Key;
 						}
 						else
 						{
-							m_axisConfig.positive = result.key;
+							m_axisConfig.Bindings[0].Positive = result.Key;
 						}
 					}
 					else if (m_changeAltKey)
 					{
-						m_axisConfig.altNegative = result.key;
+						m_axisConfig.Bindings[1].Negative = result.Key;
 					}
 					else
 					{
-						m_axisConfig.negative = result.key;
+						m_axisConfig.Bindings[0].Negative = result.Key;
 					}
-					m_keyDescription.text = ((result.key != 0) ? result.key.ToString() : string.Empty);
+					m_keyDescription.text = ((result.Key != 0) ? result.Key.ToString() : string.Empty);
 				}
-				else if (m_axisConfig.type == InputType.Button)
+				else if (m_axisConfig.Bindings[0].Type is InputType.Button)
 				{
 					KeyCode currentKeyCode = GetCurrentKeyCode();
-					m_keyDescription.text = ((currentKeyCode != 0) ? currentKeyCode.ToString() : string.Empty);
+					m_keyDescription.text = (currentKeyCode != 0) ? currentKeyCode.ToString() : string.Empty;
 				}
 				else
 				{
-					m_keyDescription.text = m_axisNames[m_axisConfig.axis];
+					m_keyDescription.text = m_axisNames[m_axisConfig.Bindings[0].Axis];
 				}
 			}
-			else if (result.joystickAxis >= 0)
+			else if (result.JoystickAxis >= 0)
 			{
-				m_axisConfig.type = InputType.AnalogButton;
-				m_axisConfig.SetAnalogButton(m_joystick, result.joystickAxis);
-				m_keyDescription.text = m_axisNames[m_axisConfig.axis];
+				m_axisConfig.Bindings[0].Type = InputType.AnalogButton;
+				//m_axisConfig.Bindings[0].SetAnalogButton(m_joystick, result.JoystickAxis);
+				m_keyDescription.text = m_axisNames[m_axisConfig.Bindings[0].Axis];
 			}
-			else if (m_axisConfig.type == InputType.AnalogButton)
+			else if (m_axisConfig.Bindings[0].Type == InputType.AnalogButton)
 			{
-				m_keyDescription.text = m_axisNames[m_axisConfig.axis];
+				m_keyDescription.text = m_axisNames[m_axisConfig.Bindings[0].Axis];
 			}
 			else
 			{
 				KeyCode currentKeyCode2 = GetCurrentKeyCode();
-				m_keyDescription.text = ((currentKeyCode2 != 0) ? currentKeyCode2.ToString() : string.Empty);
+				m_keyDescription.text = (currentKeyCode2 != 0) ? currentKeyCode2.ToString() : string.Empty;
 			}
 			return true;
 		}
@@ -364,11 +361,11 @@ namespace ZeroGravity.UI
 
 		private bool HandleJoystickAxisScan(ScanResult result)
 		{
-			if (result.joystickAxis >= 0)
+			if (result.JoystickAxis >= 0)
 			{
-				m_axisConfig.SetAnalogAxis(m_joystick, result.joystickAxis);
+				//m_axisConfig.Bindings[0].SetAnalogAxis(m_joystick, result.JoystickAxis);
 			}
-			m_keyDescription.text = m_axisNames[m_axisConfig.axis];
+			m_keyDescription.text = m_axisNames[m_axisConfig.Bindings[0].Axis];
 			return true;
 		}
 
@@ -382,15 +379,15 @@ namespace ZeroGravity.UI
 			{
 				if (m_changeAltKey)
 				{
-					return m_axisConfig.altPositive;
+					return m_axisConfig.Bindings[1].Positive;
 				}
-				return m_axisConfig.positive;
+				return m_axisConfig.Bindings[0].Positive;
 			}
 			if (m_changeAltKey)
 			{
-				return m_axisConfig.altNegative;
+				return m_axisConfig.Bindings[1].Negative;
 			}
-			return m_axisConfig.negative;
+			return m_axisConfig.Bindings[0].Negative;
 		}
 	}
 }
