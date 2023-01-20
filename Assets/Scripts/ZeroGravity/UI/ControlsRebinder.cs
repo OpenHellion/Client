@@ -478,11 +478,11 @@ namespace ZeroGravity.UI
 				{
 					if (!button.IsAlt && !isAltRev)
 					{
-						button.ButtonText.text = ((!isPositiveRev) ? oldKeyRev_n.ToString() : oldKeyRev_p.ToString());
+						button.ButtonText.text = (!isPositiveRev) ? oldKeyRev_n.ToString() : oldKeyRev_p.ToString();
 					}
 					else if (button.IsAlt && isAltRev)
 					{
-						button.ButtonText.text = ((!isPositiveRev) ? oldKeyRev_an.ToString() : oldKeyRev_ap.ToString());
+						button.ButtonText.text = (!isPositiveRev) ? oldKeyRev_an.ToString() : oldKeyRev_ap.ToString();
 					}
 				}
 				else if (button.ControlItem.Name == controlItemValOld.Name)
@@ -498,10 +498,6 @@ namespace ZeroGravity.UI
 				}
 			}
 			GameMenu.DisableGameMenu = false;
-		}
-
-		public void OnKeyChanged(RebindInput rebinder, KeyCode key)
-		{
 		}
 
 		public void OnKeyChange(KeyCode key, string AxisName, bool changePositive, bool changeAlt, ControlItem controlItemVal)

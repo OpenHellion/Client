@@ -1,6 +1,6 @@
-using Luminosity.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using ZeroGravity.UI;
 
 public class InceptionGame : MonoBehaviour
 {
@@ -33,27 +33,27 @@ public class InceptionGame : MonoBehaviour
 
 	private void Update()
 	{
-		if (InputManager.GetButtonDown("Jump"))
+		if (InputManager.GetButtonDown(InputManager.AxisNames.Space))
 		{
 			ShootBullet();
 		}
-		if (InputManager.GetButtonDown("Sprint"))
+		if (InputManager.GetButtonDown(InputManager.AxisNames.LeftShift))
 		{
 			ChangeActiveTurret();
 		}
-		if (InputManager.GetAxis("Right") > 0f)
+		if (InputManager.GetAxis(InputManager.AxisNames.Right) > 0f)
 		{
 			MovementHorizontal(true);
 		}
-		else if (InputManager.GetAxis("Right") < 0f)
+		else if (InputManager.GetAxis(InputManager.AxisNames.Right) < 0f)
 		{
 			MovementHorizontal(false);
 		}
-		if (InputManager.GetAxis("Forward") > 0f)
+		if (InputManager.GetAxis(InputManager.AxisNames.Forward) > 0f)
 		{
 			MovementVertical(true);
 		}
-		else if (InputManager.GetAxis("Forward") < 0f)
+		else if (InputManager.GetAxis(InputManager.AxisNames.Forward) < 0f)
 		{
 			MovementVertical(false);
 		}
@@ -79,7 +79,7 @@ public class InceptionGame : MonoBehaviour
 
 	private void MovementHorizontal(bool moveRight)
 	{
-		Vector3 position = default(Vector3);
+		Vector3 position = default;
 		if (moveRight)
 		{
 			position = new Vector3(Ship.transform.position.x + Time.deltaTime * ShipSpeed, Ship.transform.position.y, Ship.transform.position.z);
@@ -96,7 +96,7 @@ public class InceptionGame : MonoBehaviour
 
 	private void MovementVertical(bool moveUp)
 	{
-		Vector3 position = default(Vector3);
+		Vector3 position = default;
 		if (moveUp)
 		{
 			position = new Vector3(Ship.transform.position.x, Ship.transform.position.y + Time.deltaTime * ShipSpeed, Ship.transform.position.z);
@@ -113,7 +113,7 @@ public class InceptionGame : MonoBehaviour
 
 	private void ShootBullet()
 	{
-		GameObject gameObject = Object.Instantiate(BulletPref, ActiveTurret.transform.position, base.transform.rotation);
+		GameObject gameObject = Instantiate(BulletPref, ActiveTurret.transform.position, base.transform.rotation);
 		gameObject.transform.SetParent(GameCanvas.transform);
 		gameObject.GetComponent<BulletScript>().DirectionUp = DirectionUp;
 		gameObject.GetComponent<BulletScript>().BulletSpeed = 250f;
@@ -122,7 +122,7 @@ public class InceptionGame : MonoBehaviour
 
 	private void SpawnEnemy(Vector3 position)
 	{
-		GameObject gameObject = Object.Instantiate(EnemyPref, position, base.transform.rotation);
+		GameObject gameObject = Instantiate(EnemyPref, position, base.transform.rotation);
 		gameObject.transform.SetParent(GameCanvas.transform);
 		gameObject.GetComponent<Enemy>().GameCanvas = GameCanvas;
 		gameObject.GetComponent<Enemy>().BulletPref = BulletPref;

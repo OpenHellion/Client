@@ -226,8 +226,6 @@ namespace ZeroGravity
 
 		public float LastLoadingTipsChangeTime;
 
-		private float mouseSensitivity;
-
 		private float headbobStrength;
 
 		private int antialiasingOption;
@@ -340,20 +338,6 @@ namespace ZeroGravity
 		public static Client Instance => _instance;
 
 		public static bool IsGameBuild => Instance != null;
-
-		public float MouseSensitivity
-		{
-			get
-			{
-				return mouseSensitivity;
-			}
-			set
-			{
-				mouseSensitivity = value;
-				Luminosity.IO.InputManager.GetAction("KeyboardAndMouse", "LookVertical").GetBinding(0).Sensitivity = mouseSensitivity / 10f;
-				Luminosity.IO.InputManager.GetAction("KeyboardAndMouse", "LookHorizontal").GetBinding(0).Sensitivity = mouseSensitivity / 10f;
-			}
-		}
 
 		public float HeadbobStrength
 		{

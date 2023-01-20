@@ -14,7 +14,7 @@ namespace ZeroGravity.UI
 
 		SaveData IInputLoader.Load()
 		{
-			List<ControlScheme> defaultControls = Json.LoadResource<List<ControlScheme>>("Data/ControlsDefault");
+			List<ControlScheme> defaultControls = Json.LoadResource<SaveData>("Data/ControlsDefault").ControlSchemes;
 			List<ControlScheme> settingsControls;
 			if (File.Exists(Path.Combine(Application.persistentDataPath, "Settings.json")))
 			{

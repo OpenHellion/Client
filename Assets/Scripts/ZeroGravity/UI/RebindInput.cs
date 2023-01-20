@@ -62,7 +62,7 @@ namespace ZeroGravity.UI
 
 		private Image m_image;
 
-		private static string[] m_axisNames = new string[10] { "X", "Y", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th" };
+		private static readonly string[] m_axisNames = new string[10] { "X", "Y", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th" };
 
 		public void SetRebinder(string inputConfigName, ControlItem contItem, Text buttonText, GameObject mainPanel, bool isAlt)
 		{
@@ -79,7 +79,7 @@ namespace ZeroGravity.UI
 
 		private void Awake()
 		{
-			Button = base.transform.gameObject;
+			Button = transform.gameObject;
 		}
 
 		private void Start()
@@ -108,20 +108,20 @@ namespace ZeroGravity.UI
 					{
 						if (m_changeAltKey)
 						{
-							m_keyDescription.text = ((m_axisConfig.Bindings[1].Positive != 0) ? m_axisConfig.Bindings[1].Positive.ToString() : string.Empty);
+							m_keyDescription.text = (m_axisConfig.Bindings[1].Positive != 0) ? m_axisConfig.Bindings[1].Positive.ToString() : string.Empty;
 						}
 						else
 						{
-							m_keyDescription.text = ((m_axisConfig.Bindings[0].Positive != 0) ? m_axisConfig.Bindings[0].Positive.ToString() : string.Empty);
+							m_keyDescription.text = (m_axisConfig.Bindings[0].Positive != 0) ? m_axisConfig.Bindings[0].Positive.ToString() : string.Empty;
 						}
 					}
 					else if (m_changeAltKey)
 					{
-						m_keyDescription.text = ((m_axisConfig.Bindings[1].Negative != 0) ? m_axisConfig.Bindings[1].Negative.ToString() : string.Empty);
+						m_keyDescription.text = (m_axisConfig.Bindings[1].Negative != 0) ? m_axisConfig.Bindings[1].Negative.ToString() : string.Empty;
 					}
 					else
 					{
-						m_keyDescription.text = ((m_axisConfig.Bindings[0].Negative != 0) ? m_axisConfig.Bindings[0].Negative.ToString() : string.Empty);
+						m_keyDescription.text = (m_axisConfig.Bindings[0].Negative != 0) ? m_axisConfig.Bindings[0].Negative.ToString() : string.Empty;
 					}
 				}
 				else
@@ -236,7 +236,7 @@ namespace ZeroGravity.UI
 			else
 			{
 				KeyCode currentKeyCode = GetCurrentKeyCode();
-				m_keyDescription.text = ((currentKeyCode != 0) ? currentKeyCode.ToString() : string.Empty);
+				m_keyDescription.text = (currentKeyCode != 0) ? currentKeyCode.ToString() : string.Empty;
 			}
 			return true;
 		}

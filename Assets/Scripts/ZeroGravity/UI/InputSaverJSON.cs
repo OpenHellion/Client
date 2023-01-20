@@ -5,7 +5,7 @@ namespace ZeroGravity.UI
 	{
 		void IInputSaver.Save(SaveData saveData)
 		{
-			Json.SerializePersistent(saveData.ControlSchemes, "Controls.json");
+			Json.SerializePersistent(saveData, "Controls.json");
 		}
 	}
 }

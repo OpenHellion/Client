@@ -1,6 +1,6 @@
 using System.Collections;
-using Luminosity.IO;
 using UnityEngine;
+using ZeroGravity.UI;
 
 namespace ZeroGravity.CharacterMovement
 {
@@ -132,7 +132,7 @@ namespace ZeroGravity.CharacterMovement
 
 		private void Start()
 		{
-			Object.DontDestroyOnLoad(base.gameObject);
+			DontDestroyOnLoad(gameObject);
 			m_RigidBody = GetComponent<Rigidbody>();
 			m_Capsule = GetComponent<CapsuleCollider>();
 			m_Capsule.height = normalHeight;
@@ -221,11 +221,11 @@ namespace ZeroGravity.CharacterMovement
 			}
 			if (!crouch && speedLerpingDone)
 			{
-				if (InputManager.GetButton("Jump") && !m_Jump)
+				if (InputManager.GetButton(InputManager.AxisNames.Space) && !m_Jump)
 				{
 					timerForJump += Time.deltaTime;
 				}
-				if (InputManager.GetButtonUp("Jump") && !m_Jump)
+				if (InputManager.GetButtonUp(InputManager.AxisNames.Space) && !m_Jump)
 				{
 					if (!(timerForJump > minJumpTime))
 					{
@@ -240,22 +240,22 @@ namespace ZeroGravity.CharacterMovement
 					m_Jump = true;
 					timerForJump = 0f;
 				}
-				if (InputManager.GetButtonDown("Sprint"))
+				if (InputManager.GetButtonDown(InputManager.AxisNames.LeftShift))
 				{
 					sprint = true;
 				}
-				if (InputManager.GetButtonUp("Sprint"))
+				if (InputManager.GetButtonUp(InputManager.AxisNames.LeftShift))
 				{
 					sprint = false;
 				}
 			}
-			if (InputManager.GetButtonDown("Crouch"))
+			if (InputManager.GetButtonDown(InputManager.AxisNames.LeftCtrl))
 			{
 				SetNormalSpeed();
 				SpeedDecrease(crouchMultiplier);
 				crouch = true;
 			}
-			if (InputManager.GetButtonUp("Crouch"))
+			if (InputManager.GetButtonUp(InputManager.AxisNames.LeftCtrl))
 			{
 				speedLerpingDone = false;
 				crouch = false;
@@ -267,15 +267,15 @@ namespace ZeroGravity.CharacterMovement
 				return;
 			}
 			RaycastHit hitInfo;
-			Physics.SphereCast(base.transform.position, m_Capsule.radius - 0.02f, Vector3.up, out hitInfo, normalHeight - m_Capsule.radius);
+			Physics.SphereCast(transform.position, m_Capsule.radius - 0.02f, Vector3.up, out hitInfo, normalHeight - m_Capsule.radius);
 			if (hitInfo.transform == null)
 			{
 				ForwardSpeed = Mathf.Lerp(ForwardSpeed, normalFwdSpeed, Time.deltaTime * 4f);
-				BackwardSpeed = (StrafeSpeed = Mathf.Lerp(BackwardSpeed, backwardNormalSpeed, Time.deltaTime * 4f));
+				BackwardSpeed = StrafeSpeed = Mathf.Lerp(BackwardSpeed, backwardNormalSpeed, Time.deltaTime * 4f);
 				m_Capsule.center = new Vector3(0f, Mathf.Lerp(m_Capsule.center.y, 0.89f, Time.deltaTime * 4f), 0f);
 				m_Capsule.height = Mathf.Lerp(m_Capsule.height, 1.8f, Time.deltaTime * 4f);
 			}
-			if ((double)ForwardSpeed > (double)normalFwdSpeed - 0.5)
+			if (ForwardSpeed > normalFwdSpeed - 0.5)
 			{
 				speedLerpingDone = true;
 			}
@@ -328,18 +328,18 @@ namespace ZeroGravity.CharacterMovement
 			if (flying)
 			{
 				Vector2 input = GetInput();
-				rotationX += InputManager.GetAxis("LookHorizontal") * lookSpeed;
-				rotationY += InputManager.GetAxis("LookVertical") * lookSpeed;
-				base.transform.localRotation = Quaternion.AngleAxis(rotationX, Vector3.up);
-				base.transform.localRotation *= Quaternion.AngleAxis(rotationY, Vector3.left);
-				base.transform.position += base.transform.forward * moveSpeed * input.y;
-				base.transform.position += base.transform.right * moveSpeed * input.x;
+				rotationX += InputManager.GetAxis(InputManager.AxisNames.LookHorizontal) * lookSpeed;
+				rotationY += InputManager.GetAxis(InputManager.AxisNames.LookVertical) * lookSpeed;
+				transform.localRotation = Quaternion.AngleAxis(rotationX, Vector3.up);
+				transform.localRotation *= Quaternion.AngleAxis(rotationY, Vector3.left);
+				transform.position += input.y * moveSpeed * transform.forward;
+				transform.position += input.x * moveSpeed * transform.right;
 			}
 			GroundCheck();
 			Vector2 input2 = GetInput();
 			if (Mathf.Abs(input2.x) > float.Epsilon || Mathf.Abs(input2.y) > float.Epsilon)
 			{
-				Vector3 vector = base.transform.forward * input2.y + base.transform.right * input2.x;
+				Vector3 vector = transform.forward * input2.y + transform.right * input2.x;
 				vector = Vector3.ProjectOnPlane(vector, m_GroundContactNormal).normalized;
 				vector.x *= CurrentTargetSpeed;
 				vector.z *= CurrentTargetSpeed;
@@ -387,9 +387,9 @@ namespace ZeroGravity.CharacterMovement
 
 		private Vector2 GetInput()
 		{
-			Vector2 vector = default(Vector2);
-			vector.x = InputManager.GetAxis("Horizontal");
-			vector.y = InputManager.GetAxis("Vertical");
+			Vector2 vector = default;
+			vector.x = InputManager.GetAxis(InputManager.AxisNames.Right);
+			vector.y = InputManager.GetAxis(InputManager.AxisNames.Forward);
 			Vector2 vector2 = vector;
 			UpdateDesiredTargetSpeed(vector2);
 			return vector2;
@@ -399,7 +399,7 @@ namespace ZeroGravity.CharacterMovement
 		{
 			m_PreviouslyGrounded = m_IsGrounded;
 			RaycastHit hitInfo;
-			if (Physics.SphereCast(base.transform.position + base.transform.up * (m_Capsule.radius - 0.02f + groundCheckDistance / 2f), m_Capsule.radius - 0.02f, Vector3.down, out hitInfo, groundCheckDistance + 0.1f))
+			if (Physics.SphereCast(transform.position + transform.up * (m_Capsule.radius - 0.02f + groundCheckDistance / 2f), m_Capsule.radius - 0.02f, Vector3.down, out hitInfo, groundCheckDistance + 0.1f))
 			{
 				m_IsGrounded = true;
 				m_GroundContactNormal = hitInfo.normal;
@@ -420,7 +420,7 @@ namespace ZeroGravity.CharacterMovement
 		private void StickToGroundHelper()
 		{
 			RaycastHit hitInfo;
-			if (Physics.SphereCast(base.transform.position, m_Capsule.radius, Vector3.down, out hitInfo, m_Capsule.height / 2f - m_Capsule.radius + stickToGroundHelperDistance) && Mathf.Abs(Vector3.Angle(hitInfo.normal, Vector3.up)) < 85f)
+			if (Physics.SphereCast(transform.position, m_Capsule.radius, Vector3.down, out hitInfo, m_Capsule.height / 2f - m_Capsule.radius + stickToGroundHelperDistance) && Mathf.Abs(Vector3.Angle(hitInfo.normal, Vector3.up)) < 85f)
 			{
 				m_RigidBody.velocity = Vector3.ProjectOnPlane(m_RigidBody.velocity, hitInfo.normal);
 			}

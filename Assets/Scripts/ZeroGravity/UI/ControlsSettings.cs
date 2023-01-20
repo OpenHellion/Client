@@ -22,7 +22,7 @@ namespace ZeroGravity.UI
 		{
 			mouseSensitivitySlider.minValue = 0.1f;
 			mouseSensitivitySlider.maxValue = 10f;
-			mouseSensitivitySlider.value = Client.Instance.MouseSensitivity;
+			mouseSensitivitySlider.value = InputManager.MouseSensitivity;
 			mouseSensitivityLevel.text = mouseSensitivitySlider.value.ToString("0.0");
 			mouseSensitivitySlider.onValueChanged.AddListener(MouseSensitivity);
 			InvertMouseToggle.onValueChanged.AddListener(delegate
@@ -38,7 +38,7 @@ namespace ZeroGravity.UI
 		public void MouseSensitivity(float val)
 		{
 			mouseSensitivityLevel.text = val.ToString("0.0");
-			Client.Instance.MouseSensitivity = val;
+			InputManager.MouseSensitivity = val;
 			ControlsData.MouseSensitivity = val;
 			mouseSensitivitySlider.value = val;
 		}
@@ -72,7 +72,7 @@ namespace ZeroGravity.UI
 
 		public void SaveControlsSettings()
 		{
-			ControlsData.MouseSensitivity = Client.Instance.MouseSensitivity;
+			ControlsData.MouseSensitivity = InputManager.MouseSensitivity;
 			ControlsData.InvertMouse = Client.Instance.InvertedMouse;
 			ControlsData.InverMouseWhileDriving = Client.Instance.InvertMouseWhileDriving;
 			if (!ControlsRebind.CheckIfEmpty())
@@ -92,11 +92,10 @@ namespace ZeroGravity.UI
 			MouseSensitivity(ControlsData.MouseSensitivity);
 			InvertMouseToggle.isOn = ControlsData.InvertMouse;
 			InvertMouseWhileDrivingToggle.isOn = ControlsData.InverMouseWhileDriving;
-			Client.Instance.MouseSensitivity = ControlsData.MouseSensitivity;
+			InputManager.MouseSensitivity = ControlsData.MouseSensitivity;
 			Client.Instance.InvertedMouse = ControlsData.InvertMouse;
 			Client.Instance.InvertMouseWhileDriving = ControlsData.InverMouseWhileDriving;
 			Client.Instance.InputManager.SetSaveData(ControlsData.InputConfigurations);
-			InputManager.LoadJSON();
 		}
 	}
 }

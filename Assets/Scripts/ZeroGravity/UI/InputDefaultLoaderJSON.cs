@@ -8,7 +8,7 @@ namespace ZeroGravity.UI
 	{
 		SaveData IInputLoader.Load()
 		{
-			List<ControlScheme> list = Json.LoadResource<List<ControlScheme>>("Data/ControlsDefault");
+			List<ControlScheme> list = Json.LoadResource<SaveData>("Data/ControlsDefault").ControlSchemes;
 			SaveData saveLoadParameters = new SaveData
 			{
 				ControlSchemes = list

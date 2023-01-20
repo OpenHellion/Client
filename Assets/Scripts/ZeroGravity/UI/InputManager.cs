@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Luminosity.IO;
 using UnityEngine;
 
@@ -34,7 +33,6 @@ namespace ZeroGravity.UI
 			Enter = 23,
 			NumPlus = 24,
 			NumMinus = 25,
-			Modifier = 26,
 			Y = 27,
 			T = 28,
 			CapsLock = 29,
@@ -61,6 +59,21 @@ namespace ZeroGravity.UI
 			Alpha0 = 50,
 			B = 51,
 			O = 52
+		}
+
+		private static float _mouseSensitivity;
+		public static float MouseSensitivity
+		{
+			get
+			{
+				return _mouseSensitivity;
+			}
+			set
+			{
+				_mouseSensitivity = value;
+				Luminosity.IO.InputManager.GetAction("KeyboardAndMouse", "LookVertical").GetBinding(0).Sensitivity = _mouseSensitivity / 10f;
+				Luminosity.IO.InputManager.GetAction("KeyboardAndMouse", "LookHorizontal").GetBinding(0).Sensitivity = _mouseSensitivity / 10f;
+			}
 		}
 
 		public static bool GetButton(AxisNames key)
@@ -135,6 +148,7 @@ namespace ZeroGravity.UI
 
 		public static void SaveJSON()
 		{
+			Luminosity.IO.InputManager.Save(new InputSaverJSON());
 		}
 
 		public static void SaveDefaultJSON()
@@ -174,17 +188,6 @@ namespace ZeroGravity.UI
 				}
 			}
 			return string.Empty;
-		}
-
-		public static void SaveDefault(Luminosity.IO.InputManager inputManager)
-		{
-			List<ControlScheme> list = inputManager.ControlSchemes;
-			Json.SerializeDataPath(list, "Resources/Data/ControlsDefault.json");
-		}
-
-		public static void LoadDefault(Luminosity.IO.InputManager inputManager)
-		{
-			Luminosity.IO.InputManager.Load(new InputDefaultLoaderJSON());
 		}
 	}
 }
