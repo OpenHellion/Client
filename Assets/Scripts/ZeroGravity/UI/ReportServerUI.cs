@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using OpenHellion;
 using OpenHellion.Networking;
-using OpenHellion.ProviderSystem;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -133,7 +131,7 @@ namespace ZeroGravity.UI
 			string time = DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss");
 			string user = MyPlayer.Instance.PlayerName;
 			form.AddField("name", Client.LastConnectedServer.Name + "-" + time);
-			string stats = Client.Instance.GetNetworkDataLogs();
+			string stats = NetworkController.GetNetworkDataLogs();
 			form.AddField("data", Client.LastConnectedServer.Name + " - " + user + "\n" + stats + "\nPOWERED BY JUNKRAT");
 			UnityWebRequest req = UnityWebRequest.Post("http://api.playhellion.com/upload-log.php", form);
 			yield return req.SendWebRequest();

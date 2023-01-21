@@ -28,10 +28,6 @@ namespace ZeroGravity.Audio
 
 		private OpusEncoder opusEncoder;
 
-		private float[] outBuffer = new float[0];
-
-		private List<float> audioData = new List<float>();
-
 		private int lastSample;
 
 		[SerializeField]
@@ -44,7 +40,7 @@ namespace ZeroGravity.Audio
 
 		private void Update()
 		{
-			if (ProviderManager.MainProvider is not SteamProvider)
+			if (ProviderManager.SteamId.IsNullOrEmpty())
 			{
 				return;
 			}
@@ -87,7 +83,7 @@ namespace ZeroGravity.Audio
 
 		private void FixedUpdate()
 		{
-			if (ProviderManager.MainProvider is not SteamProvider)
+			if (ProviderManager.SteamId.IsNullOrEmpty())
 			{
 				return;
 			}
@@ -145,16 +141,18 @@ namespace ZeroGravity.Audio
 			}
 			if (list.Count > 0)
 			{
-				VoiceCommDataMessage voiceCommDataMessage = new VoiceCommDataMessage();
-				voiceCommDataMessage.SourceGUID = MyPlayer.Instance.GUID;
-				voiceCommDataMessage.IsRadioComm = radio;
-				voiceCommDataMessage.AudioPackets = list;
+				VoiceCommDataMessage voiceCommDataMessage = new VoiceCommDataMessage
+				{
+					SourceGUID = MyPlayer.Instance.GUID,
+					IsRadioComm = radio,
+					AudioPackets = list
+				};
 				byte[] msgBytes = Serializer.Package(voiceCommDataMessage);
 				HashSet<OtherPlayer> hashSet = new HashSet<OtherPlayer>();
 				hashSet.UnionWith(GetAllPlayersFromSameVessel());
 				if (radio)
 				{
-					hashSet.UnionWith(GetAllPlayersWithinRadius(base.transform.position, maxRadioDistance));
+					hashSet.UnionWith(GetAllPlayersWithinRadius(transform.position, maxRadioDistance));
 				}
 				SendP2PPacketToPlayers(hashSet, msgBytes);
 			}

@@ -29,7 +29,6 @@ namespace OpenHellion.Networking
 
 		public enum InternalEventType
 		{
-			GravityChange = 0,
 			ShowMessageBox = 1,
 			SetActiveLoginLoadingCanvas = 2,
 			OpenMainScreen = 3,

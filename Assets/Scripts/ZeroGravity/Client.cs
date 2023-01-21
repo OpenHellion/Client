@@ -111,14 +111,6 @@ namespace ZeroGravity
 
 		public static float MouseSpeedOnPanels = 30f;
 
-		private ConcurrentQueue<Tuple<float, Type>> sentNetworkDataLog = new ConcurrentQueue<Tuple<float, Type>>();
-
-		private ConcurrentQueue<Tuple<float, Type>> receivedNetworkDataLog = new ConcurrentQueue<Tuple<float, Type>>();
-
-		private const int maxNetworkDataLogsSize = 3000;
-
-		private DateTime clientStartTime = DateTime.UtcNow.ToUniversalTime();
-
 		public static SceneLoadTypeValue SceneLoadType = SceneLoadTypeValue.PreloadWithCopy;
 
 		public static int ControlsVersion = 1;
@@ -197,9 +189,9 @@ namespace ZeroGravity
 
 		public volatile bool LogInResponseReceived;
 
-		private bool gameExitWanted;
+		private bool _gameExitWanted;
 
-		private float maxSecondsToWaitForExit = 3f;
+		private float _maxSecondsToWaitForExit = 3f;
 
 		public bool EnvironmentReady;
 
@@ -991,7 +983,7 @@ namespace ZeroGravity
 			{
 				KillAllSPProcesses();
 			}
-			if (gameExitWanted)
+			if (_gameExitWanted)
 			{
 				QuitApplication();
 			}
@@ -1040,6 +1032,9 @@ namespace ZeroGravity
 			}
 		}
 
+		/// <summary>
+		/// 	Minor reset of game state. Reloads scene and opens main menu.
+		/// </summary>
 		public void OpenMainScreen()
 		{
 			if (!openMainSceneStarted)
@@ -1049,7 +1044,7 @@ namespace ZeroGravity
 				ToggleCursor(true);
 				if (MyPlayer.Instance != null)
 				{
-					UnityEngine.Object.Destroy(MyPlayer.Instance.gameObject);
+					Destroy(MyPlayer.Instance.gameObject);
 				}
 				SceneManager.LoadScene("Client", LoadSceneMode.Single);
 				if (MainMenuSceneController != null)
@@ -1121,7 +1116,7 @@ namespace ZeroGravity
 			}
 
 			// If we didn't tell the game explicitly that we want to exit.
-			if (!gameExitWanted)
+			if (!_gameExitWanted)
 			{
 				// Prevent the app from quitting...
 				Application.wantsToQuit += () => { return false; };
@@ -1131,7 +1126,7 @@ namespace ZeroGravity
 			}
 			else
 			{
-				NetworkController.Instance.DisconnectImmediate();
+				NetworkController.Instance.Disconnect();
 			}
 		}
 
@@ -1140,7 +1135,7 @@ namespace ZeroGravity
 		/// </summary>
 		public void ExitGame()
 		{
-			gameExitWanted = true;
+			_gameExitWanted = true;
 			QuitApplication();
 		}
 
@@ -1148,7 +1143,7 @@ namespace ZeroGravity
 		{
 			IsRunning = false;
 			OnDestroy();
-			NetworkController.Instance.DisconnectImmediate();
+			NetworkController.Instance.Disconnect();
 			Application.Quit();
 		}
 
@@ -1245,10 +1240,10 @@ namespace ZeroGravity
 			if (Time.deltaTime > 1f)
 			{
 			}
-			if (gameExitWanted)
+			if (_gameExitWanted)
 			{
-				maxSecondsToWaitForExit -= Time.deltaTime;
-				if (maxSecondsToWaitForExit <= 0f)
+				_maxSecondsToWaitForExit -= Time.deltaTime;
+				if (_maxSecondsToWaitForExit <= 0f)
 				{
 					QuitApplication();
 				}
@@ -2071,7 +2066,7 @@ namespace ZeroGravity
 			LastSignInRequest = signInRequest;
 			try
 			{
-				MSConnection.Get<SignInResponse>(signInRequest, SignInResponseListener);
+				ConnectionMain.Get<SignInResponse>(signInRequest, SignInResponseListener);
 			}
 			catch (Exception)
 			{
@@ -2140,7 +2135,7 @@ namespace ZeroGravity
 			};
 
 			// First time booting, so we need to download id from the main server.
-			MSConnection.Get<PlayerIdResponse>(idRequest, (data) =>
+			ConnectionMain.Get<PlayerIdResponse>(idRequest, (data) =>
 			{
 				CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.FindingPlayer);
 
@@ -2164,7 +2159,7 @@ namespace ZeroGravity
 					};
 
 					// Send request to server.
-					MSConnection.Get<PlayerIdResponse>(createRequest, (data) =>
+					ConnectionMain.Get<PlayerIdResponse>(createRequest, (data) =>
 					{
 						if (data.Result == ResponseResult.Success)
 						{
@@ -2625,48 +2620,6 @@ namespace ZeroGravity
 					}
 				}
 			}
-		}
-
-		public void LogReceivedNetworkData(Type type)
-		{
-			receivedNetworkDataLog.Enqueue(new Tuple<float, Type>((float)(DateTime.UtcNow.ToUniversalTime() - clientStartTime).TotalSeconds, type));
-			while (receivedNetworkDataLog.Count > maxNetworkDataLogsSize)
-			{
-				receivedNetworkDataLog.TryDequeue(out var _);
-			}
-		}
-
-		public void LogSentNetworkData(Type type)
-		{
-			sentNetworkDataLog.Enqueue(new Tuple<float, Type>((float)(DateTime.UtcNow.ToUniversalTime() - clientStartTime).TotalSeconds, type));
-			while (sentNetworkDataLog.Count > maxNetworkDataLogsSize)
-			{
-				sentNetworkDataLog.TryDequeue(out var _);
-			}
-		}
-
-		public string GetNetworkDataLogs()
-		{
-			Tuple<float, Type>[] source = receivedNetworkDataLog.ToArray();
-			float lastRecvdTime = source.Last().Item1;
-			IEnumerable<Tuple<float, Type>> recvd = source.Where((Tuple<float, Type> m) => lastRecvdTime - m.Item1 <= 300f);
-			float item = recvd.First().Item1;
-			string text = "Received packets (in last " + (lastRecvdTime - item).ToString("0") + "s):\n";
-			text += string.Join("\n", from z in (from x in recvd.Select((Tuple<float, Type> m) => m.Item2).Distinct()
-					select new Tuple<string, int>(x.Name, recvd.Count((Tuple<float, Type> n) => n.Item2 == x)) into y
-					orderby y.Item2
-					select y).Reverse()
-				select z.Item1 + ": " + z.Item2);
-			Tuple<float, Type>[] source2 = sentNetworkDataLog.ToArray();
-			float lastSentTime = source2.Last().Item1;
-			IEnumerable<Tuple<float, Type>> sent = source2.Where((Tuple<float, Type> m) => lastSentTime - m.Item1 <= 300f);
-			float item2 = sent.First().Item1;
-			text = text + "\n\nSent packets (in last " + (lastSentTime - item2).ToString("0") + "s):\n";
-			return text + string.Join("\n", from z in (from x in sent.Select((Tuple<float, Type> m) => m.Item2).Distinct()
-					select new Tuple<string, int>(x.Name, sent.Count((Tuple<float, Type> n) => n.Item2 == x)) into y
-					orderby y.Item2
-					select y).Reverse()
-				select z.Item1 + ": " + z.Item2);
 		}
 	}
 }

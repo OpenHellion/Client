@@ -2370,7 +2370,7 @@ namespace ZeroGravity.Objects
 			}
 			GUI.Label(new Rect(15f, 225f, 320f, 30f), "Occlusion status: " + ((!ZeroOcclusion.UseOcclusion) ? "Inactive" : "Active"));
 			GUI.Label(new Rect(Screen.width - 250, 250f, 320f, 30f), "Latency: " + Client.Instance.LatencyMs + " ms");
-			GUI.Box(new Rect(Screen.width - 460, 280f, 420f, 340f), Client.Instance.GetNetworkDataLogs());
+			GUI.Box(new Rect(Screen.width - 460, 280f, 420f, 340f), NetworkController.GetNetworkDataLogs());
 			if (ShotDebugList.Count > 0)
 			{
 				GUI.Label(new Rect(Screen.width / 2, Screen.height / 2, 120f, 30f), "Shotz fired: ");
