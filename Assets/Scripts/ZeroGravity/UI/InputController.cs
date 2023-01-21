@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ZeroGravity.UI
 {
-	public class InputManager
+	public class InputController
 	{
 		public enum AxisNames
 		{
@@ -71,122 +71,135 @@ namespace ZeroGravity.UI
 			set
 			{
 				_mouseSensitivity = value;
-				Luminosity.IO.InputManager.GetAction("KeyboardAndMouse", "LookVertical").GetBinding(0).Sensitivity = _mouseSensitivity / 10f;
-				Luminosity.IO.InputManager.GetAction("KeyboardAndMouse", "LookHorizontal").GetBinding(0).Sensitivity = _mouseSensitivity / 10f;
+				InputManager.GetAction("KeyboardAndMouse", "LookVertical").GetBinding(0).Sensitivity = _mouseSensitivity / 10f;
+				InputManager.GetAction("KeyboardAndMouse", "LookHorizontal").GetBinding(0).Sensitivity = _mouseSensitivity / 10f;
 			}
 		}
 
 		public static bool GetButton(AxisNames key)
 		{
-			return Luminosity.IO.InputManager.GetButton(key.ToString());
+			return InputManager.GetButton(key.ToString());
 		}
 
 		public static bool GetButtonDown(AxisNames key)
 		{
-			return Luminosity.IO.InputManager.GetButtonDown(key.ToString());
+			return InputManager.GetButtonDown(key.ToString());
 		}
 
 		public static bool GetButtonUp(AxisNames key)
 		{
-			return Luminosity.IO.InputManager.GetButtonUp(key.ToString());
+			return InputManager.GetButtonUp(key.ToString());
 		}
 
 		public static float GetAxis(AxisNames name)
 		{
-			return Luminosity.IO.InputManager.GetAxis(name.ToString());
+			return InputManager.GetAxis(name.ToString());
 		}
 
 		public static float GetAxisRaw(AxisNames name)
 		{
-			return Luminosity.IO.InputManager.GetAxisRaw(name.ToString());
+			return InputManager.GetAxisRaw(name.ToString());
 		}
 
 		public static bool GetKey(KeyCode key)
 		{
-			return Luminosity.IO.InputManager.GetKey(key);
+			return InputManager.GetKey(key);
 		}
 
 		public static bool GetKeyDown(KeyCode key)
 		{
-			return Luminosity.IO.InputManager.GetKeyDown(key);
+			return InputManager.GetKeyDown(key);
 		}
 
 		public static bool GetKeyUp(KeyCode key)
 		{
-			return Luminosity.IO.InputManager.GetKeyUp(key);
+			return InputManager.GetKeyUp(key);
 		}
 
 		public static AccelerationEvent GetAccelerationEvent(int index)
 		{
-			return Luminosity.IO.InputManager.GetAccelerationEvent(index);
+			return InputManager.GetAccelerationEvent(index);
 		}
 
 		public static bool GetMouseButton(int index)
 		{
-			return Luminosity.IO.InputManager.GetMouseButton(index);
+			return InputManager.GetMouseButton(index);
 		}
 
 		public static bool GetMouseButtonDown(int index)
 		{
-			return Luminosity.IO.InputManager.GetMouseButtonDown(index);
+			return InputManager.GetMouseButtonDown(index);
 		}
 
 		public static bool GetMouseButtonUp(int index)
 		{
-			return Luminosity.IO.InputManager.GetMouseButtonUp(index);
+			return InputManager.GetMouseButtonUp(index);
 		}
 
 		public static void LoadJSON()
 		{
-			Luminosity.IO.InputManager.Load(new InputLoaderJSON());
+			InputManager.Load(new InputLoaderJSON());
 		}
 
 		public static void LoadDefaultJSON()
 		{
-			Luminosity.IO.InputManager.Load(new InputDefaultLoaderJSON());
-		}
-
-		public static void SaveJSON()
-		{
-			Luminosity.IO.InputManager.Save(new InputSaverJSON());
+			InputManager.Load(new InputDefaultLoaderJSON());
 		}
 
 		public static void SaveDefaultJSON()
 		{
-			Luminosity.IO.InputManager.Save(new InputDefaultSaverJSON());
+			InputManager.Save(new InputDefaultSaverJSON());
 		}
 
 		public static void ResetInputAxis()
 		{
-			Luminosity.IO.InputManager.ResetInputAxes();
+			InputManager.ResetInputAxes();
 		}
 
 		public static string GetAxisKeyName(AxisNames key, bool getPositive = true, bool getNegative = true, bool getAlt = false)
 		{
-			InputAction axisConfiguration = Luminosity.IO.InputManager.GetAction("KeyboardAndMouse", key.ToString());
-			foreach (InputBinding binding in axisConfiguration.Bindings)
+			InputAction actions = InputManager.GetAction("KeyboardAndMouse", key.ToString());
+			if (!getAlt)
 			{
-				if (binding.Type == InputType.DigitalAxis)
+				// Get main binding.
+				if (actions.Bindings[0].Type == InputType.DigitalAxis)
 				{
-					if (getPositive && getNegative && !getAlt)
+					if (getPositive && getNegative)
 					{
-						return binding.Positive.ToString() + "/" + binding.Negative;
+						return actions.Bindings[0].Positive.ToString() + "/" + actions.Bindings[0].Negative;
 					}
-					if (getPositive && !getNegative && !getAlt)
+					if (getPositive && !getNegative)
 					{
-						return binding.Positive.ToString();
+						return actions.Bindings[0].Positive.ToString();
 					}
-					if (!getPositive && getNegative && !getAlt)
+					if (!getPositive && getNegative)
 					{
-						return binding.Negative.ToString();
+						return actions.Bindings[0].Negative.ToString();
 					}
-					return string.Empty;
 				}
-				if (!getAlt)
+
+				return actions.Bindings[0].Positive.ToString();
+			}
+			else
+			{
+				// Get alternative binding.
+				if (actions.Bindings[1].Type == InputType.DigitalAxis)
 				{
-					return binding.Positive.ToString();
+					if (getPositive && getNegative)
+					{
+						return actions.Bindings[1].Positive.ToString() + "/" + actions.Bindings[1].Negative;
+					}
+					if (getPositive && !getNegative)
+					{
+						return actions.Bindings[1].Positive.ToString();
+					}
+					if (!getPositive && getNegative)
+					{
+						return actions.Bindings[1].Negative.ToString();
+					}
 				}
 			}
+
 			return string.Empty;
 		}
 	}

@@ -5,19 +5,19 @@
 //
 //	Copyright (c) 2018 Cristian Alexandru Geambasu
 //
-//	Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
-//	and associated documentation files (the "Software"), to deal in the Software without restriction, 
-//	including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-//	and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
+//	Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+//	and associated documentation files (the "Software"), to deal in the Software without restriction,
+//	including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//	and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
 //	subject to the following conditions:
 //
-//	The above copyright notice and this permission notice shall be included in all copies or substantial 
+//	The above copyright notice and this permission notice shall be included in all copies or substantial
 //	portions of the Software.
 //
-//	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-//	INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+//	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//	INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 //	PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
-//	FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+//	FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 //	ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 using UnityEngine;
@@ -41,9 +41,10 @@ namespace Luminosity.IO
 		[SerializeField]
 		private List<InputAction> m_actions;
 
-		public ReadOnlyCollection<InputAction> Actions
+		public List<InputAction> Actions
 		{
-			get { return m_actions.AsReadOnly(); }
+			get { return m_actions; }
+			set { m_actions = value; }
 		}
 
 		public bool IsExpanded
@@ -64,10 +65,6 @@ namespace Luminosity.IO
 			set
 			{
 				m_name = value;
-				if(Application.isPlaying)
-				{
-					Debug.LogWarning("You should not change the name of a control scheme at runtime");
-				}
 			}
 		}
 
@@ -90,10 +87,10 @@ namespace Luminosity.IO
 				return false;
 			}
 		}
-		
+
 		public ControlScheme() :
 			this("New Scheme") { }
-		
+
 		public ControlScheme(string name)
 		{
 			m_actions = new List<InputAction>();
@@ -295,13 +292,13 @@ namespace Luminosity.IO
 			ControlScheme duplicate = new ControlScheme();
 			duplicate.m_name = name;
 			duplicate.m_description = source.m_description;
-			duplicate.m_uniqueID = GenerateUniqueID(); 
+			duplicate.m_uniqueID = GenerateUniqueID();
 			duplicate.m_actions = new List<InputAction>();
 			foreach(var action in source.m_actions)
 			{
 				duplicate.m_actions.Add(InputAction.Duplicate(action));
 			}
-			
+
 			return duplicate;
 		}
 

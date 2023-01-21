@@ -5,7 +5,7 @@ namespace ZeroGravity.Data
 {
 	public class ControlsSettingsData
 	{
-		public SaveData InputConfigurations;
+		public List<ControlScheme> ControlSchemes;
 
 		public float MouseSensitivity;
 

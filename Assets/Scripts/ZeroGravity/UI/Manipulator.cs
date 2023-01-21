@@ -22,7 +22,7 @@ namespace ZeroGravity.UI
 
 		private void Update()
 		{
-			if (InputManager.GetButtonDown(InputManager.AxisNames.Mouse1))
+			if (InputController.GetButtonDown(InputController.AxisNames.Mouse1))
 			{
 				RaycastHit hitInfo = default(RaycastHit);
 				if (Physics.Raycast(MainCamera.ScreenPointToRay(Input.mousePosition), out hitInfo, float.PositiveInfinity))
@@ -41,7 +41,7 @@ namespace ZeroGravity.UI
 					theOne = null;
 				}
 			}
-			else if (InputManager.GetButton(InputManager.AxisNames.Mouse1) && theOne != null)
+			else if (InputController.GetButton(InputController.AxisNames.Mouse1) && theOne != null)
 			{
 				Vector3 vector = MainCamera.WorldToScreenPoint(theOne.transform.position) - MainCamera.WorldToScreenPoint(base.transform.position);
 				Vector3 vector2 = Input.mousePosition - MainCamera.WorldToScreenPoint(base.transform.position);
@@ -66,7 +66,7 @@ namespace ZeroGravity.UI
 					MoveOut(false);
 				}
 			}
-			else if (InputManager.GetButtonUp(InputManager.AxisNames.Mouse1) && theOne != null)
+			else if (InputController.GetButtonUp(InputController.AxisNames.Mouse1) && theOne != null)
 			{
 				theOne.localPosition = new Vector3(0f, 0f, 3f);
 			}

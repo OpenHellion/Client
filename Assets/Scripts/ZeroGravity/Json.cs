@@ -12,9 +12,9 @@ namespace ZeroGravity
 			Indented = 1
 		}
 
-		private static AuxDataJsonConverter auxDataJsonConverter = new AuxDataJsonConverter();
+		private static readonly AuxDataJsonConverter auxDataJsonConverter = new AuxDataJsonConverter();
 
-		private static AttachPointDataJsonConverter attachPointDataJsonConverter = new AttachPointDataJsonConverter();
+		private static readonly AttachPointDataJsonConverter attachPointDataJsonConverter = new AttachPointDataJsonConverter();
 
 		public static T LoadPersistent<T>(string filename)
 		{

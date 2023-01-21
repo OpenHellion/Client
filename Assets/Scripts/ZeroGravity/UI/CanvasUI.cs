@@ -189,7 +189,7 @@ namespace ZeroGravity.UI
 			{
 				SetItemName(null);
 				Tooltip.SetActive(value: true);
-				Tooltip.GetComponentInChildren<Text>().text = string.Format(Localization.HoldToLoot, InputManager.GetAxisKeyName(InputManager.AxisNames.F));
+				Tooltip.GetComponentInChildren<Text>().text = string.Format(Localization.HoldToLoot, InputController.GetAxisKeyName(InputController.AxisNames.F));
 			}
 			else if (lookingAtTrigger != null && Client.Instance.CanvasManager.ShowTips)
 			{
@@ -269,7 +269,7 @@ namespace ZeroGravity.UI
 
 		public void UpdateTooltipKeys()
 		{
-			TooltipEquip.GetComponentInChildren<Text>(includeInactive: true).text = string.Format(Localization.HoldToEquip, InputManager.GetAxisKeyName(InputManager.AxisNames.R));
+			TooltipEquip.GetComponentInChildren<Text>(includeInactive: true).text = string.Format(Localization.HoldToEquip, InputController.GetAxisKeyName(InputController.AxisNames.R));
 		}
 
 		public void ThrowingItemToggle(bool val)

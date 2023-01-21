@@ -28,11 +28,11 @@ namespace ZeroGravity.UI
 		{
 			if (isLockedToTrigger)
 			{
-				if (InputManager.GetKeyDown(KeyCode.Tab) || InputManager.GetKeyDown(KeyCode.Escape))
+				if (InputController.GetKeyDown(KeyCode.Tab) || InputController.GetKeyDown(KeyCode.Escape))
 				{
 					ToggleNameCanvas(thisNameTag, false, currentParentVessel, currentSceneId);
 				}
-				if (InputManager.GetKeyDown(KeyCode.KeypadEnter) || InputManager.GetKeyDown(KeyCode.Return))
+				if (InputController.GetKeyDown(KeyCode.KeypadEnter) || InputController.GetKeyDown(KeyCode.Return))
 				{
 					ConfirmInput();
 				}

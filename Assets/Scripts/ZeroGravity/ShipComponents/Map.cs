@@ -215,7 +215,7 @@ namespace ZeroGravity.ShipComponents
 						IndicatorObject = raycastHit.collider;
 						OnHover(IndicatorObject);
 					}
-					if (InputManager.GetButtonDown(InputManager.AxisNames.Mouse1) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+					if (InputController.GetButtonDown(InputController.AxisNames.Mouse1) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 					{
 						OnClick(IndicatorObject);
 						Dragging = true;
@@ -227,11 +227,11 @@ namespace ZeroGravity.ShipComponents
 						}
 						doubleClickTimer -= Time.deltaTime;
 					}
-					if (InputManager.GetButtonDown(InputManager.AxisNames.Mouse2) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+					if (InputController.GetButtonDown(InputController.AxisNames.Mouse2) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 					{
 						OnRightClick(IndicatorObject);
 					}
-					if (InputManager.GetButtonUp(InputManager.AxisNames.Mouse1))
+					if (InputController.GetButtonUp(InputController.AxisNames.Mouse1))
 					{
 						OnRelease(IndicatorObject);
 						Dragging = false;
@@ -244,11 +244,11 @@ namespace ZeroGravity.ShipComponents
 						OnUnhover(IndicatorObject);
 						IndicatorObject = null;
 					}
-					if (InputManager.GetButtonDown(InputManager.AxisNames.Mouse1) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+					if (InputController.GetButtonDown(InputController.AxisNames.Mouse1) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 					{
 						OnClick(null);
 					}
-					if (InputManager.GetButtonUp(InputManager.AxisNames.Mouse1))
+					if (InputController.GetButtonUp(InputController.AxisNames.Mouse1))
 					{
 						if (IndicatorObject != null)
 						{
@@ -267,9 +267,9 @@ namespace ZeroGravity.ShipComponents
 					DraggingManeuver.Dragging(ray);
 				}
 			}
-			if (InputManager.GetAxis(InputManager.AxisNames.MouseWheel).IsNotEpsilonZero() && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+			if (InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero() && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 			{
-				float axis = InputManager.GetAxis(InputManager.AxisNames.MouseWheel);
+				float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
 				if (axis > 0f)
 				{
 					zoom *= 1f + zoomStep;
@@ -280,13 +280,13 @@ namespace ZeroGravity.ShipComponents
 				}
 				zoom = MathHelper.Clamp(zoom, MinZoom, Mathf.Clamp(planetMaxZoom, 0f, MaxZoom));
 			}
-			if (InputManager.GetButton(InputManager.AxisNames.Mouse2) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+			if (InputController.GetButton(InputController.AxisNames.Mouse2) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 			{
-				float axis2 = InputManager.GetAxis(InputManager.AxisNames.LookHorizontal);
-				float axis3 = InputManager.GetAxis(InputManager.AxisNames.LookVertical);
+				float axis2 = InputController.GetAxis(InputController.AxisNames.LookHorizontal);
+				float axis3 = InputController.GetAxis(InputController.AxisNames.LookVertical);
 				if (axis2.IsNotEpsilonZero() || axis3.IsNotEpsilonZero())
 				{
-					if (InputManager.GetKey(KeyCode.LeftControl))
+					if (InputController.GetKey(KeyCode.LeftControl))
 					{
 						MapObjectShip mapObjectShip = SelectedObject as MapObjectShip;
 						if (mapObjectShip?.ScanningCone?.activeInHierarchy == true)

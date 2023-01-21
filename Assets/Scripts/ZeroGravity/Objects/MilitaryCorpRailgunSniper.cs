@@ -42,7 +42,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
-			float axis = InputManager.GetAxis(InputManager.AxisNames.MouseWheel);
+			float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
 			if (Mathf.Abs(axis) > float.Epsilon)
 			{
 				int num = currentZoomStep + MathHelper.Sign(axis);

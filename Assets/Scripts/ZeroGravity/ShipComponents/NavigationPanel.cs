@@ -372,9 +372,9 @@ namespace ZeroGravity.ShipComponents
 				ManeuverTimeLeft.text = string.Empty;
 				NoManeuverSelected.SetActive(value: true);
 			}
-			if (InputManager.GetAxis(InputManager.AxisNames.MouseWheel).IsNotEpsilonZero() && (StartTimeEdit || EndTimeEdit) && Map.WarpManeuver != null)
+			if (InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero() && (StartTimeEdit || EndTimeEdit) && Map.WarpManeuver != null)
 			{
-				float axis = InputManager.GetAxis(InputManager.AxisNames.MouseWheel);
+				float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
 				if (axis > 0f)
 				{
 					if (EndTimeEdit)
@@ -1125,7 +1125,7 @@ namespace ZeroGravity.ShipComponents
 		public void ShowHoverInfo(List<MapObject> mapObjects)
 		{
 			HoverObjectUi.SetActive(value: true);
-			if (InputManager.GetKey(KeyCode.LeftControl) && Map.SelectedObject != null)
+			if (InputController.GetKey(KeyCode.LeftControl) && Map.SelectedObject != null)
 			{
 				HoverObjectName.text = Map.SelectedObject.Name.ToUpper() + " - " + mapObjects[0].Name.ToUpper() + "\n" + Localization.Distance + ": " + FormatHelper.DistanceFormat((Map.SelectedObject.TruePosition - mapObjects[0].TruePosition).Magnitude);
 				HoverObjectUiAnimator.SetBool("cluster", value: false);

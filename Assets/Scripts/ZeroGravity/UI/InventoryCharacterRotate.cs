@@ -11,9 +11,9 @@ namespace ZeroGravity.UI
 
 		private void Update()
 		{
-			if (canZoom && InputManager.GetAxis(InputManager.AxisNames.MouseWheel).IsNotEpsilonZero())
+			if (canZoom && InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero())
 			{
-				float axis = InputManager.GetAxis(InputManager.AxisNames.MouseWheel);
+				float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
 				if (axis > 0f)
 				{
 					InventoryCharacterPreview.instance.ZoomCamera(0.1f);
@@ -27,7 +27,7 @@ namespace ZeroGravity.UI
 
 		public void OnDrag(PointerEventData eventData)
 		{
-			InventoryCharacterPreview.instance.RotateCharacter(InputManager.GetAxis(InputManager.AxisNames.LookHorizontal) * rotSpeed);
+			InventoryCharacterPreview.instance.RotateCharacter(InputController.GetAxis(InputController.AxisNames.LookHorizontal) * rotSpeed);
 		}
 
 		public void OnPointerEnter(PointerEventData eventData)

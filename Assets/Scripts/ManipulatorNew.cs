@@ -47,7 +47,7 @@ public class ManipulatorNew : MonoBehaviour
 	private void Update()
 	{
 		RaycastHit hitInfo = default(RaycastHit);
-		if (Physics.Raycast(MainCamera.ScreenPointToRay(Input.mousePosition), out hitInfo, float.PositiveInfinity) && InputManager.GetButtonDown(InputManager.AxisNames.Mouse1))
+		if (Physics.Raycast(MainCamera.ScreenPointToRay(Input.mousePosition), out hitInfo, float.PositiveInfinity) && InputController.GetButtonDown(InputController.AxisNames.Mouse1))
 		{
 			float z = hitInfo.distance + MainCamera.nearClipPlane;
 			Vector3 position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, z);
@@ -71,7 +71,7 @@ public class ManipulatorNew : MonoBehaviour
 				num = MathHelper.AngleSigned(Vector3.forward, vec, Vector3.up);
 				SelectedGO = Z;
 			}
-			if (InputManager.GetButtonDown(InputManager.AxisNames.Mouse1))
+			if (InputController.GetButtonDown(InputController.AxisNames.Mouse1))
 			{
 				TheOne.transform.position = position2;
 				if (SelectedGO == X)
@@ -97,19 +97,19 @@ public class ManipulatorNew : MonoBehaviour
 				endMove = Input.mousePosition;
 				startRot = base.transform.localRotation;
 			}
-			if (InputManager.GetButton(InputManager.AxisNames.Mouse1))
+			if (InputController.GetButton(InputController.AxisNames.Mouse1))
 			{
 			}
 			angleOld = num;
 		}
-		if (InputManager.GetButtonUp(InputManager.AxisNames.Mouse1))
+		if (InputController.GetButtonUp(InputController.AxisNames.Mouse1))
 		{
 			X.SetActive(true);
 			Y.SetActive(true);
 			Z.SetActive(true);
 			isMoving = false;
 		}
-		if (isMoving && InputManager.GetButton(InputManager.AxisNames.Mouse1))
+		if (isMoving && InputController.GetButton(InputController.AxisNames.Mouse1))
 		{
 			Vector3 vector2 = MainCamera.WorldToScreenPoint(TheOne.transform.position) - MainCamera.WorldToScreenPoint(base.transform.position);
 			Vector3 vector3 = Input.mousePosition - MainCamera.WorldToScreenPoint(base.transform.position);
@@ -130,8 +130,8 @@ public class ManipulatorNew : MonoBehaviour
 			{
 				pomeraj = Vector3.forward;
 			}
-			float axis = InputManager.GetAxis(InputManager.AxisNames.LookHorizontal);
-			float axis2 = InputManager.GetAxis(InputManager.AxisNames.LookVertical);
+			float axis = InputController.GetAxis(InputController.AxisNames.LookHorizontal);
+			float axis2 = InputController.GetAxis(InputController.AxisNames.LookVertical);
 			if (axis.IsNotEpsilonZero() || axis2.IsNotEpsilonZero())
 			{
 				Vector3 vector4 = MainCamera.WorldToScreenPoint(TheOne.transform.position);

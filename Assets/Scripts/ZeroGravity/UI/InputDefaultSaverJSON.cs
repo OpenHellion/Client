@@ -8,7 +8,7 @@ namespace ZeroGravity.UI
 	{
 		public void Save(SaveData parameters)
 		{
-			Json.SerializeDataPath(parameters, "Resources/Data/ControlsDefault.json");
+			Json.SerializeDataPath(parameters.ControlSchemes, "Resources/Data/ControlsDefault.json");
 		}
 	}
 }

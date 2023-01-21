@@ -221,11 +221,11 @@ namespace ZeroGravity.CharacterMovement
 			}
 			if (!crouch && speedLerpingDone)
 			{
-				if (InputManager.GetButton(InputManager.AxisNames.Space) && !m_Jump)
+				if (InputController.GetButton(InputController.AxisNames.Space) && !m_Jump)
 				{
 					timerForJump += Time.deltaTime;
 				}
-				if (InputManager.GetButtonUp(InputManager.AxisNames.Space) && !m_Jump)
+				if (InputController.GetButtonUp(InputController.AxisNames.Space) && !m_Jump)
 				{
 					if (!(timerForJump > minJumpTime))
 					{
@@ -240,22 +240,22 @@ namespace ZeroGravity.CharacterMovement
 					m_Jump = true;
 					timerForJump = 0f;
 				}
-				if (InputManager.GetButtonDown(InputManager.AxisNames.LeftShift))
+				if (InputController.GetButtonDown(InputController.AxisNames.LeftShift))
 				{
 					sprint = true;
 				}
-				if (InputManager.GetButtonUp(InputManager.AxisNames.LeftShift))
+				if (InputController.GetButtonUp(InputController.AxisNames.LeftShift))
 				{
 					sprint = false;
 				}
 			}
-			if (InputManager.GetButtonDown(InputManager.AxisNames.LeftCtrl))
+			if (InputController.GetButtonDown(InputController.AxisNames.LeftCtrl))
 			{
 				SetNormalSpeed();
 				SpeedDecrease(crouchMultiplier);
 				crouch = true;
 			}
-			if (InputManager.GetButtonUp(InputManager.AxisNames.LeftCtrl))
+			if (InputController.GetButtonUp(InputController.AxisNames.LeftCtrl))
 			{
 				speedLerpingDone = false;
 				crouch = false;
@@ -328,8 +328,8 @@ namespace ZeroGravity.CharacterMovement
 			if (flying)
 			{
 				Vector2 input = GetInput();
-				rotationX += InputManager.GetAxis(InputManager.AxisNames.LookHorizontal) * lookSpeed;
-				rotationY += InputManager.GetAxis(InputManager.AxisNames.LookVertical) * lookSpeed;
+				rotationX += InputController.GetAxis(InputController.AxisNames.LookHorizontal) * lookSpeed;
+				rotationY += InputController.GetAxis(InputController.AxisNames.LookVertical) * lookSpeed;
 				transform.localRotation = Quaternion.AngleAxis(rotationX, Vector3.up);
 				transform.localRotation *= Quaternion.AngleAxis(rotationY, Vector3.left);
 				transform.position += input.y * moveSpeed * transform.forward;
@@ -388,8 +388,8 @@ namespace ZeroGravity.CharacterMovement
 		private Vector2 GetInput()
 		{
 			Vector2 vector = default;
-			vector.x = InputManager.GetAxis(InputManager.AxisNames.Right);
-			vector.y = InputManager.GetAxis(InputManager.AxisNames.Forward);
+			vector.x = InputController.GetAxis(InputController.AxisNames.Right);
+			vector.y = InputController.GetAxis(InputController.AxisNames.Forward);
 			Vector2 vector2 = vector;
 			UpdateDesiredTargetSpeed(vector2);
 			return vector2;

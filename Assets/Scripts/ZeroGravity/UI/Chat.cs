@@ -45,27 +45,27 @@ namespace ZeroGravity.UI
 		{
 			if (!Client.Instance.CanvasManager.DisableChat)
 			{
-				if (InputManager.GetButtonDown(InputManager.AxisNames.Y) && !ChatInputBox.activeInHierarchy && !Client.Instance.CanvasManager.Console.gameObject.activeInHierarchy && !Client.Instance.CanvasManager.IsInputFieldIsActive && !Client.Instance.CanvasManager.OverlayCanvasIsOn && !InputManager.GetButton(InputManager.AxisNames.G))
+				if (InputController.GetButtonDown(InputController.AxisNames.Y) && !ChatInputBox.activeInHierarchy && !Client.Instance.CanvasManager.Console.gameObject.activeInHierarchy && !Client.Instance.CanvasManager.IsInputFieldIsActive && !Client.Instance.CanvasManager.OverlayCanvasIsOn && !InputController.GetButton(InputController.AxisNames.G))
 				{
 					ShowChat(true);
 				}
-				if (Client.Instance.IsChatOpened && (InputManager.GetKeyDown(KeyCode.KeypadEnter) || InputManager.GetKeyDown(KeyCode.Return)))
+				if (Client.Instance.IsChatOpened && (InputController.GetKeyDown(KeyCode.KeypadEnter) || InputController.GetKeyDown(KeyCode.Return)))
 				{
 					ShowChat(false);
 				}
-				if (Client.Instance.IsChatOpened && InputManager.GetAxis(InputManager.AxisNames.MouseWheel).IsNotEpsilonZero() && (ScrollBarVertical.value >= 0f || ScrollBarVertical.value <= 1f))
+				if (Client.Instance.IsChatOpened && InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero() && (ScrollBarVertical.value >= 0f || ScrollBarVertical.value <= 1f))
 				{
-					ScrollBarVertical.value += InputManager.GetAxis(InputManager.AxisNames.MouseWheel) * 0.2f;
+					ScrollBarVertical.value += InputController.GetAxis(InputController.AxisNames.MouseWheel) * 0.2f;
 				}
-				if (Client.Instance.IsChatOpened && InputManager.GetKeyDown(KeyCode.Escape))
+				if (Client.Instance.IsChatOpened && InputController.GetKeyDown(KeyCode.Escape))
 				{
 					CloseChat();
 				}
-				if (InputManager.GetButtonDown(InputManager.AxisNames.Mouse1))
+				if (InputController.GetButtonDown(InputController.AxisNames.Mouse1))
 				{
 					ChatInput.Select();
 				}
-				else if (InputManager.GetButtonUp(InputManager.AxisNames.Mouse1))
+				else if (InputController.GetButtonUp(InputController.AxisNames.Mouse1))
 				{
 					ChatInput.MoveTextEnd(false);
 				}
@@ -156,7 +156,7 @@ namespace ZeroGravity.UI
 		{
 			if (show)
 			{
-				InputManager.ResetInputAxis();
+				InputController.ResetInputAxis();
 				yield return new WaitForSeconds(0.2f);
 			}
 			if (show)

@@ -1,3 +1,4 @@
+using Luminosity.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -22,7 +23,7 @@ namespace ZeroGravity.UI
 		{
 			mouseSensitivitySlider.minValue = 0.1f;
 			mouseSensitivitySlider.maxValue = 10f;
-			mouseSensitivitySlider.value = InputManager.MouseSensitivity;
+			mouseSensitivitySlider.value = InputController.MouseSensitivity;
 			mouseSensitivityLevel.text = mouseSensitivitySlider.value.ToString("0.0");
 			mouseSensitivitySlider.onValueChanged.AddListener(MouseSensitivity);
 			InvertMouseToggle.onValueChanged.AddListener(delegate
@@ -38,7 +39,7 @@ namespace ZeroGravity.UI
 		public void MouseSensitivity(float val)
 		{
 			mouseSensitivityLevel.text = val.ToString("0.0");
-			InputManager.MouseSensitivity = val;
+			InputController.MouseSensitivity = val;
 			ControlsData.MouseSensitivity = val;
 			mouseSensitivitySlider.value = val;
 		}
@@ -67,17 +68,17 @@ namespace ZeroGravity.UI
 			flag = false;
 			InvertMouseWhileDrivingToggle.isOn = flag;
 			controlsData2.InverMouseWhileDriving = flag;
-			InputManager.LoadDefaultJSON();
+			InputController.LoadDefaultJSON();
 		}
 
 		public void SaveControlsSettings()
 		{
-			ControlsData.MouseSensitivity = InputManager.MouseSensitivity;
+			ControlsData.MouseSensitivity = InputController.MouseSensitivity;
 			ControlsData.InvertMouse = Client.Instance.InvertedMouse;
 			ControlsData.InverMouseWhileDriving = Client.Instance.InvertMouseWhileDriving;
 			if (!ControlsRebind.CheckIfEmpty())
 			{
-				ControlsData.InputConfigurations = Client.Instance.InputManager.GetSaveData();
+				ControlsData.ControlSchemes = Client.Instance.InputManager.ControlSchemes;
 			}
 		}
 
@@ -92,10 +93,11 @@ namespace ZeroGravity.UI
 			MouseSensitivity(ControlsData.MouseSensitivity);
 			InvertMouseToggle.isOn = ControlsData.InvertMouse;
 			InvertMouseWhileDrivingToggle.isOn = ControlsData.InverMouseWhileDriving;
-			InputManager.MouseSensitivity = ControlsData.MouseSensitivity;
+			InputController.MouseSensitivity = ControlsData.MouseSensitivity;
 			Client.Instance.InvertedMouse = ControlsData.InvertMouse;
 			Client.Instance.InvertMouseWhileDriving = ControlsData.InverMouseWhileDriving;
-			Client.Instance.InputManager.SetSaveData(ControlsData.InputConfigurations);
+			//Client.Instance.InputManager.SetSaveData(ControlsData.InputConfigurations);
+			InputController.LoadJSON();
 		}
 	}
 }

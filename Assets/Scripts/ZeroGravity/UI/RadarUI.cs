@@ -111,14 +111,14 @@ namespace ZeroGravity.UI
 				UpdateOverlayTargets();
 				CalculateScaleAndRotation();
 			}
-			if (HoveredTarget != null && InputManager.GetKey(KeyCode.Mouse0))
+			if (HoveredTarget != null && InputController.GetKey(KeyCode.Mouse0))
 			{
 				int index = AllTargets.IndexOf(HoveredTarget);
 				SetTarget(AllTargets[index]);
 			}
-			if (InputManager.GetAxis(InputManager.AxisNames.MouseWheel).IsNotEpsilonZero() && AllTargets.Count > 0)
+			if (InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero() && AllTargets.Count > 0)
 			{
-				float axis = InputManager.GetAxis(InputManager.AxisNames.MouseWheel);
+				float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
 				int num = AllTargets.IndexOf(SelectedTarget);
 				if (axis > 0f)
 				{

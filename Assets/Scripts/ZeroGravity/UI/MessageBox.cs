@@ -15,7 +15,7 @@ namespace ZeroGravity.UI
 
 		private void Update()
 		{
-			if (InputManager.GetKeyDown(KeyCode.KeypadEnter) || InputManager.GetKeyDown(KeyCode.Return))
+			if (InputController.GetKeyDown(KeyCode.KeypadEnter) || InputController.GetKeyDown(KeyCode.Return))
 			{
 				HideMessageBox();
 			}

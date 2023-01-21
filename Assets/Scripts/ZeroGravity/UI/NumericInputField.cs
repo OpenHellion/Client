@@ -48,7 +48,7 @@ namespace ZeroGravity.UI
 
 		private void Update()
 		{
-			if (!hovering || InputManager.GetAxis(InputManager.AxisNames.MouseWheel) == 0f)
+			if (!hovering || InputController.GetAxis(InputController.AxisNames.MouseWheel) == 0f)
 			{
 				return;
 			}
@@ -56,11 +56,11 @@ namespace ZeroGravity.UI
 			float.TryParse(inputField.text, out result);
 			if (inputField.interactable)
 			{
-				if (InputManager.GetAxis(InputManager.AxisNames.MouseWheel) > 0f)
+				if (InputController.GetAxis(InputController.AxisNames.MouseWheel) > 0f)
 				{
 					result += Increment;
 				}
-				else if (InputManager.GetAxis(InputManager.AxisNames.MouseWheel) < 0f)
+				else if (InputController.GetAxis(InputController.AxisNames.MouseWheel) < 0f)
 				{
 					result -= Increment;
 				}

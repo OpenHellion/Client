@@ -100,215 +100,215 @@ namespace ZeroGravity.UI
 			list.Add(new ControlItem
 			{
 				Name = Localization.Forward.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Forward
+				Axis = ZeroGravity.UI.InputController.AxisNames.Forward
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.Backward.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Forward,
+				Axis = ZeroGravity.UI.InputController.AxisNames.Forward,
 				IsPositive = false
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.Right.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Right
+				Axis = ZeroGravity.UI.InputController.AxisNames.Right
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.Left.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Right,
+				Axis = ZeroGravity.UI.InputController.AxisNames.Right,
 				IsPositive = false
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.RotationClockwise.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Lean
+				Axis = ZeroGravity.UI.InputController.AxisNames.Lean
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.RotationAnticlockwise.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Lean,
+				Axis = ZeroGravity.UI.InputController.AxisNames.Lean,
 				IsPositive = false
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.Jump.ToUpper() + " / <color='#A0D3F8'>" + Localization.Up.ToUpper() + "</color>",
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Space
+				Axis = ZeroGravity.UI.InputController.AxisNames.Space
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.Crouch.ToUpper() + " / <color='#A0D3F8'>" + Localization.Down.ToUpper() + "</color>",
-				Axis = ZeroGravity.UI.InputManager.AxisNames.LeftCtrl
+				Axis = ZeroGravity.UI.InputController.AxisNames.LeftCtrl
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.Sprint.ToUpper() + " / <color='#A0D3F8'>" + Localization.Grab.ToUpper() + "</color> / " + Localization.Stabilization.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.LeftShift
+				Axis = ZeroGravity.UI.InputController.AxisNames.LeftShift
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.FreeLook.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.LeftAlt
+				Axis = ZeroGravity.UI.InputController.AxisNames.LeftAlt
 			});
 			MovementControls = list;
 			list = new List<ControlItem>();
 			list.Add(new ControlItem
 			{
 				Name = Localization.PrimaryMouseButton.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Mouse1
+				Axis = ZeroGravity.UI.InputController.AxisNames.Mouse1
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.SecondaryMouseButton.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Mouse2
+				Axis = ZeroGravity.UI.InputController.AxisNames.Mouse2
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.ThirdMouseButton.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Mouse3
+				Axis = ZeroGravity.UI.InputController.AxisNames.Mouse3
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.Inventory.ToUpper() + " / <color='#A0D3F8'>" + Localization.ExitPanel.ToUpper() + "</color>",
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Tab
+				Axis = ZeroGravity.UI.InputController.AxisNames.Tab
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.Journal.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.O
+				Axis = ZeroGravity.UI.InputController.AxisNames.O
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.InteractTakeInHands.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.F
+				Axis = ZeroGravity.UI.InputController.AxisNames.F
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.DropThrow.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.G
+				Axis = ZeroGravity.UI.InputController.AxisNames.G
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.EquipItem.ToUpper() + " / <color='#A0D3F8'>" + Localization.Reload.ToUpper() + "</color> / " + Localization.ChangeDockingPort.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.R
+				Axis = ZeroGravity.UI.InputController.AxisNames.R
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.ChangeStance.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Z
+				Axis = ZeroGravity.UI.InputController.AxisNames.Z
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.ToggleLights.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.L
+				Axis = ZeroGravity.UI.InputController.AxisNames.L
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.WeaponModKey.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.B
+				Axis = ZeroGravity.UI.InputController.AxisNames.B
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.Melee.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.V
+				Axis = ZeroGravity.UI.InputController.AxisNames.V
 			});
 			ActionControls = list;
 			list = new List<ControlItem>();
 			list.Add(new ControlItem
 			{
 				Name = Localization.EngineToggle.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Enter
+				Axis = ZeroGravity.UI.InputController.AxisNames.Enter
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.EngineThrustUp.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.NumPlus
+				Axis = ZeroGravity.UI.InputController.AxisNames.NumPlus
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.EngineThrustDown.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.NumMinus
+				Axis = ZeroGravity.UI.InputController.AxisNames.NumMinus
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.MatchVelocityControl.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.M
+				Axis = ZeroGravity.UI.InputController.AxisNames.M
 			});
 			ShipControls = list;
 			list = new List<ControlItem>();
 			list.Add(new ControlItem
 			{
 				Name = Localization.ToggleVisor.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.H
+				Axis = ZeroGravity.UI.InputController.AxisNames.H
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.ToggleJetpack.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.J
+				Axis = ZeroGravity.UI.InputController.AxisNames.J
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.HelmetRadar.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.X
+				Axis = ZeroGravity.UI.InputController.AxisNames.X
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.TargetUp.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.UpArrow
+				Axis = ZeroGravity.UI.InputController.AxisNames.UpArrow
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.TargetDown.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.DownArrow
+				Axis = ZeroGravity.UI.InputController.AxisNames.DownArrow
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.FilterLeft.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.LeftArrow
+				Axis = ZeroGravity.UI.InputController.AxisNames.LeftArrow
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.FilterRight.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.RightArrow
+				Axis = ZeroGravity.UI.InputController.AxisNames.RightArrow
 			});
 			SuitControls = list;
 			list = new List<ControlItem>();
 			list.Add(new ControlItem
 			{
 				Name = Localization.Chat.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Y
+				Axis = ZeroGravity.UI.InputController.AxisNames.Y
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.Talk.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.CapsLock
+				Axis = ZeroGravity.UI.InputController.AxisNames.CapsLock
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.Radio.ToUpper(),
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Tilda
+				Axis = ZeroGravity.UI.InputController.AxisNames.Tilda
 			});
 			CommunicationControls = list;
 			list = new List<ControlItem>();
 			list.Add(new ControlItem
 			{
 				Name = Localization.Quick1,
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Alpha1
+				Axis = ZeroGravity.UI.InputController.AxisNames.Alpha1
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.Quick2,
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Alpha2
+				Axis = ZeroGravity.UI.InputController.AxisNames.Alpha2
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.Quick3,
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Alpha3
+				Axis = ZeroGravity.UI.InputController.AxisNames.Alpha3
 			});
 			list.Add(new ControlItem
 			{
 				Name = Localization.Quick4,
-				Axis = ZeroGravity.UI.InputManager.AxisNames.Alpha4
+				Axis = ZeroGravity.UI.InputController.AxisNames.Alpha4
 			});
 			QuickActions = list;
 		}
@@ -431,44 +431,44 @@ namespace ZeroGravity.UI
 
 		public void DuplicateControlsNo()
 		{
-			for (int i = 0; i < Luminosity.IO.InputManager.PlayerOneControlScheme.Actions.Count; i++)
+			for (int i = 0; i < InputManager.PlayerOneControlScheme.Actions.Count; i++)
 			{
-				if (Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i] == actionsRev)
+				if (InputManager.PlayerOneControlScheme.Actions[i] == actionsRev)
 				{
 					if (isPositiveRev && !isAltRev)
 					{
-						Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Positive = oldKeyRev_p;
+						InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Positive = oldKeyRev_p;
 					}
 					else if (!isPositiveRev && !isAltRev)
 					{
-						Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Negative = oldKeyRev_n;
+						InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Negative = oldKeyRev_n;
 					}
 					else if (isPositiveRev && isAltRev)
 					{
-						Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Positive = oldKeyRev_ap;
+						InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Positive = oldKeyRev_ap;
 					}
 					else if (!isPositiveRev && isAltRev)
 					{
-						Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Negative = oldKeyRev_an;
+						InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Negative = oldKeyRev_an;
 					}
 				}
-				if (Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i] == actionsOld)
+				if (InputManager.PlayerOneControlScheme.Actions[i] == actionsOld)
 				{
 					if (isPositiveOld && !isAltOld)
 					{
-						Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Positive = oldKeyOld;
+						InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Positive = oldKeyOld;
 					}
 					else if (!isPositiveOld && !isAltOld)
 					{
-						Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Negative = oldKeyOld;
+						InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Negative = oldKeyOld;
 					}
 					else if (isPositiveOld && isAltOld)
 					{
-						Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Positive = oldKeyOld;
+						InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Positive = oldKeyOld;
 					}
 					else if (!isPositiveOld && isAltOld)
 					{
-						Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Negative = oldKeyOld;
+						InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Negative = oldKeyOld;
 					}
 				}
 			}
@@ -506,27 +506,27 @@ namespace ZeroGravity.UI
 			{
 				return;
 			}
-			for (int i = 0; i < Luminosity.IO.InputManager.PlayerOneControlScheme.Actions.Count; i++)
+			foreach (InputAction action in InputManager.PlayerOneControlScheme.Actions)
 			{
-				if (Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Positive == key)
+				if (action.Bindings[0].Positive == key)
 				{
-					SaveControlForRevert(Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i], isPositive: true, isAlt: false, key, controlItemVal, changePositive, changeAlt);
-					Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Positive = KeyCode.None;
+					SaveControlForRevert(action, isPositive: true, isAlt: false, key, controlItemVal, changePositive, changeAlt);
+					action.Bindings[0].Positive = KeyCode.None;
 				}
-				else if (Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Negative == key)
+				else if (action.Bindings[0].Negative == key)
 				{
-					SaveControlForRevert(Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i], isPositive: false, isAlt: false, key, controlItemVal, changePositive, changeAlt);
-					Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Negative = KeyCode.None;
+					SaveControlForRevert(action, isPositive: false, isAlt: false, key, controlItemVal, changePositive, changeAlt);
+					action.Bindings[0].Negative = KeyCode.None;
 				}
-				else if (Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Positive == key)
+				else if (action.Bindings[1].Positive == key)
 				{
-					SaveControlForRevert(Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i], isPositive: true, isAlt: true, key, controlItemVal, changePositive, changeAlt);
-					Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Positive = KeyCode.None;
+					SaveControlForRevert(action, isPositive: true, isAlt: true, key, controlItemVal, changePositive, changeAlt);
+					action.Bindings[1].Positive = KeyCode.None;
 				}
-				else if (Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Negative == key)
+				else if (action.Bindings[1].Negative == key)
 				{
-					SaveControlForRevert(Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i], isPositive: false, isAlt: true, key, controlItemVal, changePositive, changeAlt);
-					Luminosity.IO.InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Negative = KeyCode.None;
+					SaveControlForRevert(action, isPositive: false, isAlt: true, key, controlItemVal, changePositive, changeAlt);
+					action.Bindings[1].Negative = KeyCode.None;
 				}
 			}
 			ButtonListItem buttonListItem = buttonList.Find((ButtonListItem m) => m.ButtonText.text == key.ToString());

@@ -138,21 +138,21 @@ public class HelmetRadar : MonoBehaviour
 		}
 		if (!Client.Instance.IsChatOpened)
 		{
-			if (radarItems.Count > 0 && InputManager.GetButtonDown(InputManager.AxisNames.X))
+			if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.AxisNames.X))
 			{
 				ToggleRadar();
 			}
 			if (!Client.Instance.CanvasManager.ConsoleIsUp)
 			{
-				if (hoveredTarget != null && InputManager.GetKey(KeyCode.Mouse0))
+				if (hoveredTarget != null && InputController.GetKey(KeyCode.Mouse0))
 				{
 					currentTarget = hoveredTarget;
 					currentTarget.IsSelected = true;
 					GoToCurrentElement();
 				}
-				if (InputManager.GetAxis(InputManager.AxisNames.MouseWheel).IsNotEpsilonZero() && radarItems.Count > 0)
+				if (InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero() && radarItems.Count > 0)
 				{
-					float axis = InputManager.GetAxis(InputManager.AxisNames.MouseWheel);
+					float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
 					if (axis > 0f)
 					{
 						if (currTargetIndex - 1 >= 0)
@@ -182,7 +182,7 @@ public class HelmetRadar : MonoBehaviour
 						GoToCurrentElement();
 					}
 				}
-				if (radarItems.Count > 0 && InputManager.GetButtonDown(InputManager.AxisNames.DownArrow))
+				if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.AxisNames.DownArrow))
 				{
 					if (radarItems.Count - 1 >= currTargetIndex + 1)
 					{
@@ -196,7 +196,7 @@ public class HelmetRadar : MonoBehaviour
 					currentTarget.IsSelected = true;
 					GoToCurrentElement();
 				}
-				else if (radarItems.Count > 0 && InputManager.GetButtonDown(InputManager.AxisNames.UpArrow))
+				else if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.AxisNames.UpArrow))
 				{
 					if (currentTarget == null)
 					{

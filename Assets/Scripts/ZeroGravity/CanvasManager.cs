@@ -280,13 +280,13 @@ namespace ZeroGravity
 			// Close the disclaimer.
 			if (Disclamer.activeInHierarchy && Input.anyKeyDown)
 			{
-				if (!InputManager.GetKeyDown(KeyCode.Mouse0) && !InputManager.GetKeyDown(KeyCode.Mouse1))
+				if (!InputController.GetKeyDown(KeyCode.Mouse0) && !InputController.GetKeyDown(KeyCode.Mouse1))
 				{
 					DisclaimerAgree();
 				}
 				return;
 			}
-			if (InputManager.GetKeyDown(KeyCode.KeypadEnter) || InputManager.GetKeyDown(KeyCode.Return))
+			if (InputController.GetKeyDown(KeyCode.KeypadEnter) || InputController.GetKeyDown(KeyCode.Return))
 			{
 				if (IsConfirmBoxActive || ReportServerBox.gameObject.activeInHierarchy || CanvasMessageBox.activeInHierarchy)
 				{
@@ -307,7 +307,7 @@ namespace ZeroGravity
 			}
 
 			// If esc is clicked.
-			if (InputManager.GetKeyDown(KeyCode.Escape))
+			if (InputController.GetKeyDown(KeyCode.Escape))
 			{
 				if (IsConfirmBoxActive || ReportServerBox.gameObject.activeInHierarchy || InGameMenuCanvas.activeInHierarchy || CanvasMessageBox.activeInHierarchy)
 				{
@@ -318,7 +318,7 @@ namespace ZeroGravity
 					ToggleScreenShootMod();
 					return;
 				}
-				if (Client.Instance.IsInGame && !OverlayCanvasIsOn && InputManager.GetKeyDown(KeyCode.Escape))
+				if (Client.Instance.IsInGame && !OverlayCanvasIsOn && InputController.GetKeyDown(KeyCode.Escape))
 				{
 					if (IsPlayerOverviewOpen)
 					{
@@ -350,7 +350,7 @@ namespace ZeroGravity
 			{
 				ToggleScreenShootMod();
 			}
-			if (Client.Instance.IsInGame && InputManager.GetKeyDown(KeyCode.F2) && !Client.Instance.IsChatOpened && !IsInputFieldIsActive && MyPlayer.Instance.IsAdmin)
+			if (Client.Instance.IsInGame && InputController.GetKeyDown(KeyCode.F2) && !Client.Instance.IsChatOpened && !IsInputFieldIsActive && MyPlayer.Instance.IsAdmin)
 			{
 				if (Console.gameObject.activeInHierarchy)
 				{
@@ -928,7 +928,7 @@ namespace ZeroGravity
 		{
 			if (!DefaultInteractionTipSeen && Client.Instance.CanvasManager.ShowTips)
 			{
-				DefaultInteractionTip.GetComponentInChildren<Text>(includeInactive: true).text = string.Format(Localization.PressToInteract, InputManager.GetAxisKeyName(InputManager.AxisNames.F)).ToUpper();
+				DefaultInteractionTip.GetComponentInChildren<Text>(includeInactive: true).text = string.Format(Localization.PressToInteract, InputController.GetAxisKeyName(InputController.AxisNames.F)).ToUpper();
 				DefaultInteractionTip.Activate(value: true);
 				DefaultInteractionTipSeen = true;
 			}

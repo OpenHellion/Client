@@ -171,13 +171,13 @@ namespace ZeroGravity.UI
 
 		private void Start()
 		{
-			ToggleTargetingInfo.text = string.Format(Localization.PressToToggleTargeting.ToUpper(), InputManager.GetAxisKeyName(InputManager.AxisNames.X));
+			ToggleTargetingInfo.text = string.Format(Localization.PressToToggleTargeting.ToUpper(), InputController.GetAxisKeyName(InputController.AxisNames.X));
 			UpdateQuickSlots();
 		}
 
 		private void Update()
 		{
-			if (Radar.CanRadarWork && Radar.AllTargets.Count > 0 && InputManager.GetButtonDown(InputManager.AxisNames.X))
+			if (Radar.CanRadarWork && Radar.AllTargets.Count > 0 && InputController.GetButtonDown(InputController.AxisNames.X))
 			{
 				Radar.ToggleTargeting(!Radar.IsActive);
 			}
@@ -315,7 +315,7 @@ namespace ZeroGravity.UI
 			}
 			if (MyPlayer.Instance.FpsController.IsJetpackOn)
 			{
-				StabilityOn.Activate(InputManager.GetButton(InputManager.AxisNames.LeftShift));
+				StabilityOn.Activate(InputController.GetButton(InputController.AxisNames.LeftShift));
 			}
 			else if (StabilityOn.activeInHierarchy)
 			{

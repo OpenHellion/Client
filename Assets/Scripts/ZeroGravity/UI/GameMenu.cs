@@ -94,7 +94,7 @@ namespace ZeroGravity.UI
 					ServerRestart.SetActive(false);
 				}
 			}
-			if (InputManager.GetKeyDown(KeyCode.Escape) && !DisableGameMenu)
+			if (InputController.GetKeyDown(KeyCode.Escape) && !DisableGameMenu)
 			{
 				if (Client.Instance.CanvasManager.ReportServerBox.gameObject.activeInHierarchy)
 				{
@@ -297,7 +297,7 @@ namespace ZeroGravity.UI
 
 		public void ControlsResetToDefaultYes()
 		{
-			InputManager.LoadDefaultJSON();
+			InputController.LoadDefaultJSON();
 			Settings.Instance.SaveSettings(Settings.SettingsType.Controls);
 		}
 

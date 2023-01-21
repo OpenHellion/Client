@@ -47,18 +47,18 @@ namespace ZeroGravity.CharacterMovement
 
 		private void Update()
 		{
-			if (InputManager.GetButtonDown(InputManager.AxisNames.LeftAlt))
+			if (InputController.GetButtonDown(InputController.AxisNames.LeftAlt))
 			{
 				previousRotationX = base.transform.localRotation.eulerAngles.x;
 				freeLook = true;
 			}
-			if (InputManager.GetButtonUp(InputManager.AxisNames.LeftAlt))
+			if (InputController.GetButtonUp(InputController.AxisNames.LeftAlt))
 			{
 				freeLook = false;
 				cameraFreed = false;
 			}
-			float y = InputManager.GetAxis(InputManager.AxisNames.LookHorizontal) * XSensitivity;
-			float num = InputManager.GetAxis(InputManager.AxisNames.LookHorizontal) * YSensitivity;
+			float y = InputController.GetAxis(InputController.AxisNames.LookHorizontal) * XSensitivity;
+			float num = InputController.GetAxis(InputController.AxisNames.LookHorizontal) * YSensitivity;
 			if (cameraFreed)
 			{
 				if (freeLook)

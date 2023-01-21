@@ -57,11 +57,11 @@ namespace ZeroGravity
 		{
 			if (CurrentScreen == 0)
 			{
-				if ((InputManager.GetKeyDown(KeyCode.KeypadEnter) || InputManager.GetKeyDown(KeyCode.Return)) && Input.text != string.Empty)
+				if ((InputController.GetKeyDown(KeyCode.KeypadEnter) || InputController.GetKeyDown(KeyCode.Return)) && Input.text != string.Empty)
 				{
 					SubmitText();
 				}
-				else if (InputManager.GetKeyDown(KeyCode.UpArrow) && Elements.Count > 0)
+				else if (InputController.GetKeyDown(KeyCode.UpArrow) && Elements.Count > 0)
 				{
 					lastSelectedStackItem = Elements.FindLast((Tuple<GameObject, bool> m) => m.Item2 && (Elements.IndexOf(lastSelectedStackItem) > Elements.IndexOf(m) || lastSelectedStackItem == null));
 					if (lastSelectedStackItem != null)
@@ -71,7 +71,7 @@ namespace ZeroGravity
 						Input.ActivateInputField();
 					}
 				}
-				else if (InputManager.GetKeyDown(KeyCode.DownArrow) && Elements.Count > 0)
+				else if (InputController.GetKeyDown(KeyCode.DownArrow) && Elements.Count > 0)
 				{
 					lastSelectedStackItem = Elements.FindLast((Tuple<GameObject, bool> m) => m.Item2 && (Elements.IndexOf(lastSelectedStackItem) < Elements.IndexOf(m) || lastSelectedStackItem == null));
 					if (lastSelectedStackItem != null)
@@ -82,7 +82,7 @@ namespace ZeroGravity
 					}
 				}
 			}
-			if (InputManager.GetKeyDown(KeyCode.Escape) || InputManager.GetKeyDown(KeyCode.F2))
+			if (InputController.GetKeyDown(KeyCode.Escape) || InputController.GetKeyDown(KeyCode.F2))
 			{
 				Close();
 			}

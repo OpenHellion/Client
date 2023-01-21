@@ -23,7 +23,7 @@ public class News : MonoBehaviour
 
 	private void Update()
 	{
-		if (base.gameObject.activeInHierarchy && InputManager.GetKeyDown(KeyCode.Escape))
+		if (base.gameObject.activeInHierarchy && InputController.GetKeyDown(KeyCode.Escape))
 		{
 			ToggleNews(false);
 		}

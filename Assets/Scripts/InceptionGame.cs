@@ -33,27 +33,27 @@ public class InceptionGame : MonoBehaviour
 
 	private void Update()
 	{
-		if (InputManager.GetButtonDown(InputManager.AxisNames.Space))
+		if (InputController.GetButtonDown(InputController.AxisNames.Space))
 		{
 			ShootBullet();
 		}
-		if (InputManager.GetButtonDown(InputManager.AxisNames.LeftShift))
+		if (InputController.GetButtonDown(InputController.AxisNames.LeftShift))
 		{
 			ChangeActiveTurret();
 		}
-		if (InputManager.GetAxis(InputManager.AxisNames.Right) > 0f)
+		if (InputController.GetAxis(InputController.AxisNames.Right) > 0f)
 		{
 			MovementHorizontal(true);
 		}
-		else if (InputManager.GetAxis(InputManager.AxisNames.Right) < 0f)
+		else if (InputController.GetAxis(InputController.AxisNames.Right) < 0f)
 		{
 			MovementHorizontal(false);
 		}
-		if (InputManager.GetAxis(InputManager.AxisNames.Forward) > 0f)
+		if (InputController.GetAxis(InputController.AxisNames.Forward) > 0f)
 		{
 			MovementVertical(true);
 		}
-		else if (InputManager.GetAxis(InputManager.AxisNames.Forward) < 0f)
+		else if (InputController.GetAxis(InputController.AxisNames.Forward) < 0f)
 		{
 			MovementVertical(false);
 		}

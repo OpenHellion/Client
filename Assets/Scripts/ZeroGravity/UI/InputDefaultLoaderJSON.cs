@@ -8,10 +8,11 @@ namespace ZeroGravity.UI
 	{
 		SaveData IInputLoader.Load()
 		{
-			List<ControlScheme> list = Json.LoadResource<SaveData>("Data/ControlsDefault").ControlSchemes;
+			List<ControlScheme> list = Json.LoadResource<List<ControlScheme>>("Data/ControlsDefault");
 			SaveData saveLoadParameters = new SaveData
 			{
-				ControlSchemes = list
+				ControlSchemes = list,
+				PlayerOneScheme = list[0].UniqueID
 			};
 			return saveLoadParameters;
 		}

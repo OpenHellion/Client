@@ -132,11 +132,11 @@ namespace ZeroGravity.UI
 		{
 			if (EnterCustomNamePopUp.activeInHierarchy)
 			{
-				if (InputManager.GetKeyDown(KeyCode.Tab) || InputManager.GetKeyDown(KeyCode.Escape))
+				if (InputController.GetKeyDown(KeyCode.Tab) || InputController.GetKeyDown(KeyCode.Escape))
 				{
 					CancelChangeShipName();
 				}
-				if (InputManager.GetKeyDown(KeyCode.KeypadEnter) || InputManager.GetKeyDown(KeyCode.Return))
+				if (InputController.GetKeyDown(KeyCode.KeypadEnter) || InputController.GetKeyDown(KeyCode.Return))
 				{
 					ChangeCustomShipName();
 				}

@@ -87,19 +87,19 @@ namespace ZeroGravity.UI
 			m_image = GetComponent<Image>();
 			m_image.overrideSprite = m_normalState;
 			InitializeAxisConfig();
-			Luminosity.IO.InputManager.Loaded += InitializeAxisConfig;
-			Luminosity.IO.InputManager.PlayerControlsChanged += HandleConfigurationDirty;
+			InputManager.Loaded += InitializeAxisConfig;
+			InputManager.PlayerControlsChanged += HandleConfigurationDirty;
 		}
 
 		private void OnDestroy()
 		{
-			Luminosity.IO.InputManager.Loaded -= InitializeAxisConfig;
-			Luminosity.IO.InputManager.PlayerControlsChanged -= HandleConfigurationDirty;
+			InputManager.Loaded -= InitializeAxisConfig;
+			InputManager.PlayerControlsChanged -= HandleConfigurationDirty;
 		}
 
 		private void InitializeAxisConfig()
 		{
-			m_axisConfig = Luminosity.IO.InputManager.GetAction(m_inputConfigName, m_axisConfigName);
+			m_axisConfig = InputManager.GetAction(m_inputConfigName, m_axisConfigName);
 			if (m_axisConfig != null)
 			{
 				if (m_rebindType == RebindType.Keyboard || m_rebindType == RebindType.GamepadButton)
@@ -138,7 +138,7 @@ namespace ZeroGravity.UI
 
 		private void HandleConfigurationDirty(PlayerID configName)
 		{
-			if (Luminosity.IO.InputManager.GetControlScheme(configName).Name == m_inputConfigName)
+			if (InputManager.GetControlScheme(configName).Name == m_inputConfigName)
 			{
 				InitializeAxisConfig();
 			}
@@ -167,7 +167,7 @@ namespace ZeroGravity.UI
 		private IEnumerator StartInputScanDelayed()
 		{
 			yield return null;
-			if (Luminosity.IO.InputManager.IsScanning || m_axisConfig == null)
+			if (InputManager.IsScanning || m_axisConfig == null)
 			{
 				yield break;
 			}
@@ -181,7 +181,7 @@ namespace ZeroGravity.UI
 			if (m_rebindType == RebindType.GamepadAxis)
 			{
 				settings.ScanFlags = ScanFlags.JoystickAxis;
-				Luminosity.IO.InputManager.StartInputScan(settings, HandleJoystickAxisScan);
+				InputManager.StartInputScan(settings, HandleJoystickAxisScan);
 			}
 			else if (m_rebindType == RebindType.GamepadButton)
 			{
@@ -190,12 +190,12 @@ namespace ZeroGravity.UI
 				{
 					settings.ScanFlags |= ScanFlags.JoystickAxis;
 				}
-				Luminosity.IO.InputManager.StartInputScan(settings, HandleJoystickButtonScan);
+				InputManager.StartInputScan(settings, HandleJoystickButtonScan);
 			}
 			else
 			{
 				settings.ScanFlags = ScanFlags.Key;
-				Luminosity.IO.InputManager.StartInputScan(settings, HandleKeyScan);
+				InputManager.StartInputScan(settings, HandleKeyScan);
 			}
 		}
 

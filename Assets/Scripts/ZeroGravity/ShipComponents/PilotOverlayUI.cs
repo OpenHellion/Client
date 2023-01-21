@@ -184,7 +184,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				CalculateScaleAndRotation();
 			}
-			if (HoveredTarget != null && InputManager.GetKey(KeyCode.Mouse0))
+			if (HoveredTarget != null && InputController.GetKey(KeyCode.Mouse0))
 			{
 				SelectedTarget = HoveredTarget;
 			}
@@ -201,11 +201,11 @@ namespace ZeroGravity.ShipComponents
 			}
 			if (!Client.Instance.CanvasManager.ConsoleIsUp)
 			{
-				if (InputManager.GetButtonDown(InputManager.AxisNames.T))
+				if (InputController.GetButtonDown(InputController.AxisNames.T))
 				{
 					Client.Instance.OffSpeedHelper = !Client.Instance.OffSpeedHelper;
 				}
-				if (InputManager.GetButtonDown(InputManager.AxisNames.R) && CurrentTargetList.TargetListHolder.gameObject.activeInHierarchy)
+				if (InputController.GetButtonDown(InputController.AxisNames.R) && CurrentTargetList.TargetListHolder.gameObject.activeInHierarchy)
 				{
 					if (RadarRange.Count - 1 > currentRadarRange)
 					{
@@ -222,9 +222,9 @@ namespace ZeroGravity.ShipComponents
 				}
 				if (CurrentTargetList != null)
 				{
-					if (InputManager.GetAxis(InputManager.AxisNames.MouseWheel).IsNotEpsilonZero() && AllTargets.Count > 0)
+					if (InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero() && AllTargets.Count > 0)
 					{
-						float axis = InputManager.GetAxis(InputManager.AxisNames.MouseWheel);
+						float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
 						if (axis > 0f)
 						{
 							int num = AllTargets.IndexOf(SelectedTarget);
@@ -238,13 +238,13 @@ namespace ZeroGravity.ShipComponents
 							SelectedTarget = AllTargets[num2];
 						}
 					}
-					if (AllTargets.Count > 0 && InputManager.GetButtonDown(InputManager.AxisNames.DownArrow))
+					if (AllTargets.Count > 0 && InputController.GetButtonDown(InputController.AxisNames.DownArrow))
 					{
 						int num3 = AllTargets.IndexOf(SelectedTarget);
 						num3 = ((AllTargets.Count - 1 > num3) ? (num3 + 1) : 0);
 						SelectedTarget = AllTargets[num3];
 					}
-					else if (AllTargets.Count > 0 && InputManager.GetButtonDown(InputManager.AxisNames.UpArrow))
+					else if (AllTargets.Count > 0 && InputController.GetButtonDown(InputController.AxisNames.UpArrow))
 					{
 						int num4 = AllTargets.IndexOf(SelectedTarget);
 						num4 = ((num4 - 1 < 0) ? (AllTargets.Count - 1) : (num4 - 1));
