@@ -14,6 +14,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using ZeroGravity;
 using UnityEditor;
+using System.Net.Sockets;
 
 namespace OpenHellion.Networking
 {
@@ -200,6 +201,62 @@ namespace OpenHellion.Networking
 		public void SendToGameServer(NetworkData data)
 		{
 			_gameConnection.Send(data);
+		}
+
+		/// <summary>
+		/// 	Send a request directly to a TCP endpoint.<br />
+		/// 	Useful for status requests.
+		/// </summary>
+		public static NetworkData SendTCP(NetworkData data, string address, int port, out int latency, bool getResponse = true, bool logException = false)
+		{
+			latency = -1;
+			try
+			{
+				TcpClient tcpClient = new TcpClient();
+				IAsyncResult asyncResult = tcpClient.BeginConnect(address, port, null, null);
+				WaitHandle asyncWaitHandle = asyncResult.AsyncWaitHandle;
+
+				// Check if connection has timed out.
+				try
+				{
+					if (!asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(4.0), exitContext: false))
+					{
+						tcpClient.Close();
+						throw new TimeoutException();
+					}
+					tcpClient.EndConnect(asyncResult);
+				}
+				finally
+				{
+					asyncWaitHandle.Close();
+				}
+
+				NetworkStream networkStream = tcpClient.GetStream();
+				networkStream.ReadTimeout = 1000;
+				networkStream.WriteTimeout = 1000;
+
+				byte[] rawData = Serializer.Package(data);
+				DateTime dateTime = DateTime.UtcNow.ToUniversalTime();
+
+				// Send data.
+				networkStream.Write(rawData, 0, rawData.Length);
+				networkStream.Flush();
+
+				if (getResponse)
+				{
+					latency = (int)(DateTime.UtcNow - dateTime).TotalMilliseconds;
+					NetworkData result = Serializer.Unpackage(networkStream);
+					return result;
+				}
+			}
+			catch (Exception ex)
+			{
+				if (logException)
+				{
+					Dbg.Error(ex.Message, ex.StackTrace);
+				}
+			}
+			return null;
 		}
 
 		private void OnDestroy()

@@ -1,11 +1,9 @@
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1527,58 +1525,6 @@ namespace ZeroGravity
 			}
 		}
 
-		private NetworkData SendRequest(NetworkData request, string address, int port, out int latency, bool getResponse = true, bool logException = false)
-		{
-			latency = -1;
-			try
-			{
-				TcpClient tcpClient = new TcpClient();
-				IAsyncResult asyncResult = tcpClient.BeginConnect(address, port, null, null);
-				WaitHandle asyncWaitHandle = asyncResult.AsyncWaitHandle;
-				try
-				{
-					if (!asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(4.0), exitContext: false))
-					{
-						tcpClient.Close();
-						throw new TimeoutException();
-					}
-					tcpClient.EndConnect(asyncResult);
-				}
-				finally
-				{
-					asyncWaitHandle.Close();
-				}
-				NetworkStream networkStream = null;
-				try
-				{
-					networkStream = tcpClient.GetStream();
-				}
-				catch
-				{
-				}
-				networkStream.ReadTimeout = 1000;
-				networkStream.WriteTimeout = 1000;
-				byte[] array = Serializer.Package(request);
-				DateTime dateTime = DateTime.UtcNow.ToUniversalTime();
-				networkStream.Write(array, 0, array.Length);
-				networkStream.Flush();
-				if (getResponse)
-				{
-					NetworkData result = Serializer.Unpackage(networkStream);
-					latency = (int)(DateTime.UtcNow - dateTime).TotalMilliseconds;
-					return result;
-				}
-			}
-			catch (Exception ex)
-			{
-				if (logException)
-				{
-					Dbg.Error(ex.Message, ex.StackTrace);
-				}
-			}
-			return null;
-		}
-
 		private void MovementMessageListener(NetworkData data)
 		{
 			if (MyPlayer.Instance == null)
@@ -1911,43 +1857,13 @@ namespace ZeroGravity
 		{
 			ShowConfirmMessageBox(Localization.DeleteCharacter, Localization.AreYouSureDeleteCharacter, Localization.Yes, Localization.No, () =>
 			{
-				TcpClient tcpClient = new TcpClient();
-				IAsyncResult asyncResult = tcpClient.BeginConnect(gs.IpAddress, gs.StatusPort, null, null);
-				WaitHandle asyncWaitHandle = asyncResult.AsyncWaitHandle;
-				try
+				DeleteCharacterRequest deleteCharacterRequest = new DeleteCharacterRequest
 				{
-					if (!asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(4.0), exitContext: false))
-					{
-						tcpClient.Close();
-						throw new TimeoutException();
-					}
-					tcpClient.EndConnect(asyncResult);
-				}
-				finally
-				{
-					asyncWaitHandle.Close();
-				}
+					ServerId = gs.Id,
+					SteamId = NetworkController.PlayerId
+				};
 
-				try
-				{
-					NetworkStream networkStream = tcpClient.GetStream();
-					networkStream.ReadTimeout = 1000;
-					networkStream.WriteTimeout = 1000;
-					DeleteCharacterRequest deleteCharacterRequest = new DeleteCharacterRequest
-					{
-						ServerId = gs.Id,
-						SteamId = NetworkController.PlayerId
-					};
-					byte[] array = Serializer.Package(deleteCharacterRequest);
-					DateTime dateTime = DateTime.UtcNow.ToUniversalTime();
-					networkStream.Write(array, 0, array.Length);
-					networkStream.Flush();
-					gs.CharacterData = null;
-					gs = null;
-				}
-				catch
-				{
-				}
+				NetworkController.SendTCP(deleteCharacterRequest, gs.IpAddress, gs.StatusPort, out int latency, false, true);
 			});
 		}
 
@@ -2299,7 +2215,7 @@ namespace ZeroGravity
 					throw new Exception("Process.Start function returned FALSE");
 				}
 
-				Dbg.Log("Started single player server process with name", _spServerProcess.ProcessName);
+				Dbg.Log("Started single player server process.");
 
 				// Get ports to connect to.
 				int gamePort = 6104;
@@ -2334,40 +2250,31 @@ namespace ZeroGravity
 
 				ServerStatusRequest serverStatusRequest = new ServerStatusRequest
 				{
-					SteamId = NetworkController.PlayerId,
+					PlayerId = NetworkController.PlayerId,
 					SendDetails = true
 				};
 
-				if (SendRequest(serverStatusRequest, "127.0.0.1", statusPort, out latency) is ServerStatusResponse serverStatusResponse && serverStatusResponse.Response == ResponseResult.Success)
+				if (NetworkController.SendTCP(serverStatusRequest, "127.0.0.1", statusPort, out latency, true, true) is ServerStatusResponse serverStatusResponse && serverStatusResponse.Response == ResponseResult.Success)
 				{
+					// Create new character if it doesn't exist.
 					if (serverStatusResponse.CharacterData == null)
 					{
 						serverStatusResponse.CharacterData = new CharacterData
 						{
 							Name = ProviderManager.MainProvider.GetUsername(),
-							Gender = Network.Gender.Male,
+							Gender = Gender.Male,
 							HairType = 1,
 							HeadType = 1
 						};
 					}
 
-					// If id is unknown, attempt to get it.
-					if (NetworkController.PlayerId is null or "")
-					{
-						FindPlayerId((playerIdResponse) =>
-						{
-							NetworkController.Instance.ConnectToGameSP(gamePort, serverStatusResponse.CharacterData);
-						});
-					}
-					else
-					{
-						NetworkController.Instance.ConnectToGameSP(gamePort, serverStatusResponse.CharacterData);
-					}
+					NetworkController.Instance.ConnectToGameSP(gamePort, serverStatusResponse.CharacterData);
 
 					this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 
 					yield break;
 				}
+
 				CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.None);
 				throw new Exception("Unable to connect to SP server.");
 			}
@@ -2473,7 +2380,7 @@ namespace ZeroGravity
 			new Task(delegate
 			{
 				int latency;
-				SendRequest(new LatencyTestMessage(), LastConnectedServer.IpAddress, LastConnectedServer.StatusPort, out latency);
+				NetworkController.SendTCP(new LatencyTestMessage(), LastConnectedServer.IpAddress, LastConnectedServer.StatusPort, out latency);
 
 				_latencyMs = latency;
 			}).Start();

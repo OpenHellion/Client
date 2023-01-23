@@ -39,7 +39,8 @@ namespace OpenHellion.Networking
 		private Telepathy.Client _client;
 
 		/// <summary>
-		/// 	Establish a connection to a specified game server.
+		/// 	Establish a connection to a specified game server.<br />
+		/// 	When connection is established, a login request is sent.
 		/// </summary>
 		internal void Connect(string ip, int port, string serverId, string password)
 		{

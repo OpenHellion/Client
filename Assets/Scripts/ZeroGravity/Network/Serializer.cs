@@ -88,48 +88,48 @@ namespace ZeroGravity.Network
 
 		public static NetworkData Unpackage(Stream str)
 		{
-			byte[] array = new byte[4];
-			int num2 = 0;
-			int num;
+			byte[] bufferSize = new byte[4];
+			int dataReadSize = 0;
+			int size;
 			do
 			{
-				num = str.Read(array, num2, array.Length - num2);
-				if (num == 0)
+				size = str.Read(bufferSize, dataReadSize, bufferSize.Length - dataReadSize);
+				if (size == 0)
 				{
 					throw new ZeroDataException("Received zero data message.");
 				}
-				num2 += num;
+				dataReadSize += size;
 			}
-			while (num2 < array.Length);
-			uint num3 = BitConverter.ToUInt32(array, 0);
-			byte[] array2 = new byte[num3];
-			num2 = 0;
+			while (dataReadSize < bufferSize.Length);
+			uint bufferLength = BitConverter.ToUInt32(bufferSize, 0);
+			byte[] buffer = new byte[bufferLength];
+			dataReadSize = 0;
 			do
 			{
-				num = str.Read(array2, num2, array2.Length - num2);
-				if (num == 0)
+				size = str.Read(buffer, dataReadSize, buffer.Length - dataReadSize);
+				if (size == 0)
 				{
 					throw new ZeroDataException("Received zero data message.");
 				}
-				num2 += num;
+				dataReadSize += size;
 			}
-			while (num2 < array2.Length);
-			MemoryStream ms = new MemoryStream(array2, 0, array2.Length);
+			while (dataReadSize < buffer.Length);
+			MemoryStream ms = new MemoryStream(buffer, 0, buffer.Length);
 			return Deserialize(ms);
 		}
 
 		public static byte[] Package(NetworkData data)
 		{
-			using MemoryStream memoryStream2 = new MemoryStream();
-			using MemoryStream memoryStream = new MemoryStream();
+			using MemoryStream outMs = new MemoryStream();
+			using MemoryStream ms = new MemoryStream();
 			try
 			{
-				NetworkDataTransportWrapper networkDataTransportWrapper = new NetworkDataTransportWrapper
+				NetworkDataTransportWrapper ndtw = new NetworkDataTransportWrapper
 				{
 					data = data
 				};
-				NetworkDataTransportWrapper instance = networkDataTransportWrapper;
-				ProtoBuf.Serializer.Serialize(memoryStream, instance);
+				NetworkDataTransportWrapper instance = ndtw;
+				ProtoBuf.Serializer.Serialize(ms, instance);
 			}
 			catch (Exception ex)
 			{
@@ -140,16 +140,16 @@ namespace ZeroGravity.Network
 			{
 				try
 				{
-					ProcessStatistics(data, memoryStream, sentStatistics);
+					ProcessStatistics(data, ms, sentStatistics);
 				}
 				catch
 				{
 				}
 			}
-			memoryStream2.Write(BitConverter.GetBytes((uint)memoryStream.Length), 0, 4);
-			memoryStream2.Write(memoryStream.ToArray(), 0, (int)memoryStream.Length);
-			memoryStream2.Flush();
-			return memoryStream2.ToArray();
+			outMs.Write(BitConverter.GetBytes((uint)ms.Length), 0, 4);
+			outMs.Write(ms.ToArray(), 0, (int)ms.Length);
+			outMs.Flush();
+			return outMs.ToArray();
 		}
 
 		private static void ProcessStatistics(NetworkData data, MemoryStream ms, Dictionary<Type, StatisticsHelper> stat)
@@ -170,7 +170,7 @@ namespace ZeroGravity.Network
 				return;
 			}
 			TimeSpan timeSpan = DateTime.UtcNow.Subtract(statisticUpdateResetTime);
-			string text = ((stat != sentStatistics) ? ("Received packets statistics (" + timeSpan.ToString("h':'mm':'ss") + "): \n") : ("Sent packets statistics (" + timeSpan.ToString("h':'mm':'ss") + "): \n"));
+			string text = (stat != sentStatistics) ? ("Received packets statistics (" + timeSpan.ToString("h':'mm':'ss") + "): \n") : ("Sent packets statistics (" + timeSpan.ToString("h':'mm':'ss") + "): \n");
 			long num = 0L;
 			string text2;
 			foreach (KeyValuePair<Type, StatisticsHelper> item in stat.OrderBy((KeyValuePair<Type, StatisticsHelper> m) => m.Value.ByteSum).Reverse())

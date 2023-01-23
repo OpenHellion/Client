@@ -17,7 +17,5 @@ namespace ZeroGravity.Network
 		public CharacterData CharacterData;
 
 		public string Description;
-
-		public string NotificationEMail;
 	}
 }
