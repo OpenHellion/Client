@@ -410,6 +410,10 @@ namespace ZeroGravity
 
 		private void Awake()
 		{
+			// Used to save input controls when we change the defaults.
+			// TODO: Make this an editor feature.
+			//InputController.SaveDefaultJSON();
+
 			Texture[] source = Resources.LoadAll<Texture>("Emblems");
 			SceneVesselEmblem.Textures = source.ToDictionary((Texture x) => x.name, (Texture y) => y);
 
@@ -506,7 +510,7 @@ namespace ZeroGravity
 			EventSystem.AddListener(typeof(ShipCollisionMessage), ShipCollisionMessageListener);
 			EventSystem.AddListener(typeof(UpdateVesselDataMessage), UpdateVesselDataMessageListener);
 			EventSystem.AddListener(EventSystem.InternalEventType.ShowMessageBox, ShowMessageBoxListener);
-			EventSystem.AddListener(EventSystem.InternalEventType.OpenMainScreen, OpenMainScreneListener);
+			EventSystem.AddListener(EventSystem.InternalEventType.OpenMainScreen, OpenMainScreenListener);
 			EventSystem.AddListener(EventSystem.InternalEventType.ReconnectAuto, ReconnectAutoListener);
 			EventSystem.AddListener(EventSystem.InternalEventType.RemoveLoadingCanvas, RemoveLoadingCanvasListener);
 			EventSystem.AddListener(EventSystem.InternalEventType.ConnectionFailed, ConnectionFailedListener);
@@ -859,7 +863,7 @@ namespace ZeroGravity
 			MyPlayer.Instance.ActivatePlayer(s);
 		}
 
-		public void OpenMainScreneListener(EventSystem.InternalEventData data)
+		public void OpenMainScreenListener(EventSystem.InternalEventData data)
 		{
 			if (!CanvasManager.DeadScreen.activeInHierarchy)
 			{
@@ -1139,6 +1143,7 @@ namespace ZeroGravity
 
 		private void QuitApplication()
 		{
+			if (IsInGame) LogOut();
 			IsRunning = false;
 			OnDestroy();
 			NetworkController.Instance.Disconnect();
@@ -1157,7 +1162,7 @@ namespace ZeroGravity
 			EventSystem.RemoveListener(typeof(ShipCollisionMessage), ShipCollisionMessageListener);
 			EventSystem.RemoveListener(typeof(UpdateVesselDataMessage), UpdateVesselDataMessageListener);
 			EventSystem.RemoveListener(EventSystem.InternalEventType.ShowMessageBox, ShowMessageBoxListener);
-			EventSystem.RemoveListener(EventSystem.InternalEventType.OpenMainScreen, OpenMainScreneListener);
+			EventSystem.RemoveListener(EventSystem.InternalEventType.OpenMainScreen, OpenMainScreenListener);
 			EventSystem.RemoveListener(EventSystem.InternalEventType.ReconnectAuto, ReconnectAutoListener);
 			EventSystem.RemoveListener(EventSystem.InternalEventType.RemoveLoadingCanvas, RemoveLoadingCanvasListener);
 			EventSystem.RemoveListener(EventSystem.InternalEventType.ConnectionFailed, ConnectionFailedListener);
@@ -1880,16 +1885,21 @@ namespace ZeroGravity
 		{
 			LogInResponse logInResponse = data as LogInResponse;
 			LogInResponseReceived = true;
+
 			if (ReconnectAutomatically)
 			{
 				ReconnectAutomatically = false;
 			}
+
 			if (logInResponse.Response == ResponseResult.Success)
 			{
+				Dbg.Info("Logged into game.");
+
 				SolarSystem.Set(SolarSystemRoot.transform.Find("SunRoot"), SolarSystemRoot.transform.Find("PlanetsRoot"), logInResponse.ServerTime);
 				SolarSystem.LoadDataFromResources();
 				MyPlayer.SpawnMyPlayer(logInResponse);
 				CanvasManager.SelectScreen(CanvasManager.Screen.Loading);
+
 				if (logInResponse.IsAlive)
 				{
 					PlayerSpawnRequest playerSpawnRequest = new PlayerSpawnRequest
@@ -1916,6 +1926,7 @@ namespace ZeroGravity
 					DebrisFields.Add(new DebrisField(debrisField));
 					Map.InitializeMapObject(new DebrisField(debrisField));
 				}
+
 				ItemsIngredients = logInResponse.ItemsIngredients;
 				Quests = logInResponse.Quests.Select((QuestData m) => new Quest(m)).ToList();
 				SpaceObjectVessel.VesselDecayRateMultiplier = logInResponse.VesselDecayRateMultiplier;
@@ -1930,7 +1941,7 @@ namespace ZeroGravity
 			}
 			else
 			{
-				Dbg.Info("Server dropped connection.");
+				Dbg.Error("Server dropped connection.");
 				CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
 				ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
 			}
@@ -2124,13 +2135,13 @@ namespace ZeroGravity
 
 		public void SwitchCurrentGender()
 		{
-			if (CurrentGender == ZeroGravity.Network.Gender.Male)
+			if (CurrentGender == Gender.Male)
 			{
-				CurrentGender = ZeroGravity.Network.Gender.Female;
+				CurrentGender = Gender.Female;
 			}
 			else
 			{
-				CurrentGender = ZeroGravity.Network.Gender.Male;
+				CurrentGender = Gender.Male;
 			}
 			CurrentGenderText.text = CurrentGender.ToLocalizedString();
 			InventoryCharacterPreview.instance.ChangeGender(CurrentGender);
@@ -2272,6 +2283,7 @@ namespace ZeroGravity
 
 					this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 
+					Dbg.Info("Successfully connected to singleplayer server!");
 					yield break;
 				}
 

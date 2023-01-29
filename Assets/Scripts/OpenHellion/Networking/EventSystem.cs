@@ -169,18 +169,17 @@ namespace OpenHellion.Networking
 		/// <summary>
 		/// 	Execute corresponding code for request.
 		/// </summary>
-		// TODO: Make this non-static internal.
-		public static void Invoke(NetworkData data)
+		internal void Invoke(NetworkData data)
 		{
-			if (Instance._listeners.ContainsKey(data.GetType()) && Instance._listeners[data.GetType()] != null)
+			if (_listeners.ContainsKey(data.GetType()) && _listeners[data.GetType()] != null)
 			{
 				if (Thread.CurrentThread.ManagedThreadId == Client.MainThreadID)
 				{
-					Instance._listeners[data.GetType()](data);
+					_listeners[data.GetType()](data);
 				}
 				else
 				{
-					Instance._networkBuffer.Enqueue(data);
+					_networkBuffer.Enqueue(data);
 				}
 			}
 			else
@@ -208,7 +207,7 @@ namespace OpenHellion.Networking
 			}
 			else
 			{
-				Dbg.Info("Cannot invoke ", data.Type, data);
+				Dbg.Log("Cannot invoke ", data.Type, data);
 			}
 		}
 

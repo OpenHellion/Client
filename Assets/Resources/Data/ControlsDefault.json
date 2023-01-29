@@ -182,7 +182,7 @@
             "Snap": false,
             "Invert": false,
             "Type": 1,
-            "Axis": 0,
+            "Axis": 1,
             "Joystick": 0,
             "GamepadButton": 0,
             "GamepadAxis": 0,

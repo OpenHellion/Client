@@ -44,16 +44,22 @@ namespace OpenHellion.Networking
 		/// </summary>
 		internal void Connect(string ip, int port, string serverId, string password)
 		{
+			Telepathy.Log.Info = Dbg.Info;
+			Telepathy.Log.Warning = Dbg.Warning;
+			Telepathy.Log.Error = Dbg.Error;
+
 			_serverIp = ip;
 			_serverPort = port;
 			_serverId = serverId;
 			_serverPassword = password;
 
-			_client = new(2000)
+			_client = new(30000)
 			{
 				OnConnected = OnConnected,
 				OnData = OnData,
-				OnDisconnected = OnDisconnected
+				OnDisconnected = OnDisconnected,
+				SendQueueLimit = 1000,
+				ReceiveQueueLimit = 1000
 			};
 
 			_client.Connect(ip, port);
@@ -72,7 +78,7 @@ namespace OpenHellion.Networking
 			if (!_client.Connected)
 			{
 				EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.OpenMainScreen));
-				Dbg.Error("Tried to send data when not connected to any server.");
+				Dbg.Log("Tried to send data when not connected to any server.");
 				return;
 			}
 
@@ -102,8 +108,6 @@ namespace OpenHellion.Networking
 		// Executed when we connect to a server.
 		private void OnConnected()
 		{
-			Dbg.Log("Client connected to server.");
-
 			LogInRequest logInRequest = new LogInRequest
 			{
 				PlayerId = NetworkController.PlayerId,
@@ -115,6 +119,8 @@ namespace OpenHellion.Networking
 			};
 
 			Send(logInRequest);
+
+			Dbg.Info("Established connection to server.");
 		}
 
 
@@ -123,10 +129,10 @@ namespace OpenHellion.Networking
 		{
 			try
 			{
-				NetworkData networkData = Serializer.Deserialize(new MemoryStream(message.Array));
-				if (networkData != null && NetworkController.Instance != null)
+				NetworkData networkData = Serializer.Unpackage(new MemoryStream(message.Array));
+				if (networkData != null)
 				{
-					EventSystem.Invoke(networkData);
+					EventSystem.Instance.Invoke(networkData);
 					NetworkController.LogReceivedNetworkData(networkData.GetType());
 				}
 			}
@@ -136,14 +142,11 @@ namespace OpenHellion.Networking
 				{
 					EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.ShowMessageBox, Localization.ConnectionError, Localization.TryAgainLater));
 					Dbg.Error(ex.Message, ex.StackTrace);
+					Disconnect();
 				}
 				else if (Client.Instance.LogoutRequestSent)
 				{
 					Dbg.Info("Tried to listen to data, but logout was requested.");
-				}
-				else
-				{
-					Dbg.Error("Game server listening thread exception", ex.Message, ex.StackTrace);
 				}
 			}
 		}
