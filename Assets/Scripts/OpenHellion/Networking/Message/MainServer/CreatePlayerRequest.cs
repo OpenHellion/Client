@@ -26,6 +26,7 @@ namespace OpenHellion.Networking.Message.MainServer
 	{
 		public string Name;
 		public Region Region;
+		public string PlayerId;
 		public string SteamId;
 		public string DiscordId;
 

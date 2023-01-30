@@ -1957,27 +1957,7 @@ namespace ZeroGravity
 		/// <summary>
 		/// 	Sign in to the main server.
 		/// </summary>
-		public void SignIn()
-		{
-			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.ConnectingToMain);
-
-			// If id is unknown, attempt to get it...
-			if (NetworkController.PlayerId is null or "")
-			{
-				FindPlayerId((playerIdResponse) =>
-				{
-					SendSignInRequest();
-				});
-			}
-			else
-			{
-				// Or if we already know our id, just sign in.
-				SendSignInRequest();
-			}
-		}
-
-		// Handles the sending of the request itself.
-		private void SendSignInRequest()
+		private void SignIn()
 		{
 			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.SigningIn);
 			Regex regex = new Regex("[^0-9.]");
@@ -2042,7 +2022,7 @@ namespace ZeroGravity
 			}
 			else if (signInResponse.Result == ResponseResult.AccountNotFound)
 			{
-				FindPlayerId((res) => SendSignInRequest());
+				FindPlayerId((res) => SignIn());
 			}
 			else
 			{
@@ -2053,6 +2033,9 @@ namespace ZeroGravity
 			_receivedSignInResponse = true;
 		}
 
+		/// <summary>
+		/// 	Attempts to get player id from the main server by using steam and discord ids. If it doesn't find the id, a new account is created.
+		/// </summary>
 		public void FindPlayerId(Action<PlayerIdResponse> callback)
 		{
 			GetPlayerIdRequest idRequest = new()
@@ -2069,18 +2052,19 @@ namespace ZeroGravity
 				// Get id from server and save it as a PlayerPref.
 				if (data.Result == ResponseResult.Success)
 				{
-					NetworkController.PlayerId = data.PlayerId;
 					callback(data);
 				}
 				else if (data.Result == ResponseResult.AccountNotFound)
 				{
 					// No account exists with that id, so we need to create a new player account.
+
 					CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.NewPlayer);
 
 					CreatePlayerRequest createRequest = new()
 					{
 						Name = ProviderManager.MainProvider.GetUsername(),
 						Region = Region.Europe,
+						PlayerId = NetworkController.PlayerId,
 						SteamId = ProviderManager.SteamId,
 						DiscordId = ProviderManager.DiscordId
 					};
@@ -2090,7 +2074,7 @@ namespace ZeroGravity
 					{
 						if (data.Result == ResponseResult.Success)
 						{
-							NetworkController.PlayerId = data.PlayerId;
+							Dbg.Info("Successfully created a new player account with id", data.PlayerId);
 							callback(data);
 						}
 						else

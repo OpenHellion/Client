@@ -91,11 +91,6 @@ namespace OpenHellion.Networking
 
 				return Instance._playerId;
 			}
-			set
-			{
-				Instance._playerId = value;
-				PlayerPrefs.SetString("player_id", value);
-			}
 		}
 
 		private void Awake()
