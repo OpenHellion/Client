@@ -305,7 +305,7 @@ namespace ZeroGravity.CharacterMovement
 
 		private void GetMouseAxis()
 		{
-			mouseRightAxis = InputController.GetAxis(InputController.AxisNames.LookVertical) * mouseSensitivity;
+			mouseRightAxis = InputController.GetAxis(InputController.AxisNames.LookHorizontal) * mouseSensitivity;
 			mouseUpAxis = (0f - InputController.GetAxis(InputController.AxisNames.LookVertical)) * mouseSensitivity;
 			if (Client.IsGameBuild)
 			{

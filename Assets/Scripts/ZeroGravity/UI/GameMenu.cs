@@ -158,7 +158,7 @@ namespace ZeroGravity.UI
 			SettingsMenuUp = isUp;
 			if (!isUp && !Client.Instance.IsInGame)
 			{
-				base.gameObject.SetActive(false);
+				gameObject.SetActive(false);
 			}
 			if (isUp)
 			{

@@ -24,6 +24,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Newtonsoft.Json;
 
 namespace Luminosity.IO
 {
@@ -60,6 +61,7 @@ namespace Luminosity.IO
 			set { m_description = value; }
 		}
 
+		[JsonIgnore]
 		public bool AnyInput
 		{
 			get

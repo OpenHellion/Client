@@ -22,6 +22,7 @@
 #endregion
 using UnityEngine;
 using System;
+using Newtonsoft.Json;
 
 namespace Luminosity.IO
 {
@@ -176,6 +177,7 @@ namespace Luminosity.IO
 			set { m_gamepadIndex = value; }
 		}
 
+		[JsonIgnore]
 		public bool AnyInput
 		{
 			get
@@ -202,6 +204,7 @@ namespace Luminosity.IO
 			}
 		}
 
+		[JsonIgnore]
 		public bool AnyKey
 		{
 			get
@@ -210,6 +213,7 @@ namespace Luminosity.IO
 			}
 		}
 
+		[JsonIgnore]
 		public bool AnyKeyDown
 		{
 			get
@@ -218,6 +222,7 @@ namespace Luminosity.IO
 			}
 		}
 
+		[JsonIgnore]
 		public bool AnyKeyUp
 		{
 			get
