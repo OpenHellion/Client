@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using OpenHellion.Networking;
 using OpenHellion.ProviderSystem;
+using OpenHellion.Util;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -3528,7 +3529,7 @@ namespace ZeroGravity.Objects
 
 		public void ResetStatistics()
 		{
-			Serializer.ResetStatistics();
+			ProtoSerialiser.ResetStatistics();
 			SentPacketStatistics = string.Empty;
 			ReceivedPacketStatistics = string.Empty;
 		}

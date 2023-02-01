@@ -1,3 +1,4 @@
+using OpenHellion.Util;
 using ProtoBuf;
 
 namespace ZeroGravity.Network
@@ -94,7 +95,7 @@ namespace ZeroGravity.Network
 
 		public override string ToString()
 		{
-			return Json.Serialize(this);
+			return JsonSerialiser.Serialize(this);
 		}
 	}
 }

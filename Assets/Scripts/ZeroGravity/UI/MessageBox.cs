@@ -23,10 +23,10 @@ namespace ZeroGravity.UI
 
 		public void HideMessageBox()
 		{
-			base.gameObject.SetActive(false);
+			gameObject.SetActive(false);
 			if (destroyOnClose)
 			{
-				Object.Destroy(base.gameObject);
+				Destroy(gameObject);
 			}
 			Cursor.visible = wasCursorVisible;
 			GameMenu.DisableGameMenu = false;
@@ -38,8 +38,8 @@ namespace ZeroGravity.UI
 			wasCursorVisible = Cursor.visible;
 			Cursor.visible = true;
 			this.destroyOnClose = destroyOnClose;
-			base.transform.Find("MessagePanel/Title").GetComponent<Text>().text = title;
-			base.transform.Find("MessagePanel/Text").GetComponent<Text>().text = text;
+			transform.Find("MessagePanel/Title").GetComponent<Text>().text = title;
+			transform.Find("MessagePanel/Text").GetComponent<Text>().text = text;
 		}
 	}
 }

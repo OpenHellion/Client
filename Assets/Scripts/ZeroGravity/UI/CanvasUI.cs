@@ -322,10 +322,10 @@ namespace ZeroGravity.UI
 
 		public void Notification(string msg, NotificationType tip)
 		{
-			NotificationUI notificationUI = GameObject.Instantiate(NotificationUI, NotificationsHolder);
+			NotificationUI notificationUI = Instantiate(NotificationUI, NotificationsHolder);
 			notificationUI.transform.Reset();
 			notificationUI.transform.SetAsFirstSibling();
-			notificationUI.Activate((float)NotificationsHolder.childCount * 0.1f);
+			notificationUI.Activate(NotificationsHolder.childCount * 0.1f);
 			notificationUI.Type = tip;
 			notificationUI.Content.text = msg;
 			isNotificationActive = true;

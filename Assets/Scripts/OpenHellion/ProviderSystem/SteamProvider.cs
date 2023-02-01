@@ -21,6 +21,9 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using OpenHellion.Networking.Message;
+using ZeroGravity;
+using OpenHellion.Util;
 
 namespace OpenHellion.ProviderSystem
 {
@@ -30,6 +33,7 @@ namespace OpenHellion.ProviderSystem
 		private bool _userStatsReceived;
 		private bool _storeStats;
 		private Callback<UserStatsReceived_t> _userStatsReceivedCallback;
+		private Callback<GameRichPresenceJoinRequested_t> m_GameRichPresenceJoinRequested;
 		private ConcurrentQueue<Task> _pendingTasks = new ConcurrentQueue<Task>();
 
 		protected SteamAPIWarningMessageHook_t _SteamAPIWarningMessageHook;
@@ -81,6 +85,8 @@ namespace OpenHellion.ProviderSystem
 			{
 				SteamUserStats.RequestCurrentStats();
 			}
+
+			m_GameRichPresenceJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested);
 		}
 
 		// OnApplicationQuit gets called too early to shutdown the SteamAPI.
@@ -118,9 +124,11 @@ namespace OpenHellion.ProviderSystem
 			}
 		}
 
-		public bool IsInitialised()
+		// When we are joining a game.
+		private void OnGameRichPresenceJoinRequested(GameRichPresenceJoinRequested_t param)
 		{
-			return true;
+			InviteMessage inviteMessage = JsonSerialiser.Deserialize<InviteMessage>(param.m_rgchConnect);
+			Client.Instance.ProcessInvitation(inviteMessage);
 		}
 
 		public void UpdateStatus() { }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using OpenHellion.Util;
 using ZeroGravity.Data;
 
 namespace ZeroGravity
@@ -21,7 +22,7 @@ namespace ZeroGravity
 
 		public static void LoadData()
 		{
-			List<DynamicObjectData> list = Json.LoadResource<List<DynamicObjectData>>("Data/DynamicObjects");
+			List<DynamicObjectData> list = JsonSerialiser.LoadResource<List<DynamicObjectData>>("Data/DynamicObjects");
 			_DynamicObjectsDataList = new Dictionary<short, DynamicObjectData>();
 			foreach (DynamicObjectData item in list)
 			{

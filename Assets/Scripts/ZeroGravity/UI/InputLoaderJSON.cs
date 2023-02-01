@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Luminosity.IO;
+using OpenHellion.Util;
 using UnityEngine;
 using ZeroGravity.Data;
 
@@ -15,11 +16,11 @@ namespace ZeroGravity.UI
 			Dbg.Log("Loading custom input...");
 
 			// Get saved controls.
-			List<ControlScheme> defaultControls = Json.LoadResource<List<ControlScheme>>("Data/ControlsDefault");
+			List<ControlScheme> defaultControls = JsonSerialiser.LoadResource<List<ControlScheme>>("Data/ControlsDefault");
 			List<ControlScheme> settingsControls;
 			if (File.Exists(Path.Combine(Application.persistentDataPath, "Settings.json")))
 			{
-				SettingsData settingsData = Json.LoadPersistent<SettingsData>("Settings.json");
+				SettingsData settingsData = JsonSerialiser.LoadPersistent<SettingsData>("Settings.json");
 				settingsControls = (settingsData == null) ? defaultControls : settingsData.ControlsSettings.ControlSchemes;
 
 				// Quality-check settings.

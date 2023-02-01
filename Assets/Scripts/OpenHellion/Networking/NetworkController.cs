@@ -15,6 +15,7 @@ using System.Linq;
 using ZeroGravity;
 using UnityEditor;
 using System.Net.Sockets;
+using OpenHellion.Util;
 
 namespace OpenHellion.Networking
 {
@@ -232,7 +233,7 @@ namespace OpenHellion.Networking
 				networkStream.ReadTimeout = 1000;
 				networkStream.WriteTimeout = 1000;
 
-				byte[] rawData = Serializer.Package(data);
+				byte[] rawData = ProtoSerialiser.Package(data);
 				DateTime dateTime = DateTime.UtcNow.ToUniversalTime();
 
 				// Send data.
@@ -242,7 +243,7 @@ namespace OpenHellion.Networking
 				if (getResponse)
 				{
 					latency = (int)(DateTime.UtcNow - dateTime).TotalMilliseconds;
-					NetworkData result = Serializer.Unpackage(networkStream);
+					NetworkData result = ProtoSerialiser.Unpackage(networkStream);
 					return result;
 				}
 			}
@@ -296,7 +297,7 @@ namespace OpenHellion.Networking
 					Marshal.Copy(netMessage.m_pData, message, 0, message.Length);
 
 					// Deseralise data and invoke code.
-					NetworkData networkData = Serializer.Unpackage((Stream)new MemoryStream(message));
+					NetworkData networkData = ProtoSerialiser.Unpackage((Stream)new MemoryStream(message));
 					Debug.Log(networkData);
 					if (networkData is ISteamP2PMessage)
 					{

@@ -11,6 +11,7 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
 using OpenHellion.ProviderSystem;
+using OpenHellion.Util;
 
 namespace ZeroGravity.Audio
 {
@@ -147,7 +148,7 @@ namespace ZeroGravity.Audio
 					IsRadioComm = radio,
 					AudioPackets = list
 				};
-				byte[] msgBytes = Serializer.Package(voiceCommDataMessage);
+				byte[] msgBytes = ProtoSerialiser.Package(voiceCommDataMessage);
 				HashSet<OtherPlayer> hashSet = new HashSet<OtherPlayer>();
 				hashSet.UnionWith(GetAllPlayersFromSameVessel());
 				if (radio)

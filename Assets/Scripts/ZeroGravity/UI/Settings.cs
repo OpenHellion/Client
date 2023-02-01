@@ -1,4 +1,5 @@
 using System.IO;
+using OpenHellion.Util;
 using UnityEngine;
 using ZeroGravity.Data;
 
@@ -48,7 +49,7 @@ namespace ZeroGravity.UI
 			{
 				try
 				{
-					SettingsData = Json.LoadPersistent<SettingsData>("Settings.json");
+					SettingsData = JsonSerialiser.LoadPersistent<SettingsData>("Settings.json");
 				}
 				catch
 				{
@@ -107,7 +108,7 @@ namespace ZeroGravity.UI
 				SettingsData.ControlsSettings = controlsComponent.ControlsData;
 				SettingsData.ControlsVersion = Client.ControlsVersion;
 			}
-			Json.SerializePersistent(SettingsData, "Settings.json");
+			JsonSerialiser.SerializePersistent(SettingsData, "Settings.json");
 			if (RestartOnSave)
 			{
 				RestartOnSave = false;
@@ -122,7 +123,7 @@ namespace ZeroGravity.UI
 				controlsComponent.SetDefault();
 				SettingsData.ControlsSettings = controlsComponent.ControlsData;
 			}
-			Json.SerializePersistent(SettingsData, "Settings.json");
+			JsonSerialiser.SerializePersistent(SettingsData, "Settings.json");
 		}
 
 		private void SaveDefaultSettingsJson()

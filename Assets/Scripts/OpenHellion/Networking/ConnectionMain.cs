@@ -15,10 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
 using System.Security.Cryptography.X509Certificates;
 using OpenHellion.Networking.Message.MainServer;
+using OpenHellion.Util;
 using UnityEngine.Networking;
-using ZeroGravity;
 
 namespace OpenHellion.Networking
 {
@@ -60,16 +61,16 @@ namespace OpenHellion.Networking
 					case UnityWebRequest.Result.ConnectionError:
 					case UnityWebRequest.Result.DataProcessingError:
 						Dbg.Error("MainServer: Error: " + operation.webRequest.error);
-						break;
+						throw new Exception();
 					case UnityWebRequest.Result.ProtocolError:
 						Dbg.Error("MainServer: HTTP Error: " + operation.webRequest.error);
-						break;
+						throw new Exception();
 					case UnityWebRequest.Result.InProgress:
 						Dbg.Error("MainServer: HTTP Error: Tried to fetch data before connection has finished.");
-						break;
+						throw new Exception();
 					case UnityWebRequest.Result.Success:
 						Dbg.Log(operation.webRequest.downloadHandler.text);
-						callback(Json.Deserialize<T>(operation.webRequest.downloadHandler.text));
+						callback(JsonSerialiser.Deserialize<T>(operation.webRequest.downloadHandler.text));
 						break;
 				}
 
@@ -98,16 +99,16 @@ namespace OpenHellion.Networking
 					case UnityWebRequest.Result.ConnectionError:
 					case UnityWebRequest.Result.DataProcessingError:
 						Dbg.Error("MainServer: Error: " + operation.webRequest.error);
-						break;
+						throw new Exception();
 					case UnityWebRequest.Result.ProtocolError:
 						Dbg.Error("MainServer: HTTP Error: " + operation.webRequest.error);
-						break;
+						throw new Exception();
 					case UnityWebRequest.Result.InProgress:
 						Dbg.Error("MainServer: HTTP Error: Tried to fetch data before connection has finished.");
-						break;
+						throw new Exception();
 					case UnityWebRequest.Result.Success:
 						Dbg.Log("Result: " + operation.webRequest.downloadHandler.text);
-						callback(Json.Deserialize<T>(operation.webRequest.downloadHandler.text));
+						callback(JsonSerialiser.Deserialize<T>(operation.webRequest.downloadHandler.text));
 						break;
 				}
 

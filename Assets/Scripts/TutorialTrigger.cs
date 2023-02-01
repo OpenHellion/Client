@@ -11,7 +11,7 @@ public class TutorialTrigger : MonoBehaviour
 		if (other.GetComponentInParent<MyPlayer>() != null)
 		{
 			Client.Instance.CanvasManager.CanvasUI.ShowTutorialUI(Tutorial);
-			Object.Destroy(base.gameObject);
+			Destroy(gameObject);
 		}
 	}
 }

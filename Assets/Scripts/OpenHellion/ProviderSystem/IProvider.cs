@@ -44,8 +44,6 @@ namespace OpenHellion.ProviderSystem
 			OFFLINE
 		}
 
-		bool IsInitialised();
-
 		/// <summary>
 		/// 	Used by the Discord provider to update rich presence.
 		/// </summary>

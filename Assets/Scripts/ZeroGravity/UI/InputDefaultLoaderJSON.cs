@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Luminosity.IO;
+using OpenHellion.Util;
 
 namespace ZeroGravity.UI
 {
@@ -8,7 +9,7 @@ namespace ZeroGravity.UI
 	{
 		SaveData IInputLoader.Load()
 		{
-			List<ControlScheme> list = Json.LoadResource<List<ControlScheme>>("Data/ControlsDefault");
+			List<ControlScheme> list = JsonSerialiser.LoadResource<List<ControlScheme>>("Data/ControlsDefault");
 			SaveData saveLoadParameters = new SaveData
 			{
 				ControlSchemes = list,

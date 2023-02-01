@@ -22,6 +22,7 @@ using ZeroGravity.Objects;
 using ZeroGravity;
 using Discord;
 using OpenHellion.Networking.Message;
+using OpenHellion.Util;
 
 namespace OpenHellion.ProviderSystem
 {
@@ -123,7 +124,7 @@ namespace OpenHellion.ProviderSystem
 			_callbackCalls++;
 			try
 			{
-				InviteMessage inviteMessage = Json.Deserialize<InviteMessage>(secret);
+				InviteMessage inviteMessage = JsonSerialiser.Deserialize<InviteMessage>(secret);
 				Client.Instance.ProcessInvitation(inviteMessage);
 			}
 			catch (Exception ex)
@@ -187,11 +188,6 @@ namespace OpenHellion.ProviderSystem
 				_discord.Dispose();
 			}
 			catch (NullReferenceException) {}
-		}
-
-		public bool IsInitialised()
-		{
-			return true;
 		}
 
 		public void UpdateStatus()

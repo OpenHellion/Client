@@ -17,10 +17,10 @@
 
 using System.Collections.Generic;
 using UnityEngine;
-using ZeroGravity;
 
 namespace OpenHellion.ProviderSystem
 {
+	// Should be self-contained, and it should therefore not reference any gameplay-related class.
 	/// <summary>
 	/// 	A system to make the underlying connections to external game providers, such as Steam and Discord.
 	/// 	The point is to make the game be interoperable with any provider of gaming services.
@@ -91,7 +91,8 @@ namespace OpenHellion.ProviderSystem
 		{
 			get
 			{
-				return Instance._mainProvider.IsInitialised();
+				if (Instance._mainProvider == null) return false;
+				return true;
 			}
 		}
 
@@ -137,8 +138,8 @@ namespace OpenHellion.ProviderSystem
 			// Exit game if no providers could be found.
 			if (_mainProvider == null)
 			{
-				Debug.LogError("No provider could be found.");
-				Client.Instance.ExitGame();
+				Dbg.Error("No provider could be found.");
+				Application.Quit();
 				return;
 			}
 

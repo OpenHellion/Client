@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.Util;
 using Unity.Jobs;
 using UnityEngine;
 using ZeroGravity.Data;
@@ -283,7 +284,7 @@ namespace ZeroGravity.Objects
 
 		public void LoadDataFromResources()
 		{
-			SolarSystemData solarSystemData = Json.LoadResource<SolarSystemData>("Data/SolarSystem");
+			SolarSystemData solarSystemData = JsonSerialiser.LoadResource<SolarSystemData>("Data/SolarSystem");
 			foreach (CelestialBodyData data in solarSystemData.CelestialBodies)
 			{
 				CelestialBody celestialBody = new CelestialBody(data.GUID);

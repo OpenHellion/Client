@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using OpenHellion.Util;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
@@ -163,7 +164,7 @@ namespace ZeroGravity.UI
 			if (isUp)
 			{
 				ActionOnButton(0);
-				oldSettings = Json.Serialize(GetComponent<Settings>().SettingsData);
+				oldSettings = JsonSerialiser.Serialize(GetComponent<Settings>().SettingsData);
 				if (Client.Instance.IsInGame)
 				{
 					gameMenuUp = false;
@@ -175,7 +176,7 @@ namespace ZeroGravity.UI
 				}
 				return;
 			}
-			newSettings = Json.Serialize(GetComponent<Settings>().SettingsData);
+			newSettings = JsonSerialiser.Serialize(GetComponent<Settings>().SettingsData);
 			if (oldSettings != newSettings)
 			{
 				Client.Instance.ShowConfirmMessageBox(Localization.Settings, Localization.AreYouSureYouWantToSave, Localization.Yes, Localization.No, ConfirmSave, DiscardChanges);
@@ -310,7 +311,7 @@ namespace ZeroGravity.UI
 		{
 			if (!Settings.Instance.controlsComponent.ControlsRebind.CheckIfEmpty())
 			{
-				string text = Json.Serialize(GetComponent<Settings>().SettingsData);
+				string text = JsonSerialiser.Serialize(GetComponent<Settings>().SettingsData);
 				if (!(text == oldSettings))
 				{
 					Client.Instance.ShowConfirmMessageBox(Localization.SaveGameSettings, Localization.AreYouSureYouWantToSave, Localization.Yes, Localization.No, ConfirmSave, DiscardChanges);
@@ -321,7 +322,7 @@ namespace ZeroGravity.UI
 		public void ConfirmSave()
 		{
 			Settings.Instance.SaveSettings(Settings.SettingsType.All);
-			oldSettings = Json.Serialize(GetComponent<Settings>().SettingsData);
+			oldSettings = JsonSerialiser.Serialize(GetComponent<Settings>().SettingsData);
 		}
 
 		public void DiscardChanges()

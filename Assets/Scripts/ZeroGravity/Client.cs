@@ -26,6 +26,7 @@ using OpenHellion.Networking;
 using OpenHellion.Networking.Message.MainServer;
 using OpenHellion.Networking.Message;
 using Luminosity.IO;
+using OpenHellion.Util;
 
 namespace ZeroGravity
 {
@@ -123,8 +124,6 @@ namespace ZeroGravity
 
 		public CustomInputModule InputModule;
 
-		public InputManager InputManager;
-
 		public static SignInRequest LastSignInRequest = null;
 
 		public static SignInResponse LastSignInResponse = null;
@@ -192,8 +191,6 @@ namespace ZeroGravity
 		private float _maxSecondsToWaitForExit = 3f;
 
 		public bool EnvironmentReady;
-
-		protected Callback<GameRichPresenceJoinRequested_t> m_GameRichPresenceJoinRequested;
 
 		private bool _receivedSignInResponse;
 
@@ -515,7 +512,6 @@ namespace ZeroGravity
 			EventSystem.AddListener(EventSystem.InternalEventType.RemoveLoadingCanvas, RemoveLoadingCanvasListener);
 			EventSystem.AddListener(EventSystem.InternalEventType.ConnectionFailed, ConnectionFailedListener);
 			EventSystem.AddListener(EventSystem.InternalEventType.CloseAllLoadingScreens, CloseAllLoadingScreensListener);
-			m_GameRichPresenceJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested);
 
 			if (InvitedToServerId != null)
 			{
@@ -564,7 +560,7 @@ namespace ZeroGravity
 				Password = LastConnectedServerPass,
 				SpawnPointId = spawnPointId
 			};
-			return Json.Serialize(inviteMessage);
+			return JsonSerialiser.Serialize(inviteMessage);
 		}
 
 		private IEnumerator LoadMainMenuScene()
@@ -576,19 +572,6 @@ namespace ZeroGravity
 			foreach (GameObject gameObject in rootGameObjects)
 			{
 				gameObject.transform.parent = MainMenuRoot.transform;
-			}
-		}
-
-		// TODO: Move this to SteamProvider.
-		private void OnGameRichPresenceJoinRequested(GameRichPresenceJoinRequested_t param)
-		{
-			try
-			{
-				InviteMessage inviteMessage = Json.Deserialize<InviteMessage>(param.m_rgchConnect);
-				ProcessInvitation(inviteMessage);
-			}
-			catch (Exception)
-			{
 			}
 		}
 
@@ -1147,7 +1130,11 @@ namespace ZeroGravity
 			IsRunning = false;
 			OnDestroy();
 			NetworkController.Instance.Disconnect();
+#if UNITY_EDITOR
+			EditorApplication.ExitPlaymode();
+#else
 			Application.Quit();
+#endif
 		}
 
 		private void OnDestroy()
@@ -1214,10 +1201,10 @@ namespace ZeroGravity
 			CanvasManager.GetMessageBox().PopulateMessageBox(title, text, destroyOnClose: false);
 		}
 
-		public void ShowMessageBox(string title, string text, MessageBox.OnCloseDelegate onClose)
+		public static void ShowMessageBox(string title, string text, GameObject parent, MessageBox.OnCloseDelegate onClose)
 		{
-			GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load("UI/CanvasMessageBox")) as GameObject;
-			transform.SetParent(CanvasManager.transform, false);
+			GameObject gameObject = Instantiate(Resources.Load("UI/CanvasMessageBox")) as GameObject;
+			gameObject.transform.SetParent(parent.transform, false);
 			gameObject.GetComponent<RectTransform>().Reset(resetScale: true);
 			gameObject.SetActive(value: true);
 			gameObject.GetComponent<MessageBox>().OnClose = onClose;
@@ -2044,50 +2031,57 @@ namespace ZeroGravity
 				DiscordId = ProviderManager.DiscordId
 			};
 
-			// First time booting, so we need to download id from the main server.
-			ConnectionMain.Get<PlayerIdResponse>(idRequest, (data) =>
+			try
 			{
-				CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.FindingPlayer);
-
-				// Get id from server and save it as a PlayerPref.
-				if (data.Result == ResponseResult.Success)
+				// First time booting, so we need to download id from the main server.
+				ConnectionMain.Get<PlayerIdResponse>(idRequest, (data) =>
 				{
-					callback(data);
-				}
-				else if (data.Result == ResponseResult.AccountNotFound)
-				{
-					// No account exists with that id, so we need to create a new player account.
+					CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.FindingPlayer);
 
-					CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.NewPlayer);
-
-					CreatePlayerRequest createRequest = new()
+					// Get id from server and save it as a PlayerPref.
+					if (data.Result == ResponseResult.Success)
 					{
-						Name = ProviderManager.MainProvider.GetUsername(),
-						Region = Region.Europe,
-						PlayerId = NetworkController.PlayerId,
-						SteamId = ProviderManager.SteamId,
-						DiscordId = ProviderManager.DiscordId
-					};
-
-					// Send request to server.
-					ConnectionMain.Get<PlayerIdResponse>(createRequest, (data) =>
+						callback(data);
+					}
+					else if (data.Result == ResponseResult.AccountNotFound)
 					{
-						if (data.Result == ResponseResult.Success)
+						// No account exists with that id, so we need to create a new player account.
+
+						CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.NewPlayer);
+
+						CreatePlayerRequest createRequest = new()
 						{
-							Dbg.Info("Successfully created a new player account with id", data.PlayerId);
-							callback(data);
-						}
-						else
+							Name = ProviderManager.MainProvider.GetUsername(),
+							Region = Region.Europe,
+							PlayerId = NetworkController.PlayerId,
+							SteamId = ProviderManager.SteamId,
+							DiscordId = ProviderManager.DiscordId
+						};
+
+						// Send request to server.
+						ConnectionMain.Get<PlayerIdResponse>(createRequest, (data) =>
 						{
-							ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
-						}
-					});
-				}
-				else
-				{
-					ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
-				}
-			});
+							if (data.Result == ResponseResult.Success)
+							{
+								Dbg.Info("Successfully created a new player account with id", data.PlayerId);
+								callback(data);
+							}
+							else
+							{
+								ShowMessageBox(Localization.SignInError, Localization.ServerUnreachable);
+							}
+						});
+					}
+					else
+					{
+						ShowMessageBox(Localization.SignInError, Localization.ServerUnreachable);
+					}
+				});
+			}
+			catch
+			{
+				ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
+			}
 		}
 
 		public void CreateCharacterButton()
@@ -2141,6 +2135,7 @@ namespace ZeroGravity
 			ExitGame();
 		}
 
+		// TODO: Move this to the provider or network system.
 		public void ProcessInvitation(InviteMessage inviteMessage)
 		{
 			if (_processInvitationCoroutine != null)

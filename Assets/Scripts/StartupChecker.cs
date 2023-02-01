@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 using ZeroGravity;
 using OpenHellion.ProviderSystem;
 
-
 /// <summary>
 /// 	This is the first class that executes. Ensures that this program was launced properly.
 /// 	Will probably not be needed.
@@ -21,7 +20,7 @@ public class StartupChecker : MonoBehaviour
 		if (!ProviderManager.AnyInitialised)
 		{
 			Dbg.Error("No external provider could be found. Exiting.");
-			Application.Quit();
+			Client.ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable, gameObject, Application.Quit);
 		}
 		else
 		{

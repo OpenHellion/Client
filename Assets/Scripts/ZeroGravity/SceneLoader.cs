@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.Util;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -55,7 +56,7 @@ namespace ZeroGravity
 		private void Awake()
 		{
 			vesselsGeometryCacheTransform = base.transform.root;
-			List<StructureSceneData> list = Json.LoadResource<List<StructureSceneData>>("Data/Structures");
+			List<StructureSceneData> list = JsonSerialiser.LoadResource<List<StructureSceneData>>("Data/Structures");
 			if (list != null)
 			{
 				foreach (StructureSceneData item in list)
@@ -63,7 +64,7 @@ namespace ZeroGravity
 					structures.Add(item.ItemID, item.SceneName);
 				}
 			}
-			List<AsteroidSceneData> list2 = Json.LoadResource<List<AsteroidSceneData>>("Data/Asteroids");
+			List<AsteroidSceneData> list2 = JsonSerialiser.LoadResource<List<AsteroidSceneData>>("Data/Asteroids");
 			if (list2 == null)
 			{
 				return;

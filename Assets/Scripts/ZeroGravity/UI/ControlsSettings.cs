@@ -76,9 +76,9 @@ namespace ZeroGravity.UI
 			ControlsData.MouseSensitivity = InputController.MouseSensitivity;
 			ControlsData.InvertMouse = Client.Instance.InvertedMouse;
 			ControlsData.InverMouseWhileDriving = Client.Instance.InvertMouseWhileDriving;
-			if (!ControlsRebind.CheckIfEmpty())
+			if (!ControlsRebind.CheckIfEmpty() && InputManager.Instance != null)
 			{
-				ControlsData.ControlSchemes = Client.Instance.InputManager.ControlSchemes;
+				ControlsData.ControlSchemes = InputManager.Instance.ControlSchemes;
 			}
 		}
 

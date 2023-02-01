@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenHellion.Networking;
+using OpenHellion.Util;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -149,7 +150,7 @@ namespace ZeroGravity.UI
 			FreeTerminal.SetActive(playerSecurityData == null);
 			RegistredTerminal.SetActive(playerSecurityData != null);
 
-			Dbg.Log("Security data: " + Json.Serialize(playerSecurityData));
+			Dbg.Log("Security data: " + JsonSerialiser.Serialize(playerSecurityData));
 
 			if (playerSecurityData == null)
 			{

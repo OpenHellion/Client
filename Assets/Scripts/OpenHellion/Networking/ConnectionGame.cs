@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using OpenHellion.ProviderSystem;
+using OpenHellion.Util;
 using ZeroGravity;
 using ZeroGravity.Network;
 
@@ -85,7 +86,7 @@ namespace OpenHellion.Networking
 			try
 			{
 				// Package data.
-				ArraySegment<byte> binary = new(Serializer.Package(data));
+				ArraySegment<byte> binary = new(ProtoSerialiser.Package(data));
 
 				// Send data to server.
 				_client.Send(binary);
@@ -129,7 +130,7 @@ namespace OpenHellion.Networking
 		{
 			try
 			{
-				NetworkData networkData = Serializer.Unpackage(new MemoryStream(message.Array));
+				NetworkData networkData = ProtoSerialiser.Unpackage(new MemoryStream(message.Array));
 				if (networkData != null)
 				{
 					EventSystem.Instance.Invoke(networkData);
