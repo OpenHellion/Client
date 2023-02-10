@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using ZeroGravity;
 using ZeroGravity.Math;
@@ -47,10 +48,10 @@ public class ManipulatorNew : MonoBehaviour
 	private void Update()
 	{
 		RaycastHit hitInfo = default(RaycastHit);
-		if (Physics.Raycast(MainCamera.ScreenPointToRay(Input.mousePosition), out hitInfo, float.PositiveInfinity) && InputController.GetButtonDown(InputController.AxisNames.Mouse1))
+		if (Physics.Raycast(MainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()), out hitInfo, float.PositiveInfinity) && InputController.GetButtonDown(InputController.Actions.PrimaryMouse))
 		{
 			float z = hitInfo.distance + MainCamera.nearClipPlane;
-			Vector3 position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, z);
+			Vector3 position = new Vector3(Mouse.current.position.x.ReadValue(), Mouse.current.position.y.ReadValue(), z);
 			Vector3 position2 = MainCamera.ScreenToWorldPoint(position);
 			Topkata.transform.position = position2;
 			Vector3 vec = Topkata.transform.localPosition - Root.localPosition;
@@ -71,7 +72,7 @@ public class ManipulatorNew : MonoBehaviour
 				num = MathHelper.AngleSigned(Vector3.forward, vec, Vector3.up);
 				SelectedGO = Z;
 			}
-			if (InputController.GetButtonDown(InputController.AxisNames.Mouse1))
+			if (InputController.GetButtonDown(InputController.Actions.PrimaryMouse))
 			{
 				TheOne.transform.position = position2;
 				if (SelectedGO == X)
@@ -93,26 +94,26 @@ public class ManipulatorNew : MonoBehaviour
 					pomeraj = Vector3.forward;
 				}
 				isMoving = true;
-				startMove = Input.mousePosition;
-				endMove = Input.mousePosition;
+				startMove = Mouse.current.position.ReadValue();
+				endMove = Mouse.current.position.ReadValue();
 				startRot = base.transform.localRotation;
 			}
-			if (InputController.GetButton(InputController.AxisNames.Mouse1))
+			if (InputController.GetButton(InputController.Actions.PrimaryMouse))
 			{
 			}
 			angleOld = num;
 		}
-		if (InputController.GetButtonUp(InputController.AxisNames.Mouse1))
+		if (InputController.GetButtonUp(InputController.Actions.PrimaryMouse))
 		{
 			X.SetActive(true);
 			Y.SetActive(true);
 			Z.SetActive(true);
 			isMoving = false;
 		}
-		if (isMoving && InputController.GetButton(InputController.AxisNames.Mouse1))
+		if (isMoving && InputController.GetButton(InputController.Actions.PrimaryMouse))
 		{
 			Vector3 vector2 = MainCamera.WorldToScreenPoint(TheOne.transform.position) - MainCamera.WorldToScreenPoint(base.transform.position);
-			Vector3 vector3 = Input.mousePosition - MainCamera.WorldToScreenPoint(base.transform.position);
+			Vector3 vector3 = (Vector3)Mouse.current.position.ReadValue() - MainCamera.WorldToScreenPoint(base.transform.position);
 			dbgimg0.transform.position = vector2;
 			dbgimg1.transform.position = vector3;
 			Debug.DrawLine(vector2, vector3);
@@ -130,8 +131,8 @@ public class ManipulatorNew : MonoBehaviour
 			{
 				pomeraj = Vector3.forward;
 			}
-			float axis = InputController.GetAxis(InputController.AxisNames.LookHorizontal);
-			float axis2 = InputController.GetAxis(InputController.AxisNames.LookVertical);
+			float axis = Mouse.current.delta.x.ReadValue();
+			float axis2 = Mouse.current.delta.y.ReadValue();
 			if (axis.IsNotEpsilonZero() || axis2.IsNotEpsilonZero())
 			{
 				Vector3 vector4 = MainCamera.WorldToScreenPoint(TheOne.transform.position);

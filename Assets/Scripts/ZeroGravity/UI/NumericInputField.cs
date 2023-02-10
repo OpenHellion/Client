@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace ZeroGravity.UI
@@ -48,7 +49,7 @@ namespace ZeroGravity.UI
 
 		private void Update()
 		{
-			if (!hovering || InputController.GetAxis(InputController.AxisNames.MouseWheel) == 0f)
+			if (!hovering || Mouse.current.scroll.y.ReadValue() == 0f)
 			{
 				return;
 			}
@@ -56,11 +57,11 @@ namespace ZeroGravity.UI
 			float.TryParse(inputField.text, out result);
 			if (inputField.interactable)
 			{
-				if (InputController.GetAxis(InputController.AxisNames.MouseWheel) > 0f)
+				if (Mouse.current.scroll.y.ReadValue() > 0f)
 				{
 					result += Increment;
 				}
-				else if (InputController.GetAxis(InputController.AxisNames.MouseWheel) < 0f)
+				else if (Mouse.current.scroll.y.ReadValue() < 0f)
 				{
 					result -= Increment;
 				}

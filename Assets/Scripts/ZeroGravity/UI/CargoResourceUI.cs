@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using ZeroGravity.Data;
 using ZeroGravity.Objects;
@@ -64,7 +65,7 @@ namespace ZeroGravity.UI
 				MyCargoPanel.DragingItem.SetActive(true);
 				MyCargoPanel.isDragigng = true;
 				RectTransform component = MyCargoPanel.DragingItem.GetComponent<RectTransform>();
-				component.transform.position = Input.mousePosition;
+				component.transform.position = Mouse.current.position.ReadValue();
 			}
 		}
 

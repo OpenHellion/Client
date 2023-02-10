@@ -4,7 +4,7 @@ namespace ZeroGravity.UI
 	{
 		public string Name;
 
-		public InputController.AxisNames Axis;
+		public InputController.Actions Actions;
 
 		public bool IsPositive = true;
 

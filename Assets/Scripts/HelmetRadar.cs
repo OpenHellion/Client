@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using ZeroGravity;
 using ZeroGravity.Math;
@@ -138,7 +139,7 @@ public class HelmetRadar : MonoBehaviour
 		}
 		if (!Client.Instance.IsChatOpened)
 		{
-			if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.AxisNames.X))
+			if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.Actions.HelmetRadar))
 			{
 				ToggleRadar();
 			}
@@ -150,9 +151,9 @@ public class HelmetRadar : MonoBehaviour
 					currentTarget.IsSelected = true;
 					GoToCurrentElement();
 				}
-				if (InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero() && radarItems.Count > 0)
+				if (Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero() && radarItems.Count > 0)
 				{
-					float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
+					float axis = Mouse.current.scroll.y.ReadValue();
 					if (axis > 0f)
 					{
 						if (currTargetIndex - 1 >= 0)
@@ -182,7 +183,7 @@ public class HelmetRadar : MonoBehaviour
 						GoToCurrentElement();
 					}
 				}
-				if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.AxisNames.DownArrow))
+				if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.Actions.TargetDown))
 				{
 					if (radarItems.Count - 1 >= currTargetIndex + 1)
 					{
@@ -196,7 +197,7 @@ public class HelmetRadar : MonoBehaviour
 					currentTarget.IsSelected = true;
 					GoToCurrentElement();
 				}
-				else if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.AxisNames.UpArrow))
+				else if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.Actions.TargetUp))
 				{
 					if (currentTarget == null)
 					{

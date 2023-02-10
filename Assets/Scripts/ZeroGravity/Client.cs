@@ -25,8 +25,8 @@ using OpenHellion.ProviderSystem;
 using OpenHellion.Networking;
 using OpenHellion.Networking.Message.MainServer;
 using OpenHellion.Networking.Message;
-using Luminosity.IO;
 using OpenHellion.Util;
+using UnityEngine.InputSystem;
 
 namespace ZeroGravity
 {
@@ -1751,8 +1751,8 @@ namespace ZeroGravity
 
 		public static void MovePanelCursor(Transform trans, float panelWidth, float panelHeight)
 		{
-			float x = Mathf.Clamp(trans.localPosition.x + ZeroGravity.UI.InputController.GetAxis(ZeroGravity.UI.InputController.AxisNames.LookHorizontal) * MouseSpeedOnPanels, 0f, panelWidth);
-			float y = Mathf.Clamp(trans.localPosition.y + ZeroGravity.UI.InputController.GetAxis(ZeroGravity.UI.InputController.AxisNames.LookVertical) * MouseSpeedOnPanels * (float)((!Instance.InvertedMouse) ? 1 : (-1)), 0f, panelHeight);
+			float x = Mathf.Clamp(trans.localPosition.x + Mouse.current.delta.x.ReadValue() * MouseSpeedOnPanels, 0f, panelWidth);
+			float y = Mathf.Clamp(trans.localPosition.y + Mouse.current.delta.y.ReadValue() * MouseSpeedOnPanels * (float)((!Instance.InvertedMouse) ? 1 : (-1)), 0f, panelHeight);
 			trans.localPosition = new Vector3(x, y, trans.localPosition.z);
 		}
 

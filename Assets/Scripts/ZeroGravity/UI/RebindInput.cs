@@ -1,5 +1,4 @@
 using System.Collections;
-using Luminosity.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -67,7 +66,7 @@ namespace ZeroGravity.UI
 		public void SetRebinder(string inputConfigName, ControlItem contItem, Text buttonText, GameObject mainPanel, bool isAlt)
 		{
 			m_inputConfigName = inputConfigName;
-			m_axisConfigName = contItem.Axis.ToString();
+			m_axisConfigName = contItem.Actions.ToString();
 			m_changePositiveKey = contItem.IsPositive;
 			m_changeAltKey = isAlt;
 			m_cancelButton = KeyCode.Escape;

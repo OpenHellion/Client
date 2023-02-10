@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace ZeroGravity.UI
@@ -54,7 +55,7 @@ namespace ZeroGravity.UI
 				}
 				Heading.text = text.ToUpper();
 				Content.text = localizedField;
-				if (Input.mousePosition.x > (float)(Screen.width / 2))
+				if (Mouse.current.position.x.ReadValue() > (float)(Screen.width / 2))
 				{
 					Tooltip.GetComponent<RectTransform>().pivot = new Vector2(1f, 1f);
 				}
@@ -62,7 +63,7 @@ namespace ZeroGravity.UI
 				{
 					Tooltip.GetComponent<RectTransform>().pivot = new Vector2(0f, 1f);
 				}
-				Tooltip.transform.position = Input.mousePosition;
+				Tooltip.transform.position = (Vector3) Mouse.current.position.ReadValue();
 				Tooltip.SetActive(true);
 			}
 			else

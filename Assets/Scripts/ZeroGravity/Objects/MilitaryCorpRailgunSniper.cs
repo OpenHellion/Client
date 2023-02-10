@@ -1,6 +1,7 @@
 using System.Collections;
 using TriInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using ZeroGravity.Math;
 using ZeroGravity.UI;
 
@@ -42,7 +43,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
-			float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
+			float axis = Mouse.current.scroll.y.ReadValue();
 			if (Mathf.Abs(axis) > float.Epsilon)
 			{
 				int num = currentZoomStep + MathHelper.Sign(axis);

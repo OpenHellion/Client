@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace ZeroGravity.UI
 {
@@ -11,9 +12,9 @@ namespace ZeroGravity.UI
 
 		private void Update()
 		{
-			if (canZoom && InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero())
+			if (canZoom && Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero())
 			{
-				float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
+				float axis = Mouse.current.scroll.y.ReadValue();
 				if (axis > 0f)
 				{
 					InventoryCharacterPreview.instance.ZoomCamera(0.1f);
@@ -27,7 +28,7 @@ namespace ZeroGravity.UI
 
 		public void OnDrag(PointerEventData eventData)
 		{
-			InventoryCharacterPreview.instance.RotateCharacter(InputController.GetAxis(InputController.AxisNames.LookHorizontal) * rotSpeed);
+			InventoryCharacterPreview.instance.RotateCharacter(Mouse.current.delta.x.ReadValue() * rotSpeed);
 		}
 
 		public void OnPointerEnter(PointerEventData eventData)

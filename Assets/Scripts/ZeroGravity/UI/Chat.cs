@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using OpenHellion.Networking;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
@@ -45,7 +46,7 @@ namespace ZeroGravity.UI
 		{
 			if (!Client.Instance.CanvasManager.DisableChat)
 			{
-				if (InputController.GetButtonDown(InputController.AxisNames.Y) && !ChatInputBox.activeInHierarchy && !Client.Instance.CanvasManager.Console.gameObject.activeInHierarchy && !Client.Instance.CanvasManager.IsInputFieldIsActive && !Client.Instance.CanvasManager.OverlayCanvasIsOn && !InputController.GetButton(InputController.AxisNames.G))
+				if (InputController.GetButtonDown(InputController.Actions.Chat) && !ChatInputBox.activeInHierarchy && !Client.Instance.CanvasManager.Console.gameObject.activeInHierarchy && !Client.Instance.CanvasManager.IsInputFieldIsActive && !Client.Instance.CanvasManager.OverlayCanvasIsOn && !InputController.GetButton(InputController.Actions.Drop))
 				{
 					ShowChat(true);
 				}
@@ -53,19 +54,19 @@ namespace ZeroGravity.UI
 				{
 					ShowChat(false);
 				}
-				if (Client.Instance.IsChatOpened && InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero() && (ScrollBarVertical.value >= 0f || ScrollBarVertical.value <= 1f))
+				if (Client.Instance.IsChatOpened && Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero() && (ScrollBarVertical.value >= 0f || ScrollBarVertical.value <= 1f))
 				{
-					ScrollBarVertical.value += InputController.GetAxis(InputController.AxisNames.MouseWheel) * 0.2f;
+					ScrollBarVertical.value += Mouse.current.scroll.y.ReadValue() * 0.2f;
 				}
 				if (Client.Instance.IsChatOpened && InputController.GetKeyDown(KeyCode.Escape))
 				{
 					CloseChat();
 				}
-				if (InputController.GetButtonDown(InputController.AxisNames.Mouse1))
+				if (InputController.GetButtonDown(InputController.Actions.PrimaryMouse))
 				{
 					ChatInput.Select();
 				}
-				else if (InputController.GetButtonUp(InputController.AxisNames.Mouse1))
+				else if (InputController.GetButtonUp(InputController.Actions.PrimaryMouse))
 				{
 					ChatInput.MoveTextEnd(false);
 				}

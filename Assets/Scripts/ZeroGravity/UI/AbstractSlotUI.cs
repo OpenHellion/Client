@@ -2,6 +2,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using ZeroGravity.Objects;
 
@@ -131,7 +132,7 @@ namespace ZeroGravity.UI
 				InventoryUI.IsDragging = true;
 				RectTransform component = InventoryUI.DraggingObject.GetComponent<RectTransform>();
 				Vector2 localPoint = Vector2.zero;
-				RectTransformUtility.ScreenPointToLocalPointInRectangle(InventoryUI.GetComponent<RectTransform>(), Input.mousePosition, Client.Instance.CanvasManager.Canvas.worldCamera, out localPoint);
+				RectTransformUtility.ScreenPointToLocalPointInRectangle(InventoryUI.GetComponent<RectTransform>(), Mouse.current.position.ReadValue(), Client.Instance.CanvasManager.Canvas.worldCamera, out localPoint);
 				component.transform.localPosition = localPoint;
 				InventoryUI.DraggingObject.SetActive(true);
 			}

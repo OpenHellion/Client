@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using ZeroGravity.Objects;
 
@@ -38,7 +39,7 @@ namespace ZeroGravity.UI
 
 		private void Update()
 		{
-			if (Input.GetKeyDown(KeyCode.BackQuote))
+			if (Keyboard.current.backquoteKey.isPressed)
 			{
 				MainCanvas.SetActive(!MainCanvas.activeSelf);
 				inputField.ActivateInputField();
@@ -49,7 +50,7 @@ namespace ZeroGravity.UI
 					MyPlayer.Instance.FpsController.ToggleCameraMovement(!MainCanvas.activeSelf);
 				}
 			}
-			if (Input.GetKeyDown(KeyCode.Escape))
+			if (Keyboard.current.escapeKey.isPressed)
 			{
 				MainCanvas.SetActive(false);
 				if (MyPlayer.Instance != null)

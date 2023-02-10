@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class ScrollList : MonoBehaviour
@@ -61,7 +62,7 @@ public class ScrollList : MonoBehaviour
 			}
 			num++;
 		}
-		if (Input.GetKeyDown(KeyCode.Space))
+		if (Keyboard.current.spaceKey.isPressed)
 		{
 			GoToMember(MemberToGoTo);
 		}

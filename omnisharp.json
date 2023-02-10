@@ -1,11 +1,16 @@
 {
 	"FormattingOptions": {
 		"EnableEditorConfigSupport": true,
-		"OrganizeImports": true
+		"OrganizeImports": true,
+		"NewLineForElse": true,
+		"NewLineForCatch": true,
+		"NewLineForFinally": true
 	},
 	"RoslynExtensionsOptions": {
 		"EnableEditorConfigSupport": true,
 		"EnableAnalyzersSupport": true,
+		"enableDecompilationSupport": true,
+		"enableImportCompletion": true,
 		"LocationPaths": ["./NuGet/microsoft.unity.analyzers.1.15.0/analyzers/dotnet/cs"]
 	},
 	"fileOptions": {

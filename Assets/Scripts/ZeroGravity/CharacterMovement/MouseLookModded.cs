@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using ZeroGravity.Math;
 using ZeroGravity.UI;
 
@@ -47,18 +48,18 @@ namespace ZeroGravity.CharacterMovement
 
 		private void Update()
 		{
-			if (InputController.GetButtonDown(InputController.AxisNames.LeftAlt))
+			if (InputController.GetButtonDown(InputController.Actions.FreeLook))
 			{
 				previousRotationX = base.transform.localRotation.eulerAngles.x;
 				freeLook = true;
 			}
-			if (InputController.GetButtonUp(InputController.AxisNames.LeftAlt))
+			if (InputController.GetButtonUp(InputController.Actions.FreeLook))
 			{
 				freeLook = false;
 				cameraFreed = false;
 			}
-			float y = InputController.GetAxis(InputController.AxisNames.LookHorizontal) * XSensitivity;
-			float num = InputController.GetAxis(InputController.AxisNames.LookHorizontal) * YSensitivity;
+			float y = Mouse.current.delta.x.ReadValue() * XSensitivity;
+			float num = Mouse.current.delta.x.ReadValue() * YSensitivity;
 			if (cameraFreed)
 			{
 				if (freeLook)

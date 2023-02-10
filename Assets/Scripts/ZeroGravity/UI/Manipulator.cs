@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace ZeroGravity.UI
 {
@@ -22,10 +23,10 @@ namespace ZeroGravity.UI
 
 		private void Update()
 		{
-			if (InputController.GetButtonDown(InputController.AxisNames.Mouse1))
+			if (InputController.GetButtonDown(InputController.Actions.PrimaryMouse))
 			{
-				RaycastHit hitInfo = default(RaycastHit);
-				if (Physics.Raycast(MainCamera.ScreenPointToRay(Input.mousePosition), out hitInfo, float.PositiveInfinity))
+				RaycastHit hitInfo = default;
+				if (Physics.Raycast(MainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()), out hitInfo, float.PositiveInfinity))
 				{
 					if (hitInfo.collider.gameObject.name == "Collider")
 					{
@@ -41,10 +42,10 @@ namespace ZeroGravity.UI
 					theOne = null;
 				}
 			}
-			else if (InputController.GetButton(InputController.AxisNames.Mouse1) && theOne != null)
+			else if (InputController.GetButton(InputController.Actions.PrimaryMouse) && theOne != null)
 			{
 				Vector3 vector = MainCamera.WorldToScreenPoint(theOne.transform.position) - MainCamera.WorldToScreenPoint(base.transform.position);
-				Vector3 vector2 = Input.mousePosition - MainCamera.WorldToScreenPoint(base.transform.position);
+				Vector3 vector2 = (Vector3) Mouse.current.position.ReadValue() - MainCamera.WorldToScreenPoint(base.transform.position);
 				float num = Vector2.Angle(vector2, vector);
 				if ((num > 80f && num < 110f) || (vector.magnitude.IsEpsilonEqual(vector2.magnitude, 8f) && num < 90f))
 				{
@@ -66,7 +67,7 @@ namespace ZeroGravity.UI
 					MoveOut(false);
 				}
 			}
-			else if (InputController.GetButtonUp(InputController.AxisNames.Mouse1) && theOne != null)
+			else if (InputController.GetButtonUp(InputController.Actions.PrimaryMouse) && theOne != null)
 			{
 				theOne.localPosition = new Vector3(0f, 0f, 3f);
 			}

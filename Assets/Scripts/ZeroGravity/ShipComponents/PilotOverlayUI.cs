@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TriInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using ZeroGravity.Math;
 using ZeroGravity.Objects;
@@ -201,11 +202,11 @@ namespace ZeroGravity.ShipComponents
 			}
 			if (!Client.Instance.CanvasManager.ConsoleIsUp)
 			{
-				if (InputController.GetButtonDown(InputController.AxisNames.T))
+				if (Keyboard.current.tKey.isPressed)
 				{
 					Client.Instance.OffSpeedHelper = !Client.Instance.OffSpeedHelper;
 				}
-				if (InputController.GetButtonDown(InputController.AxisNames.R) && CurrentTargetList.TargetListHolder.gameObject.activeInHierarchy)
+				if (InputController.GetButtonDown(InputController.Actions.Equip) && CurrentTargetList.TargetListHolder.gameObject.activeInHierarchy)
 				{
 					if (RadarRange.Count - 1 > currentRadarRange)
 					{
@@ -222,9 +223,9 @@ namespace ZeroGravity.ShipComponents
 				}
 				if (CurrentTargetList != null)
 				{
-					if (InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero() && AllTargets.Count > 0)
+					if (Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero() && AllTargets.Count > 0)
 					{
-						float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
+						float axis = Mouse.current.scroll.y.ReadValue();
 						if (axis > 0f)
 						{
 							int num = AllTargets.IndexOf(SelectedTarget);
@@ -238,13 +239,13 @@ namespace ZeroGravity.ShipComponents
 							SelectedTarget = AllTargets[num2];
 						}
 					}
-					if (AllTargets.Count > 0 && InputController.GetButtonDown(InputController.AxisNames.DownArrow))
+					if (AllTargets.Count > 0 && InputController.GetButtonDown(InputController.Actions.TargetDown))
 					{
 						int num3 = AllTargets.IndexOf(SelectedTarget);
 						num3 = ((AllTargets.Count - 1 > num3) ? (num3 + 1) : 0);
 						SelectedTarget = AllTargets[num3];
 					}
-					else if (AllTargets.Count > 0 && InputController.GetButtonDown(InputController.AxisNames.UpArrow))
+					else if (AllTargets.Count > 0 && InputController.GetButtonDown(InputController.Actions.TargetUp))
 					{
 						int num4 = AllTargets.IndexOf(SelectedTarget);
 						num4 = ((num4 - 1 < 0) ? (AllTargets.Count - 1) : (num4 - 1));

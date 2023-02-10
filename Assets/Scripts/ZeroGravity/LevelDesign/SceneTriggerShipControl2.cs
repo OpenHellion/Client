@@ -215,19 +215,19 @@ namespace ZeroGravity.LevelDesign
 				{
 					return;
 				}
-				if (InputController.GetButtonDown(InputController.AxisNames.Alpha1))
+				if (InputController.GetButtonDown(InputController.Actions.Quick1))
 				{
 					instance.ShipControlMode = ShipControlMode.Piloting;
 				}
-				else if (InputController.GetButtonDown(InputController.AxisNames.Alpha2) && base.ParentShip.VesselBaseSystem.Status == SystemStatus.OnLine)
+				else if (InputController.GetButtonDown(InputController.Actions.Quick2) && base.ParentShip.VesselBaseSystem.Status == SystemStatus.OnLine)
 				{
 					instance.ShipControlMode = ShipControlMode.Navigation;
 				}
-				else if (InputController.GetButtonDown(InputController.AxisNames.Alpha3))
+				else if (InputController.GetButtonDown(InputController.Actions.Quick3))
 				{
 					instance.ShipControlMode = ShipControlMode.Docking;
 				}
-				else if (InputController.GetButtonDown(InputController.AxisNames.Alpha4) && Headlights != null)
+				else if (InputController.GetButtonDown(InputController.Actions.Quick4) && Headlights != null)
 				{
 					Headlights.Toggle();
 				}

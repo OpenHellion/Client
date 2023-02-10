@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Math;
 using ZeroGravity.Objects;
@@ -305,15 +306,15 @@ namespace ZeroGravity.CharacterMovement
 
 		private void GetMouseAxis()
 		{
-			mouseRightAxis = InputController.GetAxis(InputController.AxisNames.LookHorizontal) * mouseSensitivity;
-			mouseUpAxis = (0f - InputController.GetAxis(InputController.AxisNames.LookVertical)) * mouseSensitivity;
+			mouseRightAxis = Mouse.current.delta.x.ReadValue() * mouseSensitivity;
+			mouseUpAxis = Mouse.current.delta.y.ReadValue() * mouseSensitivity;
 			if (Client.IsGameBuild)
 			{
-				mouseUpAxis = -((!Client.Instance.InvertedMouse) ? 1 : (-1)) * (InputController.GetAxis(InputController.AxisNames.LookVertical) * mouseSensitivity);
+				mouseUpAxis = -((!Client.Instance.InvertedMouse) ? 1 : (-1)) * Mouse.current.delta.y.ReadValue() * mouseSensitivity;
 			}
 			else
 			{
-				mouseUpAxis = -1f * (InputController.GetAxis(InputController.AxisNames.LookVertical) * mouseSensitivity);
+				mouseUpAxis = -1f * Mouse.current.delta.y.ReadValue() * mouseSensitivity;
 			}
 		}
 
@@ -445,11 +446,11 @@ namespace ZeroGravity.CharacterMovement
 			{
 				if (!autoFreeLook || !isFreeLook)
 				{
-					if (InputController.GetButtonDown(InputController.AxisNames.LeftAlt))
+					if (InputController.GetButtonDown(InputController.Actions.FreeLook))
 					{
 						ToggleFreeLook(true);
 					}
-					if (InputController.GetButtonUp(InputController.AxisNames.LeftAlt) && isFreeLook)
+					if (InputController.GetButtonUp(InputController.Actions.FreeLook) && isFreeLook)
 					{
 						ToggleFreeLook(false);
 					}

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TriInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -154,7 +155,7 @@ namespace ZeroGravity.ShipComponents
 		private void Start()
 		{
 			RCSPanel.SetActive(ParentShip.RCS != null);
-			ControlsForChangingPort.text = string.Format(Localization.ControlChangeDockingPort, GetControlName(InputController.AxisNames.R)).ToUpper();
+			ControlsForChangingPort.text = string.Format(Localization.ControlChangeDockingPort, GetControlName(InputController.Actions.Equip)).ToUpper();
 		}
 
 		private void Update()
@@ -169,7 +170,7 @@ namespace ZeroGravity.ShipComponents
 			}
 			if (!Client.Instance.CanvasManager.ConsoleIsUp)
 			{
-				if (InputController.GetButtonDown(InputController.AxisNames.R))
+				if (InputController.GetButtonDown(InputController.Actions.Equip))
 				{
 					TargetDockingPort = null;
 					changeTargetedModulePort = true;
@@ -177,11 +178,11 @@ namespace ZeroGravity.ShipComponents
 					ReloadRadarElements();
 					UpdateTargetedModule();
 				}
-				if (InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero() && TargetedModulePorts.Count > 0)
+				if (Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero() && TargetedModulePorts.Count > 0)
 				{
 					TargetedModulePorts[currentTargetedModulePortIndex].UI.IsSelected = false;
 					TargetedModulePorts[currentTargetedModulePortIndex].UI.Distance = string.Empty;
-					float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
+					float axis = Mouse.current.scroll.y.ReadValue();
 					if (axis > 0f)
 					{
 						if (currentTargetedModulePortIndex - 1 >= 0)
@@ -206,8 +207,8 @@ namespace ZeroGravity.ShipComponents
 					}
 					ChangeTargetedPort();
 				}
-				bool buttonDown = InputController.GetButtonDown(InputController.AxisNames.UpArrow);
-				bool buttonDown2 = InputController.GetButtonDown(InputController.AxisNames.DownArrow);
+				bool buttonDown = InputController.GetButtonDown(InputController.Actions.TargetUp);
+				bool buttonDown2 = InputController.GetButtonDown(InputController.Actions.TargetDown);
 				if (TargetedModulePorts.Count > 0 && (buttonDown || buttonDown2))
 				{
 					TargetedModulePorts[currentTargetedModulePortIndex].UI.IsSelected = false;
@@ -347,13 +348,13 @@ namespace ZeroGravity.ShipComponents
 					}
 					TargetDockingPort = null;
 				}
-				if (MyPlayer.Instance.IsAdmin && (Input.GetKeyDown(KeyCode.Keypad9) || Input.GetKeyDown(KeyCode.Keypad8)))
+				if (MyPlayer.Instance.IsAdmin && (Keyboard.current.numpad9Key.isPressed || Keyboard.current.numpad8Key.isPressed))
 				{
 					if (dockingPort.ParentShip.Engine != null && TargetDockingPort.ParentShip.Engine == null && !TargetDockingPort.ParentShip.IsDocked && TargetDockingPort.ParentShip.AllDockedVessels.Count == 0 && !dockingPort.ParentShip.IsDocked && dockingPort.ParentShip.AllDockedVessels.Count == 0)
 					{
 						TargetDockingPort.ToggleDockTo(dockingPort, toggle: true);
 					}
-					else if (Input.GetKeyDown(KeyCode.Keypad9))
+					else if (Keyboard.current.numpad9Key.isPressed)
 					{
 						dockingPort.ToggleDockTo(TargetDockingPort, toggle: true);
 					}
@@ -740,7 +741,7 @@ namespace ZeroGravity.ShipComponents
 			return dockingPanelUIItem;
 		}
 
-		public string GetControlName(InputController.AxisNames axName)
+		public string GetControlName(InputController.Actions axName)
 		{
 			string axisKeyName = InputController.GetAxisKeyName(axName);
 			if (axisKeyName == "None")

@@ -14,6 +14,7 @@ using ZeroGravity.Objects;
 using ZeroGravity.UI;
 using OpenHellion.Networking;
 using TriInspector;
+using UnityEngine.InputSystem;
 
 namespace ZeroGravity.ShipComponents
 {
@@ -372,9 +373,9 @@ namespace ZeroGravity.ShipComponents
 				ManeuverTimeLeft.text = string.Empty;
 				NoManeuverSelected.SetActive(value: true);
 			}
-			if (InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero() && (StartTimeEdit || EndTimeEdit) && Map.WarpManeuver != null)
+			if (Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero() && (StartTimeEdit || EndTimeEdit) && Map.WarpManeuver != null)
 			{
-				float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
+				float axis = Mouse.current.scroll.y.ReadValue();
 				if (axis > 0f)
 				{
 					if (EndTimeEdit)
@@ -400,7 +401,7 @@ namespace ZeroGravity.ShipComponents
 			}
 			if (HoverObjectUi.activeInHierarchy)
 			{
-				HoverObjectUi.transform.position = Input.mousePosition;
+				HoverObjectUi.transform.position = (Vector3) Mouse.current.position.ReadValue();
 			}
 		}
 

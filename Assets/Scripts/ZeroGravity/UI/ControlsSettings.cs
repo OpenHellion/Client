@@ -1,4 +1,3 @@
-using Luminosity.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -35,13 +34,13 @@ namespace ZeroGravity.UI
 				InvertMouseWhileDrivingSetter();
 			});
 		}
-
 		public void MouseSensitivity(float val)
 		{
 			mouseSensitivityLevel.text = val.ToString("0.0");
-			InputController.MouseSensitivity = val;
 			ControlsData.MouseSensitivity = val;
 			mouseSensitivitySlider.value = val;
+
+			InputController.MouseSensitivity = val;
 		}
 
 		public void InvertMouseSetter()

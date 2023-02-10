@@ -440,11 +440,11 @@ namespace ZeroGravity
 
 		public static string Stabilization;
 
-		public static string Mouse1;
+		public static string LeftMouse;
 
-		public static string Mouse2;
+		public static string RightMouse;
 
-		public static string Mouse3;
+		public static string MiddleMouse;
 
 		public static string ToggleVisor;
 
@@ -2424,9 +2424,9 @@ namespace ZeroGravity
 			Reload = "Reload";
 			ChangeStance = "Change Stance";
 			Stabilization = "Stabilization";
-			Mouse1 = "Left Mouse Button";
-			Mouse2 = "Right Mouse Button";
-			Mouse3 = "Third Mouse Button";
+			LeftMouse = "Left Mouse Button";
+			RightMouse = "Right Mouse Button";
+			MiddleMouse = "Middle Mouse Button";
 			ToggleVisor = "Toggle Visor";
 			ToggleLights = "Toggle Lights";
 			ToggleJetpack = "Toggle Jetpack";

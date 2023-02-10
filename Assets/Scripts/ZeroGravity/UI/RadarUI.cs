@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using ZeroGravity.Math;
 using ZeroGravity.Objects;
@@ -116,9 +117,9 @@ namespace ZeroGravity.UI
 				int index = AllTargets.IndexOf(HoveredTarget);
 				SetTarget(AllTargets[index]);
 			}
-			if (InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero() && AllTargets.Count > 0)
+			if (Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero() && AllTargets.Count > 0)
 			{
-				float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
+				float axis = Mouse.current.scroll.y.ReadValue();
 				int num = AllTargets.IndexOf(SelectedTarget);
 				if (axis > 0f)
 				{

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using ZeroGravity.UI;
 
 namespace ZeroGravity.CharacterMovement
@@ -210,22 +211,22 @@ namespace ZeroGravity.CharacterMovement
 
 		private void Update()
 		{
-			if (Input.GetKeyDown(KeyCode.R))
+			if (Keyboard.current.rKey.isPressed)
 			{
 				GameObject.Find("MotusMan_v2_mod").transform.position = GameObject.Find("SpawnPoint").transform.position;
 				setFlying(true);
 			}
-			if (Input.GetKeyDown(KeyCode.F))
+			if (Keyboard.current.fKey.isPressed)
 			{
 				setFlying(!flying);
 			}
 			if (!crouch && speedLerpingDone)
 			{
-				if (InputController.GetButton(InputController.AxisNames.Space) && !m_Jump)
+				if (InputController.GetButton(InputController.Actions.Jump) && !m_Jump)
 				{
 					timerForJump += Time.deltaTime;
 				}
-				if (InputController.GetButtonUp(InputController.AxisNames.Space) && !m_Jump)
+				if (InputController.GetButtonUp(InputController.Actions.Jump) && !m_Jump)
 				{
 					if (!(timerForJump > minJumpTime))
 					{
@@ -240,22 +241,22 @@ namespace ZeroGravity.CharacterMovement
 					m_Jump = true;
 					timerForJump = 0f;
 				}
-				if (InputController.GetButtonDown(InputController.AxisNames.LeftShift))
+				if (InputController.GetButtonDown(InputController.Actions.Sprint))
 				{
 					sprint = true;
 				}
-				if (InputController.GetButtonUp(InputController.AxisNames.LeftShift))
+				if (InputController.GetButtonUp(InputController.Actions.Sprint))
 				{
 					sprint = false;
 				}
 			}
-			if (InputController.GetButtonDown(InputController.AxisNames.LeftCtrl))
+			if (InputController.GetButtonDown(InputController.Actions.Crouch))
 			{
 				SetNormalSpeed();
 				SpeedDecrease(crouchMultiplier);
 				crouch = true;
 			}
-			if (InputController.GetButtonUp(InputController.AxisNames.LeftCtrl))
+			if (InputController.GetButtonUp(InputController.Actions.Crouch))
 			{
 				speedLerpingDone = false;
 				crouch = false;
@@ -328,8 +329,8 @@ namespace ZeroGravity.CharacterMovement
 			if (flying)
 			{
 				Vector2 input = GetInput();
-				rotationX += InputController.GetAxis(InputController.AxisNames.LookHorizontal) * lookSpeed;
-				rotationY += InputController.GetAxis(InputController.AxisNames.LookVertical) * lookSpeed;
+				rotationX += Mouse.current.delta.x.ReadValue() * lookSpeed;
+				rotationY += Mouse.current.delta.y.ReadValue() * lookSpeed;
 				transform.localRotation = Quaternion.AngleAxis(rotationX, Vector3.up);
 				transform.localRotation *= Quaternion.AngleAxis(rotationY, Vector3.left);
 				transform.position += input.y * moveSpeed * transform.forward;
@@ -388,8 +389,8 @@ namespace ZeroGravity.CharacterMovement
 		private Vector2 GetInput()
 		{
 			Vector2 vector = default;
-			vector.x = InputController.GetAxis(InputController.AxisNames.Right);
-			vector.y = InputController.GetAxis(InputController.AxisNames.Forward);
+			vector.x = InputController.GetAxis(InputController.Actions.Right);
+			vector.y = InputController.GetAxis(InputController.Actions.Forward);
 			Vector2 vector2 = vector;
 			UpdateDesiredTargetSpeed(vector2);
 			return vector2;

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Luminosity.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,8 +45,6 @@ namespace ZeroGravity.UI
 
 		public Transform QuickHolder;
 
-		public Settings settings;
-
 		public bool isScanning;
 
 		public string WhoIsScanning = string.Empty;
@@ -86,231 +83,236 @@ namespace ZeroGravity.UI
 
 		private ControlItem controlItemValOld;
 
-		private RebindInput rebinderRev;
-
-		private RebindInput rebinderOld;
-
-		public Transform ScrollListContent;
-
 		private List<GameObject> AllElements = new List<GameObject>();
 
 		public static void Initialize()
 		{
-			List<ControlItem> list = new List<ControlItem>();
-			list.Add(new ControlItem
+			MovementControls = new List<ControlItem>
 			{
-				Name = Localization.Forward.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.Forward
-			});
-			list.Add(new ControlItem
+				new ControlItem
+				{
+					Name = Localization.Forward.ToUpper(),
+					Actions = InputController.Actions.Forward
+				},
+				new ControlItem
+				{
+					Name = Localization.Backward.ToUpper(),
+					Actions = InputController.Actions.Forward,
+					IsPositive = false
+				},
+				new ControlItem
+				{
+					Name = Localization.Right.ToUpper(),
+					Actions = InputController.Actions.Right
+				},
+				new ControlItem
+				{
+					Name = Localization.Left.ToUpper(),
+					Actions = InputController.Actions.Right,
+					IsPositive = false
+				},
+				new ControlItem
+				{
+					Name = Localization.RotationClockwise.ToUpper(),
+					Actions = InputController.Actions.Lean
+				},
+				new ControlItem
+				{
+					Name = Localization.RotationAnticlockwise.ToUpper(),
+					Actions = InputController.Actions.Lean,
+					IsPositive = false
+				},
+				new ControlItem
+				{
+					Name = Localization.Jump.ToUpper() + " / <color='#A0D3F8'>" + Localization.Up.ToUpper() + "</color>",
+					Actions = InputController.Actions.Jump
+				},
+				new ControlItem
+				{
+					Name = Localization.Crouch.ToUpper() + " / <color='#A0D3F8'>" + Localization.Down.ToUpper() + "</color>",
+					Actions = InputController.Actions.Crouch
+				},
+				new ControlItem
+				{
+					Name = Localization.Sprint.ToUpper() + " / <color='#A0D3F8'>" + Localization.Grab.ToUpper() + "</color> / " + Localization.Stabilization.ToUpper(),
+					Actions = InputController.Actions.Sprint
+				},
+				new ControlItem
+				{
+					Name = Localization.FreeLook.ToUpper(),
+					Actions = InputController.Actions.FreeLook
+				}
+			};
+
+			ActionControls = new List<ControlItem>
 			{
-				Name = Localization.Backward.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.Forward,
-				IsPositive = false
-			});
-			list.Add(new ControlItem
+				new ControlItem
+				{
+					Name = Localization.PrimaryMouseButton.ToUpper(),
+					Actions = InputController.Actions.PrimaryMouse
+				},
+				new ControlItem
+				{
+					Name = Localization.SecondaryMouseButton.ToUpper(),
+					Actions = InputController.Actions.SecondaryMouse
+				},
+				new ControlItem
+				{
+					Name = Localization.ThirdMouseButton.ToUpper(),
+					Actions = InputController.Actions.ThirdMouse
+				},
+				new ControlItem
+				{
+					Name = Localization.Inventory.ToUpper() + " / <color='#A0D3F8'>" + Localization.ExitPanel.ToUpper() + "</color>",
+					Actions = InputController.Actions.Inventory
+				},
+				new ControlItem
+				{
+					Name = Localization.Journal.ToUpper(),
+					Actions = InputController.Actions.Journal
+				},
+				new ControlItem
+				{
+					Name = Localization.InteractTakeInHands.ToUpper(),
+					Actions = InputController.Actions.Interact
+				},
+				new ControlItem
+				{
+					Name = Localization.DropThrow.ToUpper(),
+					Actions = InputController.Actions.Drop
+				},
+				new ControlItem
+				{
+					Name = Localization.EquipItem.ToUpper() + " / <color='#A0D3F8'>" + Localization.Reload.ToUpper() + "</color> / " + Localization.ChangeDockingPort.ToUpper(),
+					Actions = InputController.Actions.Equip
+				},
+				new ControlItem
+				{
+					Name = Localization.ChangeStance.ToUpper(),
+					Actions = InputController.Actions.ChangeStance
+				},
+				new ControlItem
+				{
+					Name = Localization.ToggleLights.ToUpper(),
+					Actions = InputController.Actions.ToggleLights
+				},
+				new ControlItem
+				{
+					Name = Localization.WeaponModKey.ToUpper(),
+					Actions = InputController.Actions.WeaponMod
+				},
+				new ControlItem
+				{
+					Name = Localization.Melee.ToUpper(),
+					Actions = InputController.Actions.Melee
+				}
+			};
+
+			ShipControls = new List<ControlItem>
 			{
-				Name = Localization.Right.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.Right
-			});
-			list.Add(new ControlItem
+				new ControlItem
+				{
+					Name = Localization.EngineToggle.ToUpper(),
+					Actions = InputController.Actions.EngineToggle
+				},
+				new ControlItem
+				{
+					Name = Localization.EngineThrustUp.ToUpper(),
+					Actions = InputController.Actions.ThrustUp
+				},
+				new ControlItem
+				{
+					Name = Localization.EngineThrustDown.ToUpper(),
+					Actions = InputController.Actions.ThustDown
+				},
+				new ControlItem
+				{
+					Name = Localization.MatchVelocityControl.ToUpper(),
+					Actions = InputController.Actions.MachVelocity
+				}
+			};
+
+			SuitControls = new List<ControlItem>
 			{
-				Name = Localization.Left.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.Right,
-				IsPositive = false
-			});
-			list.Add(new ControlItem
+				new ControlItem
+				{
+					Name = Localization.ToggleVisor.ToUpper(),
+					Actions = InputController.Actions.ToggleVisor
+				},
+				new ControlItem
+				{
+					Name = Localization.ToggleJetpack.ToUpper(),
+					Actions = InputController.Actions.ToggleJetpack
+				},
+				new ControlItem
+				{
+					Name = Localization.HelmetRadar.ToUpper(),
+					Actions = InputController.Actions.HelmetRadar
+				},
+				new ControlItem
+				{
+					Name = Localization.TargetUp.ToUpper(),
+					Actions = InputController.Actions.TargetUp
+				},
+				new ControlItem
+				{
+					Name = Localization.TargetDown.ToUpper(),
+					Actions = InputController.Actions.TargetDown
+				},
+				new ControlItem
+				{
+					Name = Localization.FilterLeft.ToUpper(),
+					Actions = InputController.Actions.FilterLeft
+				},
+				new ControlItem
+				{
+					Name = Localization.FilterRight.ToUpper(),
+					Actions = InputController.Actions.FilterRight
+				}
+			};
+
+			CommunicationControls = new List<ControlItem>
 			{
-				Name = Localization.RotationClockwise.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.Lean
-			});
-			list.Add(new ControlItem
+				new ControlItem
+				{
+					Name = Localization.Chat.ToUpper(),
+					Actions = InputController.Actions.Chat
+				},
+				new ControlItem
+				{
+					Name = Localization.Talk.ToUpper(),
+					Actions = InputController.Actions.Talk
+				},
+				new ControlItem
+				{
+					Name = Localization.Radio.ToUpper(),
+					Actions = InputController.Actions.Radio
+				}
+			};
+
+			QuickActions = new List<ControlItem>
 			{
-				Name = Localization.RotationAnticlockwise.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.Lean,
-				IsPositive = false
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.Jump.ToUpper() + " / <color='#A0D3F8'>" + Localization.Up.ToUpper() + "</color>",
-				Axis = ZeroGravity.UI.InputController.AxisNames.Space
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.Crouch.ToUpper() + " / <color='#A0D3F8'>" + Localization.Down.ToUpper() + "</color>",
-				Axis = ZeroGravity.UI.InputController.AxisNames.LeftCtrl
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.Sprint.ToUpper() + " / <color='#A0D3F8'>" + Localization.Grab.ToUpper() + "</color> / " + Localization.Stabilization.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.LeftShift
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.FreeLook.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.LeftAlt
-			});
-			MovementControls = list;
-			list = new List<ControlItem>();
-			list.Add(new ControlItem
-			{
-				Name = Localization.PrimaryMouseButton.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.Mouse1
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.SecondaryMouseButton.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.Mouse2
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.ThirdMouseButton.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.Mouse3
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.Inventory.ToUpper() + " / <color='#A0D3F8'>" + Localization.ExitPanel.ToUpper() + "</color>",
-				Axis = ZeroGravity.UI.InputController.AxisNames.Tab
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.Journal.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.O
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.InteractTakeInHands.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.F
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.DropThrow.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.G
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.EquipItem.ToUpper() + " / <color='#A0D3F8'>" + Localization.Reload.ToUpper() + "</color> / " + Localization.ChangeDockingPort.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.R
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.ChangeStance.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.Z
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.ToggleLights.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.L
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.WeaponModKey.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.B
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.Melee.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.V
-			});
-			ActionControls = list;
-			list = new List<ControlItem>();
-			list.Add(new ControlItem
-			{
-				Name = Localization.EngineToggle.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.Enter
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.EngineThrustUp.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.NumPlus
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.EngineThrustDown.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.NumMinus
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.MatchVelocityControl.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.M
-			});
-			ShipControls = list;
-			list = new List<ControlItem>();
-			list.Add(new ControlItem
-			{
-				Name = Localization.ToggleVisor.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.H
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.ToggleJetpack.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.J
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.HelmetRadar.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.X
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.TargetUp.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.UpArrow
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.TargetDown.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.DownArrow
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.FilterLeft.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.LeftArrow
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.FilterRight.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.RightArrow
-			});
-			SuitControls = list;
-			list = new List<ControlItem>();
-			list.Add(new ControlItem
-			{
-				Name = Localization.Chat.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.Y
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.Talk.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.CapsLock
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.Radio.ToUpper(),
-				Axis = ZeroGravity.UI.InputController.AxisNames.Tilda
-			});
-			CommunicationControls = list;
-			list = new List<ControlItem>();
-			list.Add(new ControlItem
-			{
-				Name = Localization.Quick1,
-				Axis = ZeroGravity.UI.InputController.AxisNames.Alpha1
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.Quick2,
-				Axis = ZeroGravity.UI.InputController.AxisNames.Alpha2
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.Quick3,
-				Axis = ZeroGravity.UI.InputController.AxisNames.Alpha3
-			});
-			list.Add(new ControlItem
-			{
-				Name = Localization.Quick4,
-				Axis = ZeroGravity.UI.InputController.AxisNames.Alpha4
-			});
-			QuickActions = list;
+				new ControlItem
+				{
+					Name = Localization.Quick1,
+					Actions = InputController.Actions.Quick1
+				},
+				new ControlItem
+				{
+					Name = Localization.Quick2,
+					Actions = InputController.Actions.Quick2
+				},
+				new ControlItem
+				{
+					Name = Localization.Quick3,
+					Actions = InputController.Actions.Quick3
+				},
+				new ControlItem
+				{
+					Name = Localization.Quick4,
+					Actions = InputController.Actions.Quick4
+				}
+			};
 		}
 
 		private void Awake()

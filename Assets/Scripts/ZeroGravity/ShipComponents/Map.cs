@@ -5,6 +5,7 @@ using System.Linq;
 using OpenHellion.Networking;
 using TriInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;
 using ZeroGravity.Math;
@@ -186,8 +187,8 @@ namespace ZeroGravity.ShipComponents
 			{
 				Focus = FocusObject.TruePosition;
 			}
-			RaycastHit raycastHit = default(RaycastHit);
-			ray = MapCamera.ScreenPointToRay(Input.mousePosition);
+			RaycastHit raycastHit = default;
+			ray = MapCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 			LayerMask layerMask = 8192;
 			Debug.DrawRay(ray.origin, ray.direction * 100f, Color.magenta);
 			if (!Focusing && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
@@ -215,7 +216,7 @@ namespace ZeroGravity.ShipComponents
 						IndicatorObject = raycastHit.collider;
 						OnHover(IndicatorObject);
 					}
-					if (InputController.GetButtonDown(InputController.AxisNames.Mouse1) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+					if (InputController.GetButtonDown(InputController.Actions.PrimaryMouse) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 					{
 						OnClick(IndicatorObject);
 						Dragging = true;
@@ -227,11 +228,11 @@ namespace ZeroGravity.ShipComponents
 						}
 						doubleClickTimer -= Time.deltaTime;
 					}
-					if (InputController.GetButtonDown(InputController.AxisNames.Mouse2) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+					if (InputController.GetButtonDown(InputController.Actions.SecondaryMouse) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 					{
 						OnRightClick(IndicatorObject);
 					}
-					if (InputController.GetButtonUp(InputController.AxisNames.Mouse1))
+					if (InputController.GetButtonUp(InputController.Actions.PrimaryMouse))
 					{
 						OnRelease(IndicatorObject);
 						Dragging = false;
@@ -244,11 +245,11 @@ namespace ZeroGravity.ShipComponents
 						OnUnhover(IndicatorObject);
 						IndicatorObject = null;
 					}
-					if (InputController.GetButtonDown(InputController.AxisNames.Mouse1) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+					if (InputController.GetButtonDown(InputController.Actions.PrimaryMouse) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 					{
 						OnClick(null);
 					}
-					if (InputController.GetButtonUp(InputController.AxisNames.Mouse1))
+					if (InputController.GetButtonUp(InputController.Actions.PrimaryMouse))
 					{
 						if (IndicatorObject != null)
 						{
@@ -267,9 +268,9 @@ namespace ZeroGravity.ShipComponents
 					DraggingManeuver.Dragging(ray);
 				}
 			}
-			if (InputController.GetAxis(InputController.AxisNames.MouseWheel).IsNotEpsilonZero() && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+			if (Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero() && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 			{
-				float axis = InputController.GetAxis(InputController.AxisNames.MouseWheel);
+				float axis = Mouse.current.scroll.y.ReadValue();
 				if (axis > 0f)
 				{
 					zoom *= 1f + zoomStep;
@@ -280,27 +281,27 @@ namespace ZeroGravity.ShipComponents
 				}
 				zoom = MathHelper.Clamp(zoom, MinZoom, Mathf.Clamp(planetMaxZoom, 0f, MaxZoom));
 			}
-			if (InputController.GetButton(InputController.AxisNames.Mouse2) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+			if (InputController.GetButton(InputController.Actions.SecondaryMouse) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 			{
-				float axis2 = InputController.GetAxis(InputController.AxisNames.LookHorizontal);
-				float axis3 = InputController.GetAxis(InputController.AxisNames.LookVertical);
-				if (axis2.IsNotEpsilonZero() || axis3.IsNotEpsilonZero())
+				float horizontalMouse = Mouse.current.delta.x.ReadValue();
+				float verticalMouse = Mouse.current.delta.y.ReadValue();
+				if (horizontalMouse.IsNotEpsilonZero() || verticalMouse.IsNotEpsilonZero())
 				{
 					if (InputController.GetKey(KeyCode.LeftControl))
 					{
 						MapObjectShip mapObjectShip = SelectedObject as MapObjectShip;
 						if (mapObjectShip?.ScanningCone?.activeInHierarchy == true)
 						{
-							float scanningConePitch = (Client.Instance.Map.Panel.PitchAngle - axis3 + 360f) % 360f;
-							float scanningConeYaw = (Client.Instance.Map.Panel.YawAngle + axis2 + 360f) % 360f;
+							float scanningConePitch = (Client.Instance.Map.Panel.PitchAngle - verticalMouse + 360f) % 360f;
+							float scanningConeYaw = (Client.Instance.Map.Panel.YawAngle + horizontalMouse + 360f) % 360f;
 							mapObjectShip.Map.Panel.SetScanningConePitch(scanningConePitch);
 							mapObjectShip.Map.Panel.SetScanningConeYaw(scanningConeYaw);
 						}
 					}
 					else
 					{
-						pitch += axis3 * RotationStrenght;
-						yaw += axis2 * RotationStrenght;
+						pitch += verticalMouse * RotationStrenght;
+						yaw += horizontalMouse * RotationStrenght;
 						pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
 					}
 				}

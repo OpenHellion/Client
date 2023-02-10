@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Luminosity.IO;
 using OpenHellion.Util;
 
 namespace ZeroGravity.UI

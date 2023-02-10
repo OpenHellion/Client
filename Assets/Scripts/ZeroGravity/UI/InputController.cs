@@ -1,102 +1,86 @@
-using Luminosity.IO;
 using UnityEngine;
 
 namespace ZeroGravity.UI
 {
 	public class InputController
 	{
-		public enum AxisNames
+		/// <summary>
+		/// 	Keys that can be customised.
+		/// </summary>
+		public enum Actions
 		{
-			Right = 0,
-			Forward = 1,
-			LookHorizontal = 2,
-			LookVertical = 3,
-			Mouse1 = 4,
-			Mouse2 = 5,
-			Mouse3 = 6,
-			MouseWheel = 7,
-			Space = 8,
-			Submit = 9,
-			Cancel = 10,
-			LeftCtrl = 11,
-			LeftShift = 12,
-			LeftAlt = 13,
-			MenuHorizontal = 14,
-			MenuVertical = 15,
-			Escape = 16,
-			F = 17,
-			Lean = 18,
-			Tab = 19,
-			G = 20,
-			R = 21,
-			Z = 22,
-			Enter = 23,
-			NumPlus = 24,
-			NumMinus = 25,
-			Y = 27,
-			T = 28,
-			CapsLock = 29,
-			Tilda = 30,
-			UpArrow = 31,
-			DownArrow = 32,
-			LeftArrow = 33,
-			RightArrow = 34,
-			X = 35,
-			H = 36,
-			V = 37,
-			J = 38,
-			M = 39,
-			L = 40,
-			Alpha1 = 41,
-			Alpha2 = 42,
-			Alpha3 = 43,
-			Alpha4 = 44,
-			Alpha5 = 45,
-			Alpha6 = 46,
-			Alpha7 = 47,
-			Alpha8 = 48,
-			Alpha9 = 49,
-			Alpha0 = 50,
-			B = 51,
-			O = 52
+			Right,
+			Forward,
+			PrimaryMouse,
+			SecondaryMouse,
+			ThirdMouse,
+			Jump,
+			Crouch,
+			Sprint,
+			FreeLook,
+			Interact,
+			Lean,
+			Inventory,
+			Journal,
+			Drop,
+			Equip,
+			ChangeStance,
+			EngineToggle,
+			ThrustUp,
+			ThustDown,
+			Chat,
+			Talk,
+			Radio,
+			TargetUp,
+			TargetDown,
+			FilterLeft,
+			FilterRight,
+			HelmetRadar,
+			ToggleVisor,
+			Melee,
+			ToggleJetpack,
+			MachVelocity,
+			ToggleLights,
+			WeaponMod,
+			Quick1,
+			Quick2,
+			Quick3,
+			Quick4
 		}
 
-		private static float _mouseSensitivity;
+		// TODO: Implement mouse sensitivity.
 		public static float MouseSensitivity
 		{
 			get
 			{
-				return _mouseSensitivity;
+				return 1;
 			}
 			set
 			{
-				_mouseSensitivity = value;
-				InputManager.GetAction("KeyboardAndMouse", "LookVertical").GetBinding(0).Sensitivity = _mouseSensitivity / 10f;
-				InputManager.GetAction("KeyboardAndMouse", "LookHorizontal").GetBinding(0).Sensitivity = _mouseSensitivity / 10f;
 			}
 		}
 
-		public static bool GetButton(AxisNames key)
+		public static bool GetButton(Actions key)
 		{
 			return InputManager.GetButton(key.ToString());
 		}
 
-		public static bool GetButtonDown(AxisNames key)
+		public static bool GetButtonDown(Actions key)
 		{
 			return InputManager.GetButtonDown(key.ToString());
 		}
 
-		public static bool GetButtonUp(AxisNames key)
+		public static bool GetButtonUp(Actions key)
 		{
 			return InputManager.GetButtonUp(key.ToString());
 		}
 
-		public static float GetAxis(AxisNames name)
+		public static float GetAxis(Actions name)
 		{
 			return InputManager.GetAxis(name.ToString());
 		}
 
-		public static float GetAxisRaw(AxisNames name)
+		public static float GetAxisRaw(Actions name)
 		{
 			return InputManager.GetAxisRaw(name.ToString());
 		}
@@ -116,26 +100,6 @@ namespace ZeroGravity.UI
 			return InputManager.GetKeyUp(key);
 		}
 
-		public static AccelerationEvent GetAccelerationEvent(int index)
-		{
-			return InputManager.GetAccelerationEvent(index);
-		}
-
-		public static bool GetMouseButton(int index)
-		{
-			return InputManager.GetMouseButton(index);
-		}
-
-		public static bool GetMouseButtonDown(int index)
-		{
-			return InputManager.GetMouseButtonDown(index);
-		}
-
-		public static bool GetMouseButtonUp(int index)
-		{
-			return InputManager.GetMouseButtonUp(index);
-		}
-
 		public static void LoadJSON()
 		{
 			InputManager.Load(new InputLoaderJSON());
@@ -146,17 +110,12 @@ namespace ZeroGravity.UI
 			InputManager.Load(new InputDefaultLoaderJSON());
 		}
 
-		public static void SaveDefaultJSON()
-		{
-			InputManager.Save(new InputDefaultSaverJSON());
-		}
-
 		public static void ResetInputAxis()
 		{
 			InputManager.ResetInputAxes();
 		}
 
-		public static string GetAxisKeyName(AxisNames key, bool getPositive = true, bool getNegative = true, bool getAlt = false)
+		public static string GetAxisKeyName(Actions key, bool getPositive = true, bool getNegative = true, bool getAlt = false)
 		{
 			InputAction actions = InputManager.GetAction("KeyboardAndMouse", key.ToString());
 			if (!getAlt)
