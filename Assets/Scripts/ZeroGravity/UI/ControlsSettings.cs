@@ -67,7 +67,7 @@ namespace ZeroGravity.UI
 			flag = false;
 			InvertMouseWhileDrivingToggle.isOn = flag;
 			controlsData2.InverMouseWhileDriving = flag;
-			InputController.LoadDefaultJSON();
+			InputController.LoadDefaultConfig();
 		}
 
 		public void SaveControlsSettings()
@@ -75,9 +75,9 @@ namespace ZeroGravity.UI
 			ControlsData.MouseSensitivity = InputController.MouseSensitivity;
 			ControlsData.InvertMouse = Client.Instance.InvertedMouse;
 			ControlsData.InverMouseWhileDriving = Client.Instance.InvertMouseWhileDriving;
-			if (!ControlsRebind.CheckIfEmpty() && InputManager.Instance != null)
+			if (!ControlsRebind.CheckIfEmpty())
 			{
-				ControlsData.ControlSchemes = InputManager.Instance.ControlSchemes;
+				ControlsData.ActionMap = InputController.Instance.InputActions.FindActionMap(InputController.ActionMapName);
 			}
 		}
 
@@ -95,8 +95,7 @@ namespace ZeroGravity.UI
 			InputController.MouseSensitivity = ControlsData.MouseSensitivity;
 			Client.Instance.InvertedMouse = ControlsData.InvertMouse;
 			Client.Instance.InvertMouseWhileDriving = ControlsData.InverMouseWhileDriving;
-			//Client.Instance.InputManager.SetSaveData(ControlsData.InputConfigurations);
-			InputController.LoadJSON();
+			InputController.LoadSavedConfig(ControlsData.ActionMap);
 		}
 	}
 }

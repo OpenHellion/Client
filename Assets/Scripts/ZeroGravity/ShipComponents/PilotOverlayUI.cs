@@ -185,7 +185,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				CalculateScaleAndRotation();
 			}
-			if (HoveredTarget != null && InputController.GetKey(KeyCode.Mouse0))
+			if (HoveredTarget != null && Mouse.current.leftButton.wasPressedThisFrame)
 			{
 				SelectedTarget = HoveredTarget;
 			}

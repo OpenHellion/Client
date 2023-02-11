@@ -145,7 +145,7 @@ public class HelmetRadar : MonoBehaviour
 			}
 			if (!Client.Instance.CanvasManager.ConsoleIsUp)
 			{
-				if (hoveredTarget != null && InputController.GetKey(KeyCode.Mouse0))
+				if (hoveredTarget != null && Mouse.current.leftButton.isPressed)
 				{
 					currentTarget = hoveredTarget;
 					currentTarget.IsSelected = true;

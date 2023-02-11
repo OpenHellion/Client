@@ -1312,7 +1312,7 @@ namespace ZeroGravity.Objects
 							LookingAtTrigger = null;
 						}
 					}
-					if (LookingAtTrigger != null && LockedToTrigger == null && LookingAtTrigger.Glossary != null && InputController.GetKey(KeyCode.F1))
+					if (LookingAtTrigger != null && LockedToTrigger == null && LookingAtTrigger.Glossary != null && Keyboard.current.f1Key.isPressed)
 					{
 						AbstractGlossaryElement glossary = LookingAtTrigger.Glossary;
 						Client.Instance.CanvasManager.PlayerOverview.Toggle(val: true, 0, gloss: true);
@@ -1460,7 +1460,7 @@ namespace ZeroGravity.Objects
 			}
 
 			// Open the in game meny when pressing escape.
-			if (InputController.GetKeyDown(KeyCode.Escape) && LockedToTrigger == null && !Client.Instance.CanvasManager.IsGameMenuOpen && !Client.Instance.CanvasManager.ScreenShootMod.activeInHierarchy)
+			if (Keyboard.current.escapeKey.wasPressedThisFrame && LockedToTrigger == null && !Client.Instance.CanvasManager.IsGameMenuOpen && !Client.Instance.CanvasManager.ScreenShootMod.activeInHierarchy)
 			{
 				if (Client.Instance.CanvasManager.IsPlayerOverviewOpen)
 				{
@@ -1471,7 +1471,7 @@ namespace ZeroGravity.Objects
 					Client.Instance.CanvasManager.OpenInGameMenu();
 				}
 			}
-			if (InputController.GetButtonDown(InputController.Actions.ThirdMouse) && !FpsController.IsZeroG)
+			if (Mouse.current.middleButton.wasPressedThisFrame && !FpsController.IsZeroG)
 			{
 				Vector3 position = base.transform.position + base.Gravity.normalized + base.transform.forward * 0.7f;
 				Collider[] array = Physics.OverlapSphere(position, 0.7f);
@@ -1492,7 +1492,7 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
-			if ((InputController.GetKeyDown(KeyCode.Tab) || InputController.GetKeyDown(KeyCode.Escape)) && (LockedToTrigger != null || CancelInteractExecuter != null))
+			if ((Keyboard.current.tabKey.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame) && (LockedToTrigger != null || CancelInteractExecuter != null))
 			{
 				CancelInteract();
 			}
@@ -1558,7 +1558,7 @@ namespace ZeroGravity.Objects
 					LockedToTrigger = LookingAtTrigger;
 					LadderTrigger.LadderAttach(this);
 				}
-				if ((InputController.GetButtonDown(InputController.Actions.Jump) || InputController.GetKeyDown(KeyCode.Tab)) && FpsController.IsOnLadder)
+				if ((InputController.GetButtonDown(InputController.Actions.Jump) || Keyboard.current.tabKey.wasPressedThisFrame) && FpsController.IsOnLadder)
 				{
 					LadderTrigger.LadderDetach(Instance);
 				}
@@ -1667,7 +1667,7 @@ namespace ZeroGravity.Objects
 					LookingAtItem = null;
 				}
 			}
-			if (InputController.GetButton(InputController.Actions.PrimaryMouse) && Client.IsGameBuild && animHelper.CanSwitchState)
+			if (Mouse.current.leftButton.isPressed && Client.IsGameBuild && animHelper.CanSwitchState)
 			{
 				Item itemInHands4 = Inventory.ItemInHands;
 				if (LockedToTrigger == null)
@@ -1700,7 +1700,7 @@ namespace ZeroGravity.Objects
 					(LockedToTrigger as SceneTriggerTurret).GetComponent<Turret>().Shoot();
 				}
 			}
-			if (InputController.GetButtonUp(InputController.Actions.PrimaryMouse) && Client.IsGameBuild)
+			if (Mouse.current.leftButton.wasReleasedThisFrame && Client.IsGameBuild)
 			{
 				Item itemInHands5 = Inventory.ItemInHands;
 				if (itemInHands5 != null)
@@ -1757,27 +1757,27 @@ namespace ZeroGravity.Objects
 				{
 					ChangeCamerasFov(CurrentPanelFov);
 				}
-				else if (InputController.GetButtonDown(InputController.Actions.SecondaryMouse) && InputController.GetButton(InputController.Actions.FreeLook))
+				else if (Mouse.current.rightButton.wasPressedThisFrame && InputController.GetButton(InputController.Actions.FreeLook))
 				{
 					ChangeCamerasFov(cameraFovZoomMinValue);
 				}
-				else if (InputController.GetButtonUp(InputController.Actions.SecondaryMouse) && InputController.GetButton(InputController.Actions.FreeLook))
+				else if (Mouse.current.rightButton.wasReleasedThisFrame && InputController.GetButton(InputController.Actions.FreeLook))
 				{
 					ChangeCamerasFov(Client.DefaultCameraFov);
 				}
 			}
-			else if (InputController.GetButtonDown(InputController.Actions.SecondaryMouse) && Client.IsGameBuild && CurrentStance != PlayerStance.Special)
+			else if (Mouse.current.rightButton.wasPressedThisFrame && Client.IsGameBuild && CurrentStance != PlayerStance.Special)
 			{
 				cameraFovZoomCounter = Time.time;
 			}
-			else if (InputController.GetButton(InputController.Actions.SecondaryMouse) && Client.IsGameBuild && CurrentStance != PlayerStance.Special)
+			else if (Mouse.current.rightButton.isPressed && Client.IsGameBuild && CurrentStance != PlayerStance.Special)
 			{
 				if (Time.time - cameraFovZoomCounter > cameraFovZoomTreshold)
 				{
 					ChangeCamerasFov(cameraFovZoomMinValue);
 				}
 			}
-			else if (InputController.GetButtonUp(InputController.Actions.SecondaryMouse) && Client.IsGameBuild && !cameraFovLerpValue.IsNotEpsilonZero())
+			else if (Mouse.current.rightButton.wasReleasedThisFrame && Client.IsGameBuild && !cameraFovLerpValue.IsNotEpsilonZero())
 			{
 				Item itemInHands8 = Inventory.ItemInHands;
 				if (itemInHands8 != null)
@@ -1785,7 +1785,7 @@ namespace ZeroGravity.Objects
 					itemInHands8.SecondaryFunction();
 				}
 			}
-			else if (InputController.GetButtonUp(InputController.Actions.SecondaryMouse) && cameraFovLerpValue.IsNotEpsilonZero() && currentStance != PlayerStance.Special)
+			else if (Mouse.current.rightButton.wasReleasedThisFrame && cameraFovLerpValue.IsNotEpsilonZero() && currentStance != PlayerStance.Special)
 			{
 				ChangeCamerasFov(Client.DefaultCameraFov);
 			}
@@ -1840,7 +1840,7 @@ namespace ZeroGravity.Objects
 			}
 			if (LockedToTrigger.TriggerType == SceneTriggerType.Turret)
 			{
-				(LockedToTrigger as SceneTriggerTurret).GetComponent<Turret>().SetNewRotation(num, num2, InputController.GetButton(InputController.Actions.SecondaryMouse));
+				(LockedToTrigger as SceneTriggerTurret).GetComponent<Turret>().SetNewRotation(num, num2, Mouse.current.rightButton.isPressed);
 				return;
 			}
 			bool flag = false;
@@ -1848,7 +1848,7 @@ namespace ZeroGravity.Objects
 			{
 				bool flag2 = false;
 				bool button = InputController.GetButton(InputController.Actions.ThrustUp);
-				bool button2 = InputController.GetButton(InputController.Actions.ThustDown);
+				bool button2 = InputController.GetButton(InputController.Actions.ThrustDown);
 				if (button || button2 || axisRaw.IsNotEpsilonZero())
 				{
 					float num3;
@@ -1962,18 +1962,18 @@ namespace ZeroGravity.Objects
 			{
 				Client.Instance.InGamePanels.Pilot.StartTargetStabilization();
 			}
-			if (InputController.GetKeyDown(KeyCode.KeypadMinus) || InputController.GetKeyDown(KeyCode.KeypadPlus))
+			if (InputController.GetButtonDown(InputController.Actions.ThrustDown) || InputController.GetButtonDown(InputController.Actions.ThrustUp))
 			{
 				changeEngineThrust = true;
 			}
-			else if (InputController.GetKeyUp(KeyCode.KeypadMinus) && InputController.GetKeyUp(KeyCode.KeypadPlus))
+			else if (InputController.GetButtonUp(InputController.Actions.ThrustDown) && InputController.GetButtonUp(InputController.Actions.ThrustUp))
 			{
 				changeEngineThrust = false;
 				changeEngineThrustTime = 0f;
 			}
 			if (changeEngineThrust)
 			{
-				if (InputController.GetKey(KeyCode.KeypadMinus))
+				if (InputController.GetButton(InputController.Actions.ThrustDown))
 				{
 					changeEngineThrustTime += Time.deltaTime * 5f;
 					if (changeEngineThrustTime > 0.1f)
@@ -1990,7 +1990,7 @@ namespace ZeroGravity.Objects
 						ship.ChangeStats(null, null, null, engineThrustPercentage);
 					}
 				}
-				else if (InputController.GetKey(KeyCode.KeypadPlus))
+				else if (InputController.GetButton(InputController.Actions.ThrustUp))
 				{
 					changeEngineThrustTime += Time.deltaTime * 5f;
 					if (changeEngineThrustTime > 0.1f)

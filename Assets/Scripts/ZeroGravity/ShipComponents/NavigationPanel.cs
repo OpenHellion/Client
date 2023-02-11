@@ -1126,7 +1126,7 @@ namespace ZeroGravity.ShipComponents
 		public void ShowHoverInfo(List<MapObject> mapObjects)
 		{
 			HoverObjectUi.SetActive(value: true);
-			if (InputController.GetKey(KeyCode.LeftControl) && Map.SelectedObject != null)
+			if (Keyboard.current.leftCtrlKey.isPressed && Map.SelectedObject != null)
 			{
 				HoverObjectName.text = Map.SelectedObject.Name.ToUpper() + " - " + mapObjects[0].Name.ToUpper() + "\n" + Localization.Distance + ": " + FormatHelper.DistanceFormat((Map.SelectedObject.TruePosition - mapObjects[0].TruePosition).Magnitude);
 				HoverObjectUiAnimator.SetBool("cluster", value: false);

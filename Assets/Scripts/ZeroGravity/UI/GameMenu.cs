@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using OpenHellion.Util;
 using TriInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using ZeroGravity.Objects;
 
@@ -95,7 +96,7 @@ namespace ZeroGravity.UI
 					ServerRestart.SetActive(false);
 				}
 			}
-			if (InputController.GetKeyDown(KeyCode.Escape) && !DisableGameMenu)
+			if (Keyboard.current.escapeKey.wasPressedThisFrame && !DisableGameMenu)
 			{
 				if (Client.Instance.CanvasManager.ReportServerBox.gameObject.activeInHierarchy)
 				{
@@ -298,7 +299,7 @@ namespace ZeroGravity.UI
 
 		public void ControlsResetToDefaultYes()
 		{
-			InputController.LoadDefaultJSON();
+			InputController.LoadDefaultConfig();
 			Settings.Instance.SaveSettings(Settings.SettingsType.Controls);
 		}
 

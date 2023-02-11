@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace ZeroGravity.UI
@@ -148,21 +149,6 @@ namespace ZeroGravity.UI
 			{
 				new ControlItem
 				{
-					Name = Localization.PrimaryMouseButton.ToUpper(),
-					Actions = InputController.Actions.PrimaryMouse
-				},
-				new ControlItem
-				{
-					Name = Localization.SecondaryMouseButton.ToUpper(),
-					Actions = InputController.Actions.SecondaryMouse
-				},
-				new ControlItem
-				{
-					Name = Localization.ThirdMouseButton.ToUpper(),
-					Actions = InputController.Actions.ThirdMouse
-				},
-				new ControlItem
-				{
 					Name = Localization.Inventory.ToUpper() + " / <color='#A0D3F8'>" + Localization.ExitPanel.ToUpper() + "</color>",
 					Actions = InputController.Actions.Inventory
 				},
@@ -223,7 +209,7 @@ namespace ZeroGravity.UI
 				new ControlItem
 				{
 					Name = Localization.EngineThrustDown.ToUpper(),
-					Actions = InputController.Actions.ThustDown
+					Actions = InputController.Actions.ThrustDown
 				},
 				new ControlItem
 				{
@@ -380,38 +366,41 @@ namespace ZeroGravity.UI
 
 		public void InstantiateControlPref(ControlItem controlName, Transform holder)
 		{
-			GameObject gameObject = Object.Instantiate(ControlPref, holder);
-			AllElements.Add(gameObject);
-			gameObject.transform.Find("ControlNameText").GetComponent<Text>().text = controlName.Name;
-			gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
-			RebindInput component = gameObject.transform.Find("Button").GetComponent<RebindInput>();
-			GameObject gameObject2 = gameObject.transform.Find("Button").gameObject;
-			Button component2 = gameObject.transform.Find("Button").GetComponent<Button>();
-			component2.interactable = controlName.CanBeChanged;
-			component.SetRebinder(InputConfName, controlName, gameObject2.transform.Find("Text").GetComponent<Text>(), base.gameObject, isAlt: false);
-			component2.onClick.AddListener(component.OnButtonPressed);
+			GameObject controlPref = Instantiate(ControlPref, holder);
+			AllElements.Add(controlPref);
+			controlPref.transform.Find("ControlNameText").GetComponent<Text>().text = controlName.Name;
+			controlPref.transform.localScale = new Vector3(1f, 1f, 1f);
+
+			RebindInput rebinder = controlPref.transform.Find("Button").GetComponent<RebindInput>();
+			Button button = controlPref.transform.Find("Button").GetComponent<Button>();
+			rebinder.SetRebinder(InputConfName, controlName, rebinder.transform.Find("Text").GetComponent<Text>(), gameObject, isAlt: false);
+			button.interactable = controlName.CanBeChanged;
+			button.onClick.AddListener(rebinder.OnButtonPressed);
+
 			buttonList.Add(new ButtonListItem
 			{
-				Button = component2,
-				ButtonObject = gameObject2,
-				ButtonText = gameObject2.transform.Find("Text").GetComponent<Text>(),
+				Button = button,
+				ButtonObject = rebinder.gameObject,
+				ButtonText = rebinder.transform.Find("Text").GetComponent<Text>(),
 				IsAlt = false,
-				ControlItem = component.ControlItem
+				ControlItem = rebinder.ControlItem
 			});
-			gameObject.transform.name = controlName.Name;
-			component = gameObject.transform.Find("AltButton").GetComponent<RebindInput>();
-			gameObject2 = gameObject.transform.Find("AltButton").gameObject;
-			component2 = gameObject.transform.Find("AltButton").GetComponent<Button>();
-			component2.interactable = controlName.CanBeChanged;
-			component.SetRebinder(InputConfName, controlName, gameObject2.transform.Find("Text").GetComponent<Text>(), base.gameObject, isAlt: true);
-			component2.onClick.AddListener(component.OnButtonPressed);
+
+			controlPref.transform.name = controlName.Name;
+
+			RebindInput altRebind = controlPref.transform.Find("AltButton").GetComponent<RebindInput>();
+			Button altButton = controlPref.transform.Find("AltButton").GetComponent<Button>();
+			altRebind.SetRebinder(InputConfName, controlName, altRebind.transform.Find("Text").GetComponent<Text>(), gameObject, isAlt: true);
+			altButton.interactable = controlName.CanBeChanged;
+			altButton.onClick.AddListener(altRebind.OnButtonPressed);
+
 			buttonList.Add(new ButtonListItem
 			{
-				Button = component2,
-				ButtonObject = gameObject2,
-				ButtonText = gameObject2.transform.Find("Text").GetComponent<Text>(),
+				Button = altButton,
+				ButtonObject = altRebind.gameObject,
+				ButtonText = altRebind.transform.Find("Text").GetComponent<Text>(),
 				IsAlt = true,
-				ControlItem = component.ControlItem
+				ControlItem = altRebind.ControlItem
 			});
 		}
 
@@ -426,7 +415,7 @@ namespace ZeroGravity.UI
 			isAltRev = isAltR;
 		}
 
-		public void DuplicatedControlsYes()
+		public void DuplicateControlsYes()
 		{
 			GameMenu.DisableGameMenu = false;
 		}
@@ -539,7 +528,7 @@ namespace ZeroGravity.UI
 				if (buttonListItem.ControlItem.Name != controlItemVal.Name)
 				{
 					GameMenu.DisableGameMenu = true;
-					Client.Instance.ShowConfirmMessageBox(Localization.DuplicatedControl, string.Format(Localization.DuplicateControlMessage, buttonListItem.ControlItem.Name), Localization.Yes, Localization.No, DuplicatedControlsYes, DuplicateControlsNo);
+					Client.Instance.ShowConfirmMessageBox(Localization.DuplicatedControl, string.Format(Localization.DuplicateControlMessage, buttonListItem.ControlItem.Name), Localization.Yes, Localization.No, DuplicateControlsYes, DuplicateControlsNo);
 					return;
 				}
 			}

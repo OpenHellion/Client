@@ -47,8 +47,8 @@ public class ManipulatorNew : MonoBehaviour
 
 	private void Update()
 	{
-		RaycastHit hitInfo = default(RaycastHit);
-		if (Physics.Raycast(MainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()), out hitInfo, float.PositiveInfinity) && InputController.GetButtonDown(InputController.Actions.PrimaryMouse))
+		RaycastHit hitInfo = default;
+		if (Physics.Raycast(MainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()), out hitInfo, float.PositiveInfinity) && Mouse.current.leftButton.wasPressedThisFrame)
 		{
 			float z = hitInfo.distance + MainCamera.nearClipPlane;
 			Vector3 position = new Vector3(Mouse.current.position.x.ReadValue(), Mouse.current.position.y.ReadValue(), z);
@@ -72,7 +72,7 @@ public class ManipulatorNew : MonoBehaviour
 				num = MathHelper.AngleSigned(Vector3.forward, vec, Vector3.up);
 				SelectedGO = Z;
 			}
-			if (InputController.GetButtonDown(InputController.Actions.PrimaryMouse))
+			if (Mouse.current.leftButton.isPressed)
 			{
 				TheOne.transform.position = position2;
 				if (SelectedGO == X)
@@ -98,19 +98,19 @@ public class ManipulatorNew : MonoBehaviour
 				endMove = Mouse.current.position.ReadValue();
 				startRot = base.transform.localRotation;
 			}
-			if (InputController.GetButton(InputController.Actions.PrimaryMouse))
+			if (Mouse.current.leftButton.isPressed)
 			{
 			}
 			angleOld = num;
 		}
-		if (InputController.GetButtonUp(InputController.Actions.PrimaryMouse))
+		if (Mouse.current.leftButton.wasReleasedThisFrame)
 		{
 			X.SetActive(true);
 			Y.SetActive(true);
 			Z.SetActive(true);
 			isMoving = false;
 		}
-		if (isMoving && InputController.GetButton(InputController.Actions.PrimaryMouse))
+		if (isMoving && Mouse.current.leftButton.isPressed)
 		{
 			Vector3 vector2 = MainCamera.WorldToScreenPoint(TheOne.transform.position) - MainCamera.WorldToScreenPoint(base.transform.position);
 			Vector3 vector3 = (Vector3)Mouse.current.position.ReadValue() - MainCamera.WorldToScreenPoint(base.transform.position);

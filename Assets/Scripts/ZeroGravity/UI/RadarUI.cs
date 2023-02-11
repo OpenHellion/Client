@@ -112,7 +112,7 @@ namespace ZeroGravity.UI
 				UpdateOverlayTargets();
 				CalculateScaleAndRotation();
 			}
-			if (HoveredTarget != null && InputController.GetKey(KeyCode.Mouse0))
+			if (HoveredTarget != null && Mouse.current.leftButton.wasPressedThisFrame)
 			{
 				int index = AllTargets.IndexOf(HoveredTarget);
 				SetTarget(AllTargets[index]);

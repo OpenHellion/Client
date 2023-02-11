@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using ZeroGravity.UI;
@@ -23,7 +24,7 @@ public class News : MonoBehaviour
 
 	private void Update()
 	{
-		if (base.gameObject.activeInHierarchy && InputController.GetKeyDown(KeyCode.Escape))
+		if (base.gameObject.activeInHierarchy && Keyboard.current.escapeKey.wasPressedThisFrame)
 		{
 			ToggleNews(false);
 		}

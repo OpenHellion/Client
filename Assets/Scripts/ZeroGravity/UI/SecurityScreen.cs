@@ -4,6 +4,7 @@ using System.Linq;
 using OpenHellion.Networking;
 using OpenHellion.Util;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -133,11 +134,11 @@ namespace ZeroGravity.UI
 		{
 			if (EnterCustomNamePopUp.activeInHierarchy)
 			{
-				if (InputController.GetKeyDown(KeyCode.Tab) || InputController.GetKeyDown(KeyCode.Escape))
+				if (Keyboard.current.tabKey.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
 				{
 					CancelChangeShipName();
 				}
-				if (InputController.GetKeyDown(KeyCode.KeypadEnter) || InputController.GetKeyDown(KeyCode.Return))
+				if (Keyboard.current.enterKey.wasPressedThisFrame)
 				{
 					ChangeCustomShipName();
 				}

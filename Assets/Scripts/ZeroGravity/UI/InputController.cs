@@ -1,4 +1,8 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace ZeroGravity.UI
 {
@@ -11,9 +15,6 @@ namespace ZeroGravity.UI
 		{
 			Right,
 			Forward,
-			PrimaryMouse,
-			SecondaryMouse,
-			ThirdMouse,
 			Jump,
 			Crouch,
 			Sprint,
@@ -27,7 +28,7 @@ namespace ZeroGravity.UI
 			ChangeStance,
 			EngineToggle,
 			ThrustUp,
-			ThustDown,
+			ThrustDown,
 			Chat,
 			Talk,
 			Radio,
@@ -60,106 +61,159 @@ namespace ZeroGravity.UI
 			}
 		}
 
+		public InputActionAsset InputActions = Resources.Load<InputActionAsset>("InputConfig");
+
+		public const string ActionMapName = "Main";
+
+		private static InputController _instance;
+		public static InputController Instance
+		{
+			get
+			{
+				if (_instance == null)
+				{
+					_instance = new InputController();
+					_instance.InputActions.Enable();
+				}
+
+				return _instance;
+			}
+		}
+
 		public static bool GetButton(Actions key)
 		{
-			return InputManager.GetButton(key.ToString());
+			return Instance.InputActions.FindAction(key.ToString(), true).IsPressed();
 		}
 
 		public static bool GetButtonDown(Actions key)
 		{
-			return InputManager.GetButtonDown(key.ToString());
+			return Instance.InputActions.FindAction(key.ToString(), true).WasPressedThisFrame();
 		}
 
 		public static bool GetButtonUp(Actions key)
 		{
-			return InputManager.GetButtonUp(key.ToString());
+			return Instance.InputActions.FindAction(key.ToString(), true).WasReleasedThisFrame();
 		}
 
 		public static float GetAxis(Actions name)
 		{
-			return InputManager.GetAxis(name.ToString());
+			return Instance.InputActions.FindAction(name.ToString(), true).ReadValue<float>();
 		}
 
 		public static float GetAxisRaw(Actions name)
 		{
-			return InputManager.GetAxisRaw(name.ToString());
+			return Instance.InputActions.FindAction(name.ToString(), true).ReadValue<float>();
 		}
 
-		public static bool GetKey(KeyCode key)
+		/// <summary>
+		/// 	Load the currently modified config and overwrite the default config.
+		/// </summary>
+		public static void LoadSavedConfig(InputActionMap actionMap)
 		{
-			return InputManager.GetKey(key);
+			Dbg.Log("Loading custom input...");
+
+			// Get saved controls.
+			InputActionMap defaultControls = InputActionMap.FromJson(File.ReadAllText(Path.Combine(Application.persistentDataPath, "Data/ControlsDefault")))[0];
+			if (File.Exists(Path.Combine(Application.persistentDataPath, "Settings.json")))
+			{
+				// Quality-check settings.
+				if (actionMap.actions.Count > 0)
+				{
+					List<string> settingsControlsNames = new List<string>();
+					List<string> defaultControlsNames = new List<string>();
+					for (int i = 0; i < actionMap.actions.Count; i++)
+					{
+						settingsControlsNames.Add(actionMap.actions[i].name);
+					}
+					for (int j = 0; j < defaultControls.actions.Count; j++)
+					{
+						defaultControlsNames.Add(defaultControls.actions[j].name);
+					}
+
+					// Extra entries in the settings list.
+					List<string> extraEntries = settingsControlsNames.Except(defaultControlsNames).ToList();
+					if (extraEntries.Count > 0)
+					{
+						for (int k = 0; k < extraEntries.Count; k++)
+						{
+							for (int l = 0; l < actionMap.actions.Count; l++)
+							{
+								if (actionMap.actions[l].name == extraEntries[k])
+								{
+									actionMap.actions[l].RemoveAction();
+								}
+							}
+						}
+					}
+
+					// Entries missing from the settings list.
+					List<string> missingEntries = defaultControlsNames.Except(settingsControlsNames).ToList();
+					if (missingEntries.Count > 0)
+					{
+						foreach (string item in missingEntries)
+						{
+							for (int m = 0; m < defaultControls.actions.Count; m++)
+							{
+								if (defaultControls.actions[m].name == item)
+								{
+									InputAction action = actionMap.AddAction(defaultControls.actions[m].name);
+									foreach (InputBinding binding in defaultControls.actions[m].bindings)
+									{
+										action.AddBinding(binding);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				actionMap = defaultControls;
+			}
+
+			Instance.InputActions.RemoveActionMap(ActionMapName);
+			Instance.InputActions.AddActionMap(actionMap);
+			actionMap.Enable();
 		}
 
-		public static bool GetKeyDown(KeyCode key)
+		public static void LoadDefaultConfig()
 		{
-			return InputManager.GetKeyDown(key);
-		}
-
-		public static bool GetKeyUp(KeyCode key)
-		{
-			return InputManager.GetKeyUp(key);
-		}
-
-		public static void LoadJSON()
-		{
-			InputManager.Load(new InputLoaderJSON());
-		}
-
-		public static void LoadDefaultJSON()
-		{
-			InputManager.Load(new InputDefaultLoaderJSON());
+			Instance.InputActions.RemoveActionMap(ActionMapName);
+			Instance.InputActions.AddActionMap(InputActionMap.FromJson(File.ReadAllText(Path.Combine(Application.persistentDataPath, "Data/ControlsDefault")))[0]);
 		}
 
 		public static void ResetInputAxis()
 		{
-			InputManager.ResetInputAxes();
+			//InputManager.ResetInputAxes();
 		}
 
-		public static string GetAxisKeyName(Actions key, bool getPositive = true, bool getNegative = true, bool getAlt = false)
+		public static string GetAxisKeyName(Actions key, bool getAlt = false)
 		{
-			InputAction actions = InputManager.GetAction("KeyboardAndMouse", key.ToString());
-			if (!getAlt)
+			InputAction actions = Instance.InputActions.FindAction(key.ToString());
+			//if (!getAlt)
 			{
 				// Get main binding.
-				if (actions.Bindings[0].Type == InputType.DigitalAxis)
-				{
-					if (getPositive && getNegative)
-					{
-						return actions.Bindings[0].Positive.ToString() + "/" + actions.Bindings[0].Negative;
-					}
-					if (getPositive && !getNegative)
-					{
-						return actions.Bindings[0].Positive.ToString();
-					}
-					if (!getPositive && getNegative)
-					{
-						return actions.Bindings[0].Negative.ToString();
-					}
-				}
-
-				return actions.Bindings[0].Positive.ToString();
+				return actions.bindings[0].ToString();
 			}
-			else
+			/*else
 			{
 				// Get alternative binding.
-				if (actions.Bindings[1].Type == InputType.DigitalAxis)
+				if (getPositive && getNegative)
 				{
-					if (getPositive && getNegative)
-					{
-						return actions.Bindings[1].Positive.ToString() + "/" + actions.Bindings[1].Negative;
-					}
-					if (getPositive && !getNegative)
-					{
-						return actions.Bindings[1].Positive.ToString();
-					}
-					if (!getPositive && getNegative)
-					{
-						return actions.Bindings[1].Negative.ToString();
-					}
+					return actions.Bindings[1].Positive.ToString() + "/" + actions.Bindings[1].Negative;
+				}
+				if (getPositive && !getNegative)
+				{
+					return actions.Bindings[1].Positive.ToString();
+				}
+				if (!getPositive && getNegative)
+				{
+					return actions.Bindings[1].Negative.ToString();
 				}
 			}
 
-			return string.Empty;
+			return string.Empty;*/
 		}
 	}
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace ZeroGravity.UI
@@ -15,7 +16,7 @@ namespace ZeroGravity.UI
 
 		private void Update()
 		{
-			if (InputController.GetKeyDown(KeyCode.KeypadEnter) || InputController.GetKeyDown(KeyCode.Return))
+			if (Keyboard.current.enterKey.wasPressedThisFrame)
 			{
 				HideMessageBox();
 			}

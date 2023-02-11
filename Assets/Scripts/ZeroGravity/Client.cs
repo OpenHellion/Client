@@ -122,8 +122,6 @@ namespace ZeroGravity
 
 		public CanvasManager CanvasManager;
 
-		public CustomInputModule InputModule;
-
 		public static SignInRequest LastSignInRequest = null;
 
 		public static SignInResponse LastSignInResponse = null;

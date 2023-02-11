@@ -50,7 +50,7 @@ namespace ZeroGravity.UI
 				{
 					ShowChat(true);
 				}
-				if (Client.Instance.IsChatOpened && (InputController.GetKeyDown(KeyCode.KeypadEnter) || InputController.GetKeyDown(KeyCode.Return)))
+				if (Client.Instance.IsChatOpened && Keyboard.current.enterKey.wasPressedThisFrame)
 				{
 					ShowChat(false);
 				}
@@ -58,15 +58,15 @@ namespace ZeroGravity.UI
 				{
 					ScrollBarVertical.value += Mouse.current.scroll.y.ReadValue() * 0.2f;
 				}
-				if (Client.Instance.IsChatOpened && InputController.GetKeyDown(KeyCode.Escape))
+				if (Client.Instance.IsChatOpened && Keyboard.current.escapeKey.wasPressedThisFrame)
 				{
 					CloseChat();
 				}
-				if (InputController.GetButtonDown(InputController.Actions.PrimaryMouse))
+				if (Mouse.current.leftButton.wasPressedThisFrame)
 				{
 					ChatInput.Select();
 				}
-				else if (InputController.GetButtonUp(InputController.Actions.PrimaryMouse))
+				else if (Mouse.current.leftButton.wasReleasedThisFrame)
 				{
 					ChatInput.MoveTextEnd(false);
 				}

@@ -1,5 +1,5 @@
 {
-    "name": "Controls",
+    "name": "InputConfig",
     "maps": [
         {
             "name": "Main",
@@ -18,33 +18,6 @@
                     "name": "Forward",
                     "type": "Button",
                     "id": "2cb16fb5-e3d2-481b-bc67-72ed73ed532a",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "PrimaryMouse",
-                    "type": "Button",
-                    "id": "706d0cb7-26f6-4d5c-8c66-6e52e4e00efa",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "SecondaryMouse",
-                    "type": "Button",
-                    "id": "9f8ded2e-33e1-4977-9a51-75dd66e4bb1c",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "ThirdMouse",
-                    "type": "Button",
-                    "id": "5f1beda2-7765-4db1-8734-52c8b5c510a8",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -405,39 +378,6 @@
                     "action": "Forward",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "c31cb289-8682-4eab-b0e0-021f3b36bd24",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "PrimaryMouse",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3fa173fc-e41b-4475-8a57-7cbbfdc69916",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SecondaryMouse",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "05c13599-79cc-4e8a-a4cb-058c1e6b461b",
-                    "path": "<Mouse>/middleButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ThirdMouse",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 },
                 {
                     "name": "",

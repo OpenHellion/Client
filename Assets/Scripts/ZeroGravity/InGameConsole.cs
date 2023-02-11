@@ -10,6 +10,7 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
 using OpenHellion.Networking;
+using UnityEngine.InputSystem;
 
 namespace ZeroGravity
 {
@@ -57,11 +58,11 @@ namespace ZeroGravity
 		{
 			if (CurrentScreen == 0)
 			{
-				if ((InputController.GetKeyDown(KeyCode.KeypadEnter) || InputController.GetKeyDown(KeyCode.Return)) && Input.text != string.Empty)
+				if (Keyboard.current.enterKey.wasPressedThisFrame && Input.text != string.Empty)
 				{
 					SubmitText();
 				}
-				else if (InputController.GetKeyDown(KeyCode.UpArrow) && Elements.Count > 0)
+				else if (Keyboard.current.upArrowKey.wasPressedThisFrame && Elements.Count > 0)
 				{
 					lastSelectedStackItem = Elements.FindLast((Tuple<GameObject, bool> m) => m.Item2 && (Elements.IndexOf(lastSelectedStackItem) > Elements.IndexOf(m) || lastSelectedStackItem == null));
 					if (lastSelectedStackItem != null)
@@ -71,7 +72,7 @@ namespace ZeroGravity
 						Input.ActivateInputField();
 					}
 				}
-				else if (InputController.GetKeyDown(KeyCode.DownArrow) && Elements.Count > 0)
+				else if (Keyboard.current.downArrowKey.wasPressedThisFrame && Elements.Count > 0)
 				{
 					lastSelectedStackItem = Elements.FindLast((Tuple<GameObject, bool> m) => m.Item2 && (Elements.IndexOf(lastSelectedStackItem) < Elements.IndexOf(m) || lastSelectedStackItem == null));
 					if (lastSelectedStackItem != null)
@@ -82,7 +83,7 @@ namespace ZeroGravity
 					}
 				}
 			}
-			if (InputController.GetKeyDown(KeyCode.Escape) || InputController.GetKeyDown(KeyCode.F2))
+			if (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.f2Key.wasPressedThisFrame)
 			{
 				Close();
 			}

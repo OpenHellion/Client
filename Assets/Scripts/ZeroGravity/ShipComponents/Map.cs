@@ -216,7 +216,7 @@ namespace ZeroGravity.ShipComponents
 						IndicatorObject = raycastHit.collider;
 						OnHover(IndicatorObject);
 					}
-					if (InputController.GetButtonDown(InputController.Actions.PrimaryMouse) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+					if (Mouse.current.leftButton.wasPressedThisFrame && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 					{
 						OnClick(IndicatorObject);
 						Dragging = true;
@@ -228,11 +228,11 @@ namespace ZeroGravity.ShipComponents
 						}
 						doubleClickTimer -= Time.deltaTime;
 					}
-					if (InputController.GetButtonDown(InputController.Actions.SecondaryMouse) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+					if (Mouse.current.rightButton.wasPressedThisFrame && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 					{
 						OnRightClick(IndicatorObject);
 					}
-					if (InputController.GetButtonUp(InputController.Actions.PrimaryMouse))
+					if (Mouse.current.leftButton.wasReleasedThisFrame)
 					{
 						OnRelease(IndicatorObject);
 						Dragging = false;
@@ -245,11 +245,11 @@ namespace ZeroGravity.ShipComponents
 						OnUnhover(IndicatorObject);
 						IndicatorObject = null;
 					}
-					if (InputController.GetButtonDown(InputController.Actions.PrimaryMouse) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+					if (Mouse.current.leftButton.wasPressedThisFrame && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 					{
 						OnClick(null);
 					}
-					if (InputController.GetButtonUp(InputController.Actions.PrimaryMouse))
+					if (Mouse.current.leftButton.wasReleasedThisFrame)
 					{
 						if (IndicatorObject != null)
 						{
@@ -281,13 +281,13 @@ namespace ZeroGravity.ShipComponents
 				}
 				zoom = MathHelper.Clamp(zoom, MinZoom, Mathf.Clamp(planetMaxZoom, 0f, MaxZoom));
 			}
-			if (InputController.GetButton(InputController.Actions.SecondaryMouse) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+			if (Mouse.current.rightButton.isPressed && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 			{
 				float horizontalMouse = Mouse.current.delta.x.ReadValue();
 				float verticalMouse = Mouse.current.delta.y.ReadValue();
 				if (horizontalMouse.IsNotEpsilonZero() || verticalMouse.IsNotEpsilonZero())
 				{
-					if (InputController.GetKey(KeyCode.LeftControl))
+					if (Keyboard.current.leftCtrlKey.isPressed)
 					{
 						MapObjectShip mapObjectShip = SelectedObject as MapObjectShip;
 						if (mapObjectShip?.ScanningCone?.activeInHierarchy == true)

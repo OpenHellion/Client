@@ -279,17 +279,13 @@ namespace ZeroGravity
 			}
 
 			// Close the disclaimer.
-			// Don't use custom input here.
-			if (Disclamer.activeInHierarchy && Input.anyKeyDown)
+			if (Disclamer.activeInHierarchy && Keyboard.current.anyKey.wasPressedThisFrame)
 			{
-				if (!Mouse.current.leftButton.isPressed && !Mouse.current.rightButton.isPressed)
-				{
-					DisclaimerAgree();
-				}
+				DisclaimerAgree();
 				return;
 			}
 
-			if (InputController.GetKeyDown(KeyCode.KeypadEnter) || InputController.GetKeyDown(KeyCode.Return))
+			if (Keyboard.current.enterKey.wasPressedThisFrame)
 			{
 				if (IsConfirmBoxActive || ReportServerBox.gameObject.activeInHierarchy || CanvasMessageBox.activeInHierarchy)
 				{
@@ -310,7 +306,7 @@ namespace ZeroGravity
 			}
 
 			// If esc is clicked.
-			if (InputController.GetKeyDown(KeyCode.Escape))
+			if (Keyboard.current.escapeKey.wasPressedThisFrame)
 			{
 				if (IsConfirmBoxActive || ReportServerBox.gameObject.activeInHierarchy || InGameMenuCanvas.activeInHierarchy || CanvasMessageBox.activeInHierarchy)
 				{
@@ -321,7 +317,7 @@ namespace ZeroGravity
 					ToggleScreenShootMod();
 					return;
 				}
-				if (Client.Instance.IsInGame && !OverlayCanvasIsOn && InputController.GetKeyDown(KeyCode.Escape))
+				if (Client.Instance.IsInGame && !OverlayCanvasIsOn && Keyboard.current.escapeKey.wasPressedThisFrame)
 				{
 					if (IsPlayerOverviewOpen)
 					{
@@ -353,7 +349,7 @@ namespace ZeroGravity
 			{
 				ToggleScreenShootMod();
 			}
-			if (Client.Instance.IsInGame && InputController.GetKeyDown(KeyCode.F2) && !Client.Instance.IsChatOpened && !IsInputFieldIsActive && MyPlayer.Instance.IsAdmin)
+			if (Client.Instance.IsInGame && Keyboard.current.f2Key.wasPressedThisFrame && !Client.Instance.IsChatOpened && !IsInputFieldIsActive && MyPlayer.Instance.IsAdmin)
 			{
 				if (Console.gameObject.activeInHierarchy)
 				{

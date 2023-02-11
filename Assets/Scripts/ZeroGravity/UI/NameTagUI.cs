@@ -1,5 +1,6 @@
 using OpenHellion.Networking;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
@@ -28,11 +29,11 @@ namespace ZeroGravity.UI
 		{
 			if (isLockedToTrigger)
 			{
-				if (InputController.GetKeyDown(KeyCode.Tab) || InputController.GetKeyDown(KeyCode.Escape))
+				if (Keyboard.current.tabKey.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
 				{
 					ToggleNameCanvas(thisNameTag, false, currentParentVessel, currentSceneId);
 				}
-				if (InputController.GetKeyDown(KeyCode.KeypadEnter) || InputController.GetKeyDown(KeyCode.Return))
+				if (Keyboard.current.enterKey.wasPressedThisFrame)
 				{
 					ConfirmInput();
 				}

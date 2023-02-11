@@ -746,7 +746,7 @@ namespace ZeroGravity.ShipComponents
 			string axisKeyName = InputController.GetAxisKeyName(axName);
 			if (axisKeyName == "None")
 			{
-				axisKeyName = InputController.GetAxisKeyName(axName, getPositive: true, getNegative: true, getAlt: true);
+				axisKeyName = InputController.GetAxisKeyName(axName, true);
 			}
 			return axisKeyName;
 		}
