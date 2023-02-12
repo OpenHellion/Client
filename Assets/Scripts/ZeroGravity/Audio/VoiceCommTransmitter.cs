@@ -11,7 +11,7 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
 using OpenHellion.ProviderSystem;
-using OpenHellion.Util;
+using OpenHellion.IO;
 
 namespace ZeroGravity.Audio
 {
@@ -45,7 +45,7 @@ namespace ZeroGravity.Audio
 			{
 				return;
 			}
-			if (InputController.GetButtonDown(InputController.Actions.Talk) && !talk)
+			if (InputController.GetButtonDown(InputController.ConfigAction.Talk) && !talk)
 			{
 				if (Microphone.devices.Length > 0)
 				{
@@ -60,7 +60,7 @@ namespace ZeroGravity.Audio
 					talk = true;
 				}
 			}
-			else if (InputController.GetButtonDown(InputController.Actions.Radio) && !talk)
+			else if (InputController.GetButtonDown(InputController.ConfigAction.Radio) && !talk)
 			{
 				if (Microphone.devices.Length > 0)
 				{
@@ -71,7 +71,7 @@ namespace ZeroGravity.Audio
 					talk = true;
 				}
 			}
-			else if ((InputController.GetButtonUp(InputController.Actions.Talk) || InputController.GetButtonUp(InputController.Actions.Radio)) && talk)
+			else if ((InputController.GetButtonUp(InputController.ConfigAction.Talk) || InputController.GetButtonUp(InputController.ConfigAction.Radio)) && talk)
 			{
 				if (MyPlayer.isAudioDebug)
 				{

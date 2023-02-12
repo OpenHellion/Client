@@ -1,11 +1,8 @@
-using System.Collections.Generic;
-using UnityEngine.InputSystem;
-
 namespace ZeroGravity.Data
 {
 	public class ControlsSettingsData
 	{
-		public InputActionMap ActionMap;
+		public string ActionMap;
 
 		public float MouseSensitivity;
 

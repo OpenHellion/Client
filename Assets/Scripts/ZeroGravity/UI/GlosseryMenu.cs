@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using OpenHellion.Util;
+using OpenHellion.IO;
+using OpenHellion.Networking;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -136,7 +138,7 @@ namespace ZeroGravity.UI
 
 		public void ShowTooltip()
 		{
-			GameObject gameObject = Client.Instance.InputModule.OverGameObject();
+			GameObject gameObject = HandleUtility.PickGameObject(Mouse.current.position.ReadValue(), out _);
 			if (gameObject != null)
 			{
 				GlossaryItemUI componentInParent = gameObject.GetComponentInParent<GlossaryItemUI>();

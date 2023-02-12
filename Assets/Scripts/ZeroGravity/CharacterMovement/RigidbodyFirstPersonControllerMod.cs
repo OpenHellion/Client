@@ -1,7 +1,7 @@
 using System.Collections;
+using OpenHellion.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using ZeroGravity.UI;
 
 namespace ZeroGravity.CharacterMovement
 {
@@ -222,11 +222,11 @@ namespace ZeroGravity.CharacterMovement
 			}
 			if (!crouch && speedLerpingDone)
 			{
-				if (InputController.GetButton(InputController.Actions.Jump) && !m_Jump)
+				if (InputController.GetButton(InputController.ConfigAction.Jump) && !m_Jump)
 				{
 					timerForJump += Time.deltaTime;
 				}
-				if (InputController.GetButtonUp(InputController.Actions.Jump) && !m_Jump)
+				if (InputController.GetButtonUp(InputController.ConfigAction.Jump) && !m_Jump)
 				{
 					if (!(timerForJump > minJumpTime))
 					{
@@ -241,22 +241,22 @@ namespace ZeroGravity.CharacterMovement
 					m_Jump = true;
 					timerForJump = 0f;
 				}
-				if (InputController.GetButtonDown(InputController.Actions.Sprint))
+				if (InputController.GetButtonDown(InputController.ConfigAction.Sprint))
 				{
 					sprint = true;
 				}
-				if (InputController.GetButtonUp(InputController.Actions.Sprint))
+				if (InputController.GetButtonUp(InputController.ConfigAction.Sprint))
 				{
 					sprint = false;
 				}
 			}
-			if (InputController.GetButtonDown(InputController.Actions.Crouch))
+			if (InputController.GetButtonDown(InputController.ConfigAction.Crouch))
 			{
 				SetNormalSpeed();
 				SpeedDecrease(crouchMultiplier);
 				crouch = true;
 			}
-			if (InputController.GetButtonUp(InputController.Actions.Crouch))
+			if (InputController.GetButtonUp(InputController.ConfigAction.Crouch))
 			{
 				speedLerpingDone = false;
 				crouch = false;
@@ -389,8 +389,8 @@ namespace ZeroGravity.CharacterMovement
 		private Vector2 GetInput()
 		{
 			Vector2 vector = default;
-			vector.x = InputController.GetAxis(InputController.Actions.Right);
-			vector.y = InputController.GetAxis(InputController.Actions.Forward);
+			vector.x = InputController.GetAxis(InputController.ConfigAction.Right);
+			vector.y = InputController.GetAxis(InputController.ConfigAction.Forward);
 			Vector2 vector2 = vector;
 			UpdateDesiredTargetSpeed(vector2);
 			return vector2;

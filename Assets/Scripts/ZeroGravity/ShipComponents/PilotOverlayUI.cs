@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.IO;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -206,7 +207,7 @@ namespace ZeroGravity.ShipComponents
 				{
 					Client.Instance.OffSpeedHelper = !Client.Instance.OffSpeedHelper;
 				}
-				if (InputController.GetButtonDown(InputController.Actions.Equip) && CurrentTargetList.TargetListHolder.gameObject.activeInHierarchy)
+				if (InputController.GetButtonDown(InputController.ConfigAction.Equip) && CurrentTargetList.TargetListHolder.gameObject.activeInHierarchy)
 				{
 					if (RadarRange.Count - 1 > currentRadarRange)
 					{
@@ -239,13 +240,13 @@ namespace ZeroGravity.ShipComponents
 							SelectedTarget = AllTargets[num2];
 						}
 					}
-					if (AllTargets.Count > 0 && InputController.GetButtonDown(InputController.Actions.TargetDown))
+					if (AllTargets.Count > 0 && InputController.GetButtonDown(InputController.ConfigAction.TargetDown))
 					{
 						int num3 = AllTargets.IndexOf(SelectedTarget);
 						num3 = ((AllTargets.Count - 1 > num3) ? (num3 + 1) : 0);
 						SelectedTarget = AllTargets[num3];
 					}
-					else if (AllTargets.Count > 0 && InputController.GetButtonDown(InputController.Actions.TargetUp))
+					else if (AllTargets.Count > 0 && InputController.GetButtonDown(InputController.ConfigAction.TargetUp))
 					{
 						int num4 = AllTargets.IndexOf(SelectedTarget);
 						num4 = ((num4 - 1 < 0) ? (AllTargets.Count - 1) : (num4 - 1));

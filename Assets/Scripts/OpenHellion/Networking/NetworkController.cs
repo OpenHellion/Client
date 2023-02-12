@@ -15,7 +15,7 @@ using System.Linq;
 using ZeroGravity;
 using UnityEditor;
 using System.Net.Sockets;
-using OpenHellion.Util;
+using OpenHellion.IO;
 
 namespace OpenHellion.Networking
 {

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using OpenHellion.IO;
 using OpenHellion.Networking;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -46,7 +47,7 @@ namespace ZeroGravity.UI
 		{
 			if (!Client.Instance.CanvasManager.DisableChat)
 			{
-				if (InputController.GetButtonDown(InputController.Actions.Chat) && !ChatInputBox.activeInHierarchy && !Client.Instance.CanvasManager.Console.gameObject.activeInHierarchy && !Client.Instance.CanvasManager.IsInputFieldIsActive && !Client.Instance.CanvasManager.OverlayCanvasIsOn && !InputController.GetButton(InputController.Actions.Drop))
+				if (InputController.GetButtonDown(InputController.ConfigAction.Chat) && !ChatInputBox.activeInHierarchy && !Client.Instance.CanvasManager.Console.gameObject.activeInHierarchy && !Client.Instance.CanvasManager.IsInputFieldIsActive && !Client.Instance.CanvasManager.OverlayCanvasIsOn && !InputController.GetButton(InputController.ConfigAction.Drop))
 				{
 					ShowChat(true);
 				}

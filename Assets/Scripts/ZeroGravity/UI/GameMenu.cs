@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using OpenHellion.Util;
+using OpenHellion.IO;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -129,7 +129,7 @@ namespace ZeroGravity.UI
 			{
 				ServerInfoScreen.SetActive(false);
 				InGameMenuScreen.SetActive(true);
-				Client.Instance.InputModule.UseCustomCursorPosition = false;
+				//Client.Instance.InputModule.UseCustomCursorPosition = false;
 				ServerNameText.text = (!Client.Instance.SinglePlayerMode) ? Client.LastConnectedServer.Name : Localization.SinglePlayer;
 				ServerDescriptionText.text = (!Client.Instance.SinglePlayerMode) ? Client.LastConnectedServer.Description : Localization.SinglePlayerModeDescription;
 				SaveButton.SetActive(Client.Instance.SinglePlayerMode);
@@ -141,11 +141,11 @@ namespace ZeroGravity.UI
 			{
 				if (MyPlayer.Instance.IsLockedToTrigger)
 				{
-					Client.Instance.InputModule.UseCustomCursorPosition = true;
+					//Client.Instance.InputModule.UseCustomCursorPosition = true;
 				}
 				else
 				{
-					Client.Instance.InputModule.UseCustomCursorPosition = false;
+					//Client.Instance.InputModule.UseCustomCursorPosition = false;
 				}
 			}
 		}
@@ -172,7 +172,7 @@ namespace ZeroGravity.UI
 					MainMenu(false);
 					if (MyPlayer.Instance.IsLockedToTrigger)
 					{
-						Client.Instance.InputModule.UseCustomCursorPosition = false;
+						//Client.Instance.InputModule.UseCustomCursorPosition = false;
 					}
 				}
 				return;
@@ -197,7 +197,7 @@ namespace ZeroGravity.UI
 				MainMenu(true);
 				if (MyPlayer.Instance.IsLockedToTrigger)
 				{
-					Client.Instance.InputModule.UseCustomCursorPosition = true;
+					//Client.Instance.InputModule.UseCustomCursorPosition = true;
 				}
 			}
 		}

@@ -36,7 +36,7 @@ namespace ZeroGravity
 			Client.Instance.ToggleCursor(val);
 			MyPlayer.Instance.FpsController.ToggleCameraMovement(!val);
 			MyPlayer.Instance.FpsController.ToggleMovement(!val);
-			Client.Instance.InputModule.ToggleCustomCursorPosition(!val);
+			//Client.Instance.InputModule.ToggleCustomCursorPosition(!val);
 			if (MyPlayer.Instance.CurrentActiveItem != null)
 			{
 				MyPlayer.Instance.CurrentActiveItem.PrimaryReleased();

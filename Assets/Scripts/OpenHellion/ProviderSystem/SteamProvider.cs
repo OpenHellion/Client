@@ -23,7 +23,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using OpenHellion.Networking.Message;
 using ZeroGravity;
-using OpenHellion.Util;
+using OpenHellion.IO;
 
 namespace OpenHellion.ProviderSystem
 {

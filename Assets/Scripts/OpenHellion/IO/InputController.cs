@@ -1,0 +1,250 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using ZeroGravity.Network;
+
+namespace OpenHellion.IO
+{
+	/// <summary>
+	/// 	Class to get keys that can be changed during runtime.
+	/// </summary>
+	public class InputController : MonoBehaviour
+	{
+		/// <summary>
+		/// 	Keys that can be customised.
+		/// </summary>
+		public enum ConfigAction
+		{
+			Right,
+			Forward,
+			Jump,
+			Crouch,
+			Sprint,
+			FreeLook,
+			Interact,
+			Lean,
+			Inventory,
+			Journal,
+			Drop,
+			Equip,
+			ChangeStance,
+			EngineToggle,
+			ThrustUp,
+			ThrustDown,
+			Chat,
+			Talk,
+			Radio,
+			TargetUp,
+			TargetDown,
+			FilterLeft,
+			FilterRight,
+			HelmetRadar,
+			ToggleVisor,
+			Melee,
+			ToggleJetpack,
+			MatchVelocity,
+			ToggleLights,
+			WeaponMod,
+			Quick1,
+			Quick2,
+			Quick3,
+			Quick4
+		}
+
+		// TODO: Implement mouse sensitivity.
+		public static float MouseSensitivity
+		{
+			get
+			{
+				return 1;
+			}
+			set
+			{
+			}
+		}
+
+		public InputActionAsset InputActions;
+
+		public const string ActionMapName = "Main";
+
+		private static InputController s_instance;
+		public static InputController Instance
+		{
+			get
+			{
+				if (s_instance == null)
+				{
+					Dbg.Error("Tried to get input controller before it has been initialised.");
+				}
+
+				return s_instance;
+			}
+		}
+
+		public void Awake()
+		{
+			if (s_instance != null)
+			{
+				Destroy(this);
+				Dbg.Error("Input controller already exists.");
+				return;
+			}
+			s_instance = this;
+
+#if UNITY_EDITOR
+			if (InputActions != null)
+			{
+				Dbg.Log("Saving default controls to", Application.dataPath + "/Resources/Data/ControlsDefault.json");
+				File.WriteAllText(Application.dataPath + "/Resources/Data/ControlsDefault.json", InputActions.ToJson());
+			}
+#endif
+			LoadDefaultConfig();
+		}
+
+		public static bool GetButton(ConfigAction key)
+		{
+			return Instance.InputActions.FindAction(key.ToString(), true).IsPressed();
+		}
+
+		public static bool GetButtonDown(ConfigAction key)
+		{
+			return Instance.InputActions.FindAction(key.ToString(), true).WasPressedThisFrame();
+		}
+
+		public static bool GetButtonUp(ConfigAction key)
+		{
+			return Instance.InputActions.FindAction(key.ToString(), true).WasReleasedThisFrame();
+		}
+
+		public static float GetAxis(ConfigAction name)
+		{
+			return Instance.InputActions.FindAction(name.ToString(), true).ReadValue<float>();
+		}
+
+		public static float GetAxisRaw(ConfigAction name)
+		{
+			return Instance.InputActions.FindAction(name.ToString(), true).ReadValue<float>();
+		}
+
+		/// <summary>
+		/// 	Load the currently modified config and overwrite the default config.
+		/// </summary>
+		public static void LoadSavedConfig(string actionMap)
+		{
+			Dbg.Log("Loading custom input...");
+
+			// Get saved controls.
+			InputActionMap settingsControls = InputActionMap.FromJson(actionMap)[0];
+			InputActionMap defaultControls = InputActionAsset.FromJson(Resources.Load("Data/ControlsDefault").ToString()).actionMaps[0];
+
+			// If settings exist, proceed.
+			if (File.Exists(Path.Combine(Application.persistentDataPath, "Settings.json")))
+			{
+				// Quality-check settings.
+				if (settingsControls.actions.Count > 0)
+				{
+					List<string> settingsControlsNames = new List<string>();
+					List<string> defaultControlsNames = new List<string>();
+					foreach (InputAction action in settingsControls.actions)
+					{
+						settingsControlsNames.Add(action.name);
+					}
+					foreach (InputAction action in defaultControls.actions)
+					{
+						defaultControlsNames.Add(action.name);
+					}
+
+					// Extra entries in the settings list.
+					List<string> extraEntries = settingsControlsNames.Except(defaultControlsNames).ToList();
+					if (extraEntries.Count > 0)
+					{
+						for (int k = 0; k < extraEntries.Count; k++)
+						{
+							for (int l = 0; l < settingsControls.actions.Count; l++)
+							{
+								// This action exists in extra entries.
+								if (settingsControls.actions[l].name == extraEntries[k])
+								{
+									settingsControls.actions[l].RemoveAction();
+								}
+							}
+						}
+					}
+
+					// Entries missing from the settings list.
+					List<string> missingEntries = defaultControlsNames.Except(settingsControlsNames).ToList();
+					if (missingEntries.Count > 0)
+					{
+						foreach (string item in missingEntries)
+						{
+							for (int m = 0; m < defaultControls.actions.Count; m++)
+							{
+								if (defaultControls.actions[m].name == item)
+								{
+									InputAction action = settingsControls.AddAction(defaultControls.actions[m].name);
+									foreach (InputBinding binding in defaultControls.actions[m].bindings)
+									{
+										action.AddBinding(binding);
+									}
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					settingsControls = defaultControls;
+				}
+			}
+			else
+			{
+				settingsControls = defaultControls;
+			}
+
+			Instance.InputActions.RemoveActionMap(ActionMapName);
+			Instance.InputActions.AddActionMap(settingsControls);
+			settingsControls.Enable();
+		}
+
+		public static void LoadDefaultConfig()
+		{
+			Instance.InputActions = InputActionAsset.FromJson(Resources.Load("Data/ControlsDefault").ToString());
+		}
+
+		public static void ResetInputAxis()
+		{
+			//InputManager.ResetInputAxes();
+		}
+
+		public static string GetAxisKeyName(ConfigAction key, bool getAlt = false)
+		{
+			InputAction action = Instance.InputActions.FindAction(key.ToString());
+			if (!getAlt)
+			{
+				// Get main binding.
+				return action.bindings[0].ToString();
+			}
+			/*else
+			{
+				// Get alternative binding.
+				if (getPositive && getNegative)
+				{
+					return actions.Bindings[1].Positive.ToString() + "/" + actions.Bindings[1].Negative;
+				}
+				if (getPositive && !getNegative)
+				{
+					return actions.Bindings[1].Positive.ToString();
+				}
+				if (!getPositive && getNegative)
+				{
+					return actions.Bindings[1].Negative.ToString();
+				}
+			}*/
+
+			return string.Empty;
+		}
+	}
+}

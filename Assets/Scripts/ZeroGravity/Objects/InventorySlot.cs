@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using OpenHellion.IO;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.UI;
@@ -77,7 +78,7 @@ namespace ZeroGravity.Objects
 
 		public short SlotID { get; private set; }
 
-		public InputController.Actions? ShortcutKey { get; private set; }
+		public InputController.ConfigAction? ShortcutKey { get; private set; }
 
 		public bool MustBeEmptyToRemoveOutfit
 		{
@@ -160,7 +161,7 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public InventorySlot(Outfit outfit, short slotID, Type type, Size size, Group group, InputController.Actions? shortKey, int cycleIndex, bool mustBeEmptyToRemove, Item item, List<AttachData> points, Inventory inv)
+		public InventorySlot(Outfit outfit, short slotID, Type type, Size size, Group group, InputController.ConfigAction? shortKey, int cycleIndex, bool mustBeEmptyToRemove, Item item, List<AttachData> points, Inventory inv)
 		{
 			SlotID = slotID;
 			slotType = type;

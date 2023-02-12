@@ -1,7 +1,7 @@
+using OpenHellion.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ZeroGravity.Math;
-using ZeroGravity.UI;
 
 namespace ZeroGravity.CharacterMovement
 {
@@ -48,12 +48,12 @@ namespace ZeroGravity.CharacterMovement
 
 		private void Update()
 		{
-			if (InputController.GetButtonDown(InputController.Actions.FreeLook))
+			if (InputController.GetButtonDown(InputController.ConfigAction.FreeLook))
 			{
 				previousRotationX = base.transform.localRotation.eulerAngles.x;
 				freeLook = true;
 			}
-			if (InputController.GetButtonUp(InputController.Actions.FreeLook))
+			if (InputController.GetButtonUp(InputController.ConfigAction.FreeLook))
 			{
 				freeLook = false;
 				cameraFreed = false;

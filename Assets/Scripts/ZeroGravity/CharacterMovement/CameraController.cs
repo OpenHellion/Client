@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
+using OpenHellion.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Math;
 using ZeroGravity.Objects;
-using ZeroGravity.UI;
 
 namespace ZeroGravity.CharacterMovement
 {
@@ -415,14 +415,14 @@ namespace ZeroGravity.CharacterMovement
 			{
 				if (Client.IsGameBuild && MyPlayer.Instance.IsLockedToTrigger)
 				{
-					Client.Instance.InputModule.UseCustomCursorPosition = false;
+					//Client.Instance.InputModule.UseCustomCursorPosition = false;
 				}
 				return;
 			}
 			canMoveCamera = false;
 			if (Client.IsGameBuild && MyPlayer.Instance.IsLockedToTrigger)
 			{
-				Client.Instance.InputModule.UseCustomCursorPosition = true;
+				//Client.Instance.InputModule.UseCustomCursorPosition = true;
 			}
 		}
 
@@ -446,11 +446,11 @@ namespace ZeroGravity.CharacterMovement
 			{
 				if (!autoFreeLook || !isFreeLook)
 				{
-					if (InputController.GetButtonDown(InputController.Actions.FreeLook))
+					if (InputController.GetButtonDown(InputController.ConfigAction.FreeLook))
 					{
 						ToggleFreeLook(true);
 					}
-					if (InputController.GetButtonUp(InputController.Actions.FreeLook) && isFreeLook)
+					if (InputController.GetButtonUp(InputController.ConfigAction.FreeLook) && isFreeLook)
 					{
 						ToggleFreeLook(false);
 					}

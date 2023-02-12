@@ -25,7 +25,7 @@ using OpenHellion.ProviderSystem;
 using OpenHellion.Networking;
 using OpenHellion.Networking.Message.MainServer;
 using OpenHellion.Networking.Message;
-using OpenHellion.Util;
+using OpenHellion.IO;
 using UnityEngine.InputSystem;
 
 namespace ZeroGravity
@@ -237,8 +237,6 @@ namespace ZeroGravity
 
 		[ReadOnly]
 		public bool SignInFailed;
-
-		private int collisionLayerMask;
 
 		public static volatile bool ForceRespawn = false;
 
@@ -490,8 +488,6 @@ namespace ZeroGravity
 			}
 			InGamePanels.LocalizePanels();
 			EventSystem.AddListener(typeof(LogInResponse), LogInResponseListener);
-
-			collisionLayerMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("PlayerCollision"));
 			EventSystem.AddListener(typeof(KillPlayerMessage), KillPlayerMessageListener);
 			EventSystem.AddListener(typeof(LogOutResponse), LogOutResponseListener);
 			EventSystem.AddListener(typeof(DestroyObjectMessage), DestroyObjectMessageListener);

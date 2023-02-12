@@ -135,7 +135,7 @@ namespace ZeroGravity
 			Client.Instance.CanvasManager.IsInputFieldIsActive = true;
 			SetScreen(0);
 			Client.Instance.ToggleCursor(true);
-			Client.Instance.InputModule.ToggleCustomCursorPosition(val: false);
+			//Client.Instance.InputModule.ToggleCustomCursorPosition(val: false);
 			MyPlayer.Instance.FpsController.ToggleMovement(false);
 			MyPlayer.Instance.FpsController.ToggleAttached(true);
 			if (!MyPlayer.Instance.FpsController.IsZeroG)
@@ -155,7 +155,7 @@ namespace ZeroGravity
 			if (!MyPlayer.Instance.IsLockedToTrigger)
 			{
 				Client.Instance.ToggleCursor(false);
-				Client.Instance.InputModule.ToggleCustomCursorPosition(val: true);
+				//Client.Instance.InputModule.ToggleCustomCursorPosition(val: true);
 				MyPlayer.Instance.FpsController.ToggleAttached(false);
 				MyPlayer.Instance.FpsController.ToggleMovement(!MyPlayer.Instance.SittingOnPilotSeat);
 				if (MyPlayer.Instance.SittingOnPilotSeat)
@@ -167,7 +167,7 @@ namespace ZeroGravity
 			else if (MyPlayer.Instance.IsDrivingShip || MyPlayer.Instance.ShipControlMode == ShipControlMode.Docking)
 			{
 				Client.Instance.ToggleCursor(false);
-				Client.Instance.InputModule.ToggleCustomCursorPosition(val: true);
+				//Client.Instance.InputModule.ToggleCustomCursorPosition(val: true);
 			}
 		}
 

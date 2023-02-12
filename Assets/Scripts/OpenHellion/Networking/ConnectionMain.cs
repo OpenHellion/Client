@@ -18,7 +18,7 @@
 using System;
 using System.Security.Cryptography.X509Certificates;
 using OpenHellion.Networking.Message.MainServer;
-using OpenHellion.Util;
+using OpenHellion.IO;
 using UnityEngine.Networking;
 
 namespace OpenHellion.Networking

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OpenHellion.IO;
 using OpenHellion.Networking;
 using TriInspector;
 using UnityEngine;
@@ -1684,7 +1685,7 @@ namespace ZeroGravity.Objects
 							hitGUIDs.Add(componentInParent.GUID);
 							if (componentInParent is MyPlayer && ExplosionDamageType == TypeOfDamage.Impact && !MyPlayer.Instance.IsLockedToTrigger)
 							{
-								if (!MyPlayer.Instance.FpsController.IsZeroG && !MyPlayer.Instance.FpsController.HasTumbled && (!InputController.GetButton(InputController.Actions.Sprint) || !MyPlayer.Instance.FpsController.IsGrounded))
+								if (!MyPlayer.Instance.FpsController.IsZeroG && !MyPlayer.Instance.FpsController.HasTumbled && (!InputController.GetButton(InputController.ConfigAction.Sprint) || !MyPlayer.Instance.FpsController.IsGrounded))
 								{
 									MyPlayer.Instance.FpsController.Tumble();
 								}

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.IO;
 using UnityEngine;
 using ZeroGravity.Effects;
 using ZeroGravity.Network;
@@ -87,8 +88,6 @@ namespace ZeroGravity.LevelDesign
 
 		private Vector3 DoorPassageTriggerSize;
 
-		private Quaternion defaultDoorUIRotation;
-
 		private bool overridSafety;
 
 		public int InSceneID
@@ -111,10 +110,6 @@ namespace ZeroGravity.LevelDesign
 
 		public bool IsOpen => _isOpen;
 
-		private void Awake()
-		{
-		}
-
 		private void Start()
 		{
 			if (ParentVessel == null && Client.IsGameBuild)
@@ -129,8 +124,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				Room2.AddBehaviourScript(this);
 			}
-			SceneTriggerAnimation component = GetComponent<SceneTriggerAnimation>();
-			if (component != null)
+			if (TryGetComponent<SceneTriggerAnimation>(out var component))
 			{
 				DoorOpenDuration = component.GetActiveExecutingDuration();
 			}
@@ -147,7 +141,7 @@ namespace ZeroGravity.LevelDesign
 			_hasPower = details.HasPower;
 			_isLocked = details.IsLocked;
 			_isOpen = details.IsOpen;
-			pressureEquilizationTime = ((!(details.PressureEquilizationTime < 0.5f) || !(details.PressureEquilizationTime > 0f)) ? details.PressureEquilizationTime : 0.5f);
+			pressureEquilizationTime = (details.PressureEquilizationTime is >= 0.5f or <= 0f) ? details.PressureEquilizationTime : 0.5f;
 			airFlowDirection = details.AirFlowDirection;
 			airSpeed = details.AirSpeed;
 			if (details.Room1ID != null)
@@ -306,16 +300,16 @@ namespace ZeroGravity.LevelDesign
 					Vector3 vector3 = Vector3.Project(vector, fLine);
 					if (corpse.CurrentRoomTrigger == Room1)
 					{
-						vector2 = vector3.normalized * ((airFlowDirection != 1) ? 1 : (-1)) * fIntensity;
+						vector2 = ((airFlowDirection != 1) ? 1 : (-1)) * fIntensity * vector3.normalized;
 					}
 					else if (corpse.CurrentRoomTrigger == Room2)
 					{
-						vector2 = vector3.normalized * ((airFlowDirection != 2) ? 1 : (-1)) * fIntensity;
+						vector2 = ((airFlowDirection != 2) ? 1 : (-1)) * fIntensity * vector3.normalized;
 					}
 					Vector3 vector4 = Vector3.ProjectOnPlane(vector, vector2);
 					if (vector2.sqrMagnitude > float.Epsilon && (vector4.x + 0.3f > DoorPassageTriggerSize.x / 2f || vector4.x - 0.3f < (0f - DoorPassageTriggerSize.x) / 2f || vector4.y + 0.3f > DoorPassageTriggerSize.y / 2f || vector4.y - 0.3f < (0f - DoorPassageTriggerSize.y) / 2f))
 					{
-						vector2 += -vector4 * fIntensity * 0.1f;
+						vector2 += 0.1f * fIntensity * -vector4;
 					}
 					corpse.AddForce(vector2 * 0.005f, ForceMode.Impulse);
 				}
@@ -355,16 +349,16 @@ namespace ZeroGravity.LevelDesign
 					Vector3 vector3 = Vector3.Project(vector, fLine);
 					if (dynamicObject.CurrentRoomTrigger == Room1)
 					{
-						vector2 = vector3.normalized * ((airFlowDirection != 1) ? 1 : (-1)) * fIntensity;
+						vector2 = ((airFlowDirection != 1) ? 1 : (-1)) * fIntensity * vector3.normalized;
 					}
 					else if (dynamicObject.CurrentRoomTrigger == Room2)
 					{
-						vector2 = vector3.normalized * ((airFlowDirection != 2) ? 1 : (-1)) * fIntensity;
+						vector2 = ((airFlowDirection != 2) ? 1 : (-1)) * fIntensity * vector3.normalized;
 					}
 					Vector3 vector4 = Vector3.ProjectOnPlane(vector, vector2);
 					if (vector2.sqrMagnitude > float.Epsilon && (vector4.x + 0.2f > DoorPassageTriggerSize.x / 2f || vector4.x - 0.2f < (0f - DoorPassageTriggerSize.x) / 2f || vector4.y + 0.2f > DoorPassageTriggerSize.y / 2f || vector4.y - 0.2f < (0f - DoorPassageTriggerSize.y) / 2f))
 					{
-						vector2 += -vector4 * fIntensity * 0.1f;
+						vector2 += 0.1f * fIntensity * -vector4;
 					}
 					float num = ((!(dynamicObject.Mass > 0f)) ? 10f : dynamicObject.Mass);
 					dynamicObject.Velocity = Vector3.ClampMagnitude(dynamicObject.Velocity + vector2 / num * Time.deltaTime, 10f);
@@ -385,28 +379,28 @@ namespace ZeroGravity.LevelDesign
 				Vector3 vector3 = Vector3.Project(vector, fLine);
 				if (MyPlayer.Instance.CurrentRoomTrigger == Room1)
 				{
-					vector2 = vector3.normalized * ((airFlowDirection != 1) ? 1 : (-1)) * fIntensity;
+					vector2 = ((airFlowDirection != 1) ? 1 : (-1)) * fIntensity * vector3.normalized;
 				}
 				else if (MyPlayer.Instance.CurrentRoomTrigger == Room2)
 				{
-					vector2 = vector3.normalized * ((airFlowDirection != 2) ? 1 : (-1)) * fIntensity;
+					vector2 = ((airFlowDirection != 2) ? 1 : (-1)) * fIntensity * vector3.normalized;
 				}
 				Vector3 vector4 = Vector3.ProjectOnPlane(vector, vector2);
 				if (vector2.sqrMagnitude > float.Epsilon && (vector4.x + 0.3f > DoorPassageTriggerSize.x / 2f || vector4.x - 0.3f < (0f - DoorPassageTriggerSize.x) / 2f || vector4.y + 0.3f > DoorPassageTriggerSize.y / 2f || vector4.y - 0.3f < (0f - DoorPassageTriggerSize.y) / 2f))
 				{
-					vector2 += -vector4 * fIntensity * 0.1f;
+					vector2 += 0.1f * fIntensity * -vector4;
 				}
 			}
 			else
 			{
 				vector2 = vector.normalized * fIntensity;
 			}
-			if (airSpeed > 100f && !MyPlayer.Instance.FpsController.IsZeroG && !MyPlayer.Instance.FpsController.HasTumbled && (!InputController.GetButton(InputController.Actions.Sprint) || !MyPlayer.Instance.FpsController.IsGrounded))
+			if (airSpeed > 100f && !MyPlayer.Instance.FpsController.IsZeroG && !MyPlayer.Instance.FpsController.HasTumbled && (!InputController.GetButton(InputController.ConfigAction.Sprint) || !MyPlayer.Instance.FpsController.IsGrounded))
 			{
 				MyPlayer.Instance.FpsController.Tumble();
 			}
-			float num = ((!(MyPlayer.Instance.rigidBody.mass > 0f)) ? 10f : MyPlayer.Instance.rigidBody.mass);
-			if (InputController.GetButton(InputController.Actions.Sprint) && MyPlayer.Instance.FpsController.CanGrabWall)
+			float num = (!(MyPlayer.Instance.rigidBody.mass > 0f)) ? 10f : MyPlayer.Instance.rigidBody.mass;
+			if (InputController.GetButton(InputController.ConfigAction.Sprint) && MyPlayer.Instance.FpsController.CanGrabWall)
 			{
 				num *= 100f;
 			}

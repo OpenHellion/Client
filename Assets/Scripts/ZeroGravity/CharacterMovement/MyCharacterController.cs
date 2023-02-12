@@ -1,13 +1,12 @@
 using System;
 using System.Collections;
 using System.Linq;
+using OpenHellion.IO;
 using UnityEngine;
 using ZeroGravity;
-using ZeroGravity.CharacterMovement;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Math;
 using ZeroGravity.Objects;
-using ZeroGravity.UI;
 
 namespace ZeroGravity.CharacterMovement
 {
@@ -604,7 +603,7 @@ namespace ZeroGravity.CharacterMovement
 
 		private void Calculate1GMovementData()
 		{
-			if (InputController.GetButton(InputController.Actions.Sprint) && !IsCrouch && animatorHelper.CanRun)
+			if (InputController.GetButton(InputController.ConfigAction.Sprint) && !IsCrouch && animatorHelper.CanRun)
 			{
 				if (lastMovementState != MovementState.Run)
 				{
@@ -616,7 +615,7 @@ namespace ZeroGravity.CharacterMovement
 				sprintTime += Time.deltaTime;
 				myPlayer.HealthSounds.Switch("WalkRun", "Run");
 			}
-			else if (InputController.GetButton(InputController.Actions.Crouch))
+			else if (InputController.GetButton(InputController.ConfigAction.Crouch))
 			{
 				if (lastMovementState != MovementState.Crouch)
 				{
@@ -639,8 +638,8 @@ namespace ZeroGravity.CharacterMovement
 				sprintTime = 0f;
 				myPlayer.HealthSounds.Switch("WalkRun", "Walk");
 			}
-			movementAxis.Forward = InputController.GetAxisRaw(InputController.Actions.Forward);
-			movementAxis.Right = InputController.GetAxisRaw(InputController.Actions.Right);
+			movementAxis.Forward = InputController.GetAxisRaw(InputController.ConfigAction.Forward);
+			movementAxis.Right = InputController.GetAxisRaw(InputController.ConfigAction.Right);
 			movementAxis.Forward *= stanceSpeedMultiplier;
 			movementAxis.Right *= stanceSpeedMultiplier;
 			if (movementAxis.Forward != 0f && movementAxis.Right != 0f)
@@ -691,7 +690,7 @@ namespace ZeroGravity.CharacterMovement
 			bool? flag = isGrounded;
 			float? num = airTime;
 			obj.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, flag, null, null, null, null, null, null, null, null, num);
-			if (isMovementEnabled && crouchLerpHelper.IsEpsilonEqual(1f, 0.001f) && isGrounded && InputController.GetButtonDown(InputController.Actions.Jump))
+			if (isMovementEnabled && crouchLerpHelper.IsEpsilonEqual(1f, 0.001f) && isGrounded && InputController.GetButtonDown(InputController.ConfigAction.Jump))
 			{
 				doJump = true;
 			}
@@ -702,7 +701,7 @@ namespace ZeroGravity.CharacterMovement
 			cameraController.SetLeanRightAxis(0f);
 			if (isOnLadder)
 			{
-				float axisRaw = InputController.GetAxisRaw(InputController.Actions.Forward);
+				float axisRaw = InputController.GetAxisRaw(InputController.ConfigAction.Forward);
 				base.transform.Translate(base.transform.up * (axisRaw * ladderVelocity * Time.fixedDeltaTime), Space.World);
 				AnimatorHelper animHelper = myPlayer.animHelper;
 				float? ladderDirection = axisRaw;
@@ -802,7 +801,7 @@ namespace ZeroGravity.CharacterMovement
 				}
 				bool? isMoving = rigidBody.velocity.magnitude > float.Epsilon;
 				animatorHelper.SetParameter(null, isMoving);
-				if (InputController.GetButton(InputController.Actions.Crouch))
+				if (InputController.GetButton(InputController.ConfigAction.Crouch))
 				{
 					lastMovementState = MovementState.Crouch;
 				}
@@ -859,7 +858,7 @@ namespace ZeroGravity.CharacterMovement
 					float? ladderDirection = currForwardAnimationVal;
 					float? velocityRight = currRightAnimationVal;
 					animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, velocityRight, ladderDirection);
-					if (slopeJumpTimer > 1f && isGrounded && InputController.GetButtonDown(InputController.Actions.Jump))
+					if (slopeJumpTimer > 1f && isGrounded && InputController.GetButtonDown(InputController.ConfigAction.Jump))
 					{
 						float num2 = Mathf.Sqrt(2f * jumpHeightMax * myPlayer.Gravity.magnitude);
 						rigidBody.AddForce(base.transform.up * num2, ForceMode.VelocityChange);
@@ -873,8 +872,8 @@ namespace ZeroGravity.CharacterMovement
 			}
 			else if (isMovementEnabled)
 			{
-				float axisRaw2 = InputController.GetAxisRaw(InputController.Actions.Forward);
-				float axisRaw3 = InputController.GetAxisRaw(InputController.Actions.Right);
+				float axisRaw2 = InputController.GetAxisRaw(InputController.ConfigAction.Forward);
+				float axisRaw3 = InputController.GetAxisRaw(InputController.ConfigAction.Right);
 				if (axisRaw2 != 0f && Vector3.Project(rigidBody.velocity, base.transform.forward).sqrMagnitude < ((!(movementAxis.Forward > 0f)) ? (airSpeeds.BackwardVelocity * airSpeeds.BackwardVelocity) : (airSpeeds.ForwardVelocity * airSpeeds.ForwardVelocity)))
 				{
 					Vector3 force = base.transform.forward * ((!(axisRaw2 > 0f)) ? (0f - airSpeeds.BackwardVelocity) : airSpeeds.ForwardVelocity);
@@ -924,16 +923,16 @@ namespace ZeroGravity.CharacterMovement
 		private void Calculate0GMovementData()
 		{
 			// Get normal input.
-			movementAxis.Forward = InputController.GetAxis(InputController.Actions.Forward);
-			movementAxis.Right = InputController.GetAxis(InputController.Actions.Right);
-			movementAxis.LeanRight = InputController.GetAxis(InputController.Actions.Lean);
+			movementAxis.Forward = InputController.GetAxis(InputController.ConfigAction.Forward);
+			movementAxis.Right = InputController.GetAxis(InputController.ConfigAction.Right);
+			movementAxis.LeanRight = InputController.GetAxis(InputController.ConfigAction.Lean);
 
 			// Get vertical input.
-			if (InputController.GetButton(InputController.Actions.Jump))
+			if (InputController.GetButton(InputController.ConfigAction.Jump))
 			{
 				movementAxis.Up = Mathf.Min(movementAxis.Up + Time.fixedDeltaTime * 4f, 1f);
 			}
-			else if (InputController.GetButton(InputController.Actions.Crouch))
+			else if (InputController.GetButton(InputController.ConfigAction.Crouch))
 			{
 				movementAxis.Up = Mathf.Max(movementAxis.Up - Time.fixedDeltaTime * 4f, -1f);
 			}
@@ -1010,7 +1009,7 @@ namespace ZeroGravity.CharacterMovement
 		{
 			if (isOnLadder)
 			{
-				float axisRaw = InputController.GetAxisRaw(InputController.Actions.Forward);
+				float axisRaw = InputController.GetAxisRaw(InputController.ConfigAction.Forward);
 				base.transform.Translate(base.transform.up * (axisRaw * ladderVelocity * Time.fixedDeltaTime), Space.World);
 				AnimatorHelper animHelper = myPlayer.animHelper;
 				float? ladderDirection = axisRaw;
@@ -1034,7 +1033,7 @@ namespace ZeroGravity.CharacterMovement
 				}
 				Calculate0GMovementData();
 				cameraController.SetLeanRightAxis(0f - movementAxis.LeanRight);
-				bool hasToStabilise = InputController.GetButton(InputController.Actions.Sprint) || (myPlayer.IsUsingItemInHands && myPlayer.Inventory.CheckIfItemInHandsIsType<HandDrill>());
+				bool hasToStabilise = InputController.GetButton(InputController.ConfigAction.Sprint) || (myPlayer.IsUsingItemInHands && myPlayer.Inventory.CheckIfItemInHandsIsType<HandDrill>());
 				if (hasToStabilise && canGrabWall && NearbyVessel != null && (NearbyVessel.Velocity - (myPlayer.Parent.Velocity + rigidBody.velocity.ToVector3D())).SqrMagnitude < 100.0)
 				{
 					if (myPlayer.CurrentRoomTrigger == null)
@@ -1214,7 +1213,7 @@ namespace ZeroGravity.CharacterMovement
 				}
 				update1GMovement();
 			}
-			if (InputController.GetButton(InputController.Actions.Sprint))
+			if (InputController.GetButton(InputController.ConfigAction.Sprint))
 			{
 				canGrabWall = Physics.OverlapSphere(centerOfMass.position, 0.8f, collisionLayerMask, QueryTriggerInteraction.Ignore).Length > 0;
 			}

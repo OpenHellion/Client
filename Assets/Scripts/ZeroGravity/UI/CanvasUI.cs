@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.IO;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -189,7 +190,7 @@ namespace ZeroGravity.UI
 			{
 				SetItemName(null);
 				Tooltip.SetActive(value: true);
-				Tooltip.GetComponentInChildren<Text>().text = string.Format(Localization.HoldToLoot, InputController.GetAxisKeyName(InputController.Actions.Interact));
+				Tooltip.GetComponentInChildren<Text>().text = string.Format(Localization.HoldToLoot, InputController.GetAxisKeyName(InputController.ConfigAction.Interact));
 			}
 			else if (lookingAtTrigger != null && Client.Instance.CanvasManager.ShowTips)
 			{
@@ -269,7 +270,7 @@ namespace ZeroGravity.UI
 
 		public void UpdateTooltipKeys()
 		{
-			TooltipEquip.GetComponentInChildren<Text>(includeInactive: true).text = string.Format(Localization.HoldToEquip, InputController.GetAxisKeyName(InputController.Actions.Equip));
+			TooltipEquip.GetComponentInChildren<Text>(includeInactive: true).text = string.Format(Localization.HoldToEquip, InputController.GetAxisKeyName(InputController.ConfigAction.Equip));
 		}
 
 		public void ThrowingItemToggle(bool val)

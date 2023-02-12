@@ -1,4 +1,5 @@
 using System.Collections;
+using OpenHellion.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -6,8 +7,9 @@ using UnityEngine.UI;
 
 namespace ZeroGravity.UI
 {
+	// TODO: This is really broken right now.
 	[RequireComponent(typeof(Image))]
-	public class RebindInput : MonoBehaviour, IPointerDownHandler, IEventSystemHandler
+	public class RebindInput : MonoBehaviour, IEventSystemHandler
 	{
 		public GameObject MainPanel;
 
@@ -22,27 +24,19 @@ namespace ZeroGravity.UI
 		public Text m_keyDescription;
 
 		[SerializeField]
-		private string m_inputConfigName;
-
-		[SerializeField]
 		private string m_axisConfigName;
 
 		[SerializeField]
-		private bool m_changePositiveKey;
-
-		[SerializeField]
-		private bool m_changeAltKey;
+		private bool m_isPositiveKey;
 
 		public InputAction m_axisConfig;
 
 		private Image m_image;
 
-		public void SetRebinder(string inputConfigName, ControlItem contItem, Text buttonText, GameObject mainPanel, bool isAlt)
+		public void SetRebinder(ControlItem contItem, Text buttonText, GameObject mainPanel)
 		{
-			m_inputConfigName = inputConfigName;
-			m_axisConfigName = contItem.Actions.ToString();
-			m_changePositiveKey = contItem.IsPositive;
-			m_changeAltKey = isAlt;
+			m_axisConfigName = contItem.Action.ToString();
+			m_isPositiveKey = contItem.IsPositive;
 			MainPanel = mainPanel;
 			m_keyDescription = buttonText;
 			ControlItem = contItem;
@@ -53,14 +47,6 @@ namespace ZeroGravity.UI
 			m_image = GetComponent<Image>();
 			m_image.overrideSprite = m_normalState;
 			InitializeAxisConfig();
-			InputManager.Loaded += InitializeAxisConfig;
-			InputManager.PlayerControlsChanged += HandleConfigurationDirty;
-		}
-
-		private void OnDestroy()
-		{
-			InputManager.Loaded -= InitializeAxisConfig;
-			InputManager.PlayerControlsChanged -= HandleConfigurationDirty;
 		}
 
 		private void InitializeAxisConfig()
@@ -68,54 +54,44 @@ namespace ZeroGravity.UI
 			m_axisConfig = InputController.Instance.InputActions.FindAction(m_axisConfigName);
 			if (m_axisConfig != null)
 			{
-				if (m_changePositiveKey)
+				m_keyDescription.text = m_axisConfig.GetBindingDisplayString();
+				// Loop through bindings and find the positive/negative binding.
+				foreach (InputBinding binding in m_axisConfig.bindings)
 				{
-					if (m_changeAltKey)
+					if (!binding.isPartOfComposite) continue;
+
+					if (m_isPositiveKey && binding.name == "positive")
 					{
-						m_keyDescription.text = (m_axisConfig.bindings[1].Positive != 0) ? m_axisConfig.bindings[1].Positive.ToString() : string.Empty;
+						m_keyDescription.text = binding.ToDisplayString();
+						break;
 					}
-					else
+					else if (!m_isPositiveKey && binding.name == "negative")
 					{
-						m_keyDescription.text = (m_axisConfig.bindings[0].Positive != 0) ? m_axisConfig.bindings[0].Positive.ToString() : string.Empty;
+						m_keyDescription.text = binding.ToDisplayString();
+						break;
 					}
-				}
-				else if (m_changeAltKey)
-				{
-					m_keyDescription.text = (m_axisConfig.bindings[1].Negative != 0) ? m_axisConfig.bindings[1].Negative.ToString() : string.Empty;
-				}
-				else
-				{
-					m_keyDescription.text = (m_axisConfig.bindings[0].Negative != 0) ? m_axisConfig.bindings[0].Negative.ToString() : string.Empty;
 				}
 			}
 			else
 			{
 				m_keyDescription.text = string.Empty;
-				Debug.LogError(string.Format("Input configuration '{0}' does not exist or axis '{1}' does not exist", m_inputConfigName, m_axisConfigName));
+				Debug.LogError(string.Format("Axis '{0}' does not exist", m_axisConfigName));
 			}
-		}
-
-		private void OnControlsChanged()
-		{
-			InitializeAxisConfig();
-		}
-
-		public void OnPointerDown(PointerEventData data)
-		{
 		}
 
 		public void OnButtonPressed()
 		{
-			if (MainPanel.GetComponent<ControlsRebinder>().WhoIsScanning == string.Empty)
+			ControlsRebinder rebinder = MainPanel.GetComponent<ControlsRebinder>();
+			if (rebinder.WhoIsScanning == string.Empty)
 			{
-				//MainPanel.GetComponent<ControlsRebinder>().oldKeyRev_p = m_axisConfig.bindings[0].Positive;
-				//MainPanel.GetComponent<ControlsRebinder>().oldKeyRev_n = m_axisConfig.bindings[0].Negative;
-				//MainPanel.GetComponent<ControlsRebinder>().oldKeyRev_ap = m_axisConfig.bindings[1].Positive;
-				//MainPanel.GetComponent<ControlsRebinder>().oldKeyRev_an = m_axisConfig.bindings[1].Negative;
-				MainPanel.GetComponent<ControlsRebinder>().actionsRev = m_axisConfig;
-				MainPanel.GetComponent<ControlsRebinder>().EnableAllButtons(false);
-				MainPanel.GetComponent<ControlsRebinder>().isScanning = true;
-				MainPanel.GetComponent<ControlsRebinder>().WhoIsScanning = base.transform.name;
+				//rebinder.oldKeyRev_p = m_axisConfig.bindings[0].Positive;
+				//rebinder.oldKeyRev_n = m_axisConfig.bindings[0].Negative;
+				//rebinder.oldKeyRev_ap = m_axisConfig.bindings[1].Positive;
+				//rebinder.oldKeyRev_an = m_axisConfig.bindings[1].Negative;
+				rebinder._actionsRev = m_axisConfig;
+				rebinder.EnableAllButtons(false);
+				rebinder.isScanning = true;
+				rebinder.WhoIsScanning = transform.name;
 				StartCoroutine(StartInputScanDelayed());
 			}
 		}
@@ -137,19 +113,20 @@ namespace ZeroGravity.UI
 
 		private bool HandleKeyScan()
 		{
-			//if (!IsKeyValid(result.Key))
+			/*if (!IsKeyValid(result.Key))
 			{
 				return false;
 			}
 
-			//MainPanel.GetComponent<ControlsRebinder>().OnKeyChange(result.Key, m_axisConfigName, m_changePositiveKey, m_changeAltKey, ControlItem);
+			MainPanel.GetComponent<ControlsRebinder>().OnKeyChange(result.Key, m_axisConfigName, m_changePositiveKey, m_changeAltKey, ControlItem);
 			StartCoroutine(WaitAfterScan(0.4f));
 			MainPanel.GetComponent<ControlsRebinder>().isScanning = false;
 			MainPanel.GetComponent<ControlsRebinder>().WhoIsScanning = string.Empty;
 
 			// Change key.
 
-			return true;
+			return true;*/
+			return false;
 		}
 
 		private bool IsKeyValid(KeyCode key)
@@ -183,16 +160,6 @@ namespace ZeroGravity.UI
 		{
 			yield return new WaitForSeconds(waitTime);
 			MainPanel.GetComponent<ControlsRebinder>().EnableAllButtons(true);
-		}
-
-		private bool HandleJoystickButtonScan()
-		{
-			return false;
-		}
-
-		private bool HandleJoystickAxisScan()
-		{
-			return false;
 		}
 	}
 }

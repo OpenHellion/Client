@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using OpenHellion.Networking;
 using OpenHellion.ProviderSystem;
-using OpenHellion.Util;
+using OpenHellion.IO;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -1164,7 +1164,7 @@ namespace ZeroGravity.Objects
 					ShipRotationCursor.y += Mathf.Clamp(Mouse.current.delta.x.ReadValue(), -1f, 1f);
 
 					// Stabilise rotation cursor.
-					if (InputController.GetButton(InputController.Actions.Sprint))
+					if (InputController.GetButton(InputController.ConfigAction.Sprint))
 					{
 						ShipRotationCursor *= spaceObjectVessel.RCS.RotationAcceleration / spaceObjectVessel.RCS.RotationStabilization;
 					}
@@ -1177,7 +1177,7 @@ namespace ZeroGravity.Objects
 						ShipRotationCursor += velocity;
 					}
 
-					if (velocity.IsNotEpsilonZero() && !InputController.GetButton(InputController.Actions.Sprint))
+					if (velocity.IsNotEpsilonZero() && !InputController.GetButton(InputController.ConfigAction.Sprint))
 					{
 						lastShipRotationCursorChangeTime = Time.realtimeSinceStartup;
 						shipRotation.x = velocity.x;
@@ -1422,11 +1422,11 @@ namespace ZeroGravity.Objects
 					Client.Instance.QuickLoad();
 				}
 			}
-			if (InputController.GetButtonDown(InputController.Actions.ToggleJetpack))
+			if (InputController.GetButtonDown(InputController.ConfigAction.ToggleJetpack))
 			{
 				FpsController.ToggleJetPack();
 			}
-			if (InputController.GetButtonDown(InputController.Actions.FreeLook))
+			if (InputController.GetButtonDown(InputController.ConfigAction.FreeLook))
 			{
 				if (Inventory.ItemInHands == null)
 				{
@@ -1450,11 +1450,11 @@ namespace ZeroGravity.Objects
 					HighlightAttachPoints(itemInHands.Type, generic, part, partTier);
 				}
 			}
-			else if (InputController.GetButtonUp(InputController.Actions.FreeLook))
+			else if (InputController.GetButtonUp(InputController.ConfigAction.FreeLook))
 			{
-				Invoke("HideHiglightedAttachPoints", 5f);
+				Invoke(nameof(HideHiglightedAttachPoints), 5f);
 			}
-			if (InputController.GetButtonDown(InputController.Actions.Melee) && animHelper.CanMelee && (base.CurrentActiveItem == null || base.CurrentActiveItem.HasMelee))
+			if (InputController.GetButtonDown(InputController.ConfigAction.Melee) && animHelper.CanMelee && (base.CurrentActiveItem == null || base.CurrentActiveItem.HasMelee))
 			{
 				animHelper.SetParameterTrigger(AnimatorHelper.Triggers.Melee);
 			}
@@ -1473,7 +1473,7 @@ namespace ZeroGravity.Objects
 			}
 			if (Mouse.current.middleButton.wasPressedThisFrame && !FpsController.IsZeroG)
 			{
-				Vector3 position = base.transform.position + base.Gravity.normalized + base.transform.forward * 0.7f;
+				Vector3 position = transform.position + Gravity.normalized + transform.forward * 0.7f;
 				Collider[] array = Physics.OverlapSphere(position, 0.7f);
 				Collider[] array2 = array;
 				foreach (Collider collider in array2)
@@ -1482,7 +1482,7 @@ namespace ZeroGravity.Objects
 					if (componentInParent != null && componentInParent.AttachPoint == null && componentInParent.SubType == GenericItemSubType.BasketBall)
 					{
 						componentInParent.DynamicObj.ToggleKinematic(value: false);
-						componentInParent.DynamicObj.rigidBody.AddForce(base.transform.forward * 4f + base.transform.up * 2f, ForceMode.VelocityChange);
+						componentInParent.DynamicObj.rigidBody.AddForce(transform.forward * 4f + transform.up * 2f, ForceMode.VelocityChange);
 						ImpactDetector componentInChildren = componentInParent.DynamicObj.GetComponentInChildren<ImpactDetector>(includeInactive: true);
 						if (componentInChildren != null)
 						{
@@ -1498,16 +1498,16 @@ namespace ZeroGravity.Objects
 			}
 			else if (LockedToTrigger == null && !InIteractLayer && !InLerpingState && !Instance.FpsController.IsOnLadder && Client.IsGameBuild)
 			{
-				if (InputController.GetButtonDown(InputController.Actions.Journal))
+				if (InputController.GetButtonDown(InputController.ConfigAction.Journal))
 				{
 					Client.Instance.CanvasManager.PlayerOverview.Toggle(!Client.Instance.CanvasManager.IsPlayerOverviewOpen, 1);
 				}
-				if (InputController.GetButtonDown(InputController.Actions.Inventory) && !Client.Instance.CanvasManager.IsGameMenuOpen)
+				if (InputController.GetButtonDown(InputController.ConfigAction.Inventory) && !Client.Instance.CanvasManager.IsGameMenuOpen)
 				{
 					inventoryQuickTime = Time.time;
 					Client.Instance.CanvasManager.PlayerOverview.Toggle(!Client.Instance.CanvasManager.IsPlayerOverviewOpen);
 				}
-				else if (InputController.GetButtonUp(InputController.Actions.Inventory) && !Client.Instance.CanvasManager.IsGameMenuOpen && inventoryQuickTime > 0f)
+				else if (InputController.GetButtonUp(InputController.ConfigAction.Inventory) && !Client.Instance.CanvasManager.IsGameMenuOpen && inventoryQuickTime > 0f)
 				{
 					if (Time.time - inventoryQuickTime > inventoryTreshold && Client.Instance.CanvasManager.IsPlayerOverviewOpen)
 					{
@@ -1522,27 +1522,27 @@ namespace ZeroGravity.Objects
 			}
 			if (CurrentHelmet != null)
 			{
-				if (InputController.GetButtonDown(InputController.Actions.ToggleVisor))
+				if (InputController.GetButtonDown(InputController.ConfigAction.ToggleVisor))
 				{
 					CurrentHelmet.ToggleVisor();
 				}
-				if (InputController.GetButtonDown(InputController.Actions.ToggleLights) && !IsDrivingShip)
+				if (InputController.GetButtonDown(InputController.ConfigAction.ToggleLights) && !IsDrivingShip)
 				{
 					CurrentHelmet.ToggleLight(!CurrentHelmet.LightOn);
 				}
 			}
-			if (InputController.GetButtonDown(InputController.Actions.Drop) && Inventory.ItemInHands != null && animHelper.CanDrop)
+			if (InputController.GetButtonDown(InputController.ConfigAction.Drop) && Inventory.ItemInHands != null && animHelper.CanDrop)
 			{
 				dropThrowStartTime = Time.time;
 			}
-			else if (InputController.GetButton(InputController.Actions.Drop) && Inventory.ItemInHands != null && animHelper.CanDrop)
+			else if (InputController.GetButton(InputController.ConfigAction.Drop) && Inventory.ItemInHands != null && animHelper.CanDrop)
 			{
 				if (!Client.Instance.CanvasManager.CanvasUI.ThrowingItem.activeInHierarchy && Time.time - dropThrowStartTime >= Client.DROP_THRESHOLD)
 				{
 					Client.Instance.CanvasManager.CanvasUI.ThrowingItemToggle(val: true);
 				}
 			}
-			else if (InputController.GetButtonUp(InputController.Actions.Drop))
+			else if (InputController.GetButtonUp(InputController.ConfigAction.Drop))
 			{
 				Client.Instance.CanvasManager.CanvasUI.ThrowingItemToggle(val: false);
 				if (Inventory.ItemInHands != null)
@@ -1553,22 +1553,22 @@ namespace ZeroGravity.Objects
 			}
 			if (InLadderTrigger && !FpsController.IsZeroG)
 			{
-				if (InputController.GetButtonDown(InputController.Actions.Interact) && FpsController.Velocity.magnitude < LadderTrigger.MaxAttachVelocity)
+				if (InputController.GetButtonDown(InputController.ConfigAction.Interact) && FpsController.Velocity.magnitude < LadderTrigger.MaxAttachVelocity)
 				{
 					LockedToTrigger = LookingAtTrigger;
 					LadderTrigger.LadderAttach(this);
 				}
-				if ((InputController.GetButtonDown(InputController.Actions.Jump) || Keyboard.current.tabKey.wasPressedThisFrame) && FpsController.IsOnLadder)
+				if ((InputController.GetButtonDown(InputController.ConfigAction.Jump) || Keyboard.current.tabKey.wasPressedThisFrame) && FpsController.IsOnLadder)
 				{
 					LadderTrigger.LadderDetach(Instance);
 				}
 			}
-			if (InputController.GetButtonDown(InputController.Actions.Interact) && LookingAtItem != null && animHelper.CanPickUp)
+			if (InputController.GetButtonDown(InputController.ConfigAction.Interact) && LookingAtItem != null && animHelper.CanPickUp)
 			{
 				pickUpWhenFullCounter = 0f;
 				switchItemTime = Time.time;
 			}
-			else if (InputController.GetButton(InputController.Actions.Interact) && (LookingAtItem != null || LookingAtCorpseCollider != null) && animHelper.CanPickUp)
+			else if (InputController.GetButton(InputController.ConfigAction.Interact) && (LookingAtItem != null || LookingAtCorpseCollider != null) && animHelper.CanPickUp)
 			{
 				if (LookingAtItem != null || LookingAtCorpseCollider != null)
 				{
@@ -1611,16 +1611,16 @@ namespace ZeroGravity.Objects
 					pickUpWhenFullCounter = 0f;
 				}
 			}
-			else if (InputController.GetButtonUp(InputController.Actions.Interact) && LookingAtItem != null && animHelper.CanPickUp && Time.time - switchItemTime < pickUpWhenFullTreshold && LookingAtItem.CanPlayerPickUp(this))
+			else if (InputController.GetButtonUp(InputController.ConfigAction.Interact) && LookingAtItem != null && animHelper.CanPickUp && Time.time - switchItemTime < pickUpWhenFullTreshold && LookingAtItem.CanPlayerPickUp(this))
 			{
 				LookingAtItem.RequestPickUp();
 			}
-			if (InputController.GetButtonUp(InputController.Actions.Interact) && pickingUpItem)
+			if (InputController.GetButtonUp(InputController.ConfigAction.Interact) && pickingUpItem)
 			{
 				pickingUpItem = false;
 				return;
 			}
-			if (InputController.GetButtonUp(InputController.Actions.Interact) && LookingAtTrigger != null && !pickingUpItem && LockedToTrigger == null && !LookingAtTrigger.OtherPlayerLockedToTrigger() && LookingAtTrigger.IsInteractable && (FpsController.IsZeroG || FpsController.IsGrounded) && (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.DontCheck || (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.HandsMustBeEmpty && (Inventory == null || Inventory.ItemInHands == null)) || (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.StoreItemInHands && (Inventory == null || Inventory.StoreItemInHands())) || (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.MustHaveItemInHands && LookingAtTrigger.PlayerHandsItemType != null && Inventory != null && Inventory.ItemInHands != null && LookingAtTrigger.PlayerHandsItemType.Contains(Inventory.ItemInHands.Type))))
+			if (InputController.GetButtonUp(InputController.ConfigAction.Interact) && LookingAtTrigger != null && !pickingUpItem && LockedToTrigger == null && !LookingAtTrigger.OtherPlayerLockedToTrigger() && LookingAtTrigger.IsInteractable && (FpsController.IsZeroG || FpsController.IsGrounded) && (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.DontCheck || (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.HandsMustBeEmpty && (Inventory == null || Inventory.ItemInHands == null)) || (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.StoreItemInHands && (Inventory == null || Inventory.StoreItemInHands())) || (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.MustHaveItemInHands && LookingAtTrigger.PlayerHandsItemType != null && Inventory != null && Inventory.ItemInHands != null && LookingAtTrigger.PlayerHandsItemType.Contains(Inventory.ItemInHands.Type))))
 			{
 				if (LookingAtTrigger.ExclusivePlayerLocking)
 				{
@@ -1635,12 +1635,12 @@ namespace ZeroGravity.Objects
 					LookingAtTrigger.Interact(this);
 				}
 			}
-			if (InputController.GetButtonDown(InputController.Actions.Equip) && Client.IsGameBuild)
+			if (InputController.GetButtonDown(InputController.ConfigAction.Equip) && Client.IsGameBuild)
 			{
 				reloadCalled = false;
 				reloadButtonPressedTime = 0f;
 			}
-			if (InputController.GetButton(InputController.Actions.Equip) && Client.IsGameBuild && !reloadCalled)
+			if (InputController.GetButton(InputController.ConfigAction.Equip) && Client.IsGameBuild && !reloadCalled)
 			{
 				reloadButtonPressedTime += Time.deltaTime;
 				Item itemInHands2 = Inventory.ItemInHands;
@@ -1651,10 +1651,10 @@ namespace ZeroGravity.Objects
 					itemInHands2.Special();
 				}
 			}
-			if ((InputController.GetButtonUp(InputController.Actions.Equip) || (LookingAtItem != null && InputController.GetButtonDown(InputController.Actions.Interact))) && Client.IsGameBuild && !animHelper.GetParameterBool(AnimatorHelper.Parameter.Reloading))
+			if ((InputController.GetButtonUp(InputController.ConfigAction.Equip) || (LookingAtItem != null && InputController.GetButtonDown(InputController.ConfigAction.Interact))) && Client.IsGameBuild && !animHelper.GetParameterBool(AnimatorHelper.Parameter.Reloading))
 			{
 				Item itemInHands3 = Inventory.ItemInHands;
-				if (itemInHands3 != null && (InputController.GetButtonUp(InputController.Actions.Equip) || (InputController.GetButtonDown(InputController.Actions.Interact) && itemInHands3.CanReloadOnInteract(LookingAtItem))))
+				if (itemInHands3 != null && (InputController.GetButtonUp(InputController.ConfigAction.Equip) || (InputController.GetButtonDown(InputController.ConfigAction.Interact) && itemInHands3.CanReloadOnInteract(LookingAtItem))))
 				{
 					if (LookingAtItem != null)
 					{
@@ -1708,7 +1708,7 @@ namespace ZeroGravity.Objects
 					itemInHands5.PrimaryReleased();
 				}
 			}
-			if (InputController.GetButtonUp(InputController.Actions.WeaponMod) && Client.IsGameBuild)
+			if (InputController.GetButtonUp(InputController.ConfigAction.WeaponMod) && Client.IsGameBuild)
 			{
 				Item itemInHands6 = Inventory.ItemInHands;
 				if (itemInHands6 != null && itemInHands6 is Weapon)
@@ -1716,7 +1716,7 @@ namespace ZeroGravity.Objects
 					(itemInHands6 as Weapon).IncrementMod();
 				}
 			}
-			if (!animHelper.GetParameterBool(AnimatorHelper.Parameter.Reloading) && animHelper.CanSwitchState && InputController.GetButtonDown(InputController.Actions.ChangeStance))
+			if (!animHelper.GetParameterBool(AnimatorHelper.Parameter.Reloading) && animHelper.CanSwitchState && InputController.GetButtonDown(InputController.ConfigAction.ChangeStance))
 			{
 				Item itemInHands7 = Inventory.ItemInHands;
 				if (itemInHands7 != null && itemInHands7.HasActiveStance)
@@ -1736,32 +1736,32 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
-			if (InputController.GetButton(InputController.Actions.Sprint) && characterController.CanLockToPoint && characterController.IsZeroG)
+			if (InputController.GetButton(InputController.ConfigAction.Sprint) && characterController.CanLockToPoint && characterController.IsZeroG)
 			{
 				if (!characterController.IsLockedToPoint)
 				{
 					characterController.grabSlowEnabled = true;
 				}
 			}
-			else if (InputController.GetButtonUp(InputController.Actions.Sprint) && characterController.IsLockedToPoint)
+			else if (InputController.GetButtonUp(InputController.ConfigAction.Sprint) && characterController.IsLockedToPoint)
 			{
 				characterController.ResetPlayerLock();
 			}
 			if (IsLockedToTrigger)
 			{
-				if (InputController.GetButtonDown(InputController.Actions.FreeLook) && FpsController.MainCamera.fieldOfView != Client.DefaultCameraFov)
+				if (InputController.GetButtonDown(InputController.ConfigAction.FreeLook) && FpsController.MainCamera.fieldOfView != Client.DefaultCameraFov)
 				{
 					ChangeCamerasFov(Client.DefaultCameraFov);
 				}
-				else if (InputController.GetButtonUp(InputController.Actions.FreeLook) && FpsController.MainCamera.fieldOfView != CurrentPanelFov && CurrentPanelFov > 10f)
+				else if (InputController.GetButtonUp(InputController.ConfigAction.FreeLook) && FpsController.MainCamera.fieldOfView != CurrentPanelFov && CurrentPanelFov > 10f)
 				{
 					ChangeCamerasFov(CurrentPanelFov);
 				}
-				else if (Mouse.current.rightButton.wasPressedThisFrame && InputController.GetButton(InputController.Actions.FreeLook))
+				else if (Mouse.current.rightButton.wasPressedThisFrame && InputController.GetButton(InputController.ConfigAction.FreeLook))
 				{
 					ChangeCamerasFov(cameraFovZoomMinValue);
 				}
-				else if (Mouse.current.rightButton.wasReleasedThisFrame && InputController.GetButton(InputController.Actions.FreeLook))
+				else if (Mouse.current.rightButton.wasReleasedThisFrame && InputController.GetButton(InputController.ConfigAction.FreeLook))
 				{
 					ChangeCamerasFov(Client.DefaultCameraFov);
 				}
@@ -1791,15 +1791,15 @@ namespace ZeroGravity.Objects
 			}
 			if (inventoryUI != null && ((Inventory != null) ? Inventory.Outfit : null) != null && animHelper.CanDrop)
 			{
-				if (InputController.GetButtonDown(InputController.Actions.Quick1))
+				if (InputController.GetButtonDown(InputController.ConfigAction.Quick1))
 				{
 					StartCoroutine(QuickSwitchItem(InventorySlot.Group.Primary));
 				}
-				else if (InputController.GetButtonDown(InputController.Actions.Quick2))
+				else if (InputController.GetButtonDown(InputController.ConfigAction.Quick2))
 				{
 					StartCoroutine(QuickSwitchItem(InventorySlot.Group.Secondary));
 				}
-				else if (InputController.GetButtonDown(InputController.Actions.Quick3))
+				else if (InputController.GetButtonDown(InputController.ConfigAction.Quick3))
 				{
 					StartCoroutine(QuickSwitchItem(null, new List<ItemType>
 					{
@@ -1807,7 +1807,7 @@ namespace ZeroGravity.Objects
 						ItemType.EMPGrenade
 					}));
 				}
-				else if (InputController.GetButtonDown(InputController.Actions.Quick4))
+				else if (InputController.GetButtonDown(InputController.ConfigAction.Quick4))
 				{
 					StartCoroutine(QuickSwitchItem(null, new List<ItemType>
 					{
@@ -1822,9 +1822,9 @@ namespace ZeroGravity.Objects
 				return;
 			}
 			Ship ship = Parent as Ship;
-			float axis = InputController.GetAxis(InputController.Actions.Lean);
-			float axisRaw = InputController.GetAxisRaw(InputController.Actions.Forward);
-			float axisRaw2 = InputController.GetAxisRaw(InputController.Actions.Right);
+			float axis = InputController.GetAxis(InputController.ConfigAction.Lean);
+			float axisRaw = InputController.GetAxisRaw(InputController.ConfigAction.Forward);
+			float axisRaw2 = InputController.GetAxisRaw(InputController.ConfigAction.Right);
 			float num = 0f;
 			float num2 = 0f;
 			if (!FpsController.IsFreeLook)
@@ -1847,8 +1847,8 @@ namespace ZeroGravity.Objects
 			if (ship.Engine != null && ship.Engine.Status == SystemStatus.OnLine && (LockedToTrigger == null || LockedToTrigger.TriggerType != SceneTriggerType.DockingPanel))
 			{
 				bool flag2 = false;
-				bool button = InputController.GetButton(InputController.Actions.ThrustUp);
-				bool button2 = InputController.GetButton(InputController.Actions.ThrustDown);
+				bool button = InputController.GetButton(InputController.ConfigAction.ThrustUp);
+				bool button2 = InputController.GetButton(InputController.ConfigAction.ThrustDown);
 				if (button || button2 || axisRaw.IsNotEpsilonZero())
 				{
 					float num3;
@@ -1907,7 +1907,7 @@ namespace ZeroGravity.Objects
 				shipThrust = Mathf.Sign(axisRaw) * ThrustForward;
 				flag = true;
 			}
-			if (ship.Engine != null && InputController.GetButtonDown(InputController.Actions.EngineToggle))
+			if (ship.Engine != null && InputController.GetButtonDown(InputController.ConfigAction.EngineToggle))
 			{
 				if (ship.Engine.IsSwitchedOn())
 				{
@@ -1923,12 +1923,12 @@ namespace ZeroGravity.Objects
 				shipThrust += Mathf.Sign(axisRaw2) * ThrustRight;
 				flag = true;
 			}
-			if (InputController.GetButton(InputController.Actions.Jump) && !InputController.GetButton(InputController.Actions.Crouch))
+			if (InputController.GetButton(InputController.ConfigAction.Jump) && !InputController.GetButton(InputController.ConfigAction.Crouch))
 			{
 				shipThrust += ThrustUp;
 				flag = true;
 			}
-			if (InputController.GetButton(InputController.Actions.Crouch) && !InputController.GetButton(InputController.Actions.Jump))
+			if (InputController.GetButton(InputController.ConfigAction.Crouch) && !InputController.GetButton(InputController.ConfigAction.Jump))
 			{
 				shipThrust += -ThrustUp;
 				flag = true;
@@ -1948,32 +1948,32 @@ namespace ZeroGravity.Objects
 			{
 				shipThrustStrength = 0f;
 			}
-			if (InputController.GetButton(InputController.Actions.Sprint))
+			if (InputController.GetButton(InputController.ConfigAction.Sprint))
 			{
 				Vector3? autoStabilize = Vector3.one;
 				ship.ChangeStats(null, null, autoStabilize);
 			}
-			else if (InputController.GetButtonUp(InputController.Actions.Sprint))
+			else if (InputController.GetButtonUp(InputController.ConfigAction.Sprint))
 			{
 				Vector3? autoStabilize = Vector3.zero;
 				ship.ChangeStats(null, null, autoStabilize);
 			}
-			if (InputController.GetButtonDown(InputController.Actions.MachVelocity))
+			if (InputController.GetButtonDown(InputController.ConfigAction.MatchVelocity))
 			{
 				Client.Instance.InGamePanels.Pilot.StartTargetStabilization();
 			}
-			if (InputController.GetButtonDown(InputController.Actions.ThrustDown) || InputController.GetButtonDown(InputController.Actions.ThrustUp))
+			if (InputController.GetButtonDown(InputController.ConfigAction.ThrustDown) || InputController.GetButtonDown(InputController.ConfigAction.ThrustUp))
 			{
 				changeEngineThrust = true;
 			}
-			else if (InputController.GetButtonUp(InputController.Actions.ThrustDown) && InputController.GetButtonUp(InputController.Actions.ThrustUp))
+			else if (InputController.GetButtonUp(InputController.ConfigAction.ThrustDown) && InputController.GetButtonUp(InputController.ConfigAction.ThrustUp))
 			{
 				changeEngineThrust = false;
 				changeEngineThrustTime = 0f;
 			}
 			if (changeEngineThrust)
 			{
-				if (InputController.GetButton(InputController.Actions.ThrustDown))
+				if (InputController.GetButton(InputController.ConfigAction.ThrustDown))
 				{
 					changeEngineThrustTime += Time.deltaTime * 5f;
 					if (changeEngineThrustTime > 0.1f)
@@ -1990,7 +1990,7 @@ namespace ZeroGravity.Objects
 						ship.ChangeStats(null, null, null, engineThrustPercentage);
 					}
 				}
-				else if (InputController.GetButton(InputController.Actions.ThrustUp))
+				else if (InputController.GetButton(InputController.ConfigAction.ThrustUp))
 				{
 					changeEngineThrustTime += Time.deltaTime * 5f;
 					if (changeEngineThrustTime > 0.1f)
@@ -2424,39 +2424,39 @@ namespace ZeroGravity.Objects
 			{
 				if (LockedToTrigger.TriggerType == SceneTriggerType.ShipControl)
 				{
-					GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.Actions.Inventory) + "' to stop driving ship");
+					GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.ConfigAction.Inventory) + "' to stop driving ship");
 				}
 				else if (LockedToTrigger.TriggerType == SceneTriggerType.NavigationPanel)
 				{
-					GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.Actions.Inventory) + "' to stop interactin with panel");
+					GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.ConfigAction.Inventory) + "' to stop interactin with panel");
 				}
 			}
 			else if (LookingAtTrigger != null)
 			{
 				if (LookingAtTrigger.TriggerType == SceneTriggerType.ShipControl)
 				{
-					GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.Actions.Interact) + "' to drive ship");
+					GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.ConfigAction.Interact) + "' to drive ship");
 				}
 				else if (LookingAtTrigger.TriggerType == SceneTriggerType.LightSwitch)
 				{
-					GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.Actions.Interact) + "' to switch light");
+					GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.ConfigAction.Interact) + "' to switch light");
 				}
 				else if (LookingAtTrigger.TriggerType == SceneTriggerType.NavigationPanel)
 				{
-					GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.Actions.Interact) + "' interact with panel");
+					GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.ConfigAction.Interact) + "' interact with panel");
 				}
 				else if (LookingAtTrigger.TriggerType == SceneTriggerType.Door)
 				{
-					GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.Actions.Interact) + "' interact");
+					GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.ConfigAction.Interact) + "' interact");
 				}
 				else if (LookingAtTrigger.TriggerType == SceneTriggerType.Turret)
 				{
-					GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.Actions.Interact) + "' to use turret");
+					GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.ConfigAction.Interact) + "' to use turret");
 				}
 			}
 			else if (LookingAtItem != null)
 			{
-				GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.Actions.Interact) + "' to pick up item");
+				GUI.Label(new Rect(15f, 55f, 250f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.ConfigAction.Interact) + "' to pick up item");
 			}
 			if (base.CurrentRoomTrigger != null)
 			{
@@ -2538,7 +2538,7 @@ namespace ZeroGravity.Objects
 			}
 			if (InLadderTrigger && !FpsController.IsOnLadder && !FpsController.IsZeroG)
 			{
-				GUI.Label(new Rect(Screen.width / 2 - 150, Screen.height / 2 - 15, 300f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.Actions.Interact) + "' to use");
+				GUI.Label(new Rect(Screen.width / 2 - 150, Screen.height / 2 - 15, 300f, 30f), "Press '" + InputController.GetAxisKeyName(InputController.ConfigAction.Interact) + "' to use");
 			}
 		}
 
@@ -2825,7 +2825,7 @@ namespace ZeroGravity.Objects
 			FpsController.ToggleAutoFreeLook(SittingOnPilotSeat);
 			LockedToTrigger = null;
 			Client.Instance.ToggleCursor(false);
-			Client.Instance.InputModule.ToggleCustomCursorPosition(val: true);
+			//Client.Instance.InputModule.ToggleCustomCursorPosition(val: true);
 			Client.Instance.CanvasManager.OverlayCanvasIsOn = false;
 			ResetMyRoomTrigger();
 			if (FpsController.CurrentJetpack != null)
@@ -2854,7 +2854,7 @@ namespace ZeroGravity.Objects
 			FpsController.ToggleCameraMovement(false);
 			LockToTrigger(trigger);
 			Client.Instance.ToggleCursor(useCursor);
-			Client.Instance.InputModule.ToggleCustomCursorPosition(!useCursor);
+			//Client.Instance.InputModule.ToggleCustomCursorPosition(!useCursor);
 			Client.Instance.CanvasManager.OverlayCanvasIsOn = true;
 			if (!(Parent is SpaceObjectVessel) && Client.IsGameBuild)
 			{

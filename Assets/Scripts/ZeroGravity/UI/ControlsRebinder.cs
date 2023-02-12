@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using OpenHellion.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -19,8 +20,6 @@ namespace ZeroGravity.UI
 
 			public ControlItem ControlItem;
 		}
-
-		public static List<ControlItem> Controls;
 
 		public static List<ControlItem> MovementControls;
 
@@ -54,37 +53,33 @@ namespace ZeroGravity.UI
 
 		public GameObject ControlPref;
 
-		public List<string> ControlsList = new List<string>();
+		public InputAction _actionsRev;
 
-		private string InputConfName = "KeyboardAndMouse";
+		private bool _isPositiveRev;
 
-		public InputAction actionsRev;
+		private bool _isAltRev;
 
-		private bool isPositiveRev;
+		public KeyCode OldKeyRev_p;
 
-		private bool isAltRev;
+		public KeyCode OldKeyRev_n;
 
-		public KeyCode oldKeyRev_p;
+		public KeyCode OldKeyRev_ap;
 
-		public KeyCode oldKeyRev_n;
+		public KeyCode OldKeyRev_an;
 
-		public KeyCode oldKeyRev_ap;
+		private ControlItem _controlItemValRev;
 
-		public KeyCode oldKeyRev_an;
+		private InputAction _actionsOld;
 
-		private ControlItem controlItemValRev;
+		private bool _isPositiveOld;
 
-		private InputAction actionsOld;
+		private bool _isAltOld;
 
-		private bool isPositiveOld;
+		public KeyCode OldKeyOld;
 
-		private bool isAltOld;
+		private ControlItem _controlItemValOld;
 
-		public KeyCode oldKeyOld;
-
-		private ControlItem controlItemValOld;
-
-		private List<GameObject> AllElements = new List<GameObject>();
+		private List<GameObject> _allElements = new List<GameObject>();
 
 		public static void Initialize()
 		{
@@ -93,55 +88,55 @@ namespace ZeroGravity.UI
 				new ControlItem
 				{
 					Name = Localization.Forward.ToUpper(),
-					Actions = InputController.Actions.Forward
+					Action = InputController.ConfigAction.Forward
 				},
 				new ControlItem
 				{
 					Name = Localization.Backward.ToUpper(),
-					Actions = InputController.Actions.Forward,
+					Action = InputController.ConfigAction.Forward,
 					IsPositive = false
 				},
 				new ControlItem
 				{
 					Name = Localization.Right.ToUpper(),
-					Actions = InputController.Actions.Right
+					Action = InputController.ConfigAction.Right
 				},
 				new ControlItem
 				{
 					Name = Localization.Left.ToUpper(),
-					Actions = InputController.Actions.Right,
+					Action = InputController.ConfigAction.Right,
 					IsPositive = false
 				},
 				new ControlItem
 				{
 					Name = Localization.RotationClockwise.ToUpper(),
-					Actions = InputController.Actions.Lean
+					Action = InputController.ConfigAction.Lean
 				},
 				new ControlItem
 				{
 					Name = Localization.RotationAnticlockwise.ToUpper(),
-					Actions = InputController.Actions.Lean,
+					Action = InputController.ConfigAction.Lean,
 					IsPositive = false
 				},
 				new ControlItem
 				{
 					Name = Localization.Jump.ToUpper() + " / <color='#A0D3F8'>" + Localization.Up.ToUpper() + "</color>",
-					Actions = InputController.Actions.Jump
+					Action = InputController.ConfigAction.Jump
 				},
 				new ControlItem
 				{
 					Name = Localization.Crouch.ToUpper() + " / <color='#A0D3F8'>" + Localization.Down.ToUpper() + "</color>",
-					Actions = InputController.Actions.Crouch
+					Action = InputController.ConfigAction.Crouch
 				},
 				new ControlItem
 				{
 					Name = Localization.Sprint.ToUpper() + " / <color='#A0D3F8'>" + Localization.Grab.ToUpper() + "</color> / " + Localization.Stabilization.ToUpper(),
-					Actions = InputController.Actions.Sprint
+					Action = InputController.ConfigAction.Sprint
 				},
 				new ControlItem
 				{
 					Name = Localization.FreeLook.ToUpper(),
-					Actions = InputController.Actions.FreeLook
+					Action = InputController.ConfigAction.FreeLook
 				}
 			};
 
@@ -150,47 +145,47 @@ namespace ZeroGravity.UI
 				new ControlItem
 				{
 					Name = Localization.Inventory.ToUpper() + " / <color='#A0D3F8'>" + Localization.ExitPanel.ToUpper() + "</color>",
-					Actions = InputController.Actions.Inventory
+					Action = InputController.ConfigAction.Inventory
 				},
 				new ControlItem
 				{
 					Name = Localization.Journal.ToUpper(),
-					Actions = InputController.Actions.Journal
+					Action = InputController.ConfigAction.Journal
 				},
 				new ControlItem
 				{
 					Name = Localization.InteractTakeInHands.ToUpper(),
-					Actions = InputController.Actions.Interact
+					Action = InputController.ConfigAction.Interact
 				},
 				new ControlItem
 				{
 					Name = Localization.DropThrow.ToUpper(),
-					Actions = InputController.Actions.Drop
+					Action = InputController.ConfigAction.Drop
 				},
 				new ControlItem
 				{
 					Name = Localization.EquipItem.ToUpper() + " / <color='#A0D3F8'>" + Localization.Reload.ToUpper() + "</color> / " + Localization.ChangeDockingPort.ToUpper(),
-					Actions = InputController.Actions.Equip
+					Action = InputController.ConfigAction.Equip
 				},
 				new ControlItem
 				{
 					Name = Localization.ChangeStance.ToUpper(),
-					Actions = InputController.Actions.ChangeStance
+					Action = InputController.ConfigAction.ChangeStance
 				},
 				new ControlItem
 				{
 					Name = Localization.ToggleLights.ToUpper(),
-					Actions = InputController.Actions.ToggleLights
+					Action = InputController.ConfigAction.ToggleLights
 				},
 				new ControlItem
 				{
 					Name = Localization.WeaponModKey.ToUpper(),
-					Actions = InputController.Actions.WeaponMod
+					Action = InputController.ConfigAction.WeaponMod
 				},
 				new ControlItem
 				{
 					Name = Localization.Melee.ToUpper(),
-					Actions = InputController.Actions.Melee
+					Action = InputController.ConfigAction.Melee
 				}
 			};
 
@@ -199,22 +194,22 @@ namespace ZeroGravity.UI
 				new ControlItem
 				{
 					Name = Localization.EngineToggle.ToUpper(),
-					Actions = InputController.Actions.EngineToggle
+					Action = InputController.ConfigAction.EngineToggle
 				},
 				new ControlItem
 				{
 					Name = Localization.EngineThrustUp.ToUpper(),
-					Actions = InputController.Actions.ThrustUp
+					Action = InputController.ConfigAction.ThrustUp
 				},
 				new ControlItem
 				{
 					Name = Localization.EngineThrustDown.ToUpper(),
-					Actions = InputController.Actions.ThrustDown
+					Action = InputController.ConfigAction.ThrustDown
 				},
 				new ControlItem
 				{
 					Name = Localization.MatchVelocityControl.ToUpper(),
-					Actions = InputController.Actions.MachVelocity
+					Action = InputController.ConfigAction.MatchVelocity
 				}
 			};
 
@@ -223,37 +218,37 @@ namespace ZeroGravity.UI
 				new ControlItem
 				{
 					Name = Localization.ToggleVisor.ToUpper(),
-					Actions = InputController.Actions.ToggleVisor
+					Action = InputController.ConfigAction.ToggleVisor
 				},
 				new ControlItem
 				{
 					Name = Localization.ToggleJetpack.ToUpper(),
-					Actions = InputController.Actions.ToggleJetpack
+					Action = InputController.ConfigAction.ToggleJetpack
 				},
 				new ControlItem
 				{
 					Name = Localization.HelmetRadar.ToUpper(),
-					Actions = InputController.Actions.HelmetRadar
+					Action = InputController.ConfigAction.HelmetRadar
 				},
 				new ControlItem
 				{
 					Name = Localization.TargetUp.ToUpper(),
-					Actions = InputController.Actions.TargetUp
+					Action = InputController.ConfigAction.TargetUp
 				},
 				new ControlItem
 				{
 					Name = Localization.TargetDown.ToUpper(),
-					Actions = InputController.Actions.TargetDown
+					Action = InputController.ConfigAction.TargetDown
 				},
 				new ControlItem
 				{
 					Name = Localization.FilterLeft.ToUpper(),
-					Actions = InputController.Actions.FilterLeft
+					Action = InputController.ConfigAction.FilterLeft
 				},
 				new ControlItem
 				{
 					Name = Localization.FilterRight.ToUpper(),
-					Actions = InputController.Actions.FilterRight
+					Action = InputController.ConfigAction.FilterRight
 				}
 			};
 
@@ -262,17 +257,17 @@ namespace ZeroGravity.UI
 				new ControlItem
 				{
 					Name = Localization.Chat.ToUpper(),
-					Actions = InputController.Actions.Chat
+					Action = InputController.ConfigAction.Chat
 				},
 				new ControlItem
 				{
 					Name = Localization.Talk.ToUpper(),
-					Actions = InputController.Actions.Talk
+					Action = InputController.ConfigAction.Talk
 				},
 				new ControlItem
 				{
 					Name = Localization.Radio.ToUpper(),
-					Actions = InputController.Actions.Radio
+					Action = InputController.ConfigAction.Radio
 				}
 			};
 
@@ -281,22 +276,22 @@ namespace ZeroGravity.UI
 				new ControlItem
 				{
 					Name = Localization.Quick1,
-					Actions = InputController.Actions.Quick1
+					Action = InputController.ConfigAction.Quick1
 				},
 				new ControlItem
 				{
 					Name = Localization.Quick2,
-					Actions = InputController.Actions.Quick2
+					Action = InputController.ConfigAction.Quick2
 				},
 				new ControlItem
 				{
 					Name = Localization.Quick3,
-					Actions = InputController.Actions.Quick3
+					Action = InputController.ConfigAction.Quick3
 				},
 				new ControlItem
 				{
 					Name = Localization.Quick4,
-					Actions = InputController.Actions.Quick4
+					Action = InputController.ConfigAction.Quick4
 				}
 			};
 		}
@@ -307,21 +302,13 @@ namespace ZeroGravity.UI
 			UpdateUI();
 		}
 
-		private void Start()
-		{
-		}
-
-		private void OnEnable()
-		{
-		}
-
 		public void UpdateUI()
 		{
-			foreach (GameObject allElement in AllElements)
+			foreach (GameObject allElement in _allElements)
 			{
-				Object.Destroy(allElement);
+				Destroy(allElement);
 			}
-			AllElements.Clear();
+			_allElements.Clear();
 			InstantiateKeyboardControls();
 		}
 
@@ -367,13 +354,13 @@ namespace ZeroGravity.UI
 		public void InstantiateControlPref(ControlItem controlName, Transform holder)
 		{
 			GameObject controlPref = Instantiate(ControlPref, holder);
-			AllElements.Add(controlPref);
+			_allElements.Add(controlPref);
 			controlPref.transform.Find("ControlNameText").GetComponent<Text>().text = controlName.Name;
 			controlPref.transform.localScale = new Vector3(1f, 1f, 1f);
 
 			RebindInput rebinder = controlPref.transform.Find("Button").GetComponent<RebindInput>();
-			Button button = controlPref.transform.Find("Button").GetComponent<Button>();
-			rebinder.SetRebinder(InputConfName, controlName, rebinder.transform.Find("Text").GetComponent<Text>(), gameObject, isAlt: false);
+			Button button = rebinder.GetComponent<Button>();
+			rebinder.SetRebinder(controlName, rebinder.transform.Find("Text").GetComponent<Text>(), gameObject);
 			button.interactable = controlName.CanBeChanged;
 			button.onClick.AddListener(rebinder.OnButtonPressed);
 
@@ -387,32 +374,17 @@ namespace ZeroGravity.UI
 			});
 
 			controlPref.transform.name = controlName.Name;
-
-			RebindInput altRebind = controlPref.transform.Find("AltButton").GetComponent<RebindInput>();
-			Button altButton = controlPref.transform.Find("AltButton").GetComponent<Button>();
-			altRebind.SetRebinder(InputConfName, controlName, altRebind.transform.Find("Text").GetComponent<Text>(), gameObject, isAlt: true);
-			altButton.interactable = controlName.CanBeChanged;
-			altButton.onClick.AddListener(altRebind.OnButtonPressed);
-
-			buttonList.Add(new ButtonListItem
-			{
-				Button = altButton,
-				ButtonObject = altRebind.gameObject,
-				ButtonText = altRebind.transform.Find("Text").GetComponent<Text>(),
-				IsAlt = true,
-				ControlItem = altRebind.ControlItem
-			});
 		}
 
 		private void SaveControlForRevert(InputAction actions, bool isPositive, bool isAlt, KeyCode oldKey, ControlItem controlItemVal, bool isPositiveR, bool isAltR)
 		{
-			actionsOld = actions;
-			isPositiveOld = isPositive;
-			isAltOld = isAlt;
-			oldKeyOld = oldKey;
-			controlItemValRev = controlItemVal;
-			isPositiveRev = isPositiveR;
-			isAltRev = isAltR;
+			_actionsOld = actions;
+			_isPositiveOld = isPositive;
+			_isAltOld = isAlt;
+			OldKeyOld = oldKey;
+			_controlItemValRev = controlItemVal;
+			_isPositiveRev = isPositiveR;
+			_isAltRev = isAltR;
 		}
 
 		public void DuplicateControlsYes()
@@ -422,69 +394,69 @@ namespace ZeroGravity.UI
 
 		public void DuplicateControlsNo()
 		{
-			for (int i = 0; i < InputManager.PlayerOneControlScheme.Actions.Count; i++)
+			for (int i = 0; i < InputController.Instance.InputActions.actionMaps[0].actions.Count; i++)
 			{
-				if (InputManager.PlayerOneControlScheme.Actions[i] == actionsRev)
+				/*if (InputController.Instance.InputActions.actionMaps[0].actions[i] == actionsRev)
 				{
 					if (isPositiveRev && !isAltRev)
 					{
-						InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Positive = oldKeyRev_p;
+						InputController.Instance.InputActions.actionMaps[0].actions[i].bindings[0].Positive = oldKeyRev_p;
 					}
 					else if (!isPositiveRev && !isAltRev)
 					{
-						InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Negative = oldKeyRev_n;
+						InputController.Instance.InputActions.actionMaps[0].actions[i].bindings[0].Negative = oldKeyRev_n;
 					}
 					else if (isPositiveRev && isAltRev)
 					{
-						InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Positive = oldKeyRev_ap;
+						InputController.Instance.InputActions.actionMaps[0].actions[i].bindings[1].Positive = oldKeyRev_ap;
 					}
 					else if (!isPositiveRev && isAltRev)
 					{
-						InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Negative = oldKeyRev_an;
+						InputController.Instance.InputActions.actionMaps[0].actions[i].bindings[1].Negative = oldKeyRev_an;
 					}
 				}
-				if (InputManager.PlayerOneControlScheme.Actions[i] == actionsOld)
+				if (InputController.Instance.InputActions.actionMaps[0].actions[i] == actionsOld)
 				{
 					if (isPositiveOld && !isAltOld)
 					{
-						InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Positive = oldKeyOld;
+						InputController.Instance.InputActions.actionMaps[0].actions[i].bindings[0].Positive = oldKeyOld;
 					}
 					else if (!isPositiveOld && !isAltOld)
 					{
-						InputManager.PlayerOneControlScheme.Actions[i].Bindings[0].Negative = oldKeyOld;
+						InputController.Instance.InputActions.actionMaps[0].actions[i].bindings[0].Negative = oldKeyOld;
 					}
 					else if (isPositiveOld && isAltOld)
 					{
-						InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Positive = oldKeyOld;
+						InputController.Instance.InputActions.actionMaps[0].actions[i].bindings[1].Positive = oldKeyOld;
 					}
 					else if (!isPositiveOld && isAltOld)
 					{
-						InputManager.PlayerOneControlScheme.Actions[i].Bindings[1].Negative = oldKeyOld;
+						InputController.Instance.InputActions.actionMaps[0].actions[i].bindings[1].Negative = oldKeyOld;
 					}
-				}
+				}*/
 			}
 			foreach (ButtonListItem button in buttonList)
 			{
-				if (button.ControlItem == controlItemValRev)
+				if (button.ControlItem == _controlItemValRev)
 				{
-					if (!button.IsAlt && !isAltRev)
+					if (!button.IsAlt && !_isAltRev)
 					{
-						button.ButtonText.text = (!isPositiveRev) ? oldKeyRev_n.ToString() : oldKeyRev_p.ToString();
+						button.ButtonText.text = (!_isPositiveRev) ? OldKeyRev_n.ToString() : OldKeyRev_p.ToString();
 					}
-					else if (button.IsAlt && isAltRev)
+					else if (button.IsAlt && _isAltRev)
 					{
-						button.ButtonText.text = (!isPositiveRev) ? oldKeyRev_an.ToString() : oldKeyRev_ap.ToString();
+						button.ButtonText.text = (!_isPositiveRev) ? OldKeyRev_an.ToString() : OldKeyRev_ap.ToString();
 					}
 				}
-				else if (button.ControlItem.Name == controlItemValOld.Name)
+				else if (button.ControlItem.Name == _controlItemValOld.Name)
 				{
-					if (!isAltOld && !button.IsAlt)
+					if (!_isAltOld && !button.IsAlt)
 					{
-						button.ButtonText.text = oldKeyOld.ToString();
+						button.ButtonText.text = OldKeyOld.ToString();
 					}
-					else if (isAltOld && button.IsAlt)
+					else if (_isAltOld && button.IsAlt)
 					{
-						button.ButtonText.text = oldKeyOld.ToString();
+						button.ButtonText.text = OldKeyOld.ToString();
 					}
 				}
 			}
@@ -497,33 +469,33 @@ namespace ZeroGravity.UI
 			{
 				return;
 			}
-			foreach (InputAction action in InputManager.PlayerOneControlScheme.Actions)
+			/*foreach (InputAction action in InputController.Instance.InputActions.actionMaps[0].actions)
 			{
-				if (action.Bindings[0].Positive == key)
+				if (action.bindings[0].Positive == key)
 				{
 					SaveControlForRevert(action, isPositive: true, isAlt: false, key, controlItemVal, changePositive, changeAlt);
-					action.Bindings[0].Positive = KeyCode.None;
+					action.bindings[0].Positive = KeyCode.None;
 				}
-				else if (action.Bindings[0].Negative == key)
+				else if (action.bindings[0].Negative == key)
 				{
 					SaveControlForRevert(action, isPositive: false, isAlt: false, key, controlItemVal, changePositive, changeAlt);
-					action.Bindings[0].Negative = KeyCode.None;
+					action.bindings[0].Negative = KeyCode.None;
 				}
-				else if (action.Bindings[1].Positive == key)
+				else if (action.bindings[1].Positive == key)
 				{
 					SaveControlForRevert(action, isPositive: true, isAlt: true, key, controlItemVal, changePositive, changeAlt);
-					action.Bindings[1].Positive = KeyCode.None;
+					action.bindings[1].Positive = KeyCode.None;
 				}
-				else if (action.Bindings[1].Negative == key)
+				else if (action.bindings[1].Negative == key)
 				{
 					SaveControlForRevert(action, isPositive: false, isAlt: true, key, controlItemVal, changePositive, changeAlt);
-					action.Bindings[1].Negative = KeyCode.None;
+					action.bindings[1].Negative = KeyCode.None;
 				}
-			}
+			}*/
 			ButtonListItem buttonListItem = buttonList.Find((ButtonListItem m) => m.ButtonText.text == key.ToString());
 			if (buttonListItem != null)
 			{
-				controlItemValOld = buttonListItem.ControlItem;
+				_controlItemValOld = buttonListItem.ControlItem;
 				buttonListItem.ButtonText.text = string.Empty;
 				if (buttonListItem.ControlItem.Name != controlItemVal.Name)
 				{

@@ -15,6 +15,7 @@ using OpenHellion.ProviderSystem;
 using OpenHellion.Networking;
 using TriInspector;
 using UnityEngine.InputSystem;
+using OpenHellion.IO;
 
 namespace ZeroGravity
 {
@@ -514,7 +515,7 @@ namespace ZeroGravity
 				if (Client.Instance.SinglePlayerMode)
 				{
 					Client.Instance.ToggleCursor(true);
-					Client.Instance.InputModule.ToggleCustomCursorPosition(val: false);
+					//Client.Instance.InputModule.ToggleCustomCursorPosition(val: false);
 				}
 				PressAnyKey.Activate(!Client.Instance.SinglePlayerMode);
 			}
@@ -927,7 +928,7 @@ namespace ZeroGravity
 		{
 			if (!DefaultInteractionTipSeen && Client.Instance.CanvasManager.ShowTips)
 			{
-				DefaultInteractionTip.GetComponentInChildren<Text>(includeInactive: true).text = string.Format(Localization.PressToInteract, InputController.GetAxisKeyName(InputController.Actions.Interact)).ToUpper();
+				DefaultInteractionTip.GetComponentInChildren<Text>(includeInactive: true).text = string.Format(Localization.PressToInteract, InputController.GetAxisKeyName(InputController.ConfigAction.Interact)).ToUpper();
 				DefaultInteractionTip.Activate(value: true);
 				DefaultInteractionTipSeen = true;
 			}

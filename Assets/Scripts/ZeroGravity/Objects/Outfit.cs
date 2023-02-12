@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.IO;
 using UnityEngine;
 using ZeroGravity.Data;
-using ZeroGravity.UI;
 
 namespace ZeroGravity.Objects
 {
@@ -27,7 +27,7 @@ namespace ZeroGravity.Objects
 
 			public bool MustBeEmptyToRemoveOutfit;
 
-			public InputController.Actions ShortcutKey;
+			public InputController.ConfigAction ShortcutKey;
 
 			public int CycleIndex = -1;
 
@@ -130,7 +130,7 @@ namespace ZeroGravity.Objects
 							item.HideAttachedObject = true;
 						}
 					}
-					InputController.Actions? shortKey = null;
+					InputController.ConfigAction? shortKey = null;
 					if (slot.ShortcutKey != 0)
 					{
 						shortKey = slot.ShortcutKey;

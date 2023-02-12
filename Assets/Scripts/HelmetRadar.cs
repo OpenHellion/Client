@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using OpenHellion.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -139,7 +140,7 @@ public class HelmetRadar : MonoBehaviour
 		}
 		if (!Client.Instance.IsChatOpened)
 		{
-			if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.Actions.HelmetRadar))
+			if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.ConfigAction.HelmetRadar))
 			{
 				ToggleRadar();
 			}
@@ -183,7 +184,7 @@ public class HelmetRadar : MonoBehaviour
 						GoToCurrentElement();
 					}
 				}
-				if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.Actions.TargetDown))
+				if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.ConfigAction.TargetDown))
 				{
 					if (radarItems.Count - 1 >= currTargetIndex + 1)
 					{
@@ -197,7 +198,7 @@ public class HelmetRadar : MonoBehaviour
 					currentTarget.IsSelected = true;
 					GoToCurrentElement();
 				}
-				else if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.Actions.TargetUp))
+				else if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.ConfigAction.TargetUp))
 				{
 					if (currentTarget == null)
 					{

@@ -1,3 +1,4 @@
+using OpenHellion.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -77,7 +78,7 @@ namespace ZeroGravity.UI
 			ControlsData.InverMouseWhileDriving = Client.Instance.InvertMouseWhileDriving;
 			if (!ControlsRebind.CheckIfEmpty())
 			{
-				ControlsData.ActionMap = InputController.Instance.InputActions.FindActionMap(InputController.ActionMapName);
+				ControlsData.ActionMap = InputController.Instance.InputActions.FindActionMap(InputController.ActionMapName).ToJson();
 			}
 		}
 

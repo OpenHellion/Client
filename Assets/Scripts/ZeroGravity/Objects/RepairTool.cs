@@ -7,6 +7,7 @@ using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.UI;
 using OpenHellion.Networking;
+using OpenHellion.IO;
 
 namespace ZeroGravity.Objects
 {
@@ -141,7 +142,7 @@ namespace ZeroGravity.Objects
 
 		private void Update()
 		{
-			if (active && Type == ItemType.FireExtinguisher && FuelCompartment.Resources[0].Quantity > float.Epsilon && MyPlayer.Instance.FpsController.IsZeroG && !InputController.GetButton(InputController.Actions.Sprint))
+			if (active && Type == ItemType.FireExtinguisher && FuelCompartment.Resources[0].Quantity > float.Epsilon && MyPlayer.Instance.FpsController.IsZeroG && !InputController.GetButton(InputController.ConfigAction.Sprint))
 			{
 				MyPlayer.Instance.FpsController.AddForce(-(MyPlayer.Instance.FpsController.MainCamera.transform.rotation * Vector3.forward).normalized * 0.03f, ForceMode.VelocityChange);
 			}

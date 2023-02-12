@@ -84,7 +84,7 @@ namespace ZeroGravity.UI
 			isLockedToTrigger = toggle;
 			MainCanvas.SetActive(toggle);
 			Client.Instance.ToggleCursor(toggle);
-			Client.Instance.InputModule.ToggleCustomCursorPosition(!toggle);
+			//Client.Instance.InputModule.ToggleCustomCursorPosition(!toggle);
 			Client.Instance.CanvasManager.OverlayCanvasIsOn = toggle;
 			MyPlayer.Instance.FpsController.ResetVelocity();
 			MyPlayer.Instance.FpsController.ToggleAttached(toggle);

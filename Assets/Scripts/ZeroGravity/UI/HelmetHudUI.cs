@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.IO;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
@@ -171,13 +172,13 @@ namespace ZeroGravity.UI
 
 		private void Start()
 		{
-			ToggleTargetingInfo.text = string.Format(Localization.PressToToggleTargeting.ToUpper(), InputController.GetAxisKeyName(InputController.Actions.HelmetRadar));
+			ToggleTargetingInfo.text = string.Format(Localization.PressToToggleTargeting.ToUpper(), InputController.GetAxisKeyName(InputController.ConfigAction.HelmetRadar));
 			UpdateQuickSlots();
 		}
 
 		private void Update()
 		{
-			if (Radar.CanRadarWork && Radar.AllTargets.Count > 0 && InputController.GetButtonDown(InputController.Actions.HelmetRadar))
+			if (Radar.CanRadarWork && Radar.AllTargets.Count > 0 && InputController.GetButtonDown(InputController.ConfigAction.HelmetRadar))
 			{
 				Radar.ToggleTargeting(!Radar.IsActive);
 			}
@@ -315,7 +316,7 @@ namespace ZeroGravity.UI
 			}
 			if (MyPlayer.Instance.FpsController.IsJetpackOn)
 			{
-				StabilityOn.Activate(InputController.GetButton(InputController.Actions.Sprint));
+				StabilityOn.Activate(InputController.GetButton(InputController.ConfigAction.Sprint));
 			}
 			else if (StabilityOn.activeInHierarchy)
 			{

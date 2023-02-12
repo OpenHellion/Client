@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.IO;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -155,7 +156,7 @@ namespace ZeroGravity.ShipComponents
 		private void Start()
 		{
 			RCSPanel.SetActive(ParentShip.RCS != null);
-			ControlsForChangingPort.text = string.Format(Localization.ControlChangeDockingPort, GetControlName(InputController.Actions.Equip)).ToUpper();
+			ControlsForChangingPort.text = string.Format(Localization.ControlChangeDockingPort, GetControlName(InputController.ConfigAction.Equip)).ToUpper();
 		}
 
 		private void Update()
@@ -170,7 +171,7 @@ namespace ZeroGravity.ShipComponents
 			}
 			if (!Client.Instance.CanvasManager.ConsoleIsUp)
 			{
-				if (InputController.GetButtonDown(InputController.Actions.Equip))
+				if (InputController.GetButtonDown(InputController.ConfigAction.Equip))
 				{
 					TargetDockingPort = null;
 					changeTargetedModulePort = true;
@@ -207,8 +208,8 @@ namespace ZeroGravity.ShipComponents
 					}
 					ChangeTargetedPort();
 				}
-				bool buttonDown = InputController.GetButtonDown(InputController.Actions.TargetUp);
-				bool buttonDown2 = InputController.GetButtonDown(InputController.Actions.TargetDown);
+				bool buttonDown = InputController.GetButtonDown(InputController.ConfigAction.TargetUp);
+				bool buttonDown2 = InputController.GetButtonDown(InputController.ConfigAction.TargetDown);
 				if (TargetedModulePorts.Count > 0 && (buttonDown || buttonDown2))
 				{
 					TargetedModulePorts[currentTargetedModulePortIndex].UI.IsSelected = false;
@@ -741,7 +742,7 @@ namespace ZeroGravity.ShipComponents
 			return dockingPanelUIItem;
 		}
 
-		public string GetControlName(InputController.Actions axName)
+		public string GetControlName(InputController.ConfigAction axName)
 		{
 			string axisKeyName = InputController.GetAxisKeyName(axName);
 			if (axisKeyName == "None")

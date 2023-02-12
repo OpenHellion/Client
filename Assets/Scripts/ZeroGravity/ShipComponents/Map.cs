@@ -525,7 +525,7 @@ namespace ZeroGravity.ShipComponents
 			OldFocusObject = SelectedObject;
 			Client.Instance.ToggleCursor(true);
 			Client.Instance.CanvasManager.OverlayCanvasIsOn = true;
-			Client.Instance.InputModule.ToggleCustomCursorPosition(val: false);
+			//Client.Instance.InputModule.ToggleCustomCursorPosition(val: false);
 			if (FocusObject == MyShip)
 			{
 				zoom = 8452280000.0 / FocusObject.MainObject.ParentCelesitalBody.Radius * (double)ClosestSunScale / 2.0;
@@ -548,7 +548,7 @@ namespace ZeroGravity.ShipComponents
 			Panel.OnDetach();
 			Client.Instance.ToggleCursor(false);
 			Client.Instance.CanvasManager.OverlayCanvasIsOn = false;
-			Client.Instance.InputModule.ToggleCustomCursorPosition(val: true);
+			//Client.Instance.InputModule.ToggleCustomCursorPosition(val: true);
 			Client.Instance.CanvasManager.CanvasUI.QuestIndicators.RemoveMarkersOnMap();
 		}
 
