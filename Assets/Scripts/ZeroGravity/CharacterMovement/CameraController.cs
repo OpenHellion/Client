@@ -47,9 +47,6 @@ namespace ZeroGravity.CharacterMovement
 
 		public CameraShake cameraShakeController;
 
-		[SerializeField]
-		private float mouseSensitivity = 2.5f;
-
 		private float mouseRightAxis;
 
 		private float mouseUpAxis;
@@ -158,19 +155,6 @@ namespace ZeroGravity.CharacterMovement
 				return freeLookYTransform;
 			}
 		}
-
-		public float MouseSensitivity
-		{
-			get
-			{
-				return mouseSensitivity;
-			}
-			set
-			{
-				mouseSensitivity = value;
-			}
-		}
-
 		public bool IsZeroG
 		{
 			set
@@ -306,15 +290,15 @@ namespace ZeroGravity.CharacterMovement
 
 		private void GetMouseAxis()
 		{
-			mouseRightAxis = Mouse.current.delta.x.ReadValue() * mouseSensitivity;
-			mouseUpAxis = Mouse.current.delta.y.ReadValue() * mouseSensitivity;
+			mouseRightAxis = Mouse.current.delta.x.ReadValue() * 0.2f * InputController.MouseSensitivity;
+			mouseUpAxis = Mouse.current.delta.y.ReadValue() * 0.2f * InputController.MouseSensitivity;
 			if (Client.IsGameBuild)
 			{
-				mouseUpAxis = -((!Client.Instance.InvertedMouse) ? 1 : (-1)) * Mouse.current.delta.y.ReadValue() * mouseSensitivity;
+				mouseUpAxis = -((!Client.Instance.InvertedMouse) ? 1 : (-1)) * Mouse.current.delta.y.ReadValue() * 0.2f * InputController.MouseSensitivity;
 			}
 			else
 			{
-				mouseUpAxis = -1f * Mouse.current.delta.y.ReadValue() * mouseSensitivity;
+				mouseUpAxis = -1f * Mouse.current.delta.y.ReadValue() * 0.2f * InputController.MouseSensitivity;
 			}
 		}
 

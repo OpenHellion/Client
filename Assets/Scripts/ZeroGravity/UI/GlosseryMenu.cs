@@ -1,8 +1,5 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using OpenHellion.IO;
-using OpenHellion.Networking;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -138,10 +135,11 @@ namespace ZeroGravity.UI
 
 		public void ShowTooltip()
 		{
-			GameObject gameObject = HandleUtility.PickGameObject(Mouse.current.position.ReadValue(), out _);
-			if (gameObject != null)
+			Vector2 ray = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+			RaycastHit2D hit = Physics2D.Raycast(ray, ray, 1);
+			if (hit.transform != null)
 			{
-				GlossaryItemUI componentInParent = gameObject.GetComponentInParent<GlossaryItemUI>();
+				GlossaryItemUI componentInParent = hit.transform.GetComponentInParent<GlossaryItemUI>();
 				if (componentInParent != null)
 				{
 					RectTransform component = TooltipPanel.GetComponent<RectTransform>();

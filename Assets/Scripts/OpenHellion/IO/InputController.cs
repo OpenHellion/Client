@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using ZeroGravity.Network;
 
 namespace OpenHellion.IO
 {
@@ -54,15 +53,16 @@ namespace OpenHellion.IO
 			Quick4
 		}
 
-		// TODO: Implement mouse sensitivity.
+		private static float _mouseSensitivity;
 		public static float MouseSensitivity
 		{
 			get
 			{
-				return 1;
+				return _mouseSensitivity;
 			}
 			set
 			{
+				_mouseSensitivity = value;
 			}
 		}
 
@@ -198,51 +198,51 @@ namespace OpenHellion.IO
 				{
 					settingsControls = defaultControls;
 				}
-			}
-			else
-			{
-				settingsControls = defaultControls;
-			}
 
-			Instance.InputActions.RemoveActionMap(ActionMapName);
-			Instance.InputActions.AddActionMap(settingsControls);
-			settingsControls.Enable();
+				Instance.InputActions.FindActionMap(ActionMapName).Disable();
+				Instance.InputActions.RemoveActionMap(ActionMapName);
+				Instance.InputActions.AddActionMap(settingsControls);
+				settingsControls.Enable();
+			}
 		}
 
 		public static void LoadDefaultConfig()
 		{
 			Instance.InputActions = InputActionAsset.FromJson(Resources.Load("Data/ControlsDefault").ToString());
+			Instance.InputActions.Enable();
 		}
 
 		public static void ResetInputAxis()
 		{
+			Debug.Log("Reset input axes!");
 			//InputManager.ResetInputAxes();
 		}
 
-		public static string GetAxisKeyName(ConfigAction key, bool getAlt = false)
+		public static string GetAxisKeyName(ConfigAction key, bool getPositive = false, bool getNegative = false)
 		{
 			InputAction action = Instance.InputActions.FindAction(key.ToString());
-			if (!getAlt)
+
+
+			// Get main binding.
+			if (getPositive && getNegative || !getPositive && !getNegative)
 			{
-				// Get main binding.
-				return action.bindings[0].ToString();
+				return action.GetBindingDisplayString();
 			}
-			/*else
+
+			// Get composite bindings.
+			foreach (InputBinding binding in action.bindings)
 			{
-				// Get alternative binding.
-				if (getPositive && getNegative)
+				if (!binding.isPartOfComposite) continue;
+
+				if (getPositive && binding.name == "positive")
 				{
-					return actions.Bindings[1].Positive.ToString() + "/" + actions.Bindings[1].Negative;
+					return binding.ToDisplayString();
 				}
-				if (getPositive && !getNegative)
+				if (getNegative && binding.name == "negative")
 				{
-					return actions.Bindings[1].Positive.ToString();
+					return binding.ToDisplayString();
 				}
-				if (!getPositive && getNegative)
-				{
-					return actions.Bindings[1].Negative.ToString();
-				}
-			}*/
+			}
 
 			return string.Empty;
 		}

@@ -1590,7 +1590,7 @@ namespace ZeroGravity.Objects
 									Client.Instance.CanvasManager.PlayerOverview.Toggle(val: true);
 								}
 							}
-							else if (Vector3.Distance(base.transform.position, LookingAtCorpseCollider.CorpseObject.transform.position) < FarRaycastDistance)
+							else if (Vector3.Distance(transform.position, LookingAtCorpseCollider.CorpseObject.transform.position) < FarRaycastDistance)
 							{
 								Client.Instance.CanvasManager.PlayerOverview.Inventory.LootingTarget = LookingAtCorpseCollider.CorpseObject.GetComponentInParent<Corpse>().Inventory;
 								Client.Instance.CanvasManager.PlayerOverview.Toggle(val: true);
@@ -1627,7 +1627,7 @@ namespace ZeroGravity.Objects
 					NetworkController.Instance.SendToGameServer(new LockToTriggerMessage
 					{
 						TriggerID = LookingAtTrigger.GetID(),
-						IsPilotingVessel = (LookingAtTrigger.TriggerType == SceneTriggerType.ShipControl || LookingAtTrigger.TriggerType == SceneTriggerType.DockingPanel)
+						IsPilotingVessel = LookingAtTrigger.TriggerType == SceneTriggerType.ShipControl || LookingAtTrigger.TriggerType == SceneTriggerType.DockingPanel
 					});
 				}
 				else

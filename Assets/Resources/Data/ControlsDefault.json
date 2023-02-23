@@ -327,7 +327,7 @@
                 {
                     "name": "negative",
                     "id": "b72c4457-35d3-4137-92ef-a7025ee6a0a2",
-                    "path": "<Keyboard>/d",
+                    "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -338,7 +338,7 @@
                 {
                     "name": "positive",
                     "id": "dfc51c28-70b9-45e3-9c2a-add67477bc17",
-                    "path": "<Keyboard>/a",
+                    "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -448,7 +448,7 @@
                 {
                     "name": "negative",
                     "id": "cac4f152-27ad-42af-bb5f-f2684e2884cb",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -459,7 +459,7 @@
                 {
                     "name": "positive",
                     "id": "64863567-d509-46fc-a04d-a66d14e23f4f",
-                    "path": "<Keyboard>/q",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

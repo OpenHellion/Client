@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using OpenHellion.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -78,7 +80,7 @@ namespace ZeroGravity.UI
 			ControlsData.InverMouseWhileDriving = Client.Instance.InvertMouseWhileDriving;
 			if (!ControlsRebind.CheckIfEmpty())
 			{
-				ControlsData.ActionMap = InputController.Instance.InputActions.FindActionMap(InputController.ActionMapName).ToJson();
+				File.WriteAllText(Path.Combine(Application.persistentDataPath, "Controls.json"), InputController.Instance.InputActions.FindActionMap(InputController.ActionMapName).ToJson());
 			}
 		}
 
@@ -93,10 +95,13 @@ namespace ZeroGravity.UI
 			MouseSensitivity(ControlsData.MouseSensitivity);
 			InvertMouseToggle.isOn = ControlsData.InvertMouse;
 			InvertMouseWhileDrivingToggle.isOn = ControlsData.InverMouseWhileDriving;
-			InputController.MouseSensitivity = ControlsData.MouseSensitivity;
 			Client.Instance.InvertedMouse = ControlsData.InvertMouse;
 			Client.Instance.InvertMouseWhileDriving = ControlsData.InverMouseWhileDriving;
-			InputController.LoadSavedConfig(ControlsData.ActionMap);
+
+			if (File.Exists(Path.Combine(Application.persistentDataPath, "Controls.json")))
+			{
+				InputController.LoadSavedConfig(File.ReadAllText(Path.Combine(Application.persistentDataPath, "Controls.json")));
+			}
 		}
 	}
 }

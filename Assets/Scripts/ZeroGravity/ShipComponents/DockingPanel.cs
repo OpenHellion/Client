@@ -744,12 +744,7 @@ namespace ZeroGravity.ShipComponents
 
 		public string GetControlName(InputController.ConfigAction axName)
 		{
-			string axisKeyName = InputController.GetAxisKeyName(axName);
-			if (axisKeyName == "None")
-			{
-				axisKeyName = InputController.GetAxisKeyName(axName, true);
-			}
-			return axisKeyName;
+			return InputController.GetAxisKeyName(axName);
 		}
 
 		public void UpdateDockingPorts()

@@ -20,8 +20,7 @@ using OpenHellion.IO;
 namespace ZeroGravity
 {
 
-	// TODO: Clean up this file. I want to rewrite this to add a new central system controlling
-	//       the shown menu, using an enum with a gameobject to define the menu.
+	// TODO: Use new UI system.
 	public class CanvasManager : MonoBehaviour
 	{
 		public delegate void OnSpawnPointClicked(SpawnPointDetails details);
