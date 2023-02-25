@@ -2183,6 +2183,7 @@ namespace ZeroGravity
 		public static string SystemShipArrive;
 
 		public static string SystemServerRestart;
+
 		public static string NoProvider;
 
 		public static Dictionary<Enum, string> Enums;

@@ -16,15 +16,15 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace OpenHellion.Networking.Message.MainServer
 {
 	[Serializable]
 	[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
-	public class PlayerIdResponse : DataPacket
+	public class PlayerIdResponse : BasicResponse
 	{
-		public ResponseResult Result;
-		public string PlayerId;
+		public List<string> PlayerIds;
 	}
 }

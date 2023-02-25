@@ -80,6 +80,7 @@ namespace OpenHellion.Networking
 				{
 					Instance._playerId = PlayerPrefs.GetString("player_id", null);
 
+					// Generate new player id.
 					if (Instance._playerId.IsNullOrEmpty())
 					{
 						string uuid = Guid.NewGuid().ToString();
@@ -91,6 +92,11 @@ namespace OpenHellion.Networking
 				}
 
 				return Instance._playerId;
+			}
+			set
+			{
+				Instance._playerId = value;
+				PlayerPrefs.SetString("player_id", value);
 			}
 		}
 

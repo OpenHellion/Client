@@ -9,6 +9,8 @@ using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using TriInspector;
+using OpenHellion.Networking.Message.MainServer;
+using OpenHellion.Networking.Message;
 
 namespace ZeroGravity.ShipComponents
 {
@@ -19,6 +21,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			public long GUID;
 
+			// Used to get avatar.
 			public string PlayerNativeId;
 
 			public string PlayerId;
@@ -35,29 +38,29 @@ namespace ZeroGravity.ShipComponents
 		[ReadOnly]
 		public List<PlayerSecurityData> AuthorizedPlayers = new List<PlayerSecurityData>();
 
-		private Ship parentShip;
-
 		public SceneNameTag[] ShipNameTags;
 
-		private GetInvitedPlayersDelegate onPlayersLodedDelegate;
+		private GetInvitedPlayersDelegate m_onPlayersLodedDelegate;
 
-		public Ship ParentShip => parentShip;
+		private Ship m_parentShip;
+
+		public Ship ParentShip => m_parentShip;
 
 		public void Awake()
 		{
-			if (parentShip == null)
+			if (m_parentShip == null)
 			{
-				parentShip = GetComponentInParent<GeometryRoot>().MainObject as Ship;
+				m_parentShip = GetComponentInParent<GeometryRoot>().MainObject as Ship;
 			}
 		}
 
 		public void ChangeVesselName(string newName)
 		{
-			if (!(parentShip == null) && !newName.IsNullOrEmpty())
+			if (!(m_parentShip == null) && !newName.IsNullOrEmpty())
 			{
 				NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 				{
-					VesselGUID = parentShip.GUID,
+					VesselGUID = m_parentShip.GUID,
 					VesselName = newName
 				});
 			}
@@ -72,7 +75,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
-				VesselGUID = parentShip.GUID,
+				VesselGUID = m_parentShip.GUID,
 				AddPlayerId = player.PlayerId,
 				AddPlayerRank = newRank,
 				AddPlayerName = player.Name
@@ -83,7 +86,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
-				VesselGUID = parentShip.GUID,
+				VesselGUID = m_parentShip.GUID,
 				RemovePlayerId = player.PlayerId
 			});
 			UpdateUI();
@@ -95,7 +98,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 				{
-					VesselGUID = parentShip.GUID,
+					VesselGUID = m_parentShip.GUID,
 					HackPanel = true
 				});
 			}
@@ -103,27 +106,48 @@ namespace ZeroGravity.ShipComponents
 
 		public void GetPlayersForAuthorization(bool getFriends, bool getPlayerFromServer, GetInvitedPlayersDelegate onPlayersLoaded)
 		{
-			if (getFriends)
+			// Cannot be run in singleplayer mode.
+			if (getFriends && !Client.Instance.SinglePlayerMode)
 			{
 				List<PlayerSecurityData> list = new List<PlayerSecurityData>();
+				GetPlayerIdRequest req = new GetPlayerIdRequest();
+
+				List<IProvider.Friend> friends = new List<IProvider.Friend>();
 
 				// Loop through each friend and add it to the list.
 				foreach (IProvider.Friend friend in ProviderManager.MainProvider.GetFriends())
 				{
-					// If friend is online, and not already authorised.
-					if (friend.Status == IProvider.FriendStatus.ONLINE && AuthorizedPlayers.Find((PlayerSecurityData m) => m.PlayerNativeId == friend.NativeId) == null)
-					{
-						list.Add(new PlayerSecurityData
-						{
-							PlayerNativeId = friend.NativeId,
-							IsFriend = true,
-							Name = friend.Name,
-							Rank = AuthorizedPersonRank.None
-						});
-					}
+					req.Ids.Add(new GetPlayerIdRequest.Entry {
+						SteamId = ProviderManager.SteamId,
+						DiscordId = ProviderManager.DiscordId
+					});
+
+					friends.Add(friend);
 				}
 
-				onPlayersLoaded(list);
+				// This has the added benefit of filtering out all non-players.
+				ConnectionMain.Get<PlayerIdResponse>(req, (res) => {
+					// Loop through all entries in the same order as before.
+					for (int i = 0; i < res.PlayerIds.Count; i++)
+					{
+						if (res.PlayerIds[i] == "-1") continue;
+
+						// If friend is online, and not already authorised.
+						if (friends[i].Status == IProvider.FriendStatus.ONLINE && AuthorizedPlayers.Find((PlayerSecurityData m) => m.PlayerId == res.PlayerIds[i]) == null)
+						{
+							list.Add(new PlayerSecurityData
+							{
+								PlayerNativeId = friends[i].NativeId,
+								PlayerId = res.PlayerIds[i],
+								IsFriend = true,
+								Name = friends[i].Name,
+								Rank = AuthorizedPersonRank.None
+							});
+						}
+					}
+
+					onPlayersLoaded(list);
+				});
 			}
 
 			if (getPlayerFromServer)
@@ -136,25 +160,25 @@ namespace ZeroGravity.ShipComponents
 						InSceneID = 0
 					}
 				});
-				onPlayersLodedDelegate = onPlayersLoaded;
+				m_onPlayersLodedDelegate = onPlayersLoaded;
 			}
 		}
 
 		public void ParseSecurityData(VesselSecurityData data)
 		{
-			if (data == null || parentShip == null)
+			if (data == null || m_parentShip == null)
 			{
 				return;
 			}
 			AuthorizedPersonRank playerRank = GetPlayerRank(MyPlayer.Instance);
-			if (parentShip.VesselData == null)
+			if (m_parentShip.VesselData == null)
 			{
-				parentShip.VesselData = new VesselData();
+				m_parentShip.VesselData = new VesselData();
 			}
-			if (!data.VesselName.IsNullOrEmpty() && data.VesselName != parentShip.VesselData.VesselName)
+			if (!data.VesselName.IsNullOrEmpty() && data.VesselName != m_parentShip.VesselData.VesselName)
 			{
-				parentShip.VesselData.VesselName = data.VesselName;
-				Client.Instance.Map.InitializeMapObject(parentShip);
+				m_parentShip.VesselData.VesselName = data.VesselName;
+				Client.Instance.Map.InitializeMapObject(m_parentShip);
 			}
 			AuthorizedPlayers.Clear();
 			if (data.AuthorizedPersonel != null)
@@ -193,9 +217,12 @@ namespace ZeroGravity.ShipComponents
 			}
 		}
 
+		/// <summary>
+		/// 	Get a list of all player on server. Used by function GetPlayersForAuthorization.
+		/// </summary>
 		public void ParsePlayersOnServerResponse(PlayersOnServerResponse data)
 		{
-			if (onPlayersLodedDelegate == null)
+			if (m_onPlayersLodedDelegate == null)
 			{
 				return;
 			}
@@ -219,7 +246,7 @@ namespace ZeroGravity.ShipComponents
 			}
 			if (list.Count > 0)
 			{
-				onPlayersLodedDelegate(list);
+				m_onPlayersLodedDelegate(list);
 			}
 		}
 

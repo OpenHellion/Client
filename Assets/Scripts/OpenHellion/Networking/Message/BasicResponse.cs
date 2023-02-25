@@ -1,4 +1,4 @@
-// GetPlayerIdRequest.cs
+// BasicResponse.cs
 //
 // Copyright (C) 2023, OpenHellion contributors
 //
@@ -16,26 +16,14 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace OpenHellion.Networking.Message.MainServer
 {
 	[Serializable]
 	[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
-	public class GetPlayerIdRequest : MSMessage
+	public class BasicResponse : DataPacket
 	{
-		public struct Entry
-		{
-			public string SteamId;
-			public string DiscordId;
-		}
-
-		public List<Entry> Ids = new();
-
-		public override string GetDestination()
-		{
-			return "getPlayerId";
-		}
+		public ResponseResult Result;
 	}
 }

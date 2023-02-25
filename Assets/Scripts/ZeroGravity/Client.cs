@@ -1970,6 +1970,11 @@ namespace ZeroGravity
 				return;
 			}
 
+			if (signInResponse == null)
+			{
+				ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
+			}
+
 			if (signInResponse.Result == ResponseResult.Success)
 			{
 				CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
@@ -2019,17 +2024,23 @@ namespace ZeroGravity
 		/// </summary>
 		public void FindPlayerId(Action<PlayerIdResponse> callback)
 		{
-			GetPlayerIdRequest idRequest = new()
-			{
+			GetPlayerIdRequest idRequest = new();
+
+			idRequest.Ids.Add(new GetPlayerIdRequest.Entry {
 				SteamId = ProviderManager.SteamId,
 				DiscordId = ProviderManager.DiscordId
-			};
+			});
 
 			try
 			{
 				// First time booting, so we need to download id from the main server.
 				ConnectionMain.Get<PlayerIdResponse>(idRequest, (data) =>
 				{
+					if (data == null)
+					{
+						ShowMessageBox(Localization.SignInError, Localization.ServerUnreachable);
+						return;
+					}
 					CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.FindingPlayer);
 
 					// Get id from server and save it as a PlayerPref.
@@ -2055,9 +2066,15 @@ namespace ZeroGravity
 						// Send request to server.
 						ConnectionMain.Get<PlayerIdResponse>(createRequest, (data) =>
 						{
+							if (data == null)
+							{
+								ShowMessageBox(Localization.SignInError, Localization.ServerUnreachable);
+								return;
+							}
+
 							if (data.Result == ResponseResult.Success)
 							{
-								Dbg.Info("Successfully created a new player account with id", data.PlayerId);
+								Dbg.Info("Successfully created a new player account with id", data.PlayerIds);
 								callback(data);
 							}
 							else

@@ -2,28 +2,30 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using ZeroGravity;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Objects;
 
-[ExecuteInEditMode]
+[ExecuteInEditMode, RequireComponent(typeof(TextMeshPro))]
 public class SceneNameTag : BaseSceneTrigger, ISceneObject
 {
-	[SerializeField]
-	private int _InSceneID;
+	[SerializeField, FormerlySerializedAs("_InSceneID")]
+	private int m_inSceneId;
 
 	public string NameTagText;
 
 	[NonSerialized]
 	public SpaceObjectVessel ParentVessel;
 
-	private TextMeshPro _textComponent;
+	[SerializeField]
+	private TMP_FontAsset m_font;
 
 	[SerializeField]
-	public Material sourceMat;
+	private Material m_sourceMat;
 
-	public string fontName;
+	private TextMeshPro m_textComponent;
 
 	public bool Local;
 
@@ -47,11 +49,11 @@ public class SceneNameTag : BaseSceneTrigger, ISceneObject
 	{
 		get
 		{
-			return _InSceneID;
+			return m_inSceneId;
 		}
 		set
 		{
-			_InSceneID = value;
+			m_inSceneId = value;
 		}
 	}
 
@@ -97,11 +99,7 @@ public class SceneNameTag : BaseSceneTrigger, ISceneObject
 
 	private void Awake()
 	{
-		_textComponent = GetComponent<TextMeshPro>();
-		if (_textComponent == null)
-		{
-			_textComponent = gameObject.AddComponent<TextMeshPro>() as TextMeshPro;
-		}
+		m_textComponent = GetComponent<TextMeshPro>();
 	}
 
 	protected override void Start()
@@ -113,13 +111,13 @@ public class SceneNameTag : BaseSceneTrigger, ISceneObject
 	public void SetNameTagText(string text)
 	{
 		NameTagText = text;
-		_textComponent.text = NameTagText;
+		m_textComponent.text = NameTagText;
 	}
 
 	public void SetNameTagTextEditor(string text)
 	{
 		NameTagText = text;
-		_textComponent.text = NameTagText;
+		m_textComponent.text = NameTagText;
 	}
 
 	public override bool Interact(MyPlayer player, bool interactWithOverlappingTriggers = true)
@@ -128,13 +126,13 @@ public class SceneNameTag : BaseSceneTrigger, ISceneObject
 		{
 			return false;
 		}
-		Client.Instance.InGamePanels.NameTagUI.ToggleNameCanvas(this, true, ParentVessel, _InSceneID);
+		Client.Instance.InGamePanels.NameTagUI.ToggleNameCanvas(this, true, ParentVessel, m_inSceneId);
 		return true;
 	}
 
 	public override void CancelInteract(MyPlayer player)
 	{
 		base.CancelInteract(player);
-		Client.Instance.InGamePanels.NameTagUI.ToggleNameCanvas(this, false, ParentVessel, _InSceneID);
+		Client.Instance.InGamePanels.NameTagUI.ToggleNameCanvas(this, false, ParentVessel, m_inSceneId);
 	}
 }

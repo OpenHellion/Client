@@ -16,10 +16,14 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 using OpenHellion.Networking.Message.MainServer;
 using OpenHellion.IO;
 using UnityEngine.Networking;
+using OpenHellion.Networking.Message;
+using System.Net.Http;
+using System.Text;
 
 namespace OpenHellion.Networking
 {
@@ -38,82 +42,77 @@ namespace OpenHellion.Networking
 			}
 		}
 
-		public delegate void SendCallback<T>(T data);
+		/// <summary>
+		/// 	Send a request to get data from the main server.
+		/// </summary>
+		public static void Get<T>(MSMessage data, Action<T> callback)
+		{
+			Task.Run(async () =>
+			{
+				try {
+					// Create new client and request and load it with data.
+					HttpClient httpClient = new HttpClient();
+					HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, new UriBuilder("http", IpAddress, Port, "/api/" + data.GetDestination()).Uri)
+					{
+						Content = new StringContent(data.ToString(), Encoding.UTF8, "application/json")
+					};
+
+					Dbg.Log("Sending data to:", request.RequestUri);
+
+					// Send message and get result.
+					HttpResponseMessage result = await httpClient.SendAsync(request);
+
+					// Read data as string.
+					string str = await result.Content.ReadAsStringAsync();
+
+					Dbg.Log("Data:", str);
+
+					// Make object out of data.
+					callback(JsonSerialiser.Deserialize<T>(str));
+
+					// Clean up.
+					httpClient.Dispose();
+					request.Dispose();
+					result.Dispose();
+				}
+				catch (Exception e)
+				{
+					Dbg.Warning("Exception caught when sending get request to main server.");
+					Dbg.Warning("Message:", e.Message);
+					callback(default);
+				}
+			});
+		}
 
 		/// <summary>
 		/// 	Send a message to the main server.
 		/// </summary>
-		public static void Post<T>(MSMessage data, SendCallback<T> callback)
+		public static void Send(MSMessage message)
 		{
-			UnityWebRequest request = new(Address + "/api/" + data.GetDestination(), "POST")
+			Task.Run(async () =>
 			{
-				uploadHandler = new UploadHandlerRaw(new System.Text.UTF8Encoding().GetBytes(data.ToString()))
-			};
-
-			request.SetRequestHeader("Content-Type", "application/json");
-
-			UnityWebRequestAsyncOperation operation = request.SendWebRequest();
-
-			operation.completed += (asyncOperation) =>
-			{
-				switch (operation.webRequest.result)
+				try
 				{
-					case UnityWebRequest.Result.ConnectionError:
-					case UnityWebRequest.Result.DataProcessingError:
-						Dbg.Error("MainServer: Error: " + operation.webRequest.error);
-						throw new Exception();
-					case UnityWebRequest.Result.ProtocolError:
-						Dbg.Error("MainServer: HTTP Error: " + operation.webRequest.error);
-						throw new Exception();
-					case UnityWebRequest.Result.InProgress:
-						Dbg.Error("MainServer: HTTP Error: Tried to fetch data before connection has finished.");
-						throw new Exception();
-					case UnityWebRequest.Result.Success:
-						Dbg.Log(operation.webRequest.downloadHandler.text);
-						callback(JsonSerialiser.Deserialize<T>(operation.webRequest.downloadHandler.text));
-						break;
+					HttpClient httpClient = new HttpClient();
+					HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, new UriBuilder("http", IpAddress, Port, "/api/" + message.GetDestination()).Uri)
+					{
+						Content = new StringContent(message.ToString(), Encoding.UTF8, "application/json")
+					};
+
+					// Send message.
+					HttpResponseMessage result = await httpClient.SendAsync(request);
+
+					// Clean up.
+					httpClient.Dispose();
+					request.Dispose();
+					result.Dispose();
 				}
-
-				request.Dispose();
-			};
-		}
-
-		/// <summary>
-		/// 	Send a request to get data from the main server.
-		/// </summary>
-		public static void Get<T>(MSMessage data, SendCallback<T> callback)
-		{
-			Dbg.Log(data.GetDestination() + ": " + data.ToString());
-
-			UnityWebRequest request = UnityWebRequest.Get(Address + "/api/" + data.GetDestination());
-
-			request.uploadHandler = new UploadHandlerRaw(new System.Text.UTF8Encoding().GetBytes(data.ToString()));
-			request.SetRequestHeader("Content-Type", "application/json");
-
-			UnityWebRequestAsyncOperation operation = request.SendWebRequest();
-
-			operation.completed += (asyncOperation) =>
-			{
-				switch (operation.webRequest.result)
+				catch (Exception e)
 				{
-					case UnityWebRequest.Result.ConnectionError:
-					case UnityWebRequest.Result.DataProcessingError:
-						Dbg.Error("MainServer: Error: " + operation.webRequest.error);
-						throw new Exception();
-					case UnityWebRequest.Result.ProtocolError:
-						Dbg.Error("MainServer: HTTP Error: " + operation.webRequest.error);
-						throw new Exception();
-					case UnityWebRequest.Result.InProgress:
-						Dbg.Error("MainServer: HTTP Error: Tried to fetch data before connection has finished.");
-						throw new Exception();
-					case UnityWebRequest.Result.Success:
-						Dbg.Log("Result: " + operation.webRequest.downloadHandler.text);
-						callback(JsonSerialiser.Deserialize<T>(operation.webRequest.downloadHandler.text));
-						break;
+					Dbg.Warning("Exception caught when sending get request to main server.");
+					Dbg.Warning("Message: {0} ", e.Message);
 				}
-
-				request.Dispose();
-			};
+			});
 		}
 	}
 }
