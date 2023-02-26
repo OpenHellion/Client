@@ -403,10 +403,6 @@ namespace ZeroGravity
 
 		private void Awake()
 		{
-			// Used to save input controls when we change the defaults.
-			// TODO: Make this an editor feature.
-			//InputController.SaveDefaultJSON();
-
 			Texture[] source = Resources.LoadAll<Texture>("Emblems");
 			SceneVesselEmblem.Textures = source.ToDictionary((Texture x) => x.name, (Texture y) => y);
 

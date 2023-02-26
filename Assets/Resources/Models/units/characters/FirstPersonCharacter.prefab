@@ -5337,7 +5337,6 @@ MonoBehaviour:
   characterController: {fileID: 114588308043369360}
   mainCamera: {fileID: 20457876916212877}
   cameraShakeController: {fileID: 114393173984183772}
-  mouseSensitivity: 2.5
   resetLerpDuration: 0.15
   maxUpAngle: 85
   maxDownAngle: 85
@@ -5347,7 +5346,6 @@ MonoBehaviour:
   freeLookMaxDownAngle: 60
   swayMultiplier: 3
   xSwayMultiplier: 1.5
-  maxLerpDuration: 0.5
   translationInertion: {x: 0, y: 0, z: 0}
   rotationInertion: {x: 0, y: 0, z: 0}
   lerpCoef: 2
@@ -5595,7 +5593,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1241487161733373}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f5454b0c5f60804591a9c87eb515233, type: 3}
   m_Name: 
@@ -15306,7 +15304,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -19764,7 +19761,7 @@ MonoBehaviour:
     Source: {fileID: 0}
     PlayOnAwake: 1
     UseStringInsteadOfId: 0
-    IsPlaying: 0
+    IsPlaying: 1
     ShowRadius: 0
     AttenuationRadius: 0
   - EventID: -1455436248
@@ -21272,7 +21269,8 @@ MonoBehaviour:
   TransitionTrigger: {fileID: 114493429894415821}
   EnterVesselRoomTrigger: {fileID: 0}
   PlayerName: 
-  SteamId: 
+  NativeId: 
+  PlayerId: 
   SittingOnPilotSeat: 0
   MeleeRange: 1
   OldGravity: {x: 0, y: 0, z: 0}

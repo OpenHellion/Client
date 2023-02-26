@@ -16,27 +16,10 @@ namespace ZeroGravity.ShipComponents
 {
 	public class SecuritySystem : MonoBehaviour
 	{
-		[Serializable]
-		public class PlayerSecurityData
-		{
-			public long GUID;
-
-			// Used to get avatar.
-			public string PlayerNativeId;
-
-			public string PlayerId;
-
-			public string Name;
-
-			public bool IsFriend;
-
-			public AuthorizedPersonRank Rank;
-		}
-
-		public delegate void GetInvitedPlayersDelegate(List<PlayerSecurityData> availablePlayers);
+		public delegate void GetInvitedPlayersDelegate(List<AuthorizedPerson> availablePlayers);
 
 		[ReadOnly]
-		public List<PlayerSecurityData> AuthorizedPlayers = new List<PlayerSecurityData>();
+		public List<AuthorizedPerson> AuthorizedPlayers = new List<AuthorizedPerson>();
 
 		public SceneNameTag[] ShipNameTags;
 
@@ -68,10 +51,10 @@ namespace ZeroGravity.ShipComponents
 
 		public AuthorizedPersonRank GetPlayerRank(Player pl)
 		{
-			return AuthorizedPlayers.Find((PlayerSecurityData m) => m.PlayerId == pl.PlayerId)?.Rank ?? AuthorizedPersonRank.None;
+			return AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == pl.PlayerId)?.Rank ?? AuthorizedPersonRank.None;
 		}
 
-		public void AddPerson(PlayerSecurityData player, AuthorizedPersonRank newRank)
+		public void AddPerson(AuthorizedPerson player, AuthorizedPersonRank newRank)
 		{
 			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
@@ -82,7 +65,7 @@ namespace ZeroGravity.ShipComponents
 			});
 		}
 
-		public void RemovePerson(PlayerSecurityData player)
+		public void RemovePerson(AuthorizedPerson player)
 		{
 			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
@@ -109,7 +92,7 @@ namespace ZeroGravity.ShipComponents
 			// Cannot be run in singleplayer mode.
 			if (getFriends && !Client.Instance.SinglePlayerMode)
 			{
-				List<PlayerSecurityData> list = new List<PlayerSecurityData>();
+				List<AuthorizedPerson> list = new List<AuthorizedPerson>();
 				GetPlayerIdRequest req = new GetPlayerIdRequest();
 
 				List<IProvider.Friend> friends = new List<IProvider.Friend>();
@@ -133,9 +116,9 @@ namespace ZeroGravity.ShipComponents
 						if (res.PlayerIds[i] == "-1") continue;
 
 						// If friend is online, and not already authorised.
-						if (friends[i].Status == IProvider.FriendStatus.ONLINE && AuthorizedPlayers.Find((PlayerSecurityData m) => m.PlayerId == res.PlayerIds[i]) == null)
+						if (friends[i].Status == IProvider.FriendStatus.ONLINE && AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == res.PlayerIds[i]) == null)
 						{
-							list.Add(new PlayerSecurityData
+							list.Add(new AuthorizedPerson
 							{
 								PlayerNativeId = friends[i].NativeId,
 								PlayerId = res.PlayerIds[i],
@@ -170,7 +153,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				return;
 			}
-			AuthorizedPersonRank playerRank = GetPlayerRank(MyPlayer.Instance);
+			AuthorizedPersonRank originalRank = GetPlayerRank(MyPlayer.Instance);
 			if (m_parentShip.VesselData == null)
 			{
 				m_parentShip.VesselData = new VesselData();
@@ -185,10 +168,9 @@ namespace ZeroGravity.ShipComponents
 			{
 				foreach (VesselSecurityAuthorizedPerson item in data.AuthorizedPersonel)
 				{
-					AuthorizedPlayers.Add(new PlayerSecurityData
+					AuthorizedPlayers.Add(new AuthorizedPerson
 					{
 						IsFriend = false,
-						GUID = item.GUID,
 						Name = item.Name,
 						PlayerNativeId = item.PlayerNativeId,
 						PlayerId = item.PlayerId,
@@ -203,16 +185,16 @@ namespace ZeroGravity.ShipComponents
 					select m).ToList();
 			}
 			UpdateUI();
-			AuthorizedPersonRank playerRank2 = GetPlayerRank(MyPlayer.Instance);
-			if (playerRank != playerRank2)
+			AuthorizedPersonRank updatedRank = GetPlayerRank(MyPlayer.Instance);
+			if (originalRank != updatedRank)
 			{
-				if (playerRank == AuthorizedPersonRank.None && playerRank2 == AuthorizedPersonRank.CommandingOfficer)
+				if (originalRank == AuthorizedPersonRank.None && updatedRank == AuthorizedPersonRank.CommandingOfficer)
 				{
-					SceneQuestTrigger.Check(base.gameObject, SceneQuestTriggerEvent.Claim);
+					SceneQuestTrigger.Check(gameObject, SceneQuestTriggerEvent.Claim);
 				}
-				else if (playerRank == AuthorizedPersonRank.CommandingOfficer && playerRank2 == AuthorizedPersonRank.None)
+				else if (originalRank == AuthorizedPersonRank.CommandingOfficer && updatedRank == AuthorizedPersonRank.None)
 				{
-					SceneQuestTrigger.Check(base.gameObject, SceneQuestTriggerEvent.Resign);
+					SceneQuestTrigger.Check(gameObject, SceneQuestTriggerEvent.Resign);
 				}
 			}
 		}
@@ -226,14 +208,14 @@ namespace ZeroGravity.ShipComponents
 			{
 				return;
 			}
-			List<PlayerSecurityData> list = new List<PlayerSecurityData>();
+			List<AuthorizedPerson> list = new List<AuthorizedPerson>();
 			if (data.PlayersOnServer != null && data.PlayersOnServer.Count > 0)
 			{
 				foreach (PlayerOnServerData item in data.PlayersOnServer)
 				{
 					if (item.Name != MyPlayer.Instance.PlayerName)
 					{
-						list.Add(new PlayerSecurityData
+						list.Add(new AuthorizedPerson
 						{
 							IsFriend = false,
 							PlayerNativeId = item.PlayerNativeId,

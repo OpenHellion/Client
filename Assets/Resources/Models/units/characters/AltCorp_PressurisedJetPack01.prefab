@@ -5471,7 +5471,7 @@ GameObject:
   - component: {fileID: 4139477387248588}
   - component: {fileID: 114704100065250714}
   m_Layer: 0
-  m_Name: leanright
+  m_Name: TPSleanright
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8093,7 +8093,7 @@ GameObject:
   - component: {fileID: 4305006299803486}
   - component: {fileID: 114265312990953087}
   m_Layer: 0
-  m_Name: down
+  m_Name: TPSdown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8147,7 +8147,7 @@ GameObject:
   - component: {fileID: 4696837964716019}
   - component: {fileID: 114445339896662278}
   m_Layer: 0
-  m_Name: back
+  m_Name: FPSback
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15945,7 +15945,7 @@ GameObject:
   - component: {fileID: 4009211982073391}
   - component: {fileID: 114955208951694966}
   m_Layer: 0
-  m_Name: left
+  m_Name: FPSleft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15999,7 +15999,7 @@ GameObject:
   - component: {fileID: 4464197624079190}
   - component: {fileID: 114441729568413421}
   m_Layer: 0
-  m_Name: up
+  m_Name: FPSup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21445,7 +21445,7 @@ GameObject:
   - component: {fileID: 4008096891685496}
   - component: {fileID: 114061834601981927}
   m_Layer: 0
-  m_Name: up
+  m_Name: TPSup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21611,7 +21611,7 @@ GameObject:
   - component: {fileID: 4401113019885669}
   - component: {fileID: 114924704339691073}
   m_Layer: 0
-  m_Name: leanright
+  m_Name: FPSleanright
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34130,7 +34130,7 @@ GameObject:
   - component: {fileID: 4685897743706606}
   - component: {fileID: 114277030610790381}
   m_Layer: 0
-  m_Name: back
+  m_Name: TPSback
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34306,7 +34306,7 @@ GameObject:
   - component: {fileID: 4169517215515295}
   - component: {fileID: 114168689359573685}
   m_Layer: 0
-  m_Name: front
+  m_Name: FPSfront
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34443,7 +34443,7 @@ GameObject:
   - component: {fileID: 4808732892961153}
   - component: {fileID: 114998080682620544}
   m_Layer: 0
-  m_Name: leanleft
+  m_Name: TPSleanleft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34497,7 +34497,7 @@ GameObject:
   - component: {fileID: 4714934994513708}
   - component: {fileID: 114947906152654753}
   m_Layer: 0
-  m_Name: right
+  m_Name: FPSright
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37345,7 +37345,7 @@ GameObject:
   - component: {fileID: 4906377445427456}
   - component: {fileID: 114860582531637156}
   m_Layer: 0
-  m_Name: down
+  m_Name: FPSdown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37431,7 +37431,7 @@ GameObject:
   - component: {fileID: 4544163075077715}
   - component: {fileID: 114828206845030788}
   m_Layer: 0
-  m_Name: leanleft
+  m_Name: FPSleanleft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38322,7 +38322,7 @@ GameObject:
   - component: {fileID: 4502282741316388}
   - component: {fileID: 114743905633336858}
   m_Layer: 0
-  m_Name: right
+  m_Name: TPSright
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43602,7 +43602,7 @@ GameObject:
   - component: {fileID: 4538979188357260}
   - component: {fileID: 114243366490280877}
   m_Layer: 0
-  m_Name: front
+  m_Name: TPSfront
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43735,7 +43735,7 @@ GameObject:
   - component: {fileID: 4878229787049231}
   - component: {fileID: 114769991622464656}
   m_Layer: 0
-  m_Name: left
+  m_Name: TPSleft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

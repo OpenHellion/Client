@@ -1160,14 +1160,11 @@ namespace ZeroGravity.Objects
 				else if (ShipControlMode == ShipControlMode.Piloting && !FpsController.IsFreeLook && !Client.Instance.CanvasManager.ConsoleIsUp)
 				{
 					Vector3 oldShipRotationCursor = ShipRotationCursor;
-					ShipRotationCursor.x -= Mathf.Clamp((!Client.Instance.InvertMouseWhileDriving) ? 1 : (-1) * Mouse.current.delta.y.ReadValue(), -1f, 1f);
-					ShipRotationCursor.y += Mathf.Clamp(Mouse.current.delta.x.ReadValue(), -1f, 1f);
+					ShipRotationCursor.x -= Mathf.Clamp((!Client.Instance.InvertMouseWhileDriving) ? 1 : (-1) * Mouse.current.delta.x.ReadValue(), -1f, 1f);
+					ShipRotationCursor.y += Mathf.Clamp(Mouse.current.delta.y.ReadValue(), -1f, 1f);
 
 					// Stabilise rotation cursor.
-					if (InputController.GetButton(InputController.ConfigAction.Sprint))
-					{
-						ShipRotationCursor *= spaceObjectVessel.RCS.RotationAcceleration / spaceObjectVessel.RCS.RotationStabilization;
-					}
+					ShipRotationCursor *= spaceObjectVessel.RCS.RotationAcceleration / spaceObjectVessel.RCS.RotationStabilization;
 
 					// Calculate velocity.
 					Vector3 velocity = ShipRotationCursor - oldShipRotationCursor;
@@ -2296,6 +2293,7 @@ namespace ZeroGravity.Objects
 			myPlayer.RefreshOutfitData();
 			myPlayer.GUID = res.GUID;
 			myPlayer.PlayerName = res.Data.Name;
+			myPlayer.PlayerId = NetworkController.PlayerId;
 			myPlayer.SunCameraRoot = Client.Instance.SunCameraRootTransform;
 			myPlayer.SunCamera = Client.Instance.SunCameraTransform;
 			myPlayer.PlanetsCameraRoot = Client.Instance.PlanetsCameraRootTransform;

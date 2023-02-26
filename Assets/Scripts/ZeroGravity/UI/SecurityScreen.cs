@@ -67,7 +67,7 @@ namespace ZeroGravity.UI
 
 		public Dictionary<string, InvitePlayerToPod> AvailablePlayersForInvite = new Dictionary<string, InvitePlayerToPod>();
 
-		private SecuritySystem.PlayerSecurityData m_selectedCrewman;
+		private AuthorizedPerson m_selectedCrewman;
 
 		public GameObject SelfDestructBox;
 
@@ -147,7 +147,7 @@ namespace ZeroGravity.UI
 
 		public void SetSecurityStatus()
 		{
-			SecuritySystem.PlayerSecurityData commandingOfficer = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.Rank == AuthorizedPersonRank.CommandingOfficer);
+			AuthorizedPerson commandingOfficer = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.CommandingOfficer);
 			FreeTerminal.SetActive(commandingOfficer == null);
 			RegistredTerminal.SetActive(commandingOfficer != null);
 
@@ -159,12 +159,10 @@ namespace ZeroGravity.UI
 			}
 			else
 			{
-				Dbg.Log("Commanding officer is not null.");
 				PlayerName.text = commandingOfficer.Name;
 				PlayerImage.texture = Player.GetAvatar(commandingOfficer.PlayerNativeId);
 				if (!SecuritySystem.ParentShip.SelfDestructTimer.HasValue)
 				{
-					Dbg.Log("Self destruct is not active.");
 					ResignButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) != AuthorizedPersonRank.None);
 					InviteButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) == AuthorizedPersonRank.CommandingOfficer);
 					ChangeNameButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) == AuthorizedPersonRank.CommandingOfficer);
@@ -273,8 +271,8 @@ namespace ZeroGravity.UI
 				Destroy(crewMembers.gameObject);
 			}
 			m_crewMembersList.Clear();
-			SecuritySystem.PlayerSecurityData playerSecurityData = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.GUID == MyPlayer.Instance.GUID);
-			foreach (SecuritySystem.PlayerSecurityData crewman in SecuritySystem.AuthorizedPlayers.FindAll((SecuritySystem.PlayerSecurityData m) => m.Rank == AuthorizedPersonRank.Crewman))
+			AuthorizedPerson ourPerson = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == MyPlayer.Instance.PlayerId);
+			foreach (AuthorizedPerson crewman in SecuritySystem.AuthorizedPlayers.FindAll((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.Crewman))
 			{
 				GameObject gameObject = Instantiate(CrewMemberPref, CrewMemberPref.transform.parent);
 				gameObject.SetActive(value: true);
@@ -283,7 +281,7 @@ namespace ZeroGravity.UI
 				m_crewMembersList.Add(component);
 				component.PlayerNameText.text = crewman.Name;
 				component.Avatar.texture = Player.GetAvatar(crewman.PlayerNativeId);
-				if (playerSecurityData != null && playerSecurityData.Rank == AuthorizedPersonRank.CommandingOfficer)
+				if (ourPerson != null && ourPerson.Rank == AuthorizedPersonRank.CommandingOfficer)
 				{
 					component.GetComponent<Button>().interactable = true;
 					component.GetComponent<Button>().onClick.AddListener(delegate
@@ -299,7 +297,7 @@ namespace ZeroGravity.UI
 			}
 		}
 
-		public void CrewMemberActions(SecuritySystem.PlayerSecurityData crewman)
+		public void CrewMemberActions(AuthorizedPerson crewman)
 		{
 			CrewMemberPanel.SetActive(value: true);
 			CrewMemberPanel.GetComponentInChildren<CrewMembersUI>().Avatar.texture = Player.GetAvatar(crewman.PlayerNativeId);
@@ -345,8 +343,8 @@ namespace ZeroGravity.UI
 		public void ClaimSecurityTerminal()
 		{
 			// Check if nobody owns the terminal, or if we are the owner.
-			SecuritySystem.PlayerSecurityData playerSecurityData = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.Rank == AuthorizedPersonRank.CommandingOfficer);
-			if (playerSecurityData == null || playerSecurityData.PlayerId == NetworkController.PlayerId)
+			AuthorizedPerson commandingOfficer = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.CommandingOfficer);
+			if (commandingOfficer == null || commandingOfficer.PlayerId == NetworkController.PlayerId)
 			{
 				NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 				{
@@ -362,14 +360,14 @@ namespace ZeroGravity.UI
 
 		public void Resign()
 		{
-			SecuritySystem.PlayerSecurityData playerSecurityData = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.GUID == MyPlayer.Instance.GUID);
-			if (playerSecurityData.Rank == AuthorizedPersonRank.CommandingOfficer && SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.Rank == AuthorizedPersonRank.Crewman) != null)
+			AuthorizedPerson ourPerson = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == MyPlayer.Instance.PlayerId);
+			if (ourPerson.Rank == AuthorizedPersonRank.CommandingOfficer && SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.Crewman) != null)
 			{
 				ResignAlertBox.SetActive(value: true);
 			}
 			else
 			{
-				SecuritySystem.RemovePerson(playerSecurityData);
+				SecuritySystem.RemovePerson(ourPerson);
 			}
 		}
 
@@ -380,31 +378,31 @@ namespace ZeroGravity.UI
 
 		public void ConfirmCommanderResign()
 		{
-			SecuritySystem.PlayerSecurityData player = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.GUID == MyPlayer.Instance.GUID);
-			SecuritySystem.RemovePerson(player);
-			SecuritySystem.PlayerSecurityData playerSecurityData = SecuritySystem.AuthorizedPlayers.Find((SecuritySystem.PlayerSecurityData m) => m.Rank == AuthorizedPersonRank.Crewman);
+			AuthorizedPerson ourPerson = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == MyPlayer.Instance.PlayerId);
+			SecuritySystem.RemovePerson(ourPerson);
+			AuthorizedPerson crewman = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.Crewman);
 			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = SecuritySystem.ParentShip.GUID,
-				AddPlayerId = playerSecurityData.PlayerId,
+				AddPlayerId = crewman.PlayerId,
 				AddPlayerRank = AuthorizedPersonRank.CommandingOfficer,
-				AddPlayerName = playerSecurityData.Name
+				AddPlayerName = crewman.Name
 			});
 			ResignAlertBox.SetActive(value: false);
 			UpdateUI();
 		}
 
-		private void GetPlayersDelegate(List<SecuritySystem.PlayerSecurityData> availablePlayers)
+		private void GetPlayersDelegate(List<AuthorizedPerson> availablePlayers)
 		{
 			InviteList.SetActive(value: true);
 			InviteList.GetComponentInChildren<Scrollbar>(includeInactive: true).value = 1f;
-			foreach (SecuritySystem.PlayerSecurityData pl in availablePlayers)
+			foreach (AuthorizedPerson pl in availablePlayers)
 			{
 				if (AvailablePlayersForInvite.ContainsKey(pl.PlayerId) || pl.Rank != 0)
 				{
 					continue;
 				}
-				if (SecuritySystem.AuthorizedPlayers.FirstOrDefault((SecuritySystem.PlayerSecurityData m) => m.PlayerId == pl.PlayerId) == null)
+				if (SecuritySystem.AuthorizedPlayers.FirstOrDefault((AuthorizedPerson m) => m.PlayerId == pl.PlayerId) == null)
 				{
 					GameObject gameObject = Instantiate(PlayerToInvitePref, PlayerToInvitePref.transform.parent);
 					gameObject.SetActive(value: true);
@@ -429,14 +427,14 @@ namespace ZeroGravity.UI
 			}
 		}
 
-		private void AddToCrew(SecuritySystem.PlayerSecurityData player)
+		private void AddToCrew(AuthorizedPerson player)
 		{
 			SecuritySystem.AddPerson(player, AuthorizedPersonRank.Crewman);
 			InviteList.SetActive(value: false);
 			UpdateSecurityList();
 		}
 
-		private void RemovePlayer(SecuritySystem.PlayerSecurityData player)
+		private void RemovePlayer(AuthorizedPerson player)
 		{
 			SecuritySystem.RemovePerson(player);
 		}

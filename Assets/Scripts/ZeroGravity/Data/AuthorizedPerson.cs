@@ -7,10 +7,13 @@ namespace ZeroGravity.Data
 	{
 		public AuthorizedPersonRank Rank;
 
-		public long PlayerGUID;
+		public string PlayerId;
 
-		public string SteamID;
+		// Used to get avatar.
+		public string PlayerNativeId;
 
 		public string Name;
+
+		public bool IsFriend;
 	}
 }

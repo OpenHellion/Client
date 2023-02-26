@@ -1,18 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
-using ZeroGravity.ShipComponents;
+using ZeroGravity.Data;
 
 namespace ZeroGravity.UI
 {
 	public class CrewMembersUI : MonoBehaviour
 	{
-		private SecuritySystem.PlayerSecurityData player;
+		private AuthorizedPerson player;
 
 		public Text PlayerNameText;
 
 		public RawImage Avatar;
 
-		public SecuritySystem.PlayerSecurityData Player
+		public AuthorizedPerson Player
 		{
 			get
 			{

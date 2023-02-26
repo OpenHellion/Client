@@ -9,11 +9,6 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneTriggerSecurityScreen : BaseSceneTrigger
 	{
-		[SerializeField]
-		private bool _cancelExecuterAtSameTime;
-
-		private SecurityScreen mySecurityScreen;
-
 		public override bool ExclusivePlayerLocking
 		{
 			get
@@ -62,14 +57,6 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public bool CancelExecuterAtSameTime
-		{
-			get
-			{
-				return _cancelExecuterAtSameTime;
-			}
-		}
-
 		public override bool CameraMovementAllowed
 		{
 			get
@@ -82,11 +69,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			get
 			{
-				if (mySecurityScreen == null)
-				{
-					mySecurityScreen = Client.Instance.InGamePanels.Security;
-				}
-				return mySecurityScreen;
+				return Client.Instance.InGamePanels.Security;
 			}
 		}
 
@@ -111,7 +94,7 @@ namespace ZeroGravity.LevelDesign
 			}
 			if (interactWithOverlappingTriggers)
 			{
-				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
+				SceneTriggerHelper.InteractWithOverlappingTriggers(gameObject, this, player);
 			}
 			player.AttachToPanel(this);
 			MySecurityScreen.OnInteract();
@@ -120,7 +103,7 @@ namespace ZeroGravity.LevelDesign
 
 		public override bool CheckAuthorization()
 		{
-			return base.IsAuthorized || (base.IsAuthorizedOrFreeSecurity && !base.ParentShip.SecurityPanelsLocked);
+			return IsAuthorized || (IsAuthorizedOrFreeSecurity && !ParentShip.SecurityPanelsLocked);
 		}
 
 		public override void CancelInteract(MyPlayer player)

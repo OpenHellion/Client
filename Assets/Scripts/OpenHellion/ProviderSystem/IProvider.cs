@@ -69,7 +69,6 @@ namespace OpenHellion.ProviderSystem
 		/// <summary>
 		/// 	Get a list of all our friends.
 		/// </summary>
-		// TODO: Not provider independent.
 		Friend[] GetFriends();
 		Texture2D GetAvatar(string id);
 		void InviteUser(string id, string secret);
