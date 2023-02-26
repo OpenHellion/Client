@@ -172,7 +172,7 @@ Material:
     - _DirtTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _DmgTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _EmColor: {r: 0.027999997, g: 1, b: 0.8793377, a: 1}
-    - _EmissionColor: {r: 1.9852946, g: 2.5381346, b: 3.0000005, a: 1}
+    - _EmissionColor: {r: 1.2643069, g: 1.2043155, b: 0.98742366, a: 1}
     - _FrostColor1: {r: 1, g: 1, b: 1, a: 1}
     - _FrostColor2: {r: 0.5437392, g: 0.7477099, b: 0.8308824, a: 1}
     - _GlowColor: {r: 1, g: 1, b: 1, a: 1}

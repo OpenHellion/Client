@@ -219,7 +219,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					instance.ShipControlMode = ShipControlMode.Piloting;
 				}
-				else if (InputController.GetButtonDown(InputController.ConfigAction.Quick2) && base.ParentShip.VesselBaseSystem.Status == SystemStatus.OnLine)
+				else if (InputController.GetButtonDown(InputController.ConfigAction.Quick2) && base.ParentShip.VesselBaseSystem.Status == SystemStatus.Online)
 				{
 					instance.ShipControlMode = ShipControlMode.Navigation;
 				}
@@ -235,7 +235,7 @@ namespace ZeroGravity.LevelDesign
 			UpdateMode();
 			if (Headlights != null)
 			{
-				Client.Instance.InGamePanels.PilotingOptions.Lights.SetActive(Headlights.Status == SystemStatus.OnLine);
+				Client.Instance.InGamePanels.PilotingOptions.Lights.SetActive(Headlights.Status == SystemStatus.Online);
 				Client.Instance.InGamePanels.PilotingOptions.LightsMalfunction.SetActive(Headlights.SecondaryStatus == SystemSecondaryStatus.Defective);
 			}
 		}
@@ -270,7 +270,7 @@ namespace ZeroGravity.LevelDesign
 				Client.Instance.InGamePanels.Docking.OnInteract(base.ParentShip);
 				Client.Instance.InGamePanels.PilotingOptions.SetPilotingMode(instance.ShipControlMode);
 			}
-			Client.Instance.InGamePanels.PilotingOptions.NavigationDisabled.Activate(base.ParentShip.VesselBaseSystem.Status != SystemStatus.OnLine);
+			Client.Instance.InGamePanels.PilotingOptions.NavigationDisabled.Activate(base.ParentShip.VesselBaseSystem.Status != SystemStatus.Online);
 		}
 	}
 }

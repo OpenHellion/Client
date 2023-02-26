@@ -30,11 +30,11 @@ public class SceneAnimatedSystemAccessory : MonoBehaviour, IVesselSystemAccessor
 
 	public void BaseVesselSystemUpdated()
 	{
-		if (BaseVesselSystem.Status == SystemStatus.OnLine)
+		if (BaseVesselSystem.Status == SystemStatus.Online)
 		{
 			Animator.SetBool("Online", true);
 		}
-		if (BaseVesselSystem.Status == SystemStatus.OffLine)
+		if (BaseVesselSystem.Status == SystemStatus.Offline)
 		{
 			Animator.SetBool("Online", false);
 		}

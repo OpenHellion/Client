@@ -291,7 +291,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (Status != details.Status && ActiveScanTask != null)
 			{
-				if (details.Status == SystemStatus.OnLine)
+				if (details.Status == SystemStatus.Online)
 				{
 					Client.Instance.Map.ShowScanningEffect();
 				}

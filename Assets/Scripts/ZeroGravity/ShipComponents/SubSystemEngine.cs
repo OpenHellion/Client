@@ -45,7 +45,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			get
 			{
-				return Status == SystemStatus.OnLine && OperationRate > 0f;
+				return Status == SystemStatus.Online && OperationRate > 0f;
 			}
 		}
 

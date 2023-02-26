@@ -96,7 +96,7 @@ namespace ZeroGravity.Objects
 		public override void SetDetails(SubSystemDetails details, bool instant = false)
 		{
 			base.SetDetails(details, instant);
-			if (Status == SystemStatus.OnLine)
+			if (Status == SystemStatus.Online)
 			{
 				FabricatorAnimator.SetBool("Work", value: true);
 				FabricatorAnimator.SetBool("Initialized", initialized);

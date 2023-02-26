@@ -234,7 +234,7 @@ namespace ZeroGravity.UI
 			float num = 0f;
 			foreach (KeyValuePair<Generator, PowerSupplyPowerGenerator> powerGenerator in powerGenerators)
 			{
-				if (powerGenerator.Key.ParentVessel == vessel && powerGenerator.Value.Generator.Status == SystemStatus.OnLine)
+				if (powerGenerator.Key.ParentVessel == vessel && powerGenerator.Value.Generator.Status == SystemStatus.Online)
 				{
 					num += powerGenerator.Value.Generator.MaxOutput;
 				}
@@ -324,7 +324,7 @@ namespace ZeroGravity.UI
 					UpdatePowerConsumers(value);
 				}
 			}
-			if (vesselInfo.Base.Status == SystemStatus.OnLine || vesselInfo.Base.SecondaryStatus == SystemSecondaryStatus.Malfunction)
+			if (vesselInfo.Base.Status == SystemStatus.Online || vesselInfo.Base.SecondaryStatus == SystemSecondaryStatus.Malfunction)
 			{
 				vesselInfo.ToggleStatus.transform.localPosition = new Vector3(0f, 10f, 0f);
 				vesselInfo.IsOnline.SetActive(vesselInfo.Base.SecondaryStatus == SystemSecondaryStatus.Malfunction);
@@ -399,10 +399,10 @@ namespace ZeroGravity.UI
 			Color color;
 			PG.Status.text = PG.Generator.GetStatus(out color);
 			PG.Status.color = color;
-			PG.IsOnline.SetActive(PG.Generator.Status == SystemStatus.OnLine);
+			PG.IsOnline.SetActive(PG.Generator.Status == SystemStatus.Online);
 			if (PG.DisablePattern != null)
 			{
-				PG.DisablePattern.SetActive(PG.Generator.Status != SystemStatus.OnLine);
+				PG.DisablePattern.SetActive(PG.Generator.Status != SystemStatus.Online);
 			}
 			if (PG.Generator.Type == GeneratorType.Power)
 			{

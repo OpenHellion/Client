@@ -822,7 +822,7 @@ namespace ZeroGravity.ShipComponents
 		public void DoScan()
 		{
 			MapObjectShip mos = Map.MyShip as MapObjectShip;
-			if (ParentVessel.RadarSystem != null && (ParentVessel.RadarSystem.Status == SystemStatus.OffLine || ParentVessel.RadarSystem.Status == SystemStatus.CoolDown))
+			if (ParentVessel.RadarSystem != null && (ParentVessel.RadarSystem.Status == SystemStatus.Offline || ParentVessel.RadarSystem.Status == SystemStatus.Cooldown))
 			{
 				ParentVessel.RadarSystem.ActiveScanTask = new Task(delegate
 				{
@@ -834,7 +834,7 @@ namespace ZeroGravity.ShipComponents
 
 		private void UpdateScanDetails()
 		{
-			if (ParentVessel.RadarSystem.Status == SystemStatus.OffLine && ParentVessel.VesselBaseSystem.Status == SystemStatus.OnLine)
+			if (ParentVessel.RadarSystem.Status == SystemStatus.Offline && ParentVessel.VesselBaseSystem.Status == SystemStatus.Online)
 			{
 				ScanButton.interactable = true;
 			}

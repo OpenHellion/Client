@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using ZeroGravity.Data;
 
@@ -23,49 +22,22 @@ namespace ZeroGravity.ShipComponents
 
 		public float DebrisFieldDamageMultiplier = 0.5f;
 
-		[CompilerGenerated]
-		private static Func<ResourceRequirement, bool> _003C_003Ef__am_0024cache0;
+		public override ResourceRequirement[] ResourceRequirements => _ResourceRequirements;
 
-		public override ResourceRequirement[] ResourceRequirements
-		{
-			get
-			{
-				return _ResourceRequirements;
-			}
-		}
-
-		public override SubSystemType Type
-		{
-			get
-			{
-				return SubSystemType.VesselBasePowerConsumer;
-			}
-		}
+		public override SubSystemType Type => SubSystemType.VesselBasePowerConsumer;
 
 		public override SystemAuxData GetAuxData()
 		{
-			if (ResourceRequirements.Length == 1)
+			if (ResourceRequirements.Length != 1 || ResourceRequirements.Count((ResourceRequirement m) => m.ResourceType == DistributionSystemType.Power) != 1)
 			{
-				ResourceRequirement[] resourceRequirements = ResourceRequirements;
-				if (_003C_003Ef__am_0024cache0 == null)
-				{
-					_003C_003Ef__am_0024cache0 = _003CGetAuxData_003Em__0;
-				}
-				if (resourceRequirements.Count(_003C_003Ef__am_0024cache0) == 1)
-				{
-					VesselBaseSystemAuxData vesselBaseSystemAuxData = new VesselBaseSystemAuxData();
-					vesselBaseSystemAuxData.DebrisFieldDamageMultiplier = DebrisFieldDamageMultiplier;
-					vesselBaseSystemAuxData.DecayDamageMultiplier = DecayDamageMultiplier;
-					return vesselBaseSystemAuxData;
-				}
+				throw new Exception("Invalid ResourceRequirements");
 			}
-			throw new Exception("Invalid ResourceRequirements");
-		}
 
-		[CompilerGenerated]
-		private static bool _003CGetAuxData_003Em__0(ResourceRequirement m)
-		{
-			return m.ResourceType == DistributionSystemType.Power;
+			return new VesselBaseSystemAuxData
+			{
+				DebrisFieldDamageMultiplier = DebrisFieldDamageMultiplier,
+				DecayDamageMultiplier = DecayDamageMultiplier
+			};
 		}
 	}
 }

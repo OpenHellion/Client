@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;
@@ -13,36 +12,6 @@ namespace ZeroGravity.ShipComponents
 {
 	public abstract class SubSystem : VesselSystem
 	{
-		[CompilerGenerated]
-		private sealed class _003CGetResourceRequirement_003Ec__AnonStorey0
-		{
-			internal DistributionSystemType resourceType;
-
-			internal bool? working;
-
-			internal SubSystem _0024this;
-
-			internal bool _003C_003Em__0(ResourceRequirement m)
-			{
-				return m.ResourceType == resourceType;
-			}
-
-			internal float _003C_003Em__1(ResourceRequirement m)
-			{
-				return (_0024this.SecondaryStatus != SystemSecondaryStatus.Idle) ? m.Nominal : m.Standby;
-			}
-
-			internal bool _003C_003Em__2(ResourceRequirement m)
-			{
-				return m.ResourceType == resourceType;
-			}
-
-			internal float _003C_003Em__3(ResourceRequirement m)
-			{
-				return (!working.Value) ? m.Standby : m.Nominal;
-			}
-		}
-
 		[Space(5f)]
 		public float OperationRate = 1f;
 
@@ -67,13 +36,7 @@ namespace ZeroGravity.ShipComponents
 
 		public abstract ResourceRequirement[] ResourceRequirements { get; }
 
-		public override VesselComponentType ComponentType
-		{
-			get
-			{
-				return VesselComponentType.SubSystem;
-			}
-		}
+		public override VesselComponentType ComponentType => VesselComponentType.SubSystem;
 
 		public float GetPowerConsumption(bool? working = null)
 		{
@@ -87,24 +50,20 @@ namespace ZeroGravity.ShipComponents
 
 		public float GetResourceRequirement(DistributionSystemType resourceType, bool? working = null)
 		{
-			_003CGetResourceRequirement_003Ec__AnonStorey0 _003CGetResourceRequirement_003Ec__AnonStorey = new _003CGetResourceRequirement_003Ec__AnonStorey0();
-			_003CGetResourceRequirement_003Ec__AnonStorey.resourceType = resourceType;
-			_003CGetResourceRequirement_003Ec__AnonStorey.working = working;
-			_003CGetResourceRequirement_003Ec__AnonStorey._0024this = this;
 			float num;
-			if (!_003CGetResourceRequirement_003Ec__AnonStorey.working.HasValue)
+			if (!working.HasValue)
 			{
-				if (Status != SystemStatus.OnLine)
+				if (Status != SystemStatus.Online)
 				{
 					return 0f;
 				}
-				num = ResourceRequirements.Where(_003CGetResourceRequirement_003Ec__AnonStorey._003C_003Em__0).Sum((Func<ResourceRequirement, float>)_003CGetResourceRequirement_003Ec__AnonStorey._003C_003Em__1);
+				num = ResourceRequirements.Where((ResourceRequirement m) => m.ResourceType == resourceType).Sum((ResourceRequirement m) => (SecondaryStatus != SystemSecondaryStatus.Idle) ? m.Nominal : m.Standby);
 			}
 			else
 			{
-				num = ResourceRequirements.Where(_003CGetResourceRequirement_003Ec__AnonStorey._003C_003Em__2).Sum((Func<ResourceRequirement, float>)_003CGetResourceRequirement_003Ec__AnonStorey._003C_003Em__3);
+				num = ResourceRequirements.Where((ResourceRequirement m) => m.ResourceType == resourceType).Sum((ResourceRequirement m) => (!working.Value) ? m.Standby : m.Nominal);
 			}
-			if (_003CGetResourceRequirement_003Ec__AnonStorey.resourceType == DistributionSystemType.Power)
+			if (resourceType == DistributionSystemType.Power)
 			{
 				return num * PowerInputFactor;
 			}
@@ -119,12 +78,14 @@ namespace ZeroGravity.ShipComponents
 			}
 		}
 
-		protected SubSystemDetails getDetails(bool? isSwitchedOn = null)
+		protected SubSystemDetails GetDetails(bool? isSwitchedOn = null)
 		{
-			SubSystemDetails subSystemDetails = new SubSystemDetails();
-			subSystemDetails.InSceneID = base.InSceneID;
-			subSystemDetails.Status = ((!isSwitchedOn.HasValue) ? Status : ((!isSwitchedOn.Value) ? SystemStatus.OffLine : SystemStatus.OnLine));
-			subSystemDetails.AuxDetails = GetAuxDetails();
+			SubSystemDetails subSystemDetails = new SubSystemDetails
+			{
+				InSceneID = base.InSceneID,
+				Status = ((!isSwitchedOn.HasValue) ? Status : ((!isSwitchedOn.Value) ? SystemStatus.Offline : SystemStatus.Online)),
+				AuxDetails = GetAuxDetails()
+			};
 			return subSystemDetails;
 		}
 
@@ -133,7 +94,7 @@ namespace ZeroGravity.ShipComponents
 			if (Client.IsGameBuild)
 			{
 				SpaceObjectVessel parentVessel = _ParentVessel;
-				SubSystemDetails details = getDetails();
+				SubSystemDetails details = GetDetails();
 				parentVessel.ChangeStats(null, null, null, null, details);
 			}
 		}
@@ -159,7 +120,7 @@ namespace ZeroGravity.ShipComponents
 			OperationRate = operationRate;
 			if (triggerAnimation != null)
 			{
-				triggerAnimation.ChangeState(Status == SystemStatus.OnLine, instant);
+				triggerAnimation.ChangeState(Status == SystemStatus.Online, instant);
 			}
 		}
 
@@ -179,34 +140,34 @@ namespace ZeroGravity.ShipComponents
 
 		public override void SwitchOn()
 		{
-			if (Status == SystemStatus.OffLine || Status == SystemStatus.CoolDown)
+			if (Status == SystemStatus.Offline || Status == SystemStatus.Cooldown)
 			{
 				if (Client.IsGameBuild)
 				{
 					SpaceObjectVessel parentVessel = _ParentVessel;
-					SubSystemDetails details = getDetails(true);
+					SubSystemDetails details = GetDetails(true);
 					parentVessel.ChangeStats(null, null, null, null, details);
 				}
 				else
 				{
-					SetDetails(SystemStatus.OnLine, SystemSecondaryStatus.None, OperationRate);
+					SetDetails(SystemStatus.Online, SystemSecondaryStatus.None, OperationRate);
 				}
 			}
 		}
 
 		public override void SwitchOff()
 		{
-			if (Status == SystemStatus.OnLine || Status == SystemStatus.PowerUp)
+			if (Status == SystemStatus.Online || Status == SystemStatus.Powerup)
 			{
 				if (Client.IsGameBuild)
 				{
 					SpaceObjectVessel parentVessel = _ParentVessel;
-					SubSystemDetails details = getDetails(false);
+					SubSystemDetails details = GetDetails(false);
 					parentVessel.ChangeStats(null, null, null, null, details);
 				}
 				else
 				{
-					SetDetails(SystemStatus.OffLine, SystemSecondaryStatus.None, OperationRate);
+					SetDetails(SystemStatus.Offline, SystemSecondaryStatus.None, OperationRate);
 				}
 			}
 		}
@@ -216,7 +177,7 @@ namespace ZeroGravity.ShipComponents
 			if (Client.IsGameBuild)
 			{
 				SpaceObjectVessel parentVessel = _ParentVessel;
-				SubSystemDetails details = getDetails(!IsSwitchedOn());
+				SubSystemDetails details = GetDetails(!IsSwitchedOn());
 				parentVessel.ChangeStats(null, null, null, null, details);
 			}
 			else if (IsSwitchedOn())
@@ -260,28 +221,30 @@ namespace ZeroGravity.ShipComponents
 					list2.Add(resourceContainer2.InSceneID);
 				}
 			}
-			SubSystemData subSystemData = new SubSystemData();
-			subSystemData.InSceneID = base.InSceneID;
-			subSystemData.Type = Type;
-			subSystemData.ResourceRequirements = ResourceRequirements;
-			subSystemData.SpawnSettings = SpawnSettings;
-			subSystemData.Status = Status;
-			subSystemData.MachineryPartSlots = list;
-			subSystemData.ResourceContainers = list2;
-			subSystemData.OperationRate = OperationRate;
-			subSystemData.AutoTuneOperationRate = AutoTuneOperationRate;
-			subSystemData.AutoReactivate = AutoReactivate;
-			subSystemData.CoolDownTime = CoolDownTime;
-			subSystemData.PowerUpTime = PowerUpTime;
-			subSystemData.AuxData = GetAuxData();
-			subSystemData.RadarSignature = RadarSignature;
-			subSystemData.RoomID = ((!(Room == null)) ? Room.InSceneID : (-1));
+			SubSystemData subSystemData = new SubSystemData
+			{
+				InSceneID = InSceneID,
+				Type = Type,
+				ResourceRequirements = ResourceRequirements,
+				SpawnSettings = SpawnSettings,
+				Status = Status,
+				MachineryPartSlots = list,
+				ResourceContainers = list2,
+				OperationRate = OperationRate,
+				AutoTuneOperationRate = AutoTuneOperationRate,
+				AutoReactivate = AutoReactivate,
+				CoolDownTime = CoolDownTime,
+				PowerUpTime = PowerUpTime,
+				AuxData = GetAuxData(),
+				RadarSignature = RadarSignature,
+				RoomID = (!(Room == null)) ? Room.InSceneID : (-1)
+			};
 			return subSystemData;
 		}
 
 		public virtual float GetConsumption(DistributionSystemType resourceType)
 		{
-			if (Status != SystemStatus.OnLine)
+			if (Status != SystemStatus.Online)
 			{
 				return 0f;
 			}

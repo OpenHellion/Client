@@ -28,7 +28,7 @@ namespace ZeroGravity.ShipComponents
 		public float RadarSignature;
 
 		[SerializeField]
-		private SystemStatus _Status = SystemStatus.OffLine;
+		private SystemStatus _Status = SystemStatus.Offline;
 
 		public SystemSecondaryStatus SecondaryStatus;
 
@@ -61,27 +61,27 @@ namespace ZeroGravity.ShipComponents
 				}
 				switch (value)
 				{
-				case SystemStatus.OnLine:
-					SceneQuestTrigger.Check(base.gameObject, SceneQuestTriggerEvent.SystemSwitchOn);
+				case SystemStatus.Online:
+					SceneQuestTrigger.OnTrigger(base.gameObject, SceneQuestTriggerEvent.SystemSwitchOn);
 					if (OnOnlineEvent != null)
 					{
 						OnOnlineEvent.Invoke();
 					}
 					break;
-				case SystemStatus.OffLine:
-					SceneQuestTrigger.Check(base.gameObject, SceneQuestTriggerEvent.SystemSwitchOff);
+				case SystemStatus.Offline:
+					SceneQuestTrigger.OnTrigger(base.gameObject, SceneQuestTriggerEvent.SystemSwitchOff);
 					if (OnOfflineEvent != null)
 					{
 						OnOfflineEvent.Invoke();
 					}
 					break;
-				case SystemStatus.PowerUp:
+				case SystemStatus.Powerup:
 					if (OnPowerUpEvent != null)
 					{
 						OnPowerUpEvent.Invoke();
 					}
 					break;
-				case SystemStatus.CoolDown:
+				case SystemStatus.Cooldown:
 					if (OnCooldownEvent != null)
 					{
 						OnCooldownEvent.Invoke();
@@ -104,14 +104,14 @@ namespace ZeroGravity.ShipComponents
 
 		public bool IsSwitchedOn()
 		{
-			return Status == SystemStatus.OnLine || Status == SystemStatus.PowerUp || (Status == SystemStatus.OffLine && AutoRestart);
+			return Status == SystemStatus.Online || Status == SystemStatus.Powerup || (Status == SystemStatus.Offline && AutoRestart);
 		}
 
 		public string GetStatus(out Color color)
 		{
 			string empty = string.Empty;
 			color = Colors.White;
-			if (Status == SystemStatus.OffLine && SecondaryStatus == SystemSecondaryStatus.Defective)
+			if (Status == SystemStatus.Offline && SecondaryStatus == SystemSecondaryStatus.Defective)
 			{
 				empty = Localization.Defective.ToUpper();
 				color = Colors.Defective;

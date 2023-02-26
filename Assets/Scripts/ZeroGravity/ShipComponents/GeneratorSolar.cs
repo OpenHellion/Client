@@ -47,11 +47,11 @@ namespace ZeroGravity.ShipComponents
 			base.SetDetails(details, instant);
 			if (DeployRetractExecuter != null && status != Status)
 			{
-				if (Status == SystemStatus.PowerUp || Status == SystemStatus.OnLine)
+				if (Status == SystemStatus.Powerup || Status == SystemStatus.Online)
 				{
 					DeployRetractExecuter.ChangeState(DeplayState);
 				}
-				else if (Status == SystemStatus.CoolDown || Status == SystemStatus.OffLine)
+				else if (Status == SystemStatus.Cooldown || Status == SystemStatus.Offline)
 				{
 					DeployRetractExecuter.ChangeState(RetractState);
 				}

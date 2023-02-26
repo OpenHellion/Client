@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using OpenHellion.Networking;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using ZeroGravity.Data;
@@ -11,47 +12,60 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneQuestTrigger : MonoBehaviour
 	{
-		[Tooltip("Used only if Task is not assigned")]
+		[PropertyTooltip("Used only if Task is not assigned"), ShowIf(nameof(Task), null)]
 		public uint QuestID;
 
-		[Tooltip("Used only if Task is not assigned")]
+		[PropertyTooltip("Used only if Task is not assigned"), ShowIf(nameof(Task), null)]
 		public uint QuestTriggerID;
 
+		[PropertyTooltip("The event that should complete this quest.")]
 		public SceneQuestTriggerEvent TriggerEvent;
 
-		private Quest quest;
-
-		private QuestTrigger questTrigger;
-
-		private SpaceObjectVessel parentVessel;
-
-		private double lastActivationTime;
-
+		[PropertyTooltip("The quest task to complete.")]
 		public QuestTaskObject Task;
 
+		[PropertyTooltip("A list of additional quest tasks to complete if Task is completed."), HideIf(nameof(Task), null)]
 		public List<QuestTaskObject> AdditionalTasksToComplete;
 
+		[PropertyTooltip("Wether or not the quest indicator is visible.")]
 		public QuestIndicatorVisibility Visibility = QuestIndicatorVisibility.AlwaysVisible;
 
+		[PropertyTooltip("The maximum distance the quest indicator can be seen from."), ShowIf(nameof(Visibility), QuestIndicatorVisibility.Proximity)]
 		public float ProximityDistance = 10f;
 
+		[PropertyTooltip("Position of the quest indicator relative to the object.")]
 		public Vector3 QuestIndicatorPosition = new Vector3(0f, 1f, 0f);
 
+		[SceneObjectsOnly]
 		public GameObject QuestTriggerObject;
+
+		[PropertyTooltip("Collider enabled when quest is activated.")]
+		public Collider Collider;
+
+		[PropertyTooltip("An optional localization key for a tooltip to be shown on the screen.")]
+		public string QuickTooltip;
 
 		public UnityEvent PostTriggerEvent;
 
+		[PropertyTooltip("Events executed when task becomes active.")]
 		public UnityEvent ActiveTriggerEvent;
 
+		[PropertyTooltip("Events executed when task is completed.")]
 		public UnityEvent CompleteTriggerEvent;
 
-		public Collider Collider;
+		private Quest m_quest;
 
-		public string QuickTooltip;
+		private QuestTrigger m_questTrigger;
 
-		public QuestTrigger QuestTrigger => questTrigger;
+		private SpaceObjectVessel m_parentVessel;
 
-		public SpaceObjectVessel ParentVessel => GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
+		private double m_lastActivationTime;
+
+		[ShowInInspector]
+		public QuestTrigger QuestTrigger => m_questTrigger;
+
+		[ShowInInspector]
+		public SpaceObjectVessel ParentVessel => m_parentVessel;
 
 		private void Start()
 		{
@@ -63,24 +77,24 @@ namespace ZeroGravity.LevelDesign
 			{
 				QuestID = Task.QuestID;
 				QuestTriggerID = Task.QuestTriggerID;
-				quest = Client.Instance.Quests.FirstOrDefault((Quest m) => m.ID == QuestID);
-				questTrigger = quest.QuestTriggers.FirstOrDefault((QuestTrigger m) => m.ID == QuestTriggerID);
-				parentVessel = base.gameObject.GetComponentInParent<SpaceObjectVessel>();
+				m_quest = Client.Instance.Quests.FirstOrDefault((Quest m) => m.ID == QuestID);
+				m_questTrigger = m_quest.QuestTriggers.FirstOrDefault((QuestTrigger m) => m.ID == QuestTriggerID);
+				m_parentVessel = gameObject.GetComponentInParent<SpaceObjectVessel>();
 				OnQuestTriggerUpdate();
 				UpdateQuestTriggerMarker();
 				UpdateAvailableQuestMarker();
 				if (TriggerEvent == SceneQuestTriggerEvent.EnterTrigger || TriggerEvent == SceneQuestTriggerEvent.ExitTrigger)
 				{
-					base.gameObject.SetLayerRecursively("Triggers");
+					gameObject.SetLayerRecursively("Triggers");
 				}
 				if (TriggerEvent == SceneQuestTriggerEvent.Interact)
 				{
-					base.gameObject.SetLayerRecursively("InteractiveTriggers");
+					gameObject.SetLayerRecursively("InteractiveTriggers");
 				}
 			}
 			else
 			{
-				Dbg.Error("Scene Quest Trigger " + base.gameObject.name + " has no Task assigned!");
+				Dbg.Error("Scene Quest Trigger " + gameObject.name + " has no Task assigned!");
 			}
 		}
 
@@ -103,14 +117,14 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public void Activate()
+		public void CompleteQuest()
 		{
-			if ((double)Time.realtimeSinceStartup - lastActivationTime < 1.0 || (quest.DependencyQuests != null && Client.Instance.Quests.FirstOrDefault((Quest m) => quest.DependencyQuests.Contains(m.ID) && m.Status != QuestStatus.Completed) != null))
+			if ((double)Time.realtimeSinceStartup - m_lastActivationTime < 1.0 || (m_quest.DependencyQuests != null && Client.Instance.Quests.FirstOrDefault((Quest m) => m_quest.DependencyQuests.Contains(m.ID) && m.Status != QuestStatus.Completed) != null))
 			{
 				return;
 			}
-			lastActivationTime = Time.realtimeSinceStartup;
-			if (quest.IsFinished || questTrigger == null || questTrigger.Status != QuestStatus.Active || !questTrigger.CheckLocation(ParentVessel))
+			m_lastActivationTime = Time.realtimeSinceStartup;
+			if (m_quest.IsFinished || m_questTrigger == null || m_questTrigger.Status != QuestStatus.Active || !m_questTrigger.CheckLocation(ParentVessel))
 			{
 				return;
 			}
@@ -138,16 +152,16 @@ namespace ZeroGravity.LevelDesign
 			}
 			if (quest != null)
 			{
-				if (this.quest == quest && questTrigger.Status == QuestStatus.Active && SceneHelper.CompareTags(ParentVessel.VesselData.Tag, SceneTagObject.TagsToString(Task.Tags)))
+				if (this.m_quest == quest && m_questTrigger.Status == QuestStatus.Active && SceneHelper.CompareTags(ParentVessel.VesselData.Tag, SceneTagObject.TagsToString(Task.Tags)))
 				{
 					Client.Instance.CanvasManager.CanvasUI.QuestIndicators.AddQuestIndicator(this);
 				}
-				else if ((questTrigger.Type != QuestTriggerType.Activate || questTrigger.Status != QuestStatus.Active) && SceneHelper.CompareTags(ParentVessel.VesselData.Tag, SceneTagObject.TagsToString(Task.Tags)))
+				else if ((m_questTrigger.Type != QuestTriggerType.Activate || m_questTrigger.Status != QuestStatus.Active) && SceneHelper.CompareTags(ParentVessel.VesselData.Tag, SceneTagObject.TagsToString(Task.Tags)))
 				{
 					Client.Instance.CanvasManager.CanvasUI.QuestIndicators.StopQuestIndicator(this);
 				}
 			}
-			else if (questTrigger.Type != QuestTriggerType.Activate || questTrigger.Status != QuestStatus.Active)
+			else if (m_questTrigger.Type != QuestTriggerType.Activate || m_questTrigger.Status != QuestStatus.Active)
 			{
 				Client.Instance.CanvasManager.CanvasUI.QuestIndicators.StopQuestIndicator(this);
 			}
@@ -160,14 +174,14 @@ namespace ZeroGravity.LevelDesign
 			{
 				flag = SceneHelper.CompareTags(ParentVessel.VesselData.Tag, SceneTagObject.TagsToString(Task.Tags));
 			}
-			if (questTrigger.Type != QuestTriggerType.Activate || questTrigger.Status != QuestStatus.Active || !flag)
+			if (m_questTrigger.Type != QuestTriggerType.Activate || m_questTrigger.Status != QuestStatus.Active || !flag)
 			{
 				return;
 			}
 			bool flag2 = true;
-			if (questTrigger.Quest != null && questTrigger.Quest.DependencyQuests != null)
+			if (m_questTrigger.Quest != null && m_questTrigger.Quest.DependencyQuests != null)
 			{
-				foreach (uint dependencyQuestID in questTrigger.Quest.DependencyQuests)
+				foreach (uint dependencyQuestID in m_questTrigger.Quest.DependencyQuests)
 				{
 					Quest quest = Client.Instance.Quests.FirstOrDefault((Quest m) => m.ID == dependencyQuestID);
 					if (quest != null && quest.Status != QuestStatus.Completed)
@@ -191,9 +205,9 @@ namespace ZeroGravity.LevelDesign
 			}
 			if (QuestTriggerObject != null)
 			{
-				QuestTriggerObject.SetActive(questTrigger.Status == QuestStatus.Active);
+				QuestTriggerObject.SetActive(m_questTrigger.Status == QuestStatus.Active);
 			}
-			if (questTrigger.Status == QuestStatus.Active)
+			if (m_questTrigger.Status == QuestStatus.Active)
 			{
 				if (Collider != null)
 				{
@@ -201,7 +215,7 @@ namespace ZeroGravity.LevelDesign
 				}
 				ActiveTriggerEvent.Invoke();
 			}
-			if (questTrigger.Status == QuestStatus.Completed)
+			if (m_questTrigger.Status == QuestStatus.Completed)
 			{
 				CompleteTriggerEvent.Invoke();
 			}
@@ -209,7 +223,7 @@ namespace ZeroGravity.LevelDesign
 
 		private void OnDrawGizmos()
 		{
-			Gizmos.matrix = Matrix4x4.TRS(base.transform.position, base.transform.rotation, base.transform.lossyScale);
+			Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
 			if (GetComponent<BoxCollider>() != null)
 			{
 				Gizmos.color = new Color(1f, 0f, 1f, 0.05f);
@@ -225,29 +239,32 @@ namespace ZeroGravity.LevelDesign
 			{
 				if (Task.QuestTriggerID == 0)
 				{
-					Gizmos.DrawIcon(base.transform.TransformPoint(QuestIndicatorPosition), "NewQuestIndicator");
+					Gizmos.DrawIcon(transform.TransformPoint(QuestIndicatorPosition), "NewQuestIndicator");
 				}
 				else
 				{
-					Gizmos.DrawIcon(base.transform.TransformPoint(QuestIndicatorPosition), "QuestTrigger");
+					Gizmos.DrawIcon(transform.TransformPoint(QuestIndicatorPosition), "QuestTrigger", false);
 				}
 			}
 			else
 			{
-				Gizmos.DrawIcon(base.transform.TransformPoint(QuestIndicatorPosition), "QuestTrigger");
+				Gizmos.DrawIcon(transform.TransformPoint(QuestIndicatorPosition), "QuestTrigger", false);
 			}
 		}
 
 		private void OnDrawGizmosSelected()
 		{
-			Gizmos.matrix = Matrix4x4.TRS(base.transform.position, base.transform.rotation, base.transform.lossyScale);
+			Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
 			if (Visibility == QuestIndicatorVisibility.Proximity)
 			{
 				Gizmos.DrawWireSphere(Vector3.zero, ProximityDistance);
 			}
 		}
 
-		public static void Check(GameObject go, SceneQuestTriggerEvent triggerEvent)
+		/// <summary>
+		/// 	Checks if the quests on the provided gameobject can be completed. Completes them if the trigger event is the same.
+		/// </summary>
+		public static void OnTrigger(GameObject go, SceneQuestTriggerEvent triggerEvent)
 		{
 			if (go.GetComponents<SceneQuestTrigger>() == null)
 			{
@@ -257,11 +274,14 @@ namespace ZeroGravity.LevelDesign
 				where m.TriggerEvent == triggerEvent && m.QuestTrigger != null && m.QuestTrigger.Status == QuestStatus.Active
 				select m)
 			{
-				item.Activate();
+				item.CompleteQuest();
 			}
 		}
 
-		public static void CheckInChildren(GameObject go, SceneQuestTriggerEvent triggerEvent)
+		/// <summary>
+		/// 	Checks if the quests on children of the provided gameobject can be completed. Completes them if the trigger event is the same.
+		/// </summary>
+		public static void OnTriggerInChildren(GameObject go, SceneQuestTriggerEvent triggerEvent)
 		{
 			if (go.GetComponentsInChildren<SceneQuestTrigger>() == null)
 			{
@@ -271,7 +291,7 @@ namespace ZeroGravity.LevelDesign
 				where m.TriggerEvent == triggerEvent && m.QuestTrigger != null && m.QuestTrigger.Status == QuestStatus.Active
 				select m)
 			{
-				item.Activate();
+				item.CompleteQuest();
 			}
 		}
 	}

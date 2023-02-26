@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
@@ -25,24 +24,9 @@ namespace ZeroGravity.ShipComponents
 
 		public float MaxOperationRate = 1f;
 
-		[CompilerGenerated]
-		private static Predicate<ResourceRequirement> _003C_003Ef__am_0024cache0;
+		public override SubSystemType Type => SubSystemType.RCS;
 
-		public override SubSystemType Type
-		{
-			get
-			{
-				return SubSystemType.RCS;
-			}
-		}
-
-		public override ResourceRequirement[] ResourceRequirements
-		{
-			get
-			{
-				return _ResourceRequirements;
-			}
-		}
+		public override ResourceRequirement[] ResourceRequirements => _ResourceRequirements;
 
 		public override SystemAuxData GetAuxData()
 		{
@@ -72,24 +56,13 @@ namespace ZeroGravity.ShipComponents
 		{
 			try
 			{
-				ResourceRequirement[] resourceRequirements = ResourceRequirements;
-				if (_003C_003Ef__am_0024cache0 == null)
-				{
-					_003C_003Ef__am_0024cache0 = _003ChasPropellant_003Em__0;
-				}
-				float nominal = Array.Find(resourceRequirements, _003C_003Ef__am_0024cache0).Nominal;
+				float nominal = Array.Find(ResourceRequirements, (ResourceRequirement m) => m.ResourceType == DistributionSystemType.RCS).Nominal;
 				return ResourceContainers[0].Compartments[0].Resources[0].Quantity > nominal;
 			}
 			catch
 			{
 			}
 			return false;
-		}
-
-		[CompilerGenerated]
-		private static bool _003ChasPropellant_003Em__0(ResourceRequirement m)
-		{
-			return m.ResourceType == DistributionSystemType.RCS;
 		}
 	}
 }

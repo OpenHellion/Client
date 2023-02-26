@@ -109,7 +109,7 @@ namespace ZeroGravity.LevelDesign
 				}
 				return false;
 			}
-			SceneQuestTrigger.Check(base.gameObject, SceneQuestTriggerEvent.Interact);
+			SceneQuestTrigger.OnTrigger(base.gameObject, SceneQuestTriggerEvent.Interact);
 			if (AuthorizationPassEvent != null)
 			{
 				AuthorizationPassEvent.Invoke();
@@ -137,7 +137,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (coli == MyPlayer.Instance.FpsController.GetCollider())
 			{
-				SceneQuestTrigger.Check(base.gameObject, SceneQuestTriggerEvent.EnterTrigger);
+				SceneQuestTrigger.OnTrigger(base.gameObject, SceneQuestTriggerEvent.EnterTrigger);
 			}
 		}
 
@@ -145,7 +145,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (coli == MyPlayer.Instance.FpsController.GetCollider())
 			{
-				SceneQuestTrigger.Check(base.gameObject, SceneQuestTriggerEvent.ExitTrigger);
+				SceneQuestTrigger.OnTrigger(base.gameObject, SceneQuestTriggerEvent.ExitTrigger);
 			}
 		}
 	}

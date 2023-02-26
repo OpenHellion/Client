@@ -190,11 +190,11 @@ namespace ZeroGravity.ShipComponents
 			{
 				if (originalRank == AuthorizedPersonRank.None && updatedRank == AuthorizedPersonRank.CommandingOfficer)
 				{
-					SceneQuestTrigger.Check(gameObject, SceneQuestTriggerEvent.Claim);
+					SceneQuestTrigger.OnTrigger(gameObject, SceneQuestTriggerEvent.Claim);
 				}
 				else if (originalRank == AuthorizedPersonRank.CommandingOfficer && updatedRank == AuthorizedPersonRank.None)
 				{
-					SceneQuestTrigger.Check(gameObject, SceneQuestTriggerEvent.Resign);
+					SceneQuestTrigger.OnTrigger(gameObject, SceneQuestTriggerEvent.Resign);
 				}
 			}
 		}

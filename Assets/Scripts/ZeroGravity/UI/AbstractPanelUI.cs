@@ -140,14 +140,14 @@ namespace ZeroGravity.UI
 			powDiff = 0f;
 			foreach (GeneratorPower powerGenerator in PowerGenerators)
 			{
-				if (powerGenerator.Status == SystemStatus.OnLine)
+				if (powerGenerator.Status == SystemStatus.Online)
 				{
 					generalOutput += powerGenerator.MaxOutput;
 				}
 			}
 			foreach (GeneratorSolar solarGenerator in SolarGenerators)
 			{
-				if (solarGenerator.Status == SystemStatus.OnLine)
+				if (solarGenerator.Status == SystemStatus.Online)
 				{
 					generalOutput += solarGenerator.MaxOutput;
 				}
@@ -159,7 +159,7 @@ namespace ZeroGravity.UI
 			}
 			foreach (VesselSystem consumer in Consumers)
 			{
-				if (consumer.Status == SystemStatus.OnLine)
+				if (consumer.Status == SystemStatus.Online)
 				{
 					generalConsumption += (consumer as IPowerConsumer).GetPowerConsumption();
 				}

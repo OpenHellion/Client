@@ -2,11 +2,11 @@ Shader "ZeroGravity/Surface/StandardLightMap" {
 	Properties {
 		[HideInInspector] __dirty ("", Float) = 1
 		_MainTex ("MainTex", 2D) = "white" {}
-		_Color ("Color", Vector) = (0,0,0,0)
-		_BumpMap ("BumpMap", 2D) = "bump" {}
+		_Color ("Color", Color) = (0,0,0,0)
+		[Normal] _BumpMap ("BumpMap", 2D) = "bump" {}
 		_BumpScale ("BumpScale", Float) = 0
 		_EmissionMap ("EmissionMap", 2D) = "white" {}
-		[HDR] _EmissionColor ("EmissionColor", Vector) = (0,0,0,0)
+		[HDR] _EmissionColor ("EmissionColor", Color) = (0,0,0,0)
 		_MetallicGlossMap ("MetallicGlossMap", 2D) = "white" {}
 		_GlossMapScale ("GlossMapScale", Range(0, 1)) = 0
 		_OcclusionMap ("OcclusionMap", 2D) = "white" {}
@@ -14,8 +14,8 @@ Shader "ZeroGravity/Surface/StandardLightMap" {
 		_EmissionControl ("EmissionControl", Range(0, 1)) = 0
 		[Toggle] _AlwaysEmit ("AlwaysEmit", Range(0, 1)) = 1
 		[IntRange] _EmissionState ("EmissionState", Range(0, 3)) = 0
-		[HDR] _ToxicColor ("ToxicColor", Vector) = (2,1.034483,0,0)
-		[HDR] _LowPressureColor ("LowPressureColor", Vector) = (2,0,0,0)
+		[HDR] _ToxicColor ("ToxicColor", Color) = (2,1.034483,0,0)
+		[HDR] _LowPressureColor ("LowPressureColor", Color) = (2,0,0,0)
 		[HideInInspector] _texcoord ("", 2D) = "white" {}
 		[HideInInspector] _texcoord4 ("", 2D) = "white" {}
 	}

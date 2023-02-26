@@ -96,7 +96,7 @@ namespace ZeroGravity.ShipComponents
 			float num;
 			if (!_003CGetResourceRequirement_003Ec__AnonStorey.working.HasValue)
 			{
-				if (Status != SystemStatus.OnLine)
+				if (Status != SystemStatus.Online)
 				{
 					return 0f;
 				}
@@ -125,7 +125,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			GeneratorDetails generatorDetails = new GeneratorDetails();
 			generatorDetails.InSceneID = base.InSceneID;
-			generatorDetails.Status = ((!isSwitchedOn.HasValue) ? Status : ((!isSwitchedOn.Value) ? SystemStatus.OffLine : SystemStatus.OnLine));
+			generatorDetails.Status = ((!isSwitchedOn.HasValue) ? Status : ((!isSwitchedOn.Value) ? SystemStatus.Offline : SystemStatus.Online));
 			generatorDetails.OutputRate = OutputRate;
 			return generatorDetails;
 		}
@@ -150,7 +150,7 @@ namespace ZeroGravity.ShipComponents
 			SecondaryStatus = secondaryStatus;
 			if (triggerAnimtion != null)
 			{
-				triggerAnimtion.ChangeState(Status == SystemStatus.OnLine, instant);
+				triggerAnimtion.ChangeState(Status == SystemStatus.Online, instant);
 			}
 		}
 
@@ -171,7 +171,7 @@ namespace ZeroGravity.ShipComponents
 			DebugInfo = details.DebugInfo;
 			if (triggerAnimtion != null)
 			{
-				triggerAnimtion.ChangeState(Status == SystemStatus.OnLine, instant);
+				triggerAnimtion.ChangeState(Status == SystemStatus.Online, instant);
 			}
 		}
 
@@ -189,7 +189,7 @@ namespace ZeroGravity.ShipComponents
 			}
 			else
 			{
-				SetDetails(SystemStatus.OnLine, SystemSecondaryStatus.None);
+				SetDetails(SystemStatus.Online, SystemSecondaryStatus.None);
 			}
 		}
 
@@ -203,7 +203,7 @@ namespace ZeroGravity.ShipComponents
 			}
 			else
 			{
-				SetDetails(SystemStatus.OffLine, SystemSecondaryStatus.None);
+				SetDetails(SystemStatus.Offline, SystemSecondaryStatus.None);
 			}
 		}
 
@@ -289,7 +289,7 @@ namespace ZeroGravity.ShipComponents
 
 		public virtual float GetConsumption(DistributionSystemType resourceType)
 		{
-			if (Status != SystemStatus.OnLine)
+			if (Status != SystemStatus.Online)
 			{
 				return 0f;
 			}

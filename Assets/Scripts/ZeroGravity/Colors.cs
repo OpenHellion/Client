@@ -26,19 +26,19 @@ namespace ZeroGravity
 		public static Dictionary<SystemStatus, Color> Status = new Dictionary<SystemStatus, Color>
 		{
 			{
-				SystemStatus.OffLine,
+				SystemStatus.Offline,
 				hexToColor("#AE1515")
 			},
 			{
-				SystemStatus.OnLine,
+				SystemStatus.Online,
 				hexToColor("#2DAE15")
 			},
 			{
-				SystemStatus.CoolDown,
+				SystemStatus.Cooldown,
 				hexToColor("#146EE2")
 			},
 			{
-				SystemStatus.PowerUp,
+				SystemStatus.Powerup,
 				hexToColor("#00F0EA")
 			},
 			{
@@ -50,19 +50,19 @@ namespace ZeroGravity
 		public static Dictionary<SystemStatus, Color> ReversedStatus = new Dictionary<SystemStatus, Color>
 		{
 			{
-				SystemStatus.OffLine,
+				SystemStatus.Offline,
 				hexToColor("#2DAE15")
 			},
 			{
-				SystemStatus.OnLine,
+				SystemStatus.Online,
 				hexToColor("#AE1515")
 			},
 			{
-				SystemStatus.CoolDown,
+				SystemStatus.Cooldown,
 				hexToColor("#146EE2")
 			},
 			{
-				SystemStatus.PowerUp,
+				SystemStatus.Powerup,
 				hexToColor("#00F0EA")
 			},
 			{

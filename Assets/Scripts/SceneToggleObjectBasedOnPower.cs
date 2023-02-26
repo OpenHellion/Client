@@ -29,7 +29,7 @@ public class SceneToggleObjectBasedOnPower : MonoBehaviour, IVesselSystemAccesso
 
 	public void BaseVesselSystemUpdated()
 	{
-		if (BaseVesselSystem.Status == SystemStatus.OnLine)
+		if (BaseVesselSystem.Status == SystemStatus.Online)
 		{
 			base.gameObject.SetActive(!Reverse);
 		}

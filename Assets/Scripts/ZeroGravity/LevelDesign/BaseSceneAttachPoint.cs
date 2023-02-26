@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
@@ -22,43 +21,6 @@ namespace ZeroGravity.LevelDesign
 			public MachineryPartType MachineryPartType;
 
 			public Transform AttachPoint;
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CGetAttachPointData_003Ec__AnonStorey1
-		{
-			internal Item it;
-
-			internal bool _003C_003Em__0(AttachPointTransformData m)
-			{
-				return m.ItemType == it.Type && (!(it is GenericItem) || m.GenericItemType == (it as GenericItem).SubType) && (!(it is MachineryPart) || m.MachineryPartType == (it as MachineryPart).PartType);
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CGetAttachPointData_003Ec__AnonStorey0
-		{
-			internal MachineryPart part;
-
-			internal bool _003C_003Em__0(AttachPointTransformData m)
-			{
-				return m.ItemType == part.Type && m.MachineryPartType == part.PartType;
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CCanAttachItemType_003Ec__AnonStorey2
-		{
-			internal ItemType itemType;
-
-			internal GenericItemSubType? generic;
-
-			internal MachineryPartType? part;
-
-			internal bool _003C_003Em__0(AttachPointTransformData m)
-			{
-				return m.ItemType == itemType && (!generic.HasValue || m.GenericItemType == generic.Value) && (!part.HasValue || (m.MachineryPartType == part.GetValueOrDefault() && part.HasValue));
-			}
 		}
 
 		[SerializeField]
@@ -98,37 +60,13 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public override bool ExclusivePlayerLocking
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool ExclusivePlayerLocking => false;
 
-		public override SceneTriggerType TriggerType
-		{
-			get
-			{
-				return SceneTriggerType.AttachPoint;
-			}
-		}
+		public override SceneTriggerType TriggerType => SceneTriggerType.AttachPoint;
 
-		public override PlayerHandsCheckType PlayerHandsCheck
-		{
-			get
-			{
-				return PlayerHandsCheckType.DontCheck;
-			}
-		}
+		public override PlayerHandsCheckType PlayerHandsCheck => PlayerHandsCheckType.DontCheck;
 
-		public override List<ItemType> PlayerHandsItemType
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public override List<ItemType> PlayerHandsItemType => null;
 
 		public virtual string InteractionTip
 		{
@@ -155,29 +93,11 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public override bool IsNearTrigger
-		{
-			get
-			{
-				return _isNearTrigger;
-			}
-		}
+		public override bool IsNearTrigger => _isNearTrigger;
 
-		public override bool IsInteractable
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool IsInteractable => true;
 
-		public override bool CameraMovementAllowed
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool CameraMovementAllowed => false;
 
 		public virtual Item Item
 		{
@@ -202,13 +122,7 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public SpaceObject Parent
-		{
-			get
-			{
-				return ParentVessel;
-			}
-		}
+		public SpaceObject Parent => ParentVessel;
 
 		private string GetItemName(AttachPointTransformData data)
 		{
@@ -228,7 +142,7 @@ namespace ZeroGravity.LevelDesign
 			Sprite result = null;
 			if (attachableTypesList.Count == 1)
 			{
-				result = ((attachableTypesList[0].ItemType == ItemType.GenericItem) ? Client.Instance.SpriteManager.GetSprite(attachableTypesList[0].GenericItemType) : ((attachableTypesList[0].ItemType != ItemType.MachineryPart) ? Client.Instance.SpriteManager.GetSprite(attachableTypesList[0].ItemType) : Client.Instance.SpriteManager.GetSprite(attachableTypesList[0].MachineryPartType)));
+				result = (attachableTypesList[0].ItemType == ItemType.GenericItem) ? Client.Instance.SpriteManager.GetSprite(attachableTypesList[0].GenericItemType) : ((attachableTypesList[0].ItemType != ItemType.MachineryPart) ? Client.Instance.SpriteManager.GetSprite(attachableTypesList[0].ItemType) : Client.Instance.SpriteManager.GetSprite(attachableTypesList[0].MachineryPartType));
 			}
 			return result;
 		}
@@ -283,20 +197,17 @@ namespace ZeroGravity.LevelDesign
 
 		protected virtual AttachPointTransformData GetAttachPointData(Item it)
 		{
-			_003CGetAttachPointData_003Ec__AnonStorey1 _003CGetAttachPointData_003Ec__AnonStorey = new _003CGetAttachPointData_003Ec__AnonStorey1();
-			_003CGetAttachPointData_003Ec__AnonStorey.it = it;
 			if (this is SceneMachineryPartSlot)
 			{
-				_003CGetAttachPointData_003Ec__AnonStorey0 _003CGetAttachPointData_003Ec__AnonStorey2 = new _003CGetAttachPointData_003Ec__AnonStorey0();
 				SceneMachineryPartSlot sceneMachineryPartSlot = this as SceneMachineryPartSlot;
-				_003CGetAttachPointData_003Ec__AnonStorey2.part = _003CGetAttachPointData_003Ec__AnonStorey.it as MachineryPart;
-				if (_003CGetAttachPointData_003Ec__AnonStorey2.part != null && (_003CGetAttachPointData_003Ec__AnonStorey2.part.Tier == 0 || sceneMachineryPartSlot.MaxTier == 0 || (_003CGetAttachPointData_003Ec__AnonStorey2.part.Tier >= sceneMachineryPartSlot.MinTier && _003CGetAttachPointData_003Ec__AnonStorey2.part.Tier <= sceneMachineryPartSlot.MaxTier)))
+				MachineryPart part = it as MachineryPart;
+				if (part != null && (part.Tier == 0 || sceneMachineryPartSlot.MaxTier == 0 || (part.Tier >= sceneMachineryPartSlot.MinTier && part.Tier <= sceneMachineryPartSlot.MaxTier)))
 				{
-					return attachableTypesList.Find(_003CGetAttachPointData_003Ec__AnonStorey2._003C_003Em__0);
+					return attachableTypesList.Find((AttachPointTransformData m) => m.ItemType == part.Type && m.MachineryPartType == part.PartType);
 				}
 				return null;
 			}
-			return attachableTypesList.Find(_003CGetAttachPointData_003Ec__AnonStorey._003C_003Em__0);
+			return attachableTypesList.Find((AttachPointTransformData m) => m.ItemType == it.Type && (!(it is GenericItem) || m.GenericItemType == (it as GenericItem).SubType) && (!(it is MachineryPart) || m.MachineryPartType == (it as MachineryPart).PartType));
 		}
 
 		public bool CanFitItem(Item it)
@@ -328,7 +239,7 @@ namespace ZeroGravity.LevelDesign
 			}
 			if (interactWithOverlappingTriggers)
 			{
-				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, myPlayer);
+				SceneTriggerHelper.InteractWithOverlappingTriggers(gameObject, this, myPlayer);
 			}
 			return true;
 		}
@@ -353,14 +264,14 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (attachableTypesList == null || attachableTypesList.Count == 0)
 			{
-				return base.transform;
+				return transform;
 			}
 			AttachPointTransformData attachPointData = GetAttachPointData(itm);
 			if (attachPointData != null && attachPointData.AttachPoint != null)
 			{
 				return attachPointData.AttachPoint;
 			}
-			return base.transform;
+			return transform;
 		}
 
 		public virtual AttachPointDetails GetDetails()
@@ -387,7 +298,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (Item != item || Item == null)
 			{
-				Dbg.Warning("Cannot detach item from this slot", Item, item, base.name);
+				Dbg.Warning("Cannot detach item from this slot", Item, item, name);
 			}
 			else
 			{
@@ -398,23 +309,19 @@ namespace ZeroGravity.LevelDesign
 
 		public virtual bool CanAttachItemType(ItemType itemType, GenericItemSubType? generic = null, MachineryPartType? part = null, int? partTier = null)
 		{
-			_003CCanAttachItemType_003Ec__AnonStorey2 _003CCanAttachItemType_003Ec__AnonStorey = new _003CCanAttachItemType_003Ec__AnonStorey2();
-			_003CCanAttachItemType_003Ec__AnonStorey.itemType = itemType;
-			_003CCanAttachItemType_003Ec__AnonStorey.generic = generic;
-			_003CCanAttachItemType_003Ec__AnonStorey.part = part;
-			return attachableTypesList.FirstOrDefault(_003CCanAttachItemType_003Ec__AnonStorey._003C_003Em__0) != null;
+			return attachableTypesList.FirstOrDefault((AttachPointTransformData m) => m.ItemType == itemType && (!generic.HasValue || m.GenericItemType == generic.Value) && (!part.HasValue || (m.MachineryPartType == part.GetValueOrDefault() && part.HasValue))) != null;
 		}
 
 		private void OnDrawGizmos()
 		{
 			if (GetComponent<BoxCollider>() != null)
 			{
-				Gizmos.matrix = base.transform.localToWorldMatrix;
+				Gizmos.matrix = transform.localToWorldMatrix;
 				Gizmos.color = new Color(0f, 1f, 0f, 0.05f);
 				Gizmos.DrawCube(GetComponent<BoxCollider>().center, GetComponent<BoxCollider>().size);
 				Gizmos.color = new Color(0f, 1f, 0f, 0.3f);
 				Gizmos.DrawWireCube(GetComponent<BoxCollider>().center, GetComponent<BoxCollider>().size);
-				Gizmos.DrawIcon(base.transform.TransformPoint(GetComponent<BoxCollider>().center), "AttachPoint");
+				Gizmos.DrawIcon(transform.TransformPoint(GetComponent<BoxCollider>().center), "AttachPoint", false);
 			}
 		}
 	}

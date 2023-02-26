@@ -22,8 +22,6 @@ public class SceneLightController : MonoBehaviour
 
 	private bool previousOnOff = true;
 
-	private LightState tempState;
-
 	[ContextMenuItem("On", "test")]
 	[ContextMenuItem("Off", "test2")]
 	public float LightChangeDuration = 1f;
@@ -143,9 +141,9 @@ public class SceneLightController : MonoBehaviour
 	private IEnumerator OnOffLerp()
 	{
 		float startIntensity = light.intensity;
-		float endIntensity = 0f;
+		float endIntensity;
 		Color startColor = light.color;
-		Color endColor2 = Color.white;
+		Color endColor2;
 		float emissionState = 0f;
 		if (OnOff)
 		{
@@ -210,6 +208,6 @@ public class SceneLightController : MonoBehaviour
 	public void SwitchStateTo(LightState state)
 	{
 		State = state;
-		StartCoroutine("OnOffLerp");
+		StartCoroutine(nameof(OnOffLerp));
 	}
 }

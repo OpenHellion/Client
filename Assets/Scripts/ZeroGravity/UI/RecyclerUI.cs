@@ -39,7 +39,7 @@ namespace ZeroGravity.UI
 
 		public void UpdateUI()
 		{
-			NoPower.SetActive(Recycler.BaseVesselSystem.Status != SystemStatus.OnLine);
+			NoPower.SetActive(Recycler.BaseVesselSystem.Status != SystemStatus.Online);
 			if (Recycler.Item != null)
 			{
 				ShowResults();

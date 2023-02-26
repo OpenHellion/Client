@@ -345,19 +345,19 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (DamageType == RepairPointDamageType.None)
 			{
-				Gizmos.DrawIcon(base.transform.position, "RepairRegular");
+				Gizmos.DrawIcon(transform.position, "RepairRegular", false);
 			}
 			if (DamageType == RepairPointDamageType.Breach)
 			{
-				Gizmos.DrawIcon(base.transform.position, "RepairBreach");
+				Gizmos.DrawIcon(transform.position, "RepairBreach", false);
 			}
 			if (DamageType == RepairPointDamageType.Fire)
 			{
-				Gizmos.DrawIcon(base.transform.position, "RepairFire");
+				Gizmos.DrawIcon(transform.position, "RepairFire", false);
 			}
 			if (DamageType == RepairPointDamageType.System)
 			{
-				Gizmos.DrawIcon(base.transform.position, "RepairSystem");
+				Gizmos.DrawIcon(transform.position, "RepairSystem", false);
 			}
 		}
 

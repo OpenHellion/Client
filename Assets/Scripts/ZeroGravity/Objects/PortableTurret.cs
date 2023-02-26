@@ -231,13 +231,13 @@ namespace ZeroGravity.Objects
 				ShootingEffect.Stop();
 				if (!isOnPlayer && !isDestroyed)
 				{
-					turretAnimator.SetBool("IsActive", !flag && BaseVesselSystem != null && BaseVesselSystem.Status == SystemStatus.OnLine);
+					turretAnimator.SetBool("IsActive", !flag && BaseVesselSystem != null && BaseVesselSystem.Status == SystemStatus.Online);
 					targettingHelper.gameObject.SetActive(!flag);
 					_isActive = !flag;
 				}
 				else if (flag && !isDestroyed)
 				{
-					turretAnimator.SetBool("IsActive", !flag && BaseVesselSystem != null && BaseVesselSystem.Status == SystemStatus.OnLine);
+					turretAnimator.SetBool("IsActive", !flag && BaseVesselSystem != null && BaseVesselSystem.Status == SystemStatus.Online);
 					_isActive = !flag;
 					canTarget = !flag;
 				}
@@ -551,11 +551,11 @@ namespace ZeroGravity.Objects
 
 		public void BaseVesselSystemUpdated()
 		{
-			if (BaseVesselSystem.Status == SystemStatus.OnLine)
+			if (BaseVesselSystem.Status == SystemStatus.Online)
 			{
 				turretAnimator.SetBool("IsActive", value: true);
 			}
-			else if (BaseVesselSystem.Status != SystemStatus.OnLine)
+			else if (BaseVesselSystem.Status != SystemStatus.Online)
 			{
 				ShootingEffect.Stop();
 				canTarget = false;

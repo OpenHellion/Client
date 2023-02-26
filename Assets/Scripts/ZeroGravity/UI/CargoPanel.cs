@@ -700,7 +700,7 @@ namespace ZeroGravity.UI
 			{
 				return;
 			}
-			if (Fabricator.ItemsInQueue != null && (Fabricator.Status == SystemStatus.OnLine || (Fabricator.Status == SystemStatus.OffLine && Fabricator.SecondaryStatus == SystemSecondaryStatus.Malfunction)))
+			if (Fabricator.ItemsInQueue != null && (Fabricator.Status == SystemStatus.Online || (Fabricator.Status == SystemStatus.Offline && Fabricator.SecondaryStatus == SystemSecondaryStatus.Malfunction)))
 			{
 				if (CraftingItemInProgress == null)
 				{
@@ -855,7 +855,7 @@ namespace ZeroGravity.UI
 		private void RefineryStatusUpdate()
 		{
 			UnloadRefineryButton.SetActive(Refinery.CargoResources.Resources != null);
-			if (Refinery.Status == SystemStatus.OnLine)
+			if (Refinery.Status == SystemStatus.Online)
 			{
 				RefineButtonStatus.text = Localization.Cancel.ToUpper();
 			}

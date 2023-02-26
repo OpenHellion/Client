@@ -262,11 +262,11 @@ namespace ZeroGravity.LevelDesign
 				initialize = false;
 				if (triggerAnimation != null)
 				{
-					triggerAnimation.ChangeState(BaseVesselSystem.Status == SystemStatus.OnLine, flag);
+					triggerAnimation.ChangeState(BaseVesselSystem.Status == SystemStatus.Online, flag);
 				}
 				else if (lightObjects.Count > 0)
 				{
-					SwitchOnOffData switchOnOffData = ((BaseVesselSystem.Status != SystemStatus.OnLine) ? switchOffData : switchOnData);
+					SwitchOnOffData switchOnOffData = ((BaseVesselSystem.Status != SystemStatus.Online) ? switchOffData : switchOnData);
 					if (switchOnOffData == currentSwitchData)
 					{
 						return;
@@ -285,7 +285,7 @@ namespace ZeroGravity.LevelDesign
 						doAnimationCurve = true;
 						currentCurveTime = 0f;
 						currentIndex = 0;
-						currentOrderIndexList = ((BaseVesselSystem.Status != SystemStatus.OnLine) ? switchOffOrderIndex : switchOnOrderIndex);
+						currentOrderIndexList = ((BaseVesselSystem.Status != SystemStatus.Online) ? switchOffOrderIndex : switchOnOrderIndex);
 						UpdateAnimationCurveData(true);
 					}
 				}
@@ -299,7 +299,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				if (sceneLightCotroller != null)
 				{
-					if (BaseVesselSystem.Status == SystemStatus.OnLine)
+					if (BaseVesselSystem.Status == SystemStatus.Online)
 					{
 						sceneLightCotroller.SwitchOnOff(true);
 					}

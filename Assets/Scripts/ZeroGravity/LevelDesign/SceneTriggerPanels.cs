@@ -46,7 +46,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			try
 			{
-				if (BaseVesselSystem.Status != SystemStatus.OnLine)
+				if (BaseVesselSystem.Status != SystemStatus.Online)
 				{
 				}
 			}

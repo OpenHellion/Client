@@ -119,9 +119,9 @@ namespace ZeroGravity.Objects
 
 		public float MaxHealth { get; protected set; }
 
-		public bool EngineOnLine => Engine != null && Engine.Status == SystemStatus.OnLine;
+		public bool EngineOnLine => Engine != null && Engine.Status == SystemStatus.Online;
 
-		public bool HasPower => VesselBaseSystem == null || VesselBaseSystem.Status == SystemStatus.OnLine;
+		public bool HasPower => VesselBaseSystem == null || VesselBaseSystem.Status == SystemStatus.Online;
 
 		public bool OptimizationEnabled { get; private set; }
 

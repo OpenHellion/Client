@@ -441,6 +441,6 @@ public class SoundEffect : AkGameObj
 
 	private void OnDrawGizmos()
 	{
-		Gizmos.DrawIcon(base.transform.position, "SoundEffect");
+		Gizmos.DrawIcon(base.transform.position, "SoundEffect", false);
 	}
 }

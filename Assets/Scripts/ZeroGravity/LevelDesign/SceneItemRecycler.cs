@@ -96,7 +96,7 @@ namespace ZeroGravity.LevelDesign
 		private IEnumerator DoRecycle()
 		{
 			yield return new WaitForSeconds(RecycleDelay);
-			if (BaseVesselSystem.Status == SystemStatus.OnLine && !(Item == null))
+			if (BaseVesselSystem.Status == SystemStatus.Online && !(Item == null))
 			{
 				NetworkController.Instance.SendToGameServer(new RecycleItemMessage
 				{
@@ -125,7 +125,7 @@ namespace ZeroGravity.LevelDesign
 			if (Executer == null || (Executer != null && Executer.IsMyPlayerTriggered))
 			{
 				recycle = true;
-				if (BaseVesselSystem.Status == SystemStatus.OnLine)
+				if (BaseVesselSystem.Status == SystemStatus.Online)
 				{
 					StartCoroutine(DoRecycle());
 				}
@@ -134,7 +134,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void BaseVesselSystemUpdated()
 		{
-			if (BaseVesselSystem.Status == SystemStatus.OnLine)
+			if (BaseVesselSystem.Status == SystemStatus.Online)
 			{
 				if (recycle)
 				{
@@ -217,7 +217,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
-			if (BaseVesselSystem.Status == SystemStatus.OnLine && Idle)
+			if (BaseVesselSystem.Status == SystemStatus.Online && Idle)
 			{
 				if (IdleSound != null && !IdleSound.IsPlaying)
 				{
@@ -232,7 +232,7 @@ namespace ZeroGravity.LevelDesign
 					IdleAnimation.enabled = true;
 				}
 			}
-			else if (BaseVesselSystem.Status != SystemStatus.OnLine || !Idle)
+			else if (BaseVesselSystem.Status != SystemStatus.Online || !Idle)
 			{
 				if (IdleSound != null && IdleSound.IsPlaying)
 				{

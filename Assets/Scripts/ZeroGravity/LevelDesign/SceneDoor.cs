@@ -213,15 +213,14 @@ namespace ZeroGravity.LevelDesign
 			{
 				if (Client.IsGameBuild)
 				{
-					SpaceObjectVessel parentVessel = ParentVessel;
 					DoorDetails door = new DoorDetails
 					{
 						InSceneID = InSceneID,
 						HasPower = _hasPower,
-						IsLocked = ((!locked.HasValue) ? _isLocked : locked.Value),
-						IsOpen = ((!open.HasValue) ? _isOpen : open.Value)
+						IsLocked = (!locked.HasValue) ? _isLocked : locked.Value,
+						IsOpen = (!open.HasValue) ? _isOpen : open.Value
 					};
-					parentVessel.ChangeStats(null, null, null, null, null, null, null, door);
+					ParentVessel.ChangeStats(null, null, null, null, null, null, null, door);
 				}
 				else
 				{
@@ -229,8 +228,8 @@ namespace ZeroGravity.LevelDesign
 					{
 						InSceneID = InSceneID,
 						HasPower = _hasPower,
-						IsLocked = ((!locked.HasValue) ? _isLocked : locked.Value),
-						IsOpen = ((!open.HasValue) ? _isOpen : open.Value)
+						IsLocked = (!locked.HasValue) ? _isLocked : locked.Value,
+						IsOpen = (!open.HasValue) ? _isOpen : open.Value
 					});
 				}
 				equilizePressure = false;

@@ -346,10 +346,10 @@ namespace ZeroGravity.UI
 		{
 			LG.Status.text = LG.Generator.GetStatus(out var color);
 			LG.Status.color = color;
-			LG.IsOnline.SetActive(LG.Generator.Status == SystemStatus.OnLine);
+			LG.IsOnline.SetActive(LG.Generator.Status == SystemStatus.Online);
 			if (LG.DisablePattern != null)
 			{
-				LG.DisablePattern.SetActive(LG.Generator.Status != SystemStatus.OnLine);
+				LG.DisablePattern.SetActive(LG.Generator.Status != SystemStatus.Online);
 			}
 			LG.ToggleText.text = ((!LG.Generator.IsSwitchedOn()) ? Localization.Powerup.ToUpper() : Localization.ShutDown.ToUpper());
 			LG.Consumption.text = FormatHelper.FormatValue(LG.Generator.GetPowerConsumption(true));

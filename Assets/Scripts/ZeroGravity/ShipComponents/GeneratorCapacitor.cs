@@ -67,7 +67,7 @@ namespace ZeroGravity.ShipComponents
 
 		public override float GetConsumption(DistributionSystemType resourceType)
 		{
-			if (Status != SystemStatus.OnLine)
+			if (Status != SystemStatus.Online)
 			{
 				return 0f;
 			}

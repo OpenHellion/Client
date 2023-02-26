@@ -98,7 +98,7 @@ public class PilotStatusScreen : MonoBehaviour
 			RCSValue.text = FormatHelper.Percentage(num3);
 			RCSFuel.fillAmount = num3;
 			RCSFuel.color = ((!(num3 < 0.2f)) ? Colors.Orange : Colors.Red);
-			RCSStatus.color = ((ParentPilot.ParentShip.RCS.Status != SystemStatus.OnLine) ? Colors.GrayDefault : Colors.White);
+			RCSStatus.color = ((ParentPilot.ParentShip.RCS.Status != SystemStatus.Online) ? Colors.GrayDefault : Colors.White);
 		}
 		if (ParentPilot.ParentShip.Engine != null)
 		{
@@ -108,8 +108,8 @@ public class PilotStatusScreen : MonoBehaviour
 			EngineValue.text = FormatHelper.Percentage(val);
 			EngineStatus.text = ParentPilot.ParentShip.Engine.GetStatus(out var color);
 			EngineStatus.color = color;
-			ENGStatus.color = ((ParentPilot.ParentShip.Engine.Status != SystemStatus.OnLine) ? Colors.GrayDefault : Colors.White);
-			EngPowerUp.SetActive(ParentPilot.ParentShip.Engine.Status == SystemStatus.PowerUp);
+			ENGStatus.color = ((ParentPilot.ParentShip.Engine.Status != SystemStatus.Online) ? Colors.GrayDefault : Colors.White);
+			EngPowerUp.SetActive(ParentPilot.ParentShip.Engine.Status == SystemStatus.Powerup);
 			EngineNotAvailable.Activate(value: false);
 		}
 		else

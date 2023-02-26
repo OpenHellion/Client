@@ -668,11 +668,11 @@ namespace ZeroGravity.Objects
 				Client.Instance.CanvasManager.CanvasUI.HelmetHud.HandsSlotUpdate();
 				if (slot2 != null && slot2 is BaseSceneAttachPoint && Slot != null && Slot.Parent.GetComponentInParent<MyPlayer>() != null)
 				{
-					SceneQuestTrigger.Check((slot2 as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.DetachItem);
+					SceneQuestTrigger.OnTrigger((slot2 as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.DetachItem);
 				}
 				else if (slot2 != null && slot2.Parent.GetComponentInParent<MyPlayer>() != null && Slot != null && Slot is BaseSceneAttachPoint)
 				{
-					SceneQuestTrigger.Check((Slot as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.AttachItem);
+					SceneQuestTrigger.OnTrigger((Slot as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.AttachItem);
 				}
 			});
 			if (flag && slot == null && attachPoint == null && DynamicObj.Parent is MyPlayer)
@@ -948,11 +948,11 @@ namespace ZeroGravity.Objects
 			yield return null;
 			if (Quantity < prevQuantity)
 			{
-				SceneQuestTrigger.Check((Slot as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.DecreaseQuantity);
+				SceneQuestTrigger.OnTrigger((Slot as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.DecreaseQuantity);
 			}
 			else if (Quantity > prevQuantity)
 			{
-				SceneQuestTrigger.Check((Slot as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.IncreaseQuantity);
+				SceneQuestTrigger.OnTrigger((Slot as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.IncreaseQuantity);
 			}
 		}
 

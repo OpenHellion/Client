@@ -1282,7 +1282,7 @@ namespace ZeroGravity.Objects
 				select m.RadarSystem into m
 				orderby m.PassiveScanSensitivity
 				select m).Reverse();
-			SubSystemRadar subSystemRadar = source.FirstOrDefault((SubSystemRadar m) => m.ParentVessel != null && m.ParentVessel.VesselBaseSystem.Status == SystemStatus.OnLine && m.ParentVessel.IsPlayerAuthorized(this));
+			SubSystemRadar subSystemRadar = source.FirstOrDefault((SubSystemRadar m) => m.ParentVessel != null && m.ParentVessel.VesselBaseSystem.Status == SystemStatus.Online && m.ParentVessel.IsPlayerAuthorized(this));
 			if (subSystemRadar != null)
 			{
 				subSystemRadar.PassiveScan();
@@ -1841,7 +1841,7 @@ namespace ZeroGravity.Objects
 				return;
 			}
 			bool flag = false;
-			if (ship.Engine != null && ship.Engine.Status == SystemStatus.OnLine && (LockedToTrigger == null || LockedToTrigger.TriggerType != SceneTriggerType.DockingPanel))
+			if (ship.Engine != null && ship.Engine.Status == SystemStatus.Online && (LockedToTrigger == null || LockedToTrigger.TriggerType != SceneTriggerType.DockingPanel))
 			{
 				bool flag2 = false;
 				bool button = InputController.GetButton(InputController.ConfigAction.ThrustUp);
@@ -2578,7 +2578,7 @@ namespace ZeroGravity.Objects
 			{
 				Client.Instance.SolarSystem.RemoveArtificialBody(Parent as Pivot);
 				Destroy(Parent.gameObject);
-				SceneQuestTrigger.CheckInChildren(vessel.MainVessel.gameObject, SceneQuestTriggerEvent.EnterStation);
+				SceneQuestTrigger.OnTriggerInChildren(vessel.MainVessel.gameObject, SceneQuestTriggerEvent.EnterStation);
 			}
 			else if (spaceObjectVessel != null && spaceObjectVessel != spaceObjectVessel2 && spaceObjectVessel.transform.parent != Client.Instance.ShipExteriorRoot.transform)
 			{
@@ -2586,7 +2586,7 @@ namespace ZeroGravity.Objects
 				spaceObjectVessel.SetTargetPositionAndRotation(null, spaceObjectVessel.Forward, spaceObjectVessel.Up, instant: true);
 				rigidBody.velocity = Vector3.zero;
 			}
-			SceneQuestTrigger.CheckInChildren(vessel.GeometryRoot, SceneQuestTriggerEvent.EnterVessel);
+			SceneQuestTrigger.OnTriggerInChildren(vessel.GeometryRoot, SceneQuestTriggerEvent.EnterVessel);
 			Parent = vessel;
 			if (CurrentHelmet != null && Parent is Ship)
 			{
@@ -2703,8 +2703,8 @@ namespace ZeroGravity.Objects
 			if (Parent is SpaceObjectVessel)
 			{
 				SpaceObjectVessel spaceObjectVessel = Parent as SpaceObjectVessel;
-				SceneQuestTrigger.CheckInChildren(spaceObjectVessel.GeometryRoot, SceneQuestTriggerEvent.ExitVessel);
-				SceneQuestTrigger.CheckInChildren(spaceObjectVessel.MainVessel.gameObject, SceneQuestTriggerEvent.ExitStation);
+				SceneQuestTrigger.OnTriggerInChildren(spaceObjectVessel.GeometryRoot, SceneQuestTriggerEvent.ExitVessel);
+				SceneQuestTrigger.OnTriggerInChildren(spaceObjectVessel.MainVessel.gameObject, SceneQuestTriggerEvent.ExitStation);
 			}
 			SpaceObjectVessel spaceObjectVessel2 = Parent as SpaceObjectVessel;
 			SpaceObjectVessel mainVessel = spaceObjectVessel2.MainVessel;
@@ -3145,7 +3145,7 @@ namespace ZeroGravity.Objects
 		{
 			SpaceObjectVessel spaceObjectVessel = Parent as SpaceObjectVessel;
 			Parent = vessel;
-			SceneQuestTrigger.CheckInChildren(vessel.GeometryRoot, SceneQuestTriggerEvent.EnterVessel);
+			SceneQuestTrigger.OnTriggerInChildren(vessel.GeometryRoot, SceneQuestTriggerEvent.EnterVessel);
 			if (spaceObjectVessel != null)
 			{
 				ZeroOcclusion.CheckOcclusionFor(spaceObjectVessel, onlyCheckDistance: false);
@@ -3187,7 +3187,7 @@ namespace ZeroGravity.Objects
 			{
 				FpsController.CameraController.cameraShakeController.ShakeCamera(CameraShake.ShakeType.Warp, infiniteShake: true);
 			}
-			else if ((ship.Engine != null && ship.Engine.Status == SystemStatus.OnLine) || ship.AllDockedVessels.Find((SpaceObjectVessel m) => m as Ship != null && (m as Ship).Engine != null && (m as Ship).Engine.Status == SystemStatus.OnLine) != null)
+			else if ((ship.Engine != null && ship.Engine.Status == SystemStatus.Online) || ship.AllDockedVessels.Find((SpaceObjectVessel m) => m as Ship != null && (m as Ship).Engine != null && (m as Ship).Engine.Status == SystemStatus.Online) != null)
 			{
 				FpsController.CameraController.cameraShakeController.TargetMainMultiplier = ship.Engine.OperationRate;
 				FpsController.CameraController.cameraShakeController.ShakeCamera(CameraShake.ShakeType.Engine, infiniteShake: true);

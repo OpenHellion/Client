@@ -1650,7 +1650,7 @@ namespace ZeroGravity
 				foreach (ArtificialBody item4 in list)
 				{
 					float num3 = (item4.transform.position - MyPlayer.Instance.transform.position).sqrMagnitude - (float)(item4.Radius * item4.Radius);
-					if (item4 is SpaceObjectVessel && !(item4 as SpaceObjectVessel).IsDebrisFragment && (spaceObjectVessel == null || (num > num3 && (spaceObjectVessel.FTLEngine == null || spaceObjectVessel.FTLEngine.Status != SystemStatus.OnLine || (spaceObjectVessel.Velocity - MyPlayer.Instance.Parent.Velocity).SqrMagnitude < 900.0))))
+					if (item4 is SpaceObjectVessel && !(item4 as SpaceObjectVessel).IsDebrisFragment && (spaceObjectVessel == null || (num > num3 && (spaceObjectVessel.FTLEngine == null || spaceObjectVessel.FTLEngine.Status != SystemStatus.Online || (spaceObjectVessel.Velocity - MyPlayer.Instance.Parent.Velocity).SqrMagnitude < 900.0))))
 					{
 						spaceObjectVessel = item4 as SpaceObjectVessel;
 						num = num3;

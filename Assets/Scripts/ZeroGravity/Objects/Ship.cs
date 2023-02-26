@@ -784,7 +784,7 @@ namespace ZeroGravity.Objects
 					{
 						SubSystem structureObject = GetStructureObject<SubSystem>(subSystem.InSceneID);
 						structureObject.SetDetails(subSystem);
-						if (MyPlayer.Instance.Parent == this && structureObject is VesselBaseSystem && MyPlayer.Instance.ShipControlMode == ShipControlMode.Navigation && structureObject.Status == SystemStatus.OffLine)
+						if (MyPlayer.Instance.Parent == this && structureObject is VesselBaseSystem && MyPlayer.Instance.ShipControlMode == ShipControlMode.Navigation && structureObject.Status == SystemStatus.Offline)
 						{
 							MyPlayer.Instance.ShipControlMode = ShipControlMode.Piloting;
 						}
@@ -814,12 +814,12 @@ namespace ZeroGravity.Objects
 							}
 							if (engineThrusters != null)
 							{
-								engineThrusters.OnOff = structureObject.Status == SystemStatus.OnLine;
+								engineThrusters.OnOff = structureObject.Status == SystemStatus.Online;
 							}
 						}
 						else if (structureObject is SubSystemFTL && warpEffect != null && isInitialize)
 						{
-							warpEffect.SetActive(structureObject.Status == SystemStatus.OnLine && MyPlayer.Instance.IsInVesselHierarchy(this), instant: true);
+							warpEffect.SetActive(structureObject.Status == SystemStatus.Online && MyPlayer.Instance.IsInVesselHierarchy(this), instant: true);
 						}
 						if (structureObject.Room != null)
 						{
@@ -886,11 +886,11 @@ namespace ZeroGravity.Objects
 						SceneTriggerRoom structureObject4 = GetStructureObject<SceneTriggerRoom>(roomTrigger.InSceneID);
 						if (structureObject4.AirPressure < 1f && roomTrigger.AirPressure == 1f)
 						{
-							SceneQuestTrigger.Check(structureObject4.gameObject, SceneQuestTriggerEvent.Pressurize);
+							SceneQuestTrigger.OnTrigger(structureObject4.gameObject, SceneQuestTriggerEvent.Pressurize);
 						}
 						else if (structureObject4.AirPressure > 0f && roomTrigger.AirPressure == 0f)
 						{
-							SceneQuestTrigger.Check(structureObject4.gameObject, SceneQuestTriggerEvent.Depressurize);
+							SceneQuestTrigger.OnTrigger(structureObject4.gameObject, SceneQuestTriggerEvent.Depressurize);
 						}
 						short compoundRoomID = structureObject4.CompoundRoomID;
 						if (structureObject4.UseGravity != roomTrigger.UseGravity)
@@ -957,11 +957,11 @@ namespace ZeroGravity.Objects
 							(MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel).CargoPanel.RefreshSystemObject(structureObject5);
 							if (structureObject5.Quantity > quantity)
 							{
-								SceneQuestTrigger.Check(structureObject5.gameObject, SceneQuestTriggerEvent.IncreaseQuantity);
+								SceneQuestTrigger.OnTrigger(structureObject5.gameObject, SceneQuestTriggerEvent.IncreaseQuantity);
 							}
 							else if (structureObject5.Quantity < quantity)
 							{
-								SceneQuestTrigger.Check(structureObject5.gameObject, SceneQuestTriggerEvent.DecreaseQuantity);
+								SceneQuestTrigger.OnTrigger(structureObject5.gameObject, SceneQuestTriggerEvent.DecreaseQuantity);
 							}
 						}
 						if (refuelingStation != null)
@@ -1021,11 +1021,11 @@ namespace ZeroGravity.Objects
 						{
 							if (structureObject8.DockedToPort == null && dockingPort.DockedToID != null)
 							{
-								SceneQuestTrigger.Check(structureObject8.gameObject, SceneQuestTriggerEvent.Dock);
+								SceneQuestTrigger.OnTrigger(structureObject8.gameObject, SceneQuestTriggerEvent.Dock);
 							}
 							else if (structureObject8.DockedToPort != null && dockingPort.DockedToID == null)
 							{
-								SceneQuestTrigger.Check(structureObject8.gameObject, SceneQuestTriggerEvent.Undock);
+								SceneQuestTrigger.OnTrigger(structureObject8.gameObject, SceneQuestTriggerEvent.Undock);
 							}
 						}
 						structureObject8.SetDetails(dockingPort, isInitialize);
@@ -1087,7 +1087,7 @@ namespace ZeroGravity.Objects
 							long? playerGUID = spawnPoint.PlayerGUID;
 							if (playerGUID.GetValueOrDefault() == MyPlayer.Instance.GUID && playerGUID.HasValue && spawnPoint.NewState == SpawnPointState.Authorized)
 							{
-								SceneQuestTrigger.Check(structureObject9.gameObject, SceneQuestTriggerEvent.AssignOnCryoPod);
+								SceneQuestTrigger.OnTrigger(structureObject9.gameObject, SceneQuestTriggerEvent.AssignOnCryoPod);
 							}
 						}
 						structureObject9.SetStats(spawnPoint);
@@ -1853,11 +1853,11 @@ namespace ZeroGravity.Objects
 			UpdateMapObjects(dockToShip);
 			if (RCS != null)
 			{
-				RCS.Status = SystemStatus.OffLine;
+				RCS.Status = SystemStatus.Offline;
 			}
 			if (dockToShip.RCS != null)
 			{
-				dockToShip.RCS.Status = SystemStatus.OffLine;
+				dockToShip.RCS.Status = SystemStatus.Offline;
 			}
 		}
 
