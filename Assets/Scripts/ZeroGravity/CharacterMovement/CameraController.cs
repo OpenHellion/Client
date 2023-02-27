@@ -290,15 +290,15 @@ namespace ZeroGravity.CharacterMovement
 
 		private void GetMouseAxis()
 		{
-			mouseRightAxis = Mouse.current.delta.x.ReadValue() * 0.2f * InputController.MouseSensitivity;
-			mouseUpAxis = Mouse.current.delta.y.ReadValue() * 0.2f * InputController.MouseSensitivity;
+			mouseRightAxis = Mouse.current.delta.x.ReadValue() * 0.2f * InputManager.MouseSensitivity;
+			mouseUpAxis = Mouse.current.delta.y.ReadValue() * 0.2f * InputManager.MouseSensitivity;
 			if (Client.IsGameBuild)
 			{
-				mouseUpAxis = -((!Client.Instance.InvertedMouse) ? 1 : (-1)) * Mouse.current.delta.y.ReadValue() * 0.2f * InputController.MouseSensitivity;
+				mouseUpAxis = -((!Client.Instance.InvertedMouse) ? 1 : (-1)) * Mouse.current.delta.y.ReadValue() * 0.2f * InputManager.MouseSensitivity;
 			}
 			else
 			{
-				mouseUpAxis = -1f * Mouse.current.delta.y.ReadValue() * 0.2f * InputController.MouseSensitivity;
+				mouseUpAxis = -1f * Mouse.current.delta.y.ReadValue() * 0.2f * InputManager.MouseSensitivity;
 			}
 		}
 
@@ -430,11 +430,11 @@ namespace ZeroGravity.CharacterMovement
 			{
 				if (!autoFreeLook || !isFreeLook)
 				{
-					if (InputController.GetButtonDown(InputController.ConfigAction.FreeLook))
+					if (InputManager.GetButtonDown(InputManager.ConfigAction.FreeLook))
 					{
 						ToggleFreeLook(true);
 					}
-					if (InputController.GetButtonUp(InputController.ConfigAction.FreeLook) && isFreeLook)
+					if (InputManager.GetButtonUp(InputManager.ConfigAction.FreeLook) && isFreeLook)
 					{
 						ToggleFreeLook(false);
 					}

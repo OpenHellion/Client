@@ -172,5 +172,14 @@ namespace OpenHellion.ProviderSystem
 				provider.Destroy();
 			}
 		}
+
+		void OnApplicationQuit()
+		{
+			// Destroy our providers.
+			foreach (IProvider provider in _allProviders)
+			{
+				provider.Destroy();
+			}
+		}
 	}
 }

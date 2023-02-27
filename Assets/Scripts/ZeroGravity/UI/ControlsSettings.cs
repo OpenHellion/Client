@@ -25,7 +25,7 @@ namespace ZeroGravity.UI
 		{
 			mouseSensitivitySlider.minValue = 0.1f;
 			mouseSensitivitySlider.maxValue = 10f;
-			mouseSensitivitySlider.value = InputController.MouseSensitivity;
+			mouseSensitivitySlider.value = InputManager.MouseSensitivity;
 			mouseSensitivityLevel.text = mouseSensitivitySlider.value.ToString("0.0");
 			mouseSensitivitySlider.onValueChanged.AddListener(MouseSensitivity);
 			InvertMouseToggle.onValueChanged.AddListener(delegate
@@ -43,7 +43,7 @@ namespace ZeroGravity.UI
 			ControlsData.MouseSensitivity = val;
 			mouseSensitivitySlider.value = val;
 
-			InputController.MouseSensitivity = val;
+			InputManager.MouseSensitivity = val;
 		}
 
 		public void InvertMouseSetter()
@@ -70,17 +70,17 @@ namespace ZeroGravity.UI
 			flag = false;
 			InvertMouseWhileDrivingToggle.isOn = flag;
 			controlsData2.InverMouseWhileDriving = flag;
-			InputController.LoadDefaultConfig();
+			InputManager.LoadDefaultConfig();
 		}
 
 		public void SaveControlsSettings()
 		{
-			ControlsData.MouseSensitivity = InputController.MouseSensitivity;
+			ControlsData.MouseSensitivity = InputManager.MouseSensitivity;
 			ControlsData.InvertMouse = Client.Instance.InvertedMouse;
 			ControlsData.InverMouseWhileDriving = Client.Instance.InvertMouseWhileDriving;
 			if (!ControlsRebind.CheckIfEmpty())
 			{
-				File.WriteAllText(Path.Combine(Application.persistentDataPath, "Controls.json"), InputController.Instance.InputActions.FindActionMap(InputController.ActionMapName).ToJson());
+				File.WriteAllText(Path.Combine(Application.persistentDataPath, "Controls.json"), InputManager.Instance.InputActions.FindActionMap(InputManager.ActionMapName).ToJson());
 			}
 		}
 
@@ -100,7 +100,7 @@ namespace ZeroGravity.UI
 
 			if (File.Exists(Path.Combine(Application.persistentDataPath, "Controls.json")))
 			{
-				InputController.LoadSavedConfig(File.ReadAllText(Path.Combine(Application.persistentDataPath, "Controls.json")));
+				InputManager.LoadSavedConfig(File.ReadAllText(Path.Combine(Application.persistentDataPath, "Controls.json")));
 			}
 		}
 	}

@@ -10,7 +10,7 @@ namespace OpenHellion.IO
 	/// <summary>
 	/// 	Class to get keys that can be changed during runtime.
 	/// </summary>
-	public class InputController : MonoBehaviour
+	public class InputManager : MonoBehaviour
 	{
 		/// <summary>
 		/// 	Keys that can be customised.
@@ -70,14 +70,14 @@ namespace OpenHellion.IO
 
 		public const string ActionMapName = "Main";
 
-		private static InputController s_instance;
-		public static InputController Instance
+		private static InputManager s_instance;
+		public static InputManager Instance
 		{
 			get
 			{
 				if (s_instance == null)
 				{
-					Dbg.Error("Tried to get input controller before it has been initialised.");
+					Dbg.Error("Tried to get input manager before it has been initialised.");
 				}
 
 				return s_instance;
@@ -89,7 +89,7 @@ namespace OpenHellion.IO
 			if (s_instance != null)
 			{
 				Destroy(this);
-				Dbg.Error("Input controller already exists.");
+				Dbg.Error("Input manager already exists.");
 				return;
 			}
 			s_instance = this;

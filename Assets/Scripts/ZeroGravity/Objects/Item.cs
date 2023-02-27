@@ -1685,7 +1685,7 @@ namespace ZeroGravity.Objects
 							hitGUIDs.Add(componentInParent.GUID);
 							if (componentInParent is MyPlayer && ExplosionDamageType == TypeOfDamage.Impact && !MyPlayer.Instance.IsLockedToTrigger)
 							{
-								if (!MyPlayer.Instance.FpsController.IsZeroG && !MyPlayer.Instance.FpsController.HasTumbled && (!InputController.GetButton(InputController.ConfigAction.Sprint) || !MyPlayer.Instance.FpsController.IsGrounded))
+								if (!MyPlayer.Instance.FpsController.IsZeroG && !MyPlayer.Instance.FpsController.HasTumbled && (!InputManager.GetButton(InputManager.ConfigAction.Sprint) || !MyPlayer.Instance.FpsController.IsGrounded))
 								{
 									MyPlayer.Instance.FpsController.Tumble();
 								}

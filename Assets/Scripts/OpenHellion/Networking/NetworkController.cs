@@ -25,7 +25,7 @@ namespace OpenHellion.Networking
 
 		public static string NameOfCurrentServer = string.Empty;
 
-		private ConnectionGame _gameConnection;
+		private GSConnection _gameConnection;
 
 		private bool GetP2PPacketsThreadActive;
 
@@ -183,7 +183,7 @@ namespace OpenHellion.Networking
 			{
 				_gameConnection.Disconnect();
 			}
-			_gameConnection = new ConnectionGame();
+			_gameConnection = new GSConnection();
 
 			NameOfCurrentServer = serverData.Name;
 			_gameConnection.Connect(serverData.IpAddress, serverData.GamePort, serverData.Id, password);
@@ -198,7 +198,7 @@ namespace OpenHellion.Networking
 			}
 
 			Dbg.Info("Connecting to singleplayer server with port", port);
-			_gameConnection = new ConnectionGame();
+			_gameConnection = new GSConnection();
 			_gameConnection.Connect("127.0.0.1", port, string.Empty, string.Empty);
 		}
 
@@ -265,18 +265,12 @@ namespace OpenHellion.Networking
 
 		private void OnDestroy()
 		{
-			if (_gameConnection != null)
-			{
-				_gameConnection.Disconnect();
-			}
+			_gameConnection?.Disconnect();
 		}
 
 		public void Disconnect()
 		{
-			if (_gameConnection != null)
-			{
-				_gameConnection.Disconnect();
-			}
+			_gameConnection?.Disconnect();
 		}
 
 		/// <summary>

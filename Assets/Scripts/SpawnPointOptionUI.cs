@@ -30,8 +30,8 @@ public class SpawnPointOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerE
 
 	public void Start()
 	{
-		base.gameObject.transform.Reset();
-		base.gameObject.SetActive(true);
+		gameObject.transform.Reset();
+		gameObject.SetActive(true);
 	}
 
 	/// <summary>
@@ -49,7 +49,7 @@ public class SpawnPointOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerE
 	{
 		isSaveFile = true;
 		string text = SaveFile.Name.Replace(".save", string.Empty);
-		Name.text = SaveFile.LastWriteTime.ToString() + ((!(text.ToLower() == "autosave")) ? string.Empty : (" (" + Localization.Autosave.ToUpper() + ")"));
+		Name.text = SaveFile.LastWriteTime.ToString() + text.ToLower() != "autosave" ? string.Empty : " (" + Localization.Autosave.ToUpper() + ")";
 		JsonTextReader jsonTextReader = new JsonTextReader(File.OpenText(SaveFile.FullName));
 		JToken jToken = null;
 		while (jsonTextReader.Read())

@@ -344,12 +344,12 @@ namespace ZeroGravity.UI
 		{
 			// Check if nobody owns the terminal, or if we are the owner.
 			AuthorizedPerson commandingOfficer = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.CommandingOfficer);
-			if (commandingOfficer == null || commandingOfficer.PlayerId == NetworkController.PlayerId)
+			if (commandingOfficer == null || commandingOfficer.PlayerId == MyPlayer.Instance.PlayerId)
 			{
 				NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 				{
 					VesselGUID = SecuritySystem.ParentShip.GUID,
-					AddPlayerId = NetworkController.PlayerId,
+					AddPlayerId = MyPlayer.Instance.PlayerId,
 					AddPlayerRank = AuthorizedPersonRank.CommandingOfficer,
 					AddPlayerName = MyPlayer.Instance.PlayerName
 				});

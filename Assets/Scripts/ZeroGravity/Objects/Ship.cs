@@ -2150,23 +2150,27 @@ namespace ZeroGravity.Objects
 
 		public override bool IsPlayerAuthorized(Player pl)
 		{
-			return IsPlayerAuthorized(pl, new HashSet<SecuritySystem>());
+			return IsPlayerAuthorized(pl, new HashSet<SpaceObjectVessel>(), new HashSet<SecuritySystem>());
 		}
 
 		public override bool IsPlayerAuthorizedOrNoSecurity(Player pl)
 		{
 			HashSet<SecuritySystem> hashSet = new HashSet<SecuritySystem>();
-			return IsPlayerAuthorized(pl, hashSet) || hashSet.Count == 0;
+			return IsPlayerAuthorized(pl, new HashSet<SpaceObjectVessel>(), hashSet) || hashSet.Count == 0;
 		}
 
 		public override bool IsPlayerAuthorizedOrFreeSecurity(Player pl)
 		{
 			HashSet<SecuritySystem> hashSet = new HashSet<SecuritySystem>();
-			return IsPlayerAuthorized(pl, hashSet) || hashSet.Count == 0 || hashSet.Count((SecuritySystem m) => m.AuthorizedPlayers.Count == 0) == hashSet.Count;
+			return IsPlayerAuthorized(pl, new HashSet<SpaceObjectVessel>(), hashSet) || hashSet.Count == 0 || hashSet.Count((SecuritySystem m) => m.AuthorizedPlayers.Count == 0) == hashSet.Count;
 		}
 
-		private bool IsPlayerAuthorized(Player pl, HashSet<SecuritySystem> securitySystems)
+		private bool IsPlayerAuthorized(Player pl, HashSet<SpaceObjectVessel> traversedVessels, HashSet<SecuritySystem> securitySystems)
 		{
+			if (!traversedVessels.Add(this))
+			{
+				return false;
+			}
 			if (SecuritySystem != null)
 			{
 				securitySystems.Add(SecuritySystem);
@@ -2180,13 +2184,13 @@ namespace ZeroGravity.Objects
 			}
 
 			// Player is authorised in docked vessel.
-			if (DockedToVessel != null && DockedToVessel is Ship && !GameScenes.Ranges.IsShip(DockedToVessel.SceneID) && (DockedToVessel as Ship).IsPlayerAuthorized(pl, securitySystems))
+			if (DockedToVessel != null && DockedToVessel is Ship && !GameScenes.Ranges.IsShip(DockedToVessel.SceneID) && (DockedToVessel as Ship).IsPlayerAuthorized(pl, traversedVessels, securitySystems))
 			{
 				return true;
 			}
 			foreach (SpaceObjectVessel dockedVessel in DockedVessels)
 			{
-				if (dockedVessel is Ship && !GameScenes.Ranges.IsShip(dockedVessel.SceneID) && (dockedVessel as Ship).IsPlayerAuthorized(pl, securitySystems))
+				if (dockedVessel is Ship && !GameScenes.Ranges.IsShip(dockedVessel.SceneID) && (dockedVessel as Ship).IsPlayerAuthorized(pl, traversedVessels, securitySystems))
 				{
 					return true;
 				}

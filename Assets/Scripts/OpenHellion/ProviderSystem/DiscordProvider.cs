@@ -182,12 +182,7 @@ namespace OpenHellion.ProviderSystem
 		void IProvider.Destroy()
 		{
 			Dbg.Log("Discord: Shutdown");
-
-			try
-			{
-				m_discord.Dispose();
-			}
-			catch (NullReferenceException) {}
+			m_discord?.Dispose();
 		}
 
 		public void UpdateStatus()

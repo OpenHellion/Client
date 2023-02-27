@@ -222,11 +222,11 @@ namespace ZeroGravity.CharacterMovement
 			}
 			if (!crouch && speedLerpingDone)
 			{
-				if (InputController.GetButton(InputController.ConfigAction.Jump) && !m_Jump)
+				if (InputManager.GetButton(InputManager.ConfigAction.Jump) && !m_Jump)
 				{
 					timerForJump += Time.deltaTime;
 				}
-				if (InputController.GetButtonUp(InputController.ConfigAction.Jump) && !m_Jump)
+				if (InputManager.GetButtonUp(InputManager.ConfigAction.Jump) && !m_Jump)
 				{
 					if (!(timerForJump > minJumpTime))
 					{
@@ -241,22 +241,22 @@ namespace ZeroGravity.CharacterMovement
 					m_Jump = true;
 					timerForJump = 0f;
 				}
-				if (InputController.GetButtonDown(InputController.ConfigAction.Sprint))
+				if (InputManager.GetButtonDown(InputManager.ConfigAction.Sprint))
 				{
 					sprint = true;
 				}
-				if (InputController.GetButtonUp(InputController.ConfigAction.Sprint))
+				if (InputManager.GetButtonUp(InputManager.ConfigAction.Sprint))
 				{
 					sprint = false;
 				}
 			}
-			if (InputController.GetButtonDown(InputController.ConfigAction.Crouch))
+			if (InputManager.GetButtonDown(InputManager.ConfigAction.Crouch))
 			{
 				SetNormalSpeed();
 				SpeedDecrease(crouchMultiplier);
 				crouch = true;
 			}
-			if (InputController.GetButtonUp(InputController.ConfigAction.Crouch))
+			if (InputManager.GetButtonUp(InputManager.ConfigAction.Crouch))
 			{
 				speedLerpingDone = false;
 				crouch = false;
@@ -389,8 +389,8 @@ namespace ZeroGravity.CharacterMovement
 		private Vector2 GetInput()
 		{
 			Vector2 vector = default;
-			vector.x = InputController.GetAxis(InputController.ConfigAction.Right);
-			vector.y = InputController.GetAxis(InputController.ConfigAction.Forward);
+			vector.x = InputManager.GetAxis(InputManager.ConfigAction.Right);
+			vector.y = InputManager.GetAxis(InputManager.ConfigAction.Forward);
 			Vector2 vector2 = vector;
 			UpdateDesiredTargetSpeed(vector2);
 			return vector2;

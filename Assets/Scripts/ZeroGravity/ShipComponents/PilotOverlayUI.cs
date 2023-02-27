@@ -207,7 +207,7 @@ namespace ZeroGravity.ShipComponents
 				{
 					Client.Instance.OffSpeedHelper = !Client.Instance.OffSpeedHelper;
 				}
-				if (InputController.GetButtonDown(InputController.ConfigAction.Equip) && CurrentTargetList.TargetListHolder.gameObject.activeInHierarchy)
+				if (InputManager.GetButtonDown(InputManager.ConfigAction.Equip) && CurrentTargetList.TargetListHolder.gameObject.activeInHierarchy)
 				{
 					if (RadarRange.Count - 1 > currentRadarRange)
 					{
@@ -240,13 +240,13 @@ namespace ZeroGravity.ShipComponents
 							SelectedTarget = AllTargets[num2];
 						}
 					}
-					if (AllTargets.Count > 0 && InputController.GetButtonDown(InputController.ConfigAction.TargetDown))
+					if (AllTargets.Count > 0 && InputManager.GetButtonDown(InputManager.ConfigAction.TargetDown))
 					{
 						int num3 = AllTargets.IndexOf(SelectedTarget);
 						num3 = ((AllTargets.Count - 1 > num3) ? (num3 + 1) : 0);
 						SelectedTarget = AllTargets[num3];
 					}
-					else if (AllTargets.Count > 0 && InputController.GetButtonDown(InputController.ConfigAction.TargetUp))
+					else if (AllTargets.Count > 0 && InputManager.GetButtonDown(InputManager.ConfigAction.TargetUp))
 					{
 						int num4 = AllTargets.IndexOf(SelectedTarget);
 						num4 = ((num4 - 1 < 0) ? (AllTargets.Count - 1) : (num4 - 1));

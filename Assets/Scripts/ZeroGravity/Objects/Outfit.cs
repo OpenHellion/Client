@@ -27,7 +27,7 @@ namespace ZeroGravity.Objects
 
 			public bool MustBeEmptyToRemoveOutfit;
 
-			public InputController.ConfigAction ShortcutKey;
+			public InputManager.ConfigAction ShortcutKey;
 
 			public int CycleIndex = -1;
 
@@ -130,7 +130,7 @@ namespace ZeroGravity.Objects
 							item.HideAttachedObject = true;
 						}
 					}
-					InputController.ConfigAction? shortKey = null;
+					InputManager.ConfigAction? shortKey = null;
 					if (slot.ShortcutKey != 0)
 					{
 						shortKey = slot.ShortcutKey;

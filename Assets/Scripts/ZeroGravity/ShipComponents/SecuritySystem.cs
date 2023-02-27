@@ -109,7 +109,7 @@ namespace ZeroGravity.ShipComponents
 				}
 
 				// This has the added benefit of filtering out all non-players.
-				ConnectionMain.Get<PlayerIdResponse>(req, (res) => {
+				MSConnection.Get<PlayerIdResponse>(req, (res) => {
 					// Loop through all entries in the same order as before.
 					for (int i = 0; i < res.PlayerIds.Count; i++)
 					{

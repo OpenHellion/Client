@@ -51,7 +51,7 @@ namespace ZeroGravity.UI
 
 		private void InitializeAxisConfig()
 		{
-			m_axisConfig = InputController.Instance.InputActions.FindAction(m_axisConfigName);
+			m_axisConfig = InputManager.Instance.InputActions.FindAction(m_axisConfigName);
 			if (m_axisConfig != null)
 			{
 				m_keyDescription.text = m_axisConfig.GetBindingDisplayString();

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -12,26 +11,6 @@ namespace ZeroGravity.UI
 {
 	public class RadarUI : MonoBehaviour
 	{
-		[CompilerGenerated]
-		private sealed class _003CUpdateRadarList_003Ec__AnonStorey0
-		{
-			internal Vector3D myPos;
-
-			internal List<ArtificialBody> list;
-
-			internal RadarUI _0024this;
-
-			internal bool _003C_003Em__0(TargetObject m)
-			{
-				return m.AB == null || !(m.AB is SpaceObjectVessel) || !(m.AB as SpaceObjectVessel).IsMainVessel || m.Distance > (float)_0024this.currentRadarRange;
-			}
-
-			internal bool _003C_003Em__1(ArtificialBody m)
-			{
-				return m is SpaceObjectVessel && (m as SpaceObjectVessel).VesselData != null && (m as SpaceObjectVessel).IsMainVessel && !(m as SpaceObjectVessel).IsWarpOnline && (myPos - m.Position).Magnitude <= (double)_0024this.currentRadarRange && !list.Contains(m);
-			}
-		}
-
 		[HideInInspector]
 		public bool CanRadarWork;
 
@@ -62,22 +41,7 @@ namespace ZeroGravity.UI
 
 		public GameObject RadarCroshair;
 
-		[CompilerGenerated]
-		private static Func<TargetObject, ArtificialBody> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<TargetObject, float> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Func<TargetObject, bool> _003C_003Ef__am_0024cache2;
-
-		private int currentRadarRange
-		{
-			get
-			{
-				return (int)(10000f * ((!(MyPlayer.Instance.CurrentHelmet != null)) ? 1f : MyPlayer.Instance.CurrentHelmet.TierMultiplier));
-			}
-		}
+		public int CurrentRadarRange => (int)(10000f * (MyPlayer.Instance.CurrentHelmet == null ? 1f : MyPlayer.Instance.CurrentHelmet.TierMultiplier));
 
 		private void Start()
 		{
@@ -89,14 +53,14 @@ namespace ZeroGravity.UI
 			if (!CanRadarWork && base.gameObject.activeInHierarchy)
 			{
 				SetTarget();
-				base.gameObject.SetActive(false);
-				ToggleTargeting(false);
+				base.gameObject.SetActive(value: false);
+				ToggleTargeting(val: false);
 				return;
 			}
 			if (CanRadarWork && !base.gameObject.activeInHierarchy)
 			{
-				ToggleTargeting(true);
-				base.gameObject.SetActive(true);
+				ToggleTargeting(val: true);
+				base.gameObject.SetActive(value: true);
 			}
 			UpdateRadarList();
 			if (AllTargets.Count <= 0)
@@ -136,32 +100,27 @@ namespace ZeroGravity.UI
 
 		public void UpdateRadarList()
 		{
-			_003CUpdateRadarList_003Ec__AnonStorey0 _003CUpdateRadarList_003Ec__AnonStorey = new _003CUpdateRadarList_003Ec__AnonStorey0();
-			_003CUpdateRadarList_003Ec__AnonStorey._0024this = this;
-			_003CUpdateRadarList_003Ec__AnonStorey.myPos = MyPlayer.Instance.Parent.Position + MyPlayer.Instance.transform.position.ToVector3D();
-			List<TargetObject> list = AllTargets.Where(_003CUpdateRadarList_003Ec__AnonStorey._003C_003Em__0).ToList();
-			foreach (TargetObject item in list)
+			Vector3D myPos = MyPlayer.Instance.Parent.Position + MyPlayer.Instance.transform.position.ToVector3D();
+			List<TargetObject> list2 = AllTargets.Where((TargetObject m) => m.AB == null || m.AB is not SpaceObjectVessel || !(m.AB as SpaceObjectVessel).IsMainVessel || m.Distance > CurrentRadarRange).ToList();
+			foreach (TargetObject item in list2)
 			{
 				AllTargets.Remove(item);
 			}
-			TargetOverlayUI[] componentsInChildren = OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(true);
+			TargetOverlayUI[] componentsInChildren = OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(includeInactive: true);
 			foreach (TargetOverlayUI targetOverlayUI in componentsInChildren)
 			{
-				if (list.Contains(targetOverlayUI.Target))
+				if (list2.Contains(targetOverlayUI.Target))
 				{
-					UnityEngine.Object.Destroy(targetOverlayUI.gameObject);
+					Destroy(targetOverlayUI.gameObject);
 				}
 			}
-			List<TargetObject> allTargets = AllTargets;
-			if (_003C_003Ef__am_0024cache0 == null)
+			List<ArtificialBody> list = AllTargets.Select((TargetObject m) => m.AB).ToList();
+			foreach (ArtificialBody item2 in Client.Instance.SolarSystem.ArtificialBodies.Where((ArtificialBody m) => m is SpaceObjectVessel && (m as SpaceObjectVessel).VesselData != null && (m as SpaceObjectVessel).IsMainVessel && !(m as SpaceObjectVessel).IsWarpOnline && (myPos - m.Position).Magnitude <= (double)CurrentRadarRange && !list.Contains(m)))
 			{
-				_003C_003Ef__am_0024cache0 = _003CUpdateRadarList_003Em__0;
-			}
-			_003CUpdateRadarList_003Ec__AnonStorey.list = allTargets.Select(_003C_003Ef__am_0024cache0).ToList();
-			foreach (ArtificialBody item2 in Client.Instance.SolarSystem.ArtificialBodies.Where(_003CUpdateRadarList_003Ec__AnonStorey._003C_003Em__1))
-			{
-				TargetObject targetObject = new TargetObject();
-				targetObject.AB = item2;
+				TargetObject targetObject = new TargetObject
+				{
+					AB = item2
+				};
 				AllTargets.Add(targetObject);
 				CreateOverlayTargets(targetObject);
 			}
@@ -173,7 +132,7 @@ namespace ZeroGravity.UI
 
 		public void CreateOverlayTargets(TargetObject target)
 		{
-			TargetOverlayUI targetOverlayUI = UnityEngine.Object.Instantiate(TargetOnScreen, OverlayTargets);
+			TargetOverlayUI targetOverlayUI = Instantiate(TargetOnScreen, OverlayTargets);
 			targetOverlayUI.AB = target.AB;
 			targetOverlayUI.Target = target;
 			targetOverlayUI.Name.text = target.Name;
@@ -181,14 +140,14 @@ namespace ZeroGravity.UI
 
 		public void UpdateOverlayTargets()
 		{
-			TargetOverlayUI[] componentsInChildren = OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(true);
+			TargetOverlayUI[] componentsInChildren = OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(includeInactive: true);
 			foreach (TargetOverlayUI targetOverlayUI in componentsInChildren)
 			{
 				if (targetOverlayUI.Name.text != targetOverlayUI.Target.Name)
 				{
 					targetOverlayUI.Name.text = targetOverlayUI.Target.Name;
 				}
-				Vector3 pos = ((!targetOverlayUI.Target.AB.IsDummyObject) ? targetOverlayUI.Target.AB.transform.position : ((targetOverlayUI.Target.AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() - MyPlayer.Instance.transform.position));
+				Vector3 pos = !targetOverlayUI.Target.AB.IsDummyObject ? targetOverlayUI.Target.AB.transform.position : ((targetOverlayUI.Target.AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() - MyPlayer.Instance.transform.position);
 				Vector2 localPoint = Vector2.zero;
 				Vector3 arrowUp;
 				Vector3 positionOnOverlay = GetPositionOnOverlay(pos, out arrowUp);
@@ -197,57 +156,47 @@ namespace ZeroGravity.UI
 				targetOverlayUI.transform.rotation = Quaternion.identity;
 				if (!targetOverlayUI.gameObject.activeInHierarchy)
 				{
-					targetOverlayUI.gameObject.SetActive(true);
+					targetOverlayUI.gameObject.SetActive(value: true);
 				}
 				if (arrowUp != Vector3.zero)
 				{
-					targetOverlayUI.Distance.gameObject.Activate(false);
-					targetOverlayUI.OffScreenTarget.gameObject.Activate(true);
+					targetOverlayUI.Distance.gameObject.Activate(value: false);
+					targetOverlayUI.OffScreenTarget.gameObject.Activate(value: true);
 					targetOverlayUI.OffScreenTarget.transform.up = arrowUp;
 				}
 				else
 				{
-					targetOverlayUI.Distance.gameObject.Activate(true);
-					targetOverlayUI.OffScreenTarget.gameObject.Activate(false);
+					targetOverlayUI.Distance.gameObject.Activate(value: true);
+					targetOverlayUI.OffScreenTarget.gameObject.Activate(value: false);
 				}
-				List<TargetObject> allTargets = AllTargets;
-				if (_003C_003Ef__am_0024cache1 == null)
-				{
-					_003C_003Ef__am_0024cache1 = _003CUpdateOverlayTargets_003Em__1;
-				}
-				IOrderedEnumerable<TargetObject> source = allTargets.OrderBy(_003C_003Ef__am_0024cache1);
-				if (_003C_003Ef__am_0024cache2 == null)
-				{
-					_003C_003Ef__am_0024cache2 = _003CUpdateOverlayTargets_003Em__2;
-				}
-				HoveredTarget = source.FirstOrDefault(_003C_003Ef__am_0024cache2);
+				HoveredTarget = AllTargets.OrderBy((TargetObject m) => m.AngleFromCameraForward).FirstOrDefault((TargetObject m) => m.AngleFromCameraForward < 3f);
 				if (HoveredTarget != targetOverlayUI.Target && targetOverlayUI.Hovered.activeInHierarchy)
 				{
-					targetOverlayUI.Hovered.SetActive(false);
+					targetOverlayUI.Hovered.SetActive(value: false);
 				}
 				if (HoveredTarget != null && HoveredTarget == targetOverlayUI.Target && !targetOverlayUI.Hovered.activeInHierarchy)
 				{
-					targetOverlayUI.Hovered.SetActive(true);
+					targetOverlayUI.Hovered.SetActive(value: true);
 				}
 				if (SelectedTarget != targetOverlayUI.Target && targetOverlayUI.Selected.activeInHierarchy)
 				{
-					targetOverlayUI.Default.SetActive(true);
-					targetOverlayUI.Selected.SetActive(false);
+					targetOverlayUI.Default.SetActive(value: true);
+					targetOverlayUI.Selected.SetActive(value: false);
 					targetOverlayUI.Distance.color = Colors.GrayDefault;
 				}
 				if (SelectedTarget != null && SelectedTarget == targetOverlayUI.Target && !targetOverlayUI.Selected.activeInHierarchy)
 				{
-					targetOverlayUI.Default.SetActive(false);
-					targetOverlayUI.Selected.SetActive(true);
+					targetOverlayUI.Default.SetActive(value: false);
+					targetOverlayUI.Selected.SetActive(value: true);
 					targetOverlayUI.Distance.color = Colors.White;
 				}
 				if ((targetOverlayUI.Target == SelectedTarget || targetOverlayUI.Target == HoveredTarget) && !targetOverlayUI.NameHolder.activeInHierarchy)
 				{
-					targetOverlayUI.NameHolder.SetActive(true);
+					targetOverlayUI.NameHolder.SetActive(value: true);
 				}
 				if (targetOverlayUI.Target != SelectedTarget && targetOverlayUI.Target != HoveredTarget && targetOverlayUI.NameHolder.activeInHierarchy)
 				{
-					targetOverlayUI.NameHolder.SetActive(false);
+					targetOverlayUI.NameHolder.SetActive(value: false);
 				}
 				targetOverlayUI.Distance.text = FormatHelper.DistanceFormat(((targetOverlayUI.Target.AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() - MyPlayer.Instance.transform.position).magnitude);
 			}
@@ -265,7 +214,7 @@ namespace ZeroGravity.UI
 				{
 					vector3 = Quaternion.Euler(0f, 0f, 180f) * vector3;
 				}
-				vector = ((!(System.Math.Abs(vector3.x / (float)Screen.width) > System.Math.Abs(vector3.y / (float)Screen.height))) ? (vector3 / System.Math.Abs(vector3.y / ((float)Screen.height / 2f)) + vector2) : (vector3 / System.Math.Abs(vector3.x / ((float)Screen.width / 2f)) + vector2));
+				vector = (!(System.Math.Abs(vector3.x / (float)Screen.width) > System.Math.Abs(vector3.y / (float)Screen.height))) ? (vector3 / System.Math.Abs(vector3.y / ((float)Screen.height / 2f)) + vector2) : (vector3 / System.Math.Abs(vector3.x / ((float)Screen.width / 2f)) + vector2);
 				arrowUp = (vector2 - vector).normalized;
 				arrowUp.z = 0f;
 			}
@@ -279,7 +228,7 @@ namespace ZeroGravity.UI
 			{
 				if (!ParametersHolder.activeInHierarchy)
 				{
-					ParametersHolder.SetActive(true);
+					ParametersHolder.SetActive(value: true);
 				}
 				Vector3 vector = (SelectedTarget.AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() - MyPlayer.Instance.transform.position;
 				Vector3 vector2 = (SelectedTarget.AB.Velocity - MyPlayer.Instance.Parent.Velocity).ToVector3() - MyPlayer.Instance.rigidBody.velocity;
@@ -287,10 +236,10 @@ namespace ZeroGravity.UI
 				Vector3 vector4 = Vector3.ProjectOnPlane(vector2, vector.normalized);
 				float magnitude = vector.magnitude;
 				float num = 0f - Vector3.Dot(vector2, vector.normalized);
-				TargetDirectional.color = ((!(num >= 0f)) ? Colors.FormatedRed : Colors.White);
+				TargetDirectional.color = !(num >= 0f) ? Colors.FormatedRed : Colors.White;
 				TargetDirectional.text = num.ToString("0.0") + " m/s";
 				TargetLateral.text = vector4.magnitude.ToString("0.0") + " m/s";
-				TargetDistance.color = ((!(magnitude <= 150f)) ? Colors.White : Colors.FormatedRed);
+				TargetDistance.color = !(magnitude <= 150f) ? Colors.White : Colors.FormatedRed;
 				TargetDistance.text = FormatHelper.DistanceFormat(magnitude);
 			}
 		}
@@ -303,17 +252,17 @@ namespace ZeroGravity.UI
 				TargetName.text = SelectedTarget.Name;
 				if (!ParametersHolder.activeInHierarchy)
 				{
-					ParametersHolder.SetActive(true);
+					ParametersHolder.SetActive(value: true);
 				}
 				if (IsActive)
 				{
-					ToggleStarDust(true);
+					ToggleStarDust(value: true);
 				}
 			}
 			else
 			{
-				ParametersHolder.Activate(false);
-				ToggleStarDust(false);
+				ParametersHolder.Activate(value: false);
+				ToggleStarDust(value: false);
 			}
 		}
 
@@ -325,13 +274,13 @@ namespace ZeroGravity.UI
 				{
 					ParticleSystem.MainModule main = MyPlayer.Instance.FpsController.StarDustParticle.main;
 					main.customSimulationSpace = SelectedTarget.AB.transform;
-					MyPlayer.Instance.FpsController.StarDustParticle.gameObject.SetActive(true);
+					MyPlayer.Instance.FpsController.StarDustParticle.gameObject.SetActive(value: true);
 					MyPlayer.Instance.FpsController.StarDustParticle.Play();
 				}
 			}
 			else
 			{
-				MyPlayer.Instance.FpsController.StarDustParticle.gameObject.SetActive(false);
+				MyPlayer.Instance.FpsController.StarDustParticle.gameObject.SetActive(value: false);
 				MyPlayer.Instance.FpsController.StarDustParticle.Stop();
 			}
 		}
@@ -341,24 +290,6 @@ namespace ZeroGravity.UI
 			IsActive = val;
 			Root.SetActive(IsActive);
 			ToggleStarDust(IsActive);
-		}
-
-		[CompilerGenerated]
-		private static ArtificialBody _003CUpdateRadarList_003Em__0(TargetObject m)
-		{
-			return m.AB;
-		}
-
-		[CompilerGenerated]
-		private static float _003CUpdateOverlayTargets_003Em__1(TargetObject m)
-		{
-			return m.AngleFromCameraForward;
-		}
-
-		[CompilerGenerated]
-		private static bool _003CUpdateOverlayTargets_003Em__2(TargetObject m)
-		{
-			return m.AngleFromCameraForward < 3f;
 		}
 	}
 }

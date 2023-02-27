@@ -299,7 +299,7 @@ namespace ZeroGravity.UI
 
 		public void ControlsResetToDefaultYes()
 		{
-			InputController.LoadDefaultConfig();
+			InputManager.LoadDefaultConfig();
 			Settings.Instance.SaveSettings(Settings.SettingsType.Controls);
 		}
 

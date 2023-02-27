@@ -48,12 +48,12 @@ namespace ZeroGravity.CharacterMovement
 
 		private void Update()
 		{
-			if (InputController.GetButtonDown(InputController.ConfigAction.FreeLook))
+			if (InputManager.GetButtonDown(InputManager.ConfigAction.FreeLook))
 			{
 				previousRotationX = base.transform.localRotation.eulerAngles.x;
 				freeLook = true;
 			}
-			if (InputController.GetButtonUp(InputController.ConfigAction.FreeLook))
+			if (InputManager.GetButtonUp(InputManager.ConfigAction.FreeLook))
 			{
 				freeLook = false;
 				cameraFreed = false;

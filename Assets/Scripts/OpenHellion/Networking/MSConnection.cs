@@ -1,4 +1,4 @@
-// ConnectionMain.cs
+// MSConnection.cs
 //
 // Copyright (C) 2023, OpenHellion contributors
 //
@@ -20,8 +20,6 @@ using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 using OpenHellion.Networking.Message.MainServer;
 using OpenHellion.IO;
-using UnityEngine.Networking;
-using OpenHellion.Networking.Message;
 using System.Net.Http;
 using System.Text;
 
@@ -31,7 +29,7 @@ namespace OpenHellion.Networking
 	/// <summary>
 	/// 	Handles connecting to the main server.
 	/// </summary>
-	public class ConnectionMain
+	public class MSConnection
 	{
 		public const string IpAddress = "localhost";
 		public const ushort Port = 6001;

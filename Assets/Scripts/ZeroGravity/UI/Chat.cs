@@ -47,7 +47,7 @@ namespace ZeroGravity.UI
 		{
 			if (!Client.Instance.CanvasManager.DisableChat)
 			{
-				if (InputController.GetButtonDown(InputController.ConfigAction.Chat) && !ChatInputBox.activeInHierarchy && !Client.Instance.CanvasManager.Console.gameObject.activeInHierarchy && !Client.Instance.CanvasManager.IsInputFieldIsActive && !Client.Instance.CanvasManager.OverlayCanvasIsOn && !InputController.GetButton(InputController.ConfigAction.Drop))
+				if (InputManager.GetButtonDown(InputManager.ConfigAction.Chat) && !ChatInputBox.activeInHierarchy && !Client.Instance.CanvasManager.Console.gameObject.activeInHierarchy && !Client.Instance.CanvasManager.IsInputFieldIsActive && !Client.Instance.CanvasManager.OverlayCanvasIsOn && !InputManager.GetButton(InputManager.ConfigAction.Drop))
 				{
 					ShowChat(true);
 				}
@@ -158,7 +158,7 @@ namespace ZeroGravity.UI
 		{
 			if (show)
 			{
-				InputController.ResetInputAxis();
+				InputManager.ResetInputAxis();
 				yield return new WaitForSeconds(0.2f);
 			}
 			if (show)

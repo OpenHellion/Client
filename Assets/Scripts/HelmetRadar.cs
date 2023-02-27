@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using OpenHellion.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,24 +12,6 @@ using ZeroGravity.UI;
 
 public class HelmetRadar : MonoBehaviour
 {
-	[CompilerGenerated]
-	private sealed class _003CReloadRadarElements_003Ec__AnonStorey0
-	{
-		internal List<ArtificialBody> list;
-
-		internal HelmetRadar _0024this;
-
-		internal bool _003C_003Em__0(HelmetRadarTargetElement m)
-		{
-			return m.AB == null || !m.AB.gameObject.activeInHierarchy || !(m.AB is SpaceObjectVessel) || !(m.AB as SpaceObjectVessel).IsMainVessel || (MyPlayer.Instance.Parent.Position - m.AB.Position).Magnitude > (double)_0024this.radarScanningRange;
-		}
-
-		internal bool _003C_003Em__1(ArtificialBody m)
-		{
-			return m is SpaceObjectVessel && (m as SpaceObjectVessel).IsMainVessel && (MyPlayer.Instance.Parent.Position - m.Position).Magnitude <= (double)_0024this.radarScanningRange && !list.Contains(m);
-		}
-	}
-
 	public bool CanRadarWork;
 
 	public GameObject RadarRoot;
@@ -72,30 +53,9 @@ public class HelmetRadar : MonoBehaviour
 
 	public bool RadarActive;
 
-	[CompilerGenerated]
-	private static Func<HelmetRadarTargetElement, ArtificialBody> _003C_003Ef__am_0024cache0;
+	private Helmet Helmet => MyPlayer.Instance.CurrentHelmet;
 
-	[CompilerGenerated]
-	private static Func<HelmetRadarTargetElement, float> _003C_003Ef__am_0024cache1;
-
-	[CompilerGenerated]
-	private static Func<HelmetRadarTargetElement, bool> _003C_003Ef__am_0024cache2;
-
-	private Helmet Helmet
-	{
-		get
-		{
-			return MyPlayer.Instance.CurrentHelmet;
-		}
-	}
-
-	private float radarScanningRange
-	{
-		get
-		{
-			return 10000f * Helmet.TierMultiplier;
-		}
-	}
+	private float radarScanningRange => 10000f * Helmet.TierMultiplier;
 
 	public int CurrTargetIndex
 	{
@@ -128,7 +88,7 @@ public class HelmetRadar : MonoBehaviour
 		}
 		else
 		{
-			ToggleTargetting(false);
+			ToggleTargetting(status: false);
 		}
 	}
 
@@ -140,7 +100,7 @@ public class HelmetRadar : MonoBehaviour
 		}
 		if (!Client.Instance.IsChatOpened)
 		{
-			if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.ConfigAction.HelmetRadar))
+			if (radarItems.Count > 0 && InputManager.GetButtonDown(InputManager.ConfigAction.HelmetRadar))
 			{
 				ToggleRadar();
 			}
@@ -184,7 +144,7 @@ public class HelmetRadar : MonoBehaviour
 						GoToCurrentElement();
 					}
 				}
-				if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.ConfigAction.TargetDown))
+				if (radarItems.Count > 0 && InputManager.GetButtonDown(InputManager.ConfigAction.TargetDown))
 				{
 					if (radarItems.Count - 1 >= currTargetIndex + 1)
 					{
@@ -198,7 +158,7 @@ public class HelmetRadar : MonoBehaviour
 					currentTarget.IsSelected = true;
 					GoToCurrentElement();
 				}
-				else if (radarItems.Count > 0 && InputController.GetButtonDown(InputController.ConfigAction.TargetUp))
+				else if (radarItems.Count > 0 && InputManager.GetButtonDown(InputManager.ConfigAction.TargetUp))
 				{
 					if (currentTarget == null)
 					{
@@ -263,15 +223,13 @@ public class HelmetRadar : MonoBehaviour
 
 	private void ReloadRadarElements()
 	{
-		_003CReloadRadarElements_003Ec__AnonStorey0 _003CReloadRadarElements_003Ec__AnonStorey = new _003CReloadRadarElements_003Ec__AnonStorey0();
-		_003CReloadRadarElements_003Ec__AnonStorey._0024this = this;
 		Vector3 position = MyPlayer.Instance.FpsController.MainCamera.transform.position;
-		List<HelmetRadarTargetElement> list = radarItems.Where(_003CReloadRadarElements_003Ec__AnonStorey._003C_003Em__0).ToList();
-		foreach (HelmetRadarTargetElement item in list)
+		List<HelmetRadarTargetElement> list2 = radarItems.Where((HelmetRadarTargetElement m) => m.AB == null || !m.AB.gameObject.activeInHierarchy || !(m.AB is SpaceObjectVessel) || !(m.AB as SpaceObjectVessel).IsMainVessel || (MyPlayer.Instance.Parent.Position - m.AB.Position).Magnitude > (double)radarScanningRange).ToList();
+		foreach (HelmetRadarTargetElement item in list2)
 		{
 			radarItems.Remove(item);
-			UnityEngine.Object.Destroy(item.gameObject);
-			UnityEngine.Object.Destroy(item.TargetMarker.gameObject);
+			Destroy(item.gameObject);
+			Destroy(item.TargetMarker.gameObject);
 		}
 		if (!radarItems.Contains(currentTarget) && radarItems.Count > 0)
 		{
@@ -279,13 +237,8 @@ public class HelmetRadar : MonoBehaviour
 			currentTarget = radarItems[currTargetIndex];
 			currentTarget.IsSelected = true;
 		}
-		List<HelmetRadarTargetElement> source = radarItems;
-		if (_003C_003Ef__am_0024cache0 == null)
-		{
-			_003C_003Ef__am_0024cache0 = _003CReloadRadarElements_003Em__0;
-		}
-		_003CReloadRadarElements_003Ec__AnonStorey.list = source.Select(_003C_003Ef__am_0024cache0).ToList();
-		foreach (ArtificialBody item2 in Client.Instance.SolarSystem.ArtificialBodies.Where(_003CReloadRadarElements_003Ec__AnonStorey._003C_003Em__1))
+		List<ArtificialBody> list = radarItems.Select((HelmetRadarTargetElement m) => m.AB).ToList();
+		foreach (ArtificialBody item2 in Client.Instance.SolarSystem.ArtificialBodies.Where((ArtificialBody m) => m is SpaceObjectVessel && (m as SpaceObjectVessel).IsMainVessel && (MyPlayer.Instance.Parent.Position - m.Position).Magnitude <= (double)radarScanningRange && !list.Contains(m)))
 		{
 			CreateUIElement(item2);
 		}
@@ -345,23 +298,13 @@ public class HelmetRadar : MonoBehaviour
 			{
 				radarItem.TargetMarker.transform.position = Vector3.Lerp(radarItem.TargetMarker.transform.position, b, 0.5f);
 				radarItem.TargetMarker.transform.rotation = Quaternion.identity;
-				radarItem.TargetMarker.SetActive(true);
+				radarItem.TargetMarker.SetActive(value: true);
 			}
 			else
 			{
-				radarItem.TargetMarker.SetActive(false);
+				radarItem.TargetMarker.SetActive(value: false);
 			}
-			List<HelmetRadarTargetElement> source2 = radarItems;
-			if (_003C_003Ef__am_0024cache1 == null)
-			{
-				_003C_003Ef__am_0024cache1 = _003CReloadRadarElements_003Em__1;
-			}
-			IOrderedEnumerable<HelmetRadarTargetElement> source3 = source2.OrderBy(_003C_003Ef__am_0024cache1);
-			if (_003C_003Ef__am_0024cache2 == null)
-			{
-				_003C_003Ef__am_0024cache2 = _003CReloadRadarElements_003Em__2;
-			}
-			hoveredTarget = source3.FirstOrDefault(_003C_003Ef__am_0024cache2);
+			hoveredTarget = radarItems.OrderBy((HelmetRadarTargetElement m) => m.DistanceFromCamera).FirstOrDefault((HelmetRadarTargetElement m) => m.AngleFromCameraForward < 5f);
 			radarItem.TargetOnScreen.IsHovered.SetActive(hoveredTarget == radarItem);
 			radarItem.TargetOnScreen.IsSelected.SetActive(radarItem.IsSelected);
 			radarItem.TargetOnScreen.HoveredName.text = radarItem.Name;
@@ -374,9 +317,9 @@ public class HelmetRadar : MonoBehaviour
 	{
 		if ((!(ab is Ship) || (ab as SpaceObjectVessel).IsMainVessel) && !(ab as SpaceObjectVessel).IsDebrisFragment)
 		{
-			GameObject gameObject = UnityEngine.Object.Instantiate(UIPrefab, listParent);
+			GameObject gameObject = Instantiate(UIPrefab, listParent);
 			gameObject.transform.localScale = Vector3.one;
-			gameObject.SetActive(true);
+			gameObject.SetActive(value: true);
 			HelmetRadarTargetElement component = gameObject.GetComponent<HelmetRadarTargetElement>();
 			component.IsSelected = false;
 			component.AB = ab;
@@ -399,9 +342,9 @@ public class HelmetRadar : MonoBehaviour
 			else if (ab is SpaceObjectVessel)
 			{
 				component.Name = (ab as SpaceObjectVessel).CustomName.ToUpper();
-				component.Icon.sprite = Client.Instance.SpriteManager.GetSprite(ab as SpaceObjectVessel, true);
+				component.Icon.sprite = Client.Instance.SpriteManager.GetSprite(ab as SpaceObjectVessel, checkDocked: true);
 			}
-			GameObject gameObject2 = UnityEngine.Object.Instantiate(RadarTarget, TargetParent);
+			GameObject gameObject2 = Instantiate(RadarTarget, TargetParent);
 			gameObject2.transform.localScale = Vector3.one;
 			gameObject2.transform.Rotate(Vector3.zero);
 			component.TargetMarker = gameObject2;
@@ -421,7 +364,7 @@ public class HelmetRadar : MonoBehaviour
 		}
 		else if (target.AB is SpaceObjectVessel)
 		{
-			target.Icon.sprite = Client.Instance.SpriteManager.GetSprite(target.AB as SpaceObjectVessel, true);
+			target.Icon.sprite = Client.Instance.SpriteManager.GetSprite(target.AB as SpaceObjectVessel, checkDocked: true);
 		}
 	}
 
@@ -462,14 +405,14 @@ public class HelmetRadar : MonoBehaviour
 		if (target != null && target.AB != null)
 		{
 			TargetNameText.text = target.Name;
-			HasTargetPanel.SetActive(true);
-			ToggleStarDust(true);
+			HasTargetPanel.SetActive(value: true);
+			ToggleStarDust(value: true);
 		}
 		else
 		{
-			HasTargetPanel.SetActive(false);
-			ToggleTargettingList(false);
-			RadarTarget.SetActive(false);
+			HasTargetPanel.SetActive(value: false);
+			ToggleTargettingList(status: false);
+			RadarTarget.SetActive(value: false);
 		}
 	}
 
@@ -505,32 +448,14 @@ public class HelmetRadar : MonoBehaviour
 			{
 				ParticleSystem.MainModule main = MyPlayer.Instance.FpsController.StarDustParticle.main;
 				main.customSimulationSpace = radarItems[currTargetIndex].AB.transform;
-				MyPlayer.Instance.FpsController.StarDustParticle.gameObject.SetActive(true);
+				MyPlayer.Instance.FpsController.StarDustParticle.gameObject.SetActive(value: true);
 				MyPlayer.Instance.FpsController.StarDustParticle.Play();
 			}
 		}
 		else
 		{
-			MyPlayer.Instance.FpsController.StarDustParticle.gameObject.SetActive(false);
+			MyPlayer.Instance.FpsController.StarDustParticle.gameObject.SetActive(value: false);
 			MyPlayer.Instance.FpsController.StarDustParticle.Stop();
 		}
-	}
-
-	[CompilerGenerated]
-	private static ArtificialBody _003CReloadRadarElements_003Em__0(HelmetRadarTargetElement m)
-	{
-		return m.AB;
-	}
-
-	[CompilerGenerated]
-	private static float _003CReloadRadarElements_003Em__1(HelmetRadarTargetElement m)
-	{
-		return m.DistanceFromCamera;
-	}
-
-	[CompilerGenerated]
-	private static bool _003CReloadRadarElements_003Em__2(HelmetRadarTargetElement m)
-	{
-		return m.AngleFromCameraForward < 5f;
 	}
 }

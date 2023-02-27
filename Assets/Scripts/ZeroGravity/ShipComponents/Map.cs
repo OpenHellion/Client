@@ -817,7 +817,6 @@ namespace ZeroGravity.ShipComponents
 			if (obj is MapObjectCelestial)
 			{
 				MapObjectCelestial mapObjectCelestial = obj as MapObjectCelestial;
-				mapObjectCelestial = obj as MapObjectCelestial;
 				mapObjectCelestial.ChildObjects.gameObject.SetActive(show);
 				MapObjectCelestial[] componentsInChildren = mapObjectCelestial.CelestialObjects.GetComponentsInChildren<MapObjectCelestial>();
 				foreach (MapObjectCelestial mapObjectCelestial2 in componentsInChildren)

@@ -45,7 +45,7 @@ namespace ZeroGravity.Audio
 			{
 				return;
 			}
-			if (InputController.GetButtonDown(InputController.ConfigAction.Talk) && !talk)
+			if (InputManager.GetButtonDown(InputManager.ConfigAction.Talk) && !talk)
 			{
 				if (Microphone.devices.Length > 0)
 				{
@@ -60,7 +60,7 @@ namespace ZeroGravity.Audio
 					talk = true;
 				}
 			}
-			else if (InputController.GetButtonDown(InputController.ConfigAction.Radio) && !talk)
+			else if (InputManager.GetButtonDown(InputManager.ConfigAction.Radio) && !talk)
 			{
 				if (Microphone.devices.Length > 0)
 				{
@@ -71,7 +71,7 @@ namespace ZeroGravity.Audio
 					talk = true;
 				}
 			}
-			else if ((InputController.GetButtonUp(InputController.ConfigAction.Talk) || InputController.GetButtonUp(InputController.ConfigAction.Radio)) && talk)
+			else if ((InputManager.GetButtonUp(InputManager.ConfigAction.Talk) || InputManager.GetButtonUp(InputManager.ConfigAction.Radio)) && talk)
 			{
 				if (MyPlayer.isAudioDebug)
 				{

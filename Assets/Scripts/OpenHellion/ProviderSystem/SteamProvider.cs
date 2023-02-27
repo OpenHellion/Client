@@ -61,7 +61,7 @@ namespace OpenHellion.ProviderSystem
 
 			if (success)
 			{
-				Dbg.Log("Steamworks API initialised.");
+				Dbg.Log("Steam: API initialised.");
 			}
 
 			return success;
@@ -70,7 +70,6 @@ namespace OpenHellion.ProviderSystem
 		// This should only ever get called on first load and after an Assembly reload, You should never Disable the Steamworks Manager yourself.
 		void IProvider.Enable()
 		{
-
 			// Check if a player id is stored in the cloud, then locally, then generate.
 
 			if (_SteamAPIWarningMessageHook == null)
@@ -94,6 +93,7 @@ namespace OpenHellion.ProviderSystem
 		// Thus it is not recommended to perform any Steamworks work in other OnDestroy functions as the order of execution can not be garenteed upon Shutdown. Prefer OnDisable().
 		void IProvider.Destroy()
 		{
+			Dbg.Log("Steam: Shutdown");
 			SteamAPI.Shutdown();
 		}
 

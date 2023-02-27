@@ -74,10 +74,6 @@ namespace ZeroGravity.UI
 			InviteToPodButton.onClick.RemoveAllListeners();
 		}
 
-		private void Update()
-		{
-		}
-
 		public void ToggleCanvas(bool toggle)
 		{
 			if (toggle)
@@ -87,11 +83,11 @@ namespace ZeroGravity.UI
 				InviteList.Activate(value: false);
 				AlertBox.Activate(value: false);
 				ActionHolder.Activate(value: true);
-				base.gameObject.Activate(value: true);
+				gameObject.Activate(value: true);
 			}
 			else
 			{
-				base.gameObject.Activate(value: false);
+				gameObject.Activate(value: false);
 			}
 		}
 

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Steamworks;
 using TriInspector;
 using UnityEditor;
 using UnityEngine;
@@ -1950,7 +1949,7 @@ namespace ZeroGravity
 			LastSignInRequest = signInRequest;
 			try
 			{
-				ConnectionMain.Get<SignInResponse>(signInRequest, SignInResponseListener);
+				MSConnection.Get<SignInResponse>(signInRequest, SignInResponseListener);
 			}
 			catch (Exception)
 			{
@@ -2030,7 +2029,7 @@ namespace ZeroGravity
 			try
 			{
 				// First time booting, so we need to download id from the main server.
-				ConnectionMain.Get<PlayerIdResponse>(idRequest, (data) =>
+				MSConnection.Get<PlayerIdResponse>(idRequest, (data) =>
 				{
 					if (data == null)
 					{
@@ -2060,7 +2059,7 @@ namespace ZeroGravity
 						};
 
 						// Send request to server.
-						ConnectionMain.Get<PlayerIdResponse>(createRequest, (data) =>
+						MSConnection.Get<PlayerIdResponse>(createRequest, (data) =>
 						{
 							if (data == null)
 							{

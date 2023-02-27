@@ -78,7 +78,7 @@ namespace ZeroGravity.Objects
 
 		public short SlotID { get; private set; }
 
-		public InputController.ConfigAction? ShortcutKey { get; private set; }
+		public InputManager.ConfigAction? ShortcutKey { get; private set; }
 
 		public bool MustBeEmptyToRemoveOutfit
 		{
@@ -161,7 +161,7 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public InventorySlot(Outfit outfit, short slotID, Type type, Size size, Group group, InputController.ConfigAction? shortKey, int cycleIndex, bool mustBeEmptyToRemove, Item item, List<AttachData> points, Inventory inv)
+		public InventorySlot(Outfit outfit, short slotID, Type type, Size size, Group group, InputManager.ConfigAction? shortKey, int cycleIndex, bool mustBeEmptyToRemove, Item item, List<AttachData> points, Inventory inv)
 		{
 			SlotID = slotID;
 			slotType = type;

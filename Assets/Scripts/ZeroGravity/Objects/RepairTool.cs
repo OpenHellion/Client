@@ -142,7 +142,7 @@ namespace ZeroGravity.Objects
 
 		private void Update()
 		{
-			if (active && Type == ItemType.FireExtinguisher && FuelCompartment.Resources[0].Quantity > float.Epsilon && MyPlayer.Instance.FpsController.IsZeroG && !InputController.GetButton(InputController.ConfigAction.Sprint))
+			if (active && Type == ItemType.FireExtinguisher && FuelCompartment.Resources[0].Quantity > float.Epsilon && MyPlayer.Instance.FpsController.IsZeroG && !InputManager.GetButton(InputManager.ConfigAction.Sprint))
 			{
 				MyPlayer.Instance.FpsController.AddForce(-(MyPlayer.Instance.FpsController.MainCamera.transform.rotation * Vector3.forward).normalized * 0.03f, ForceMode.VelocityChange);
 			}

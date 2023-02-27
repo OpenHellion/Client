@@ -16,8 +16,6 @@ namespace ZeroGravity.LevelDesign
 
 		public SceneSpawnPoint SpawnPoint;
 
-		private CryoPodUI myCryoPod;
-
 		public override bool ExclusivePlayerLocking
 		{
 			get
@@ -94,11 +92,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			get
 			{
-				if (myCryoPod == null)
-				{
-					myCryoPod = Client.Instance.InGamePanels.Cryo;
-				}
-				return myCryoPod;
+				return Client.Instance.InGamePanels.Cryo;
 			}
 		}
 

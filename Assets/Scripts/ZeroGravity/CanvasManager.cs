@@ -927,7 +927,7 @@ namespace ZeroGravity
 		{
 			if (!DefaultInteractionTipSeen && Client.Instance.CanvasManager.ShowTips)
 			{
-				DefaultInteractionTip.GetComponentInChildren<Text>(includeInactive: true).text = string.Format(Localization.PressToInteract, InputController.GetAxisKeyName(InputController.ConfigAction.Interact)).ToUpper();
+				DefaultInteractionTip.GetComponentInChildren<Text>(includeInactive: true).text = string.Format(Localization.PressToInteract, InputManager.GetAxisKeyName(InputManager.ConfigAction.Interact)).ToUpper();
 				DefaultInteractionTip.Activate(value: true);
 				DefaultInteractionTipSeen = true;
 			}

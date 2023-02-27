@@ -394,12 +394,12 @@ namespace ZeroGravity.LevelDesign
 			{
 				vector2 = vector.normalized * fIntensity;
 			}
-			if (airSpeed > 100f && !MyPlayer.Instance.FpsController.IsZeroG && !MyPlayer.Instance.FpsController.HasTumbled && (!InputController.GetButton(InputController.ConfigAction.Sprint) || !MyPlayer.Instance.FpsController.IsGrounded))
+			if (airSpeed > 100f && !MyPlayer.Instance.FpsController.IsZeroG && !MyPlayer.Instance.FpsController.HasTumbled && (!InputManager.GetButton(InputManager.ConfigAction.Sprint) || !MyPlayer.Instance.FpsController.IsGrounded))
 			{
 				MyPlayer.Instance.FpsController.Tumble();
 			}
 			float num = (!(MyPlayer.Instance.rigidBody.mass > 0f)) ? 10f : MyPlayer.Instance.rigidBody.mass;
-			if (InputController.GetButton(InputController.ConfigAction.Sprint) && MyPlayer.Instance.FpsController.CanGrabWall)
+			if (InputManager.GetButton(InputManager.ConfigAction.Sprint) && MyPlayer.Instance.FpsController.CanGrabWall)
 			{
 				num *= 100f;
 			}

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using ZeroGravity.Data;
 using ZeroGravity.Objects;
 
@@ -9,86 +8,39 @@ namespace ZeroGravity
 {
 	public class Inventory : ISlotContainer
 	{
-		[CompilerGenerated]
-		private sealed class _003CGetSlotsByGroup_003Ec__AnonStorey0
-		{
-			internal InventorySlot.Group group;
+		private Player m_parentPlayer;
 
-			internal bool _003C_003Em__0(KeyValuePair<short, InventorySlot> m)
-			{
-				return m.Value.SlotGroup == group;
-			}
-		}
+		private Corpse m_parentCorpse;
 
-		private Player parentPlayer;
+		private MyPlayer m_myPlayer;
 
-		private Corpse parentCorpse;
+		private AnimatorHelper m_animHelper;
 
-		private MyPlayer myPlayer;
+		private InventorySlot m_outfitSlot;
 
-		private AnimatorHelper animHelper;
-
-		private InventorySlot _OutfitSlot;
-
-		private InventorySlot _HandsSlot;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<short, InventorySlot>, short> _003C_003Ef__am_0024cache0;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<short, InventorySlot>, InventorySlot> _003C_003Ef__am_0024cache1;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<short, InventorySlot>, short> _003C_003Ef__am_0024cache2;
-
-		[CompilerGenerated]
-		private static Func<KeyValuePair<short, InventorySlot>, InventorySlot> _003C_003Ef__am_0024cache3;
+		private InventorySlot m_handsSlot;
 
 		public SpaceObject Parent
 		{
 			get
 			{
-				if (parentPlayer != null)
+				if (m_parentPlayer != null)
 				{
-					return parentPlayer;
+					return m_parentPlayer;
 				}
-				return parentCorpse;
+				return m_parentCorpse;
 			}
 		}
 
 		public Outfit Outfit { get; private set; }
 
-		public InventorySlot OutfitSlot
-		{
-			get
-			{
-				return _OutfitSlot;
-			}
-		}
+		public InventorySlot OutfitSlot => m_outfitSlot;
 
-		public InventorySlot HandsSlot
-		{
-			get
-			{
-				return _HandsSlot;
-			}
-		}
+		public InventorySlot HandsSlot => m_handsSlot;
 
-		public Item ItemInHands
-		{
-			get
-			{
-				return _HandsSlot.Item;
-			}
-		}
+		public Item ItemInHands => m_handsSlot.Item;
 
-		public bool CanDrop
-		{
-			get
-			{
-				return animHelper.CanDrop;
-			}
-		}
+		public bool CanDrop => m_animHelper.CanDrop;
 
 		public Item AnimationItem { get; private set; }
 
@@ -102,25 +54,25 @@ namespace ZeroGravity
 
 		public Inventory(Player parent, AnimatorHelper aHelper)
 		{
-			animHelper = aHelper;
-			parentPlayer = parent;
-			parentCorpse = null;
+			m_animHelper = aHelper;
+			m_parentPlayer = parent;
+			m_parentCorpse = null;
 			if (parent is MyPlayer)
 			{
-				myPlayer = parent as MyPlayer;
+				m_myPlayer = parent as MyPlayer;
 			}
-			_HandsSlot = InventorySlot.CreateHandsSlot(animHelper.GetBone(AnimatorHelper.HumanBones.RightInteractBone).gameObject, this);
-			_OutfitSlot = InventorySlot.CreateOutfitSlot(Parent.gameObject, this);
+			m_handsSlot = InventorySlot.CreateHandsSlot(m_animHelper.GetBone(AnimatorHelper.HumanBones.RightInteractBone).gameObject, this);
+			m_outfitSlot = InventorySlot.CreateOutfitSlot(Parent.gameObject, this);
 		}
 
 		public Inventory(Corpse parent, AnimatorHelper aHelper)
 		{
-			animHelper = aHelper;
-			parentPlayer = null;
-			parentCorpse = parent;
-			myPlayer = null;
-			_HandsSlot = InventorySlot.CreateHandsSlot(animHelper.GetBone(AnimatorHelper.HumanBones.RightInteractBone).gameObject, this);
-			_OutfitSlot = InventorySlot.CreateOutfitSlot(Parent.gameObject, this);
+			m_animHelper = aHelper;
+			m_parentPlayer = null;
+			m_parentCorpse = parent;
+			m_myPlayer = null;
+			m_handsSlot = InventorySlot.CreateHandsSlot(m_animHelper.GetBone(AnimatorHelper.HumanBones.RightInteractBone).gameObject, this);
+			m_outfitSlot = InventorySlot.CreateOutfitSlot(Parent.gameObject, this);
 		}
 
 		public void SetAnimationItem(Item item, InventorySlot startSlot, InventorySlot destinationSlot, bool isDrop)
@@ -136,9 +88,9 @@ namespace ZeroGravity
 			switch (id)
 			{
 			case -1:
-				return _HandsSlot;
+				return m_handsSlot;
 			case -2:
-				return _OutfitSlot;
+				return m_outfitSlot;
 			default:
 				if (Outfit != null)
 				{
@@ -156,36 +108,16 @@ namespace ZeroGravity
 			Dictionary<short, InventorySlot> dictionary2 = dictionary;
 			if (Outfit != null)
 			{
-				IEnumerable<KeyValuePair<short, InventorySlot>> source = dictionary2.Union(Outfit.InventorySlots);
-				if (_003C_003Ef__am_0024cache0 == null)
-				{
-					_003C_003Ef__am_0024cache0 = _003CGetAllSlots_003Em__0;
-				}
-				Func<KeyValuePair<short, InventorySlot>, short> keySelector = _003C_003Ef__am_0024cache0;
-				if (_003C_003Ef__am_0024cache1 == null)
-				{
-					_003C_003Ef__am_0024cache1 = _003CGetAllSlots_003Em__1;
-				}
-				return source.ToDictionary(keySelector, _003C_003Ef__am_0024cache1);
+				return dictionary2.Union(Outfit.InventorySlots).ToDictionary((KeyValuePair<short, InventorySlot> k) => k.Key, (KeyValuePair<short, InventorySlot> v) => v.Value);
 			}
 			return dictionary2;
 		}
 
 		public Dictionary<short, InventorySlot> GetSlotsByGroup(InventorySlot.Group group)
 		{
-			_003CGetSlotsByGroup_003Ec__AnonStorey0 _003CGetSlotsByGroup_003Ec__AnonStorey = new _003CGetSlotsByGroup_003Ec__AnonStorey0();
-			_003CGetSlotsByGroup_003Ec__AnonStorey.group = group;
-			IEnumerable<KeyValuePair<short, InventorySlot>> source = GetAllSlots().Where(_003CGetSlotsByGroup_003Ec__AnonStorey._003C_003Em__0);
-			if (_003C_003Ef__am_0024cache2 == null)
-			{
-				_003C_003Ef__am_0024cache2 = _003CGetSlotsByGroup_003Em__2;
-			}
-			Func<KeyValuePair<short, InventorySlot>, short> keySelector = _003C_003Ef__am_0024cache2;
-			if (_003C_003Ef__am_0024cache3 == null)
-			{
-				_003C_003Ef__am_0024cache3 = _003CGetSlotsByGroup_003Em__3;
-			}
-			return source.ToDictionary(keySelector, _003C_003Ef__am_0024cache3);
+			return (from m in GetAllSlots()
+				where m.Value.SlotGroup == @group
+				select m).ToDictionary((KeyValuePair<short, InventorySlot> k) => k.Key, (KeyValuePair<short, InventorySlot> v) => v.Value);
 		}
 
 		public void SetOutfit(Outfit outfit)
@@ -205,15 +137,15 @@ namespace ZeroGravity
 					value2.SetInventory(this);
 				}
 			}
-			if (myPlayer != null)
+			if (m_myPlayer != null)
 			{
-				myPlayer.CurrentOutfit = Outfit;
+				m_myPlayer.CurrentOutfit = Outfit;
 			}
-			_OutfitSlot.SetItem(outfit, false);
-			_HandsSlot.SetAttachPoint(ItemType.None, animHelper.GetBone(AnimatorHelper.HumanBones.RightInteractBone).gameObject, false);
-			if (parentPlayer != null)
+			m_outfitSlot.SetItem(outfit, sendMessage: false);
+			m_handsSlot.SetAttachPoint(ItemType.None, m_animHelper.GetBone(AnimatorHelper.HumanBones.RightInteractBone).gameObject, hideAttachedObject: false);
+			if (m_parentPlayer != null)
 			{
-				parentPlayer.RefreshTargetingPoints();
+				m_parentPlayer.RefreshTargetingPoints();
 			}
 			if (Client.Instance.CanvasManager.InventoryUI.gameObject.activeInHierarchy)
 			{
@@ -239,7 +171,7 @@ namespace ZeroGravity
 
 		public bool DropItem(Item item, InventorySlot oldSlot)
 		{
-			if (myPlayer == null)
+			if (m_myPlayer == null)
 			{
 				return false;
 			}
@@ -248,7 +180,7 @@ namespace ZeroGravity
 			{
 				if (oldSlot.SlotType == InventorySlot.Type.Hands && oldSlot.Item == item)
 				{
-					RemoveItemFromHands(true);
+					RemoveItemFromHands(resetStance: true);
 				}
 				else
 				{
@@ -260,9 +192,9 @@ namespace ZeroGravity
 
 		public void AnimationItem_EventStart()
 		{
-			if (AnimationItem != null && parentPlayer != null)
+			if (AnimationItem != null && m_parentPlayer != null)
 			{
-				AnimationItem.AttachToBone(parentPlayer, AnimatorHelper.HumanBones.RightInteractBone);
+				AnimationItem.AttachToBone(m_parentPlayer, AnimatorHelper.HumanBones.RightInteractBone);
 			}
 		}
 
@@ -312,7 +244,7 @@ namespace ZeroGravity
 			{
 				if (newSlot.Item != null)
 				{
-					if (_HandsSlot.Item.CanGoDirectlyToInventory)
+					if (m_handsSlot.Item.CanGoDirectlyToInventory)
 					{
 						if (oldSlot != null && oldSlot.CanFitItem(newSlot.Item))
 						{
@@ -355,18 +287,18 @@ namespace ZeroGravity
 
 		public void ReleasePrimaryForItemInHands()
 		{
-			if (_HandsSlot.Item != null)
+			if (m_handsSlot.Item != null)
 			{
-				_HandsSlot.Item.PrimaryReleased();
+				m_handsSlot.Item.PrimaryReleased();
 			}
 		}
 
 		public void ItemAddedToHands(Item item)
 		{
-			if (myPlayer != null)
+			if (m_myPlayer != null)
 			{
-				myPlayer.animHelper.OverrideItemAnimations(item.fpsAnimations, item.Type, item.NeedsFullAnimOverride, item);
-				myPlayer.ItemAddedToHands(item);
+				m_myPlayer.animHelper.OverrideItemAnimations(item.fpsAnimations, item.Type, item.NeedsFullAnimOverride, item);
+				m_myPlayer.ItemAddedToHands(item);
 			}
 			else if (Parent is OtherPlayer)
 			{
@@ -376,56 +308,32 @@ namespace ZeroGravity
 
 		public void RemoveItemFromHands(bool resetStance)
 		{
-			_HandsSlot.SetItem(null);
-			if (myPlayer != null && resetStance)
+			m_handsSlot.SetItem(null);
+			if (m_myPlayer != null && resetStance)
 			{
 				ExitCombatStance();
-				myPlayer.ResetLookingAtItem();
+				m_myPlayer.ResetLookingAtItem();
 			}
 		}
 
 		public bool StoreItemInHands()
 		{
-			return _HandsSlot.Item == null || AddToInventory(_HandsSlot.Item, null, _HandsSlot);
+			return m_handsSlot.Item == null || AddToInventory(m_handsSlot.Item, null, m_handsSlot);
 		}
 
 		public void ExitCombatStance()
 		{
-			if (myPlayer != null)
+			if (m_myPlayer != null)
 			{
-				myPlayer.ChangeStance(MyPlayer.PlayerStance.Passive, 1f);
-				myPlayer.ResetCameraFov();
-				animHelper.SetParameter(null, null, null, null, null, null, null, null, false);
+				m_myPlayer.ChangeStance(MyPlayer.PlayerStance.Passive, 1f);
+				m_myPlayer.ResetCameraFov();
+				m_animHelper.SetParameter(null, null, null, null, null, null, null, null, false);
 			}
 		}
 
 		public bool CheckIfItemInHandsIsType<T>()
 		{
-			return _HandsSlot.Item != null && typeof(T).IsAssignableFrom(_HandsSlot.Item.GetType());
-		}
-
-		[CompilerGenerated]
-		private static short _003CGetAllSlots_003Em__0(KeyValuePair<short, InventorySlot> k)
-		{
-			return k.Key;
-		}
-
-		[CompilerGenerated]
-		private static InventorySlot _003CGetAllSlots_003Em__1(KeyValuePair<short, InventorySlot> v)
-		{
-			return v.Value;
-		}
-
-		[CompilerGenerated]
-		private static short _003CGetSlotsByGroup_003Em__2(KeyValuePair<short, InventorySlot> k)
-		{
-			return k.Key;
-		}
-
-		[CompilerGenerated]
-		private static InventorySlot _003CGetSlotsByGroup_003Em__3(KeyValuePair<short, InventorySlot> v)
-		{
-			return v.Value;
+			return m_handsSlot.Item != null && typeof(T).IsAssignableFrom(m_handsSlot.Item.GetType());
 		}
 	}
 }

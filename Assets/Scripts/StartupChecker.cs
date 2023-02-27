@@ -43,7 +43,7 @@ public class StartupChecker : MonoBehaviour
 			DiscordId = ProviderManager.DiscordId
 		});
 
-		ConnectionMain.Get<PlayerIdResponse>(req, (res) =>
+		MSConnection.Get<PlayerIdResponse>(req, (res) =>
 		{
 			// Use the remote id instead.
 			if (res != default && res.Result == ResponseResult.Success)
