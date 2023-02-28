@@ -106,7 +106,7 @@ namespace ZeroGravity.UI
 				{
 					GlosseryMenuButton();
 				}
-				else if (gameMenuUp)
+				else if (gameMenuUp) // If no other menus are up.
 				{
 					ResumeButton();
 				}
@@ -213,9 +213,7 @@ namespace ZeroGravity.UI
 			gameMenuUp = false;
 			MainMenu(false);
 			Client.Instance.CanvasManager.ToggleInGameMenuCanvas(false);
-			Client.Instance.OnInGameMenuClosed();
-
-			Client.Instance.ToggleCursor(false);
+			Client.Instance.OnInGameMenu(false);
 		}
 
 		public void LogoutButton()

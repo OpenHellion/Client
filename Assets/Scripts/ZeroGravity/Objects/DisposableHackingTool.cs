@@ -31,16 +31,6 @@ namespace ZeroGravity.Objects
 			return GetBaseAuxData<DisposableHackingToolData>();
 		}
 
-		public override void ProcesStatsData(DynamicObjectStats dos)
-		{
-			base.ProcesStatsData(dos);
-			DisposableHackingToolStats disposableHackingToolStats = dos as DisposableHackingToolStats;
-			if (disposableHackingToolStats.Use && DynamicObj.Parent is MyPlayer)
-			{
-				Client.Instance.ChangeStatsByIfNotAdmin(ProviderStatID.hacked_stuff, 1);
-			}
-		}
-
 		public override string QuantityCheck()
 		{
 			return FormatHelper.CurrentMax(base.Health, base.MaxHealth);

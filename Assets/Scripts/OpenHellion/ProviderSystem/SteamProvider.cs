@@ -17,7 +17,6 @@
 
 using UnityEngine;
 using Steamworks;
-using System;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -27,16 +26,17 @@ using OpenHellion.IO;
 
 namespace OpenHellion.ProviderSystem
 {
+	/// <seealso cref="DiscordProvider"/>
 	internal class SteamProvider : IProvider
 	{
-		private bool _currentStatsRequested;
-		private bool _userStatsReceived;
-		private bool _storeStats;
-		private Callback<UserStatsReceived_t> _userStatsReceivedCallback;
+		private bool m_currentStatsRequested;
+		private bool m_userStatsReceived;
+		private bool m_storeStats;
+		private Callback<UserStatsReceived_t> m_userStatsReceivedCallback;
 		private Callback<GameRichPresenceJoinRequested_t> m_GameRichPresenceJoinRequested;
-		private ConcurrentQueue<Task> _pendingTasks = new ConcurrentQueue<Task>();
+		private readonly ConcurrentQueue<Task> m_pendingTasks = new ConcurrentQueue<Task>();
 
-		protected SteamAPIWarningMessageHook_t _SteamAPIWarningMessageHook;
+		private SteamAPIWarningMessageHook_t m_SteamAPIWarningMessageHook;
 
 		[AOT.MonoPInvokeCallback(typeof(SteamAPIWarningMessageHook_t))]
 		protected static void SteamAPIDebugTextHook(int nSeverity, System.Text.StringBuilder pchDebugText)
@@ -70,17 +70,15 @@ namespace OpenHellion.ProviderSystem
 		// This should only ever get called on first load and after an Assembly reload, You should never Disable the Steamworks Manager yourself.
 		void IProvider.Enable()
 		{
-			// Check if a player id is stored in the cloud, then locally, then generate.
-
-			if (_SteamAPIWarningMessageHook == null)
+			if (m_SteamAPIWarningMessageHook == null)
 			{
 				// Set up our callback to receive warning messages from Steam.
 				// You must launch with "-debug_steamapi" in the launch args to receive warnings.
-				_SteamAPIWarningMessageHook = new SteamAPIWarningMessageHook_t(SteamAPIDebugTextHook);
-				SteamClient.SetWarningMessageHook(_SteamAPIWarningMessageHook);
+				m_SteamAPIWarningMessageHook = new SteamAPIWarningMessageHook_t(SteamAPIDebugTextHook);
+				SteamClient.SetWarningMessageHook(m_SteamAPIWarningMessageHook);
 			}
 
-			if (_currentStatsRequested)
+			if (m_currentStatsRequested)
 			{
 				SteamUserStats.RequestCurrentStats();
 			}
@@ -102,24 +100,24 @@ namespace OpenHellion.ProviderSystem
 			// Run Steam client callbacks
 			SteamAPI.RunCallbacks();
 
-			if (!_currentStatsRequested)
+			if (!m_currentStatsRequested)
 			{
-				_userStatsReceivedCallback = Callback<UserStatsReceived_t>.Create(callback => {
-					_userStatsReceived = true;
+				m_userStatsReceivedCallback = Callback<UserStatsReceived_t>.Create(callback => {
+					m_userStatsReceived = true;
 				});
-				_currentStatsRequested = SteamUserStats.RequestCurrentStats();
+				m_currentStatsRequested = SteamUserStats.RequestCurrentStats();
 			}
-			else if (_userStatsReceived)
+			else if (m_userStatsReceived)
 			{
 				Task result;
-				while (_pendingTasks.TryDequeue(out result))
+				while (m_pendingTasks.TryDequeue(out result))
 				{
 					result.RunSynchronously();
 				}
-				if (_storeStats)
+				if (m_storeStats)
 				{
 					SteamUserStats.StoreStats();
-					_storeStats = false;
+					m_storeStats = false;
 				}
 			}
 		}
@@ -131,77 +129,45 @@ namespace OpenHellion.ProviderSystem
 			Client.Instance.ProcessInvitation(inviteMessage);
 		}
 
+		/// <inheritdoc/>
 		public void UpdateStatus() { }
 
+		/// <inheritdoc/>
 		public bool GetAchievement(AchievementID id, out bool achieved)
 		{
 			return SteamUserStats.GetAchievement(id.ToString(), out achieved);
 		}
 
+		/// <inheritdoc/>
 		public void SetAchievement(AchievementID id)
 		{
-			_pendingTasks.Enqueue(new Task(delegate
+			m_pendingTasks.Enqueue(new Task(delegate
 			{
 				SteamUserStats.SetAchievement(id.ToString());
-				_storeStats = true;
+				m_storeStats = true;
 			}));
 		}
 
-		public bool GetStat(ProviderStatID id, out int value)
-		{
-			return SteamUserStats.GetStat(id.ToString(), out value);
-		}
-
-		public void SetStat(ProviderStatID id, int value)
-		{
-			_pendingTasks.Enqueue(new Task(delegate
-			{
-				SteamUserStats.SetStat(id.ToString(), value);
-				_storeStats = true;
-			}));
-		}
-
-		public void ResetStat(ProviderStatID id)
-		{
-			SetStat(id, 0);
-		}
-
-		// TODO: Fix this.
-		public void ChangeStatBy<T>(ProviderStatID id, T value)
-		{
-			if (typeof(T) == typeof(int))
-			{
-				ChangeStatBy(id, (int)(object)value);
-			}
-			else if (typeof(T) == typeof(float))
-			{
-				ChangeStatBy(id, (int)(object)value);
-			}
-		}
-
-		private void ChangeStatBy(ProviderStatID id, int value)
-		{
-			_pendingTasks.Enqueue(new Task(delegate
-			{
-				if (GetStat(id, out int value2))
-				{
-					SteamUserStats.SetStat(id.ToString(), value2 + value);
-					_storeStats = true;
-				}
-			}));
-		}
-
+		/// <inheritdoc/>
 		public string GetUsername()
 		{
 			return SteamFriends.GetFriendPersonaName(SteamUser.GetSteamID());
 		}
 
-		public string GetNativeId()
+		/// <inheritdoc/>
+		public string GetPrefixedNativeId()
 		{
 
+			return "s" + SteamUser.GetSteamID().ToString();
+		}
+
+		/// <inheritdoc/>
+		public string GetNativeId()
+		{
 			return SteamUser.GetSteamID().ToString();
 		}
 
+		/// <inheritdoc/>
 		public IProvider.Friend[] GetFriends()
 		{
 			List<IProvider.Friend> friends = new();
@@ -225,28 +191,52 @@ namespace OpenHellion.ProviderSystem
 			return friends.ToArray();
 		}
 
+		/// <inheritdoc/>
 		public Texture2D GetAvatar(string id)
 		{
+			Texture2D texture = Resources.Load<Texture2D>("UI/default_avatar");
+
+			// Check for correct prefix.
+			if (!id.StartsWith("s"))
+			{
+				return texture;
+			}
+
+			// Remove the prefix.
+			id.Remove(0, 1);
+
 			int largeFriendAvatar = SteamFriends.GetLargeFriendAvatar(new CSteamID(ulong.Parse(id)));
 			uint pnWidth;
 			uint pnHeight;
 			if (SteamUtils.GetImageSize(largeFriendAvatar, out pnWidth, out pnHeight) && pnWidth != 0 && pnHeight != 0)
 			{
+				// Construct texture from metadata.
 				byte[] array = new byte[pnWidth * pnHeight * 4];
-				Texture2D texture2D = new Texture2D((int)pnWidth, (int)pnHeight, TextureFormat.RGBA32, false, false);
+				texture = new Texture2D((int)pnWidth, (int)pnHeight, TextureFormat.RGBA32, false, false);
+
+				// Load data into texture.
 				if (SteamUtils.GetImageRGBA(largeFriendAvatar, array, (int)(pnWidth * pnHeight * 4)))
 				{
-					texture2D.LoadRawTextureData(array);
-					texture2D.Apply();
+					texture.LoadRawTextureData(array);
+					texture.Apply();
 				}
-				return texture2D;
 			}
 
-			return Resources.Load<Texture2D>("UI/default_avatar");
+			return texture;
 		}
 
+		/// <inheritdoc/>
 		public void InviteUser(string id, string secret)
 		{
+			// Check for correct prefix.
+			if (!id.StartsWith("s"))
+			{
+				return;
+			}
+
+			// Remove the prefix.
+			id.Remove(0, 1);
+
 			Dbg.Log("Inviting user through Steam.");
 
 			SteamFriends.InviteUserToGame(new CSteamID(ulong.Parse(id)), secret);

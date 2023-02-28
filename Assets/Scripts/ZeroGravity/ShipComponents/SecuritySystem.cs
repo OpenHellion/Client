@@ -98,7 +98,7 @@ namespace ZeroGravity.ShipComponents
 				List<IProvider.Friend> friends = new List<IProvider.Friend>();
 
 				// Loop through each friend and add it to the list.
-				foreach (IProvider.Friend friend in ProviderManager.MainProvider.GetFriends())
+				foreach (IProvider.Friend friend in ProviderManager.Friends)
 				{
 					req.Ids.Add(new GetPlayerIdRequest.Entry {
 						SteamId = ProviderManager.SteamId,

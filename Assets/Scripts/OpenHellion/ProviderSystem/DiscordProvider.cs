@@ -23,12 +23,14 @@ using ZeroGravity;
 using Discord;
 using OpenHellion.Networking.Message;
 using OpenHellion.IO;
+using System.Linq;
 
 namespace OpenHellion.ProviderSystem
 {
 	/// <summary>
 	/// 	This class handles everything related to Discord. Acts as a bridge between the game and the API.
 	/// </summary>
+	/// <seealso cref="SteamProvider"/>
 	internal class DiscordProvider : IProvider
 	{
 		private static readonly Dictionary<long, string> s_planets = new Dictionary<long, string>
@@ -59,7 +61,6 @@ namespace OpenHellion.ProviderSystem
 		private const long m_clientId = 349114016968474626L;
 		private const uint m_optionalSteamId = 588210;
 
-		private int m_callbackCalls;
 		private Discord.Discord m_discord;
 		private ActivityManager m_activityManager;
 		private UserManager m_userManager;
@@ -70,8 +71,6 @@ namespace OpenHellion.ProviderSystem
 
 		bool IProvider.Initialise()
 		{
-			m_callbackCalls = 0;
-
 			// Init Discord API.
 			try
 			{
@@ -107,7 +106,6 @@ namespace OpenHellion.ProviderSystem
 			return true;
 		}
 
-
 		void IProvider.Enable()
 		{
 			UpdateStatus();
@@ -121,7 +119,6 @@ namespace OpenHellion.ProviderSystem
 		// When we are joining a game.
 		private void JoinCallback(string secret)
 		{
-			m_callbackCalls++;
 			try
 			{
 				InviteMessage inviteMessage = JsonSerialiser.Deserialize<InviteMessage>(secret);
@@ -136,8 +133,6 @@ namespace OpenHellion.ProviderSystem
 		// When we get an invite to a game.
 		private void InviteCallback(ActivityActionType Type, ref User user, ref Activity activity2)
 		{
-			m_callbackCalls++;
-
 			// TODO: Make this safer.
 			m_activityManager.AcceptInvite(user.Id, result =>
 			{
@@ -149,7 +144,6 @@ namespace OpenHellion.ProviderSystem
 		private void JoinRequestCallback(ref User user)
 		{
 			Dbg.Log(string.Format("Discord: Join request {0}#{1}: {2}", user.Username, user.Discriminator, user.Id));
-			m_callbackCalls++;
 			m_joinUser = user;
 
 			RequestRespondYes();
@@ -185,6 +179,7 @@ namespace OpenHellion.ProviderSystem
 			m_discord?.Dispose();
 		}
 
+		/// <inheritdoc/>
 		public void UpdateStatus()
 		{
 			try
@@ -262,38 +257,20 @@ namespace OpenHellion.ProviderSystem
 			}
 		}
 
+		/// <inheritdoc/>
 		public bool GetAchievement(AchievementID id, out bool achieved)
 		{
 			achieved = false;
 			return false;
 		}
 
+		/// <inheritdoc/>
 		public void SetAchievement(AchievementID id)
 		{
 
 		}
 
-		public bool GetStat(ProviderStatID id, out int value)
-		{
-			value = 0;
-			return false;
-		}
-
-		public void SetStat(ProviderStatID id, int value)
-		{
-
-		}
-
-		public void ResetStat(ProviderStatID id)
-		{
-
-		}
-
-		public void ChangeStatBy<T>(ProviderStatID id, T value)
-		{
-			throw new NotImplementedException();
-		}
-
+		/// <inheritdoc/>
 		public string GetUsername()
 		{
 			User user;
@@ -310,6 +287,24 @@ namespace OpenHellion.ProviderSystem
 			return user.Username;
 		}
 
+		/// <inheritdoc/>
+		public string GetPrefixedNativeId()
+		{
+			User user;
+			try
+			{
+				user = m_userManager.GetCurrentUser();
+			}
+			catch (ResultException ex)
+			{
+				Dbg.Error("Error when getting discord user.", ex);
+				return null;
+			}
+
+			return "d" + user.Id.ToString();
+		}
+
+		/// <inheritdoc/>
 		public string GetNativeId()
 		{
 			User user;
@@ -326,6 +321,7 @@ namespace OpenHellion.ProviderSystem
 			return user.Id.ToString();
 		}
 
+		/// <inheritdoc/>
 		public IProvider.Friend[] GetFriends()
 		{
 			// Filter our list of relationships to users online and friends of us.
@@ -354,11 +350,21 @@ namespace OpenHellion.ProviderSystem
 			return friends.ToArray();
 		}
 
+		/// <inheritdoc/>
 		public Texture2D GetAvatar(string id)
 		{
 			Texture2D texture = Resources.Load<Texture2D>("UI/default_avatar");
 
-			m_discord.GetImageManager().Fetch(ImageHandle.User(Int64.Parse(id)), false, (result, handle) =>
+			// Check for correct prefix.
+			if (!id.StartsWith("d"))
+			{
+				return texture;
+			}
+
+			// Remove the prefix.
+			id.Remove(0, 1);
+
+			m_discord.GetImageManager().Fetch(ImageHandle.User(long.Parse(id)), false, (result, handle) =>
 			{
 				if (result == Result.Ok)
 				{
@@ -369,8 +375,18 @@ namespace OpenHellion.ProviderSystem
 			return texture;
 		}
 
+		/// <inheritdoc/>
 		public void InviteUser(string id, string secret)
 		{
+			// Check for correct prefix.
+			if (!id.StartsWith("d"))
+			{
+				return;
+			}
+
+			// Remove the prefix.
+			id.Remove(0, 1);
+
 			Dbg.Log("Inviting user through Discord.");
 
 			m_activity.Secrets.Join = secret;

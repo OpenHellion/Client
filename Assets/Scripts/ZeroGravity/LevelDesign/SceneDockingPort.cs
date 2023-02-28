@@ -251,7 +251,6 @@ namespace ZeroGravity.LevelDesign
 			Ship parentShip2 = ParentShip;
 			SceneDockingPortDetails dockingPort = sceneDockingPortDetails;
 			parentShip2.ChangeStats(null, null, null, null, null, null, null, null, null, dockingPort);
-			Client.Instance.ChangeStatsByIfNotAdmin(ProviderStatID.docked_vessels, 1);
 			return true;
 		}
 

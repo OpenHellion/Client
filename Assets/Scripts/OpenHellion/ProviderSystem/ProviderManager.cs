@@ -15,16 +15,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace OpenHellion.ProviderSystem
 {
-	// Should be self-contained, and it should therefore not reference any gameplay-related class.
+	// Should be self-contained, and it should therefore not reference any gameplay-related classes.
 	/// <summary>
 	/// 	A system to make the underlying connections to external game providers, such as Steam and Discord.
 	/// 	The point is to make the game be interoperable with any provider of gaming services.
 	/// </summary>
+	/// <seealso cref="DiscordProvider"/>
+	/// <seealso cref="SteamProvider"/>
+	/// <seealso cref="IProvider"/>
 	internal class ProviderManager : MonoBehaviour
 	{
 		private static ProviderManager s_instance;
@@ -38,25 +42,19 @@ namespace OpenHellion.ProviderSystem
 			}
 		}
 
-		// Keep all backends acive.
-		// Mainly used to update Discord rich presence while using steam.
-		private List<IProvider> _allProviders;
+		private List<IProvider> m_allProviders;
 
-		// The provider we are actually going to use.
-		private IProvider _mainProvider;
-		public static IProvider MainProvider
-		{
-			get
-			{
-				return Instance._mainProvider;
-			}
-		}
+		// The most important of the two providers.
+		private IProvider m_mainProvider;
 
+		/// <summary>
+		/// 	Get our stream id without a prefix. Returns null if steam is inaccessible.
+		/// </summary>
 		public static string SteamId
 		{
 			get
 			{
-				foreach (IProvider provider in Instance._allProviders)
+				foreach (IProvider provider in Instance.m_allProviders)
 				{
 					if (provider is SteamProvider)
 					{
@@ -68,11 +66,14 @@ namespace OpenHellion.ProviderSystem
 			}
 		}
 
+		/// <summary>
+		/// 	Get our discord id without a prefix. Returns null if discord is inaccessible.
+		/// </summary>
 		public static string DiscordId
 		{
 			get
 			{
-				foreach (IProvider provider in Instance._allProviders)
+				foreach (IProvider provider in Instance.m_allProviders)
 				{
 					if (provider is DiscordProvider)
 					{
@@ -91,11 +92,43 @@ namespace OpenHellion.ProviderSystem
 		{
 			get
 			{
-				if (Instance._mainProvider == null) return false;
+				if (Instance.m_mainProvider == null) return false;
 				return true;
 			}
 		}
 
+		/// <summary>
+		/// 	Get the id of our local player with a prefix. The prefix tells us what provider it is from.
+		/// </summary>
+		public static string NativeId
+		{
+			get
+			{
+				return Instance.m_mainProvider.GetPrefixedNativeId();
+			}
+		}
+
+		/// <summary>
+		/// 	Get the username of our local player.
+		/// </summary>
+		public static string Username
+		{
+			get
+			{
+				return Instance.m_mainProvider.GetUsername();
+			}
+		}
+
+		/// <summary>
+		/// 	Get a list of all our friends.
+		/// </summary>
+		public static IProvider.Friend[] Friends
+		{
+			get
+			{
+				return Instance.m_mainProvider.GetFriends();
+			}
+		}
 
 		void Awake()
 		{
@@ -109,7 +142,7 @@ namespace OpenHellion.ProviderSystem
 
 			DontDestroyOnLoad(gameObject);
 
-			_allProviders = new()
+			m_allProviders = new()
 			{
 				new SteamProvider(),
 				new DiscordProvider()
@@ -117,18 +150,18 @@ namespace OpenHellion.ProviderSystem
 
 			// Initialise our providers.
 			// Loop backwards to prevent an InvalidOperationException.
-			for (int i = _allProviders.Count - 1; i >= 0; i--)
+			for (int i = m_allProviders.Count - 1; i >= 0; i--)
 			{
-				if (!_allProviders[i].Initialise())
+				if (!m_allProviders[i].Initialise())
 				{
-					_allProviders.RemoveAt(i);
+					m_allProviders.RemoveAt(i);
 				}
 			}
 
 			// Find our main provider, Steam is preferable.
-			foreach (IProvider provider in _allProviders)
+			foreach (IProvider provider in m_allProviders)
 			{
-				_mainProvider = provider;
+				m_mainProvider = provider;
 				if (provider is SteamProvider)
 				{
 					break;
@@ -136,20 +169,20 @@ namespace OpenHellion.ProviderSystem
 			}
 
 			// Exit game if no providers could be found.
-			if (_mainProvider == null)
+			if (m_mainProvider == null)
 			{
 				Dbg.Error("No provider could be found.");
 				Application.Quit();
 				return;
 			}
 
-			Dbg.Log("Using provider", _mainProvider);
+			Dbg.Log("Setting main provider to", m_mainProvider);
 		}
 
 		void Start()
 		{
 			// Enable our providers.
-			foreach (IProvider provider in _allProviders)
+			foreach (IProvider provider in m_allProviders)
 			{
 				provider.Enable();
 			}
@@ -158,7 +191,7 @@ namespace OpenHellion.ProviderSystem
 		void Update()
 		{
 			// Update our providers.
-			foreach (IProvider provider in _allProviders)
+			foreach (IProvider provider in m_allProviders)
 			{
 				provider.Update();
 			}
@@ -167,7 +200,7 @@ namespace OpenHellion.ProviderSystem
 		void OnDestroy()
 		{
 			// Destroy our providers.
-			foreach (IProvider provider in _allProviders)
+			foreach (IProvider provider in m_allProviders)
 			{
 				provider.Destroy();
 			}
@@ -176,9 +209,61 @@ namespace OpenHellion.ProviderSystem
 		void OnApplicationQuit()
 		{
 			// Destroy our providers.
-			foreach (IProvider provider in _allProviders)
+			foreach (IProvider provider in m_allProviders)
 			{
 				provider.Destroy();
+			}
+		}
+
+		/// <summary>
+		/// 	Used to update rich presence.
+		/// </summary>
+		public static void UpdateStatus()
+		{
+			// Update rich presence for all providers.
+			foreach (IProvider provider in Instance.m_allProviders)
+			{
+				provider.UpdateStatus();
+			}
+		}
+
+		/// <summary>
+		/// 	Get if we have achieved a specific achievement.
+		/// </summary>
+		public static bool GetAchievement(AchievementID id, out bool achieved)
+		{
+			return Instance.m_mainProvider.GetAchievement(id, out achieved);
+		}
+
+		/// <summary>
+		/// 	Award the player an achievement.
+		/// </summary>
+		public static void SetAchievement(AchievementID id)
+		{
+			Instance.m_mainProvider.SetAchievement(id);
+		}
+
+		/// <summary>
+		/// 	Get the avatar of a specified user as a texture.
+		/// </summary>
+		public static Texture2D GetAvatar(string id)
+		{
+			foreach (IProvider provider in Instance.m_allProviders)
+			{
+				return provider.GetAvatar(id);
+			}
+
+			return Resources.Load<Texture2D>("UI/default_avatar");
+		}
+
+		/// <summary>
+		/// 	Send an invite to a user with a specified id.
+		/// </summary>
+		public static void InviteUser(string id, string secret)
+		{
+			foreach (IProvider provider in Instance.m_allProviders)
+			{
+				provider.InviteUser(id, secret);
 			}
 		}
 	}

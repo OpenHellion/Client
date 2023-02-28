@@ -33,15 +33,15 @@ namespace ZeroGravity
 			{
 				return;
 			}
-			Client.Instance.ToggleCursor(val);
-			MyPlayer.Instance.FpsController.ToggleCameraMovement(!val);
-			MyPlayer.Instance.FpsController.ToggleMovement(!val);
+
+			Client.Instance.OnInGameMenu(val);
+
 			//Client.Instance.InputModule.ToggleCustomCursorPosition(!val);
 			if (MyPlayer.Instance.CurrentActiveItem != null)
 			{
 				MyPlayer.Instance.CurrentActiveItem.PrimaryReleased();
 			}
-			base.gameObject.SetActive(val);
+			gameObject.SetActive(val);
 			if (val)
 			{
 				if (!MyPlayer.Instance.FpsController.IsZeroG && !MyPlayer.Instance.FpsController.IsJump)

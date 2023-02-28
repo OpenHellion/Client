@@ -485,6 +485,70 @@ namespace ZeroGravity.CharacterMovement
 			RefreshMaxAngularVelocity();
 		}
 
+		private void Update()
+		{
+			if (isLockedToPoint)
+			{
+				LockPlayerToPoint(locked: true);
+			}
+			if (grabSlowEnabled)
+			{
+				CheckVelocityForLock();
+			}
+			if (!isZeroG)
+			{
+				update1GInput();
+			}
+			if (isZeroG)
+			{
+				CheckLegDistanceFromFloor();
+			}
+			if (lerpCameraBack)
+			{
+				LerpCameraToLocalZero();
+			}
+			if (myPlayer.Parent is Pivot && rigidBody.drag.IsNotEpsilonZero() && NearbyVessel != null)
+			{
+				Pivot pivot = myPlayer.Parent as Pivot;
+				rigidBody.velocity -= ((pivot.Velocity - NearbyVessel.Velocity) * Time.deltaTime).ToVector3();
+			}
+
+#if UNITY_EDITOR // Do this to stop getting those annoying cursors after you close a menu.
+			if (isMovementEnabled)
+			{
+				Client.Instance.ToggleCursor(false);
+			}
+#endif
+		}
+
+		private void FixedUpdate()
+		{
+			if (Client.IsGameBuild && !myPlayer.PlayerReady)
+			{
+				return;
+			}
+			if (isZeroG)
+			{
+				update0GMovement();
+			}
+			else
+			{
+				if (!isGrounded && !HasTumbled)
+				{
+					float num = Vector3.Dot(Vector3.Project(rigidBody.velocity, myPlayer.GravityDirection), myPlayer.GravityDirection);
+					if (num > 7f)
+					{
+						Tumble(rigidBody.velocity);
+					}
+				}
+				update1GMovement();
+			}
+			if (InputManager.GetButton(InputManager.ConfigAction.Sprint))
+			{
+				canGrabWall = Physics.OverlapSphere(centerOfMass.position, 0.8f, collisionLayerMask, QueryTriggerInteraction.Ignore).Length > 0;
+			}
+		}
+
 		private void CheckLegDistanceFromFloor()
 		{
 			bool? touchingFloor = Physics.Raycast(base.transform.position, -base.transform.up, legDistance, collisionLayerMask);
@@ -1159,63 +1223,6 @@ namespace ZeroGravity.CharacterMovement
 			else
 			{
 				rigidBody.constraints = RigidbodyConstraints.None;
-			}
-		}
-
-		private void Update()
-		{
-			if (isLockedToPoint)
-			{
-				LockPlayerToPoint(locked: true);
-			}
-			if (grabSlowEnabled)
-			{
-				CheckVelocityForLock();
-			}
-			if (!isZeroG)
-			{
-				update1GInput();
-			}
-			if (isZeroG)
-			{
-				CheckLegDistanceFromFloor();
-			}
-			if (lerpCameraBack)
-			{
-				LerpCameraToLocalZero();
-			}
-			if (myPlayer.Parent is Pivot && rigidBody.drag.IsNotEpsilonZero() && NearbyVessel != null)
-			{
-				Pivot pivot = myPlayer.Parent as Pivot;
-				rigidBody.velocity -= ((pivot.Velocity - NearbyVessel.Velocity) * Time.deltaTime).ToVector3();
-			}
-		}
-
-		private void FixedUpdate()
-		{
-			if (Client.IsGameBuild && !myPlayer.PlayerReady)
-			{
-				return;
-			}
-			if (isZeroG)
-			{
-				update0GMovement();
-			}
-			else
-			{
-				if (!isGrounded && !HasTumbled)
-				{
-					float num = Vector3.Dot(Vector3.Project(rigidBody.velocity, myPlayer.GravityDirection), myPlayer.GravityDirection);
-					if (num > 7f)
-					{
-						Tumble(rigidBody.velocity);
-					}
-				}
-				update1GMovement();
-			}
-			if (InputManager.GetButton(InputManager.ConfigAction.Sprint))
-			{
-				canGrabWall = Physics.OverlapSphere(centerOfMass.position, 0.8f, collisionLayerMask, QueryTriggerInteraction.Ignore).Length > 0;
 			}
 		}
 

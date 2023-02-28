@@ -23,6 +23,7 @@ using ZeroGravity.UI;
 
 namespace ZeroGravity.Objects
 {
+	// TODO: This class should probably not be a singleton.
 	public class MyPlayer : Player
 	{
 		public delegate void InteractLockDelegate();
@@ -471,7 +472,7 @@ namespace ZeroGravity.Objects
 				base.Parent = value;
 				if (flag)
 				{
-					ProviderManager.MainProvider.UpdateStatus();
+					ProviderManager.UpdateStatus();
 				}
 			}
 		}
@@ -546,6 +547,11 @@ namespace ZeroGravity.Objects
 
 		private void Awake()
 		{
+			if (_instance != null)
+			{
+				Dbg.Error("Created new local player (MyPlayer.cs) when one already exists.");
+				// Don't return here because it might make it impossible to return to the main menu and restart a game.
+			}
 			_instance = this;
 			sunRaycastLayerMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("FirstPerson"));
 			planetsRaycastLayer = 1 << LayerMask.NameToLayer("Planets");
@@ -2174,13 +2180,15 @@ namespace ZeroGravity.Objects
 		public SaveFileAuxData GetSaveFileAuxData()
 		{
 			Texture2D tex = ScreenCapture.CaptureScreenshotAsTexture();
-			SaveFileAuxData saveFileAuxData = new SaveFileAuxData();
-			saveFileAuxData.CelestialBody = ((!(Parent is ArtificialBody)) ? null : (Parent as ArtificialBody).Orbit.Parent.CelestialBody.Name);
-			saveFileAuxData.ParentSceneID = ((!(Parent is SpaceObjectVessel)) ? GameScenes.SceneID.None : (Parent as SpaceObjectVessel).SceneID);
-			saveFileAuxData.LockedToTrigger = ((!(LockedToTrigger != null)) ? null : LockedToTrigger.TriggerType.ToString());
-			saveFileAuxData.Screenshot = tex.EncodeToJPG();
-			saveFileAuxData.ClientVersion = new Regex("[^0-9.]").Replace(Application.version, string.Empty);
-			saveFileAuxData.ClientHash = Client.CombinedHash;
+			SaveFileAuxData saveFileAuxData = new SaveFileAuxData
+			{
+				CelestialBody = Parent is not ArtificialBody ? null : (Parent as ArtificialBody).Orbit.Parent.CelestialBody.Name,
+				ParentSceneID = Parent is not SpaceObjectVessel ? GameScenes.SceneID.None : (Parent as SpaceObjectVessel).SceneID,
+				LockedToTrigger = LockedToTrigger == null ? null : LockedToTrigger.TriggerType.ToString(),
+				Screenshot = tex.EncodeToJPG(),
+				ClientVersion = new Regex("[^0-9.]").Replace(Application.version, string.Empty),
+				ClientHash = Client.CombinedHash
+			};
 			return saveFileAuxData;
 		}
 
@@ -2199,8 +2207,7 @@ namespace ZeroGravity.Objects
 				}
 				if (sceneSpawnPoint != null)
 				{
-					base.transform.position = sceneSpawnPoint.transform.position;
-					base.transform.rotation = sceneSpawnPoint.transform.rotation;
+					transform.SetPositionAndRotation(sceneSpawnPoint.transform.position, sceneSpawnPoint.transform.rotation);
 				}
 				else
 				{
@@ -3523,7 +3530,7 @@ namespace ZeroGravity.Objects
 		{
 			if (!(CurrentOutfit == null) && !(CurrentHelmet == null) && !(FpsController.CurrentJetpack == null) && !IsAdmin && CurrentOutfit.Type == ItemType.SoePressurisedSuit && CurrentHelmet.Type == ItemType.SoePressurisedHelmet && FpsController.CurrentJetpack.Type == ItemType.SoePressurisedJetpack)
 			{
-				ProviderManager.MainProvider.SetAchievement(AchievementID.collection_full_soe_outfit);
+				ProviderManager.SetAchievement(AchievementID.collection_full_soe_outfit);
 			}
 		}
 

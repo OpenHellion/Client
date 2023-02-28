@@ -112,7 +112,7 @@ namespace OpenHellion.Networking
 			LogInRequest logInRequest = new LogInRequest
 			{
 				PlayerId = NetworkController.PlayerId,
-				NativeId = ProviderManager.MainProvider.GetNativeId(),
+				NativeId = ProviderManager.NativeId,
 				CharacterData = NetworkController.CharacterData,
 				ServerID = m_serverId,
 				Password = m_serverPassword,

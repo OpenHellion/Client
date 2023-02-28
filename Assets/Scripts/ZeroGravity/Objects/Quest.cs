@@ -64,7 +64,7 @@ namespace ZeroGravity.Objects
 			QuestObject.Quest = this;
 			if (QuestObject != null && QuestObject.Achivement != 0)
 			{
-				ProviderManager.MainProvider.GetAchievement(QuestObject.Achivement, out CanSkip);
+				ProviderManager.GetAchievement(QuestObject.Achivement, out CanSkip);
 			}
 		}
 
@@ -90,7 +90,7 @@ namespace ZeroGravity.Objects
 			}
 			if (Status == QuestStatus.Completed && QuestObject != null && QuestObject.Achivement != 0)
 			{
-				ProviderManager.MainProvider.SetAchievement(QuestObject.Achivement);
+				ProviderManager.SetAchievement(QuestObject.Achivement);
 			}
 		}
 	}

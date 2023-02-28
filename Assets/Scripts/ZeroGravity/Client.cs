@@ -29,6 +29,16 @@ using UnityEngine.InputSystem;
 
 namespace ZeroGravity
 {
+	/// TODO: This class needs to be decoupled. It doesn't follow the SOLID principles at all.<br/>
+	/// TODO: This should probably not be a singleton.
+	/// <summary>
+	/// 	This is the main component of the game. It handles everything from saving to managing parts of the GUI.<br/>
+	/// 	Avoid referencing this class if you're able -- and don't use it when designing new systems.
+	/// </summary>
+	/// <remarks>
+	/// 	This class is just a mess of different funcions. It has no explicit function, other than to be a class to reference all other important classes.<br/>
+	/// </remarks>
+	/// <seealso cref="MyPlayer"/>
 	public class Client : MonoBehaviour
 	{
 		public enum SPGameMode
@@ -448,7 +458,7 @@ namespace ZeroGravity
 				{
 					ExperimentalGameObject.SetActive(value: true);
 					ExperimentalGameObject.GetComponentInChildren<Text>().text = ExperimentalText.Trim() + " " + Application.version;
-					ProviderManager.MainProvider.SetAchievement(AchievementID.other_testing_squad_member);
+					ProviderManager.SetAchievement(AchievementID.other_testing_squad_member);
 				}
 				else
 				{
@@ -1146,14 +1156,14 @@ namespace ZeroGravity
 			Localization.RevertToDefault();
 		}
 
-		public void OnInGameMenuClosed()
+		public void OnInGameMenu(bool val)
 		{
 			if (IsInGame)
 			{
-				ToggleCursor(false);
-				MyPlayer.Instance.FpsController.ToggleCameraController(true);
-				MyPlayer.Instance.FpsController.ToggleCameraMovement(true);
-				MyPlayer.Instance.FpsController.ToggleMovement(true);
+				ToggleCursor(val);
+				MyPlayer.Instance.FpsController.ToggleCameraController(!val);
+				MyPlayer.Instance.FpsController.ToggleCameraMovement(!val);
+				MyPlayer.Instance.FpsController.ToggleMovement(!val);
 			}
 		}
 
@@ -1162,11 +1172,14 @@ namespace ZeroGravity
 		/// </summary>
 		public void ToggleCursor(bool? val = null)
 		{
-			Cursor.visible = (!val.HasValue) ? (!Cursor.visible) : val.Value;
-			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = !val.HasValue ? !Cursor.visible : val.Value;
 			if (!Cursor.visible)
 			{
 				Cursor.lockState = CursorLockMode.Locked;
+			}
+			else
+			{
+				Cursor.lockState = CursorLockMode.None;
 			}
 		}
 
@@ -1682,7 +1695,7 @@ namespace ZeroGravity
 				}
 				if (MyPlayer.Instance != null && this == MyPlayer.Instance.Parent)
 				{
-					ProviderManager.MainProvider.UpdateStatus();
+					ProviderManager.UpdateStatus();
 				}
 			}
 			if (MyPlayer.Instance.LockedToTrigger is SceneTriggerNavigationPanel || MyPlayer.Instance.ShipControlMode == ShipControlMode.Navigation)
@@ -1781,7 +1794,7 @@ namespace ZeroGravity
 				CreateCharacterPanel.SetActive(value: true);
 				CurrentGenderText.text = CurrentGender.ToLocalizedString();
 				InventoryCharacterPreview.instance.ResetPosition();
-				CharacterInputField.text = ProviderManager.MainProvider.GetUsername();
+				CharacterInputField.text = ProviderManager.Username;
 				CharacterInputField.Select();
 				yield return new WaitWhile(() => CreateCharacterPanel.activeInHierarchy);
 				string newCharacterName = CharacterInputField.text.Trim();
@@ -2043,15 +2056,13 @@ namespace ZeroGravity
 					{
 						callback(data);
 					}
-					else if (data.Result == ResponseResult.AccountNotFound)
+					else if (data.Result == ResponseResult.AccountNotFound) // No account exists with that id, so we need to create a new player account.
 					{
-						// No account exists with that id, so we need to create a new player account.
-
 						CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.NewPlayer);
 
 						CreatePlayerRequest createRequest = new()
 						{
-							Name = ProviderManager.MainProvider.GetUsername(),
+							Name = ProviderManager.Username,
 							Region = Region.Europe,
 							PlayerId = NetworkController.PlayerId,
 							SteamId = ProviderManager.SteamId,
@@ -2257,7 +2268,7 @@ namespace ZeroGravity
 					{
 						serverStatusResponse.CharacterData = new CharacterData
 						{
-							Name = ProviderManager.MainProvider.GetUsername(),
+							Name = ProviderManager.Username,
 							Gender = Gender.Male,
 							HairType = 1,
 							HeadType = 1
@@ -2428,7 +2439,7 @@ namespace ZeroGravity
 			this.CancelInvoke(CheckLoadingComplete);
 			AkSoundEngine.SetRTPCValue(SoundManager.Instance.InGameVolume, 1f);
 			MyPlayer.Instance.PlayerReady = true;
-			ProviderManager.MainProvider.UpdateStatus();
+			ProviderManager.UpdateStatus();
 			MyPlayer.Instance.InitializeCameraEffects();
 
 			Instance.CanvasManager.SelectSpawnPointScreen.Activate(value: false);
@@ -2454,21 +2465,6 @@ namespace ZeroGravity
 				yield return new WaitUntil(() => MyPlayer.Instance.gameObject.activeInHierarchy);
 				yield return new WaitForSecondsRealtime(0.5f);
 				exec.ChangeStateImmediateForce("occupied");
-			}
-		}
-
-		public void ChangeStatsByIfNotAdmin<T>(ProviderStatID id, T value)
-		{
-			try
-			{
-				if (!MyPlayer.Instance.IsAdmin)
-				{
-					ProviderManager.MainProvider.ChangeStatBy(id, value);
-				}
-			}
-			catch (Exception ex)
-			{
-				Dbg.Error(ex.Message, ex.StackTrace);
 			}
 		}
 

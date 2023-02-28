@@ -23,7 +23,10 @@ namespace OpenHellion.ProviderSystem
 	/// 	Wrapper around APIs like Steamworks and Discord Game API.
 	/// 	Everything here should be provider independent (or as independent as possible).
 	/// </summary>
-	public interface IProvider
+	/// <seealso cref="DiscordProvider"/>
+	/// <seealso cref="SteamProvider"/>
+	/// <seealso cref="ProviderManager"/>
+	internal interface IProvider
 	{
 		internal bool Initialise();
 		internal void Enable();
@@ -45,16 +48,19 @@ namespace OpenHellion.ProviderSystem
 		}
 
 		/// <summary>
-		/// 	Used by the Discord provider to update rich presence.
+		/// 	Used to update rich presence.
 		/// </summary>
 		void UpdateStatus();
 
+		/// <summary>
+		/// 	Get if we have achieved a specific achievement.
+		/// </summary>
 		bool GetAchievement(AchievementID id, out bool achieved);
+
+		/// <summary>
+		/// 	Award the player an achievement.
+		/// </summary>
 		void SetAchievement(AchievementID id);
-		bool GetStat(ProviderStatID id, out int value);
-		void SetStat(ProviderStatID id, int value);
-		void ResetStat(ProviderStatID id);
-		void ChangeStatBy<T>(ProviderStatID id, T value);
 
 		/// <summary>
 		/// 	Get the username of our local player.
@@ -62,7 +68,12 @@ namespace OpenHellion.ProviderSystem
 		string GetUsername();
 
 		/// <summary>
-		/// 	Get the id of our local player.
+		/// 	Get the id of our local player with a prefix. The prefix tells us what provider it is from.
+		/// </summary>
+		string GetPrefixedNativeId();
+
+		/// <summary>
+		/// 	Get the id of our local player without a prefix.
 		/// </summary>
 		string GetNativeId();
 
@@ -70,7 +81,16 @@ namespace OpenHellion.ProviderSystem
 		/// 	Get a list of all our friends.
 		/// </summary>
 		Friend[] GetFriends();
+
+		/// <summary>
+		/// 	Get the avatar of a specified user as a texture.
+		/// </summary>
 		Texture2D GetAvatar(string id);
+
+
+		/// <summary>
+		/// 	Send an invite to a user with a specified id.
+		/// </summary>
 		void InviteUser(string id, string secret);
 	}
 }

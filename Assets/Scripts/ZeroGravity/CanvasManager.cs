@@ -341,11 +341,11 @@ namespace ZeroGravity
 					ExitSpawnOptionsScreen();
 				}
 			}
-			if (ScreenShootMod.activeInHierarchy && Keyboard.current.f11Key.isPressed)
+			if (ScreenShootMod.activeInHierarchy && Keyboard.current.f11Key.wasPressedThisFrame)
 			{
 				StartCoroutine(TakeScreenShoot());
 			}
-			if (Client.Instance.IsInGame && MyPlayer.Instance != null && Keyboard.current.f10Key.isPressed)
+			if (Client.Instance.IsInGame && MyPlayer.Instance != null && Keyboard.current.f10Key.wasPressedThisFrame)
 			{
 				ToggleScreenShootMod();
 			}
@@ -578,7 +578,7 @@ namespace ZeroGravity
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start1));
 			});
 
-			ProviderManager.MainProvider.GetAchievement(AchievementID.quest_sound_of_silence, out var achieved);
+			ProviderManager.GetAchievement(AchievementID.quest_sound_of_silence, out var achieved);
 			StartingPointOptionUI strandedMinerUI = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			strandedMinerUI.Type = StartingPointOption.StrandedMiner;
 			strandedMinerUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
@@ -587,7 +587,7 @@ namespace ZeroGravity
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start2));
 			});
 
-			ProviderManager.MainProvider.GetAchievement(AchievementID.quest_shattered_dreams, out achieved);
+			ProviderManager.GetAchievement(AchievementID.quest_shattered_dreams, out achieved);
 			StartingPointOptionUI evaUI = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			evaUI.Type = StartingPointOption.Eva;
 			evaUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
@@ -596,7 +596,7 @@ namespace ZeroGravity
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start3));
 			});
 
-			ProviderManager.MainProvider.GetAchievement(AchievementID.quest_heart_of_stone, out achieved);
+			ProviderManager.GetAchievement(AchievementID.quest_heart_of_stone, out achieved);
 			StartingPointOptionUI soeUI = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			soeUI.Type = StartingPointOption.Soe;
 			soeUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;

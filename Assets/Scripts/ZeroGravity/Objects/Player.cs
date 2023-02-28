@@ -91,7 +91,7 @@ namespace ZeroGravity.Objects
 
 		public static Texture GetAvatar(string ProviderId)
 		{
-			return ProviderManager.MainProvider.GetAvatar(ProviderId);
+			return ProviderManager.GetAvatar(ProviderId);
 		}
 	}
 }

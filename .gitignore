@@ -100,12 +100,12 @@ WwiseUnityIntegration_*_Src.zip
 
 *.zip
 
-
 logRunSetup.txt
 *.bak
 GeneratedSoundBanks**
 
 /Hellion_Data
+/Hellion_Build
 /NodeDependencyCache
 
 /NuGet

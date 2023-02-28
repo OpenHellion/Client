@@ -654,7 +654,7 @@ namespace ZeroGravity.Objects
 					});
 				}
 			}
-			ProviderManager.MainProvider.UpdateStatus();
+			ProviderManager.UpdateStatus();
 		}
 
 		public void ActivateWarpStartEffect()

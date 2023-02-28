@@ -267,7 +267,7 @@ namespace ZeroGravity.LevelDesign
 				// Send invite.
 				if (!Client.Instance.SinglePlayerMode)
 				{
-					ProviderManager.MainProvider.InviteUser(player.PlayerNativeId, Client.Instance.GetInviteString(new VesselObjectID(ParentVessel.GUID, InSceneID)));
+					ProviderManager.InviteUser(player.PlayerNativeId, Client.Instance.GetInviteString(new VesselObjectID(ParentVessel.GUID, InSceneID)));
 				}
 			}
 		}
@@ -283,7 +283,7 @@ namespace ZeroGravity.LevelDesign
 				List<PlayerInviteData> list = new List<PlayerInviteData>();
 
 				// Loop through each friend and add it to the list.
-				foreach (IProvider.Friend friend in ProviderManager.MainProvider.GetFriends())
+				foreach (IProvider.Friend friend in ProviderManager.Friends)
 				{
 					// If friend is online.
 					if (friend.Status == IProvider.FriendStatus.ONLINE)
