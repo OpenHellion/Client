@@ -32,6 +32,9 @@ You will now have the whole project at your hands.
 
 Processor and graphics card shouldn't matter much, but it has to at least run Unity; Settings can be modified to increase performance.
 
+## Coding style and conventions
+It is recommended to follow the Unity [style guide](https://resources.unity.com/games/create-code-style-guide-e-book) when writing code for the project, as well as learning about [programming patterns](https://resources.unity.com/games/level-up-your-code-with-game-programming-patterns).
+
 ## License
 All software written by members of the Hellion-Revived project and affiliates is licenced under GPL-3.0.
 
