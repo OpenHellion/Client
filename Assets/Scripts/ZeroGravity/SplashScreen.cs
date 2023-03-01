@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Video;
 
 namespace ZeroGravity
@@ -18,15 +19,15 @@ namespace ZeroGravity
 
 		public VideoPlayer VideoPlayer;
 
-		private SoundEffect _soundEffect;
-
-		private bool _soundPlaying;
-
 		public GameObject PressAnyToContinue;
 
 		public List<VideoObject> VideoClips;
 
-		private Task _videoEndTask;
+		private bool m_soundPlaying;
+
+		private SoundEffect m_soundEffect;
+
+		private Task m_videoEndTask;
 
 		private void EndReached(VideoPlayer vp)
 		{
@@ -35,23 +36,28 @@ namespace ZeroGravity
 
 		private void Started(VideoPlayer vp)
 		{
-			if (!_soundPlaying)
+			if (!m_soundPlaying)
 			{
-				_soundEffect.Play(0);
-				_soundPlaying = true;
+				m_soundEffect.Play(0);
+				m_soundPlaying = true;
 			}
 		}
 
 		private void Update()
 		{
-			if (Input.anyKeyDown && !PressAnyToContinue.activeInHierarchy)
+			// If any key, including left mouse button, have been pressed.
+			if (Keyboard.current.anyKey.wasPressedThisFrame || Mouse.current.leftButton.wasPressedThisFrame)
 			{
-				PressAnyToContinue.Activate(true);
-			}
-			else if (Input.anyKeyDown && PressAnyToContinue.activeInHierarchy)
-			{
-				//StopVideo();
-				VideoEnd();
+				if (!PressAnyToContinue.activeInHierarchy) // First time clicking.
+				{
+					// Enable the text to continue.
+					PressAnyToContinue.Activate(true);
+				}
+				else if (PressAnyToContinue.activeInHierarchy) // Second time clicking.
+				{
+					// End the video.
+					VideoEnd();
+				}
 			}
 		}
 
@@ -61,12 +67,12 @@ namespace ZeroGravity
 			{
 				if (VideoClips[clip].Sound != null)
 				{
-					_soundEffect = VideoClips[clip].Sound;
+					m_soundEffect = VideoClips[clip].Sound;
 				}
 				VideoPlayer.loopPointReached += EndReached;
 				VideoPlayer.started += Started;
 				VideoPlayer.clip = VideoClips[clip].Video;
-				base.gameObject.Activate(true);
+				gameObject.Activate(true);
 				VideoPlayer.Play();
 			}
 			else
@@ -75,43 +81,39 @@ namespace ZeroGravity
 			}
 		}
 
-		public void StopVideo()
-		{
-			GetComponent<Animator>().SetTrigger("Stop");
-		}
-
 		public void FreshStart(Task tsk)
 		{
-			_videoEndTask = tsk;
+			m_videoEndTask = tsk;
 			StartVideo(1);
 		}
 
 		public void VideoEnd()
 		{
+			// Start preloading.
 			if (VideoPlayer.clip == VideoClips[0].Video)
 			{
 				Client.Instance.SceneLoader.InitializeScenes();
 			}
 
 			// Run video end task.
-			if (_videoEndTask != null)
+			if (m_videoEndTask != null)
 			{
-				_videoEndTask.RunSynchronously();
-				_videoEndTask = null;
+				m_videoEndTask.RunSynchronously();
+				m_videoEndTask = null;
 			}
 
 			// Hide the text.
 			PressAnyToContinue.Activate(false);
-			if (_soundEffect != null)
+			if (m_soundEffect != null)
 			{
-				_soundEffect.Play(1);
+				m_soundEffect.Play(1);
 			}
 
 			// Stop playing.
 			VideoPlayer.Stop();
 			VideoPlayer.clip = null;
-			_soundPlaying = false;
-			base.gameObject.Activate(false);
+			m_soundPlaying = false;
+			gameObject.Activate(false);
 		}
 	}
 }

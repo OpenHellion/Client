@@ -40,15 +40,6 @@
       "source": "builtin",
       "dependencies": {}
     },
-    "com.unity.analytics": {
-      "version": "3.6.12",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.ugui": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
     "com.unity.cinemachine": {
       "version": "2.8.9",
       "depth": 0,
@@ -66,7 +57,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.15",
+      "version": "3.0.18",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -169,7 +160,7 @@
       }
     },
     "com.unity.test-framework": {
-      "version": "1.1.31",
+      "version": "1.1.33",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -217,46 +208,46 @@
       "hash": "b75c648f6547e5b355cd889ee8ced1fd718cdc8a"
     },
     "org.nuget.protobuf-net": {
-      "version": "3.1.25",
+      "version": "3.2.8",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "org.nuget.protobuf-net.core": "3.1.25",
-        "org.nuget.system.memory": "4.5.4",
+        "org.nuget.protobuf-net.core": "3.2.8",
         "org.nuget.system.reflection.emit": "4.7.0",
         "org.nuget.system.reflection.emit.lightweight": "4.7.0"
       },
       "url": "https://unitynuget-registry.azurewebsites.net"
     },
     "org.nuget.protobuf-net.core": {
-      "version": "3.1.25",
+      "version": "3.2.8",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "org.nuget.system.collections.immutable": "1.7.1",
-        "org.nuget.system.memory": "4.5.4"
+        "org.nuget.system.collections.immutable": "7.0.0",
+        "org.nuget.system.memory": "4.5.5"
       },
       "url": "https://unitynuget-registry.azurewebsites.net"
     },
     "org.nuget.system.buffers": {
       "version": "4.5.1",
-      "depth": 2,
+      "depth": 3,
       "source": "registry",
       "dependencies": {},
       "url": "https://unitynuget-registry.azurewebsites.net"
     },
     "org.nuget.system.collections.immutable": {
-      "version": "1.7.1",
+      "version": "7.0.0",
       "depth": 2,
       "source": "registry",
       "dependencies": {
-        "org.nuget.system.memory": "4.5.4"
+        "org.nuget.system.memory": "4.5.5",
+        "org.nuget.system.runtime.compilerservices.unsafe": "6.0.0"
       },
       "url": "https://unitynuget-registry.azurewebsites.net"
     },
     "org.nuget.system.memory": {
-      "version": "4.5.4",
-      "depth": 1,
+      "version": "4.5.5",
+      "depth": 2,
       "source": "registry",
       "dependencies": {
         "org.nuget.system.buffers": "4.5.1",
@@ -267,7 +258,7 @@
     },
     "org.nuget.system.numerics.vectors": {
       "version": "4.4.0",
-      "depth": 2,
+      "depth": 3,
       "source": "registry",
       "dependencies": {},
       "url": "https://unitynuget-registry.azurewebsites.net"
@@ -298,8 +289,8 @@
       "url": "https://unitynuget-registry.azurewebsites.net"
     },
     "org.nuget.system.runtime.compilerservices.unsafe": {
-      "version": "4.5.3",
-      "depth": 2,
+      "version": "6.0.0",
+      "depth": 3,
       "source": "registry",
       "dependencies": {},
       "url": "https://unitynuget-registry.azurewebsites.net"

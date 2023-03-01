@@ -6,7 +6,7 @@ namespace ZeroGravity.UI
 {
 	public class InventoryCharacterRotate : MonoBehaviour, IDragHandler, IPointerEnterHandler, IPointerExitHandler, IEventSystemHandler
 	{
-		private float rotSpeed = 5f;
+		private const float RotSpeed = 5f;
 
 		private bool canZoom;
 
@@ -28,7 +28,7 @@ namespace ZeroGravity.UI
 
 		public void OnDrag(PointerEventData eventData)
 		{
-			InventoryCharacterPreview.instance.RotateCharacter(Mouse.current.delta.x.ReadValue() * rotSpeed);
+			InventoryCharacterPreview.instance.RotateCharacter(Mouse.current.delta.x.ReadValue() * RotSpeed);
 		}
 
 		public void OnPointerEnter(PointerEventData eventData)

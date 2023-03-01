@@ -169,17 +169,21 @@ namespace ZeroGravity.Objects
 
 		private void CreateNewStatsMessage()
 		{
-			shipStatsMsg = new ShipStatsMessage();
-			shipStatsMsg.GUID = base.GUID;
-			shipStatsMsg.VesselObjects = new VesselObjects();
-			shipStatsMsg.VesselObjects.SubSystems = new List<SubSystemDetails>();
-			shipStatsMsg.VesselObjects.Generators = new List<GeneratorDetails>();
-			shipStatsMsg.VesselObjects.RoomTriggers = new List<RoomDetails>();
-			shipStatsMsg.VesselObjects.Doors = new List<DoorDetails>();
-			shipStatsMsg.VesselObjects.SceneTriggerExecuters = new List<SceneTriggerExecuterDetails>();
-			shipStatsMsg.VesselObjects.DockingPorts = new List<SceneDockingPortDetails>();
-			shipStatsMsg.VesselObjects.AttachPoints = new List<AttachPointDetails>();
-			shipStatsMsg.VesselObjects.SpawnPoints = new List<SpawnPointStats>();
+			shipStatsMsg = new ShipStatsMessage
+			{
+				GUID = GUID,
+				VesselObjects = new VesselObjects
+				{
+					SubSystems = new List<SubSystemDetails>(),
+					Generators = new List<GeneratorDetails>(),
+					RoomTriggers = new List<RoomDetails>(),
+					Doors = new List<DoorDetails>(),
+					SceneTriggerExecuters = new List<SceneTriggerExecuterDetails>(),
+					DockingPorts = new List<SceneDockingPortDetails>(),
+					AttachPoints = new List<AttachPointDetails>(),
+					SpawnPoints = new List<SpawnPointStats>()
+				}
+			};
 			shipStatsChanged = false;
 		}
 

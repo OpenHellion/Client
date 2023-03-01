@@ -341,7 +341,7 @@ namespace OpenHellion.ProviderSystem
 				// Add the relationship to our friends list.
 				friends.Add(new IProvider.Friend
 				{
-					NativeId = r.User.Id.ToString(),
+					NativeId = "d" + r.User.Id.ToString(),
 					Name = r.User.Username,
 					Status = r.Presence.Status == Status.Online ? IProvider.FriendStatus.ONLINE : IProvider.FriendStatus.OFFLINE
 				});

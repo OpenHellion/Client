@@ -196,7 +196,7 @@ namespace ZeroGravity.ShipComponents
 				RaycastHit[] source = (from m in Physics.RaycastAll(ray, float.PositiveInfinity, layerMask)
 					where m.collider.GetComponentInParent<MapObject>() != null
 					select m).ToArray();
-				VesselsGroup = (from m in ((IEnumerable<RaycastHit>)source).Select((Func<RaycastHit, MapObject>)((RaycastHit m) => m.collider.GetComponentInParent<MapObjectVessel>()))
+				VesselsGroup = (from m in source.Select((Func<RaycastHit, MapObject>)((RaycastHit m) => m.collider.GetComponentInParent<MapObjectVessel>()))
 					where m?.MainObject != null
 					orderby (m.TruePosition - MyPlayer.Instance.Parent.Position).SqrMagnitude
 					select m).ToList();
@@ -268,6 +268,8 @@ namespace ZeroGravity.ShipComponents
 					DraggingManeuver.Dragging(ray);
 				}
 			}
+
+			// Map zoom.
 			if (Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero() && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 			{
 				float axis = Mouse.current.scroll.y.ReadValue();
@@ -281,21 +283,26 @@ namespace ZeroGravity.ShipComponents
 				}
 				zoom = MathHelper.Clamp(zoom, MinZoom, Mathf.Clamp(planetMaxZoom, 0f, MaxZoom));
 			}
+
+			// Map controls.
 			if (Mouse.current.rightButton.isPressed && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 			{
-				float horizontalMouse = Mouse.current.delta.x.ReadValue();
-				float verticalMouse = Mouse.current.delta.y.ReadValue();
+				float horizontalMouse = Mouse.current.delta.x.ReadValue() * 0.1f;
+				float verticalMouse = Mouse.current.delta.y.ReadValue() * 0.1f;
 				if (horizontalMouse.IsNotEpsilonZero() || verticalMouse.IsNotEpsilonZero())
 				{
 					if (Keyboard.current.leftCtrlKey.isPressed)
 					{
-						MapObjectShip mapObjectShip = SelectedObject as MapObjectShip;
-						if (mapObjectShip?.ScanningCone?.activeInHierarchy == true)
+						if (SelectedObject is MapObjectShip)
 						{
-							float scanningConePitch = (Client.Instance.Map.Panel.PitchAngle - verticalMouse + 360f) % 360f;
-							float scanningConeYaw = (Client.Instance.Map.Panel.YawAngle + horizontalMouse + 360f) % 360f;
-							mapObjectShip.Map.Panel.SetScanningConePitch(scanningConePitch);
-							mapObjectShip.Map.Panel.SetScanningConeYaw(scanningConeYaw);
+							MapObjectShip mapObjectShip = SelectedObject as MapObjectShip;
+							if (mapObjectShip.ScanningCone != null && mapObjectShip.ScanningCone.activeInHierarchy == true)
+							{
+								float scanningConePitch = (Client.Instance.Map.Panel.PitchAngle - verticalMouse + 360f) % 360f;
+								float scanningConeYaw = (Client.Instance.Map.Panel.YawAngle + horizontalMouse + 360f) % 360f;
+								mapObjectShip.Map.Panel.SetScanningConePitch(scanningConePitch);
+								mapObjectShip.Map.Panel.SetScanningConeYaw(scanningConeYaw);
+							}
 						}
 					}
 					else
@@ -306,7 +313,10 @@ namespace ZeroGravity.ShipComponents
 					}
 				}
 			}
+
+			// Handle rotation.
 			RotateCamera();
+
 			if (MapScanEffect.activeInHierarchy)
 			{
 				MapScanEffect.transform.position = MyShip.Position.transform.position;

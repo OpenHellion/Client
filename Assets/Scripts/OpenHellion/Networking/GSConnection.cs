@@ -54,7 +54,7 @@ namespace OpenHellion.Networking
 			m_serverId = serverId;
 			m_serverPassword = password;
 
-			m_client = new(30000)
+			m_client = new(80000)
 			{
 				OnConnected = OnConnected,
 				OnData = OnData,

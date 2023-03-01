@@ -1103,8 +1103,6 @@ namespace ZeroGravity.Objects
 		private void UpdateSunFlareAndItensity(Quaternion lookRotation, Vector3D playerPosition)
 		{
 			Vector3 vector = lookRotation.Inverse() * -playerPosition.Normalized.ToVector3();
-			Vector3 vector2 = vector * 100000f;
-			float num = Vector3.Angle(vector, FpsController.MainCamera.transform.forward);
 			bool flag = true;
 			if (Physics.Raycast(PlanetsCamera.position, vector, out var _, float.PositiveInfinity, planetsRaycastLayer))
 			{
@@ -1145,11 +1143,11 @@ namespace ZeroGravity.Objects
 				return;
 			}
 
-			// Control ships and docking.
+			// Smooth, stabilise, and regulate docking and ship movements.
 			if ((ShipControlMode == ShipControlMode.Piloting || ShipControlMode == ShipControlMode.Docking || LockedToTrigger is SceneTriggerDockingPanel) && Parent is SpaceObjectVessel)
 			{
 				SpaceObjectVessel spaceObjectVessel = LockedToTrigger == null ? Parent as SpaceObjectVessel : LockedToTrigger.ParentShip;
-				// Docking controls.
+				// Docking.
 				if (ShipControlMode == ShipControlMode.Docking || LockedToTrigger is SceneTriggerDockingPanel)
 				{
 					if (LockedToTrigger is not SceneTriggerDockingPanel || (LockedToTrigger as SceneTriggerDockingPanel).MyDockingPanel.IsDockingEnabled)
@@ -1162,14 +1160,15 @@ namespace ZeroGravity.Objects
 						}
 					}
 				}
-				// Ship controls.
+				// Set ship rotation cursor and stabilise rotation.
 				else if (ShipControlMode == ShipControlMode.Piloting && !FpsController.IsFreeLook && !Client.Instance.CanvasManager.ConsoleIsUp)
 				{
 					Vector3 oldShipRotationCursor = ShipRotationCursor;
-					ShipRotationCursor.x -= Mathf.Clamp((!Client.Instance.InvertMouseWhileDriving) ? 1 : (-1) * Mouse.current.delta.x.ReadValue(), -1f, 1f);
-					ShipRotationCursor.y += Mathf.Clamp(Mouse.current.delta.y.ReadValue(), -1f, 1f);
 
-					Dbg.Log(string.Format("Mouse position x={0} y={1}", Mouse.current.position.x.ReadValue(), Mouse.current.position.y.ReadValue()));
+					// Must be the same as the other mouse delta.
+					Vector2 mouseDelta = Mouse.current.delta.ReadValue() * 0.05f;
+					ShipRotationCursor.x += Client.Instance.InvertMouseWhileDriving ? 1 : -1 * mouseDelta.y;
+					ShipRotationCursor.y += mouseDelta.x;
 
 					// Stabilise rotation cursor.
 					if (InputManager.GetButton(InputManager.ConfigAction.Sprint))
@@ -1185,6 +1184,7 @@ namespace ZeroGravity.Objects
 						ShipRotationCursor += velocity;
 					}
 
+					// Apply changes.
 					if (velocity.IsNotEpsilonZero() && !InputManager.GetButton(InputManager.ConfigAction.Sprint))
 					{
 						lastShipRotationCursorChangeTime = Time.realtimeSinceStartup;
@@ -1204,15 +1204,17 @@ namespace ZeroGravity.Objects
 						ShipRotationCursor = Vector3.Lerp(ShipRotationCursor, Quaternion.LookRotation(spaceObjectVessel.Forward, spaceObjectVessel.Up).Inverse() * spaceObjectVessel.MainVessel.AngularVelocity, (Time.realtimeSinceStartup - lastShipRotationCursorChangeTime) / 5f);
 						ShipRotationCursor.z = 0f;
 					}
+
+					// Regulate thrust.
 					Vector3 value = RcsThrustModifier * shipThrustStrength * shipThrust;
 					if (value.IsNotEpsilonZero())
 					{
 						if (ShipControlMode == ShipControlMode.Piloting && Client.Instance.InGamePanels.Pilot.SelectedTarget != null && Mathf.Abs(Vector3.Dot(shipThrust.normalized, spaceObjectVessel.Forward)) > 0.9f && Client.Instance.OffSpeedHelper)
 						{
-							Vector3 from = (Client.Instance.InGamePanels.Pilot.SelectedTarget.AB.Position - spaceObjectVessel.Position).ToVector3();
-							Vector3 vector2 = (Client.Instance.InGamePanels.Pilot.SelectedTarget.AB.Velocity - spaceObjectVessel.Velocity).ToVector3();
-							Vector3 vector3 = Vector3.ProjectOnPlane(vector2, from.normalized);
-							float num = Vector3.Angle(from, spaceObjectVessel.Forward);
+							Vector3 positionChange = (Client.Instance.InGamePanels.Pilot.SelectedTarget.AB.Position - spaceObjectVessel.Position).ToVector3();
+							Vector3 velocityChange = (Client.Instance.InGamePanels.Pilot.SelectedTarget.AB.Velocity - spaceObjectVessel.Velocity).ToVector3();
+							Vector3 vector3 = Vector3.ProjectOnPlane(velocityChange, positionChange.normalized);
+							float num = Vector3.Angle(positionChange, spaceObjectVessel.Forward);
 							if (num <= 3f)
 							{
 								shipThrust += 0.1f * MathHelper.Clamp(1f - num / 3f, 0f, 1f) * vector3;
@@ -1226,6 +1228,8 @@ namespace ZeroGravity.Objects
 						}
 						spaceObjectVessel.ChangeStats(RcsThrustModifier * shipThrustStrength * shipThrust);
 					}
+
+					// Apply changes.
 					if (shipRotation.IsNotEpsilonZero())
 					{
 						Vector3? rotation = shipRotation * shipRotationStrength;
@@ -1415,6 +1419,7 @@ namespace ZeroGravity.Objects
 			}
 			shipThrust = Vector3.zero;
 			shipRotation = Vector3.zero;
+
 			if (Client.Instance.SinglePlayerMode)
 			{
 				if (Keyboard.current.f5Key.isPressed)
@@ -1426,10 +1431,12 @@ namespace ZeroGravity.Objects
 					Client.Instance.QuickLoad();
 				}
 			}
+
 			if (InputManager.GetButtonDown(InputManager.ConfigAction.ToggleJetpack))
 			{
 				FpsController.ToggleJetPack();
 			}
+
 			if (InputManager.GetButtonDown(InputManager.ConfigAction.FreeLook))
 			{
 				if (Inventory.ItemInHands == null)
@@ -1458,12 +1465,13 @@ namespace ZeroGravity.Objects
 			{
 				Invoke(nameof(HideHiglightedAttachPoints), 5f);
 			}
+
 			if (InputManager.GetButtonDown(InputManager.ConfigAction.Melee) && animHelper.CanMelee && (base.CurrentActiveItem == null || base.CurrentActiveItem.HasMelee))
 			{
 				animHelper.SetParameterTrigger(AnimatorHelper.Triggers.Melee);
 			}
 
-			// Open the in game meny when pressing escape.
+			// Open the in game menu when pressing escape.
 			if (Keyboard.current.escapeKey.wasPressedThisFrame && LockedToTrigger == null && !Client.Instance.CanvasManager.IsGameMenuOpen && !Client.Instance.CanvasManager.ScreenShootMod.activeInHierarchy)
 			{
 				if (Client.Instance.CanvasManager.IsPlayerOverviewOpen)
@@ -1475,12 +1483,12 @@ namespace ZeroGravity.Objects
 					Client.Instance.CanvasManager.OpenInGameMenu();
 				}
 			}
+
 			if (Mouse.current.middleButton.wasPressedThisFrame && !FpsController.IsZeroG)
 			{
 				Vector3 position = transform.position + Gravity.normalized + transform.forward * 0.7f;
 				Collider[] array = Physics.OverlapSphere(position, 0.7f);
-				Collider[] array2 = array;
-				foreach (Collider collider in array2)
+				foreach (Collider collider in array)
 				{
 					GenericItem componentInParent = collider.GetComponentInParent<GenericItem>();
 					if (componentInParent != null && componentInParent.AttachPoint == null && componentInParent.SubType == GenericItemSubType.BasketBall)
@@ -1496,6 +1504,8 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
+
+			// Open player overview/inventory.
 			if ((Keyboard.current.tabKey.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame) && (LockedToTrigger != null || CancelInteractExecuter != null))
 			{
 				CancelInteract();
@@ -1520,10 +1530,14 @@ namespace ZeroGravity.Objects
 					inventoryQuickTime = -1f;
 				}
 			}
+
+			// Prevent us from interacting with the environment when we're in a menu.
 			if (Client.IsGameBuild && (Client.Instance.CanvasManager.IsGameMenuOpen || Client.Instance.CanvasManager.IsPlayerOverviewOpen))
 			{
 				return;
 			}
+
+			// Helmet visor and lights.
 			if (CurrentHelmet != null)
 			{
 				if (InputManager.GetButtonDown(InputManager.ConfigAction.ToggleVisor))
@@ -1535,6 +1549,8 @@ namespace ZeroGravity.Objects
 					CurrentHelmet.ToggleLight(!CurrentHelmet.LightOn);
 				}
 			}
+
+			// Drop action.
 			if (InputManager.GetButtonDown(InputManager.ConfigAction.Drop) && Inventory.ItemInHands != null && animHelper.CanDrop)
 			{
 				dropThrowStartTime = Time.time;
@@ -1555,6 +1571,8 @@ namespace ZeroGravity.Objects
 				}
 				dropThrowStartTime = -1f;
 			}
+
+			// Ladder controls.
 			if (InLadderTrigger && !FpsController.IsZeroG)
 			{
 				if (InputManager.GetButtonDown(InputManager.ConfigAction.Interact) && FpsController.Velocity.magnitude < LadderTrigger.MaxAttachVelocity)
@@ -1567,6 +1585,8 @@ namespace ZeroGravity.Objects
 					LadderTrigger.LadderDetach(Instance);
 				}
 			}
+
+			// Custom interactions, and picking up items.
 			if (InputManager.GetButtonDown(InputManager.ConfigAction.Interact) && LookingAtItem != null && animHelper.CanPickUp)
 			{
 				pickUpWhenFullCounter = 0f;
@@ -1619,11 +1639,15 @@ namespace ZeroGravity.Objects
 			{
 				LookingAtItem.RequestPickUp();
 			}
+
+			// Cancel picking up an item.
 			if (InputManager.GetButtonUp(InputManager.ConfigAction.Interact) && pickingUpItem)
 			{
 				pickingUpItem = false;
 				return;
 			}
+
+			// Interact with trigger.
 			if (InputManager.GetButtonUp(InputManager.ConfigAction.Interact) && LookingAtTrigger != null && !pickingUpItem && LockedToTrigger == null && !LookingAtTrigger.OtherPlayerLockedToTrigger() && LookingAtTrigger.IsInteractable && (FpsController.IsZeroG || FpsController.IsGrounded) && (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.DontCheck || (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.HandsMustBeEmpty && (Inventory == null || Inventory.ItemInHands == null)) || (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.StoreItemInHands && (Inventory == null || Inventory.StoreItemInHands())) || (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.MustHaveItemInHands && LookingAtTrigger.PlayerHandsItemType != null && Inventory != null && Inventory.ItemInHands != null && LookingAtTrigger.PlayerHandsItemType.Contains(Inventory.ItemInHands.Type))))
 			{
 				if (LookingAtTrigger.ExclusivePlayerLocking)
@@ -1639,6 +1663,7 @@ namespace ZeroGravity.Objects
 					LookingAtTrigger.Interact(this);
 				}
 			}
+
 			if (InputManager.GetButtonDown(InputManager.ConfigAction.Equip) && Client.IsGameBuild)
 			{
 				reloadCalled = false;
@@ -1647,55 +1672,52 @@ namespace ZeroGravity.Objects
 			if (InputManager.GetButton(InputManager.ConfigAction.Equip) && Client.IsGameBuild && !reloadCalled)
 			{
 				reloadButtonPressedTime += Time.deltaTime;
-				Item itemInHands2 = Inventory.ItemInHands;
-				if (reloadButtonPressedTime > specialMenuTreshold && itemInHands2 != null && animHelper.CanSpecial)
+				if (reloadButtonPressedTime > specialMenuTreshold && Inventory.ItemInHands != null && animHelper.CanSpecial)
 				{
 					reloadCalled = true;
 					reloadButtonPressedTime = 0f;
-					itemInHands2.Special();
+					Inventory.ItemInHands.Special();
 				}
 			}
 			if ((InputManager.GetButtonUp(InputManager.ConfigAction.Equip) || (LookingAtItem != null && InputManager.GetButtonDown(InputManager.ConfigAction.Interact))) && Client.IsGameBuild && !animHelper.GetParameterBool(AnimatorHelper.Parameter.Reloading))
 			{
-				Item itemInHands3 = Inventory.ItemInHands;
-				if (itemInHands3 != null && (InputManager.GetButtonUp(InputManager.ConfigAction.Equip) || (InputManager.GetButtonDown(InputManager.ConfigAction.Interact) && itemInHands3.CanReloadOnInteract(LookingAtItem))))
+				if (Inventory.ItemInHands != null && (InputManager.GetButtonUp(InputManager.ConfigAction.Equip) || (InputManager.GetButtonDown(InputManager.ConfigAction.Interact) && Inventory.ItemInHands.CanReloadOnInteract(LookingAtItem))))
 				{
 					if (LookingAtItem != null)
 					{
-						itemInHands3.Reload(LookingAtItem);
+						Inventory.ItemInHands.Reload(LookingAtItem);
 					}
-					else if (itemInHands3 is Weapon)
+					else if (Inventory.ItemInHands is Weapon)
 					{
-						(itemInHands3 as Weapon).ReloadFromInventory();
+						(Inventory.ItemInHands as Weapon).ReloadFromInventory();
 					}
 					LookingAtItem = null;
 				}
 			}
 			if (Mouse.current.leftButton.isPressed && Client.IsGameBuild && animHelper.CanSwitchState)
 			{
-				Item itemInHands4 = Inventory.ItemInHands;
 				if (LockedToTrigger == null)
 				{
-					if (itemInHands4 != null)
+					if (Inventory.ItemInHands != null)
 					{
-						if (itemInHands4.HasActiveStance && currentStance == PlayerStance.Passive && animHelper.doneSwitchingState)
+						if (Inventory.ItemInHands.HasActiveStance && currentStance == PlayerStance.Passive && animHelper.doneSwitchingState)
 						{
 							currentStance = PlayerStance.Active;
 							AnimatorHelper animatorHelper = animHelper;
 							PlayerStance? playerStance = currentStance;
 							animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, playerStance);
-							FpsController.SetStateSpeedMultiplier(itemInHands4.ActiveSpeedMultiplier);
+							FpsController.SetStateSpeedMultiplier(Inventory.ItemInHands.ActiveSpeedMultiplier);
 						}
-						if (ItemTypeRange.IsWeapon(itemInHands4.Type))
+						if (ItemTypeRange.IsWeapon(Inventory.ItemInHands.Type))
 						{
 							if (animHelper.CanShoot && currentStance != PlayerStance.Passive)
 							{
-								itemInHands4.PrimaryFunction();
+								Inventory.ItemInHands.PrimaryFunction();
 							}
 						}
 						else
 						{
-							itemInHands4.PrimaryFunction();
+							Inventory.ItemInHands.PrimaryFunction();
 						}
 					}
 				}
@@ -1706,27 +1728,24 @@ namespace ZeroGravity.Objects
 			}
 			if (Mouse.current.leftButton.wasReleasedThisFrame && Client.IsGameBuild)
 			{
-				Item itemInHands5 = Inventory.ItemInHands;
-				if (itemInHands5 != null)
+				if (Inventory.ItemInHands != null)
 				{
-					itemInHands5.PrimaryReleased();
+					Inventory.ItemInHands.PrimaryReleased();
 				}
 			}
 			if (InputManager.GetButtonUp(InputManager.ConfigAction.WeaponMod) && Client.IsGameBuild)
 			{
-				Item itemInHands6 = Inventory.ItemInHands;
-				if (itemInHands6 != null && itemInHands6 is Weapon)
+				if (Inventory.ItemInHands != null && Inventory.ItemInHands is Weapon)
 				{
-					(itemInHands6 as Weapon).IncrementMod();
+					(Inventory.ItemInHands as Weapon).IncrementMod();
 				}
 			}
 			if (!animHelper.GetParameterBool(AnimatorHelper.Parameter.Reloading) && animHelper.CanSwitchState && InputManager.GetButtonDown(InputManager.ConfigAction.ChangeStance))
 			{
-				Item itemInHands7 = Inventory.ItemInHands;
-				if (itemInHands7 != null && itemInHands7.HasActiveStance)
+				if (Inventory.ItemInHands != null && Inventory.ItemInHands.HasActiveStance)
 				{
 					currentStance = ((currentStance != PlayerStance.Passive) ? PlayerStance.Passive : PlayerStance.Active);
-					FpsController.SetStateSpeedMultiplier((currentStance != PlayerStance.Passive) ? itemInHands7.ActiveSpeedMultiplier : itemInHands7.PassiveSpeedMultiplier);
+					FpsController.SetStateSpeedMultiplier((currentStance != PlayerStance.Passive) ? Inventory.ItemInHands.ActiveSpeedMultiplier : Inventory.ItemInHands.PassiveSpeedMultiplier);
 					AnimatorHelper animatorHelper2 = animHelper;
 					PlayerStance? playerStance = currentStance;
 					animatorHelper2.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, playerStance);
@@ -1734,9 +1753,9 @@ namespace ZeroGravity.Objects
 					{
 						ChangeCamerasFov(Client.DefaultCameraFov);
 					}
-					if (itemInHands7 is Weapon)
+					if (Inventory.ItemInHands is Weapon)
 					{
-						(itemInHands7 as Weapon).IsSpecialStance = false;
+						(Inventory.ItemInHands as Weapon).IsSpecialStance = false;
 					}
 				}
 			}
@@ -1783,10 +1802,9 @@ namespace ZeroGravity.Objects
 			}
 			else if (Mouse.current.rightButton.wasReleasedThisFrame && Client.IsGameBuild && !cameraFovLerpValue.IsNotEpsilonZero())
 			{
-				Item itemInHands8 = Inventory.ItemInHands;
-				if (itemInHands8 != null)
+				if (Inventory.ItemInHands != null)
 				{
-					itemInHands8.SecondaryFunction();
+					Inventory.ItemInHands.SecondaryFunction();
 				}
 			}
 			else if (Mouse.current.rightButton.wasReleasedThisFrame && cameraFovLerpValue.IsNotEpsilonZero() && currentStance != PlayerStance.Special)
@@ -1821,96 +1839,17 @@ namespace ZeroGravity.Objects
 					}));
 				}
 			}
-			if (LockedToTrigger == null || (LockedToTrigger.TriggerType != SceneTriggerType.ShipControl && LockedToTrigger.TriggerType != SceneTriggerType.Turret && LockedToTrigger.TriggerType != SceneTriggerType.DockingPanel) || !(Parent is Ship))
+
+			// If parent object isn't a ship, or we aren't locked to any trigger.
+			if (!(Parent is Ship) || LockedToTrigger == null || (LockedToTrigger.TriggerType != SceneTriggerType.ShipControl && LockedToTrigger.TriggerType != SceneTriggerType.Turret && LockedToTrigger.TriggerType != SceneTriggerType.DockingPanel))
 			{
 				return;
 			}
+
+			// Ship controls.
 			Ship ship = Parent as Ship;
-			float axis = InputManager.GetAxis(InputManager.ConfigAction.Lean);
-			float axisRaw = InputManager.GetAxisRaw(InputManager.ConfigAction.Forward);
-			float axisRaw2 = InputManager.GetAxisRaw(InputManager.ConfigAction.Right);
-			float num = 0f;
-			float num2 = 0f;
-			if (!FpsController.IsFreeLook)
-			{
-				if (FpsController.MouseUpAxis.IsNotEpsilonZero())
-				{
-					num = Mathf.Clamp((float)(Client.Instance.InvertMouseWhileDriving ? 1 : (-1)) * Mouse.current.delta.y.ReadValue(), -1f, 1f);
-				}
-				if (FpsController.MouseRightAxis.IsNotEpsilonZero())
-				{
-					num2 = Mouse.current.delta.x.ReadValue();
-				}
-			}
-			if (LockedToTrigger.TriggerType == SceneTriggerType.Turret)
-			{
-				(LockedToTrigger as SceneTriggerTurret).GetComponent<Turret>().SetNewRotation(num, num2, Mouse.current.rightButton.isPressed);
-				return;
-			}
-			bool flag = false;
-			if (ship.Engine != null && ship.Engine.Status == SystemStatus.Online && (LockedToTrigger == null || LockedToTrigger.TriggerType != SceneTriggerType.DockingPanel))
-			{
-				bool flag2 = false;
-				bool button = InputManager.GetButton(InputManager.ConfigAction.ThrustUp);
-				bool button2 = InputManager.GetButton(InputManager.ConfigAction.ThrustDown);
-				if (button || button2 || axisRaw.IsNotEpsilonZero())
-				{
-					float num3;
-					if (button)
-					{
-						num3 = 1f;
-						cruiseControl = true;
-					}
-					else if (button2)
-					{
-						num3 = -1f;
-						cruiseControl = true;
-					}
-					else
-					{
-						num3 = Mathf.Sign(axisRaw);
-						cruiseControl = false;
-					}
-					if ((float) Mathf.Sign(ship.EngineThrustPercentage) != num3 && !cruiseControl)
-					{
-						ship.EngineThrustPercentage = 0f;
-					}
-					flag2 = !ship.EngineOnLine;
-					changeEngineThrustTime += Time.deltaTime * 10f;
-					if (changeEngineThrustTime > 0.1f)
-					{
-						float num4 = Mathf.Clamp(ship.EngineThrustPercentage + 0.01f * num3, -1f, 1f);
-						changeEngineThrustTime -= 0.1f;
-						if ((float) Mathf.Sign(num4) != prevEngineThrustDirection && prevEngineThrustDirection != 0f && cruiseControl)
-						{
-							num4 = 0f;
-							changeEngineThrustTime = -10f;
-						}
-						flag2 |= ship.EngineThrustPercentage != num4;
-						ship.EngineThrustPercentage = num4;
-						if (num4 != float.Epsilon)
-						{
-							prevEngineThrustDirection = Mathf.Sign(num4);
-						}
-					}
-				}
-				else if (!cruiseControl)
-				{
-					changeEngineThrustTime = 0f;
-					flag2 = ship.EngineOnLine || ship.EngineThrustPercentage != axisRaw;
-					ship.EngineThrustPercentage = 0f;
-				}
-				if (flag2)
-				{
-					float? engineThrustPercentage = ship.EngineThrustPercentage;
-					ship.ChangeStats(null, null, null, engineThrustPercentage);
-				}
-			}
-			else if (axisRaw.IsNotEpsilonZero())
-			{
-				shipThrust = Mathf.Sign(axisRaw) * ThrustForward;
-				flag = true;
-			}
+
+			// Turn engine on/off.
 			if (ship.Engine != null && InputManager.GetButtonDown(InputManager.ConfigAction.EngineToggle))
 			{
 				if (ship.Engine.IsSwitchedOn())
@@ -1922,22 +1861,121 @@ namespace ZeroGravity.Objects
 					ship.Engine.SwitchOn();
 				}
 			}
-			if (axisRaw2.IsNotEpsilonZero())
+
+			// Ship movement.
+			float forwardAxis = InputManager.GetAxisRaw(InputManager.ConfigAction.Forward);
+			float rightAxis = InputManager.GetAxisRaw(InputManager.ConfigAction.Right);
+			float roll = InputManager.GetAxis(InputManager.ConfigAction.Lean);
+			float pitch = 0f;
+			float yaw = 0f;
+			if (!FpsController.IsFreeLook)
 			{
-				shipThrust += Mathf.Sign(axisRaw2) * ThrustRight;
-				flag = true;
+				// Must be the same as the other mouse delta.
+				Vector2 mouseDelta = Mouse.current.delta.ReadValue() * 0.05f;
+				if (FpsController.MouseUpAxis.IsNotEpsilonZero())
+				{
+					pitch = Client.Instance.InvertMouseWhileDriving ? 1 : -1 * mouseDelta.y;
+				}
+				if (FpsController.MouseRightAxis.IsNotEpsilonZero())
+				{
+					yaw = mouseDelta.x;
+				}
 			}
+			if (LockedToTrigger.TriggerType == SceneTriggerType.Turret)
+			{
+				(LockedToTrigger as SceneTriggerTurret).GetComponent<Turret>().SetNewRotation(pitch, yaw, Mouse.current.rightButton.isPressed);
+				return;
+			}
+
+			bool thrustChanged = false;
+			if (ship.Engine != null && ship.Engine.Status == SystemStatus.Online && (LockedToTrigger == null || LockedToTrigger.TriggerType != SceneTriggerType.DockingPanel))
+			{
+				bool isEngineActive = false;
+				bool thrustUpButton = InputManager.GetButton(InputManager.ConfigAction.ThrustUp);
+				bool thrustDownButton = InputManager.GetButton(InputManager.ConfigAction.ThrustDown);
+				if (thrustUpButton || thrustDownButton || forwardAxis.IsNotEpsilonZero())
+				{
+					float thrust;
+					if (thrustUpButton)
+					{
+						thrust = 1f;
+						cruiseControl = true;
+					}
+					else if (thrustDownButton)
+					{
+						thrust = -1f;
+						cruiseControl = true;
+					}
+					else
+					{
+						thrust = Mathf.Sign(forwardAxis);
+						cruiseControl = false;
+					}
+					if (Mathf.Sign(ship.EngineThrustPercentage) != thrust && !cruiseControl)
+					{
+						ship.EngineThrustPercentage = 0f;
+					}
+					isEngineActive = !ship.EngineOnLine;
+					changeEngineThrustTime += Time.deltaTime * 10f;
+					if (changeEngineThrustTime > 0.1f)
+					{
+						float num4 = Mathf.Clamp(ship.EngineThrustPercentage + 0.01f * thrust, -1f, 1f);
+						changeEngineThrustTime -= 0.1f;
+						if (Mathf.Sign(num4) != prevEngineThrustDirection && prevEngineThrustDirection != 0f && cruiseControl)
+						{
+							num4 = 0f;
+							changeEngineThrustTime = -10f;
+						}
+						isEngineActive |= ship.EngineThrustPercentage != num4;
+						ship.EngineThrustPercentage = num4;
+						if (num4 != float.Epsilon)
+						{
+							prevEngineThrustDirection = Mathf.Sign(num4);
+						}
+					}
+				}
+				else if (!cruiseControl)
+				{
+					changeEngineThrustTime = 0f;
+					isEngineActive = ship.EngineOnLine || ship.EngineThrustPercentage != forwardAxis;
+					ship.EngineThrustPercentage = 0f;
+				}
+				if (isEngineActive)
+				{
+					float? engineThrustPercentage = ship.EngineThrustPercentage;
+					ship.ChangeStats(null, null, null, engineThrustPercentage);
+				}
+			}
+
+			// Thrust forward/back.
+			else if (forwardAxis.IsNotEpsilonZero())
+			{
+				shipThrust = Mathf.Sign(forwardAxis) * ThrustForward;
+				thrustChanged = true;
+			}
+
+			// Thrust right/left.
+			if (rightAxis.IsNotEpsilonZero())
+			{
+				shipThrust += Mathf.Sign(rightAxis) * ThrustRight;
+				thrustChanged = true;
+			}
+
+			// Thrust up.
 			if (InputManager.GetButton(InputManager.ConfigAction.Jump) && !InputManager.GetButton(InputManager.ConfigAction.Crouch))
 			{
 				shipThrust += ThrustUp;
-				flag = true;
+				thrustChanged = true;
 			}
+
+			// Thrust down.
 			if (InputManager.GetButton(InputManager.ConfigAction.Crouch) && !InputManager.GetButton(InputManager.ConfigAction.Jump))
 			{
 				shipThrust += -ThrustUp;
-				flag = true;
+				thrustChanged = true;
 			}
-			if (flag && Parent is Ship)
+
+			if (thrustChanged && Parent is Ship)
 			{
 				if (ship.RCS.CanThrust())
 				{
@@ -1952,6 +1990,7 @@ namespace ZeroGravity.Objects
 			{
 				shipThrustStrength = 0f;
 			}
+
 			if (InputManager.GetButton(InputManager.ConfigAction.Sprint))
 			{
 				Vector3? autoStabilize = Vector3.one;
@@ -1966,6 +2005,8 @@ namespace ZeroGravity.Objects
 			{
 				Client.Instance.InGamePanels.Pilot.StartTargetStabilization();
 			}
+
+			// Set if we are going to change our thrust.
 			if (InputManager.GetButtonDown(InputManager.ConfigAction.ThrustDown) || InputManager.GetButtonDown(InputManager.ConfigAction.ThrustUp))
 			{
 				changeEngineThrust = true;
@@ -1975,6 +2016,8 @@ namespace ZeroGravity.Objects
 				changeEngineThrust = false;
 				changeEngineThrustTime = 0f;
 			}
+
+			// If any one button changing thrust is pressed.
 			if (changeEngineThrust)
 			{
 				if (InputManager.GetButton(InputManager.ConfigAction.ThrustDown))
@@ -2012,27 +2055,38 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
+
+			// Don't apply changes in free look mode.
 			if (FpsController.IsFreeLook)
 			{
 				return;
 			}
-			bool flag5 = false;
-			if (axis.IsNotEpsilonZero())
+
+			bool appliedRotation = false;
+
+			// Lean ship. (roll)
+			if (roll.IsNotEpsilonZero())
 			{
-				shipRotation.z = 0f - Mathf.Clamp(axis, -1f, 1f);
-				flag5 = true;
+				shipRotation.z = 0f - Mathf.Clamp(roll, -1f, 1f);
+				appliedRotation = true;
 			}
-			if (num.IsNotEpsilonZero())
+
+			// Roatate ship forward/back. (pitch)
+			if (pitch.IsNotEpsilonZero())
 			{
-				shipRotation.x = Mathf.Clamp(num, -1f, 1f);
-				flag5 = true;
+				shipRotation.x = Mathf.Clamp(pitch, -1f, 1f);
+				appliedRotation = true;
 			}
-			if (num2.IsNotEpsilonZero())
+
+			// Rotate ship left/right. (yaw)
+			if (yaw.IsNotEpsilonZero())
 			{
-				shipRotation.y = Mathf.Clamp(num2, -1f, 1f);
-				flag5 = true;
+				shipRotation.y = Mathf.Clamp(yaw, -1f, 1f);
+				appliedRotation = true;
 			}
-			if (flag5 && Parent is Ship)
+
+			// Check if we can rotate and set rotation strength.
+			if (appliedRotation && Parent is Ship)
 			{
 				if (ship.RCS.CanRotate())
 				{
@@ -2180,7 +2234,7 @@ namespace ZeroGravity.Objects
 		public SaveFileAuxData GetSaveFileAuxData()
 		{
 			Texture2D tex = ScreenCapture.CaptureScreenshotAsTexture();
-			SaveFileAuxData saveFileAuxData = new SaveFileAuxData
+			return new SaveFileAuxData
 			{
 				CelestialBody = Parent is not ArtificialBody ? null : (Parent as ArtificialBody).Orbit.Parent.CelestialBody.Name,
 				ParentSceneID = Parent is not SpaceObjectVessel ? GameScenes.SceneID.None : (Parent as SpaceObjectVessel).SceneID,
@@ -2189,7 +2243,6 @@ namespace ZeroGravity.Objects
 				ClientVersion = new Regex("[^0-9.]").Replace(Application.version, string.Empty),
 				ClientHash = Client.CombinedHash
 			};
-			return saveFileAuxData;
 		}
 
 		public bool ActivatePlayer(PlayerSpawnResponse s)

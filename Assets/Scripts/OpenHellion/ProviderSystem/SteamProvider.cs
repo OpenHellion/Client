@@ -182,7 +182,7 @@ namespace OpenHellion.ProviderSystem
 				// Add friend to list of friends.
 				friends.Add(new IProvider.Friend
 				{
-					NativeId = id.ToString(),
+					NativeId = "s" + id.ToString(),
 					Name = SteamFriends.GetFriendPersonaName(id),
 					Status = friendPersonaState == EPersonaState.k_EPersonaStateOnline || friendPersonaState == EPersonaState.k_EPersonaStateLookingToPlay ? IProvider.FriendStatus.ONLINE : IProvider.FriendStatus.OFFLINE
 				});

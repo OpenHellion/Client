@@ -206,15 +206,6 @@ namespace OpenHellion.ProviderSystem
 			}
 		}
 
-		void OnApplicationQuit()
-		{
-			// Destroy our providers.
-			foreach (IProvider provider in m_allProviders)
-			{
-				provider.Destroy();
-			}
-		}
-
 		/// <summary>
 		/// 	Used to update rich presence.
 		/// </summary>

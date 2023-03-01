@@ -502,6 +502,9 @@ namespace ZeroGravity.UI
 		{
 			if (toggle)
 			{
+				// Debug statement.
+				Dbg.Log("Enabled security screen.");
+
 				Client.Instance.CanvasManager.QuickTipHolder.Activate(value: false);
 				UpdateUI();
 				SelfDestructBox.Activate(value: false);
@@ -514,11 +517,11 @@ namespace ZeroGravity.UI
 				RefreshSelfDestructTimer();
 				Client.Instance.CanvasManager.IsInputFieldIsActive = false;
 				UpdateEmblems();
-				base.gameObject.Activate(value: true);
+				gameObject.Activate(value: true);
 			}
 			else
 			{
-				base.gameObject.Activate(value: false);
+				gameObject.Activate(value: false);
 			}
 		}
 

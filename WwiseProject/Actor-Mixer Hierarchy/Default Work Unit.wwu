@@ -1112,11 +1112,6 @@
 									<PropertyList>
 										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
 										<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-3</Value>
-											</ValueList>
-										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -1265,6 +1260,13 @@
 											<ObjectLists/>
 										</RandomSequenceContainer>
 										<Sound Name="AltCorp_Loop_CryoChamber_1_A_01" ID="{55DBC4BE-2B8A-498B-B83F-4E7E8EEC7B18}" ShortID="1056238331">
+											<PropertyList>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>3</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
@@ -1293,11 +1295,6 @@
 								<RandomSequenceContainer Name="Outpost" ID="{34299A59-FA79-4DEE-97A7-912A0FACD160}" ShortID="601965045">
 									<PropertyList>
 										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-5</Value>
-											</ValueList>
-										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -1340,6 +1337,11 @@
 								<RandomSequenceContainer Name="Space" ID="{4A08C6E9-6935-4042-ADF2-FBA741780F65}" ShortID="514447690">
 									<PropertyList>
 										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>12</Value>
+											</ValueList>
+										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -1382,11 +1384,6 @@
 								<RandomSequenceContainer Name="MainMenu" ID="{853EDECA-5574-4A55-894F-AE5FC8CBE9AE}" ShortID="861796229">
 									<PropertyList>
 										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-5</Value>
-											</ValueList>
-										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -1482,6 +1479,7 @@
 				</ActorMixer>
 				<ActorMixer Name="ThirdPersonCharacter" ID="{08860AAB-2CB4-4EBF-A433-C74BB42DBE1D}" ShortID="579947854">
 					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="1"/>
 						<Property Name="Volume" Type="Real64">
 							<RTPCList>
 								<RTPC Name="" ID="{0C2CBDE2-5AAC-4103-ABDE-D99132F23E13}" ShortID="846116045">
@@ -1513,6 +1511,56 @@
 						</Property>
 					</PropertyList>
 					<ReferenceList>
+						<Reference Name="Attenuation">
+							<Custom>
+								<Attenuation Name="Attenuation (Custom)" ID="{ACB6BC73-0378-47E8-935E-402017C40C15}" ShortID="121774810">
+									<PropertyList>
+										<Property Name="RadiusMax" Type="Real64" Value="40"/>
+									</PropertyList>
+									<CurveUsageInfoList>
+										<VolumeDryUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+												<Curve Name="VolumeDry" ID="{2C52D9A1-CAF7-4B55-8EF3-F603613B80F9}">
+													<PropertyList>
+														<Property Name="Flags" Type="int32" Value="3"/>
+													</PropertyList>
+													<PointList>
+														<Point>
+															<XPos>0</XPos>
+															<YPos>0</YPos>
+															<Flags>5</Flags>
+														</Point>
+														<Point>
+															<XPos>40</XPos>
+															<YPos>-200</YPos>
+															<Flags>37</Flags>
+														</Point>
+													</PointList>
+												</Curve>
+											</CurveUsageInfo>
+										</VolumeDryUsage>
+										<VolumeWetGameUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+										</VolumeWetGameUsage>
+										<VolumeWetUserUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+										</VolumeWetUserUsage>
+										<LowPassFilterUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</LowPassFilterUsage>
+										<HighPassFilterUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</HighPassFilterUsage>
+										<SpreadUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</SpreadUsage>
+										<FocusUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</FocusUsage>
+									</CurveUsageInfoList>
+								</Attenuation>
+							</Custom>
+						</Reference>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
 						</Reference>
@@ -1948,327 +1996,6 @@
 							</ChildrenList>
 							<ObjectLists/>
 						</RandomSequenceContainer>
-						<Folder Name="Impact" ID="{2075A810-D435-4F7A-B403-72EFF17DC71A}" ShortID="946619043">
-							<ChildrenList>
-								<SwitchContainer Name="BodyImpact" ID="{A7432F9A-5B41-42B7-846C-A73196C17546}" ShortID="929076910">
-									<ReferenceList>
-										<Reference Name="Conversion">
-											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-										</Reference>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-										</Reference>
-										<Reference Name="SwitchGroupOrStateGroup">
-											<ObjectRef Name="ImpactVelocity" ID="{AD4A13BE-0471-4EB5-B257-8EA4C760E939}" WorkUnitID="{C436E4A2-B696-4919-8FBF-CE0FDEB7B0FA}"/>
-										</Reference>
-									</ReferenceList>
-									<ChildrenList>
-										<RandomSequenceContainer Name="Soft" ID="{A978987A-2193-426E-8580-B1EC899B9874}" ShortID="167634683">
-											<ReferenceList>
-												<Reference Name="Conversion">
-													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-												</Reference>
-												<Reference Name="OutputBus">
-													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-												</Reference>
-											</ReferenceList>
-											<ChildrenList>
-												<Sound Name="Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_1" ID="{84E07505-DE6C-4D6D-AFBF-73C003501D65}" ShortID="303330472">
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_1" ID="{D57959A7-1EB2-467F-B172-52E01D937E06}">
-															<Language>SFX</Language>
-															<AudioFile>Character\Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_1.wav</AudioFile>
-															<MediaIDList>
-																<MediaID ID="99142309"/>
-															</MediaIDList>
-														</AudioFileSource>
-													</ChildrenList>
-													<ObjectLists/>
-													<ActiveSourceList>
-														<ActiveSource Name="Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_1" ID="{D57959A7-1EB2-467F-B172-52E01D937E06}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-												<Sound Name="Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_2" ID="{CC45E3FF-C4BF-4B43-B1D8-3E56B7EFDC9C}" ShortID="253875119">
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_2" ID="{7B0BF23F-004E-42B8-AD0D-9E528467F7C1}">
-															<Language>SFX</Language>
-															<AudioFile>Character\Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_2.wav</AudioFile>
-															<MediaIDList>
-																<MediaID ID="693621827"/>
-															</MediaIDList>
-														</AudioFileSource>
-													</ChildrenList>
-													<ObjectLists/>
-													<ActiveSourceList>
-														<ActiveSource Name="Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_2" ID="{7B0BF23F-004E-42B8-AD0D-9E528467F7C1}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-											</ChildrenList>
-											<ObjectLists/>
-										</RandomSequenceContainer>
-										<RandomSequenceContainer Name="Hard" ID="{7AA968AE-40CB-4C17-9CA8-70392358DBA9}" ShortID="749468212">
-											<ReferenceList>
-												<Reference Name="Conversion">
-													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-												</Reference>
-												<Reference Name="OutputBus">
-													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-												</Reference>
-											</ReferenceList>
-											<ChildrenList>
-												<Sound Name="Altcorp_Item_Jetpack_Impact_MetalWall_Hard_1" ID="{BB891804-50BC-47BB-9E21-10EC329F744A}" ShortID="850021259">
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="Altcorp_Item_Jetpack_Impact_MetalWall_Hard_1" ID="{35FDA930-28C7-4F35-9DCB-F79EBF051FCF}">
-															<Language>SFX</Language>
-															<AudioFile>Character\Altcorp_Item_Jetpack_Impact_MetalWall_Hard_1.wav</AudioFile>
-															<MediaIDList>
-																<MediaID ID="119301750"/>
-															</MediaIDList>
-														</AudioFileSource>
-													</ChildrenList>
-													<ObjectLists/>
-													<ActiveSourceList>
-														<ActiveSource Name="Altcorp_Item_Jetpack_Impact_MetalWall_Hard_1" ID="{35FDA930-28C7-4F35-9DCB-F79EBF051FCF}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-												<Sound Name="Altcorp_Item_Jetpack_Impact_MetalWall_Hard_2" ID="{652944CC-883C-4959-A291-BDDC46CBBA45}" ShortID="470602226">
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="Altcorp_Item_Jetpack_Impact_MetalWall_Hard_2" ID="{096CE7BD-8E37-48FF-BC6F-5BF02F1BADE4}">
-															<Language>SFX</Language>
-															<AudioFile>Character\Altcorp_Item_Jetpack_Impact_MetalWall_Hard_2.wav</AudioFile>
-															<MediaIDList>
-																<MediaID ID="779679749"/>
-															</MediaIDList>
-														</AudioFileSource>
-													</ChildrenList>
-													<ObjectLists/>
-													<ActiveSourceList>
-														<ActiveSource Name="Altcorp_Item_Jetpack_Impact_MetalWall_Hard_2" ID="{096CE7BD-8E37-48FF-BC6F-5BF02F1BADE4}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-											</ChildrenList>
-											<ObjectLists/>
-										</RandomSequenceContainer>
-										<RandomSequenceContainer Name="Stop" ID="{D132D64E-D7A7-42FD-9DF0-298E51AC22C7}" ShortID="701157745">
-											<ReferenceList>
-												<Reference Name="Conversion">
-													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-												</Reference>
-												<Reference Name="OutputBus">
-													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-												</Reference>
-											</ReferenceList>
-											<ChildrenList>
-												<Sound Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_1" ID="{67DB4D43-6253-472F-BECC-6346C5EA4D59}" ShortID="740142815">
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_1" ID="{5A4106ED-E444-4BFF-98A9-ADB8317E6E49}">
-															<Language>SFX</Language>
-															<AudioFile>Character\Altcorp_Item_Helmet_Impact_MetalFloor_Soft_1.wav</AudioFile>
-															<MediaIDList>
-																<MediaID ID="1005333015"/>
-															</MediaIDList>
-														</AudioFileSource>
-													</ChildrenList>
-													<ObjectLists/>
-													<ActiveSourceList>
-														<ActiveSource Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_1" ID="{5A4106ED-E444-4BFF-98A9-ADB8317E6E49}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-												<Sound Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_2" ID="{079D69BA-FA66-44BC-AA05-9439F8179044}" ShortID="64214404">
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_2" ID="{1DFCBAC1-37F5-4919-95E3-E7B31ADE15BE}">
-															<Language>SFX</Language>
-															<AudioFile>Character\Altcorp_Item_Helmet_Impact_MetalFloor_Soft_2.wav</AudioFile>
-															<MediaIDList>
-																<MediaID ID="872287773"/>
-															</MediaIDList>
-														</AudioFileSource>
-													</ChildrenList>
-													<ObjectLists/>
-													<ActiveSourceList>
-														<ActiveSource Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_2" ID="{1DFCBAC1-37F5-4919-95E3-E7B31ADE15BE}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-												<Sound Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_3" ID="{08ACDE9A-033F-4B89-8ABA-34C089639FA9}" ShortID="276256175">
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_3" ID="{552BF0E7-D9B0-4EF8-A6B4-0770244D6742}">
-															<Language>SFX</Language>
-															<AudioFile>Character\Altcorp_Item_Helmet_Impact_MetalFloor_Soft_3.wav</AudioFile>
-															<MediaIDList>
-																<MediaID ID="606980560"/>
-															</MediaIDList>
-														</AudioFileSource>
-													</ChildrenList>
-													<ObjectLists/>
-													<ActiveSourceList>
-														<ActiveSource Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_3" ID="{552BF0E7-D9B0-4EF8-A6B4-0770244D6742}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-											</ChildrenList>
-											<ObjectLists/>
-										</RandomSequenceContainer>
-										<RandomSequenceContainer Name="Medium" ID="{32DB279D-2EE2-4D42-8945-369ED298AC47}" ShortID="404319971">
-											<ReferenceList>
-												<Reference Name="Conversion">
-													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-												</Reference>
-												<Reference Name="OutputBus">
-													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-												</Reference>
-											</ReferenceList>
-											<ChildrenList>
-												<Sound Name="Altcorp_Item_Helmet_Impact_MetalWall_Medium_1" ID="{57D872D8-A56B-4B74-BB56-1D1313338625}" ShortID="422364290">
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="Altcorp_Item_Helmet_Impact_MetalWall_Medium_1" ID="{A922F120-187C-48B5-9F62-5A1B8E04A465}">
-															<Language>SFX</Language>
-															<AudioFile>Character\Altcorp_Item_Helmet_Impact_MetalWall_Medium_1.wav</AudioFile>
-															<MediaIDList>
-																<MediaID ID="507315377"/>
-															</MediaIDList>
-														</AudioFileSource>
-													</ChildrenList>
-													<ObjectLists/>
-													<ActiveSourceList>
-														<ActiveSource Name="Altcorp_Item_Helmet_Impact_MetalWall_Medium_1" ID="{A922F120-187C-48B5-9F62-5A1B8E04A465}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-												<Sound Name="Altcorp_Item_Helmet_Impact_MetalWall_Medium_2" ID="{721DF708-DF61-4CB5-9D0F-D103BC91CE44}" ShortID="59000033">
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="Altcorp_Item_Helmet_Impact_MetalWall_Medium_2" ID="{1D0A3498-D278-41A2-83AB-D33C48BE173F}">
-															<Language>SFX</Language>
-															<AudioFile>Character\Altcorp_Item_Helmet_Impact_MetalWall_Medium_2.wav</AudioFile>
-															<MediaIDList>
-																<MediaID ID="37182091"/>
-															</MediaIDList>
-														</AudioFileSource>
-													</ChildrenList>
-													<ObjectLists/>
-													<ActiveSourceList>
-														<ActiveSource Name="Altcorp_Item_Helmet_Impact_MetalWall_Medium_2" ID="{1D0A3498-D278-41A2-83AB-D33C48BE173F}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-											</ChildrenList>
-											<ObjectLists/>
-										</RandomSequenceContainer>
-									</ChildrenList>
-									<ObjectLists/>
-									<GroupingInfo>
-										<GroupingBehaviorList>
-											<GroupingBehavior>
-												<ItemRef Name="Stop" ID="{D132D64E-D7A7-42FD-9DF0-298E51AC22C7}"/>
-											</GroupingBehavior>
-											<GroupingBehavior>
-												<ItemRef Name="Soft" ID="{A978987A-2193-426E-8580-B1EC899B9874}"/>
-											</GroupingBehavior>
-											<GroupingBehavior>
-												<ItemRef Name="Medium" ID="{32DB279D-2EE2-4D42-8945-369ED298AC47}"/>
-											</GroupingBehavior>
-											<GroupingBehavior>
-												<ItemRef Name="Hard" ID="{7AA968AE-40CB-4C17-9CA8-70392358DBA9}"/>
-											</GroupingBehavior>
-										</GroupingBehaviorList>
-										<GroupingList>
-											<Grouping>
-												<SwitchRef Name="Medium" ID="{BAF7AC16-0373-4728-90C0-22ADDB220268}"/>
-												<ItemList>
-													<ItemRef Name="Medium" ID="{32DB279D-2EE2-4D42-8945-369ED298AC47}"/>
-												</ItemList>
-											</Grouping>
-											<Grouping>
-												<SwitchRef Name="Stop" ID="{E7F3E144-C759-4713-802E-8C9D1CB7D79D}"/>
-												<ItemList>
-													<ItemRef Name="Stop" ID="{D132D64E-D7A7-42FD-9DF0-298E51AC22C7}"/>
-												</ItemList>
-											</Grouping>
-											<Grouping>
-												<SwitchRef Name="Hard" ID="{781B8598-FDC0-4664-8F93-19F0F47DC0B1}"/>
-												<ItemList>
-													<ItemRef Name="Hard" ID="{7AA968AE-40CB-4C17-9CA8-70392358DBA9}"/>
-												</ItemList>
-											</Grouping>
-											<Grouping>
-												<SwitchRef Name="Soft" ID="{FBB36FCB-3314-42B0-BC13-2184CC40B4A6}"/>
-												<ItemList>
-													<ItemRef Name="Soft" ID="{A978987A-2193-426E-8580-B1EC899B9874}"/>
-												</ItemList>
-											</Grouping>
-										</GroupingList>
-									</GroupingInfo>
-								</SwitchContainer>
-							</ChildrenList>
-						</Folder>
 						<RandomSequenceContainer Name="Footsteps_run" ID="{CE8E4AE0-D792-4124-AFAD-65A2AB4DA7D9}" ShortID="138634381">
 							<ReferenceList>
 								<Reference Name="Conversion">
@@ -2617,6 +2344,396 @@
 							</ChildrenList>
 							<ObjectLists/>
 						</RandomSequenceContainer>
+						<ActorMixer Name="Impact" ID="{EBADFDE5-DE24-4C61-8FEF-8C39A3310B7D}" ShortID="407636779">
+							<PropertyList>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-5</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<SwitchContainer Name="BodyImpact" ID="{A7432F9A-5B41-42B7-846C-A73196C17546}" ShortID="929076910">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<Custom>
+												<Attenuation Name="Attenuation (Custom)" ID="{34F743CA-8638-4DD2-A1E5-119B331C9B3F}" ShortID="490115270">
+													<PropertyList>
+														<Property Name="RadiusMax" Type="Real64" Value="40"/>
+													</PropertyList>
+													<CurveUsageInfoList>
+														<VolumeDryUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+																<Curve Name="VolumeDry" ID="{A3C13D22-0FFB-4DBC-BC3F-B650C9EEF168}">
+																	<PropertyList>
+																		<Property Name="Flags" Type="int32" Value="3"/>
+																	</PropertyList>
+																	<PointList>
+																		<Point>
+																			<XPos>0</XPos>
+																			<YPos>0</YPos>
+																			<Flags>5</Flags>
+																		</Point>
+																		<Point>
+																			<XPos>40</XPos>
+																			<YPos>-200</YPos>
+																			<Flags>37</Flags>
+																		</Point>
+																	</PointList>
+																</Curve>
+															</CurveUsageInfo>
+														</VolumeDryUsage>
+														<VolumeWetGameUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+														</VolumeWetGameUsage>
+														<VolumeWetUserUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+														</VolumeWetUserUsage>
+														<LowPassFilterUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</LowPassFilterUsage>
+														<HighPassFilterUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</HighPassFilterUsage>
+														<SpreadUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</SpreadUsage>
+														<FocusUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</FocusUsage>
+													</CurveUsageInfoList>
+												</Attenuation>
+											</Custom>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+										</Reference>
+										<Reference Name="SwitchGroupOrStateGroup">
+											<ObjectRef Name="ImpactVelocity" ID="{AD4A13BE-0471-4EB5-B257-8EA4C760E939}" WorkUnitID="{C436E4A2-B696-4919-8FBF-CE0FDEB7B0FA}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<RandomSequenceContainer Name="Soft" ID="{A978987A-2193-426E-8580-B1EC899B9874}" ShortID="167634683">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<Sound Name="Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_1" ID="{84E07505-DE6C-4D6D-AFBF-73C003501D65}" ShortID="303330472">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_1" ID="{D57959A7-1EB2-467F-B172-52E01D937E06}">
+															<Language>SFX</Language>
+															<AudioFile>Character\Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_1.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="99142309"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_1" ID="{D57959A7-1EB2-467F-B172-52E01D937E06}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_2" ID="{CC45E3FF-C4BF-4B43-B1D8-3E56B7EFDC9C}" ShortID="253875119">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_2" ID="{7B0BF23F-004E-42B8-AD0D-9E528467F7C1}">
+															<Language>SFX</Language>
+															<AudioFile>Character\Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_2.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="693621827"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="Altcorp_Item_Jetpack_Impact_MetalFloor_Soft_2" ID="{7B0BF23F-004E-42B8-AD0D-9E528467F7C1}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+											</ChildrenList>
+											<ObjectLists/>
+										</RandomSequenceContainer>
+										<RandomSequenceContainer Name="Hard" ID="{7AA968AE-40CB-4C17-9CA8-70392358DBA9}" ShortID="749468212">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<Sound Name="Altcorp_Item_Jetpack_Impact_MetalWall_Hard_1" ID="{BB891804-50BC-47BB-9E21-10EC329F744A}" ShortID="850021259">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Altcorp_Item_Jetpack_Impact_MetalWall_Hard_1" ID="{35FDA930-28C7-4F35-9DCB-F79EBF051FCF}">
+															<Language>SFX</Language>
+															<AudioFile>Character\Altcorp_Item_Jetpack_Impact_MetalWall_Hard_1.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="119301750"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="Altcorp_Item_Jetpack_Impact_MetalWall_Hard_1" ID="{35FDA930-28C7-4F35-9DCB-F79EBF051FCF}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="Altcorp_Item_Jetpack_Impact_MetalWall_Hard_2" ID="{652944CC-883C-4959-A291-BDDC46CBBA45}" ShortID="470602226">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Altcorp_Item_Jetpack_Impact_MetalWall_Hard_2" ID="{096CE7BD-8E37-48FF-BC6F-5BF02F1BADE4}">
+															<Language>SFX</Language>
+															<AudioFile>Character\Altcorp_Item_Jetpack_Impact_MetalWall_Hard_2.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="779679749"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="Altcorp_Item_Jetpack_Impact_MetalWall_Hard_2" ID="{096CE7BD-8E37-48FF-BC6F-5BF02F1BADE4}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+											</ChildrenList>
+											<ObjectLists/>
+										</RandomSequenceContainer>
+										<RandomSequenceContainer Name="Stop" ID="{D132D64E-D7A7-42FD-9DF0-298E51AC22C7}" ShortID="701157745">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<Sound Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_1" ID="{67DB4D43-6253-472F-BECC-6346C5EA4D59}" ShortID="740142815">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_1" ID="{5A4106ED-E444-4BFF-98A9-ADB8317E6E49}">
+															<Language>SFX</Language>
+															<AudioFile>Character\Altcorp_Item_Helmet_Impact_MetalFloor_Soft_1.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="1005333015"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_1" ID="{5A4106ED-E444-4BFF-98A9-ADB8317E6E49}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_2" ID="{079D69BA-FA66-44BC-AA05-9439F8179044}" ShortID="64214404">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_2" ID="{1DFCBAC1-37F5-4919-95E3-E7B31ADE15BE}">
+															<Language>SFX</Language>
+															<AudioFile>Character\Altcorp_Item_Helmet_Impact_MetalFloor_Soft_2.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="872287773"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_2" ID="{1DFCBAC1-37F5-4919-95E3-E7B31ADE15BE}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_3" ID="{08ACDE9A-033F-4B89-8ABA-34C089639FA9}" ShortID="276256175">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_3" ID="{552BF0E7-D9B0-4EF8-A6B4-0770244D6742}">
+															<Language>SFX</Language>
+															<AudioFile>Character\Altcorp_Item_Helmet_Impact_MetalFloor_Soft_3.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="606980560"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="Altcorp_Item_Helmet_Impact_MetalFloor_Soft_3" ID="{552BF0E7-D9B0-4EF8-A6B4-0770244D6742}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+											</ChildrenList>
+											<ObjectLists/>
+										</RandomSequenceContainer>
+										<RandomSequenceContainer Name="Medium" ID="{32DB279D-2EE2-4D42-8945-369ED298AC47}" ShortID="404319971">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<Sound Name="Altcorp_Item_Helmet_Impact_MetalWall_Medium_1" ID="{57D872D8-A56B-4B74-BB56-1D1313338625}" ShortID="422364290">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Altcorp_Item_Helmet_Impact_MetalWall_Medium_1" ID="{A922F120-187C-48B5-9F62-5A1B8E04A465}">
+															<Language>SFX</Language>
+															<AudioFile>Character\Altcorp_Item_Helmet_Impact_MetalWall_Medium_1.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="507315377"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="Altcorp_Item_Helmet_Impact_MetalWall_Medium_1" ID="{A922F120-187C-48B5-9F62-5A1B8E04A465}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="Altcorp_Item_Helmet_Impact_MetalWall_Medium_2" ID="{721DF708-DF61-4CB5-9D0F-D103BC91CE44}" ShortID="59000033">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="Altcorp_Item_Helmet_Impact_MetalWall_Medium_2" ID="{1D0A3498-D278-41A2-83AB-D33C48BE173F}">
+															<Language>SFX</Language>
+															<AudioFile>Character\Altcorp_Item_Helmet_Impact_MetalWall_Medium_2.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="37182091"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ObjectLists/>
+													<ActiveSourceList>
+														<ActiveSource Name="Altcorp_Item_Helmet_Impact_MetalWall_Medium_2" ID="{1D0A3498-D278-41A2-83AB-D33C48BE173F}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+											</ChildrenList>
+											<ObjectLists/>
+										</RandomSequenceContainer>
+									</ChildrenList>
+									<ObjectLists/>
+									<GroupingInfo>
+										<GroupingBehaviorList>
+											<GroupingBehavior>
+												<ItemRef Name="Stop" ID="{D132D64E-D7A7-42FD-9DF0-298E51AC22C7}"/>
+											</GroupingBehavior>
+											<GroupingBehavior>
+												<ItemRef Name="Soft" ID="{A978987A-2193-426E-8580-B1EC899B9874}"/>
+											</GroupingBehavior>
+											<GroupingBehavior>
+												<ItemRef Name="Medium" ID="{32DB279D-2EE2-4D42-8945-369ED298AC47}"/>
+											</GroupingBehavior>
+											<GroupingBehavior>
+												<ItemRef Name="Hard" ID="{7AA968AE-40CB-4C17-9CA8-70392358DBA9}"/>
+											</GroupingBehavior>
+										</GroupingBehaviorList>
+										<GroupingList>
+											<Grouping>
+												<SwitchRef Name="Medium" ID="{BAF7AC16-0373-4728-90C0-22ADDB220268}"/>
+												<ItemList>
+													<ItemRef Name="Medium" ID="{32DB279D-2EE2-4D42-8945-369ED298AC47}"/>
+												</ItemList>
+											</Grouping>
+											<Grouping>
+												<SwitchRef Name="Stop" ID="{E7F3E144-C759-4713-802E-8C9D1CB7D79D}"/>
+												<ItemList>
+													<ItemRef Name="Stop" ID="{D132D64E-D7A7-42FD-9DF0-298E51AC22C7}"/>
+												</ItemList>
+											</Grouping>
+											<Grouping>
+												<SwitchRef Name="Hard" ID="{781B8598-FDC0-4664-8F93-19F0F47DC0B1}"/>
+												<ItemList>
+													<ItemRef Name="Hard" ID="{7AA968AE-40CB-4C17-9CA8-70392358DBA9}"/>
+												</ItemList>
+											</Grouping>
+											<Grouping>
+												<SwitchRef Name="Soft" ID="{FBB36FCB-3314-42B0-BC13-2184CC40B4A6}"/>
+												<ItemList>
+													<ItemRef Name="Soft" ID="{A978987A-2193-426E-8580-B1EC899B9874}"/>
+												</ItemList>
+											</Grouping>
+										</GroupingList>
+									</GroupingInfo>
+								</SwitchContainer>
+							</ChildrenList>
+							<ObjectLists/>
+						</ActorMixer>
 					</ChildrenList>
 					<ObjectLists/>
 				</ActorMixer>
@@ -5179,6 +5296,7 @@
 				</ActorMixer>
 				<ActorMixer Name="Environment" ID="{E1BADFD2-7AF8-455B-912F-7BDEAB40C953}" ShortID="199025219">
 					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
 						<Property Name="Volume" Type="Real64">
 							<RTPCList>
 								<RTPC Name="" ID="{D0CD0F50-AC56-423F-993A-BD9C92151391}" ShortID="144167876">
@@ -5210,6 +5328,56 @@
 						</Property>
 					</PropertyList>
 					<ReferenceList>
+						<Reference Name="Attenuation">
+							<Custom>
+								<Attenuation Name="Attenuation (Custom)" ID="{70FE0FEE-C4A5-4EC9-8220-BAB36D014E0E}" ShortID="805489317">
+									<PropertyList>
+										<Property Name="RadiusMax" Type="Real64" Value="40"/>
+									</PropertyList>
+									<CurveUsageInfoList>
+										<VolumeDryUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+												<Curve Name="VolumeDry" ID="{3A376D02-23AE-4056-A124-B40139B5647E}">
+													<PropertyList>
+														<Property Name="Flags" Type="int32" Value="3"/>
+													</PropertyList>
+													<PointList>
+														<Point>
+															<XPos>0</XPos>
+															<YPos>0</YPos>
+															<Flags>5</Flags>
+														</Point>
+														<Point>
+															<XPos>40</XPos>
+															<YPos>-200</YPos>
+															<Flags>37</Flags>
+														</Point>
+													</PointList>
+												</Curve>
+											</CurveUsageInfo>
+										</VolumeDryUsage>
+										<VolumeWetGameUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+										</VolumeWetGameUsage>
+										<VolumeWetUserUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+										</VolumeWetUserUsage>
+										<LowPassFilterUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</LowPassFilterUsage>
+										<HighPassFilterUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</HighPassFilterUsage>
+										<SpreadUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</SpreadUsage>
+										<FocusUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</FocusUsage>
+									</CurveUsageInfoList>
+								</Attenuation>
+							</Custom>
+						</Reference>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
 						</Reference>
@@ -5219,7 +5387,60 @@
 					</ReferenceList>
 					<ChildrenList>
 						<ActorMixer Name="Rumble" ID="{4BCD777E-0451-494E-9D5C-5761B81645C6}" ShortID="606577242">
+							<PropertyList>
+								<Property Name="OverridePositioning" Type="bool" Value="True"/>
+							</PropertyList>
 							<ReferenceList>
+								<Reference Name="Attenuation">
+									<Custom>
+										<Attenuation Name="Attenuation (Custom)" ID="{9AD61DD9-542C-4880-8C0A-C51C287E8A4E}" ShortID="949052990">
+											<PropertyList>
+												<Property Name="RadiusMax" Type="Real64" Value="10"/>
+											</PropertyList>
+											<CurveUsageInfoList>
+												<VolumeDryUsage>
+													<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+														<Curve Name="VolumeDry" ID="{7C880FD7-AE0B-46AE-A0FD-A72F0980B030}">
+															<PropertyList>
+																<Property Name="Flags" Type="int32" Value="3"/>
+															</PropertyList>
+															<PointList>
+																<Point>
+																	<XPos>0</XPos>
+																	<YPos>0</YPos>
+																	<Flags>5</Flags>
+																</Point>
+																<Point>
+																	<XPos>10</XPos>
+																	<YPos>-200</YPos>
+																	<Flags>37</Flags>
+																</Point>
+															</PointList>
+														</Curve>
+													</CurveUsageInfo>
+												</VolumeDryUsage>
+												<VolumeWetGameUsage>
+													<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+												</VolumeWetGameUsage>
+												<VolumeWetUserUsage>
+													<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+												</VolumeWetUserUsage>
+												<LowPassFilterUsage>
+													<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+												</LowPassFilterUsage>
+												<HighPassFilterUsage>
+													<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+												</HighPassFilterUsage>
+												<SpreadUsage>
+													<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+												</SpreadUsage>
+												<FocusUsage>
+													<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+												</FocusUsage>
+											</CurveUsageInfoList>
+										</Attenuation>
+									</Custom>
+								</Reference>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
 								</Reference>
@@ -11507,87 +11728,6 @@
 								</Folder>
 							</ChildrenList>
 						</Folder>
-						<Folder Name="Alarm" ID="{F0060926-C9F9-4DA8-83E6-6F3F7B56F8C7}" ShortID="716400808">
-							<ChildrenList>
-								<Sound Name="DistressCall_Received_Alarm" ID="{949C2020-CE6A-486B-8CA0-54D7007BDA41}" ShortID="295590330">
-									<PropertyList>
-										<Property Name="3DSpatialization" Type="int16" Value="1"/>
-										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
-									</PropertyList>
-									<ReferenceList>
-										<Reference Name="Attenuation">
-											<Custom>
-												<Attenuation Name="Attenuation (Custom)" ID="{EA000584-6186-42B6-8D84-A3DC36B9B447}" ShortID="225035843">
-													<PropertyList>
-														<Property Name="RadiusMax" Type="Real64" Value="10"/>
-													</PropertyList>
-													<CurveUsageInfoList>
-														<VolumeDryUsage>
-															<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
-																<Curve Name="VolumeDry" ID="{8F77CD28-9103-471A-81BD-491AC3982AAC}">
-																	<PropertyList>
-																		<Property Name="Flags" Type="int32" Value="3"/>
-																	</PropertyList>
-																	<PointList>
-																		<Point>
-																			<XPos>0</XPos>
-																			<YPos>0</YPos>
-																			<Flags>5</Flags>
-																		</Point>
-																		<Point>
-																			<XPos>10</XPos>
-																			<YPos>-200</YPos>
-																			<Flags>37</Flags>
-																		</Point>
-																	</PointList>
-																</Curve>
-															</CurveUsageInfo>
-														</VolumeDryUsage>
-														<VolumeWetGameUsage>
-															<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
-														</VolumeWetGameUsage>
-														<VolumeWetUserUsage>
-															<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
-														</VolumeWetUserUsage>
-														<LowPassFilterUsage>
-															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
-														</LowPassFilterUsage>
-														<HighPassFilterUsage>
-															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
-														</HighPassFilterUsage>
-														<SpreadUsage>
-															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
-														</SpreadUsage>
-														<FocusUsage>
-															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
-														</FocusUsage>
-													</CurveUsageInfoList>
-												</Attenuation>
-											</Custom>
-										</Reference>
-										<Reference Name="Conversion">
-											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
-										</Reference>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
-										</Reference>
-									</ReferenceList>
-									<ChildrenList>
-										<AudioFileSource Name="DistressCall_Received_Alarm" ID="{CD703E39-E7C7-4985-80F6-C42D0CFA2865}">
-											<Language>SFX</Language>
-											<AudioFile>Environment\DistressCall_Received_Alarm.wav</AudioFile>
-											<MediaIDList>
-												<MediaID ID="845540969"/>
-											</MediaIDList>
-										</AudioFileSource>
-									</ChildrenList>
-									<ObjectLists/>
-									<ActiveSourceList>
-										<ActiveSource Name="DistressCall_Received_Alarm" ID="{CD703E39-E7C7-4985-80F6-C42D0CFA2865}" Platform="Linked"/>
-									</ActiveSourceList>
-								</Sound>
-							</ChildrenList>
-						</Folder>
 						<Folder Name="Shredder" ID="{908DB161-726B-479B-98C0-1C5538FB3617}" ShortID="316702863">
 							<ChildrenList>
 								<Sound Name="ShredderEnd" ID="{04D8CDB4-B9F7-4B35-B0FA-A2E6DE2DABFE}" ShortID="39955626">
@@ -11723,13 +11863,14 @@
 										<Value>1</Value>
 									</ValueList>
 								</Property>
+								<Property Name="OverridePositioning" Type="bool" Value="True"/>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Attenuation">
 									<Custom>
 										<Attenuation Name="Attenuation (Custom)" ID="{88C9EA95-5E1F-408C-9201-D9B38BC02E67}" ShortID="721225547">
 											<PropertyList>
-												<Property Name="RadiusMax" Type="Real64" Value="15"/>
+												<Property Name="RadiusMax" Type="Real64" Value="10"/>
 											</PropertyList>
 											<CurveUsageInfoList>
 												<VolumeDryUsage>
@@ -11750,7 +11891,7 @@
 																	<Flags>0</Flags>
 																</Point>
 																<Point>
-																	<XPos>15</XPos>
+																	<XPos>10</XPos>
 																	<YPos>-200</YPos>
 																	<Flags>37</Flags>
 																</Point>
@@ -11791,6 +11932,11 @@
 								<ActorMixer Name="Steam" ID="{85837708-C531-4C68-BC80-8CBDF047F76E}" ShortID="318523081">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-4</Value>
+											</ValueList>
+										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -11862,7 +12008,7 @@
 										<Property Name="3DSpatialization" Type="int16" Value="1"/>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
-												<Value>-10</Value>
+												<Value>-8</Value>
 											</ValueList>
 										</Property>
 									</PropertyList>
@@ -12136,6 +12282,56 @@
 										<Property Name="OverridePositioning" Type="bool" Value="True"/>
 									</PropertyList>
 									<ReferenceList>
+										<Reference Name="Attenuation">
+											<Custom>
+												<Attenuation Name="Attenuation (Custom)" ID="{8CEF1C45-1BE2-4DC7-B7F0-AD71589FE8A8}" ShortID="1032437050">
+													<PropertyList>
+														<Property Name="RadiusMax" Type="Real64" Value="25"/>
+													</PropertyList>
+													<CurveUsageInfoList>
+														<VolumeDryUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+																<Curve Name="VolumeDry" ID="{9217E10C-3E4E-466F-B809-BC36345805D7}">
+																	<PropertyList>
+																		<Property Name="Flags" Type="int32" Value="3"/>
+																	</PropertyList>
+																	<PointList>
+																		<Point>
+																			<XPos>0</XPos>
+																			<YPos>0</YPos>
+																			<Flags>5</Flags>
+																		</Point>
+																		<Point>
+																			<XPos>25</XPos>
+																			<YPos>-200</YPos>
+																			<Flags>37</Flags>
+																		</Point>
+																	</PointList>
+																</Curve>
+															</CurveUsageInfo>
+														</VolumeDryUsage>
+														<VolumeWetGameUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+														</VolumeWetGameUsage>
+														<VolumeWetUserUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+														</VolumeWetUserUsage>
+														<LowPassFilterUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</LowPassFilterUsage>
+														<HighPassFilterUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</HighPassFilterUsage>
+														<SpreadUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</SpreadUsage>
+														<FocusUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</FocusUsage>
+													</CurveUsageInfoList>
+												</Attenuation>
+											</Custom>
+										</Reference>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
 										</Reference>
@@ -12354,6 +12550,104 @@
 										<ItemRef Name="FireLoop" ID="{35831A51-BD43-49E1-869A-DF773E61CE4A}"/>
 									</Playlist>
 								</RandomSequenceContainer>
+							</ChildrenList>
+							<ObjectLists/>
+						</ActorMixer>
+						<ActorMixer Name="Alarm" ID="{399253E7-8B95-4630-A074-5C8BBC74D831}" ShortID="445570107">
+							<PropertyList>
+								<Property Name="3DSpatialization" Type="int16" Value="1"/>
+								<Property Name="OverridePositioning" Type="bool" Value="True"/>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-5</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Attenuation">
+									<Custom>
+										<Attenuation Name="Attenuation (Custom)" ID="{E3D57486-5C10-41C2-B706-F981A6D99BE4}" ShortID="407104024">
+											<PropertyList>
+												<Property Name="RadiusMax" Type="Real64" Value="10"/>
+											</PropertyList>
+											<CurveUsageInfoList>
+												<VolumeDryUsage>
+													<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+														<Curve Name="VolumeDry" ID="{1DB4A09C-CBF8-4D4F-9E25-9380B6E20C54}">
+															<PropertyList>
+																<Property Name="Flags" Type="int32" Value="3"/>
+															</PropertyList>
+															<PointList>
+																<Point>
+																	<XPos>0</XPos>
+																	<YPos>0</YPos>
+																	<Flags>5</Flags>
+																</Point>
+																<Point>
+																	<XPos>10</XPos>
+																	<YPos>-200</YPos>
+																	<Flags>37</Flags>
+																</Point>
+															</PointList>
+														</Curve>
+													</CurveUsageInfo>
+												</VolumeDryUsage>
+												<VolumeWetGameUsage>
+													<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+												</VolumeWetGameUsage>
+												<VolumeWetUserUsage>
+													<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+												</VolumeWetUserUsage>
+												<LowPassFilterUsage>
+													<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+												</LowPassFilterUsage>
+												<HighPassFilterUsage>
+													<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+												</HighPassFilterUsage>
+												<SpreadUsage>
+													<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+												</SpreadUsage>
+												<FocusUsage>
+													<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+												</FocusUsage>
+											</CurveUsageInfoList>
+										</Attenuation>
+									</Custom>
+								</Reference>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<Sound Name="DistressCall_Received_Alarm" ID="{949C2020-CE6A-486B-8CA0-54D7007BDA41}" ShortID="295590330">
+									<PropertyList>
+										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{50CD9E30-4A78-4789-A7D8-49F903A0E747}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{FFA7F647-8DCE-4C1C-AFF9-42B7467F3ED2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="DistressCall_Received_Alarm" ID="{CD703E39-E7C7-4985-80F6-C42D0CFA2865}">
+											<Language>SFX</Language>
+											<AudioFile>Environment\DistressCall_Received_Alarm.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="845540969"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ObjectLists/>
+									<ActiveSourceList>
+										<ActiveSource Name="DistressCall_Received_Alarm" ID="{CD703E39-E7C7-4985-80F6-C42D0CFA2865}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
 							</ChildrenList>
 							<ObjectLists/>
 						</ActorMixer>

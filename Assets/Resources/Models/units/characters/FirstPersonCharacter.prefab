@@ -5487,7 +5487,7 @@ GameObject:
   - component: {fileID: 114885595651064345}
   - component: {fileID: 114137996365304760}
   - component: {fileID: 114022578700973608}
-  - component: {fileID: 114766493505889229}
+  - component: {fileID: 5270074690124419968}
   - component: {fileID: 114171093554873353}
   - component: {fileID: 114553354317312252}
   - component: {fileID: 114780800335061576}
@@ -5688,7 +5688,7 @@ MonoBehaviour:
   MaxDistance: 100000
   Intensity: 0
   Burning: 0
---- !u!114 &114766493505889229
+--- !u!114 &5270074690124419968
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5706,7 +5706,7 @@ MonoBehaviour:
     m_Bits: 2048
   stopNaNPropagation: 0
   finalBlitToCameraTarget: 0
-  antialiasingMode: 2
+  antialiasingMode: 3
   temporalAntialiasing:
     jitterSpread: 0.75
     sharpness: 0.25
@@ -5718,7 +5718,7 @@ MonoBehaviour:
     fastMode: 0
     keepAlpha: 0
   fog:
-    enabled: 0
+    enabled: 1
     excludeSkybox: 1
   debugLayer:
     lightMeter:
@@ -5741,7 +5741,7 @@ MonoBehaviour:
       motionGridSize: 64
       colorBlindnessType: 0
       colorBlindnessStrength: 1
-  m_Resources: {fileID: 11400000, guid: 8fe34f9468fc70745bba817f9eb64e5d, type: 2}
+  m_Resources: {fileID: 11400000, guid: d82512f9c8e5d4a4d938b575d47f88d4, type: 2}
   m_ShowToolkit: 0
   m_ShowCustomSorter: 0
   breakBeforeColorGrading: 0
@@ -19761,7 +19761,7 @@ MonoBehaviour:
     Source: {fileID: 0}
     PlayOnAwake: 1
     UseStringInsteadOfId: 0
-    IsPlaying: 1
+    IsPlaying: 0
     ShowRadius: 0
     AttenuationRadius: 0
   - EventID: -1455436248

@@ -512,13 +512,6 @@ namespace ZeroGravity.CharacterMovement
 				Pivot pivot = myPlayer.Parent as Pivot;
 				rigidBody.velocity -= ((pivot.Velocity - NearbyVessel.Velocity) * Time.deltaTime).ToVector3();
 			}
-
-#if UNITY_EDITOR // Do this to stop getting those annoying cursors after you close a menu.
-			if (isMovementEnabled)
-			{
-				Client.Instance.ToggleCursor(false);
-			}
-#endif
 		}
 
 		private void FixedUpdate()

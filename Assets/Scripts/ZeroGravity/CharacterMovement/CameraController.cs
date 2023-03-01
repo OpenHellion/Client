@@ -288,17 +288,85 @@ namespace ZeroGravity.CharacterMovement
 			resetLerpStep = 1f / resetLerpDuration;
 		}
 
-		private void GetMouseAxis()
+		private void Update()
 		{
-			mouseRightAxis = Mouse.current.delta.x.ReadValue() * 0.2f * InputManager.MouseSensitivity;
-			mouseUpAxis = Mouse.current.delta.y.ReadValue() * 0.2f * InputManager.MouseSensitivity;
-			if (Client.IsGameBuild)
+			if (!isMovementEnabled && !MyPlayer.Instance.ShouldMoveCamera)
 			{
-				mouseUpAxis = -((!Client.Instance.InvertedMouse) ? 1 : (-1)) * Mouse.current.delta.y.ReadValue() * 0.2f * InputManager.MouseSensitivity;
+				return;
+			}
+			if (lerpControllerBack)
+			{
+				LerpCameraControllerBackWorker();
+			}
+			GetMouseAxis();
+			SetAnimatorTurningVelocity();
+			if (doInertia)
+			{
+				AddCameraInertia();
+			}
+			if (canMoveCamera)
+			{
+				if (!autoFreeLook || !isFreeLook)
+				{
+					if (InputManager.GetButtonDown(InputManager.ConfigAction.FreeLook))
+					{
+						ToggleFreeLook(true);
+					}
+					if (InputManager.GetButtonUp(InputManager.ConfigAction.FreeLook) && isFreeLook)
+					{
+						ToggleFreeLook(false);
+					}
+				}
+				if (isAttached && !isFreeLook)
+				{
+					return;
+				}
+				if (isFreeLook)
+				{
+					if (MyPlayer.Instance.LockedToTrigger == null || MyPlayer.Instance.ShipControlMode == ShipControlMode.Piloting)
+					{
+						RotateCamera(mouseUpAxis, mouseRightAxis);
+						if (!isAttached && !autoFreeLook)
+						{
+							RotateCharacter(0f, 0f, leanRightAxis);
+						}
+					}
+				}
+				else
+				{
+					RotateCharacter(mouseUpAxis, mouseRightAxis, leanRightAxis);
+				}
+				Client.Instance.CanvasManager.HelmetOverlayModel.SetAxis(mouseRightAxis, mouseUpAxis, leanRightAxis);
 			}
 			else
 			{
-				mouseUpAxis = -1f * Mouse.current.delta.y.ReadValue() * 0.2f * InputManager.MouseSensitivity;
+				resetLerpTime += resetLerpStep * Time.deltaTime;
+				freeLookXTransform.localRotation = Quaternion.Lerp(freeLookXTransform.localRotation, Quaternion.Euler(freeLookAngleXZero, 0f, 0f), resetLerpTime);
+				freeLookYTransform.localRotation = Quaternion.Lerp(freeLookYTransform.localRotation, Quaternion.Euler(0f, freeLookAngleYZero, 0f), resetLerpTime);
+				canMoveCamera = resetLerpTime > 0.9999f;
+				if (canMoveCamera)
+				{
+					resetLerpTime = 0f;
+					freeLookAngleX = freeLookAngleXZero;
+					freeLookAngleY = freeLookAngleYZero;
+					freeLookXTransform.localRotation = Quaternion.Euler(freeLookAngleXZero, 0f, 0f);
+					freeLookYTransform.localRotation = Quaternion.Euler(0f, freeLookAngleYZero, 0f);
+					resetLerpStep = 1f / resetLerpDuration;
+				}
+			}
+		}
+
+		private void GetMouseAxis()
+		{
+			mouseRightAxis = Mouse.current.delta.x.ReadValue() * 0.1f * InputManager.MouseSensitivity;
+			mouseUpAxis = Mouse.current.delta.y.ReadValue() * 0.1f * InputManager.MouseSensitivity;
+			if (Client.IsGameBuild)
+			{
+				mouseUpAxis = Client.Instance.InvertedMouse ? 0.1f : -0.1f * Mouse.current.delta.y.ReadValue() * InputManager.MouseSensitivity;
+			}
+			else
+			{
+				mouseUpAxis = -0.1f * Mouse.current.delta.y.ReadValue() * InputManager.MouseSensitivity;
 			}
 		}
 
@@ -407,74 +475,6 @@ namespace ZeroGravity.CharacterMovement
 			if (Client.IsGameBuild && MyPlayer.Instance.IsLockedToTrigger)
 			{
 				//Client.Instance.InputModule.UseCustomCursorPosition = true;
-			}
-		}
-
-		private void Update()
-		{
-			if (!isMovementEnabled && !MyPlayer.Instance.ShouldMoveCamera)
-			{
-				return;
-			}
-			if (lerpControllerBack)
-			{
-				LerpCameraControllerBackWorker();
-			}
-			GetMouseAxis();
-			SetAnimatorTurningVelocity();
-			if (doInertia)
-			{
-				AddCameraInertia();
-			}
-			if (canMoveCamera)
-			{
-				if (!autoFreeLook || !isFreeLook)
-				{
-					if (InputManager.GetButtonDown(InputManager.ConfigAction.FreeLook))
-					{
-						ToggleFreeLook(true);
-					}
-					if (InputManager.GetButtonUp(InputManager.ConfigAction.FreeLook) && isFreeLook)
-					{
-						ToggleFreeLook(false);
-					}
-				}
-				if (isAttached && !isFreeLook)
-				{
-					return;
-				}
-				if (isFreeLook)
-				{
-					if (MyPlayer.Instance.LockedToTrigger == null || MyPlayer.Instance.ShipControlMode == ShipControlMode.Piloting)
-					{
-						RotateCamera(mouseUpAxis, mouseRightAxis);
-						if (!isAttached && !autoFreeLook)
-						{
-							RotateCharacter(0f, 0f, leanRightAxis);
-						}
-					}
-				}
-				else
-				{
-					RotateCharacter(mouseUpAxis, mouseRightAxis, leanRightAxis);
-				}
-				Client.Instance.CanvasManager.HelmetOverlayModel.SetAxis(mouseRightAxis, mouseUpAxis, leanRightAxis);
-			}
-			else
-			{
-				resetLerpTime += resetLerpStep * Time.deltaTime;
-				freeLookXTransform.localRotation = Quaternion.Lerp(freeLookXTransform.localRotation, Quaternion.Euler(freeLookAngleXZero, 0f, 0f), resetLerpTime);
-				freeLookYTransform.localRotation = Quaternion.Lerp(freeLookYTransform.localRotation, Quaternion.Euler(0f, freeLookAngleYZero, 0f), resetLerpTime);
-				canMoveCamera = resetLerpTime > 0.9999f;
-				if (canMoveCamera)
-				{
-					resetLerpTime = 0f;
-					freeLookAngleX = freeLookAngleXZero;
-					freeLookAngleY = freeLookAngleYZero;
-					freeLookXTransform.localRotation = Quaternion.Euler(freeLookAngleXZero, 0f, 0f);
-					freeLookYTransform.localRotation = Quaternion.Euler(0f, freeLookAngleYZero, 0f);
-					resetLerpStep = 1f / resetLerpDuration;
-				}
 			}
 		}
 
