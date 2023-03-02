@@ -23,7 +23,6 @@ using ZeroGravity;
 using Discord;
 using OpenHellion.Networking.Message;
 using OpenHellion.IO;
-using System.Linq;
 
 namespace OpenHellion.ProviderSystem
 {
@@ -361,10 +360,8 @@ namespace OpenHellion.ProviderSystem
 				return texture;
 			}
 
-			// Remove the prefix.
-			id.Remove(0, 1);
-
-			m_discord.GetImageManager().Fetch(ImageHandle.User(long.Parse(id)), false, (result, handle) =>
+			// Read the id without the prefix.
+			m_discord.GetImageManager().Fetch(ImageHandle.User(long.Parse(id[1..])), false, (result, handle) =>
 			{
 				if (result == Result.Ok)
 				{
@@ -384,16 +381,14 @@ namespace OpenHellion.ProviderSystem
 				return;
 			}
 
-			// Remove the prefix.
-			id.Remove(0, 1);
-
 			Dbg.Log("Inviting user through Discord.");
 
 			m_activity.Secrets.Join = secret;
 			m_activity.Secrets.Spectate = secret;
 			m_activityManager.UpdateActivity(m_activity, result => {});
 
-			m_activityManager.SendInvite(long.Parse(id), ActivityActionType.Join, "You have been invited to play Hellion!", result =>
+			// Read the id without the prefix.
+			m_activityManager.SendInvite(long.Parse(id[1..]), ActivityActionType.Join, "You have been invited to play Hellion!", result =>
 			{
 				if (result == Result.Ok)
 				{

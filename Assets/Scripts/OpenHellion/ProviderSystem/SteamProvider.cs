@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using OpenHellion.Networking.Message;
 using ZeroGravity;
 using OpenHellion.IO;
-
 namespace OpenHellion.ProviderSystem
 {
 	/// <seealso cref="DiscordProvider"/>
@@ -202,10 +201,8 @@ namespace OpenHellion.ProviderSystem
 				return texture;
 			}
 
-			// Remove the prefix.
-			id.Remove(0, 1);
-
-			int largeFriendAvatar = SteamFriends.GetLargeFriendAvatar(new CSteamID(ulong.Parse(id)));
+			// Read the id without the prefix.
+			int largeFriendAvatar = SteamFriends.GetLargeFriendAvatar(new CSteamID(ulong.Parse(id[1..])));
 			uint pnWidth;
 			uint pnHeight;
 			if (SteamUtils.GetImageSize(largeFriendAvatar, out pnWidth, out pnHeight) && pnWidth != 0 && pnHeight != 0)
@@ -234,12 +231,10 @@ namespace OpenHellion.ProviderSystem
 				return;
 			}
 
-			// Remove the prefix.
-			id.Remove(0, 1);
-
 			Dbg.Log("Inviting user through Steam.");
 
-			SteamFriends.InviteUserToGame(new CSteamID(ulong.Parse(id)), secret);
+			// Read the id without the prefix.
+			SteamFriends.InviteUserToGame(new CSteamID(ulong.Parse(id[1..])), secret);
 		}
 	}
 }

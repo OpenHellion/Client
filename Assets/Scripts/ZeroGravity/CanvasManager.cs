@@ -338,7 +338,7 @@ namespace ZeroGravity
 				}
 				else if (StartingPointScreen.activeInHierarchy)
 				{
-					ExitSpawnOptionsScreen();
+					ExitStartingPointScreen();
 				}
 			}
 			if (ScreenShootMod.activeInHierarchy && Keyboard.current.f11Key.wasPressedThisFrame)
@@ -410,21 +410,20 @@ namespace ZeroGravity
 			SpawnPointsHolder.DestroyAll<SpawnPointOptionUI>();
 
 			// Create default entry for creating new game.
-			// TODO: Shouldn't this be a static gui element?
 			SpawnPointOptionUI newWorldEntry = Instantiate(SpawnPointOptionUI, SpawnPointsHolder);
 			newWorldEntry.CreateNewGameButton();
 
 			DirectoryInfo directoryInfo = new DirectoryInfo(Client.Instance.GetSPPath());
-			bool flag = true;
+			bool hasNoSaves = true;
 			foreach (FileInfo item in from m in directoryInfo.GetFiles("*.save") orderby m.LastWriteTime descending select m)
 			{
 				SpawnPointOptionUI spawnPointOptionUI2 = Instantiate(SpawnPointOptionUI, SpawnPointsHolder);
 				spawnPointOptionUI2.SaveFile = item;
 				spawnPointOptionUI2.CreateSaveGameButton();
-				flag = false;
+				hasNoSaves = false;
 			}
 
-			if (flag)
+			if (hasNoSaves)
 			{
 				Client.Instance.PlayNewSPGame();
 			}
@@ -631,42 +630,48 @@ namespace ZeroGravity
 			{
 				InstantiateSpawnButton(spawnPoints[i], i, onSpawnClicked);
 			}
-			StartingPointOptionUI startingPointOptionUI = GameObject.Instantiate(StartingPointUI, SpawnOptions);
-			startingPointOptionUI.Type = StartingPointOption.NewGame;
+
+			// Show fresh start. canContinue determines if we're able to open the next menu with spawn points.
+			StartingPointOptionUI freshStartOptionUI = Instantiate(StartingPointUI, SpawnOptions);
+			freshStartOptionUI.Type = StartingPointOption.NewGame;
 			if (canContinue)
 			{
-				startingPointOptionUI.GetComponent<Button>().onClick.AddListener(delegate
+				freshStartOptionUI.GetComponent<Button>().onClick.AddListener(delegate
 				{
 					OnFreshStartConfirm();
 				});
 			}
 			else
 			{
-				startingPointOptionUI.GetComponent<Button>().onClick.AddListener(delegate
+				freshStartOptionUI.GetComponent<Button>().onClick.AddListener(delegate
 				{
 					ShowFreshStartOptions();
 				});
 			}
+
+			// Add continue button if this isn't singleplayer.
 			if (!Client.Instance.SinglePlayerMode)
 			{
-				StartingPointOptionUI startingPointOptionUI2 = GameObject.Instantiate(StartingPointUI, SpawnOptions);
-				startingPointOptionUI2.Type = StartingPointOption.Continue;
-				SpawnPointDetails continueSP = new SpawnPointDetails
+				StartingPointOptionUI continueOptionUI = Instantiate(StartingPointUI, SpawnOptions);
+				continueOptionUI.Type = StartingPointOption.Continue;
+				SpawnPointDetails continueSpawnPoint = new SpawnPointDetails
 				{
 					SpawnSetupType = SpawnSetupType.Continue,
 					IsPartOfCrew = false,
 					PlayersOnShip = new List<string>()
 				};
-				startingPointOptionUI2.GetComponent<Button>().onClick.AddListener(delegate
+				continueOptionUI.GetComponent<Button>().onClick.AddListener(delegate
 				{
-					onSpawnClicked(continueSP);
+					onSpawnClicked(continueSpawnPoint);
 				});
-				startingPointOptionUI2.GetComponent<Button>().interactable = canContinue;
+				continueOptionUI.GetComponent<Button>().interactable = canContinue;
 			}
-			StartingPointOptionUI startingPointOptionUI3 = GameObject.Instantiate(StartingPointUI, SpawnOptions);
-			startingPointOptionUI3.Type = ((!Client.Instance.SinglePlayerMode) ? StartingPointOption.Invite : StartingPointOption.CustomStartingPoint);
-			startingPointOptionUI3.GetComponent<Button>().interactable = spawnPoints.Count > 0;
-			startingPointOptionUI3.GetComponent<Button>().onClick.AddListener(delegate
+
+			// In single player mode add a custom starting point option, while in multiplayer add an invite starting point option.
+			StartingPointOptionUI inviteCustomOptionUI = Instantiate(StartingPointUI, SpawnOptions);
+			inviteCustomOptionUI.Type = !Client.Instance.SinglePlayerMode ? StartingPointOption.Invite : StartingPointOption.CustomStartingPoint;
+			inviteCustomOptionUI.GetComponent<Button>().interactable = spawnPoints.Count > 0;
+			inviteCustomOptionUI.GetComponent<Button>().onClick.AddListener(delegate
 			{
 				SelectSpawnPointScreen.SetActive(value: true);
 			});
@@ -792,12 +797,6 @@ namespace ZeroGravity
 		public void QuitButton()
 		{
 			Client.Instance.ExitGame();
-
-		#if UNITY_EDITOR
-			// Exit play mode if we are in the editor.
-			Dbg.Info("Exiting play mode...");
-			EditorApplication.isPlaying = false;
-		#endif
 		}
 
 		/// <summary>
@@ -810,9 +809,9 @@ namespace ZeroGravity
 		}
 
 		/// <summary>
-		/// 	Handle exiting the spawn options screen.
+		/// 	Handle exiting the statring point screen, the menu where you select if you want to continue or start a new game, as well as what type of new game.
 		/// </summary>
-		public void ExitSpawnOptionsScreen()
+		public void ExitStartingPointScreen()
 		{
 			// Go back to general spawn options (new game, continue, invite).
 			if (FreshStartSpawnOptions.gameObject.activeSelf)
@@ -822,8 +821,15 @@ namespace ZeroGravity
 			}
 			else
 			{
-				// Exit screen completely, and go back to server list.
-				SelectScreen(Screen.CharacterSelect);
+				if (Client.Instance.SinglePlayerMode) // Go back to selecting game mode.
+				{
+					SelectScreen(Screen.None);
+					SinglePlayerModeScreen.SetActive(value: true);
+				}
+				else // Exit screen completely, and go back to creating a character.
+				{
+					SelectScreen(Screen.CharacterSelect);
+				}
 			}
 		}
 

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using ZeroGravity;
 using ZeroGravity.Data;
@@ -12,27 +11,6 @@ using ZeroGravity.ShipComponents;
 
 public class QuestIndicators : MonoBehaviour
 {
-	[CompilerGenerated]
-	private sealed class _003CAddMarkersOnMap_003Ec__AnonStorey0
-	{
-		internal QuestTrigger trigger;
-
-		internal bool _003C_003Em__0(KeyValuePair<IMapMainObject, MapObject> m)
-		{
-			return (m.Key is Ship && (m.Key as Ship).CustomName == trigger.TaskObject.Location.Name) || (m.Key is Asteroid && (m.Key as Asteroid).CustomName == trigger.TaskObject.Location.Name);
-		}
-
-		internal bool _003C_003Em__1(KeyValuePair<IMapMainObject, MapObject> m)
-		{
-			return m.Key is CelestialBody && (m.Key as CelestialBody).GUID == (long)trigger.TaskObject.Celestial;
-		}
-
-		internal bool _003C_003Em__2(IMapMainObject m)
-		{
-			return m is SpaceObjectVessel && (m as SpaceObjectVessel).SceneID == trigger.TaskObject.SceneID && SceneHelper.CompareTags((m as SpaceObjectVessel).VesselData.Tag, trigger.Tag);
-		}
-	}
-
 	public RectTransform IndicatorParent;
 
 	public GameObject IndicatorPrefab;
@@ -53,13 +31,13 @@ public class QuestIndicators : MonoBehaviour
 	{
 		if (!SceneQuestTriggers.ContainsKey(sceneQuestTrigger) && sceneQuestTrigger.Visibility != 0 && sceneQuestTrigger.gameObject.activeInHierarchy)
 		{
-			QuestIndicatorUI component = Object.Instantiate(IndicatorPrefab, IndicatorParent).GetComponent<QuestIndicatorUI>();
+			QuestIndicatorUI component = Instantiate(IndicatorPrefab, IndicatorParent).GetComponent<QuestIndicatorUI>();
 			component.QuestIndicators = this;
 			component.SceneQuestTrigger = sceneQuestTrigger;
 			component.TaskName.text = sceneQuestTrigger.QuestTrigger.TaskObject.IndicatorName;
 			if (sceneQuestTrigger.Visibility == QuestIndicatorVisibility.Proximity)
 			{
-				component.gameObject.SetActive(false);
+				component.gameObject.SetActive(value: false);
 			}
 			SceneQuestTriggers.Add(sceneQuestTrigger, component);
 		}
@@ -69,13 +47,13 @@ public class QuestIndicators : MonoBehaviour
 	{
 		if (!SceneQuestTriggers.ContainsKey(sceneQuestTrigger) && sceneQuestTrigger.Visibility != 0 && sceneQuestTrigger.gameObject.activeInHierarchy)
 		{
-			QuestIndicatorUI component = Object.Instantiate(NewQuestIndicatorPrefab, IndicatorParent).GetComponent<QuestIndicatorUI>();
+			QuestIndicatorUI component = Instantiate(NewQuestIndicatorPrefab, IndicatorParent).GetComponent<QuestIndicatorUI>();
 			component.QuestIndicators = this;
 			component.SceneQuestTrigger = sceneQuestTrigger;
 			component.TaskName.text = sceneQuestTrigger.QuestTrigger.Quest.Name;
 			if (sceneQuestTrigger.Visibility == QuestIndicatorVisibility.Proximity)
 			{
-				component.gameObject.SetActive(false);
+				component.gameObject.SetActive(value: false);
 			}
 			SceneQuestTriggers.Add(sceneQuestTrigger, component);
 		}
@@ -85,7 +63,7 @@ public class QuestIndicators : MonoBehaviour
 	{
 		if (SceneQuestTriggers.ContainsKey(sceneQuestTrigger))
 		{
-			Object.Destroy(SceneQuestTriggers[sceneQuestTrigger].gameObject);
+			Destroy(SceneQuestTriggers[sceneQuestTrigger].gameObject);
 			SceneQuestTriggers.Remove(sceneQuestTrigger);
 		}
 	}
@@ -96,7 +74,7 @@ public class QuestIndicators : MonoBehaviour
 		{
 			if (SceneQuestTriggers[sceneQuestTrigger] != null && !SceneQuestTriggers[sceneQuestTrigger].gameObject.activeInHierarchy)
 			{
-				Object.Destroy(SceneQuestTriggers[sceneQuestTrigger].gameObject);
+				Destroy(SceneQuestTriggers[sceneQuestTrigger].gameObject);
 				SceneQuestTriggers.Remove(sceneQuestTrigger);
 			}
 			else if (SceneQuestTriggers[sceneQuestTrigger] != null)
@@ -110,7 +88,7 @@ public class QuestIndicators : MonoBehaviour
 	{
 		foreach (SceneQuestTrigger key in SceneQuestTriggers.Keys)
 		{
-			Object.Destroy(SceneQuestTriggers[key].gameObject);
+			Destroy(SceneQuestTriggers[key].gameObject);
 		}
 		SceneQuestTriggers.Clear();
 	}
@@ -122,59 +100,54 @@ public class QuestIndicators : MonoBehaviour
 		{
 			return;
 		}
-		using (List<QuestTrigger>.Enumerator enumerator = currentTrackingQuest.QuestTriggers.GetEnumerator())
+		foreach (QuestTrigger trigger in currentTrackingQuest.QuestTriggers)
 		{
-			while (enumerator.MoveNext())
+			if (trigger.Status != QuestStatus.Active)
 			{
-				_003CAddMarkersOnMap_003Ec__AnonStorey0 _003CAddMarkersOnMap_003Ec__AnonStorey = new _003CAddMarkersOnMap_003Ec__AnonStorey0();
-				_003CAddMarkersOnMap_003Ec__AnonStorey.trigger = enumerator.Current;
-				if (_003CAddMarkersOnMap_003Ec__AnonStorey.trigger.Status != QuestStatus.Active)
+				continue;
+			}
+			if (trigger.TaskObject.Location != null)
+			{
+				MapObject value = Client.Instance.Map.AllMapObjects.FirstOrDefault((KeyValuePair<IMapMainObject, MapObject> m) => (m.Key is Ship && (m.Key as Ship).CustomName == trigger.TaskObject.Location.Name) || (m.Key is Asteroid && (m.Key as Asteroid).CustomName == trigger.TaskObject.Location.Name)).Value;
+				if (value != null)
+				{
+					(value.MainObject as ArtificialBody).RadarVisibilityType = RadarVisibilityType.AlwaysVisible;
+					if (!MapQuestIndicators.ContainsKey(trigger))
+					{
+						QuestIndicatorUI component = Object.Instantiate(MapQuestIndicatorPrefab, IndicatorParent).GetComponent<QuestIndicatorUI>();
+						component.TaskName.text = trigger.Name;
+						Tuple<MapObject, QuestIndicatorUI> value2 = new Tuple<MapObject, QuestIndicatorUI>(value, component);
+						MapQuestIndicators[trigger] = value2;
+					}
+				}
+			}
+			else if (trigger.TaskObject.Celestial != 0)
+			{
+				MapObject value3 = Client.Instance.Map.AllMapObjects.FirstOrDefault((KeyValuePair<IMapMainObject, MapObject> m) => m.Key is CelestialBody && (m.Key as CelestialBody).GUID == (long)trigger.TaskObject.Celestial).Value;
+				if (value3 != null && !MapQuestIndicators.ContainsKey(trigger))
+				{
+					QuestIndicatorUI component2 = Object.Instantiate(MapQuestIndicatorPrefab, IndicatorParent).GetComponent<QuestIndicatorUI>();
+					component2.TaskName.text = trigger.Name;
+					Tuple<MapObject, QuestIndicatorUI> value4 = new Tuple<MapObject, QuestIndicatorUI>(value3, component2);
+					MapQuestIndicators[trigger] = value4;
+				}
+			}
+			else
+			{
+				if (trigger.TaskObject.Tags.Count <= 0 || trigger.TaskObject.SceneID == GameScenes.SceneID.None)
 				{
 					continue;
 				}
-				if (_003CAddMarkersOnMap_003Ec__AnonStorey.trigger.TaskObject.Location != null)
+				List<IMapMainObject> list = Client.Instance.Map.AllMapObjects.Keys.Where((IMapMainObject m) => m is SpaceObjectVessel && (m as SpaceObjectVessel).SceneID == trigger.TaskObject.SceneID && SceneHelper.CompareTags((m as SpaceObjectVessel).VesselData.Tag, trigger.Tag)).ToList();
+				foreach (IMapMainObject item in list)
 				{
-					MapObject value = Client.Instance.Map.AllMapObjects.FirstOrDefault(_003CAddMarkersOnMap_003Ec__AnonStorey._003C_003Em__0).Value;
-					if (value != null)
+					MapObject mapObject = Client.Instance.Map.AllMapObjects[item];
+					if (mapObject != null && !MapQuestIndicators.ContainsKey(trigger))
 					{
-						(value.MainObject as ArtificialBody).RadarVisibilityType = RadarVisibilityType.AlwaysVisible;
-						if (!MapQuestIndicators.ContainsKey(_003CAddMarkersOnMap_003Ec__AnonStorey.trigger))
-						{
-							QuestIndicatorUI component = Object.Instantiate(MapQuestIndicatorPrefab, IndicatorParent).GetComponent<QuestIndicatorUI>();
-							component.TaskName.text = _003CAddMarkersOnMap_003Ec__AnonStorey.trigger.Name;
-							Tuple<MapObject, QuestIndicatorUI> value2 = new Tuple<MapObject, QuestIndicatorUI>(value, component);
-							MapQuestIndicators[_003CAddMarkersOnMap_003Ec__AnonStorey.trigger] = value2;
-						}
-					}
-				}
-				else if (_003CAddMarkersOnMap_003Ec__AnonStorey.trigger.TaskObject.Celestial != 0)
-				{
-					MapObject value3 = Client.Instance.Map.AllMapObjects.FirstOrDefault(_003CAddMarkersOnMap_003Ec__AnonStorey._003C_003Em__1).Value;
-					if (value3 != null && !MapQuestIndicators.ContainsKey(_003CAddMarkersOnMap_003Ec__AnonStorey.trigger))
-					{
-						QuestIndicatorUI component2 = Object.Instantiate(MapQuestIndicatorPrefab, IndicatorParent).GetComponent<QuestIndicatorUI>();
-						component2.TaskName.text = _003CAddMarkersOnMap_003Ec__AnonStorey.trigger.Name;
-						Tuple<MapObject, QuestIndicatorUI> value4 = new Tuple<MapObject, QuestIndicatorUI>(value3, component2);
-						MapQuestIndicators[_003CAddMarkersOnMap_003Ec__AnonStorey.trigger] = value4;
-					}
-				}
-				else
-				{
-					if (_003CAddMarkersOnMap_003Ec__AnonStorey.trigger.TaskObject.Tags.Count <= 0 || _003CAddMarkersOnMap_003Ec__AnonStorey.trigger.TaskObject.SceneID == GameScenes.SceneID.None)
-					{
-						continue;
-					}
-					List<IMapMainObject> list = Client.Instance.Map.AllMapObjects.Keys.Where(_003CAddMarkersOnMap_003Ec__AnonStorey._003C_003Em__2).ToList();
-					foreach (IMapMainObject item in list)
-					{
-						MapObject mapObject = Client.Instance.Map.AllMapObjects[item];
-						if (mapObject != null && !MapQuestIndicators.ContainsKey(_003CAddMarkersOnMap_003Ec__AnonStorey.trigger))
-						{
-							QuestIndicatorUI component3 = Object.Instantiate(MapQuestIndicatorPrefab, IndicatorParent).GetComponent<QuestIndicatorUI>();
-							component3.TaskName.text = _003CAddMarkersOnMap_003Ec__AnonStorey.trigger.Name;
-							Tuple<MapObject, QuestIndicatorUI> value5 = new Tuple<MapObject, QuestIndicatorUI>(mapObject, component3);
-							MapQuestIndicators[_003CAddMarkersOnMap_003Ec__AnonStorey.trigger] = value5;
-						}
+						QuestIndicatorUI component3 = Object.Instantiate(MapQuestIndicatorPrefab, IndicatorParent).GetComponent<QuestIndicatorUI>();
+						component3.TaskName.text = trigger.Name;
+						Tuple<MapObject, QuestIndicatorUI> value5 = new Tuple<MapObject, QuestIndicatorUI>(mapObject, component3);
+						MapQuestIndicators[trigger] = value5;
 					}
 				}
 			}
@@ -211,16 +184,16 @@ public class QuestIndicators : MonoBehaviour
 					{
 						if (!SceneQuestTriggers[key].gameObject.activeInHierarchy)
 						{
-							SceneQuestTriggers[key].gameObject.SetActive(true);
-							SceneQuestTriggers[key].Animator.SetBool("Hide", false);
+							SceneQuestTriggers[key].gameObject.SetActive(value: true);
+							SceneQuestTriggers[key].Animator.SetBool("Hide", value: false);
 						}
 					}
 					else if (SceneQuestTriggers[key].gameObject.activeInHierarchy)
 					{
-						SceneQuestTriggers[key].Animator.SetBool("Hide", true);
+						SceneQuestTriggers[key].Animator.SetBool("Hide", value: true);
 					}
 				}
-				Vector2 localPoint = Vector2.zero;
+				Vector2 localPoint;
 				RectTransformUtility.ScreenPointToLocalPointInRectangle(IndicatorParent, vector, Client.Instance.CanvasManager.Canvas.worldCamera, out localPoint);
 				bool flag = false;
 				if (vector.z < 0f)
@@ -264,10 +237,10 @@ public class QuestIndicators : MonoBehaviour
 		{
 			if (!MapQuestIndicators[key2].Item1.gameObject.activeInHierarchy && MapQuestIndicators[key2].Item1.MainObject.RadarVisibilityType == RadarVisibilityType.AlwaysVisible)
 			{
-				MapQuestIndicators[key2].Item1.gameObject.SetActive(true);
+				MapQuestIndicators[key2].Item1.gameObject.SetActive(value: true);
 			}
 			Vector3 vector2 = Client.Instance.Map.MapCamera.WorldToScreenPoint(MapQuestIndicators[key2].Item1.Position.transform.position);
-			Vector2 localPoint2 = Vector2.zero;
+			Vector2 localPoint2;
 			RectTransformUtility.ScreenPointToLocalPointInRectangle(IndicatorParent, vector2, Client.Instance.CanvasManager.Canvas.worldCamera, out localPoint2);
 			bool flag2 = false;
 			if (vector2.z < 0f)
@@ -304,3 +277,4 @@ public class QuestIndicators : MonoBehaviour
 		}
 	}
 }
+

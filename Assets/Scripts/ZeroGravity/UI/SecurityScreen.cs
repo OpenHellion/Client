@@ -502,9 +502,6 @@ namespace ZeroGravity.UI
 		{
 			if (toggle)
 			{
-				// Debug statement.
-				Dbg.Log("Enabled security screen.");
-
 				Client.Instance.CanvasManager.QuickTipHolder.Activate(value: false);
 				UpdateUI();
 				SelfDestructBox.Activate(value: false);

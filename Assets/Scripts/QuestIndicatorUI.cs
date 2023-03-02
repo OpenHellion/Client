@@ -1,5 +1,5 @@
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using ZeroGravity.LevelDesign;
 
 public class QuestIndicatorUI : MonoBehaviour
@@ -16,7 +16,7 @@ public class QuestIndicatorUI : MonoBehaviour
 
 	public Transform Arrow;
 
-	public Text TaskName;
+	public TextMeshProUGUI TaskName;
 
 	public void OnFinished()
 	{
@@ -25,7 +25,7 @@ public class QuestIndicatorUI : MonoBehaviour
 
 	public void Hide()
 	{
-		base.gameObject.SetActive(false);
+		gameObject.SetActive(false);
 	}
 
 	public void SetOffScreen(bool offScreen)

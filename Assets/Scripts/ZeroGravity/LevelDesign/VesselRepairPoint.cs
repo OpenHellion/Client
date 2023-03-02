@@ -235,13 +235,13 @@ namespace ZeroGravity.LevelDesign
 			}
 			if (Damage <= float.Epsilon)
 			{
-				foreach (RepairPointParticleEffect item3 in DamageEffects.Where((RepairPointParticleEffect m) => m.Effect != null))
+				foreach (RepairPointParticleEffect particleEffect in DamageEffects.Where((RepairPointParticleEffect m) => m.Effect != null))
 				{
-					item3.Stop();
+					particleEffect.Stop();
 				}
-				foreach (RepairPointMeshEffect item4 in DamageMeshes.Where((RepairPointMeshEffect m) => m.Mesh != null))
+				foreach (RepairPointMeshEffect meshEffect in DamageMeshes.Where((RepairPointMeshEffect m) => m.Mesh != null))
 				{
-					item4.Mesh.material.SetFloat("_Health", 1f);
+					meshEffect.Mesh.material.SetFloat("_Health", 1f);
 				}
 				{
 					foreach (RepairPointLight lightEffect in LightEffects)
@@ -251,35 +251,35 @@ namespace ZeroGravity.LevelDesign
 					return;
 				}
 			}
-			foreach (RepairPointParticleEffect item5 in DamageEffects.Where((RepairPointParticleEffect m) => m.Effect != null))
+			foreach (RepairPointParticleEffect particleEffect in DamageEffects.Where((RepairPointParticleEffect m) => m.Effect != null))
 			{
 				if (Room == null || !Room.UseGravity || Room.GravityForce == Vector3.zero)
 				{
-					item5.SetGravity(gravity: false);
+					particleEffect.SetGravity(gravity: false);
 				}
 				else
 				{
-					item5.SetGravity(gravity: true);
+					particleEffect.SetGravity(gravity: true);
 				}
-				if (item5.PlayOnce)
+				if (particleEffect.PlayOnce)
 				{
 					if (firstStrike)
 					{
-						item5.SetIntensity(Damage);
+						particleEffect.SetIntensity(Damage);
 						firstStrike = false;
 					}
 				}
 				else
 				{
-					item5.SetIntensity(Damage);
+					particleEffect.SetIntensity(Damage);
 				}
 			}
-			foreach (RepairPointMeshEffect item6 in DamageMeshes.Where((RepairPointMeshEffect m) => m.Mesh != null))
+			foreach (RepairPointMeshEffect meshEffect in DamageMeshes.Where((RepairPointMeshEffect m) => m.Mesh != null))
 			{
-				item6.Mesh.material.SetFloat("_Health", item6.Curve.Evaluate(1f - Damage));
-				if (!SecondaryDamageMesh.Contains(item6))
+				meshEffect.Mesh.material.SetFloat("_Health", meshEffect.Curve.Evaluate(1f - Damage));
+				if (!SecondaryDamageMesh.Contains(meshEffect))
 				{
-					item6.Mesh.material.SetFloat("_SystemDamage", 0f);
+					meshEffect.Mesh.material.SetFloat("_SystemDamage", 0f);
 				}
 			}
 		}
@@ -321,14 +321,16 @@ namespace ZeroGravity.LevelDesign
 					throw new Exception("Room not set.");
 				}
 			}
-			VesselRepairPointData vesselRepairPointData = new VesselRepairPointData();
-			vesselRepairPointData.InSceneID = InSceneID;
-			vesselRepairPointData.RoomID = ((!(Room == null)) ? Room.InSceneID : (-1));
-			vesselRepairPointData.DamageType = DamageType;
-			vesselRepairPointData.AffectedSystemID = ((!(AffectedSystem != null) || DamageType != RepairPointDamageType.System) ? (-1) : AffectedSystem.InSceneID);
-			vesselRepairPointData.MalfunctionThreshold = MalfunctionThreshold;
-			vesselRepairPointData.RepairThreshold = RepairThreshold;
-			vesselRepairPointData.External = External;
+			VesselRepairPointData vesselRepairPointData = new VesselRepairPointData
+			{
+				InSceneID = InSceneID,
+				RoomID = Room != null ? Room.InSceneID : -1,
+				DamageType = DamageType,
+				AffectedSystemID = (AffectedSystem == null || DamageType != RepairPointDamageType.System) ? -1 : AffectedSystem.InSceneID,
+				MalfunctionThreshold = MalfunctionThreshold,
+				RepairThreshold = RepairThreshold,
+				External = External
+			};
 			return vesselRepairPointData;
 		}
 
@@ -361,19 +363,43 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public void SetDetails(VesselRepairPointDetails vrpd)
+		public void SetDetails(VesselRepairPointDetails repairPointDetails)
 		{
-			Health = vrpd.Health;
-			MaxHealth = vrpd.MaxHealth;
+			Health = repairPointDetails.Health;
+			MaxHealth = repairPointDetails.MaxHealth;
 			prevSecondaryDamageActive = SecondaryDamageActive;
-			SecondaryDamageActive = vrpd.SecondaryDamageActive;
-			bool flag = !prevSecondaryDamageActive && SecondaryDamageActive;
+			SecondaryDamageActive = repairPointDetails.SecondaryDamageActive;
+			bool isSecondaryDamageUnchanged = !prevSecondaryDamageActive && SecondaryDamageActive;
 			UpdateEffects();
-			if (flag && MyPlayer.Instance.Parent is SpaceObjectVessel && MyPlayer.Instance.IsInVesselHierarchy(ParentVessel))
+			if (isSecondaryDamageUnchanged && MyPlayer.Instance.Parent is SpaceObjectVessel && MyPlayer.Instance.IsInVesselHierarchy(ParentVessel))
 			{
-				string text = ((DamageType != RepairPointDamageType.System) ? DamageType.ToLocalizedString() : ((!(AffectedSystem is Generator)) ? ((AffectedSystem as SubSystem).Type.ToLocalizedString() + " " + Localization.Failure.ToLower()) : ((AffectedSystem as Generator).Type.ToLocalizedString() + " " + Localization.Failure.ToLower())));
-				string msg = ((!(ParentVessel.DockedToVessel == null) || ParentVessel.DockedVessels.Count != 0) ? string.Format(Localization.RepairPointMessageVesselRoom, text.ToUpper(), ParentVessel.VesselData.VesselRegistration, (!External) ? Room.RoomName.ToUpper() : Localization.Hull.ToUpper()) : string.Format(Localization.RepairPointMessageRoom, text.ToUpper(), (!External) ? Room.RoomName.ToUpper() : Localization.Hull.ToUpper()));
-				Client.Instance.CanvasManager.CanvasUI.Notification(msg, CanvasUI.NotificationType.Alert);
+				// Get affected system/ damage type as text.
+				string damageText;
+				if (DamageType is not RepairPointDamageType.System)
+				{
+					damageText = DamageType.ToLocalizedString();
+				}
+				else if (AffectedSystem is not Generator)
+				{
+					damageText = (AffectedSystem as SubSystem).Type.ToLocalizedString() + " " + Localization.Failure.ToLower();
+				}
+				else
+				{
+					damageText = (AffectedSystem as Generator).Type.ToLocalizedString() + " " + Localization.Failure.ToLower();
+				}
+
+				// Use the damage text and get a full alert message.
+				string fullMessage;
+				if (ParentVessel.DockedToVessel != null || ParentVessel.DockedVessels.Count is not 0)
+				{
+					fullMessage = string.Format(Localization.RepairPointMessageVesselRoom, damageText.ToUpper(), ParentVessel.VesselData.VesselRegistration, !External ? Room.RoomName.ToUpper() : Localization.Hull.ToUpper());
+				}
+				else
+				{
+					fullMessage = string.Format(Localization.RepairPointMessageRoom, damageText.ToUpper(), !External ? Room.RoomName.ToUpper() : Localization.Hull.ToUpper());
+				}
+
+				Client.Instance.CanvasManager.CanvasUI.Notification(fullMessage, CanvasUI.NotificationType.Alert);
 			}
 		}
 	}

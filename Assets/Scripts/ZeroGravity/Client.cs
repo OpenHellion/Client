@@ -1049,7 +1049,7 @@ namespace ZeroGravity
 		{
 			if (CanvasManager.StartingPointScreen.activeInHierarchy)
 			{
-				CanvasManager.ExitSpawnOptionsScreen();
+				CanvasManager.ExitStartingPointScreen();
 			}
 			else
 			{

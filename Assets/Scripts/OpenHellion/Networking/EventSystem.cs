@@ -40,13 +40,13 @@ namespace OpenHellion.Networking
 			CloseAllLoadingScreens = 9
 		}
 
-		private ConcurrentDictionary<Type, NetworkDataDelegate> _listeners = new ConcurrentDictionary<Type, NetworkDataDelegate>();
+		private ConcurrentDictionary<Type, NetworkDataDelegate> m_listeners = new ConcurrentDictionary<Type, NetworkDataDelegate>();
 
-		private ConcurrentDictionary<InternalEventType, InternalDataDelegate> _internalDataGroups = new ConcurrentDictionary<InternalEventType, InternalDataDelegate>();
+		private ConcurrentDictionary<InternalEventType, InternalDataDelegate> m_internalDataGroups = new ConcurrentDictionary<InternalEventType, InternalDataDelegate>();
 
-		private ConcurrentQueue<InternalEventData> _internalBuffer = new ConcurrentQueue<InternalEventData>();
+		private ConcurrentQueue<InternalEventData> m_internalBuffer = new ConcurrentQueue<InternalEventData>();
 
-		private ConcurrentQueue<NetworkData> _networkBuffer = new ConcurrentQueue<NetworkData>();
+		private ConcurrentQueue<NetworkData> m_networkBuffer = new ConcurrentQueue<NetworkData>();
 
 		private static Dictionary<Type, int> s_avgPacketCounter = new Dictionary<Type, int>();
 		private static Dictionary<Type, int> s_packetCounter = new Dictionary<Type, int>();
@@ -111,15 +111,15 @@ namespace OpenHellion.Networking
 		/// </summary>
 		public static void AddListener(Type group, NetworkDataDelegate function)
 		{
-			if (Instance._listeners.ContainsKey(group))
+			if (Instance.m_listeners.ContainsKey(group))
 			{
 				ConcurrentDictionary<Type, NetworkDataDelegate> concurrentDictionary;
 				Type key;
-				(concurrentDictionary = Instance._listeners)[key = group] = (NetworkDataDelegate)Delegate.Combine(concurrentDictionary[key], function);
+				(concurrentDictionary = Instance.m_listeners)[key = group] = (NetworkDataDelegate)Delegate.Combine(concurrentDictionary[key], function);
 			}
 			else
 			{
-				Instance._listeners[group] = function;
+				Instance.m_listeners[group] = function;
 			}
 		}
 
@@ -128,15 +128,15 @@ namespace OpenHellion.Networking
 		/// </summary>
 		public static void AddListener(InternalEventType group, InternalDataDelegate function)
 		{
-			if (Instance._internalDataGroups.ContainsKey(group))
+			if (Instance.m_internalDataGroups.ContainsKey(group))
 			{
 				ConcurrentDictionary<InternalEventType, InternalDataDelegate> concurrentDictionary;
 				InternalEventType key;
-				(concurrentDictionary = Instance._internalDataGroups)[key = group] = (InternalDataDelegate)Delegate.Combine(concurrentDictionary[key], function);
+				(concurrentDictionary = Instance.m_internalDataGroups)[key = group] = (InternalDataDelegate)Delegate.Combine(concurrentDictionary[key], function);
 			}
 			else
 			{
-				Instance._internalDataGroups[group] = function;
+				Instance.m_internalDataGroups[group] = function;
 			}
 		}
 
@@ -145,11 +145,11 @@ namespace OpenHellion.Networking
 		/// </summary>
 		public static void RemoveListener(Type group, NetworkDataDelegate function)
 		{
-			if (Instance._listeners.ContainsKey(group))
+			if (Instance.m_listeners.ContainsKey(group))
 			{
 				ConcurrentDictionary<Type, NetworkDataDelegate> concurrentDictionary;
 				Type key;
-				(concurrentDictionary = Instance._listeners)[key = group] = (NetworkDataDelegate)Delegate.Remove(concurrentDictionary[key], function);
+				(concurrentDictionary = Instance.m_listeners)[key = group] = (NetworkDataDelegate)Delegate.Remove(concurrentDictionary[key], function);
 			}
 		}
 
@@ -158,11 +158,11 @@ namespace OpenHellion.Networking
 		/// </summary>
 		public static void RemoveListener(InternalEventType group, InternalDataDelegate function)
 		{
-			if (Instance._internalDataGroups.ContainsKey(group))
+			if (Instance.m_internalDataGroups.ContainsKey(group))
 			{
 				ConcurrentDictionary<InternalEventType, InternalDataDelegate> concurrentDictionary;
 				InternalEventType key;
-				(concurrentDictionary = Instance._internalDataGroups)[key = group] = (InternalDataDelegate)Delegate.Remove(concurrentDictionary[key], function);
+				(concurrentDictionary = Instance.m_internalDataGroups)[key = group] = (InternalDataDelegate)Delegate.Remove(concurrentDictionary[key], function);
 			}
 		}
 
@@ -171,20 +171,20 @@ namespace OpenHellion.Networking
 		/// </summary>
 		internal void Invoke(NetworkData data)
 		{
-			if (_listeners.ContainsKey(data.GetType()) && _listeners[data.GetType()] != null)
+			if (m_listeners.ContainsKey(data.GetType()) && m_listeners[data.GetType()] != null)
 			{
 				if (Thread.CurrentThread.ManagedThreadId == Client.MainThreadID)
 				{
-					_listeners[data.GetType()](data);
+					m_listeners[data.GetType()](data);
 				}
 				else
 				{
-					_networkBuffer.Enqueue(data);
+					m_networkBuffer.Enqueue(data);
 				}
 			}
 			else
 			{
-				Dbg.Error("Cannot invoke ", data.GetType(), data);
+				Dbg.Error("Listener is not registered for data:", data.GetType(), data);
 			}
 		}
 
@@ -194,15 +194,15 @@ namespace OpenHellion.Networking
 		// TODO: Make this non-static internal.
 		public static void Invoke(InternalEventData data)
 		{
-			if (Instance._internalDataGroups.ContainsKey(data.Type) && Instance._internalDataGroups[data.Type] != null)
+			if (Instance.m_internalDataGroups.ContainsKey(data.Type) && Instance.m_internalDataGroups[data.Type] != null)
 			{
 				if (!Client.IsGameBuild || Thread.CurrentThread.ManagedThreadId == Client.MainThreadID)
 				{
-					Instance._internalDataGroups[data.Type](data);
+					Instance.m_internalDataGroups[data.Type](data);
 				}
 				else
 				{
-					Instance._internalBuffer.Enqueue(data);
+					Instance.m_internalBuffer.Enqueue(data);
 				}
 			}
 			else
@@ -217,15 +217,15 @@ namespace OpenHellion.Networking
 		internal void InvokeQueuedData()
 		{
 			s_packetCounter.Clear();
-			while (_networkBuffer.Count > 0)
+			while (m_networkBuffer.Count > 0)
 			{
 				NetworkData result;
-				if (!_networkBuffer.TryDequeue(out result))
+				if (!m_networkBuffer.TryDequeue(out result))
 				{
 					continue;
 				}
 				NetworkDataDelegate value;
-				if (_listeners.TryGetValue(result.GetType(), out value) && value != null)
+				if (m_listeners.TryGetValue(result.GetType(), out value) && value != null)
 				{
 					value(result);
 				}
@@ -261,11 +261,11 @@ namespace OpenHellion.Networking
 				}
 				DebugPacketCount = false;
 			}
-			while (_internalBuffer.Count > 0)
+			while (m_internalBuffer.Count > 0)
 			{
 				InternalEventData result2;
 				InternalDataDelegate value2;
-				if (_internalBuffer.TryDequeue(out result2) && _internalDataGroups.TryGetValue(result2.Type, out value2) && value2 != null)
+				if (m_internalBuffer.TryDequeue(out result2) && m_internalDataGroups.TryGetValue(result2.Type, out value2) && value2 != null)
 				{
 					value2(result2);
 				}

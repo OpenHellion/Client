@@ -36,7 +36,7 @@ TextureImporter:
   maxTextureSize: 80
   textureSettings:
     serializedVersion: 2
-    filterMode: 2
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -111,10 +111,10 @@ TextureImporter:
       name: NewQuestIndicator
       rect:
         serializedVersion: 2
-        x: 30.07612
-        y: 9.002516
-        width: 19.864153
-        height: 60.921364
+        x: 32
+        y: 11
+        width: 16
+        height: 57
       alignment: 9
       pivot: {x: 0.49958736, y: 0.5088114}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -172,7 +172,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: d05710c6d44b3544bbe8a5badf9aa5ad
     internalID: 0
     vertices: []
     indices: 

@@ -785,7 +785,7 @@ namespace ZeroGravity.ShipComponents
 			}
 			else
 			{
-				if (obj?.Orbit?.Parent.CelestialBody == null)
+				if (obj == null || obj.Orbit == null || obj.Orbit.Parent.CelestialBody == null)
 				{
 					return;
 				}
