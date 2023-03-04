@@ -266,5 +266,4 @@ Shader "ZeroGravity/Planet/AtmosphereShader" {
 		}
 	}
 	Fallback "Diffuse"
-	CustomEditor "ShaderForgeMaterialInspector"
 }

@@ -2,17 +2,21 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: BethyrBelt04_MAT
-  m_Shader: {fileID: 4800000, guid: 9815ebeadcba15844a93ea73fcf65dfa, type: 3}
-  m_ShaderKeywords: _FLIPFLOW_ON _TEST_ON
+  m_Shader: {fileID: 4800000, guid: dce73cae648efe148abf4503cbb64e84, type: 2}
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _FLIPFLOW_ON
+  - _TEST_ON
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -42,6 +46,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: 0f6bd1db7beba5f458a89b6e3f480b0d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
@@ -72,3 +77,4 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MidColor: {r: 0.69803923, g: 0, b: 0.61960787, a: 1}
     - _RimColor: {r: 0.42745098, g: 0.38431373, b: 0.9137255, a: 1}
+  m_BuildTextureStacks: []
