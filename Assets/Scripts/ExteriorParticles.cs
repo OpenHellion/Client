@@ -2,14 +2,6 @@ using UnityEngine;
 
 public class ExteriorParticles : MonoBehaviour
 {
-	private void Start()
-	{
-	}
-
-	private void Update()
-	{
-	}
-
 	public void UpdatePositionOnPivotReset(Vector3 positionCorrect)
 	{
 		ParticleSystem[] componentsInChildren = GetComponentsInChildren<ParticleSystem>();
