@@ -100,7 +100,6 @@ namespace ZeroGravity
 		public GameObject ConfirmMessageBox;
 
 		[Title("Spawn point selection screen")]
-		[ReadOnly]
 		[ListDrawerSettings(Draggable = false, HideAddButton = true, HideRemoveButton = true, AlwaysExpanded = true)]
 		public List<StartingPointOptionData> StartingPointData = new List<StartingPointOptionData>();
 
@@ -112,15 +111,17 @@ namespace ZeroGravity
 
 		public StartingPointOptionUI StartingPointUI;
 
-		public GameObject SelectSpawnPointScreen;
+		[Title("Save selection screen")]
+		public GameObject SelectSaveScreen;
 
-		public Transform SpawnPointsHolder;
+		public Transform SaveGamesHolder;
 
-		public SpawnPointOptionUI SpawnPointOptionUI;
+		[AssetsOnly, Required]
+		public SaveGameOptionUI SaveGameOptionUI;
 
-		public RawImage CurrentSpawnPointScreenshot;
+		public RawImage CurrentSaveGameScreenshot;
 
-		public Text CurrentSpawnPointDescription;
+		public Text CurrentSaveGameDescription;
 
 		public bool CanChooseSpawn = true;
 
@@ -396,7 +397,7 @@ namespace ZeroGravity
 
 		public void SelectGameMode(int mode)
 		{
-			CurrentSpawnPointDescription.text = Localization.FreshStart;
+			CurrentSaveGameDescription.text = Localization.FreshStart;
 			Client.SinglePlayerGameMode = (Client.SPGameMode) mode;
 			ShowSingleplayerSaves();
 		}
@@ -404,22 +405,22 @@ namespace ZeroGravity
 		public void ShowSingleplayerSaves()
 		{
 			// Enable menu.
-			SelectSpawnPointScreen.SetActive(value: true);
+			SelectSaveScreen.SetActive(value: true);
 
 			// Clear all entries.
-			SpawnPointsHolder.DestroyAll<SpawnPointOptionUI>();
+			SaveGamesHolder.DestroyAll<SaveGameOptionUI>();
 
 			// Create default entry for creating new game.
-			SpawnPointOptionUI newWorldEntry = Instantiate(SpawnPointOptionUI, SpawnPointsHolder);
+			SaveGameOptionUI newWorldEntry = Instantiate(SaveGameOptionUI, SaveGamesHolder);
 			newWorldEntry.CreateNewGameButton();
 
 			DirectoryInfo directoryInfo = new DirectoryInfo(Client.Instance.GetSPPath());
 			bool hasNoSaves = true;
 			foreach (FileInfo item in from m in directoryInfo.GetFiles("*.save") orderby m.LastWriteTime descending select m)
 			{
-				SpawnPointOptionUI spawnPointOptionUI2 = Instantiate(SpawnPointOptionUI, SpawnPointsHolder);
-				spawnPointOptionUI2.SaveFile = item;
-				spawnPointOptionUI2.CreateSaveGameButton();
+				SaveGameOptionUI saveOptionUI = Instantiate(SaveGameOptionUI, SaveGamesHolder);
+				saveOptionUI.SaveFile = item;
+				saveOptionUI.CreateSaveGameButton();
 				hasNoSaves = false;
 			}
 
@@ -624,8 +625,8 @@ namespace ZeroGravity
 			FreshStartSpawnOptions.gameObject.Activate(value: false);
 			SpawnOptions.DestroyAll<StartingPointOptionUI>();
 			SpawnOptions.gameObject.Activate(value: true);
-			SelectSpawnPointScreen.SetActive(value: false);
-			SpawnPointsHolder.DestroyAll<SpawnPointOptionUI>();
+			SelectSaveScreen.SetActive(value: false);
+			SaveGamesHolder.DestroyAll<SaveGameOptionUI>();
 			for (int i = 0; i < spawnPoints.Count; i++)
 			{
 				InstantiateSpawnButton(spawnPoints[i], i, onSpawnClicked);
@@ -673,14 +674,14 @@ namespace ZeroGravity
 			inviteCustomOptionUI.GetComponent<Button>().interactable = spawnPoints.Count > 0;
 			inviteCustomOptionUI.GetComponent<Button>().onClick.AddListener(delegate
 			{
-				SelectSpawnPointScreen.SetActive(value: true);
+				SelectSaveScreen.SetActive(value: true);
 			});
 			InstantiateFreshStartOptions();
 		}
 
 		private void InstantiateSpawnButton(SpawnPointDetails spawnPoint, int posIndex, OnSpawnPointClicked onSpawnClicked)
 		{
-			SpawnPointOptionUI spawnPointOptionUI = GameObject.Instantiate(SpawnPointOptionUI, SpawnPointsHolder);
+			SaveGameOptionUI spawnPointOptionUI = GameObject.Instantiate(SaveGameOptionUI, SaveGamesHolder);
 			string text = (!spawnPoint.Name.IsNullOrEmpty()) ? spawnPoint.Name : spawnPoint.SpawnSetupType.ToLocalizedString();
 			spawnPointOptionUI.Name.text = text + ((spawnPoint.PlayersOnShip == null || spawnPoint.PlayersOnShip.Count <= 0) ? string.Empty : ("\n" + string.Join(", ", spawnPoint.PlayersOnShip.ToArray())));
 			spawnPointOptionUI.GetComponent<Button>().onClick.AddListener(delegate
@@ -689,7 +690,7 @@ namespace ZeroGravity
 			});
 			spawnPointOptionUI.GetComponent<Button>().onClick.AddListener(delegate
 			{
-				SelectSpawnPointScreen.SetActive(value: false);
+				SelectSaveScreen.SetActive(value: false);
 			});
 			if (Client.Instance.SinglePlayerMode)
 			{

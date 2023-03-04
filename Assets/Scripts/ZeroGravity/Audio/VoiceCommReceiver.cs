@@ -127,7 +127,7 @@ namespace ZeroGravity.Audio
 			UpdateAudioParameters();
 			if (MyPlayer.isAudioDebug)
 			{
-				Dbg.Info("Stigao voiceDataMessage");
+				Dbg.Log("Voice message arrived.");
 			}
 		}
 
@@ -162,7 +162,7 @@ namespace ZeroGravity.Audio
 				distance = (MyPlayer.Instance.transform.position - thisPlayer.transform.position).magnitude;
 				if (MyPlayer.isAudioDebug)
 				{
-					Dbg.Info("distance " + distance);
+					Dbg.Log("Voice distance " + distance);
 				}
 				if (distance <= maxRadioDistance)
 				{
@@ -185,7 +185,7 @@ namespace ZeroGravity.Audio
 				float? num = MyPlayer.Instance.GetDistance(thisPlayer, out bool throughBulkhead);
 				if (MyPlayer.isAudioDebug)
 				{
-					Dbg.Info("dist " + num);
+					Dbg.Log("Voice distance " + num);
 				}
 				if (num.HasValue && num.Value <= maxAudibleDistance)
 				{

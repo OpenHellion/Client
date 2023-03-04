@@ -2,6 +2,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using TMPro;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,9 +10,9 @@ using UnityEngine.UI;
 using ZeroGravity;
 using ZeroGravity.Network;
 
-public class SpawnPointOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IEventSystemHandler
+public class SaveGameOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IEventSystemHandler
 {
-	public Text Name;
+	public TextMeshProUGUI Name;
 
 	public GameObject Active;
 
@@ -26,7 +27,7 @@ public class SpawnPointOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerE
 
 	private bool isSaveFile;
 
-	private string SavedGameVersion;
+	private string m_SavedGameVersion;
 
 	public void Start()
 	{
@@ -49,7 +50,7 @@ public class SpawnPointOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerE
 	{
 		isSaveFile = true;
 		string text = SaveFile.Name.Replace(".save", string.Empty);
-		Name.text = SaveFile.LastWriteTime.ToString() + text.ToLower() != "autosave" ? string.Empty : " (" + Localization.Autosave.ToUpper() + ")";
+		Name.text = SaveFile.LastWriteTime.ToString() + (text.ToLower() != "autosave" ? text : " (" + Localization.Autosave.ToUpper() + ")");
 		JsonTextReader jsonTextReader = new JsonTextReader(File.OpenText(SaveFile.FullName));
 		JToken jToken = null;
 		while (jsonTextReader.Read())
@@ -67,8 +68,19 @@ public class SpawnPointOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerE
 			SaveFileAuxData saveFileAuxData = jToken.ToObject<SaveFileAuxData>();
 			Screenshot = new Texture2D(2, 2, TextureFormat.RGB24, false);
 			Screenshot.LoadImage(saveFileAuxData.Screenshot);
-			SavedGameVersion = new Regex("[^0-9.]").Replace(saveFileAuxData.ClientVersion, string.Empty);
-			Description = ((!(SavedGameVersion != new Regex("[^0-9.]").Replace(Application.version, string.Empty))) ? string.Format(Localization.ClientVersion, SavedGameVersion) : ("<color=#D01D1D>" + string.Format(Localization.ClientVersion, SavedGameVersion) + "</color>")) + "\n" + Localization.OrbitingNear + " : <color=#0F4F6F>" + saveFileAuxData.CelestialBody + "</color>\n" + saveFileAuxData.ParentSceneID.ToLocalizedString();
+			m_SavedGameVersion = new Regex("[^0-9.]").Replace(saveFileAuxData.ClientVersion, string.Empty);
+
+			// If the version is the same.
+			if (m_SavedGameVersion == new Regex("[^0-9.]").Replace(Application.version, string.Empty))
+			{
+				Description = $"<color=#D01D1D>{string.Format(Localization.ClientVersion, m_SavedGameVersion)}</color>\n"
+						+ $"{Localization.OrbitingNear} : <color=#0F4F6F>{saveFileAuxData.CelestialBody}</color>\n"
+						+ saveFileAuxData.ParentSceneID.ToLocalizedString();
+			}
+			else
+			{
+				Description = string.Format(Localization.ClientVersion, m_SavedGameVersion);
+			}
 		}
 		DeleteButton.onClick.AddListener(DeleteAction);
 		GetComponent<Button>().onClick.AddListener(LoadSavedGame);
@@ -76,13 +88,13 @@ public class SpawnPointOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerE
 
 	private void LoadSavedGame()
 	{
-		if (!Client.Instance.AllowLoadingOldSaveGames && SavedGameVersion != new Regex("[^0-9.]").Replace(Application.version, string.Empty))
+		if (!Client.Instance.AllowLoadingOldSaveGames && m_SavedGameVersion != new Regex("[^0-9.]").Replace(Application.version, string.Empty))
 		{
 			Client.Instance.ShowMessageBox(Localization.Warning, Localization.WrongSavegameVersion);
 			return;
 		}
 		Client.Instance.CanvasManager.StartingPointScreen.SetActive(false);
-		Client.Instance.CanvasManager.SelectSpawnPointScreen.SetActive(false);
+		Client.Instance.CanvasManager.SelectSaveScreen.SetActive(false);
 		Client.Instance.StartCoroutine(Client.Instance.PlaySPCoroutine(SaveFile.Name));
 	}
 
@@ -99,8 +111,8 @@ public class SpawnPointOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerE
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		Client.Instance.CanvasManager.CurrentSpawnPointScreenshot.texture = Screenshot;
-		Client.Instance.CanvasManager.CurrentSpawnPointDescription.text = Description;
+		Client.Instance.CanvasManager.CurrentSaveGameScreenshot.texture = Screenshot;
+		Client.Instance.CanvasManager.CurrentSaveGameDescription.text = Description;
 		if (isSaveFile)
 		{
 			DeleteButton.gameObject.SetActive(true);
@@ -109,8 +121,8 @@ public class SpawnPointOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerE
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		Client.Instance.CanvasManager.CurrentSpawnPointScreenshot.texture = Client.Instance.SpriteManager.DefaultSceneTexture;
-		Client.Instance.CanvasManager.CurrentSpawnPointDescription.text = Localization.ChooseSpawnPoint;
+		Client.Instance.CanvasManager.CurrentSaveGameScreenshot.texture = Client.Instance.SpriteManager.DefaultSceneTexture;
+		Client.Instance.CanvasManager.CurrentSaveGameDescription.text = Localization.ChooseSpawnPoint;
 		if (DeleteButton.gameObject.activeInHierarchy)
 		{
 			DeleteButton.gameObject.SetActive(false);

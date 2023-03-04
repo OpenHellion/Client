@@ -683,7 +683,7 @@ namespace ZeroGravity
 						}
 					}
 					MyPlayer.Instance.Parent = GetVessel(s.ParentID);
-					Dbg.Info("Starting main scene load, Ship");
+					Dbg.Log("Starting main scene load, Ship");
 					StartCoroutine(LoadMainScenesCoroutine(s, ship, s.VesselObjects));
 				}
 				else if (s.ParentType == SpaceObjectType.Asteroid)
@@ -691,7 +691,7 @@ namespace ZeroGravity
 					Asteroid asteroid = Asteroid.Create(s.ParentTransform, s.VesselData, isMainObject: true);
 					asteroid.gameObject.SetActive(value: true);
 					MyPlayer.Instance.Parent = asteroid;
-					Dbg.Info("Starting main scene load, Asteroid");
+					Dbg.Log("Starting main scene load, Asteroid");
 					StartCoroutine(LoadMainScenesCoroutine(s, asteroid));
 				}
 				else if (s.ParentType == SpaceObjectType.PlayerPivot)
@@ -1882,7 +1882,7 @@ namespace ZeroGravity
 
 			if (logInResponse.Response == ResponseResult.Success)
 			{
-				Dbg.Info("Logged into game.");
+				Dbg.Log("Logged into game.");
 
 				SolarSystem.Set(SolarSystemRoot.transform.Find("SunRoot"), SolarSystemRoot.transform.Find("PlanetsRoot"), logInResponse.ServerTime);
 				SolarSystem.LoadDataFromResources();
@@ -2080,7 +2080,7 @@ namespace ZeroGravity
 
 							if (data.Result == ResponseResult.Success)
 							{
-								Dbg.Info("Successfully created a new player account with id", data.PlayerIds);
+								Dbg.Log("Successfully created a new player account with id", data.PlayerIds);
 								callback(data);
 							}
 							else
@@ -2279,7 +2279,7 @@ namespace ZeroGravity
 
 					this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 
-					Dbg.Info("Successfully connected to singleplayer server!");
+					Dbg.Log("Successfully connected to singleplayer server!");
 					yield break;
 				}
 
@@ -2289,7 +2289,7 @@ namespace ZeroGravity
 			catch (Exception ex)
 			{
 				Dbg.Error("Unable to start single player game", ex.Message, ex.StackTrace);
-				CanvasManager.SelectSpawnPointScreen.SetActive(false);
+				CanvasManager.SelectSaveScreen.SetActive(false);
 				CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
 				if (File.Exists(filePath))
 				{
@@ -2442,7 +2442,7 @@ namespace ZeroGravity
 			ProviderManager.UpdateStatus();
 			MyPlayer.Instance.InitializeCameraEffects();
 
-			Instance.CanvasManager.SelectSpawnPointScreen.Activate(value: false);
+			Instance.CanvasManager.SelectSaveScreen.Activate(value: false);
 			IsInGame = true;
 			lastSPAutosaveTime = Time.time;
 			ToggleCursor(false);

@@ -121,7 +121,7 @@ namespace OpenHellion.Networking
 
 			Send(logInRequest);
 
-			Dbg.Info("Established connection to server.");
+			Dbg.Log("Established connection to server.");
 		}
 
 
@@ -147,7 +147,7 @@ namespace OpenHellion.Networking
 				}
 				else if (Client.Instance.LogoutRequestSent)
 				{
-					Dbg.Info("Tried to listen to data, but logout was requested.");
+					Dbg.Log("Tried to listen to data, but logout was requested.");
 				}
 			}
 		}

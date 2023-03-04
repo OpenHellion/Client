@@ -197,7 +197,7 @@ namespace OpenHellion.Networking
 				_gameConnection.Disconnect();
 			}
 
-			Dbg.Info("Connecting to singleplayer server with port", port);
+			Dbg.Log("Connecting to singleplayer server with port", port);
 			_gameConnection = new GSConnection();
 			_gameConnection.Connect("127.0.0.1", port, string.Empty, string.Empty);
 		}

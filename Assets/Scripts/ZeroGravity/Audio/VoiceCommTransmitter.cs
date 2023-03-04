@@ -51,7 +51,7 @@ namespace ZeroGravity.Audio
 				{
 					if (MyPlayer.isAudioDebug)
 					{
-						Dbg.Info("Start " + AudioListener.volume);
+						Dbg.Log("Start " + AudioListener.volume);
 					}
 					micDevice = Microphone.devices[0];
 					inAudioClip = Microphone.Start(micDevice, loop: true, 5, samplerate);
@@ -75,7 +75,7 @@ namespace ZeroGravity.Audio
 			{
 				if (MyPlayer.isAudioDebug)
 				{
-					Dbg.Info("Stop " + AudioListener.volume);
+					Dbg.Log("Stop " + AudioListener.volume);
 				}
 				inAudioClip = null;
 				talk = false;

@@ -8,10 +8,6 @@ public class OnMouseOverColorChangeScript : MonoBehaviour, IPointerEnterHandler,
 
 	public Color HoverColor;
 
-	private void Start()
-	{
-	}
-
 	public void OnPointerEnter(PointerEventData eventData)
 	{
 		GetComponent<Image>().color = HoverColor;
