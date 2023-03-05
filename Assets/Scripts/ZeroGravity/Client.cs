@@ -53,11 +53,11 @@ namespace ZeroGravity
 			PreloadWithCopy
 		}
 
-		private readonly string _spServerPath = Directory.GetCurrentDirectory() + "\\Hellion_Data\\HELLION_SP";
+		private readonly string k_SpServerPath = Directory.GetCurrentDirectory() + "\\Hellion_Data\\HELLION_SP";
 
-		private const string _spServerFileName = "HELLION_SP.exe";
+		private const string k_SpServerFileName = "HELLION_SP.exe";
 
-		private CharacterData _newCharacterData;
+		private CharacterData m_NewCharacterData;
 
 		public bool ExperimentalBuild;
 
@@ -83,15 +83,9 @@ namespace ZeroGravity
 
 		public MainMenuSceneController MainMenuSceneController;
 
-		public bool USE_PHYSICS_POSITION_FIX = true;
-
 		public float RCS_THRUST_SENSITIVITY = 0.5f;
 
 		public float RCS_ROTATION_SENSITIVITY = 5f;
-
-		public float RCS_THRUST_TIME_MULTIPLIER = 2f;
-
-		public float RCS_ROTATION_TIME_MULTIPLIER = 2f;
 
 		public static double CELESTIAL_BODY_RADIUS_MULTIPLIER = 1.0;
 
@@ -151,8 +145,6 @@ namespace ZeroGravity
 
 		public GameObject ShipExteriorRoot;
 
-		public Transform ShipExteriorRotation;
-
 		public Transform SunCameraRootTransform;
 
 		public Transform SunCameraTransform;
@@ -193,15 +185,15 @@ namespace ZeroGravity
 
 		public volatile bool LogInResponseReceived;
 
-		private bool _gameExitWanted;
+		private bool m_GameExitWanted;
 
-		private float _maxSecondsToWaitForExit = 3f;
+		private float m_MaxSecondsToWaitForExit = 3f;
 
 		public bool EnvironmentReady;
 
-		private bool _receivedSignInResponse;
+		private bool m_ReceivedSignInResponse;
 
-		private const int autosaveInterval = 600;
+		private const int k_AutosaveInterval = 600;
 
 		[NonSerialized]
 		public List<ItemIngredientsData> ItemsIngredients;
@@ -221,23 +213,23 @@ namespace ZeroGravity
 
 		public float LastLoadingTipsChangeTime;
 
-		private float headbobStrength;
+		private float m_HeadbobStrength;
 
-		private int antialiasingOption;
+		private int m_AntialiasingOption;
 
-		private bool volumetricOption;
+		private bool m_VolumetricOption;
 
 		public bool OffSpeedHelper = true;
 
 		public static volatile int MainThreadID;
 
-		private static int defaultLayerMaskValue = -1;
+		private static int m_DefaultLayerMaskValue = -1;
 
 		public static float DefaultCameraFov = 75f;
 
 		public static float SpecialCameraFov = 40f;
 
-		private bool openMainSceneStarted;
+		private bool m_OpenMainSceneStarted;
 
 		public GameObject MainMenuRoot;
 
@@ -257,15 +249,13 @@ namespace ZeroGravity
 
 		public int CurrentLanguageIndex;
 
-		private IEnumerator _processInvitationCoroutine;
+		private IEnumerator m_ProcessInvitationCoroutine;
 
-		private IEnumerator _inviteCoroutine;
+		private IEnumerator m_InviteCoroutine;
 
 		public GameObject InviteScreen;
 
 		public List<DebrisField> DebrisFields = new List<DebrisField>();
-
-		public ExteriorParticles ExtParticles;
 
 		public DebrisFieldEffect DebrisEffect;
 
@@ -278,9 +268,9 @@ namespace ZeroGravity
 		[NonSerialized]
 		public DateTime? ServerRestartTime;
 
-		private static Process _spServerProcess = null;
+		private static Process m_SpServerProcess = null;
 
-		private float lastSPAutosaveTime;
+		private float m_LastSPAutosaveTime;
 
 		[NonSerialized]
 		public bool SinglePlayerMode;
@@ -300,14 +290,12 @@ namespace ZeroGravity
 		[NonSerialized]
 		public float[] PlayerExposureValues;
 
-		private float _lastLatencyMessageTime = -1f;
+		private float m_LastLatencyMessageTime = -1f;
 
-		private int _latencyMs;
+		private int m_LatencyMs;
 
 		[Title("Cursor")]
 		public Texture2D DefaultCursor;
-
-		public Texture2D HoverCursor;
 
 		public static bool ReconnectAutomatically = false;
 
@@ -321,14 +309,14 @@ namespace ZeroGravity
 
 		public static VesselObjectID InvitedToServerSpawnPointId = null;
 
-		private IEnumerator _connectToServerCoroutine;
+		private IEnumerator m_ConnectToServerCoroutine;
 
-		private Task _loadingFinishedTask;
+		private Task m_LoadingFinishedTask;
 
-		private Task _restoreMapDetailsTask;
+		private Task m_RestoreMapDetailsTask;
 
-		private static Client _instance = null;
-		public static Client Instance => _instance;
+		private static Client s_Instance = null;
+		public static Client Instance => s_Instance;
 
 		public static bool IsGameBuild => Instance != null;
 
@@ -336,14 +324,14 @@ namespace ZeroGravity
 		{
 			get
 			{
-				return headbobStrength;
+				return m_HeadbobStrength;
 			}
 			set
 			{
-				headbobStrength = value;
+				m_HeadbobStrength = value;
 				if (MyPlayer.Instance != null)
 				{
-					MyPlayer.Instance.FpsController.HeadBobStrength = headbobStrength;
+					MyPlayer.Instance.FpsController.HeadBobStrength = m_HeadbobStrength;
 				}
 			}
 		}
@@ -352,11 +340,11 @@ namespace ZeroGravity
 		{
 			get
 			{
-				return antialiasingOption;
+				return m_AntialiasingOption;
 			}
 			set
 			{
-				antialiasingOption = value;
+				m_AntialiasingOption = value;
 				if (MyPlayer.Instance != null)
 				{
 					MyPlayer.Instance.InitializeCameraEffects();
@@ -368,11 +356,11 @@ namespace ZeroGravity
 		{
 			get
 			{
-				return volumetricOption;
+				return m_VolumetricOption;
 			}
 			set
 			{
-				volumetricOption = value;
+				m_VolumetricOption = value;
 				if (MyPlayer.Instance != null)
 				{
 					MyPlayer.Instance.InitializeCameraEffects();
@@ -384,11 +372,11 @@ namespace ZeroGravity
 		{
 			get
 			{
-				if (defaultLayerMaskValue == -1)
+				if (m_DefaultLayerMaskValue == -1)
 				{
-					defaultLayerMaskValue = 1 << LayerMask.NameToLayer("Default");
+					m_DefaultLayerMaskValue = 1 << LayerMask.NameToLayer("Default");
 				}
-				return defaultLayerMaskValue;
+				return m_DefaultLayerMaskValue;
 			}
 		}
 
@@ -396,16 +384,16 @@ namespace ZeroGravity
 		{
 			get
 			{
-				if (_lastLatencyMessageTime < 0f)
+				if (m_LastLatencyMessageTime < 0f)
 				{
 					return 0;
 				}
-				float num = Time.realtimeSinceStartup - _lastLatencyMessageTime;
-				if (_latencyMs < 0 || num > 5f)
+				float num = Time.realtimeSinceStartup - m_LastLatencyMessageTime;
+				if (m_LatencyMs < 0 || num > 5f)
 				{
 					return (int)(num * 1000f);
 				}
-				return _latencyMs;
+				return m_LatencyMs;
 			}
 		}
 
@@ -430,9 +418,9 @@ namespace ZeroGravity
 			StaticData.LoadData();
 			Application.runInBackground = true;
 			MainThreadID = Thread.CurrentThread.ManagedThreadId;
-			_instance = this;
+			s_Instance = this;
 			IsRunning = true;
-			openMainSceneStarted = false;
+			m_OpenMainSceneStarted = false;
 
 			// Only load simple scenes if we have little available memory, regardless of settings.
 			if (SystemInfo.systemMemorySize < 6000 || Application.isEditor)
@@ -514,8 +502,8 @@ namespace ZeroGravity
 
 			if (InvitedToServerId != null)
 			{
-				_inviteCoroutine = ConnectToInvite();
-				StartCoroutine(_inviteCoroutine);
+				m_InviteCoroutine = ConnectToInvite();
+				StartCoroutine(m_InviteCoroutine);
 			}
 			else
 			{
@@ -626,10 +614,10 @@ namespace ZeroGravity
 					Dbg.Error(ex.Message, ex.StackTrace);
 				}
 			}
-			if (_restoreMapDetailsTask != null)
+			if (m_RestoreMapDetailsTask != null)
 			{
-				_restoreMapDetailsTask.RunSynchronously();
-				_restoreMapDetailsTask = null;
+				m_RestoreMapDetailsTask.RunSynchronously();
+				m_RestoreMapDetailsTask = null;
 			}
 		}
 
@@ -698,7 +686,7 @@ namespace ZeroGravity
 				{
 					Pivot parent = Pivot.Create(SpaceObjectType.PlayerPivot, s.ParentTransform, isMainObject: true);
 					MyPlayer.Instance.Parent = parent;
-					_loadingFinishedTask = new Task(delegate
+					m_LoadingFinishedTask = new Task(delegate
 					{
 						OnLoadingComplete(s);
 					});
@@ -732,7 +720,7 @@ namespace ZeroGravity
 				{
 					return;
 				}
-				_restoreMapDetailsTask = new Task(delegate
+				m_RestoreMapDetailsTask = new Task(delegate
 				{
 					foreach (UnknownMapObjectDetails det in s.NavMapDetails.Unknown)
 					{
@@ -769,7 +757,7 @@ namespace ZeroGravity
 		private IEnumerator LoadMainScenesCoroutine(PlayerSpawnResponse s, Asteroid ast)
 		{
 			yield return StartCoroutine(ast.LoadScenesCoroutine(s.MiningPoints));
-			_loadingFinishedTask = new Task(delegate
+			m_LoadingFinishedTask = new Task(delegate
 			{
 				OnLoadingComplete(s);
 			});
@@ -833,7 +821,7 @@ namespace ZeroGravity
 			{
 				corpse.CheckRoomTrigger(null);
 			}
-			_loadingFinishedTask = new Task(delegate
+			m_LoadingFinishedTask = new Task(delegate
 			{
 				OnLoadingComplete(s);
 			});
@@ -841,7 +829,7 @@ namespace ZeroGravity
 
 		private void OnLoadingComplete(PlayerSpawnResponse s)
 		{
-			_loadingFinishedTask = null;
+			m_LoadingFinishedTask = null;
 			MyPlayer.Instance.ActivatePlayer(s);
 		}
 
@@ -967,7 +955,7 @@ namespace ZeroGravity
 			{
 				KillAllSPProcesses();
 			}
-			if (_gameExitWanted)
+			if (m_GameExitWanted)
 			{
 				QuitApplication();
 			}
@@ -1021,9 +1009,9 @@ namespace ZeroGravity
 		/// </summary>
 		public void OpenMainScreen()
 		{
-			if (!openMainSceneStarted)
+			if (!m_OpenMainSceneStarted)
 			{
-				openMainSceneStarted = true;
+				m_OpenMainSceneStarted = true;
 				InGamePanels.Detach();
 				ToggleCursor(true);
 				if (MyPlayer.Instance != null)
@@ -1060,13 +1048,13 @@ namespace ZeroGravity
 		public IEnumerator ConnectToInvite()
 		{
 			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.ConnectingToGame);
-			_receivedSignInResponse = false;
+			m_ReceivedSignInResponse = false;
 			InviteScreen.SetActive(value: true);
 
 			SignIn();
 			CanvasManager.Disclamer.SetActive(value: false);
 
-			yield return new WaitUntil(() => _receivedSignInResponse);
+			yield return new WaitUntil(() => m_ReceivedSignInResponse);
 
 			InvitedToServerId = null;
 			if (LastConnectedServer == null)
@@ -1078,15 +1066,15 @@ namespace ZeroGravity
 
 			ConnectToServer(LastConnectedServer, InvitedToServerPassword);
 			InviteScreen.SetActive(value: false);
-			_inviteCoroutine = null;
+			m_InviteCoroutine = null;
 		}
 
 		public void StopInviteCoroutine()
 		{
-			if (_inviteCoroutine != null)
+			if (m_InviteCoroutine != null)
 			{
-				StopCoroutine(_inviteCoroutine);
-				_inviteCoroutine = null;
+				StopCoroutine(m_InviteCoroutine);
+				m_InviteCoroutine = null;
 			}
 			InviteScreen.SetActive(value: false);
 		}
@@ -1100,7 +1088,7 @@ namespace ZeroGravity
 			}
 
 			// If we didn't tell the game explicitly that we want to exit.
-			if (!_gameExitWanted)
+			if (!m_GameExitWanted)
 			{
 				// Prevent the app from quitting...
 				Application.wantsToQuit += () => { return false; };
@@ -1119,7 +1107,7 @@ namespace ZeroGravity
 		/// </summary>
 		public void ExitGame()
 		{
-			_gameExitWanted = true;
+			m_GameExitWanted = true;
 			QuitApplication();
 		}
 
@@ -1232,10 +1220,10 @@ namespace ZeroGravity
 			if (Time.deltaTime > 1f)
 			{
 			}
-			if (_gameExitWanted)
+			if (m_GameExitWanted)
 			{
-				_maxSecondsToWaitForExit -= Time.deltaTime;
-				if (_maxSecondsToWaitForExit <= 0f)
+				m_MaxSecondsToWaitForExit -= Time.deltaTime;
+				if (m_MaxSecondsToWaitForExit <= 0f)
 				{
 					QuitApplication();
 				}
@@ -1246,7 +1234,7 @@ namespace ZeroGravity
 				CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
 				ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
 			}
-			if (MyPlayer.Instance != null && MyPlayer.Instance.IsAlive && !CanvasManager.InGameMenuCanvas.activeInHierarchy && autosaveInterval > 0 && SinglePlayerMode && lastSPAutosaveTime + (float)autosaveInterval < Time.time)
+			if (MyPlayer.Instance != null && MyPlayer.Instance.IsAlive && !CanvasManager.InGameMenuCanvas.activeInHierarchy && k_AutosaveInterval > 0 && SinglePlayerMode && m_LastSPAutosaveTime + (float)k_AutosaveInterval < Time.time)
 			{
 				AutoSave();
 			}
@@ -1760,8 +1748,8 @@ namespace ZeroGravity
 
 		public void ConnectToServer(ServerData server, string serverPassword = null)
 		{
-			_connectToServerCoroutine = ConnectToServerCoroutine(server, serverPassword);
-			StartCoroutine(_connectToServerCoroutine);
+			m_ConnectToServerCoroutine = ConnectToServerCoroutine(server, serverPassword);
+			StartCoroutine(m_ConnectToServerCoroutine);
 		}
 
 		/// <summary>
@@ -1774,7 +1762,7 @@ namespace ZeroGravity
 			if (!server.Online)
 			{
 				ShowMessageBox(Localization.ConnectionError, Localization.ServerOffline);
-				_connectToServerCoroutine = null;
+				m_ConnectToServerCoroutine = null;
 				yield break;
 			}
 
@@ -1789,7 +1777,7 @@ namespace ZeroGravity
 			}
 
 			// Create new character if you don't have it from before.
-			if (server.CharacterData == null && _newCharacterData == null)
+			if (server.CharacterData == null && m_NewCharacterData == null)
 			{
 				CreateCharacterPanel.SetActive(value: true);
 				CurrentGenderText.text = CurrentGender.ToLocalizedString();
@@ -1801,7 +1789,7 @@ namespace ZeroGravity
 				CharacterInputField.text = string.Empty;
 				if (newCharacterName.Length > 0)
 				{
-					_newCharacterData = new CharacterData
+					m_NewCharacterData = new CharacterData
 					{
 						Name = newCharacterName,
 						Gender = CurrentGender,
@@ -1815,7 +1803,7 @@ namespace ZeroGravity
 			if (!server.Online)
 			{
 				ShowMessageBox(Localization.ConnectionError, Localization.ServerOffline);
-				_connectToServerCoroutine = null;
+				m_ConnectToServerCoroutine = null;
 				yield break;
 			}
 
@@ -1827,12 +1815,12 @@ namespace ZeroGravity
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 
 			// Connect to server.
-			NetworkController.Instance.ConnectToGame(server, _newCharacterData, serverPassword);
+			NetworkController.Instance.ConnectToGame(server, m_NewCharacterData, serverPassword);
 
 			// Cleanup data.
-			_newCharacterData = null;
+			m_NewCharacterData = null;
 			InvitedToServerPassword = null;
-			_connectToServerCoroutine = null;
+			m_ConnectToServerCoroutine = null;
 		}
 
 		/// <summary>
@@ -1840,10 +1828,10 @@ namespace ZeroGravity
 		/// </summary>
 		public void StopConnectToServerCoroutine()
 		{
-			if (_connectToServerCoroutine != null)
+			if (m_ConnectToServerCoroutine != null)
 			{
-				StopCoroutine(_connectToServerCoroutine);
-				_connectToServerCoroutine = null;
+				StopCoroutine(m_ConnectToServerCoroutine);
+				m_ConnectToServerCoroutine = null;
 			}
 		}
 
@@ -1867,7 +1855,7 @@ namespace ZeroGravity
 		public void Reconnect()
 		{
 			this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
-			NetworkController.Instance.ConnectToGame(LastConnectedServer, _newCharacterData, LastConnectedServerPass);
+			NetworkController.Instance.ConnectToGame(LastConnectedServer, m_NewCharacterData, LastConnectedServerPass);
 		}
 
 		private void LogInResponseListener(NetworkData data)
@@ -2024,7 +2012,7 @@ namespace ZeroGravity
 			}
 
 			LastSignInResponse = signInResponse;
-			_receivedSignInResponse = true;
+			m_ReceivedSignInResponse = true;
 		}
 
 		/// <summary>
@@ -2155,12 +2143,12 @@ namespace ZeroGravity
 		// TODO: Move this to the provider or network system.
 		public void ProcessInvitation(InviteMessage inviteMessage)
 		{
-			if (_processInvitationCoroutine != null)
+			if (m_ProcessInvitationCoroutine != null)
 			{
-				StopCoroutine(_processInvitationCoroutine);
+				StopCoroutine(m_ProcessInvitationCoroutine);
 			}
-			_processInvitationCoroutine = ProcessInvitationCoroutine(inviteMessage);
-			StartCoroutine(_processInvitationCoroutine);
+			m_ProcessInvitationCoroutine = ProcessInvitationCoroutine(inviteMessage);
+			StartCoroutine(m_ProcessInvitationCoroutine);
 		}
 
 		public IEnumerator ProcessInvitationCoroutine(InviteMessage inviteMessage)
@@ -2191,34 +2179,34 @@ namespace ZeroGravity
 			// Enable loading screen.
 			CanvasManager.SelectScreen(CanvasManager.Screen.Loading);
 			yield return null;
-			string filePath = _spServerPath + "\\" + _spServerFileName;
+			string filePath = k_SpServerPath + "\\" + k_SpServerFileName;
 			try
 			{
 				KillAllSPProcesses();
-				_spServerProcess = new Process();
-				_spServerProcess.StartInfo.WorkingDirectory = _spServerPath;
-				_spServerProcess.StartInfo.FileName = filePath;
+				m_SpServerProcess = new Process();
+				m_SpServerProcess.StartInfo.WorkingDirectory = k_SpServerPath;
+				m_SpServerProcess.StartInfo.FileName = filePath;
 				string text = (SinglePlayerGameMode != 0) ? "-configdir Sandbox " : string.Empty;
 				if (SinglePlayerQuickLoad)
 				{
-					_spServerProcess.StartInfo.Arguments = text;
+					m_SpServerProcess.StartInfo.Arguments = text;
 				}
 				else if (SinglePlayerRespawn || filename == null)
 				{
-					_spServerProcess.StartInfo.Arguments = text + "-clean";
+					m_SpServerProcess.StartInfo.Arguments = text + "-clean";
 				}
 				else
 				{
-					_spServerProcess.StartInfo.Arguments = text + "-load " + filename;
+					m_SpServerProcess.StartInfo.Arguments = text + "-load " + filename;
 				}
-				_spServerProcess.StartInfo.UseShellExecute = false;
-				_spServerProcess.StartInfo.RedirectStandardOutput = true;
-				_spServerProcess.StartInfo.CreateNoWindow = true;
-				if (!_spServerProcess.Start())
+				m_SpServerProcess.StartInfo.UseShellExecute = false;
+				m_SpServerProcess.StartInfo.RedirectStandardOutput = true;
+				m_SpServerProcess.StartInfo.CreateNoWindow = true;
+				if (!m_SpServerProcess.Start())
 				{
 					CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.None);
 					CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
-					_spServerProcess = null;
+					m_SpServerProcess = null;
 					throw new Exception("Process.Start function returned FALSE");
 				}
 
@@ -2229,7 +2217,7 @@ namespace ZeroGravity
 				int statusPort = 6105;
 				while (true)
 				{
-					string text2 = _spServerProcess.StandardOutput.ReadLine();
+					string text2 = m_SpServerProcess.StandardOutput.ReadLine();
 					if (text2 == null || text2.ToLower().EndsWith("ready"))
 					{
 						break;
@@ -2252,7 +2240,7 @@ namespace ZeroGravity
 				SinglePlayerQuickLoad = false;
 				SinglePlayerRespawn = false;
 				SinglePlayerMode = true;
-				lastSPAutosaveTime = Time.time;
+				m_LastSPAutosaveTime = Time.time;
 				int latency = -1;
 
 				ServerStatusRequest serverStatusRequest = new ServerStatusRequest
@@ -2304,7 +2292,7 @@ namespace ZeroGravity
 
 		public string GetSPPath()
 		{
-			return _spServerPath + ((SinglePlayerGameMode != 0) ? "\\Sandbox\\" : string.Empty);
+			return k_SpServerPath + ((SinglePlayerGameMode != 0) ? "\\Sandbox\\" : string.Empty);
 		}
 
 		public void QuickLoad()
@@ -2339,7 +2327,7 @@ namespace ZeroGravity
 
 		public void AutoSave()
 		{
-			lastSPAutosaveTime = Time.time;
+			m_LastSPAutosaveTime = Time.time;
 			CanvasManager.TextChat.CreateMessage(null, "SAVING GAME.", local: false);
 			NetworkController.Instance.SendToGameServer(new SaveGameMessage
 			{
@@ -2352,10 +2340,10 @@ namespace ZeroGravity
 		{
 			try
 			{
-				if (_spServerProcess != null && !_spServerProcess.HasExited)
+				if (m_SpServerProcess != null && !m_SpServerProcess.HasExited)
 				{
-					_spServerProcess.Kill();
-					_spServerProcess = null;
+					m_SpServerProcess.Kill();
+					m_SpServerProcess = null;
 				}
 			}
 			catch
@@ -2364,7 +2352,7 @@ namespace ZeroGravity
 			try
 			{
 				List<Process> list = (from m in Process.GetProcesses()
-					where !m.HasExited && m.MainModule.FileName.ToLower().EndsWith(_spServerFileName.ToLower())
+					where !m.HasExited && m.MainModule.FileName.ToLower().EndsWith(k_SpServerFileName.ToLower())
 					select m).ToList();
 				foreach (Process item in list)
 				{
@@ -2384,13 +2372,13 @@ namespace ZeroGravity
 
 		public void LatencyTestMessage()
 		{
-			_lastLatencyMessageTime = Time.realtimeSinceStartup;
+			m_LastLatencyMessageTime = Time.realtimeSinceStartup;
 			new Task(delegate
 			{
 				int latency;
 				NetworkController.SendTCP(new LatencyTestMessage(), LastConnectedServer.IpAddress, LastConnectedServer.StatusPort, out latency);
 
-				_latencyMs = latency;
+				m_LatencyMs = latency;
 			}).Start();
 			if (MyPlayer.Instance.IsAlive)
 			{
@@ -2418,11 +2406,11 @@ namespace ZeroGravity
 
 		private void CheckLoadingComplete()
 		{
-			if (LoadingScenesCount == 0 && _loadingFinishedTask != null && !this.IsInvoking(AfterLoadingFinishedTask) && !this.IsInvoking(ClearCanvasesAndStartGame))
+			if (LoadingScenesCount == 0 && m_LoadingFinishedTask != null && !this.IsInvoking(AfterLoadingFinishedTask) && !this.IsInvoking(ClearCanvasesAndStartGame))
 			{
 				this.Invoke(AfterLoadingFinishedTask, 1f);
 			}
-			else if (LastLoadingTipsChangeTime + 5f < Time.realtimeSinceStartup)
+			else if (LastLoadingTipsChangeTime + 5f < Time.realtimeSinceStartup) // Change loading tips.
 			{
 				LastLoadingTipsChangeTime = Time.realtimeSinceStartup;
 				CanvasManager.LoadingTips.text = ShuffledTexts.GetNextInLoop();
@@ -2444,7 +2432,7 @@ namespace ZeroGravity
 
 			Instance.CanvasManager.SelectSaveScreen.Activate(value: false);
 			IsInGame = true;
-			lastSPAutosaveTime = Time.time;
+			m_LastSPAutosaveTime = Time.time;
 			ToggleCursor(false);
 			CanvasManager.ToggleCanvasUI(val: true);
 			CanvasManager.ToggleTextChatCanvas(val: true);
@@ -2452,7 +2440,7 @@ namespace ZeroGravity
 			CanvasManager.LoadingTips.text = string.Empty;
 			CanvasManager.SelectScreen(CanvasManager.Screen.None);
 			StartCoroutine(FixPlayerInCryo());
-			_loadingFinishedTask.RunSynchronously();
+			m_LoadingFinishedTask.RunSynchronously();
 			EnvironmentReady = true;
 			NetworkController.Instance.SendToGameServer(new EnvironmentReadyMessage());
 		}

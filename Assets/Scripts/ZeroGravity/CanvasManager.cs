@@ -23,8 +23,6 @@ namespace ZeroGravity
 	// TODO: Use new UI system.
 	public class CanvasManager : MonoBehaviour
 	{
-		public delegate void OnSpawnPointClicked(SpawnPointDetails details);
-
 		public enum Screen
 		{
 			None,
@@ -137,8 +135,6 @@ namespace ZeroGravity
 
 		public GameObject InGameMenuCanvas;
 
-		public GameObject ReportServerInGame;
-
 		public InteractionCanvas InteractionCanvas;
 
 		public Chat TextChat;
@@ -157,9 +153,9 @@ namespace ZeroGravity
 		[Title("My player")]
 		public PlayerOverview PlayerOverview;
 
-		private float hitCanvasTime;
+		private float m_HitCanvasTime;
 
-		private bool hitCanvasVisible;
+		private bool m_HitCanvasVisible;
 
 		public InventoryUI InventoryUI;
 
@@ -183,7 +179,7 @@ namespace ZeroGravity
 
 		public Texture HighlightSlotItemHere;
 
-		private float showDeadMsgTime;
+		private float m_ShowDeadMsgTime;
 
 		public bool IsBusyLoading;
 
@@ -206,7 +202,7 @@ namespace ZeroGravity
 
 		public Text QuickTipContent;
 
-		private int busyLoadingActiveCount;
+		private int m_BusyLoadingActiveCount;
 
 		public bool IsPlayerOverviewOpen => PlayerOverview.gameObject.activeInHierarchy;
 
@@ -221,8 +217,7 @@ namespace ZeroGravity
 			// Localize text in child objects.
 			foreach (Text text in GetComponentsInChildren<Text>(true))
 			{
-				string value = null;
-				if (Localization.CanvasManagerLocalization.TryGetValue(text.name, out value))
+				if (Localization.CanvasManagerLocalization.TryGetValue(text.name, out string value))
 				{
 					text.text = value;
 				}
@@ -268,14 +263,14 @@ namespace ZeroGravity
 				return;
 			}
 
-			if (hitCanvasVisible)
+			if (m_HitCanvasVisible)
 			{
-				hitCanvasTime += Time.deltaTime;
-				if (hitCanvasTime >= 0.1f)
+				m_HitCanvasTime += Time.deltaTime;
+				if (m_HitCanvasTime >= 0.1f)
 				{
-					hitCanvasTime = 0f;
+					m_HitCanvasTime = 0f;
 					HitCanvas.SetActive(value: false);
-					hitCanvasVisible = false;
+					m_HitCanvasVisible = false;
 				}
 			}
 
@@ -361,7 +356,7 @@ namespace ZeroGravity
 					Console.Open();
 				}
 			}
-			if (DeadScreen.activeInHierarchy && Input.anyKey && Time.time - showDeadMsgTime > 3f && !Client.Instance.SinglePlayerMode)
+			if (DeadScreen.activeInHierarchy && Input.anyKey && Time.time - m_ShowDeadMsgTime > 3f && !Client.Instance.SinglePlayerMode)
 			{
 				ToggleDeadMsg(val: false);
 			}
@@ -486,7 +481,7 @@ namespace ZeroGravity
 			{
 				Client.Instance.CanvasManager.CanvasUI.QuestCutScene.OnCutSceneFinished();
 				Client.Instance.InGamePanels.Detach();
-				showDeadMsgTime = Time.time;
+				m_ShowDeadMsgTime = Time.time;
 				DeadScreen.SetActive(value: true);
 				if (MyPlayer.Instance != null)
 				{
@@ -520,7 +515,7 @@ namespace ZeroGravity
 			}
 			else
 			{
-				showDeadMsgTime = 0f;
+				m_ShowDeadMsgTime = 0f;
 				if (!Client.Instance.SinglePlayerMode)
 				{
 					Client.ReconnectAutomatically = true;
@@ -571,7 +566,7 @@ namespace ZeroGravity
 		private void InstantiateFreshStartOptions()
 		{
 			FreshStartSpawnOptions.DestroyAll<StartingPointOptionUI>();
-			StartingPointOptionUI freshStartUI = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
+			StartingPointOptionUI freshStartUI = Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			freshStartUI.Type = StartingPointOption.FreshStart;
 			freshStartUI.GetComponent<Button>().onClick.AddListener(delegate
 			{
@@ -579,7 +574,7 @@ namespace ZeroGravity
 			});
 
 			ProviderManager.GetAchievement(AchievementID.quest_sound_of_silence, out var achieved);
-			StartingPointOptionUI strandedMinerUI = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
+			StartingPointOptionUI strandedMinerUI = Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			strandedMinerUI.Type = StartingPointOption.StrandedMiner;
 			strandedMinerUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
 			strandedMinerUI.GetComponent<Button>().onClick.AddListener(delegate
@@ -588,7 +583,7 @@ namespace ZeroGravity
 			});
 
 			ProviderManager.GetAchievement(AchievementID.quest_shattered_dreams, out achieved);
-			StartingPointOptionUI evaUI = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
+			StartingPointOptionUI evaUI = Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			evaUI.Type = StartingPointOption.Eva;
 			evaUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
 			evaUI.GetComponent<Button>().onClick.AddListener(delegate
@@ -597,7 +592,7 @@ namespace ZeroGravity
 			});
 
 			ProviderManager.GetAchievement(AchievementID.quest_heart_of_stone, out achieved);
-			StartingPointOptionUI soeUI = GameObject.Instantiate(StartingPointUI, FreshStartSpawnOptions);
+			StartingPointOptionUI soeUI = Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			soeUI.Type = StartingPointOption.Soe;
 			soeUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
 			soeUI.GetComponent<Button>().onClick.AddListener(delegate
@@ -619,7 +614,7 @@ namespace ZeroGravity
 			});
 		}
 
-		public void ShowSpawnPoints(List<SpawnPointDetails> spawnPoints, OnSpawnPointClicked onSpawnClicked, bool canContinue)
+		public void ShowSpawnPoints(List<SpawnPointDetails> spawnPoints, Action<SpawnPointDetails> onSpawnClicked, bool canContinue)
 		{
 			Client.ForceRespawn = false;
 			FreshStartSpawnOptions.gameObject.Activate(value: false);
@@ -627,9 +622,9 @@ namespace ZeroGravity
 			SpawnOptions.gameObject.Activate(value: true);
 			SelectSaveScreen.SetActive(value: false);
 			SaveGamesHolder.DestroyAll<SaveGameOptionUI>();
-			for (int i = 0; i < spawnPoints.Count; i++)
+			foreach (SpawnPointDetails spawnPoint in spawnPoints)
 			{
-				InstantiateSpawnButton(spawnPoints[i], i, onSpawnClicked);
+				InstantiateSpawnButton(spawnPoint, onSpawnClicked);
 			}
 
 			// Show fresh start. canContinue determines if we're able to open the next menu with spawn points.
@@ -679,9 +674,9 @@ namespace ZeroGravity
 			InstantiateFreshStartOptions();
 		}
 
-		private void InstantiateSpawnButton(SpawnPointDetails spawnPoint, int posIndex, OnSpawnPointClicked onSpawnClicked)
+		private void InstantiateSpawnButton(SpawnPointDetails spawnPoint, Action<SpawnPointDetails> onSpawnClicked)
 		{
-			SaveGameOptionUI spawnPointOptionUI = GameObject.Instantiate(SaveGameOptionUI, SaveGamesHolder);
+			SaveGameOptionUI spawnPointOptionUI = Instantiate(SaveGameOptionUI, SaveGamesHolder);
 			string text = (!spawnPoint.Name.IsNullOrEmpty()) ? spawnPoint.Name : spawnPoint.SpawnSetupType.ToLocalizedString();
 			spawnPointOptionUI.Name.text = text + ((spawnPoint.PlayersOnShip == null || spawnPoint.PlayersOnShip.Count <= 0) ? string.Empty : ("\n" + string.Join(", ", spawnPoint.PlayersOnShip.ToArray())));
 			spawnPointOptionUI.GetComponent<Button>().onClick.AddListener(delegate
@@ -837,8 +832,8 @@ namespace ZeroGravity
 		public void BeingHit()
 		{
 			HitCanvas.SetActive(value: true);
-			hitCanvasTime = 0f;
-			hitCanvasVisible = true;
+			m_HitCanvasTime = 0f;
+			m_HitCanvasVisible = true;
 		}
 
 		public void ToggleBusyLoading(bool isActive)
@@ -849,13 +844,13 @@ namespace ZeroGravity
 			}
 			if (isActive)
 			{
-				busyLoadingActiveCount++;
+				m_BusyLoadingActiveCount++;
 			}
 			else
 			{
-				busyLoadingActiveCount--;
+				m_BusyLoadingActiveCount--;
 			}
-			if (busyLoadingActiveCount > 0)
+			if (m_BusyLoadingActiveCount > 0)
 			{
 				BusyLoadingInfo.SetActive(value: true);
 				IsBusyLoading = true;
@@ -863,7 +858,7 @@ namespace ZeroGravity
 			else
 			{
 				BusyLoadingInfo.SetActive(value: false);
-				busyLoadingActiveCount = 0;
+				m_BusyLoadingActiveCount = 0;
 				IsBusyLoading = false;
 			}
 		}

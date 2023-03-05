@@ -25,23 +25,23 @@ namespace OpenHellion.Networking
 
 		public static string NameOfCurrentServer = string.Empty;
 
-		private GSConnection _gameConnection;
+		private GSConnection m_GameConnection;
 
-		private bool GetP2PPacketsThreadActive;
+		private bool m_GetP2PPacketsThreadActive;
 
-		private readonly HashSet<long> _spawnObjectsList = new HashSet<long>();
+		private readonly HashSet<long> m_SpawnObjectsList = new HashSet<long>();
 
-		private readonly HashSet<long> _subscribeToObjectsList = new HashSet<long>();
+		private readonly HashSet<long> m_SubscribeToObjectsList = new HashSet<long>();
 
-		private readonly HashSet<long> _unsubscribeFromObjectsList = new HashSet<long>();
+		private readonly HashSet<long> m_UnsubscribeFromObjectsList = new HashSet<long>();
 
-		private readonly ConcurrentQueue<Tuple<float, Type>> _sentLog = new ConcurrentQueue<Tuple<float, Type>>();
+		private readonly ConcurrentQueue<Tuple<float, Type>> m_SentLog = new ConcurrentQueue<Tuple<float, Type>>();
 
-		private readonly ConcurrentQueue<Tuple<float, Type>> _receivedLog = new ConcurrentQueue<Tuple<float, Type>>();
+		private readonly ConcurrentQueue<Tuple<float, Type>> m_ReceivedLog = new ConcurrentQueue<Tuple<float, Type>>();
 
-		private const int _maxNetworkDataLogsSize = 3000;
+		private const int k_MaxNetworkDataLogsSize = 3000;
 
-		private readonly DateTime _clientStartTime = DateTime.UtcNow.ToUniversalTime();
+		private readonly DateTime m_ClientStartTime = DateTime.UtcNow.ToUniversalTime();
 
 		[Title("Diagnostics"), ReadOnly]
 		public long PlayerGUID;
@@ -56,17 +56,17 @@ namespace OpenHellion.Networking
 		[ReadOnly, TextArea(1, 20)]
 		public string DataLogs = "";
 
-		private static NetworkController s_instance;
+		private static NetworkController s_Instance;
 		public static NetworkController Instance
 		{
 			get
 			{
-				if (s_instance == null)
+				if (s_Instance == null)
 				{
 					Dbg.Error("Tried to get network controller before it has been initialised.");
 				}
 
-				return s_instance;
+				return s_Instance;
 			}
 		}
 
@@ -103,57 +103,57 @@ namespace OpenHellion.Networking
 		private void Awake()
 		{
 			// Only one instance allowed.
-			if (s_instance != null)
+			if (s_Instance != null)
 			{
 				Destroy(this);
 				return;
 			}
 
-			s_instance = this;
+			s_Instance = this;
 		}
 
 		private void FixedUpdate()
 		{
 			EventSystem.Instance.InvokeQueuedData();
 
-			if (_spawnObjectsList.Count > 0)
+			if (m_SpawnObjectsList.Count > 0)
 			{
 				SpawnObjectsRequest spawnObjectsRequest = new SpawnObjectsRequest
 				{
-					GUIDs = new List<long>(_spawnObjectsList)
+					GUIDs = new List<long>(m_SpawnObjectsList)
 				};
 
 				SendToGameServer(spawnObjectsRequest);
-				_spawnObjectsList.Clear();
+				m_SpawnObjectsList.Clear();
 			}
-			if (_subscribeToObjectsList.Count > 0)
+			if (m_SubscribeToObjectsList.Count > 0)
 			{
 				SubscribeToObjectsRequest subscribeToObjectsRequest = new SubscribeToObjectsRequest
 				{
-					GUIDs = new List<long>(_subscribeToObjectsList)
+					GUIDs = new List<long>(m_SubscribeToObjectsList)
 				};
 
 				SendToGameServer(subscribeToObjectsRequest);
-				_subscribeToObjectsList.Clear();
+				m_SubscribeToObjectsList.Clear();
 			}
-			if (_unsubscribeFromObjectsList.Count > 0)
+			if (m_UnsubscribeFromObjectsList.Count > 0)
 			{
 				UnsubscribeFromObjectsRequest unsubscribeFromObjectsRequest = new UnsubscribeFromObjectsRequest
 				{
-					GUIDs = new List<long>(_unsubscribeFromObjectsList)
+					GUIDs = new List<long>(m_UnsubscribeFromObjectsList)
 				};
 
 				SendToGameServer(unsubscribeFromObjectsRequest);
-				_unsubscribeFromObjectsList.Clear();
+				m_UnsubscribeFromObjectsList.Clear();
 			}
 
-			if (_gameConnection != null)
-				UnprocessedPackets = _gameConnection.Tick();
+			if (m_GameConnection != null)
+				UnprocessedPackets = m_GameConnection.Tick();
 
 			DataLogs = GetNetworkDataLogs();
 
 			// Handle Steam P2P packets.
-			if (!ProviderManager.SteamId.IsNullOrEmpty() && !GetP2PPacketsThreadActive)
+			if (!ProviderManager.SteamId.IsNullOrEmpty() && !m_GetP2PPacketsThreadActive)
 			{
 				new Thread(P2PPacketListener).Start();
 			}
@@ -161,50 +161,44 @@ namespace OpenHellion.Networking
 
 		public void RequestObjectSpawn(long guid)
 		{
-			_spawnObjectsList.Add(guid);
+			m_SpawnObjectsList.Add(guid);
 		}
 
 		public void RequestObjectSubscribe(long guid)
 		{
-			_subscribeToObjectsList.Add(guid);
-			_unsubscribeFromObjectsList.Remove(guid);
+			m_SubscribeToObjectsList.Add(guid);
+			m_UnsubscribeFromObjectsList.Remove(guid);
 		}
 
 		public void RequestObjectUnsubscribe(long guid)
 		{
-			_unsubscribeFromObjectsList.Add(guid);
-			_subscribeToObjectsList.Remove(guid);
+			m_UnsubscribeFromObjectsList.Add(guid);
+			m_SubscribeToObjectsList.Remove(guid);
 		}
 
-		public void ConnectToGame(ServerData serverData, CharacterData charData, string password)
+		public void ConnectToGame(ServerData serverData, CharacterData characterData, string password)
 		{
-			CharacterData = charData;
-			if (_gameConnection != null)
-			{
-				_gameConnection.Disconnect();
-			}
-			_gameConnection = new GSConnection();
+			CharacterData = characterData;
+			m_GameConnection?.Disconnect();
+			m_GameConnection = new GSConnection();
 
 			NameOfCurrentServer = serverData.Name;
-			_gameConnection.Connect(serverData.IpAddress, serverData.GamePort, serverData.Id, password);
+			m_GameConnection.Connect(serverData.IpAddress, serverData.GamePort, serverData.Id, password);
 		}
 
-		public void ConnectToGameSP(int port, CharacterData charData)
+		public void ConnectToGameSP(int port, CharacterData characterData)
 		{
-			CharacterData = charData;
-			if (_gameConnection != null)
-			{
-				_gameConnection.Disconnect();
-			}
+			CharacterData = characterData;
+			m_GameConnection?.Disconnect();
 
 			Dbg.Log("Connecting to singleplayer server with port", port);
-			_gameConnection = new GSConnection();
-			_gameConnection.Connect("127.0.0.1", port, string.Empty, string.Empty);
+			m_GameConnection = new GSConnection();
+			m_GameConnection.Connect("127.0.0.1", port, string.Empty, string.Empty);
 		}
 
 		public void SendToGameServer(NetworkData data)
 		{
-			_gameConnection.Send(data);
+			m_GameConnection.Send(data);
 		}
 
 		/// <summary>
@@ -265,30 +259,33 @@ namespace OpenHellion.Networking
 
 		private void OnDestroy()
 		{
-			_gameConnection?.Disconnect();
+			m_GameConnection?.Disconnect();
 		}
 
 		public void Disconnect()
 		{
-			_gameConnection?.Disconnect();
+			m_GameConnection?.Disconnect();
 		}
 
 		/// <summary>
 		/// 	Read and invoke P2P packets sent though Steam.<br/>
 		/// 	TODO: Create a new class.
 		/// </summary>
-		private void P2PPacketListener() {
-			GetP2PPacketsThreadActive = true;
+		private void P2PPacketListener()
+		{
+			m_GetP2PPacketsThreadActive = true;
 
 			// Create pointer array and put data in it.
 			IntPtr[] ptr = new IntPtr[1];
 			int msgSize = SteamNetworkingMessages.ReceiveMessagesOnChannel(0, ptr, 1);
 
-			if (msgSize == 0) {
+			if (msgSize == 0)
+			{
 				return;
 			}
 
-			try {
+			try
+			{
 				SteamNetworkingMessage_t netMessage = Marshal.PtrToStructure<SteamNetworkingMessage_t>(ptr[0]);
 				if (netMessage.m_cbSize != 0)
 				{
@@ -304,35 +301,37 @@ namespace OpenHellion.Networking
 						EventSystem.Instance.Invoke(networkData);
 					}
 				}
-			} finally {
+			}
+			finally
+			{
 				Marshal.DestroyStructure<SteamNetworkingMessage_t>(ptr[0]);
 			}
-			GetP2PPacketsThreadActive = false;
+			m_GetP2PPacketsThreadActive = false;
 		}
 
 		public static void LogReceivedNetworkData(Type type)
 		{
-			Instance._receivedLog.Enqueue(new Tuple<float, Type>((float)(DateTime.UtcNow.ToUniversalTime() - Instance._clientStartTime).TotalSeconds, type));
-			while (Instance._receivedLog.Count > _maxNetworkDataLogsSize)
+			Instance.m_ReceivedLog.Enqueue(new Tuple<float, Type>((float)(DateTime.UtcNow.ToUniversalTime() - Instance.m_ClientStartTime).TotalSeconds, type));
+			while (Instance.m_ReceivedLog.Count > k_MaxNetworkDataLogsSize)
 			{
-				Instance._receivedLog.TryDequeue(out var _);
+				Instance.m_ReceivedLog.TryDequeue(out var _);
 			}
 		}
 
 		public static void LogSentNetworkData(Type type)
 		{
-			Instance._sentLog.Enqueue(new Tuple<float, Type>((float)(DateTime.UtcNow.ToUniversalTime() - Instance._clientStartTime).TotalSeconds, type));
-			while (Instance._sentLog.Count > _maxNetworkDataLogsSize)
+			Instance.m_SentLog.Enqueue(new Tuple<float, Type>((float)(DateTime.UtcNow.ToUniversalTime() - Instance.m_ClientStartTime).TotalSeconds, type));
+			while (Instance.m_SentLog.Count > k_MaxNetworkDataLogsSize)
 			{
-				Instance._sentLog.TryDequeue(out var _);
+				Instance.m_SentLog.TryDequeue(out var _);
 			}
 		}
 
 		public static string GetNetworkDataLogs()
 		{
-			if (Instance._receivedLog.IsEmpty || Instance._sentLog.IsEmpty) return "";
+			if (Instance.m_ReceivedLog.IsEmpty || Instance.m_SentLog.IsEmpty) return "";
 
-			Tuple<float, Type>[] source = Instance._receivedLog.ToArray();
+			Tuple<float, Type>[] source = Instance.m_ReceivedLog.ToArray();
 			float lastRecvdTime = source.Last().Item1;
 			IEnumerable<Tuple<float, Type>> recvd = source.Where((Tuple<float, Type> m) => lastRecvdTime - m.Item1 <= 300f);
 			float item = recvd.First().Item1;
@@ -343,7 +342,7 @@ namespace OpenHellion.Networking
 					select y).Reverse()
 				select z.Item1 + ": " + z.Item2);
 
-			Tuple<float, Type>[] source2 = Instance._sentLog.ToArray();
+			Tuple<float, Type>[] source2 = Instance.m_SentLog.ToArray();
 			float lastSentTime = source2.Last().Item1;
 			IEnumerable<Tuple<float, Type>> sent = source2.Where((Tuple<float, Type> m) => lastSentTime - m.Item1 <= 300f);
 			float item2 = sent.First().Item1;

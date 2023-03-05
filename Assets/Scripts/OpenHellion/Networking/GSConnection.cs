@@ -29,15 +29,15 @@ namespace OpenHellion.Networking
 	/// </summary>
 	internal sealed class GSConnection
 	{
-		private string m_serverIp;
+		private string m_ServerIp;
 
-		private int m_serverPort;
+		private int m_ServerPort;
 
-		private string m_serverId;
+		private string m_ServerId;
 
-		private string m_serverPassword;
+		private string m_ServerPassword;
 
-		private Telepathy.Client m_client;
+		private Telepathy.Client m_Client;
 
 		/// <summary>
 		/// 	Establish a connection to a specified game server.<br />
@@ -49,12 +49,12 @@ namespace OpenHellion.Networking
 			Telepathy.Log.Warning = Dbg.Warning;
 			Telepathy.Log.Error = Dbg.Error;
 
-			m_serverIp = ip;
-			m_serverPort = port;
-			m_serverId = serverId;
-			m_serverPassword = password;
+			m_ServerIp = ip;
+			m_ServerPort = port;
+			m_ServerId = serverId;
+			m_ServerPassword = password;
 
-			m_client = new(80000)
+			m_Client = new(80000)
 			{
 				OnConnected = OnConnected,
 				OnData = OnData,
@@ -63,12 +63,12 @@ namespace OpenHellion.Networking
 				ReceiveQueueLimit = 1000
 			};
 
-			m_client.Connect(ip, port);
+			m_Client.Connect(ip, port);
 		}
 
 		internal int Tick()
 		{
-			return m_client.Tick(50);
+			return m_Client.Tick(50);
 		}
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace OpenHellion.Networking
 		/// </summary>
 		internal void Send(NetworkData data)
 		{
-			if (!m_client.Connected)
+			if (!m_Client.Connected)
 			{
 				EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.OpenMainScreen));
 				Dbg.Log("Tried to send data when not connected to any server.");
@@ -89,7 +89,7 @@ namespace OpenHellion.Networking
 				ArraySegment<byte> binary = new(ProtoSerialiser.Package(data));
 
 				// Send data to server.
-				m_client.Send(binary);
+				m_Client.Send(binary);
 				NetworkController.LogSentNetworkData(data.GetType());
 			}
 			catch (Exception ex)
@@ -103,7 +103,7 @@ namespace OpenHellion.Networking
 		/// </summary>
 		internal void Disconnect()
 		{
-			m_client.Disconnect();
+			m_Client.Disconnect();
 		}
 
 		// Executed when we connect to a server.
@@ -114,8 +114,8 @@ namespace OpenHellion.Networking
 				PlayerId = NetworkController.PlayerId,
 				NativeId = ProviderManager.NativeId,
 				CharacterData = NetworkController.CharacterData,
-				ServerID = m_serverId,
-				Password = m_serverPassword,
+				ServerID = m_ServerId,
+				Password = m_ServerPassword,
 				ClientHash = Client.CombinedHash
 			};
 
