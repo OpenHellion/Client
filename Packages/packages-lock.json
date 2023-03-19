@@ -14,6 +14,15 @@
       "dependencies": {},
       "hash": "8cffc61ebeefbc7901dd823f380199d4597a2470"
     },
+    "com.heroiclabs.nakama-unity": {
+      "version": "https://github.com/heroiclabs/nakama-unity.git?path=/Packages/Nakama#v3.7.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      },
+      "hash": "06d3f2bd02d8019850f9444d4535ab1c17c32bd1"
+    },
     "com.innogames.asset-relations-viewer": {
       "version": "https://github.com/innogames/asset-relations-viewer.git#1.5.1",
       "depth": 0,
@@ -72,13 +81,6 @@
       "dependencies": {
         "com.unity.test-framework": "1.1.9"
       },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.ide.vscode": {
-      "version": "1.2.5",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {

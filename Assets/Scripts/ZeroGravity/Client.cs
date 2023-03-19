@@ -400,8 +400,8 @@ namespace ZeroGravity
 
 		private void Awake()
 		{
-			Texture[] source = Resources.LoadAll<Texture>("Emblems");
-			SceneVesselEmblem.Textures = source.ToDictionary((Texture x) => x.name, (Texture y) => y);
+			Texture[] emblems = Resources.LoadAll<Texture>("Emblems");
+			SceneVesselEmblem.Textures = emblems.ToDictionary((Texture x) => x.name, (Texture y) => y);
 
 			RCS_THRUST_SENSITIVITY = Properties.GetProperty("rcs_thrust_sensitivity", RCS_THRUST_SENSITIVITY);
 			RCS_ROTATION_SENSITIVITY = Properties.GetProperty("rcs_rotation_sensitivity", RCS_ROTATION_SENSITIVITY);
@@ -453,7 +453,7 @@ namespace ZeroGravity
 					ExperimentalGameObject.SetActive(value: false);
 				}
 			}
-			string property = Properties.GetProperty("custom_localization_file", string.Empty);
+			string customLocalisationFile = Properties.GetProperty("custom_localization_file", string.Empty);
 			if (Properties.GetProperty("save_default_localization_file", defaultValue: false))
 			{
 				string fileName = "localization_default.txt";
@@ -471,9 +471,9 @@ namespace ZeroGravity
 					Localization.RevertToDefault();
 				}
 			}
-			else if (property != string.Empty)
+			else if (customLocalisationFile != string.Empty)
 			{
-				Localization.ImportFromFile(property);
+				Localization.ImportFromFile(customLocalisationFile);
 			}
 			else
 			{
@@ -1696,45 +1696,45 @@ namespace ZeroGravity
 		{
 			switch (objectType)
 			{
-			case SpaceObjectType.Player:
-				if (guid == MyPlayer.Instance.GUID)
-				{
-					return MyPlayer.Instance;
-				}
-				return GetPlayer(guid);
-			case SpaceObjectType.DynamicObject:
-				return GetDynamicObject(guid);
-			case SpaceObjectType.Corpse:
-				return GetCorpse(guid);
-			case SpaceObjectType.PlayerPivot:
-			case SpaceObjectType.DynamicObjectPivot:
-			case SpaceObjectType.CorpsePivot:
-			{
-				ArtificialBody artificialBody3 = SolarSystem.GetArtificialBody(guid);
-				if (artificialBody3 != null)
-				{
-					return artificialBody3 as Pivot;
-				}
-				break;
-			}
-			case SpaceObjectType.Ship:
-			{
-				ArtificialBody artificialBody2 = SolarSystem.GetArtificialBody(guid);
-				if (artificialBody2 != null)
-				{
-					return artificialBody2 as Ship;
-				}
-				break;
-			}
-			case SpaceObjectType.Asteroid:
-			{
-				ArtificialBody artificialBody = SolarSystem.GetArtificialBody(guid);
-				if (artificialBody != null)
-				{
-					return artificialBody as Asteroid;
-				}
-				break;
-			}
+				case SpaceObjectType.Player:
+					if (guid == MyPlayer.Instance.GUID)
+					{
+						return MyPlayer.Instance;
+					}
+					return GetPlayer(guid);
+				case SpaceObjectType.DynamicObject:
+					return GetDynamicObject(guid);
+				case SpaceObjectType.Corpse:
+					return GetCorpse(guid);
+				case SpaceObjectType.PlayerPivot:
+				case SpaceObjectType.DynamicObjectPivot:
+				case SpaceObjectType.CorpsePivot:
+					{
+						ArtificialBody artificialBody3 = SolarSystem.GetArtificialBody(guid);
+						if (artificialBody3 != null)
+						{
+							return artificialBody3 as Pivot;
+						}
+						break;
+					}
+				case SpaceObjectType.Ship:
+					{
+						ArtificialBody artificialBody2 = SolarSystem.GetArtificialBody(guid);
+						if (artificialBody2 != null)
+						{
+							return artificialBody2 as Ship;
+						}
+						break;
+					}
+				case SpaceObjectType.Asteroid:
+					{
+						ArtificialBody artificialBody = SolarSystem.GetArtificialBody(guid);
+						if (artificialBody != null)
+						{
+							return artificialBody as Asteroid;
+						}
+						break;
+					}
 			}
 			return null;
 		}
@@ -2022,7 +2022,8 @@ namespace ZeroGravity
 		{
 			GetPlayerIdRequest idRequest = new();
 
-			idRequest.Ids.Add(new GetPlayerIdRequest.Entry {
+			idRequest.Ids.Add(new GetPlayerIdRequest.Entry
+			{
 				SteamId = ProviderManager.SteamId,
 				DiscordId = ProviderManager.DiscordId
 			});
@@ -2352,8 +2353,8 @@ namespace ZeroGravity
 			try
 			{
 				List<Process> list = (from m in Process.GetProcesses()
-					where !m.HasExited && m.MainModule.FileName.ToLower().EndsWith(k_SpServerFileName.ToLower())
-					select m).ToList();
+									  where !m.HasExited && m.MainModule.FileName.ToLower().EndsWith(k_SpServerFileName.ToLower())
+									  select m).ToList();
 				foreach (Process item in list)
 				{
 					try

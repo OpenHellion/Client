@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,7 @@ namespace ZeroGravity.UI
 
 		public Image Icon;
 
-		public Text Content;
+		public TextMeshProUGUI Content;
 
 		private float timer;
 
@@ -31,12 +32,12 @@ namespace ZeroGravity.UI
 
 		public void Activate(float delay)
 		{
-			Invoke("ActivateWithDelay", delay);
+			Invoke(nameof(ActivateWithDelay), delay);
 		}
 
 		private void ActivateWithDelay()
 		{
-			base.gameObject.SetActive(true);
+			gameObject.SetActive(true);
 		}
 	}
 }
