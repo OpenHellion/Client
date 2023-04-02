@@ -21,7 +21,7 @@
     "com.unity.timeline": "1.6.4",
     "com.unity.ugui": "1.0.0",
     "com.unity.vfx-toolbox": "https://github.com/Unity-Technologies/VFXToolbox.git#2.1.0-preview",
-    "org.nuget.protobuf-net": "3.2.8",
+    "org.nuget.protobuf-net": "3.2.16",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
     "com.unity.modules.assetbundle": "1.0.0",

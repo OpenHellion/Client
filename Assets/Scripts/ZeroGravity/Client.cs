@@ -2187,7 +2187,7 @@ namespace ZeroGravity
 				m_SpServerProcess = new Process();
 				m_SpServerProcess.StartInfo.WorkingDirectory = k_SpServerPath;
 				m_SpServerProcess.StartInfo.FileName = filePath;
-				string text = (SinglePlayerGameMode != 0) ? "-configdir Sandbox " : string.Empty;
+				string text = (SinglePlayerGameMode != SPGameMode.Standard) ? "-configdir Sandbox " : string.Empty;
 				if (SinglePlayerQuickLoad)
 				{
 					m_SpServerProcess.StartInfo.Arguments = text;
@@ -2293,7 +2293,7 @@ namespace ZeroGravity
 
 		public string GetSPPath()
 		{
-			return k_SpServerPath + ((SinglePlayerGameMode != 0) ? "\\Sandbox\\" : string.Empty);
+			return k_SpServerPath + ((SinglePlayerGameMode != SPGameMode.Standard) ? "\\Sandbox\\" : string.Empty);
 		}
 
 		public void QuickLoad()
