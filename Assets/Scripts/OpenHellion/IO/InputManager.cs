@@ -53,18 +53,21 @@ namespace OpenHellion.IO
 			Quick4
 		}
 
-		private static float m_mouseSensitivity;
-		public static float MouseSensitivity
+		private static float m_MouseSensitivity;
+		public static float SavedSensitivity
 		{
 			get
 			{
-				return m_mouseSensitivity;
+				return m_MouseSensitivity;
 			}
 			set
 			{
-				m_mouseSensitivity = value;
+				m_MouseSensitivity = value;
+				RealSensitivity = value;
 			}
 		}
+
+		public static float RealSensitivity = SavedSensitivity;
 
 		public InputActionAsset InputActions;
 

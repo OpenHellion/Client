@@ -23,7 +23,7 @@ using ZeroGravity.UI;
 
 namespace ZeroGravity.Objects
 {
-	// TODO: This class should probably not be a singleton.
+	// TODO: Desperately needs to be split into several smaller files.
 	public class MyPlayer : Player
 	{
 		public delegate void InteractLockDelegate();
@@ -178,19 +178,19 @@ namespace ZeroGravity.Objects
 
 		private float switchItemTime;
 
-		private float cameraFovZoomTreshold = 0.2f;
+		private float m_CameraFovZoomTreshold = 0.2f;
 
-		private float cameraFovZoomCounter;
+		private float m_CameraFovZoomCounter;
 
-		private float cameraFovZoomMinValue = 30f;
+		private float m_CameraFovZoomMinValue = 30f;
 
-		private float cameraFovLerpFrom;
+		private float m_CameraFovLerpFrom;
 
-		private float cameraFovLerpTo;
+		private float m_CameraFovLerpTo;
 
-		private float cameraFovLerpValue;
+		private float m_CameraFovLerpValue;
 
-		private float cameraFovLerpStrength = 7.5f;
+		private float m_CameraFovLerpStrength = 7.5f;
 
 		public float CurrentPanelFov = Client.DefaultCameraFov;
 
@@ -1134,7 +1134,7 @@ namespace ZeroGravity.Objects
 			}
 			TriggerRaycast();
 			UpdateInputKeys();
-			if (cameraFovLerpValue.IsNotEpsilonZero())
+			if (m_CameraFovLerpValue.IsNotEpsilonZero())
 			{
 				LerpCameraFov();
 			}
@@ -1770,6 +1770,8 @@ namespace ZeroGravity.Objects
 			{
 				characterController.ResetPlayerLock();
 			}
+
+			// Handle right-click zoom.
 			if (IsLockedToTrigger)
 			{
 				if (InputManager.GetButtonDown(InputManager.ConfigAction.FreeLook) && FpsController.MainCamera.fieldOfView != Client.DefaultCameraFov)
@@ -1782,7 +1784,7 @@ namespace ZeroGravity.Objects
 				}
 				else if (Mouse.current.rightButton.wasPressedThisFrame && InputManager.GetButton(InputManager.ConfigAction.FreeLook))
 				{
-					ChangeCamerasFov(cameraFovZoomMinValue);
+					ChangeCamerasFov(m_CameraFovZoomMinValue);
 				}
 				else if (Mouse.current.rightButton.wasReleasedThisFrame && InputManager.GetButton(InputManager.ConfigAction.FreeLook))
 				{
@@ -1791,26 +1793,27 @@ namespace ZeroGravity.Objects
 			}
 			else if (Mouse.current.rightButton.wasPressedThisFrame && Client.IsGameBuild && CurrentStance != PlayerStance.Special)
 			{
-				cameraFovZoomCounter = Time.time;
+				m_CameraFovZoomCounter = Time.time;
 			}
 			else if (Mouse.current.rightButton.isPressed && Client.IsGameBuild && CurrentStance != PlayerStance.Special)
 			{
-				if (Time.time - cameraFovZoomCounter > cameraFovZoomTreshold)
+				if (Time.time - m_CameraFovZoomCounter > m_CameraFovZoomTreshold)
 				{
-					ChangeCamerasFov(cameraFovZoomMinValue);
+					ChangeCamerasFov(m_CameraFovZoomMinValue);
 				}
 			}
-			else if (Mouse.current.rightButton.wasReleasedThisFrame && Client.IsGameBuild && !cameraFovLerpValue.IsNotEpsilonZero())
+			else if (Mouse.current.rightButton.wasReleasedThisFrame && Client.IsGameBuild && !m_CameraFovLerpValue.IsNotEpsilonZero())
 			{
 				if (Inventory.ItemInHands != null)
 				{
 					Inventory.ItemInHands.SecondaryFunction();
 				}
 			}
-			else if (Mouse.current.rightButton.wasReleasedThisFrame && cameraFovLerpValue.IsNotEpsilonZero() && currentStance != PlayerStance.Special)
+			else if (Mouse.current.rightButton.wasReleasedThisFrame && m_CameraFovLerpValue.IsNotEpsilonZero() && currentStance != PlayerStance.Special)
 			{
 				ChangeCamerasFov(Client.DefaultCameraFov);
 			}
+
 			if (inventoryUI != null && ((Inventory != null) ? Inventory.Outfit : null) != null && animHelper.CanDrop)
 			{
 				if (InputManager.GetButtonDown(InputManager.ConfigAction.Quick1))
@@ -3001,15 +3004,21 @@ namespace ZeroGravity.Objects
 
 		public void ChangeCamerasFov(float fovVal)
 		{
-			if (!(fovVal <= 0f))
+			if (fovVal > 0f)
 			{
-				cameraFovLerpFrom = fovVal;
-				cameraFovLerpTo = FpsController.MainCamera.fieldOfView;
-				cameraFovLerpValue = 1f;
+				m_CameraFovLerpFrom = fovVal;
+				m_CameraFovLerpTo = FpsController.MainCamera.fieldOfView;
+				m_CameraFovLerpValue = 1f;
 				Client.Instance.CanvasManager.CanvasUI.HelmetHud.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
 				if (fovVal == Client.DefaultCameraFov)
 				{
 					Client.Instance.CanvasManager.CanvasUI.HelmetHud.transform.localScale = new Vector3(1f, 1f, 1f);
+					InputManager.RealSensitivity = InputManager.SavedSensitivity;
+				}
+				else
+				{
+					// Reduce the sensitivity if the fov is reduced.
+					InputManager.RealSensitivity = InputManager.SavedSensitivity * (fovVal / 100f);
 				}
 			}
 		}
@@ -3024,12 +3033,12 @@ namespace ZeroGravity.Objects
 
 		private void LerpCameraFov()
 		{
-			cameraFovLerpValue -= Time.deltaTime * cameraFovLerpStrength;
-			if (cameraFovLerpValue <= 0.001f)
+			m_CameraFovLerpValue -= Time.deltaTime * m_CameraFovLerpStrength;
+			if (m_CameraFovLerpValue <= 0.001f)
 			{
-				cameraFovLerpValue = 0f;
+				m_CameraFovLerpValue = 0f;
 			}
-			float fieldOfView = Mathf.Lerp(cameraFovLerpFrom, cameraFovLerpTo, cameraFovLerpValue);
+			float fieldOfView = Mathf.Lerp(m_CameraFovLerpFrom, m_CameraFovLerpTo, m_CameraFovLerpValue);
 			if (Client.IsGameBuild)
 			{
 				Client.Instance.SunCameraTransform.GetComponent<Camera>().fieldOfView = fieldOfView;

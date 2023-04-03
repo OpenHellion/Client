@@ -358,15 +358,15 @@ namespace ZeroGravity.CharacterMovement
 
 		private void GetMouseAxis()
 		{
-			mouseRightAxis = Mouse.current.delta.x.ReadValue() * 0.1f * InputManager.MouseSensitivity;
-			mouseUpAxis = Mouse.current.delta.y.ReadValue() * 0.1f * InputManager.MouseSensitivity;
+			mouseRightAxis = Mouse.current.delta.x.ReadValue() * 0.1f * InputManager.RealSensitivity;
+			mouseUpAxis = Mouse.current.delta.y.ReadValue() * 0.1f * InputManager.RealSensitivity;
 			if (Client.IsGameBuild)
 			{
-				mouseUpAxis = Client.Instance.InvertedMouse ? 0.1f : -0.1f * Mouse.current.delta.y.ReadValue() * InputManager.MouseSensitivity;
+				mouseUpAxis = Client.Instance.InvertedMouse ? 0.1f : -0.1f * Mouse.current.delta.y.ReadValue() * InputManager.RealSensitivity;
 			}
 			else
 			{
-				mouseUpAxis = -0.1f * Mouse.current.delta.y.ReadValue() * InputManager.MouseSensitivity;
+				mouseUpAxis = -0.1f * Mouse.current.delta.y.ReadValue() * InputManager.RealSensitivity;
 			}
 		}
 
