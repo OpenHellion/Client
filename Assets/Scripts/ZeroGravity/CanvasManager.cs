@@ -110,7 +110,7 @@ namespace ZeroGravity
 		public StartingPointOptionUI StartingPointUI;
 
 		[Title("Save selection screen")]
-		public GameObject SelectSaveScreen;
+		public GameObject SaveAndSpawnPointScreen;
 
 		public Transform SaveGamesHolder;
 
@@ -400,7 +400,7 @@ namespace ZeroGravity
 		public void ShowSingleplayerSaves()
 		{
 			// Enable menu.
-			SelectSaveScreen.SetActive(value: true);
+			SaveAndSpawnPointScreen.SetActive(value: true);
 
 			// Clear all entries.
 			SaveGamesHolder.DestroyAll<SaveGameOptionUI>();
@@ -620,7 +620,7 @@ namespace ZeroGravity
 			FreshStartSpawnOptions.gameObject.Activate(value: false);
 			SpawnOptions.DestroyAll<StartingPointOptionUI>();
 			SpawnOptions.gameObject.Activate(value: true);
-			SelectSaveScreen.SetActive(value: false);
+			SaveAndSpawnPointScreen.SetActive(value: false);
 			SaveGamesHolder.DestroyAll<SaveGameOptionUI>();
 			foreach (SpawnPointDetails spawnPoint in spawnPoints)
 			{
@@ -669,7 +669,7 @@ namespace ZeroGravity
 			inviteCustomOptionUI.GetComponent<Button>().interactable = spawnPoints.Count > 0;
 			inviteCustomOptionUI.GetComponent<Button>().onClick.AddListener(delegate
 			{
-				SelectSaveScreen.SetActive(value: true);
+				SaveAndSpawnPointScreen.SetActive(value: true);
 			});
 			InstantiateFreshStartOptions();
 		}
@@ -685,7 +685,7 @@ namespace ZeroGravity
 			});
 			spawnPointOptionUI.GetComponent<Button>().onClick.AddListener(delegate
 			{
-				SelectSaveScreen.SetActive(value: false);
+				SaveAndSpawnPointScreen.SetActive(value: false);
 			});
 			if (Client.Instance.SinglePlayerMode)
 			{

@@ -94,7 +94,7 @@ public class SaveGameOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerExi
 			return;
 		}
 		Client.Instance.CanvasManager.StartingPointScreen.SetActive(false);
-		Client.Instance.CanvasManager.SelectSaveScreen.SetActive(false);
+		Client.Instance.CanvasManager.SaveAndSpawnPointScreen.SetActive(false);
 		Client.Instance.StartCoroutine(Client.Instance.PlaySPCoroutine(SaveFile.Name));
 	}
 

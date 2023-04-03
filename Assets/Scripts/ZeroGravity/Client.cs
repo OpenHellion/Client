@@ -1842,7 +1842,7 @@ namespace ZeroGravity
 				DeleteCharacterRequest deleteCharacterRequest = new DeleteCharacterRequest
 				{
 					ServerId = gs.Id,
-					SteamId = NetworkController.PlayerId
+					PlayerId = NetworkController.PlayerId
 				};
 
 				NetworkController.SendTCP(deleteCharacterRequest, gs.IpAddress, gs.StatusPort, out int latency, false, true);
@@ -1898,6 +1898,7 @@ namespace ZeroGravity
 				{
 					ShowSpawnPointSelection(logInResponse.SpawnPointsList, logInResponse.CanContinue);
 				}
+
 				foreach (DebrisFieldDetails debrisField in logInResponse.DebrisFields)
 				{
 					DebrisFields.Add(new DebrisField(debrisField));
@@ -2278,7 +2279,7 @@ namespace ZeroGravity
 			catch (Exception ex)
 			{
 				Dbg.Error("Unable to start single player game", ex.Message, ex.StackTrace);
-				CanvasManager.SelectSaveScreen.SetActive(false);
+				CanvasManager.SaveAndSpawnPointScreen.SetActive(false);
 				CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
 				if (File.Exists(filePath))
 				{
@@ -2431,7 +2432,7 @@ namespace ZeroGravity
 			ProviderManager.UpdateStatus();
 			MyPlayer.Instance.InitializeCameraEffects();
 
-			Instance.CanvasManager.SelectSaveScreen.Activate(value: false);
+			Instance.CanvasManager.SaveAndSpawnPointScreen.Activate(value: false);
 			IsInGame = true;
 			m_LastSPAutosaveTime = Time.time;
 			ToggleCursor(false);

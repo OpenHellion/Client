@@ -5,7 +5,7 @@ namespace ZeroGravity.Network
 	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 	public class DeleteCharacterRequest : NetworkData
 	{
-		public string SteamId;
+		public string PlayerId;
 
 		public string ServerId;
 	}

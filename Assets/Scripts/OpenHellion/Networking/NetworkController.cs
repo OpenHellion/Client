@@ -71,31 +71,31 @@ namespace OpenHellion.Networking
 		}
 
 		[ReadOnly, SerializeField]
-		private string _playerId = null;
+		private string m_PlayerId = null;
 		public static string PlayerId
 		{
 			get
 			{
-				if (Instance._playerId.IsNullOrEmpty())
+				if (Instance.m_PlayerId.IsNullOrEmpty())
 				{
-					Instance._playerId = PlayerPrefs.GetString("player_id", null);
+					Instance.m_PlayerId = PlayerPrefs.GetString("player_id", null);
 
 					// Generate new player id.
-					if (Instance._playerId.IsNullOrEmpty())
+					if (Instance.m_PlayerId.IsNullOrEmpty())
 					{
 						string uuid = Guid.NewGuid().ToString();
-						Instance._playerId = uuid;
+						Instance.m_PlayerId = uuid;
 						PlayerPrefs.SetString("player_id", uuid);
 
 						Dbg.Log("Generated new player id: " + uuid);
 					}
 				}
 
-				return Instance._playerId;
+				return Instance.m_PlayerId;
 			}
 			set
 			{
-				Instance._playerId = value;
+				Instance.m_PlayerId = value;
 				PlayerPrefs.SetString("player_id", value);
 			}
 		}
