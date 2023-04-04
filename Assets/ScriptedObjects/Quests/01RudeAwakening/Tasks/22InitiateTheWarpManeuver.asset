@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fcc81f2658f04641aaf1ee5408cec1f, type: 3}
+  m_Name: 22InitiateTheWarpManeuver
+  m_EditorClassIdentifier: 
+  Location: {fileID: 0}
+  Tags:
+  - {fileID: 11400000, guid: eb0c769cce8aa554b953f879e720308e, type: 2}
+  Celestial: 0
+  NameTag: Warp to Outpost
+  NameOnIndicator: 
+  DescriptionTag: Plot the course for the Outpost and Initiate the Warp Maneuver.
+  CutScene: {fileID: 11400000, guid: 8a752c7a0ddf10b4a9015763ec7fb98e, type: 2}
+  SceneID: 13
+  QuestID: 2
+  QuestTriggerID: 23
+  LastTask: 0

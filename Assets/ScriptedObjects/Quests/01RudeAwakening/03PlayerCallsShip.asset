@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4100b041523c0624c87765598d71eac5, type: 3}
+  m_Name: 03PlayerCallsShip
+  m_EditorClassIdentifier: 
+  QuestID: 2
+  QuestTriggerID: 12
+  Elements:
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: '...|It’ll take a few minutes for a ship to get there,|
+
+      but
+      it will get there,|it’s AltCorp after all...|
+
+      they''re the only good
+      thing that ever happened in Hellion|'
+    PlaySound: 1
+    DialogueSound: Theona_Log_4_PlayerCallsARescueShip
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'had we put them in charge,|we could’ve probably
+
+      avoided this
+      entire mess... |'
+    PlaySound: 0
+    DialogueSound: 
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'Anyway... |Head outside,|just make sure you have
+
+      enough oxygen,|the
+      ship probably wont have any... |'
+    PlaySound: 0
+    DialogueSound: 
+    SkipInJournal: 0
+    TaskDependencyList: []
+  QuestName: A Rude Awakening
+  Delay: 0

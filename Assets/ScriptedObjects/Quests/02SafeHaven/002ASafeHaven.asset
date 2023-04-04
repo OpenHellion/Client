@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 045e95257a910444eb0dcca09e1f84cf, type: 3}
+  m_Name: 002ASafeHaven
+  m_EditorClassIdentifier: 
+  ParentQuest: {fileID: 0}
+  DependencyQuests:
+  - {fileID: 11400000, guid: a95bf9d74f8ed8b459b725c51299965b, type: 2}
+  ID: 3
+  QuestTaskBatches:
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 8559abe87ae31694da747bfebd5e6bdf, type: 2}
+    RequireTasks: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 8ec8dae89f09c6546ade5e586f73ead3, type: 2}
+    RequireTasks: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 1bfd058bb1813cb4aad24eb33e2c3e13, type: 2}
+    RequireTasks: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 4a1c63fb0fd889344b34d6eae8065de8, type: 2}
+    RequireTasks: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 08b60e9300e081242bd6a7a85c45370b, type: 2}
+    RequireTasks: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 8602f8034eb12d144a1a870eac661611, type: 2}
+    RequireTasks: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: a5f16c2102d04844abd811ca6d241e81, type: 2}
+    RequireTasks: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 79501611cc393ca4e8c6fb53f2b3495d, type: 2}
+    - {fileID: 11400000, guid: cea2ea45bb9aa67439e450bdd9658e57, type: 2}
+    RequireTasks: 0
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 8c8cb78c61f46074f92a23d2fb1a9dbe, type: 2}
+    RequireTasks: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 442f1eb7f54071641b40318e1dd6b245, type: 2}
+    - {fileID: 11400000, guid: cf619ef148a1b6d46a1cbd042a5b8171, type: 2}
+    RequireTasks: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 3ac3162af3f654747aed0a98ad6f6405, type: 2}
+    RequireTasks: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: c989fa94d1c048840a97dd61e911a8cf, type: 2}
+    - {fileID: 11400000, guid: fc0f96fc03a72d8499c5127bb4803990, type: 2}
+    RequireTasks: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: a80b8fa7a911f914db7e6d2b2d4eec3c, type: 2}
+    RequireTasks: 1
+  Name: A Safe Haven
+  Description: Find a way to repair a damaged Outpost module and bring its dormant
+    systems online.
+  Achivement: 2
+  AutoActivate: 0
+  QuestToTrackWhenCompleted: {fileID: 0}
+  TrackOnPickUp: 0
+  Skippable: 1

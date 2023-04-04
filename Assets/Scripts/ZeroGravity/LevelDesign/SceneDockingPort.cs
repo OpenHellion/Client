@@ -48,8 +48,6 @@ namespace ZeroGravity.LevelDesign
 
 		public bool Locked;
 
-		private bool m_DockStarted = false;
-
 		[Space(5f)]
 		public List<SceneTriggerExecuter> mergeExecuters;
 
@@ -170,8 +168,6 @@ namespace ZeroGravity.LevelDesign
 		{
 			ToggleDock(true, isInitialize);
 			DockedToPort.ToggleDock(true, isInitialize);
-			m_DockStarted = false;
-			DockedToPort.m_DockStarted = false;
 			foreach (SceneDockingPortController portController in portControllers)
 			{
 				portController.OnLeverStateChange();
@@ -182,8 +178,6 @@ namespace ZeroGravity.LevelDesign
 		{
 			ToggleDock(false, isInitialize);
 			DockedToPort.ToggleDock(false, isInitialize);
-			m_DockStarted = false;
-			DockedToPort.m_DockStarted = false;
 			DockedToPort.DockedToPort = null;
 			DockedToPort = null;
 		}

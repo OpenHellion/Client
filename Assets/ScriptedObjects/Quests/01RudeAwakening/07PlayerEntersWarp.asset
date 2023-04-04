@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4100b041523c0624c87765598d71eac5, type: 3}
+  m_Name: 07PlayerEntersWarp
+  m_EditorClassIdentifier: 
+  QuestID: 2
+  QuestTriggerID: 23
+  Elements:
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: '...|Ok,|once you’re on a stable orbit|you’ll be on your own…|
+
+      And...|this
+      is all I can do for you…|Look...|Hellion...|is not
+
+      what you thought
+      it would be,|or|what any of us hoped for.|'
+    PlaySound: 1
+    DialogueSound: Theona_Log_7_PlayerWarps
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'I can’t even begin to explain how it all went wrong...|
+
+      uhm|I’m
+      not even sure if this…|if all of this is real...|
+
+      or just some|crazy
+      dream I|can’t wake up from... |'
+    PlaySound: 0
+    DialogueSound: 
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'or even if it''s|my dream at all...|I could|very well just|
+
+      be
+      imagining things...|God...|It''s getting so hard to think.|
+
+      ...Focus
+      Theona...|
+
+'
+    PlaySound: 0
+    DialogueSound: 
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: '...But if there is actually|someone listening to me!|
+
+      Search
+      for my logs,|it’s in all there...|You might be able
+
+      to figure out
+      what happened…|To do what I couldn''t...|'
+    PlaySound: 0
+    DialogueSound: 
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: ...perhaps even find us a way out of this...|
+    PlaySound: 0
+    DialogueSound: 
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'This is...|or at least|I think I am...|Theona Mayers,|
+
+      first
+      officer of Daedalus,|signing off.|'
+    PlaySound: 0
+    DialogueSound: 
+    SkipInJournal: 0
+    TaskDependencyList: []
+  QuestName: A Rude Awakening
+  Delay: 0

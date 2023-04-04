@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4100b041523c0624c87765598d71eac5, type: 3}
+  m_Name: 01WalkingInHerShoesActivationCutScene
+  m_EditorClassIdentifier: 
+  QuestID: 7
+  QuestTriggerID: 1
+  Elements:
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: '...|Terrorists…|I don’t know if I can wrap my mind
+
+      around
+      this…|I mean|back in Sol, yeah…|But here,|
+
+      in Hellion?!|'
+    PlaySound: 1
+    DialogueSound: ActivationMessage
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: '...|The thought that a religious cult from our past somehow
+
+      managed
+      to bypass our security and infiltrate the
+
+      Expedition...|'
+    PlaySound: 1
+    DialogueSound: ActivationMessage2
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'Part of me doesn’t want to to believe it but it’s hard
+
+      to
+      ignore all this damage… |I guess these really are
+
+      the Sons of Earth...|'
+    PlaySound: 0
+    DialogueSound: 
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'Back in Sol their ideology was a problem, but we always
+
+      had
+      enough security...| here?| Even one atack would''ve
+
+      been devastating|'
+    PlaySound: 0
+    DialogueSound: 
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'And looking at all these debris fields...|
+
+      There must have
+      been more than one of them.|'
+    PlaySound: 0
+    DialogueSound: 
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'Alright... |Bethyr’s moons were probably hit first |so the
+
+      debris
+      over there isn’t as dangerous.| I guess that’s my
+
+      next stop.|'
+    PlaySound: 0
+    DialogueSound: 
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'Perhaps I can find a pattern,|
+
+      Sons always had a pattern...|'
+    PlaySound: 0
+    DialogueSound: 
+    SkipInJournal: 0
+    TaskDependencyList: []
+  - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
+    Dialogue: 'Diving into one of those fields won’t be easy…|
+
+      better
+      check the hull again,| just in case.|'
+    PlaySound: 0
+    DialogueSound: 
+    SkipInJournal: 0
+    TaskDependencyList: []
+  QuestName: Walking in her shoes
+  Delay: 0

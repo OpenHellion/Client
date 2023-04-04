@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 045e95257a910444eb0dcca09e1f84cf, type: 3}
+  m_Name: 005DockFabricatorModule
+  m_EditorClassIdentifier: 
+  ParentQuest: {fileID: 0}
+  DependencyQuests: []
+  ID: 18
+  QuestTaskBatches:
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 47545172447bf174c883089e33767ae7, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: f617e8dac8aa3f84890cf622c63aa089, type: 2}
+    BatchDependency: 1
+  Name: Dock the fabricator to outpost
+  Description: Dock the fabricator to outpost
+  Achivement: 0
+  AutoActivate: 0
+  QuestToTrackWhenCompleted: {fileID: 0}
+  TrackOnPickUp: 0
+  Skippable: 1

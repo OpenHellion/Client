@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 045e95257a910444eb0dcca09e1f84cf, type: 3}
+  m_Name: 007AProperWarpDrive
+  m_EditorClassIdentifier: 
+  ParentQuest: {fileID: 0}
+  DependencyQuests: []
+  ID: 1
+  QuestTaskBatches:
+  - TasksInBatch:
+    - {fileID: 11400000, guid: b92079800204c1f459417168fb9d6897, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: 0db0aa33938c3b249a82d40aca092d73, type: 2}
+    - {fileID: 11400000, guid: 70fb00434fe67bd4e9ea9c54d4c49f52, type: 2}
+    BatchDependency: 1
+  - TasksInBatch:
+    - {fileID: 11400000, guid: b93e789347d36d24c838a53ed818f1fe, type: 2}
+    - {fileID: 11400000, guid: 8affcde6f228db14598ec49dc8ad2d56, type: 2}
+    BatchDependency: 1
+  Name: A Proper Warp Drive
+  Description: 'My ship can only use Emergency Warp at the moment, because its Warp
+    Drive is missing both a Singularity Cell Detonator and a Warp Cell. With a bit
+    of luck I should be able to salvage the parts from a nearby wreckage.
+
+    Check
+    the nearby Steropes Wreckage for spare parts.'
+  Achivement: 0
+  AutoActivate: 0
+  QuestToTrackWhenCompleted: {fileID: 0}
+  TrackOnPickUp: 1
+  Skippable: 1
