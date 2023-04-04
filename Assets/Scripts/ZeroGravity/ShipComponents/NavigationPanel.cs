@@ -13,7 +13,6 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
 using OpenHellion.Networking;
-using TriInspector;
 using UnityEngine.InputSystem;
 
 namespace ZeroGravity.ShipComponents

@@ -9,7 +9,6 @@ using System;
 using System.Runtime.InteropServices;
 using OpenHellion.ProviderSystem;
 using ZeroGravity.Network;
-using TriInspector;
 using System.Collections.Concurrent;
 using System.Linq;
 using ZeroGravity;
@@ -43,17 +42,9 @@ namespace OpenHellion.Networking
 
 		private readonly DateTime m_ClientStartTime = DateTime.UtcNow.ToUniversalTime();
 
-		[Title("Diagnostics"), ReadOnly]
-		public long PlayerGUID;
+		[Title("Diagnostics")]
+		public int UnprocessedPackets;
 
-		[ReadOnly, ShowInInspector]
-		public int UnprocessedPackets
-		{
-			get;
-			private set;
-		}
-
-		[ReadOnly, TextArea(1, 20)]
 		public string DataLogs = "";
 
 		private static NetworkController s_Instance;
@@ -70,7 +61,6 @@ namespace OpenHellion.Networking
 			}
 		}
 
-		[ReadOnly, SerializeField]
 		private string m_PlayerId = null;
 		public static string PlayerId
 		{

@@ -1,4 +1,3 @@
-using TriInspector;
 using UnityEngine;
 
 public abstract class LightOverride : MonoBehaviour

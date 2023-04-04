@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using TriInspector;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -169,11 +168,7 @@ namespace ZeroGravity
 		/// 	If we have loaded up a save or joined a server, and is in game.<br/>
 		/// 	True when game is started.
 		/// </summary>
-		[ReadOnly]
 		public bool IsInGame;
-
-		[ReadOnly]
-		public bool HasFocus;
 
 		public bool InvertMouseWhileDriving;
 
@@ -235,8 +230,7 @@ namespace ZeroGravity
 
 		[NonSerialized]
 		public Dictionary<long, CharacterInteractionState> CharacterInteractionStatesQueue = new Dictionary<long, CharacterInteractionState>();
-
-		[ReadOnly]
+		
 		public bool SignInFailed;
 
 		public static volatile bool ForceRespawn = false;
@@ -1173,7 +1167,6 @@ namespace ZeroGravity
 
 		public void OnApplicationFocus(bool focusStatus)
 		{
-			HasFocus = focusStatus;
 			if (MyPlayer.Instance != null)
 			{
 				if (MyPlayer.Instance.InLockState && !MyPlayer.Instance.IsLockedToTrigger && MyPlayer.Instance.Parent is SpaceObjectVessel && (MyPlayer.Instance.Parent as SpaceObjectVessel).SpawnPoints.Values.FirstOrDefault((SceneSpawnPoint m) => m.PlayerGUID == MyPlayer.Instance.GUID) != null)

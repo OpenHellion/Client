@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using OpenHellion.Networking;
 using OpenHellion.ProviderSystem;
 using OpenHellion.IO;
-using TriInspector;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
@@ -2308,7 +2307,6 @@ namespace ZeroGravity.Objects
 		/// </summary>
 		public static MyPlayer SpawnMyPlayer(LogInResponse res)
 		{
-			NetworkController.Instance.PlayerGUID = res.GUID;
 			GameObject characterObject = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/FirstPersonCharacter")) as GameObject;
 			GenderSettings genderSettings = characterObject.GetComponent<GenderSettings>();
 			GenderSettings.GenderItem genderItem = null;

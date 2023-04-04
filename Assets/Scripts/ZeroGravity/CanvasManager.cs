@@ -13,7 +13,6 @@ using ZeroGravity.Objects;
 using ZeroGravity.UI;
 using OpenHellion.ProviderSystem;
 using OpenHellion.Networking;
-using TriInspector;
 using UnityEngine.InputSystem;
 using OpenHellion.IO;
 
@@ -98,7 +97,6 @@ namespace ZeroGravity
 		public GameObject ConfirmMessageBox;
 
 		[Title("Spawn point selection screen")]
-		[ListDrawerSettings(Draggable = false, HideAddButton = true, HideRemoveButton = true, AlwaysExpanded = true)]
 		public List<StartingPointOptionData> StartingPointData = new List<StartingPointOptionData>();
 
 		public GameObject StartingPointScreen;
@@ -114,7 +112,6 @@ namespace ZeroGravity
 
 		public Transform SaveGamesHolder;
 
-		[AssetsOnly, Required]
 		public SaveGameOptionUI SaveGameOptionUI;
 
 		public RawImage CurrentSaveGameScreenshot;

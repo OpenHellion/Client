@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenHellion.IO;
-using TriInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;

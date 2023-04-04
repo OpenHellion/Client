@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using TriInspector;
 using UnityEngine;
 using ZeroGravity.Network;
 
@@ -17,7 +16,7 @@ public class QuestCutSceneData : ScriptableObject
 
 		public bool PlaySound;
 
-		[EnableIf(nameof(PlaySound))]
+		[ShowIf(nameof(PlaySound), true)]
 		public string DialogueSound = string.Empty;
 
 		public bool SkipInJournal;

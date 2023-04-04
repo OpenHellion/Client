@@ -1,4 +1,3 @@
-using TriInspector;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Flexible UI Data")]

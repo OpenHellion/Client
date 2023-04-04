@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using OpenHellion.IO;
 using OpenHellion.Networking;
-using TriInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;

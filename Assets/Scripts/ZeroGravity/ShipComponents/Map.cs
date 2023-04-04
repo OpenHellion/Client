@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using OpenHellion.Networking;
-using TriInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -54,14 +53,11 @@ namespace ZeroGravity.ShipComponents
 
 		public Camera MapCamera;
 
-		[ReadOnly]
 		public MapObject MyShip;
 
-		[ReadOnly]
 		public MapObject Home;
 
-		[ReadOnly]
-		public MapObject Sun;
+		private MapObject m_Sun;
 
 		[Title("ZOOM")]
 		public AnimationCurve PanCurve;
@@ -322,7 +318,7 @@ namespace ZeroGravity.ShipComponents
 				MapScanEffect.transform.position = MyShip.Position.transform.position;
 				MapScanEffect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f) * ((float)Scale / 1500f);
 			}
-			Sunlight.transform.forward = -Sun.Position.position;
+			Sunlight.transform.forward = -m_Sun.Position.position;
 		}
 
 		public void OnHover(Collider collider)
@@ -580,7 +576,7 @@ namespace ZeroGravity.ShipComponents
 				UpdateCelestialParent(obj);
 				if (celestialBody.GUID == 1)
 				{
-					Sun = component;
+					m_Sun = component;
 				}
 				component.UpdateVisibility();
 			}
@@ -774,7 +770,7 @@ namespace ZeroGravity.ShipComponents
 
 		private void ShowAllChildObjects(MapObject obj)
 		{
-			if (obj == Sun)
+			if (obj == m_Sun)
 			{
 				(obj as MapObjectCelestial).ChildObjects.gameObject.SetActive(value: true);
 				MapObjectCelestial[] componentsInChildren = (obj as MapObjectCelestial).CelestialObjects.GetComponentsInChildren<MapObjectCelestial>();
@@ -789,13 +785,13 @@ namespace ZeroGravity.ShipComponents
 				{
 					return;
 				}
-				if (obj.Orbit.Parent.CelestialBody == Sun.MainObject)
+				if (obj.Orbit.Parent.CelestialBody == m_Sun.MainObject)
 				{
 					ToggleAllChildObjects(obj, show: true);
 					return;
 				}
 				MapObject value = AllMapObjects.FirstOrDefault((KeyValuePair<IMapMainObject, MapObject> m) => m.Key == obj.Orbit.Parent.CelestialBody).Value;
-				if (value.Orbit.Parent != null && value.Orbit.Parent.CelestialBody == Sun.MainObject)
+				if (value.Orbit.Parent != null && value.Orbit.Parent.CelestialBody == m_Sun.MainObject)
 				{
 					ToggleAllChildObjects(value, show: true);
 				}
@@ -808,10 +804,10 @@ namespace ZeroGravity.ShipComponents
 
 		private void HideAllChildObjects(MapObject obj)
 		{
-			if (!(obj == Sun) && obj.Orbit.Parent.CelestialBody != null)
+			if (!(obj == m_Sun) && obj.Orbit.Parent.CelestialBody != null)
 			{
 				MapObject value = AllMapObjects.FirstOrDefault((KeyValuePair<IMapMainObject, MapObject> m) => m.Key == obj.Orbit.Parent.CelestialBody).Value;
-				if (value.MainObject == Sun.MainObject)
+				if (value.MainObject == m_Sun.MainObject)
 				{
 					ToggleAllChildObjects(value, show: false);
 				}
@@ -836,7 +832,7 @@ namespace ZeroGravity.ShipComponents
 			}
 			else
 			{
-				(Sun as MapObjectCelestial).ChildObjects.gameObject.SetActive(value: true);
+				(m_Sun as MapObjectCelestial).ChildObjects.gameObject.SetActive(value: true);
 			}
 		}
 

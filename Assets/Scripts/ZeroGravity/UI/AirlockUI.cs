@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Math;

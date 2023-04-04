@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.bedtime.selection-detective": "https://github.com/BedtimeDigitalGames/Unity-Selection-Detective.git#1.6.0",
-    "com.codewriter.triinspector": "https://github.com/codewriter-packages/Tri-Inspector.git#1.9.3",
+    "com.browar.editor-toolbox": "https://github.com/arimger/Unity-Editor-Toolbox.git#upm",
     "com.heroiclabs.nakama-unity": "https://github.com/heroiclabs/nakama-unity.git?path=/Packages/Nakama#v3.7.0",
     "com.innogames.asset-relations-viewer": "https://github.com/innogames/asset-relations-viewer.git#1.5.1",
     "com.rlabrecque.steamworks.net": "https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net#20.1.0",

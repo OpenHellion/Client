@@ -7,12 +7,14 @@
       "dependencies": {},
       "hash": "42c88a6190f665ca28690ad4f72860ac88bf499d"
     },
-    "com.codewriter.triinspector": {
-      "version": "https://github.com/codewriter-packages/Tri-Inspector.git#1.9.3",
+    "com.browar.editor-toolbox": {
+      "version": "https://github.com/arimger/Unity-Editor-Toolbox.git#upm",
       "depth": 0,
       "source": "git",
-      "dependencies": {},
-      "hash": "8cffc61ebeefbc7901dd823f380199d4597a2470"
+      "dependencies": {
+        "com.unity.editorcoroutines": "1.0.0"
+      },
+      "hash": "bbffd34d1b76cf6196cfcddc8359f3946c94b0bf"
     },
     "com.heroiclabs.nakama-unity": {
       "version": "https://github.com/heroiclabs/nakama-unity.git?path=/Packages/Nakama#v3.7.0",
@@ -56,6 +58,13 @@
       "dependencies": {
         "com.unity.test-framework": "1.1.31"
       },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.editorcoroutines": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.ext.nunit": {

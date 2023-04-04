@@ -8,7 +8,6 @@ using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
-using TriInspector;
 using OpenHellion.Networking.Message.MainServer;
 using OpenHellion.Networking.Message;
 
@@ -18,7 +17,6 @@ namespace ZeroGravity.ShipComponents
 	{
 		public delegate void GetInvitedPlayersDelegate(List<AuthorizedPerson> availablePlayers);
 
-		[ReadOnly]
 		public List<AuthorizedPerson> AuthorizedPlayers = new List<AuthorizedPerson>();
 
 		public SceneNameTag[] ShipNameTags;

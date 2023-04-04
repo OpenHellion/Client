@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using OpenHellion.Networking;
-using TriInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using ZeroGravity.Data;
@@ -12,45 +11,44 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneQuestTrigger : MonoBehaviour
 	{
-		[PropertyTooltip("Used only if Task is not assigned"), ShowIf(nameof(Task), null)]
+		[Tooltip("Used only if Task is not assigned"), ShowIf(nameof(Task), null)]
 		public uint QuestID;
 
-		[PropertyTooltip("Used only if Task is not assigned"), ShowIf(nameof(Task), null)]
+		[Tooltip("Used only if Task is not assigned"), ShowIf(nameof(Task), null)]
 		public uint QuestTriggerID;
 
-		[PropertyTooltip("The event that should complete this quest.")]
+		[Tooltip("The event that should complete this quest.")]
 		public SceneQuestTriggerEvent TriggerEvent;
 
-		[PropertyTooltip("The quest task to complete.")]
+		[Tooltip("The quest task to complete.")]
 		public QuestTaskObject Task;
 
-		[PropertyTooltip("A list of additional quest tasks to complete if Task is completed."), HideIf(nameof(Task), null)]
+		[Tooltip("A list of additional quest tasks to complete if Task is completed."), HideIf(nameof(Task), null)]
 		public List<QuestTaskObject> AdditionalTasksToComplete;
 
-		[PropertyTooltip("Wether or not the quest indicator is visible.")]
+		[Tooltip("Wether or not the quest indicator is visible.")]
 		public QuestIndicatorVisibility Visibility = QuestIndicatorVisibility.AlwaysVisible;
 
-		[PropertyTooltip("The maximum distance the quest indicator can be seen from."), ShowIf(nameof(Visibility), QuestIndicatorVisibility.Proximity)]
+		[Tooltip("The maximum distance the quest indicator can be seen from."), ShowIf(nameof(Visibility), QuestIndicatorVisibility.Proximity)]
 		public float ProximityDistance = 10f;
 
-		[PropertyTooltip("Position of the quest indicator relative to the object.")]
+		[Tooltip("Position of the quest indicator relative to the object.")]
 		public Vector3 QuestIndicatorPosition = new Vector3(0f, 1f, 0f);
 
-		[SceneObjectsOnly]
 		public GameObject QuestTriggerObject;
 
-		[PropertyTooltip("Collider enabled when quest is activated.")]
+		[Tooltip("Collider enabled when quest is activated.")]
 		public Collider Collider;
 
-		[PropertyTooltip("An optional localization key for a tooltip to be shown on the screen.")]
+		[Tooltip("An optional localization key for a tooltip to be shown on the screen.")]
 		public string QuickTooltip;
 
 		public UnityEvent PostTriggerEvent;
 
-		[PropertyTooltip("Events executed when task becomes active.")]
+		[Tooltip("Events executed when task becomes active.")]
 		public UnityEvent ActiveTriggerEvent;
 
-		[PropertyTooltip("Events executed when task is completed.")]
+		[Tooltip("Events executed when task is completed.")]
 		public UnityEvent CompleteTriggerEvent;
 
 		private Quest m_quest;
@@ -61,10 +59,8 @@ namespace ZeroGravity.LevelDesign
 
 		private double m_lastActivationTime;
 
-		[ShowInInspector]
 		public QuestTrigger QuestTrigger => m_questTrigger;
 
-		[ShowInInspector]
 		public SpaceObjectVessel ParentVessel => m_parentVessel;
 
 		private void Start()

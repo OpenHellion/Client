@@ -1,9 +1,7 @@
 using System.Collections;
-using TriInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ZeroGravity.Math;
-using ZeroGravity.UI;
 
 namespace ZeroGravity.Objects
 {
