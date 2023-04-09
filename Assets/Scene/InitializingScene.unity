@@ -41,7 +41,6 @@ GameObject:
   - component: {fileID: 17}
   - component: {fileID: 14}
   - component: {fileID: 16}
-  - component: {fileID: 15}
   m_Layer: 0
   m_Name: StartupChecker
   m_TagString: Untagged
@@ -297,26 +296,6 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
---- !u!114 &15
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7443890498e2bc148a4ce622f3dc01bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
-  m_UpButton: UpArrow
-  m_DownButton: DownArrow
-  m_LeftButton: LeftArrow
-  m_RightButton: RightArrow
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_ForceModuleActive: 1
 --- !u!114 &16
 MonoBehaviour:
   m_ObjectHideFlags: 0

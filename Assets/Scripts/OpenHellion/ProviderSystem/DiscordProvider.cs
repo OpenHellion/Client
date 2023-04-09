@@ -13,7 +13,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
@@ -23,6 +23,7 @@ using ZeroGravity;
 using Discord;
 using OpenHellion.Networking.Message;
 using OpenHellion.IO;
+using static Discord.UserManager;
 
 namespace OpenHellion.ProviderSystem
 {
@@ -32,7 +33,7 @@ namespace OpenHellion.ProviderSystem
 	/// <seealso cref="SteamProvider"/>
 	internal class DiscordProvider : IProvider
 	{
-		private static readonly Dictionary<long, string> s_planets = new Dictionary<long, string>
+		private static readonly Dictionary<long, string> s_Planets = new Dictionary<long, string>
 		{
 			{ 1L, "Hellion" },
 			{ 2L, "Nimath" },
@@ -55,52 +56,62 @@ namespace OpenHellion.ProviderSystem
 			{ 19L, "Ia" }
 		};
 
-		private static readonly List<string> s_descriptions = new List<string> { "Building a huuuuuge station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job", "Repairing a hull breach" };
+		private static readonly List<string> s_Descriptions = new List<string> { "Building a huuuuuge station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job", "Repairing a hull breach" };
 
 		private const long m_clientId = 349114016968474626L;
 		private const uint m_optionalSteamId = 588210;
 
-		private Discord.Discord m_discord;
-		private ActivityManager m_activityManager;
-		private UserManager m_userManager;
-		private RelationshipManager m_relationshipManager;
+		private Discord.Discord m_Discord;
+		private ActivityManager m_ActivityManager;
+		private RelationshipManager m_RelationshipManager;
+		private UserManager m_UserManager;
 
-		private User m_joinUser;
-		private Activity m_activity = new();
+		private User m_JoinUser;
+		private Activity m_Activity = new();
+
+		public CurrentUserUpdateHandler OnUserUpdate
+		{
+			set
+			{
+				m_UserManager.OnCurrentUserUpdate += value;
+			}
+		}
 
 		bool IProvider.Initialise()
 		{
 			// Init Discord API.
 			try
 			{
-				m_discord = new(m_clientId, (UInt64)CreateFlags.NoRequireDiscord);
+				m_Discord = new(m_clientId, (ulong)CreateFlags.NoRequireDiscord);
 			}
 			catch (ResultException)
 			{
 				return false;
 			}
 
-			m_discord.SetLogHook(LogLevel.Debug, (level, message) =>
+			m_Discord.SetLogHook(LogLevel.Debug, (level, message) =>
 			{
 				Dbg.Log("Log[{0}] {1}", level, message);
 			});
 
-			m_activityManager = m_discord.GetActivityManager();
+			m_ActivityManager = m_Discord.GetActivityManager();
 
 			// Required to work with Steam.
-			m_activityManager.RegisterSteam(m_optionalSteamId);
-			m_activityManager.RegisterCommand();
+			m_ActivityManager.RegisterSteam(m_optionalSteamId);
+			m_ActivityManager.RegisterCommand();
 
 			// Callbacks.
-			m_activityManager.OnActivitySpectate += JoinCallback;
-			m_activityManager.OnActivityJoin += JoinCallback;
-			m_activityManager.OnActivityInvite += InviteCallback;
-			m_activityManager.OnActivityJoinRequest += JoinRequestCallback;
+			m_ActivityManager.OnActivitySpectate += JoinCallback;
+			m_ActivityManager.OnActivityJoin += JoinCallback;
+			m_ActivityManager.OnActivityInvite += InviteCallback;
+			m_ActivityManager.OnActivityJoinRequest += JoinRequestCallback;
 
-			m_userManager = m_discord.GetUserManager();
-			m_relationshipManager = m_discord.GetRelationshipManager();
+			m_RelationshipManager = m_Discord.GetRelationshipManager();
+			m_UserManager = m_Discord.GetUserManager();
 
 			Dbg.Log("Discord API initialised.");
+
+			m_Discord.RunCallbacks();
 
 			return true;
 		}
@@ -112,7 +123,7 @@ namespace OpenHellion.ProviderSystem
 
 		void IProvider.Update()
 		{
-			m_discord.RunCallbacks();
+			m_Discord.RunCallbacks();
 		}
 
 		// When we are joining a game.
@@ -133,7 +144,7 @@ namespace OpenHellion.ProviderSystem
 		private void InviteCallback(ActivityActionType Type, ref User user, ref Activity activity2)
 		{
 			// TODO: Make this safer.
-			m_activityManager.AcceptInvite(user.Id, result =>
+			m_ActivityManager.AcceptInvite(user.Id, result =>
 			{
 				Dbg.Log("AcceptInvite {0}", result);
 			});
@@ -143,15 +154,15 @@ namespace OpenHellion.ProviderSystem
 		private void JoinRequestCallback(ref User user)
 		{
 			Dbg.Log(string.Format("Discord: Join request {0}#{1}: {2}", user.Username, user.Discriminator, user.Id));
-			m_joinUser = user;
+			m_JoinUser = user;
 
 			RequestRespondYes();
 		}
 
-		public void RequestRespondYes()
+		private void RequestRespondYes()
 		{
 			Dbg.Log("Discord: Responding yes to Ask to Join request");
-			m_activityManager.SendRequestReply(m_joinUser.Id, ActivityJoinRequestReply.Yes, res =>
+			m_ActivityManager.SendRequestReply(m_JoinUser.Id, ActivityJoinRequestReply.Yes, res =>
 			{
 				if (res == Result.Ok)
 				{
@@ -160,10 +171,10 @@ namespace OpenHellion.ProviderSystem
 			});
 		}
 
-		public void RequestRespondNo()
+		private void RequestRespondNo()
 		{
 			Dbg.Log("Discord: Responding no to Ask to Join request");
-			m_activityManager.SendRequestReply(m_joinUser.Id, ActivityJoinRequestReply.No, res =>
+			m_ActivityManager.SendRequestReply(m_JoinUser.Id, ActivityJoinRequestReply.No, res =>
 			{
 				if (res == Result.Ok)
 				{
@@ -175,7 +186,7 @@ namespace OpenHellion.ProviderSystem
 		void IProvider.Destroy()
 		{
 			Dbg.Log("Discord: Shutdown");
-			m_discord?.Dispose();
+			m_Discord?.Dispose();
 		}
 
 		/// <inheritdoc/>
@@ -183,72 +194,72 @@ namespace OpenHellion.ProviderSystem
 		{
 			try
 			{
-				if (Client.Instance.SinglePlayerMode)
+				if (Client.Instance != null && Client.Instance.SinglePlayerMode)
 				{
-					m_activity.State = "Playing single player game";
-					m_activity.Details = "Having so much fun.";
-					m_activity.Assets.LargeImage = "cover";
-					m_activity.Assets.LargeText = string.Empty;
-					m_activity.Assets.SmallImage = string.Empty;
-					m_activity.Assets.SmallText = string.Empty;
-					m_activity.Secrets.Join = string.Empty;
-					m_activity.Party.Size.CurrentSize = 0;
-					m_activity.Party.Size.MaxSize = 0;
-					m_activity.Party.Id = string.Empty;
+					m_Activity.State = "Playing single player game";
+					m_Activity.Details = "Having so much fun.";
+					m_Activity.Assets.LargeImage = "cover";
+					m_Activity.Assets.LargeText = string.Empty;
+					m_Activity.Assets.SmallImage = string.Empty;
+					m_Activity.Assets.SmallText = string.Empty;
+					m_Activity.Secrets.Join = string.Empty;
+					m_Activity.Party.Size.CurrentSize = 0;
+					m_Activity.Party.Size.MaxSize = 0;
+					m_Activity.Party.Id = string.Empty;
 				}
 				else if (MyPlayer.Instance != null && MyPlayer.Instance.PlayerReady)
 				{
-					m_activity.Secrets.Join = Client.Instance.GetInviteString(null);
-					m_activity.Assets.LargeText = Localization.InGameDescription + ": " + Client.LastConnectedServer.Name;
-					m_activity.Details = s_descriptions[UnityEngine.Random.Range(0, s_descriptions.Count - 1)];
+					m_Activity.Secrets.Join = Client.Instance.GetInviteString(null);
+					m_Activity.Assets.LargeText = Localization.InGameDescription + ": " + Client.LastConnectedServer.Name;
+					m_Activity.Details = s_Descriptions[UnityEngine.Random.Range(0, s_Descriptions.Count - 1)];
 					ArtificialBody artificialBody = MyPlayer.Instance.Parent as ArtificialBody;
 					if (artificialBody != null && artificialBody.ParentCelesitalBody != null)
 					{
 						string value;
-						if (s_planets.TryGetValue(artificialBody.ParentCelesitalBody.GUID, out value))
+						if (s_Planets.TryGetValue(artificialBody.ParentCelesitalBody.GUID, out value))
 						{
-							m_activity.Assets.LargeImage = artificialBody.ParentCelesitalBody.GUID.ToString();
+							m_Activity.Assets.LargeImage = artificialBody.ParentCelesitalBody.GUID.ToString();
 						}
 						else
 						{
-							m_activity.Assets.LargeImage = "default";
+							m_Activity.Assets.LargeImage = "default";
 							value = artificialBody.ParentCelesitalBody.Name;
 						}
 
 						if (artificialBody is Ship && (artificialBody as Ship).IsWarpOnline)
 						{
-							m_activity.State = Localization.WarpingNear + " " + value.ToUpper();
+							m_Activity.State = Localization.WarpingNear + " " + value.ToUpper();
 						}
 						else if (artificialBody is Pivot)
 						{
-							m_activity.State = Localization.FloatingFreelyNear + " " + value.ToUpper();
+							m_Activity.State = Localization.FloatingFreelyNear + " " + value.ToUpper();
 						}
 						else
 						{
-							m_activity.State = Localization.OrbitingNear + " " + value.ToUpper();
+							m_Activity.State = Localization.OrbitingNear + " " + value.ToUpper();
 						}
 					}
-					m_activity.Assets.SmallImage = Client.Instance.CurrentGender.ToLocalizedString().ToLower();
-					m_activity.Assets.SmallText = MyPlayer.Instance.PlayerName;
-					m_activity.Party.Size.CurrentSize = Client.LastConnectedServer.CurrentPlayers + 1;
-					m_activity.Party.Size.MaxSize = Client.LastConnectedServer.MaxPlayers;
-					m_activity.Party.Id = Client.LastConnectedServer.Hash.ToString();
+					m_Activity.Assets.SmallImage = Client.Instance.CurrentGender.ToLocalizedString().ToLower();
+					m_Activity.Assets.SmallText = MyPlayer.Instance.PlayerName;
+					m_Activity.Party.Size.CurrentSize = Client.LastConnectedServer.CurrentPlayers + 1;
+					m_Activity.Party.Size.MaxSize = Client.LastConnectedServer.MaxPlayers;
+					m_Activity.Party.Id = Client.LastConnectedServer.Hash.ToString();
 				}
 				else
 				{
-					m_activity.State = "In Menus";
-					m_activity.Details = "Launch Sequence Initiated";
-					m_activity.Assets.LargeImage = "cover";
-					m_activity.Assets.LargeText = string.Empty;
-					m_activity.Assets.SmallImage = string.Empty;
-					m_activity.Assets.SmallText = string.Empty;
-					m_activity.Secrets.Join = string.Empty;
-					m_activity.Party.Size.CurrentSize = 0;
-					m_activity.Party.Size.MaxSize = 0;
-					m_activity.Party.Id = string.Empty;
+					m_Activity.State = "In Menus";
+					m_Activity.Details = "Launch Sequence Initiated";
+					m_Activity.Assets.LargeImage = "cover";
+					m_Activity.Assets.LargeText = string.Empty;
+					m_Activity.Assets.SmallImage = string.Empty;
+					m_Activity.Assets.SmallText = string.Empty;
+					m_Activity.Secrets.Join = string.Empty;
+					m_Activity.Party.Size.CurrentSize = 0;
+					m_Activity.Party.Size.MaxSize = 0;
+					m_Activity.Party.Id = string.Empty;
 				}
 
-				m_activityManager.UpdateActivity(m_activity, result => {});
+				m_ActivityManager.UpdateActivity(m_Activity, result => {});
 			}
 			catch (Exception ex)
 			{
@@ -275,7 +286,7 @@ namespace OpenHellion.ProviderSystem
 			User user;
 			try
 			{
-				user = m_userManager.GetCurrentUser();
+				user = m_UserManager.GetCurrentUser();
 			}
 			catch (ResultException ex)
 			{
@@ -292,7 +303,7 @@ namespace OpenHellion.ProviderSystem
 			User user;
 			try
 			{
-				user = m_userManager.GetCurrentUser();
+				user = m_UserManager.GetCurrentUser();
 			}
 			catch (ResultException ex)
 			{
@@ -309,7 +320,7 @@ namespace OpenHellion.ProviderSystem
 			User user;
 			try
 			{
-				user = m_userManager.GetCurrentUser();
+				user = m_UserManager.GetCurrentUser();
 			}
 			catch (ResultException ex)
 			{
@@ -324,7 +335,7 @@ namespace OpenHellion.ProviderSystem
 		public IProvider.Friend[] GetFriends()
 		{
 			// Filter our list of relationships to users online and friends of us.
-			m_relationshipManager.Filter((ref Relationship relationship) =>
+			m_RelationshipManager.Filter((ref Relationship relationship) =>
 			{
 				return relationship.Type == RelationshipType.Friend;
 			});
@@ -332,10 +343,10 @@ namespace OpenHellion.ProviderSystem
 			List<IProvider.Friend> friends = new();
 
 			// Get all relationships.
-			for (uint i = 0; i < m_relationshipManager.Count(); i++)
+			for (uint i = 0; i < m_RelationshipManager.Count(); i++)
 			{
 				// Get an individual relationship from the list.
-				Relationship r = m_relationshipManager.GetAt(i);
+				Relationship r = m_RelationshipManager.GetAt(i);
 
 				// Add the relationship to our friends list.
 				friends.Add(new IProvider.Friend
@@ -361,11 +372,11 @@ namespace OpenHellion.ProviderSystem
 			}
 
 			// Read the id without the prefix.
-			m_discord.GetImageManager().Fetch(ImageHandle.User(long.Parse(id[1..])), false, (result, handle) =>
+			m_Discord.GetImageManager().Fetch(ImageHandle.User(long.Parse(id[1..])), false, (result, handle) =>
 			{
 				if (result == Result.Ok)
 				{
-					texture = m_discord.GetImageManager().GetTexture(handle);
+					texture = m_Discord.GetImageManager().GetTexture(handle);
 				}
 			});
 
@@ -383,12 +394,12 @@ namespace OpenHellion.ProviderSystem
 
 			Dbg.Log("Inviting user through Discord.");
 
-			m_activity.Secrets.Join = secret;
-			m_activity.Secrets.Spectate = secret;
-			m_activityManager.UpdateActivity(m_activity, result => {});
+			m_Activity.Secrets.Join = secret;
+			m_Activity.Secrets.Spectate = secret;
+			m_ActivityManager.UpdateActivity(m_Activity, result => {});
 
 			// Read the id without the prefix.
-			m_activityManager.SendInvite(long.Parse(id[1..]), ActivityActionType.Join, "You have been invited to play Hellion!", result =>
+			m_ActivityManager.SendInvite(long.Parse(id[1..]), ActivityActionType.Join, "You have been invited to play Hellion!", result =>
 			{
 				if (result == Result.Ok)
 				{

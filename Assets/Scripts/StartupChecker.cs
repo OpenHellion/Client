@@ -1,4 +1,3 @@
-using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using ZeroGravity;
@@ -6,7 +5,6 @@ using OpenHellion.ProviderSystem;
 using OpenHellion.Networking;
 using OpenHellion.Networking.Message.MainServer;
 using System.Collections;
-using System;
 
 /// <summary>
 /// 	This is the first class that executes. Ensures that this program was launced properly.
@@ -27,23 +25,26 @@ public class StartupChecker : MonoBehaviour
 		}
 		else
 		{
-			StartClient();
+			StartCoroutine(StartClient());
 		}
 	}
 
 	/// <summary>
 	/// 	Starts the game.
 	/// </summary>
-	private void StartClient()
+	public IEnumerator StartClient()	
 	{
+		yield return !ProviderManager.HasStarted;
+
 		// Get our player id.
 		GetPlayerIdRequest req = new();
-		req.Ids.Add(new GetPlayerIdRequest.Entry {
+		req.Ids.Add(new GetPlayerIdRequest.Entry
+		{
 			SteamId = ProviderManager.SteamId,
 			DiscordId = ProviderManager.DiscordId
 		});
 
-		MSConnection.Get<PlayerIdResponse>(req, (res) =>
+		MSConnection.Post<PlayerIdResponse>(req, (res) =>
 		{
 			// Use the remote id instead.
 			if (res != default && res.Result == ResponseResult.Success)
@@ -54,5 +55,6 @@ public class StartupChecker : MonoBehaviour
 
 		// This is if we sucessfully started the game.
 		SceneManager.LoadScene("Client", LoadSceneMode.Single);
+		yield break;
 	}
 }

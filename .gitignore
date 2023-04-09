@@ -99,6 +99,8 @@ Assets/Wwise/Editor/ProjectData/AkWwiseProjectData.asset*
 WwiseUnityIntegration_*_Src.zip
 
 *.zip
+*.7z
+*.gz
 
 logRunSetup.txt
 *.bak
@@ -111,3 +113,4 @@ GeneratedSoundBanks**
 /NuGet
 
 .vsconfig
+/Assets/Scripts/OpenHellion/Networking/MSConnection.cs

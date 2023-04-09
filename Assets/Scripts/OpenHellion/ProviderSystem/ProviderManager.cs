@@ -13,7 +13,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
@@ -31,21 +31,21 @@ namespace OpenHellion.ProviderSystem
 	/// <seealso cref="IProvider"/>
 	internal class ProviderManager : MonoBehaviour
 	{
-		private static ProviderManager s_instance;
+		private static ProviderManager s_Instance;
 		private static ProviderManager Instance
 		{
 			get
 			{
-				if (s_instance != null) return s_instance;
+				if (s_Instance != null) return s_Instance;
 
 				return new GameObject("ExternalProvider").AddComponent<ProviderManager>();
 			}
 		}
 
-		private List<IProvider> m_allProviders;
+		private List<IProvider> m_AllProviders;
 
 		// The most important of the two providers.
-		private IProvider m_mainProvider;
+		private IProvider m_MainProvider;
 
 		/// <summary>
 		/// 	Get our stream id without a prefix. Returns null if steam is inaccessible.
@@ -54,7 +54,7 @@ namespace OpenHellion.ProviderSystem
 		{
 			get
 			{
-				foreach (IProvider provider in Instance.m_allProviders)
+				foreach (IProvider provider in Instance.m_AllProviders)
 				{
 					if (provider is SteamProvider)
 					{
@@ -73,7 +73,7 @@ namespace OpenHellion.ProviderSystem
 		{
 			get
 			{
-				foreach (IProvider provider in Instance.m_allProviders)
+				foreach (IProvider provider in Instance.m_AllProviders)
 				{
 					if (provider is DiscordProvider)
 					{
@@ -92,7 +92,7 @@ namespace OpenHellion.ProviderSystem
 		{
 			get
 			{
-				if (Instance.m_mainProvider == null) return false;
+				if (Instance.m_MainProvider == null) return false;
 				return true;
 			}
 		}
@@ -104,7 +104,7 @@ namespace OpenHellion.ProviderSystem
 		{
 			get
 			{
-				return Instance.m_mainProvider.GetPrefixedNativeId();
+				return Instance.m_MainProvider.GetPrefixedNativeId();
 			}
 		}
 
@@ -115,7 +115,7 @@ namespace OpenHellion.ProviderSystem
 		{
 			get
 			{
-				return Instance.m_mainProvider.GetUsername();
+				return Instance.m_MainProvider.GetUsername();
 			}
 		}
 
@@ -126,23 +126,27 @@ namespace OpenHellion.ProviderSystem
 		{
 			get
 			{
-				return Instance.m_mainProvider.GetFriends();
+				return Instance.m_MainProvider.GetFriends();
 			}
 		}
 
+		public static bool HasStarted { get; private set; }
+
 		void Awake()
 		{
+			HasStarted = false;
+
 			// Only one instance can exist at a time.
-			if (s_instance != null)
+			if (s_Instance != null)
 			{
 				Destroy(gameObject, 0f);
 				Dbg.Error("Tried to create new ProviderManager, but there already exists another manager.");
 			}
-			s_instance = this;
+			s_Instance = this;
 
 			DontDestroyOnLoad(gameObject);
 
-			m_allProviders = new()
+			m_AllProviders = new()
 			{
 				new SteamProvider(),
 				new DiscordProvider()
@@ -150,18 +154,37 @@ namespace OpenHellion.ProviderSystem
 
 			// Initialise our providers.
 			// Loop backwards to prevent an InvalidOperationException.
-			for (int i = m_allProviders.Count - 1; i >= 0; i--)
+			for (int i = m_AllProviders.Count - 1; i >= 0; i--)
 			{
-				if (!m_allProviders[i].Initialise())
+				// Remove the provider if it doesn't start properly.
+				if (!m_AllProviders[i].Initialise())
 				{
-					m_allProviders.RemoveAt(i);
+					// Only the discord provider actually sets the HasStarted to true, so if the provider isn't
+					// enabled, we have to enable HasStarted to make sure the program doesn't get stuck loading.
+					if (m_AllProviders[i] is DiscordProvider)
+					{
+						HasStarted = true;
+					}
+
+					m_AllProviders.RemoveAt(i);
+
+					continue;
+				}
+
+				// Enable the custom start callback for the DiscordProvider.
+				if (m_AllProviders[i] is DiscordProvider)
+				{
+					((DiscordProvider)m_AllProviders[i]).OnUserUpdate = () =>
+					{
+						HasStarted = true;
+					};
 				}
 			}
 
 			// Find our main provider, Steam is preferable.
-			foreach (IProvider provider in m_allProviders)
+			foreach (IProvider provider in m_AllProviders)
 			{
-				m_mainProvider = provider;
+				m_MainProvider = provider;
 				if (provider is SteamProvider)
 				{
 					break;
@@ -169,20 +192,20 @@ namespace OpenHellion.ProviderSystem
 			}
 
 			// Exit game if no providers could be found.
-			if (m_mainProvider == null)
+			if (m_MainProvider == null)
 			{
 				Dbg.Error("No provider could be found.");
 				Application.Quit();
 				return;
 			}
 
-			Dbg.Log("Setting main provider to", m_mainProvider);
+			Dbg.Log("Setting main provider to", m_MainProvider);
 		}
 
 		void Start()
 		{
 			// Enable our providers.
-			foreach (IProvider provider in m_allProviders)
+			foreach (IProvider provider in m_AllProviders)
 			{
 				provider.Enable();
 			}
@@ -191,7 +214,7 @@ namespace OpenHellion.ProviderSystem
 		void Update()
 		{
 			// Update our providers.
-			foreach (IProvider provider in m_allProviders)
+			foreach (IProvider provider in m_AllProviders)
 			{
 				provider.Update();
 			}
@@ -200,7 +223,7 @@ namespace OpenHellion.ProviderSystem
 		void OnDestroy()
 		{
 			// Destroy our providers.
-			foreach (IProvider provider in m_allProviders)
+			foreach (IProvider provider in m_AllProviders)
 			{
 				provider.Destroy();
 			}
@@ -212,7 +235,7 @@ namespace OpenHellion.ProviderSystem
 		public static void UpdateStatus()
 		{
 			// Update rich presence for all providers.
-			foreach (IProvider provider in Instance.m_allProviders)
+			foreach (IProvider provider in Instance.m_AllProviders)
 			{
 				provider.UpdateStatus();
 			}
@@ -223,7 +246,7 @@ namespace OpenHellion.ProviderSystem
 		/// </summary>
 		public static bool GetAchievement(AchievementID id, out bool achieved)
 		{
-			return Instance.m_mainProvider.GetAchievement(id, out achieved);
+			return Instance.m_MainProvider.GetAchievement(id, out achieved);
 		}
 
 		/// <summary>
@@ -231,7 +254,7 @@ namespace OpenHellion.ProviderSystem
 		/// </summary>
 		public static void SetAchievement(AchievementID id)
 		{
-			Instance.m_mainProvider.SetAchievement(id);
+			Instance.m_MainProvider.SetAchievement(id);
 		}
 
 		/// <summary>
@@ -239,7 +262,7 @@ namespace OpenHellion.ProviderSystem
 		/// </summary>
 		public static Texture2D GetAvatar(string id)
 		{
-			foreach (IProvider provider in Instance.m_allProviders)
+			foreach (IProvider provider in Instance.m_AllProviders)
 			{
 				return provider.GetAvatar(id);
 			}
@@ -252,7 +275,7 @@ namespace OpenHellion.ProviderSystem
 		/// </summary>
 		public static void InviteUser(string id, string secret)
 		{
-			foreach (IProvider provider in Instance.m_allProviders)
+			foreach (IProvider provider in Instance.m_AllProviders)
 			{
 				provider.InviteUser(id, secret);
 			}

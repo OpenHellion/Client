@@ -13,7 +13,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 using System;
 using System.Threading.Tasks;
@@ -43,27 +43,20 @@ namespace OpenHellion.Networking
 		/// <summary>
 		/// 	Send a request to get data from the main server.
 		/// </summary>
-		public static void Get<T>(MSMessage data, Action<T> callback)
+		public static void Get<T>(string destination, Action<T> callback)
 		{
 			Task.Run(async () =>
 			{
 				try {
 					// Create new client and request and load it with data.
 					HttpClient httpClient = new HttpClient();
-					HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, new UriBuilder("http", IpAddress, Port, "/api/" + data.GetDestination()).Uri)
-					{
-						Content = new StringContent(data.ToString(), Encoding.UTF8, "application/json")
-					};
-
-					Dbg.Log("Sending data to:", request.RequestUri);
+					HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, new UriBuilder("http", IpAddress, Port, "/api/" + destination).Uri);
 
 					// Send message and get result.
 					HttpResponseMessage result = await httpClient.SendAsync(request);
 
 					// Read data as string.
 					string str = await result.Content.ReadAsStringAsync();
-
-					Dbg.Log("Data:", str);
 
 					// Make object out of data.
 					callback(JsonSerialiser.Deserialize<T>(str));
@@ -107,8 +100,51 @@ namespace OpenHellion.Networking
 				}
 				catch (Exception e)
 				{
-					Dbg.Warning("Exception caught when sending get request to main server.");
+					Dbg.Warning("Exception caught when sending post request to main server.");
 					Dbg.Warning("Message: {0} ", e.Message);
+				}
+			});
+		}
+
+		/// <summary>
+		/// 	Send a message to the server and get a callback.
+		/// </summary>
+		public static void Post<T>(MSMessage message, Action<T> callback)
+		{
+			Task.Run(async () =>
+			{
+				try
+				{
+					// Create new client and request and load it with data.
+					HttpClient httpClient = new HttpClient();
+					HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, new UriBuilder("http", IpAddress, Port, "/api/" + message.GetDestination()).Uri)
+					{
+						Content = new StringContent(message.ToString(), Encoding.UTF8, "application/json")
+					};
+
+					Dbg.Log("Sending data to:", request.RequestUri);
+
+					// Send message and get result.
+					HttpResponseMessage result = await httpClient.SendAsync(request);
+
+					// Read data as string.
+					string str = await result.Content.ReadAsStringAsync();
+
+					Dbg.Log("Data:", str);
+
+					// Make object out of data.
+					callback(JsonSerialiser.Deserialize<T>(str));
+
+					// Clean up.
+					httpClient.Dispose();
+					request.Dispose();
+					result.Dispose();
+				}
+				catch (Exception e)
+				{
+					Dbg.Warning("Exception caught when sending post request to main server.");
+					Dbg.Warning("Message: {0} ", e.Message);
+					callback(default);
 				}
 			});
 		}

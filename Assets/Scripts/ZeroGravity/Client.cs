@@ -1944,7 +1944,7 @@ namespace ZeroGravity
 			LastSignInRequest = signInRequest;
 			try
 			{
-				MSConnection.Get<SignInResponse>(signInRequest, SignInResponseListener);
+				MSConnection.Post<SignInResponse>(signInRequest, SignInResponseListener);
 			}
 			catch (Exception)
 			{
@@ -2025,7 +2025,7 @@ namespace ZeroGravity
 			try
 			{
 				// First time booting, so we need to download id from the main server.
-				MSConnection.Get<PlayerIdResponse>(idRequest, (data) =>
+				MSConnection.Post<PlayerIdResponse>(idRequest, (data) =>
 				{
 					if (data == null)
 					{
@@ -2053,7 +2053,7 @@ namespace ZeroGravity
 						};
 
 						// Send request to server.
-						MSConnection.Get<PlayerIdResponse>(createRequest, (data) =>
+						MSConnection.Post<PlayerIdResponse>(createRequest, (data) =>
 						{
 							if (data == null)
 							{

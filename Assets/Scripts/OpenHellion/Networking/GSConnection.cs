@@ -13,7 +13,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
@@ -54,7 +54,7 @@ namespace OpenHellion.Networking
 			m_ServerId = serverId;
 			m_ServerPassword = password;
 
-			m_Client = new(80000)
+			m_Client = new(100000)
 			{
 				OnConnected = OnConnected,
 				OnData = OnData,
@@ -89,7 +89,15 @@ namespace OpenHellion.Networking
 				ArraySegment<byte> binary = new(ProtoSerialiser.Package(data));
 
 				// Send data to server.
-				m_Client.Send(binary);
+				if (binary.Count <= m_Client.MaxMessageSize)
+				{
+					m_Client.Send(binary);
+				}
+				else
+				{
+					Dbg.Warning("Packet:", data.GetType(), "was too large to send.");
+				}
+
 				NetworkController.LogSentNetworkData(data.GetType());
 			}
 			catch (Exception ex)
