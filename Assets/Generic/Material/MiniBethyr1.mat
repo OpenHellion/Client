@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MiniBethyr1
-  m_Shader: {fileID: 4800000, guid: dce73cae648efe148abf4503cbb64e84, type: 2}
+  m_Shader: {fileID: 4800000, guid: dce73cae648efe148abf4503cbb64e84, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords:
   - _EMISSION

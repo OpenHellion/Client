@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: HellionRimMat
-  m_Shader: {fileID: 4800000, guid: d333edf79697cb44e96ddeea15ac934f, type: 2}
+  m_Shader: {fileID: 4800000, guid: d333edf79697cb44e96ddeea15ac934f, type: 3}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0

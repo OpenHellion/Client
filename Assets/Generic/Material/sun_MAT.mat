@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: sun_MAT
-  m_Shader: {fileID: 4800000, guid: 04c4dbd3b6df4b747b3c8311095cdefa, type: 2}
+  m_Shader: {fileID: 4800000, guid: 04c4dbd3b6df4b747b3c8311095cdefa, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 0
