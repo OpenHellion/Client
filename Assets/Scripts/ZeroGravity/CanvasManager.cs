@@ -353,7 +353,7 @@ namespace ZeroGravity
 					Console.Open();
 				}
 			}
-			if (DeadScreen.activeInHierarchy && Input.anyKey && Time.time - m_ShowDeadMsgTime > 3f && !Client.Instance.SinglePlayerMode)
+			if (DeadScreen.activeInHierarchy && Keyboard.current.anyKey.isPressed && Time.time - m_ShowDeadMsgTime > 3f && !Client.Instance.SinglePlayerMode)
 			{
 				ToggleDeadMsg(val: false);
 			}

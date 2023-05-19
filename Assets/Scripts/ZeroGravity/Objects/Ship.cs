@@ -1216,16 +1216,21 @@ namespace ZeroGravity.Objects
 			{
 				Temperature = shipStatsMessage.Temperature.Value;
 			}
+
+			DoorEnviormentPanel[] doorEnviormentPanels = null;
+			if (shipStatsMessage.Health.HasValue || shipStatsMessage.Armor.HasValue)
+			{
+				doorEnviormentPanels = GeometryRoot.GetComponentsInChildren<DoorEnviormentPanel>();
+			}
+
 			if (shipStatsMessage.Health.HasValue)
 			{
 				Health = shipStatsMessage.Health.Value;
-				DoorEnviormentPanel[] componentsInChildren = GeometryRoot.GetComponentsInChildren<DoorEnviormentPanel>();
-				foreach (DoorEnviormentPanel doorEnviormentPanel in componentsInChildren)
+				foreach (DoorEnviormentPanel doorEnviormentPanel in doorEnviormentPanels)
 				{
 					doorEnviormentPanel.DoorEnviormentUpdateUI();
 				}
-				VesselHealthDecal[] componentsInChildren2 = GeometryRoot.GetComponentsInChildren<VesselHealthDecal>(includeInactive: true);
-				foreach (VesselHealthDecal vesselHealthDecal in componentsInChildren2)
+				foreach (VesselHealthDecal vesselHealthDecal in GeometryRoot.GetComponentsInChildren<VesselHealthDecal>(includeInactive: true))
 				{
 					vesselHealthDecal.UpdateDecals();
 				}
@@ -1247,13 +1252,11 @@ namespace ZeroGravity.Objects
 			if (shipStatsMessage.Armor.HasValue)
 			{
 				Armor = shipStatsMessage.Armor.Value;
-				DoorEnviormentPanel[] componentsInChildren3 = GeometryRoot.GetComponentsInChildren<DoorEnviormentPanel>();
-				foreach (DoorEnviormentPanel doorEnviormentPanel2 in componentsInChildren3)
+				foreach (DoorEnviormentPanel doorEnviormentPanel2 in doorEnviormentPanels)
 				{
 					doorEnviormentPanel2.DoorEnviormentUpdateUI();
 				}
-				VesselArmorDecal[] componentsInChildren4 = GeometryRoot.GetComponentsInChildren<VesselArmorDecal>();
-				foreach (VesselArmorDecal vesselArmorDecal in componentsInChildren4)
+				foreach (VesselArmorDecal vesselArmorDecal in GeometryRoot.GetComponentsInChildren<VesselArmorDecal>())
 				{
 					vesselArmorDecal.UpdateDecals();
 				}

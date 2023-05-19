@@ -45,8 +45,6 @@ namespace OpenHellion.Networking
 		[Title("Diagnostics")]
 		public int UnprocessedPackets;
 
-		public string DataLogs = "";
-
 		private static NetworkController s_Instance;
 		public static NetworkController Instance
 		{
@@ -139,8 +137,6 @@ namespace OpenHellion.Networking
 
 			if (m_GameConnection != null)
 				UnprocessedPackets = m_GameConnection.Tick();
-
-			DataLogs = GetNetworkDataLogs();
 
 			// Handle Steam P2P packets.
 			if (!ProviderManager.SteamId.IsNullOrEmpty() && !m_GetP2PPacketsThreadActive)
