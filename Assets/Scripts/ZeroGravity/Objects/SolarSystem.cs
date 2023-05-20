@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion;
 using OpenHellion.IO;
 using Unity.Jobs;
 using UnityEngine;
@@ -146,7 +147,7 @@ namespace ZeroGravity.Objects
 		public void CalculatePositionsAfterTime(double time)
 		{
 			currentTime = time;
-			timeCorrection = (double)Time.realtimeSinceStartup - currentTime;
+			timeCorrection = HiResTime.Milliseconds / 1000.0 - time;
 			foreach (CelestialBody celesitalBody in celesitalBodies)
 			{
 				celesitalBody.UpdatePosition(time, resetTime: true);
@@ -157,11 +158,12 @@ namespace ZeroGravity.Objects
 			}
 		}
 
+		// Updates time and positions of celestial bodies after every tick is done.
 		public void UpdatePositions(double timeDelta)
 		{
-			double num = (double)Time.realtimeSinceStartup - timeCorrection;
-			timeDelta = num - currentTime;
-			currentTime = num;
+			double updatedCurrentTime = HiResTime.Milliseconds / 1000.0 - timeCorrection;
+			timeDelta = updatedCurrentTime - currentTime;
+			currentTime = updatedCurrentTime;
 			foreach (CelestialBody celesitalBody in celesitalBodies)
 			{
 				celesitalBody.UpdatePlanetSpacePosition((float)timeDelta);
@@ -172,12 +174,12 @@ namespace ZeroGravity.Objects
 			jobData.Schedule(ArtificialBodies.Count, 10).Complete();
 		}
 
-		public void Set(Transform sunRoot, Transform planetsRoot, double currentTime)
+		public void Set(Transform sunRoot, Transform planetsRoot, double time)
 		{
 			this.sunRoot = sunRoot;
 			this.planetsRoot = planetsRoot;
-			this.currentTime = currentTime;
-			timeCorrection = (double)Time.time - currentTime;
+			currentTime = time;
+			timeCorrection = HiResTime.Milliseconds / 1000.0 - time;
 		}
 
 		public void CenterPlanets()

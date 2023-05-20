@@ -24,6 +24,7 @@ using OpenHellion.Networking;
 using OpenHellion.Networking.Message.MainServer;
 using OpenHellion.Networking.Message;
 using OpenHellion.IO;
+using OpenHellion;
 using UnityEngine.InputSystem;
 
 namespace ZeroGravity
@@ -1111,6 +1112,7 @@ namespace ZeroGravity
 			IsRunning = false;
 			OnDestroy();
 			NetworkController.Instance.Disconnect();
+			HiResTime.Stop();
 #if UNITY_EDITOR
 			EditorApplication.ExitPlaymode();
 #else

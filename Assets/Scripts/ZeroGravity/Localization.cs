@@ -480,6 +480,8 @@ namespace ZeroGravity
 
 		public static string ConnectionError;
 
+		public static string SystemError;
+
 		public static string UpdatingStatus;
 
 		public static string Disabled;
@@ -487,6 +489,8 @@ namespace ZeroGravity
 		public static string ServerOffline;
 
 		public static string ServerUnreachable;
+
+		public static string InvalidSystemSpesifications;
 
 		public static string UnableToConnectToMainServer;
 
@@ -2445,10 +2449,12 @@ namespace ZeroGravity
 			ExitGame = "Exit Game";
 			Game = "Game";
 			ConnectionError = "Connection Error";
+			SystemError = "System Error";
 			UpdatingStatus = "updating status...";
 			Disabled = "Disabled";
 			ServerOffline = "Server is offline";
 			ServerUnreachable = "Main server unreachable";
+			InvalidSystemSpesifications = "This computer has invalid system specifications. You need at least 4 gigabytes of RAM and a processor with at least a 2 GHz clock speed.";
 			UnableToConnectToMainServer = "Connection to the main server could not be established.";
 			ConnectionToGameBroken = "Connection to the game server has been lost.";
 			DeleteCharacter = "Delete character";
@@ -3294,7 +3300,7 @@ namespace ZeroGravity
 			SystemShipInRange = "Ship is already in range.";
 			SystemShipArrive = "Ship will arrive in {0}";
 			SystemServerRestart = "Server will restart in {0} {1}";
-			NoProvider = "No provider is available. Try launching steam or discord.";
+			NoProvider = "No provider is available. Try launching Steam or Discord.";
 			defaultValues = GetJsonString();
 			Initialize();
 			ControlsRebinder.Initialize();
@@ -3816,6 +3822,7 @@ namespace ZeroGravity
 				{ "GlobalSettingsText", GlobalSettings.ToUpper() },
 				{ "DisconectedText", Disconnected.ToUpper() },
 				{ "ConnectionErrorText", ConnectionError.ToUpper() },
+				{ "SystemErrorText", SystemError.ToUpper() },
 				{ "UnavailableFromInGameMenuText", UnavailableFromInGameMenu.ToUpper() },
 				{ "ConnectingToInviteText", ConnectingToInvite.ToUpper() },
 				{ "RecyclingOutputText", RecyclingOutput.ToUpper() },
