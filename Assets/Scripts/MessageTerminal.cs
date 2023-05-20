@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
-using OpenHellion;
 using OpenHellion.Networking;
-using OpenHellion.ProviderSystem;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;

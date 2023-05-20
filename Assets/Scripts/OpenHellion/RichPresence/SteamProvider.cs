@@ -23,10 +23,11 @@ using System.Collections.Generic;
 using OpenHellion.Networking.Message;
 using ZeroGravity;
 using OpenHellion.IO;
-namespace OpenHellion.ProviderSystem
+
+namespace OpenHellion.RichPresence
 {
 	/// <seealso cref="DiscordProvider"/>
-	internal class SteamProvider : IProvider
+	internal class SteamProvider : IPresenceProvider
 	{
 		private bool m_currentStatsRequested;
 		private bool m_userStatsReceived;
@@ -43,7 +44,7 @@ namespace OpenHellion.ProviderSystem
 			Dbg.Warning(pchDebugText);
 		}
 
-		bool IProvider.Initialise()
+		bool IPresenceProvider.Initialise()
 		{
 			if (!Packsize.Test())
 			{
@@ -67,7 +68,7 @@ namespace OpenHellion.ProviderSystem
 		}
 
 		// This should only ever get called on first load and after an Assembly reload, You should never Disable the Steamworks Manager yourself.
-		void IProvider.Enable()
+		void IPresenceProvider.Enable()
 		{
 			if (m_SteamAPIWarningMessageHook == null)
 			{
@@ -88,13 +89,13 @@ namespace OpenHellion.ProviderSystem
 		// OnApplicationQuit gets called too early to shutdown the SteamAPI.
 		// Because the SteamManager should be persistent and never disabled or destroyed we can shutdown the SteamAPI here.
 		// Thus it is not recommended to perform any Steamworks work in other OnDestroy functions as the order of execution can not be garenteed upon Shutdown. Prefer OnDisable().
-		void IProvider.Destroy()
+		void IPresenceProvider.Destroy()
 		{
 			Dbg.Log("Steam: Shutdown");
 			SteamAPI.Shutdown();
 		}
 
-		void IProvider.Update()
+		void IPresenceProvider.Update()
 		{
 			// Run Steam client callbacks
 			SteamAPI.RunCallbacks();
@@ -167,9 +168,9 @@ namespace OpenHellion.ProviderSystem
 		}
 
 		/// <inheritdoc/>
-		public IProvider.Friend[] GetFriends()
+		public IPresenceProvider.Friend[] GetFriends()
 		{
-			List<IProvider.Friend> friends = new();
+			List<IPresenceProvider.Friend> friends = new();
 
 			// Get all friends.
 			for (int i = 0; i < SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate); i++)
@@ -179,11 +180,11 @@ namespace OpenHellion.ProviderSystem
 				EPersonaState friendPersonaState = SteamFriends.GetFriendPersonaState(id);
 
 				// Add friend to list of friends.
-				friends.Add(new IProvider.Friend
+				friends.Add(new IPresenceProvider.Friend
 				{
 					NativeId = "s" + id.ToString(),
 					Name = SteamFriends.GetFriendPersonaName(id),
-					Status = friendPersonaState == EPersonaState.k_EPersonaStateOnline || friendPersonaState == EPersonaState.k_EPersonaStateLookingToPlay ? IProvider.FriendStatus.ONLINE : IProvider.FriendStatus.OFFLINE
+					Status = friendPersonaState == EPersonaState.k_EPersonaStateOnline || friendPersonaState == EPersonaState.k_EPersonaStateLookingToPlay ? IPresenceProvider.FriendStatus.ONLINE : IPresenceProvider.FriendStatus.OFFLINE
 				});
 			}
 

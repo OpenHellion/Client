@@ -15,11 +15,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace OpenHellion.ProviderSystem
+namespace OpenHellion.RichPresence
 {
 	// Should be self-contained, and it should therefore not reference any gameplay-related classes.
 	/// <summary>
@@ -28,24 +27,24 @@ namespace OpenHellion.ProviderSystem
 	/// </summary>
 	/// <seealso cref="DiscordProvider"/>
 	/// <seealso cref="SteamProvider"/>
-	/// <seealso cref="IProvider"/>
-	internal class ProviderManager : MonoBehaviour
+	/// <seealso cref="IPresenceProvider"/>
+	internal class PresenceManager : MonoBehaviour
 	{
-		private static ProviderManager s_Instance;
-		private static ProviderManager Instance
+		private static PresenceManager s_Instance;
+		private static PresenceManager Instance
 		{
 			get
 			{
 				if (s_Instance != null) return s_Instance;
 
-				return new GameObject("ExternalProvider").AddComponent<ProviderManager>();
+				return new GameObject("ExternalProvider").AddComponent<PresenceManager>();
 			}
 		}
 
-		private List<IProvider> m_AllProviders;
+		private List<IPresenceProvider> m_AllProviders;
 
 		// The most important of the two providers.
-		private IProvider m_MainProvider;
+		private IPresenceProvider m_MainProvider = null;
 
 		/// <summary>
 		/// 	Get our stream id without a prefix. Returns null if steam is inaccessible.
@@ -54,7 +53,7 @@ namespace OpenHellion.ProviderSystem
 		{
 			get
 			{
-				foreach (IProvider provider in Instance.m_AllProviders)
+				foreach (IPresenceProvider provider in Instance.m_AllProviders)
 				{
 					if (provider is SteamProvider)
 					{
@@ -73,7 +72,7 @@ namespace OpenHellion.ProviderSystem
 		{
 			get
 			{
-				foreach (IProvider provider in Instance.m_AllProviders)
+				foreach (IPresenceProvider provider in Instance.m_AllProviders)
 				{
 					if (provider is DiscordProvider)
 					{
@@ -122,7 +121,7 @@ namespace OpenHellion.ProviderSystem
 		/// <summary>
 		/// 	Get a list of all our friends.
 		/// </summary>
-		public static IProvider.Friend[] Friends
+		public static IPresenceProvider.Friend[] Friends
 		{
 			get
 			{
@@ -182,7 +181,7 @@ namespace OpenHellion.ProviderSystem
 			}
 
 			// Find our main provider, Steam is preferable.
-			foreach (IProvider provider in m_AllProviders)
+			foreach (IPresenceProvider provider in m_AllProviders)
 			{
 				m_MainProvider = provider;
 				if (provider is SteamProvider)
@@ -205,7 +204,7 @@ namespace OpenHellion.ProviderSystem
 		void Start()
 		{
 			// Enable our providers.
-			foreach (IProvider provider in m_AllProviders)
+			foreach (IPresenceProvider provider in m_AllProviders)
 			{
 				provider.Enable();
 			}
@@ -214,7 +213,7 @@ namespace OpenHellion.ProviderSystem
 		void Update()
 		{
 			// Update our providers.
-			foreach (IProvider provider in m_AllProviders)
+			foreach (IPresenceProvider provider in m_AllProviders)
 			{
 				provider.Update();
 			}
@@ -223,7 +222,7 @@ namespace OpenHellion.ProviderSystem
 		void OnDestroy()
 		{
 			// Destroy our providers.
-			foreach (IProvider provider in m_AllProviders)
+			foreach (IPresenceProvider provider in m_AllProviders)
 			{
 				provider.Destroy();
 			}
@@ -235,7 +234,7 @@ namespace OpenHellion.ProviderSystem
 		public static void UpdateStatus()
 		{
 			// Update rich presence for all providers.
-			foreach (IProvider provider in Instance.m_AllProviders)
+			foreach (IPresenceProvider provider in Instance.m_AllProviders)
 			{
 				provider.UpdateStatus();
 			}
@@ -262,7 +261,7 @@ namespace OpenHellion.ProviderSystem
 		/// </summary>
 		public static Texture2D GetAvatar(string id)
 		{
-			foreach (IProvider provider in Instance.m_AllProviders)
+			foreach (IPresenceProvider provider in Instance.m_AllProviders)
 			{
 				return provider.GetAvatar(id);
 			}
@@ -275,7 +274,7 @@ namespace OpenHellion.ProviderSystem
 		/// </summary>
 		public static void InviteUser(string id, string secret)
 		{
-			foreach (IProvider provider in Instance.m_AllProviders)
+			foreach (IPresenceProvider provider in Instance.m_AllProviders)
 			{
 				provider.InviteUser(id, secret);
 			}

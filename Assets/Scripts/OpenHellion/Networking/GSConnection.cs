@@ -17,7 +17,7 @@
 
 using System;
 using System.IO;
-using OpenHellion.ProviderSystem;
+using OpenHellion.RichPresence;
 using OpenHellion.IO;
 using ZeroGravity;
 using ZeroGravity.Network;
@@ -120,7 +120,7 @@ namespace OpenHellion.Networking
 			LogInRequest logInRequest = new LogInRequest
 			{
 				PlayerId = NetworkController.PlayerId,
-				NativeId = ProviderManager.NativeId,
+				NativeId = PresenceManager.NativeId,
 				CharacterData = NetworkController.CharacterData,
 				ServerID = m_ServerId,
 				Password = m_ServerPassword,

@@ -11,7 +11,7 @@ using UnityEngine.UI;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
-using OpenHellion.ProviderSystem;
+using OpenHellion.RichPresence;
 using OpenHellion.Networking;
 using UnityEngine.InputSystem;
 using OpenHellion.IO;
@@ -570,7 +570,7 @@ namespace ZeroGravity
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start1));
 			});
 
-			ProviderManager.GetAchievement(AchievementID.quest_sound_of_silence, out var achieved);
+			PresenceManager.GetAchievement(AchievementID.quest_sound_of_silence, out var achieved);
 			StartingPointOptionUI strandedMinerUI = Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			strandedMinerUI.Type = StartingPointOption.StrandedMiner;
 			strandedMinerUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
@@ -579,7 +579,7 @@ namespace ZeroGravity
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start2));
 			});
 
-			ProviderManager.GetAchievement(AchievementID.quest_shattered_dreams, out achieved);
+			PresenceManager.GetAchievement(AchievementID.quest_shattered_dreams, out achieved);
 			StartingPointOptionUI evaUI = Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			evaUI.Type = StartingPointOption.Eva;
 			evaUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
@@ -588,7 +588,7 @@ namespace ZeroGravity
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start3));
 			});
 
-			ProviderManager.GetAchievement(AchievementID.quest_heart_of_stone, out achieved);
+			PresenceManager.GetAchievement(AchievementID.quest_heart_of_stone, out achieved);
 			StartingPointOptionUI soeUI = Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			soeUI.Type = StartingPointOption.Soe;
 			soeUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;

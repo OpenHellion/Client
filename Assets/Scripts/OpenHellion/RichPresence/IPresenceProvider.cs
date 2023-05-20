@@ -17,7 +17,7 @@
 
 using UnityEngine;
 
-namespace OpenHellion.ProviderSystem
+namespace OpenHellion.RichPresence
 {
 	/// <summary>
 	/// 	Wrapper around APIs like Steamworks and Discord Game API.
@@ -25,8 +25,8 @@ namespace OpenHellion.ProviderSystem
 	/// </summary>
 	/// <seealso cref="DiscordProvider"/>
 	/// <seealso cref="SteamProvider"/>
-	/// <seealso cref="ProviderManager"/>
-	internal interface IProvider
+	/// <seealso cref="PresenceManager"/>
+	internal interface IPresenceProvider
 	{
 		internal bool Initialise();
 		internal void Enable();

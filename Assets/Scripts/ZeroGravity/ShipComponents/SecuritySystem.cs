@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenHellion.Networking;
-using OpenHellion.ProviderSystem;
+using OpenHellion.RichPresence;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -93,14 +93,14 @@ namespace ZeroGravity.ShipComponents
 				List<AuthorizedPerson> list = new List<AuthorizedPerson>();
 				GetPlayerIdRequest req = new GetPlayerIdRequest();
 
-				List<IProvider.Friend> friends = new List<IProvider.Friend>();
+				List<IPresenceProvider.Friend> friends = new List<IPresenceProvider.Friend>();
 
 				// Loop through each friend and add it to the list.
-				foreach (IProvider.Friend friend in ProviderManager.Friends)
+				foreach (IPresenceProvider.Friend friend in PresenceManager.Friends)
 				{
 					req.Ids.Add(new GetPlayerIdRequest.Entry {
-						SteamId = ProviderManager.SteamId,
-						DiscordId = ProviderManager.DiscordId
+						SteamId = PresenceManager.SteamId,
+						DiscordId = PresenceManager.DiscordId
 					});
 
 					friends.Add(friend);
@@ -114,7 +114,7 @@ namespace ZeroGravity.ShipComponents
 						if (res.PlayerIds[i] == "-1") continue;
 
 						// If friend is online, and not already authorised.
-						if (friends[i].Status == IProvider.FriendStatus.ONLINE && AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == res.PlayerIds[i]) == null)
+						if (friends[i].Status == IPresenceProvider.FriendStatus.ONLINE && AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == res.PlayerIds[i]) == null)
 						{
 							list.Add(new AuthorizedPerson
 							{

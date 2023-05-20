@@ -18,15 +18,15 @@ namespace ZeroGravity.UI
 
 		public SettingsData SettingsData = new SettingsData();
 
-		public GameSettings gameComponent;
+		public GameSettings GameComponent;
 
-		public VideoSettings videoComponent;
+		public VideoSettings VideoComponent;
 
-		public AudioSettings audioComponent;
+		public AudioSettings AudioComponent;
 
-		public ControlsSettings controlsComponent;
+		public ControlsSettings ControlsComponent;
 
-		private static Settings instance;
+		private static Settings _instance;
 
 		internal bool RestartOnSave;
 
@@ -34,13 +34,13 @@ namespace ZeroGravity.UI
 		{
 			get
 			{
-				return instance;
+				return _instance;
 			}
 		}
 
 		private void Start()
 		{
-			instance = this;
+			_instance = this;
 		}
 
 		public void LoadSettings(SettingsType type)
@@ -62,24 +62,24 @@ namespace ZeroGravity.UI
 				}
 				if (SettingsData.ControlsVersion != Client.ControlsVersion)
 				{
-					gameComponent.SetDefault();
-					audioComponent.SetDefault();
-					controlsComponent.SetDefault();
-					videoComponent.SetDefault();
+					GameComponent.SetDefault();
+					AudioComponent.SetDefault();
+					ControlsComponent.SetDefault();
+					VideoComponent.SetDefault();
 					SettingsData.ControlsVersion = Client.ControlsVersion;
 					SaveSettings(SettingsType.All);
 					return;
 				}
 				if (type == SettingsType.All)
 				{
-					videoComponent.Load(SettingsData.VideoSettings);
-					gameComponent.Load(SettingsData.GameSettings);
-					audioComponent.Load(SettingsData.AudioSettings);
-					controlsComponent.Load(SettingsData.ControlsSettings);
+					VideoComponent.Load(SettingsData.VideoSettings);
+					GameComponent.Load(SettingsData.GameSettings);
+					AudioComponent.Load(SettingsData.AudioSettings);
+					ControlsComponent.Load(SettingsData.ControlsSettings);
 				}
 				if (type == SettingsType.Controls)
 				{
-					controlsComponent.Load(SettingsData.ControlsSettings);
+					ControlsComponent.Load(SettingsData.ControlsSettings);
 				}
 			}
 			else
@@ -92,20 +92,20 @@ namespace ZeroGravity.UI
 		{
 			if (type == SettingsType.All)
 			{
-				gameComponent.SaveGameSettigns();
-				SettingsData.GameSettings = gameComponent.GameSettingsData;
-				videoComponent.SaveVideoSettings();
+				GameComponent.SaveGameSettigns();
+				SettingsData.GameSettings = GameComponent.GameSettingsData;
+				VideoComponent.SaveVideoSettings();
 				SettingsData.VideoSettings = VideoSettings.VideoData;
-				audioComponent.SaveAudioSettings();
-				SettingsData.AudioSettings = audioComponent.AudioData;
-				controlsComponent.SaveControlsSettings();
-				SettingsData.ControlsSettings = controlsComponent.ControlsData;
+				AudioComponent.SaveAudioSettings();
+				SettingsData.AudioSettings = AudioComponent.AudioData;
+				ControlsComponent.SaveControlsSettings();
+				SettingsData.ControlsSettings = ControlsComponent.ControlsData;
 				SettingsData.ControlsVersion = Client.ControlsVersion;
 			}
 			if (type == SettingsType.Controls)
 			{
-				controlsComponent.SaveControlsSettings();
-				SettingsData.ControlsSettings = controlsComponent.ControlsData;
+				ControlsComponent.SaveControlsSettings();
+				SettingsData.ControlsSettings = ControlsComponent.ControlsData;
 				SettingsData.ControlsVersion = Client.ControlsVersion;
 			}
 			JsonSerialiser.SerializePersistent(SettingsData, "Settings.json");
@@ -120,18 +120,18 @@ namespace ZeroGravity.UI
 		{
 			if (type == SettingsType.Controls)
 			{
-				controlsComponent.SetDefault();
-				SettingsData.ControlsSettings = controlsComponent.ControlsData;
+				ControlsComponent.SetDefault();
+				SettingsData.ControlsSettings = ControlsComponent.ControlsData;
 			}
 			JsonSerialiser.SerializePersistent(SettingsData, "Settings.json");
 		}
 
 		private void SaveDefaultSettingsJson()
 		{
-			controlsComponent.SetDefault();
-			videoComponent.SetDefault();
-			audioComponent.SetDefault();
-			gameComponent.SetDefault();
+			ControlsComponent.SetDefault();
+			VideoComponent.SetDefault();
+			AudioComponent.SetDefault();
+			GameComponent.SetDefault();
 			SaveSettings(SettingsType.All);
 		}
 	}

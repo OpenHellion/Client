@@ -25,13 +25,13 @@ using OpenHellion.Networking.Message;
 using OpenHellion.IO;
 using static Discord.UserManager;
 
-namespace OpenHellion.ProviderSystem
+namespace OpenHellion.RichPresence
 {
 	/// <summary>
 	/// 	This class handles everything related to Discord. Acts as a bridge between the game and the API.
 	/// </summary>
 	/// <seealso cref="SteamProvider"/>
-	internal class DiscordProvider : IProvider
+	internal class DiscordProvider : IPresenceProvider
 	{
 		private static readonly Dictionary<long, string> s_Planets = new Dictionary<long, string>
 		{
@@ -77,7 +77,7 @@ namespace OpenHellion.ProviderSystem
 			}
 		}
 
-		bool IProvider.Initialise()
+		bool IPresenceProvider.Initialise()
 		{
 			// Init Discord API.
 			try
@@ -116,12 +116,12 @@ namespace OpenHellion.ProviderSystem
 			return true;
 		}
 
-		void IProvider.Enable()
+		void IPresenceProvider.Enable()
 		{
 			UpdateStatus();
 		}
 
-		void IProvider.Update()
+		void IPresenceProvider.Update()
 		{
 			m_Discord.RunCallbacks();
 		}
@@ -183,7 +183,7 @@ namespace OpenHellion.ProviderSystem
 			});
 		}
 
-		void IProvider.Destroy()
+		void IPresenceProvider.Destroy()
 		{
 			Dbg.Log("Discord: Shutdown");
 			m_Discord?.Dispose();
@@ -332,7 +332,7 @@ namespace OpenHellion.ProviderSystem
 		}
 
 		/// <inheritdoc/>
-		public IProvider.Friend[] GetFriends()
+		public IPresenceProvider.Friend[] GetFriends()
 		{
 			// Filter our list of relationships to users online and friends of us.
 			m_RelationshipManager.Filter((ref Relationship relationship) =>
@@ -340,7 +340,7 @@ namespace OpenHellion.ProviderSystem
 				return relationship.Type == RelationshipType.Friend;
 			});
 
-			List<IProvider.Friend> friends = new();
+			List<IPresenceProvider.Friend> friends = new();
 
 			// Get all relationships.
 			for (uint i = 0; i < m_RelationshipManager.Count(); i++)
@@ -349,11 +349,11 @@ namespace OpenHellion.ProviderSystem
 				Relationship r = m_RelationshipManager.GetAt(i);
 
 				// Add the relationship to our friends list.
-				friends.Add(new IProvider.Friend
+				friends.Add(new IPresenceProvider.Friend
 				{
 					NativeId = "d" + r.User.Id.ToString(),
 					Name = r.User.Username,
-					Status = r.Presence.Status == Status.Online ? IProvider.FriendStatus.ONLINE : IProvider.FriendStatus.OFFLINE
+					Status = r.Presence.Status == Status.Online ? IPresenceProvider.FriendStatus.ONLINE : IPresenceProvider.FriendStatus.OFFLINE
 				});
 			}
 

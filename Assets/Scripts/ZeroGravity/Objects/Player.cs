@@ -1,5 +1,4 @@
-using OpenHellion.ProviderSystem;
-using Steamworks;
+using OpenHellion.RichPresence;
 using UnityEngine;
 using ZeroGravity.LevelDesign;
 
@@ -91,7 +90,7 @@ namespace ZeroGravity.Objects
 
 		public static Texture GetAvatar(string ProviderId)
 		{
-			return ProviderManager.GetAvatar(ProviderId);
+			return PresenceManager.GetAvatar(ProviderId);
 		}
 	}
 }

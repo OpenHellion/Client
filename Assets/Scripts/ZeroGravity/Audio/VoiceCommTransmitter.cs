@@ -10,7 +10,7 @@ using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
-using OpenHellion.ProviderSystem;
+using OpenHellion.RichPresence;
 using OpenHellion.IO;
 
 namespace ZeroGravity.Audio
@@ -41,7 +41,7 @@ namespace ZeroGravity.Audio
 
 		private void Update()
 		{
-			if (ProviderManager.SteamId.IsNullOrEmpty())
+			if (PresenceManager.SteamId.IsNullOrEmpty())
 			{
 				return;
 			}
@@ -84,7 +84,7 @@ namespace ZeroGravity.Audio
 
 		private void FixedUpdate()
 		{
-			if (ProviderManager.SteamId.IsNullOrEmpty())
+			if (PresenceManager.SteamId.IsNullOrEmpty())
 			{
 				return;
 			}

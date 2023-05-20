@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using ZeroGravity;
 using OpenHellion;
-using OpenHellion.ProviderSystem;
+using OpenHellion.RichPresence;
 using OpenHellion.Networking;
 using OpenHellion.Networking.Message.MainServer;
 using System.Collections;
@@ -15,7 +15,7 @@ public class StartupChecker : MonoBehaviour
 	private void Start()
 	{
 		HiResTime.Start();
-		if (!RichPresence.AnyInitialised)
+		if (!PresenceManager.AnyInitialised)
 		{
 			Dbg.Error("No external provider could be found. Exiting...");
 			Client.ShowMessageBox(Localization.SystemError, Localization.NoProvider, gameObject, Application.Quit);
@@ -35,13 +35,13 @@ public class StartupChecker : MonoBehaviour
 
 	public IEnumerator StartClient()	
 	{
-		yield return !RichPresence.HasStarted;
+		yield return !PresenceManager.HasStarted;
 
 		GetPlayerIdRequest req = new();
 		req.Ids.Add(new GetPlayerIdRequest.Entry
 		{
-			SteamId = RichPresence.SteamId,
-			DiscordId = RichPresence.DiscordId
+			SteamId = PresenceManager.SteamId,
+			DiscordId = PresenceManager.DiscordId
 		});
 
 		// Get remote player id.

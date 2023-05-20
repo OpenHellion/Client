@@ -151,7 +151,7 @@ namespace ZeroGravity.UI
 
 		public void SettingsMenu(bool isUp)
 		{
-			if (!isUp && Settings.Instance.controlsComponent.ControlsRebind.CheckIfEmpty())
+			if (!isUp && Settings.Instance.ControlsComponent.ControlsRebind.CheckIfEmpty())
 			{
 				return;
 			}
@@ -307,7 +307,7 @@ namespace ZeroGravity.UI
 
 		public void SaveSettingsButton()
 		{
-			if (!Settings.Instance.controlsComponent.ControlsRebind.CheckIfEmpty())
+			if (!Settings.Instance.ControlsComponent.ControlsRebind.CheckIfEmpty())
 			{
 				string text = JsonSerialiser.Serialize(GetComponent<Settings>().SettingsData);
 				if (!(text == oldSettings))

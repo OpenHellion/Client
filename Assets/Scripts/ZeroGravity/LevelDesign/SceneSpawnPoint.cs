@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using OpenHellion;
 using OpenHellion.Networking;
-using OpenHellion.ProviderSystem;
+using OpenHellion.RichPresence;
 using ThreeEyedGames;
 using UnityEngine;
 using ZeroGravity.Data;
@@ -267,7 +267,7 @@ namespace ZeroGravity.LevelDesign
 				// Send invite.
 				if (!Client.Instance.SinglePlayerMode)
 				{
-					ProviderManager.InviteUser(player.PlayerNativeId, Client.Instance.GetInviteString(new VesselObjectID(ParentVessel.GUID, InSceneID)));
+					PresenceManager.InviteUser(player.PlayerNativeId, Client.Instance.GetInviteString(new VesselObjectID(ParentVessel.GUID, InSceneID)));
 				}
 			}
 		}
@@ -283,10 +283,10 @@ namespace ZeroGravity.LevelDesign
 				List<PlayerInviteData> list = new List<PlayerInviteData>();
 
 				// Loop through each friend and add it to the list.
-				foreach (IProvider.Friend friend in ProviderManager.Friends)
+				foreach (IPresenceProvider.Friend friend in PresenceManager.Friends)
 				{
 					// If friend is online.
-					if (friend.Status == IProvider.FriendStatus.ONLINE)
+					if (friend.Status == IPresenceProvider.FriendStatus.ONLINE)
 					{
 						list.Add(new PlayerInviteData
 						{

@@ -19,7 +19,7 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
 using ZeroGravity.UI;
-using OpenHellion.ProviderSystem;
+using OpenHellion.RichPresence;
 using OpenHellion.Networking;
 using OpenHellion.Networking.Message.MainServer;
 using OpenHellion.Networking.Message;
@@ -115,7 +115,7 @@ namespace ZeroGravity
 
 		public static SceneLoadTypeValue SceneLoadType = SceneLoadTypeValue.PreloadWithCopy;
 
-		public static int ControlsVersion = 1;
+		public static int ControlsVersion = 2;
 
 		public static volatile bool IsRunning = false;
 
@@ -441,7 +441,7 @@ namespace ZeroGravity
 				{
 					ExperimentalGameObject.SetActive(value: true);
 					ExperimentalGameObject.GetComponentInChildren<Text>().text = ExperimentalText.Trim() + " " + Application.version;
-					ProviderManager.SetAchievement(AchievementID.other_testing_squad_member);
+					PresenceManager.SetAchievement(AchievementID.other_testing_squad_member);
 				}
 				else
 				{
@@ -1188,10 +1188,11 @@ namespace ZeroGravity
 
 		public static void ShowMessageBox(string title, string text, GameObject parent, MessageBox.OnCloseDelegate onClose)
 		{
+			Dbg.Log("Showing message box with text: " + text);
 			GameObject gameObject = Instantiate(Resources.Load("UI/CanvasMessageBox")) as GameObject;
 			gameObject.transform.SetParent(parent.transform, false);
 			gameObject.GetComponent<RectTransform>().Reset(resetScale: true);
-			gameObject.SetActive(value: true);
+			gameObject.SetActive(true);
 			gameObject.GetComponent<MessageBox>().OnClose = onClose;
 			gameObject.GetComponent<MessageBox>().PopulateMessageBox(title, text, destroyOnClose: true);
 		}
@@ -1678,7 +1679,7 @@ namespace ZeroGravity
 				}
 				if (MyPlayer.Instance != null && this == MyPlayer.Instance.Parent)
 				{
-					ProviderManager.UpdateStatus();
+					PresenceManager.UpdateStatus();
 				}
 			}
 			if (MyPlayer.Instance.LockedToTrigger is SceneTriggerNavigationPanel || MyPlayer.Instance.ShipControlMode == ShipControlMode.Navigation)
@@ -1777,7 +1778,7 @@ namespace ZeroGravity
 				CreateCharacterPanel.SetActive(value: true);
 				CurrentGenderText.text = CurrentGender.ToLocalizedString();
 				InventoryCharacterPreview.instance.ResetPosition();
-				CharacterInputField.text = ProviderManager.Username;
+				CharacterInputField.text = PresenceManager.Username;
 				CharacterInputField.Select();
 				yield return new WaitWhile(() => CreateCharacterPanel.activeInHierarchy);
 				string newCharacterName = CharacterInputField.text.Trim();
@@ -2020,8 +2021,8 @@ namespace ZeroGravity
 
 			idRequest.Ids.Add(new GetPlayerIdRequest.Entry
 			{
-				SteamId = ProviderManager.SteamId,
-				DiscordId = ProviderManager.DiscordId
+				SteamId = PresenceManager.SteamId,
+				DiscordId = PresenceManager.DiscordId
 			});
 
 			try
@@ -2047,11 +2048,11 @@ namespace ZeroGravity
 
 						CreatePlayerRequest createRequest = new()
 						{
-							Name = ProviderManager.Username,
+							Name = PresenceManager.Username,
 							Region = Region.Europe,
 							PlayerId = NetworkController.PlayerId,
-							SteamId = ProviderManager.SteamId,
-							DiscordId = ProviderManager.DiscordId
+							SteamId = PresenceManager.SteamId,
+							DiscordId = PresenceManager.DiscordId
 						};
 
 						// Send request to server.
@@ -2167,7 +2168,7 @@ namespace ZeroGravity
 		/// </summary>
 		public IEnumerator PlaySPCoroutine(string filename = null)
 		{
-			if (!ProviderManager.AnyInitialised)
+			if (!PresenceManager.AnyInitialised)
 			{
 				ShowMessageBox(Localization.Error, Localization.NoProvider);
 				yield break;
@@ -2253,7 +2254,7 @@ namespace ZeroGravity
 					{
 						serverStatusResponse.CharacterData = new CharacterData
 						{
-							Name = ProviderManager.Username,
+							Name = PresenceManager.Username,
 							Gender = Gender.Male,
 							HairType = 1,
 							HeadType = 1
@@ -2424,7 +2425,7 @@ namespace ZeroGravity
 			this.CancelInvoke(CheckLoadingComplete);
 			AkSoundEngine.SetRTPCValue(SoundManager.Instance.InGameVolume, 1f);
 			MyPlayer.Instance.PlayerReady = true;
-			ProviderManager.UpdateStatus();
+			PresenceManager.UpdateStatus();
 			MyPlayer.Instance.InitializeCameraEffects();
 
 			Instance.CanvasManager.SaveAndSpawnPointScreen.Activate(value: false);
