@@ -1,14 +1,13 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion;
 using OpenHellion.IO;
+using OpenHellion.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
-using ZeroGravity.Math;
 
 namespace ZeroGravity
 {
@@ -20,7 +19,7 @@ namespace ZeroGravity
 			Asteroid
 		}
 
-		private class SceneItem
+		private class SceneReference
 		{
 			public SceneType Type;
 
@@ -29,47 +28,47 @@ namespace ZeroGravity
 			public GameObject RootObject;
 		}
 
-		private List<SceneItem> loadedScenes = new List<SceneItem>();
-
-		public GameObject LoadedScenesRoot;
+		private List<SceneReference> _LoadedSceneReferences = new List<SceneReference>();
 
 		private Dictionary<long, string> structures = new Dictionary<long, string>();
 
 		private Dictionary<long, string> asteroids = new Dictionary<long, string>();
 
-		public static DateTime PreloadStartTime;
-
 		public static bool IsPreloading = true;
 
-		private Transform vesselsGeometryCacheTransform;
+		private Transform _GeometryCacheTransform;
 
-		public Image PreloadBackgorund;
+		private List<long> _LoadingScenes = new List<long>();
 
-		public Image PreloadFiller;
+		[SerializeField] private StartupGUI _StartupGUI;
 
-		public Text PreloadText;
-
-		public List<Sprite> PreloadImages = new List<Sprite>();
-
-		private List<long> loadingScenes = new List<long>();
+		public static SceneLoader Instance { get; private set; }
 
 		private void Awake()
 		{
-			vesselsGeometryCacheTransform = base.transform.root;
-			List<StructureSceneData> list = JsonSerialiser.LoadResource<List<StructureSceneData>>("Data/Structures");
-			if (list != null)
+			if (Instance is not null)
 			{
-				foreach (StructureSceneData item in list)
+				Dbg.Error("Created new scene loader when one already exists. Removing...");
+				Destroy(this);
+			}
+			Instance = this;
+			DontDestroyOnLoad(this);
+
+			_GeometryCacheTransform = base.transform.root;
+			List<StructureSceneData> structureJson = JsonSerialiser.LoadResource<List<StructureSceneData>>("Data/Structures");
+			if (structureJson != null)
+			{
+				foreach (StructureSceneData item in structureJson)
 				{
 					structures.Add(item.ItemID, item.SceneName);
 				}
 			}
-			List<AsteroidSceneData> list2 = JsonSerialiser.LoadResource<List<AsteroidSceneData>>("Data/Asteroids");
-			if (list2 == null)
+			List<AsteroidSceneData> asteroidsJson = JsonSerialiser.LoadResource<List<AsteroidSceneData>>("Data/Asteroids");
+			if (asteroidsJson == null)
 			{
 				return;
 			}
-			foreach (AsteroidSceneData item2 in list2)
+			foreach (AsteroidSceneData item2 in asteroidsJson)
 			{
 				asteroids.Add(item2.ItemID, item2.SceneName);
 			}
@@ -80,37 +79,36 @@ namespace ZeroGravity
 		/// </summary>
 		public void InitializeScenes()
 		{
-			if (Client.SceneLoadType != Client.SceneLoadTypeValue.PreloadWithCopy)
+			if (StartupManager.SceneLoadType != StartupManager.SceneLoadTypeValue.PreloadWithCopy)
 			{
-				UnityEngine.Object.Destroy(Client.Instance.PreloadingScreen);
+				_StartupGUI.ClosePreloading();
 				IsPreloading = false;
 				return;
 			}
 
-			GameObject gameObject = GameObject.Find("VesselsGeometryCache");
+			GameObject geometryCache = GameObject.Find("VesselsGeometryCache");
 
 			// Create new VesselsGeometryCarche if it doesn't exist.
-			if (gameObject == null)
+			if (geometryCache == null)
 			{
-				gameObject = new GameObject("VesselsGeometryCache");
-				gameObject.transform.SetParent(null);
-				UnityEngine.Object.DontDestroyOnLoad(gameObject);
-				vesselsGeometryCacheTransform = gameObject.transform;
-				Client.Instance.PreloadingScreen.SetActive(value: true);
-				PreloadStartTime = DateTime.UtcNow;
+				geometryCache = new GameObject("VesselsGeometryCache");
+				geometryCache.transform.SetParent(null);
+				DontDestroyOnLoad(geometryCache);
+				_GeometryCacheTransform = geometryCache.transform;
+				_StartupGUI.OpenPreloading();
 				IsPreloading = true;
 
 				// Do the loading.
 				StartCoroutine(PreLoadScenesCoroutine());
 				return;
 			}
-			vesselsGeometryCacheTransform = gameObject.transform;
+			_GeometryCacheTransform = geometryCache.transform;
 
 			// Initialize structures.
-			StructureScene[] componentsInChildren = vesselsGeometryCacheTransform.gameObject.GetComponentsInChildren<StructureScene>(includeInactive: true);
-			foreach (StructureScene structureScene in componentsInChildren)
+			StructureScene[] structureCache = _GeometryCacheTransform.gameObject.GetComponentsInChildren<StructureScene>(includeInactive: true);
+			foreach (StructureScene structureScene in structureCache)
 			{
-				loadedScenes.Add(new SceneItem
+				_LoadedSceneReferences.Add(new SceneReference
 				{
 					GUID = structureScene.GUID,
 					Type = SceneType.Structure,
@@ -119,10 +117,10 @@ namespace ZeroGravity
 			}
 
 			// Initialize asteroids.
-			AsteroidScene[] componentsInChildren2 = vesselsGeometryCacheTransform.gameObject.GetComponentsInChildren<AsteroidScene>(includeInactive: true);
-			foreach (AsteroidScene asteroidScene in componentsInChildren2)
+			AsteroidScene[] astreoidCache = _GeometryCacheTransform.gameObject.GetComponentsInChildren<AsteroidScene>(includeInactive: true);
+			foreach (AsteroidScene asteroidScene in astreoidCache)
 			{
-				loadedScenes.Add(new SceneItem
+				_LoadedSceneReferences.Add(new SceneReference
 				{
 					GUID = asteroidScene.GUID,
 					Type = SceneType.Asteroid,
@@ -136,40 +134,25 @@ namespace ZeroGravity
 		/// </summary>
 		private IEnumerator PreLoadScenesCoroutine()
 		{
-			float startTime = float.MinValue;
-			float sceneNum = structures.Count + asteroids.Count;
-			float currentSceneNum = 0f;
-			IEnumerator<string> shuffledTexts = Localization.PreloadText.OrderBy((string m) => MathHelper.RandomNextDouble()).GetEnumerator();
-			IEnumerator<Sprite> shuffledImages = PreloadImages.OrderBy((Sprite m) => MathHelper.RandomNextDouble()).ToList().GetEnumerator();
+			float totalNumberOfScenes = structures.Count + asteroids.Count;
+			float currentSceneNumber = 0f;
 
 			// Load asteroids.
 			foreach (KeyValuePair<long, string> ast in asteroids)
 			{
-				if (Time.time - startTime > 10f)
-				{
-					PreloadText.text = shuffledTexts.GetNextInLoop();
-					PreloadBackgorund.sprite = shuffledImages.GetNextInLoop();
-					startTime = Time.time;
-				}
-				currentSceneNum += 1f;
-				PreloadFiller.fillAmount = currentSceneNum / sceneNum;
+				currentSceneNumber += 1f;
+				_StartupGUI.UpdateProgressBar(currentSceneNumber / totalNumberOfScenes);
 				yield return StartCoroutine(LoadSceneCoroutine(SceneType.Asteroid, ast.Key));
 			}
 
 			// Load structures.
 			foreach (KeyValuePair<long, string> str in structures)
 			{
-				if (Time.time - startTime > 10f)
-				{
-					PreloadText.text = shuffledTexts.GetNextInLoop();
-					PreloadBackgorund.sprite = shuffledImages.GetNextInLoop();
-					startTime = Time.time;
-				}
-				currentSceneNum += 1f;
-				PreloadFiller.fillAmount = currentSceneNum / sceneNum;
+				currentSceneNumber += 1f;
+				_StartupGUI.UpdateProgressBar(currentSceneNumber / totalNumberOfScenes);
 				yield return StartCoroutine(LoadSceneCoroutine(SceneType.Structure, str.Key));
 			}
-			UnityEngine.Object.Destroy(Client.Instance.PreloadingScreen);
+			_StartupGUI.ClosePreloading();
 			IsPreloading = false;
 		}
 
@@ -202,14 +185,14 @@ namespace ZeroGravity
 
 		public GameObject GetLoadedScene(SceneType type, long GUID)
 		{
-			SceneItem sceneItem = loadedScenes.Find((SceneItem m) => m.GUID == GUID && m.Type == type);
+			SceneReference sceneItem = _LoadedSceneReferences.Find((SceneReference m) => m.GUID == GUID && m.Type == type);
 			if (sceneItem != null)
 			{
-				if (Client.SceneLoadType == Client.SceneLoadTypeValue.PreloadWithCopy)
+				if (StartupManager.SceneLoadType == StartupManager.SceneLoadTypeValue.PreloadWithCopy)
 				{
-					return UnityEngine.Object.Instantiate(sceneItem.RootObject);
+					return Instantiate(sceneItem.RootObject);
 				}
-				loadedScenes.Remove(sceneItem);
+				_LoadedSceneReferences.Remove(sceneItem);
 				return sceneItem.RootObject;
 			}
 			Dbg.Error("Cannot find loaded scene", type, GUID);
@@ -218,7 +201,7 @@ namespace ZeroGravity
 
 		public IEnumerator LoadSceneCoroutine(SceneType type, long GUID)
 		{
-			if (Client.SceneLoadType == Client.SceneLoadTypeValue.PreloadWithCopy && loadedScenes.FirstOrDefault((SceneItem m) => m.GUID == GUID && m.Type == type) != null)
+			if (StartupManager.SceneLoadType == StartupManager.SceneLoadTypeValue.PreloadWithCopy && _LoadedSceneReferences.FirstOrDefault((SceneReference m) => m.GUID == GUID && m.Type == type) != null)
 			{
 				yield break;
 			}
@@ -228,13 +211,13 @@ namespace ZeroGravity
 				yield break;
 			}
 			Client.Instance.LoadingScenesCount++;
-			if (loadingScenes.Contains(GUID))
+			if (_LoadingScenes.Contains(GUID))
 			{
-				yield return new WaitWhile(() => loadingScenes.Contains(GUID));
+				yield return new WaitWhile(() => _LoadingScenes.Contains(GUID));
 			}
 			else
 			{
-				loadingScenes.Add(GUID);
+				_LoadingScenes.Add(GUID);
 				AsyncOperation ao = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 				yield return new WaitUntil(() => ao.isDone);
 				UnityEngine.SceneManagement.Scene sc = SceneManager.GetSceneByName(sceneName);
@@ -246,13 +229,13 @@ namespace ZeroGravity
 						StructureScene component = gameObject.GetComponent<StructureScene>();
 						if (component != null)
 						{
-							loadedScenes.Add(new SceneItem
+							_LoadedSceneReferences.Add(new SceneReference
 							{
 								Type = SceneType.Structure,
 								GUID = component.GUID,
 								RootObject = component.gameObject
 							});
-							component.transform.SetParent(vesselsGeometryCacheTransform.transform);
+							component.transform.SetParent(_GeometryCacheTransform.transform);
 							SceneManager.UnloadSceneAsync(sc);
 							break;
 						}
@@ -266,19 +249,19 @@ namespace ZeroGravity
 						AsteroidScene component2 = gameObject2.GetComponent<AsteroidScene>();
 						if (component2 != null)
 						{
-							loadedScenes.Add(new SceneItem
+							_LoadedSceneReferences.Add(new SceneReference
 							{
 								Type = SceneType.Asteroid,
 								GUID = component2.GUID,
 								RootObject = component2.gameObject
 							});
-							component2.transform.SetParent(vesselsGeometryCacheTransform.transform);
+							component2.transform.SetParent(_GeometryCacheTransform.transform);
 							SceneManager.UnloadSceneAsync(sc);
 							break;
 						}
 					}
 				}
-				loadingScenes.Remove(GUID);
+				_LoadingScenes.Remove(GUID);
 			}
 			Client.Instance.LoadingScenesCount--;
 		}

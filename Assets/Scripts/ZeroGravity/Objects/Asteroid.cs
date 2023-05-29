@@ -107,8 +107,8 @@ namespace ZeroGravity.Objects
 		private IEnumerator LoadScenes(Transform rootTransform)
 		{
 			CreateArtificalRigidbody();
-			yield return StartCoroutine(Client.Instance.SceneLoader.LoadSceneCoroutine(SceneLoader.SceneType.Asteroid, (long)base.SceneID));
-			GameObject sceneRoot = Client.Instance.SceneLoader.GetLoadedScene(SceneLoader.SceneType.Asteroid, (long)base.SceneID);
+			yield return StartCoroutine(SceneLoader.Instance.LoadSceneCoroutine(SceneLoader.SceneType.Asteroid, (long)base.SceneID));
+			GameObject sceneRoot = SceneLoader.Instance.GetLoadedScene(SceneLoader.SceneType.Asteroid, (long)base.SceneID);
 			sceneRoot.transform.SetParent(rootTransform);
 			sceneRoot.transform.Reset();
 			RootObject = sceneRoot;

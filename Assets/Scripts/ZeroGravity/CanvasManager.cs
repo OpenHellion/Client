@@ -15,6 +15,7 @@ using OpenHellion.RichPresence;
 using OpenHellion.Networking;
 using UnityEngine.InputSystem;
 using OpenHellion.IO;
+using OpenHellion;
 
 namespace ZeroGravity
 {
@@ -222,7 +223,7 @@ namespace ZeroGravity
 
 			if (Client.IsLogout || Client.IsDisconected)
 			{
-				SelectScreen(Screen.CharacterSelect);
+				SelectScreen(Screen.MainMenu);
 			}
 			else if (Client.ReconnectAutomatically || Client.ForceRespawn)
 			{
@@ -242,7 +243,6 @@ namespace ZeroGravity
 			else
 			{
 				SplashScreen.gameObject.Activate(value: false);
-				Client.Instance.SceneLoader.InitializeScenes();
 				Client.Instance.AmbientSounds.SwitchAmbience("MainMenu");
 				Client.Instance.AmbientSounds.Play(0);
 			}
@@ -835,7 +835,7 @@ namespace ZeroGravity
 
 		public void ToggleBusyLoading(bool isActive)
 		{
-			if (Client.SceneLoadType == Client.SceneLoadTypeValue.PreloadWithCopy)
+			if (StartupManager.SceneLoadType == StartupManager.SceneLoadTypeValue.PreloadWithCopy)
 			{
 				isActive = false;
 			}

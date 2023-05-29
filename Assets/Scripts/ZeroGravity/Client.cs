@@ -47,12 +47,6 @@ namespace ZeroGravity
 			Sandbox
 		}
 
-		public enum SceneLoadTypeValue
-		{
-			Simple,
-			PreloadWithCopy
-		}
-
 		private readonly string k_SpServerPath = Directory.GetCurrentDirectory() + "\\Hellion_Data\\HELLION_SP";
 
 		private const string k_SpServerFileName = "HELLION_SP.exe";
@@ -113,13 +107,9 @@ namespace ZeroGravity
 
 		public static float MouseSpeedOnPanels = 30f;
 
-		public static SceneLoadTypeValue SceneLoadType = SceneLoadTypeValue.PreloadWithCopy;
-
 		public static int ControlsVersion = 2;
 
 		public static volatile bool IsRunning = false;
-
-		public SceneLoader SceneLoader;
 
 		public SolarSystem SolarSystem;
 
@@ -239,8 +229,6 @@ namespace ZeroGravity
 		public static volatile bool IsLogout = false;
 
 		public static volatile bool IsDisconected = false;
-
-		public GameObject PreloadingScreen;
 
 		public int CurrentLanguageIndex;
 
@@ -416,20 +404,6 @@ namespace ZeroGravity
 			s_Instance = this;
 			IsRunning = true;
 			m_OpenMainSceneStarted = false;
-
-			// Only load simple scenes if we have little available memory, regardless of settings.
-			if (SystemInfo.systemMemorySize < 6000 || Application.isEditor)
-			{
-				SceneLoadType = SceneLoadTypeValue.Simple;
-			}
-			else
-			{
-				int property = Properties.GetProperty("load_type", (int)SceneLoadType);
-				if (Enum.IsDefined(typeof(SceneLoadTypeValue), property))
-				{
-					SceneLoadType = (SceneLoadTypeValue)property;
-				}
-			}
 		}
 
 		private void Start()
@@ -451,8 +425,7 @@ namespace ZeroGravity
 			string customLocalisationFile = Properties.GetProperty("custom_localization_file", string.Empty);
 			if (Properties.GetProperty("save_default_localization_file", defaultValue: false))
 			{
-				string fileName = "localization_default.txt";
-				Localization.SaveToFile(fileName);
+				Localization.SaveToFile("localization_default.txt");
 			}
 
 			if (Localization.LocalizationFiles.TryGetValue(CurrentLanguageIndex, out var value))
@@ -651,7 +624,7 @@ namespace ZeroGravity
 				{
 					MyPlayer.Instance.HomeStationGUID = s.HomeGUID.Value;
 				}
-				SceneLoader.LoadScenesWithIDs(s.Scenes);
+				SceneLoader.Instance.LoadScenesWithIDs(s.Scenes);
 				if (s.ParentType == SpaceObjectType.Ship)
 				{
 					Ship ship = Ship.Create(s.MainVesselID, s.VesselData, s.ParentTransform, isMainObject: true);
@@ -1952,6 +1925,7 @@ namespace ZeroGravity
 			catch (Exception)
 			{
 				ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
+				OpenMainScreen();
 			}
 		}
 
@@ -1966,6 +1940,7 @@ namespace ZeroGravity
 			if (signInResponse == null)
 			{
 				ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
+				Dbg.Error("Sign in responded with null.");
 			}
 
 			if (signInResponse.Result == ResponseResult.Success)

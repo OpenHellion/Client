@@ -89,12 +89,6 @@ namespace ZeroGravity
 
 		public void VideoEnd()
 		{
-			// Start preloading.
-			if (VideoPlayer.clip == VideoClips[0].Video)
-			{
-				Client.Instance.SceneLoader.InitializeScenes();
-			}
-
 			// Run video end task.
 			if (m_videoEndTask != null)
 			{
