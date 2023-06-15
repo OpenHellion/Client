@@ -218,8 +218,8 @@ namespace ZeroGravity
 			else
 			{
 				_LoadingScenes.Add(GUID);
-				AsyncOperation ao = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-				yield return new WaitUntil(() => ao.isDone);
+				AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+				yield return new WaitUntil(() => asyncLoad.isDone);
 				UnityEngine.SceneManagement.Scene sc = SceneManager.GetSceneByName(sceneName);
 				if (type == SceneType.Structure)
 				{

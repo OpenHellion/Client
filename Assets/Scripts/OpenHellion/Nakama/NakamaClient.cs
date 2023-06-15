@@ -1,4 +1,4 @@
-// NakamaManager.cs
+// NakamaClient.cs
 //
 // Copyright (C) 2023, OpenHellion contributors
 //
@@ -23,44 +23,27 @@ using UnityEngine;
 
 namespace OpenHellion.Nakama
 {
-	public class NakamaManager : MonoBehaviour
+	public class NakamaClient : MonoBehaviour
 	{
-		public static Action<string, string> OnError;
-		public static Action OnRequireAuthentification;
-		public static Action<Tuple<string, string>> OnAuthentificationComplete;
+		public static UnityEvent OnRequireAuthentification;
+
+		private Nakama.Client _Client;
 
 		private ISession _Session;
 
-		public static NakamaManager Instance;
-		public static string UserId => Instance._Session.UserId;
-		public static string Username => Instance._Session.Username;
-
-
-		private void Awake()
-		{
-			if (Instance is not null)
-			{
-				Dbg.Log("Destroying NakamaManager on " + Instance.name);
-				Destroy(Instance);
-			}
-			Instance = this;
-
-			DontDestroyOnLoad(gameObject);
-		}
-
 		async void Start()
 		{
-			var client = new Client("http", "127.0.0.1", 7350, "defaultkey");
-			client.Timeout = 20;
+			_Client = new Client("http", "127.0.0.1", 7350, "defaultkey");
+			_Client.Timeout = 20;
 
-			string authToken = PlayerPrefs.GetString("authToken");
-			string refreshToken = PlayerPrefs.GetString("refreshToken");
+			string authToken = PlayerPrefs.GetString("authToken", null);
+			string refreshToken = PlayerPrefs.GetString("refreshToken", null);
 			_Session = Session.Restore(authToken, refreshToken);
 
 			// Create new or refresh session.
 			if (_Session is null)
 			{
-				OnRequireAuthentification();
+				OnRequireAuthentification.Invoke();
 			}
 			else if (_Session.HasExpired(DateTime.UtcNow.AddDays(1)))
 			{
@@ -72,19 +55,31 @@ namespace OpenHellion.Nakama
 				{
 					Dbg.Log("Nakama session can no longer be refreshed. Must reauthenticate!");
 
-					OnRequireAuthentification();
+					OnRequireAuthentification.Invoke();
 				}
 			}
 		}
 
 		// Authenticates and saves the result.
-		async void Authenticate(Client client, string email, string password)
+		public async void Authenticate(string email, string password)
 		{
-			_Session = await client.AuthenticateEmailAsync(email, password);
+			_Session = await _Client.AuthenticateEmailAsync(email, password);
 			Dbg.Log(_Session);
 
 			PlayerPrefs.SetString("authToken", _Session.AuthToken);
 			PlayerPrefs.SetString("refreshToken", _Session.RefreshToken);
+		}
+
+		public async String GetUserId()
+		{
+			var account = await _Client.GetAccountAsync(session);
+			return account.User.UserId;
+		}
+
+		public async String GetUsername()
+		{
+			var account = await _Client.GetAccountAsync(session);
+			return account.User.Username;
 		}
 	}
 }

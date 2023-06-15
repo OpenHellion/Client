@@ -26,6 +26,7 @@ using OpenHellion.Networking.Message;
 using OpenHellion.IO;
 using OpenHellion;
 using UnityEngine.InputSystem;
+using OpenHellion.Nakama;
 
 namespace ZeroGravity
 {
@@ -221,7 +222,7 @@ namespace ZeroGravity
 
 		[NonSerialized]
 		public Dictionary<long, CharacterInteractionState> CharacterInteractionStatesQueue = new Dictionary<long, CharacterInteractionState>();
-		
+
 		public bool SignInFailed;
 
 		public static volatile bool ForceRespawn = false;
@@ -303,6 +304,8 @@ namespace ZeroGravity
 
 		public static bool IsGameBuild => Instance != null;
 
+		public NakamaClient Nakama { get; private set; }
+
 		public float HeadbobStrength
 		{
 			get
@@ -383,6 +386,8 @@ namespace ZeroGravity
 
 		private void Awake()
 		{
+			Nakama = FindObjectOfType<NakamaClient>();
+
 			Texture[] emblems = Resources.LoadAll<Texture>("Emblems");
 			SceneVesselEmblem.Textures = emblems.ToDictionary((Texture x) => x.name, (Texture y) => y);
 

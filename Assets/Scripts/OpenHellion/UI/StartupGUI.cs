@@ -33,17 +33,17 @@ namespace OpenHellion.UI
 	{
 		[SerializeField] private List<Sprite> _PreloadImages = new List<Sprite>();
 
+		[SerializeField] private NakamaClient _NakamaClient;
+
 		private Label _PreloadText;
 		private ProgressBar _PreloadProgress;
 		private VisualElement _PreloadBackground;
 
-		private void Start()
-		{
-			NakamaManager.OnRequireAuthentification = OpenAuthScreen;
-		}
 
 		private void OnEnable()
 		{
+			_NakamaClient.OnRequireAuthentification = OpenAuthScreen;
+
 			// The UXML is already instantiated by the UIDocument component
 			var uiDocument = GetComponent<UIDocument>();
 
@@ -67,7 +67,20 @@ namespace OpenHellion.UI
 		// Opens the authentification menu and preparing it for connection.
 		private void OpenAuthScreen()
 		{
+			// Add confirm button call to execute
+		}
 
+		private async void EnterGameCredentials()
+		{
+			await _NakamaClient.Authenticate("email", "password");
+
+			// If fail: call OpenAuthScreen
+			// Complete: call CloseAuthScreen
+		}
+
+		private void CloseAuthScreen()
+		{
+			// Close menu and continue loading/open game.
 		}
 
 		public void OpenPreloading()
