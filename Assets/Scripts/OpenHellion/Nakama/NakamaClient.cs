@@ -44,8 +44,9 @@ namespace OpenHellion.Nakama
 
 		private async void Start()
 		{
+			Dbg.Log("Connecting to Nakama...");
 			_Client = new Client("http", "127.0.0.1", 7350, "defaultkey");
-			_Client.Timeout = 20;
+			_Client.Timeout = 10;
 
 			string authToken = PlayerPrefs.GetString("authToken", null);
 			string refreshToken = PlayerPrefs.GetString("refreshToken", null);
@@ -77,15 +78,11 @@ namespace OpenHellion.Nakama
 		// Authenticates and saves the result.
 		public async Task<bool> Authenticate(string email, string password)
 		{
-			return await Task.Run(() =>
+			var task = await Task.Run(() =>
 			{
 				try
 				{
-					_Session = _Client.AuthenticateEmailAsync(email, password).Result;
-					Dbg.Log(_Session);
-
-					PlayerPrefs.SetString("authToken", _Session.AuthToken);
-					PlayerPrefs.SetString("refreshToken", _Session.RefreshToken);
+					_Session = _Client.AuthenticateEmailAsync(email, password, create: true).Result;
 					HasAuthenticated = true;
 					return true;
 				}
@@ -96,6 +93,11 @@ namespace OpenHellion.Nakama
 					return false;
 				}
 			});
+
+			PlayerPrefs.SetString("authToken", _Session.AuthToken);
+			PlayerPrefs.SetString("refreshToken", _Session.RefreshToken);
+
+			return task;
 		}
 
 		public string GetUserId()

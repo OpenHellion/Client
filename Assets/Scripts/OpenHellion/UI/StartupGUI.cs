@@ -112,6 +112,7 @@ namespace OpenHellion.UI
 
 			if (success)
 			{
+				Dbg.Log("Successfully authenticated with Nakama.");
 				CloseAuthentificationScreen();
 			}
 			else

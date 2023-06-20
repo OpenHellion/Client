@@ -1,19 +1,47 @@
+.main-menu-header {
+    -unity-font: resource('Fonts/MainMenuBold');
+    font-size: 18px;
+    color: rgb(160, 211, 248);
+    -unity-text-align: upper-left;
+    -unity-font-style: bold;
+}
+
 .main-menu-label {
-    -unity-font: resource('Fonts/MainMenuRegular');
-    font-size: 30px;
-    color: rgb(255, 255, 255);
-    -unity-text-align: middle-center;
 }
 
 .hellion-text-field {
 }
 
 .hellion-button {
+    -unity-font: resource('Fonts/MainMenuRegular');
+    font-size: 16px;
+    color: rgba(255, 255, 255, 255);
+    -unity-text-align: middle-center;
+    background-image: url('project://database/Assets/Generic/Texture2D/SpriteAtlasTexture-mainMenu-1024x256-fmt12.png?fileID=21300012&guid=fecc2e23573e5d24e87bdb7a1edccceb&type=3#ButtonFrame');
+    background-color: rgba(0, 0, 0, 0);
+    width: 25%;
+    height: 32px;
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+}
+
+.hellion-button:hover {
+    background-image: url('project://database/Assets/Generic/Texture2D/SpriteAtlasTexture-mainMenu-1024x256-fmt12.png?fileID=21300014&guid=fecc2e23573e5d24e87bdb7a1edccceb&type=3#ButtonHover');
+    background-color: rgba(0, 0, 0, 0);
+    transition-duration: 10ms;
+    transition-timing-function: linear;
+}
+
+.hellion-button:focus {
+    background-image: url('project://database/Assets/Generic/Texture2D/SpriteAtlasTexture-mainMenu-1024x256-fmt12.png?fileID=21300014&guid=fecc2e23573e5d24e87bdb7a1edccceb&type=3#ButtonHover');
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-image-tint-color: rgb(160, 211, 248);
 }
 
 .unity-progress-bar {
-    flex-grow: 0;
-    height: 100%;
 }
 
 .unity-progress-bar__progress {
@@ -26,6 +54,9 @@
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
+    height: 100%;
+    max-height: 100%;
+    min-height: 100%;
 }
 
 .unity-progress-bar__background {
@@ -38,11 +69,22 @@
     border-right-color: rgb(0, 0, 0);
     border-top-color: rgb(0, 0, 0);
     border-bottom-color: rgb(0, 0, 0);
-    flex-grow: 0;
+    max-height: 100%;
+    min-height: 100%;
+    height: 100%;
 }
 
 .unity-progress-bar__title {
     display: none;
     overflow: hidden;
     visibility: hidden;
+    height: 100%;
+    max-height: 100%;
+    min-height: 100%;
+}
+
+.unity-progress-bar__container {
+    max-height: 100%;
+    min-height: 100%;
+    height: 100%;
 }
