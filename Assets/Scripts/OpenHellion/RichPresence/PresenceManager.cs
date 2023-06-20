@@ -37,7 +37,7 @@ namespace OpenHellion.RichPresence
 			{
 				if (s_Instance != null) return s_Instance;
 
-				return new GameObject("ExternalProvider").AddComponent<PresenceManager>();
+				return new GameObject("PresenseManager").AddComponent<PresenceManager>();
 			}
 		}
 

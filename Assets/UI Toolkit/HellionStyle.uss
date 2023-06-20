@@ -5,13 +5,19 @@
     -unity-text-align: middle-center;
 }
 
+.hellion-text-field {
+}
+
+.hellion-button {
+}
+
 .unity-progress-bar {
     flex-grow: 0;
+    height: 100%;
 }
 
 .unity-progress-bar__progress {
     background-color: rgb(160, 211, 248);
-    height: 8px;
     margin-left: 0;
     margin-right: 0;
     margin-top: 0;
@@ -24,15 +30,14 @@
 
 .unity-progress-bar__background {
     background-color: rgb(69, 79, 98);
-    height: 8px;
     border-left-width: 0;
     border-right-width: 0;
     border-top-width: 0;
     border-bottom-width: 0;
-    border-left-color: rgba(0, 0, 0, 255);
-    border-right-color: rgba(0, 0, 0, 255);
-    border-top-color: rgba(0, 0, 0, 255);
-    border-bottom-color: rgba(0, 0, 0, 255);
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
     flex-grow: 0;
 }
 

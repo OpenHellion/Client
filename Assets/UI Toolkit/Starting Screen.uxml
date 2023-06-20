@@ -1,10 +1,18 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/HellionStyle.uss?fileID=7433441132597879392&amp;guid=688b8c618fe8d98429bb44208d7b3fd0&amp;type=3#HellionStyle" />
-    <ui:VisualElement name="Background" style="justify-content: flex-end; align-items: center; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Generic/Texture2D/Loading_art06.png?fileID=2800000&amp;guid=ec1aa9e88880f9c46a170f034b5312a6&amp;type=3#Loading_art06&apos;);">
-        <ui:VisualElement name="Bottom" style="justify-content: center; height: 167px; width: 100%; background-color: rgba(69, 79, 98, 0.78); align-items: center;">
+    <ui:VisualElement name="Background" style="justify-content: flex-end; align-items: center; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Generic/Texture2D/Loading_art06.png?fileID=2800000&amp;guid=ec1aa9e88880f9c46a170f034b5312a6&amp;type=3#Loading_art06&apos;); display: flex;">
+        <ui:VisualElement name="Bottom" style="justify-content: center; height: 20%; width: 100%; background-color: rgba(69, 79, 98, 0.78); align-items: center;">
             <ui:Label text="LOADING" display-tooltip-when-elided="true" name="LoadingText" class="main-menu-label" style="align-items: center; margin-bottom: 8px; width: 50%;" />
-            <ui:ProgressBar name="ProgressBar" low-value="50" tabindex="0" style="height: 8px; width: 70%; margin-bottom: 4px;" />
-            <ui:Label display-tooltip-when-elided="true" name="TipText" style="-unity-font: resource(&apos;Fonts/MainMenuRegular&apos;); font-size: 28px; -unity-text-align: middle-center; white-space: normal; color: rgba(255, 255, 255, 0.71); margin-bottom: 8px; width: 80%;" />
+            <ui:ProgressBar name="ProgressBar" low-value="50" tabindex="0" style="height: 4%; width: 70%; margin-bottom: 4px;" />
+            <ui:Label display-tooltip-when-elided="true" name="TipText" text="Quibusdam ducimus porro expedita esse est eius hic. Aliquam architecto et reiciendis facilis dolorem et a. Ipsam commodi laudantium distinctio praesentium optio nostrum cupiditate sit." style="-unity-font: resource(&apos;Fonts/MainMenuRegular&apos;); font-size: 14px; -unity-text-align: middle-center; white-space: normal; color: rgba(255, 255, 255, 0.71); margin-bottom: 8px; width: 80%;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="Popup" style="align-items: center; justify-content: center; width: 100%; height: 100%; display: flex; position: absolute;">
+        <ui:VisualElement name="AuthentificationScreen" style="width: 40%; height: 80%; background-color: rgba(69, 79, 98, 0.78); padding-left: 30px; padding-right: 30px; padding-top: 5px; padding-bottom: 30px;">
+            <ui:VisualElement style="background-image: url(&apos;project://database/Assets/Generic/Texture2D/hellionLogo.png?fileID=2800000&amp;guid=20a95a8955fdbb54e939df9610b109b1&amp;type=3#hellionLogo&apos;); -unity-background-scale-mode: scale-to-fit; width: 100%; height: 10%;" />
+            <ui:TextField picking-mode="Ignore" label="User Email" text="email@example.com" name="Email" />
+            <ui:TextField picking-mode="Ignore" label="User Password" name="Password" mask-character="•" />
+            <ui:Button text="Sign In" display-tooltip-when-elided="true" name="AuthenticateButton" style="-unity-font: resource(&apos;Fonts/MainMenuRegular&apos;);" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

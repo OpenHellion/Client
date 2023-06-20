@@ -30,37 +30,32 @@ namespace ZeroGravity
 
 		private List<SceneReference> _LoadedSceneReferences = new List<SceneReference>();
 
-		private Dictionary<long, string> structures = new Dictionary<long, string>();
+		private Dictionary<long, string> _Structures = new Dictionary<long, string>();
 
-		private Dictionary<long, string> asteroids = new Dictionary<long, string>();
+		private Dictionary<long, string> _Asteroids = new Dictionary<long, string>();
 
-		public static bool IsPreloading = true;
+		public bool IsPreloading { get; private set; }
 
 		private Transform _GeometryCacheTransform;
 
 		private List<long> _LoadingScenes = new List<long>();
 
+		// Only call this when preloading.
 		[SerializeField] private StartupGUI _StartupGUI;
-
-		public static SceneLoader Instance { get; private set; }
 
 		private void Awake()
 		{
-			if (Instance is not null)
-			{
-				Dbg.Error("Created new scene loader when one already exists. Removing...");
-				Destroy(this);
-			}
-			Instance = this;
+			IsPreloading = true;
+
 			DontDestroyOnLoad(this);
 
-			_GeometryCacheTransform = base.transform.root;
+			_GeometryCacheTransform = transform.root;
 			List<StructureSceneData> structureJson = JsonSerialiser.LoadResource<List<StructureSceneData>>("Data/Structures");
 			if (structureJson != null)
 			{
 				foreach (StructureSceneData item in structureJson)
 				{
-					structures.Add(item.ItemID, item.SceneName);
+					_Structures.Add(item.ItemID, item.SceneName);
 				}
 			}
 			List<AsteroidSceneData> asteroidsJson = JsonSerialiser.LoadResource<List<AsteroidSceneData>>("Data/Asteroids");
@@ -70,7 +65,7 @@ namespace ZeroGravity
 			}
 			foreach (AsteroidSceneData item2 in asteroidsJson)
 			{
-				asteroids.Add(item2.ItemID, item2.SceneName);
+				_Asteroids.Add(item2.ItemID, item2.SceneName);
 			}
 		}
 
@@ -81,14 +76,14 @@ namespace ZeroGravity
 		{
 			if (StartupManager.SceneLoadType != StartupManager.SceneLoadTypeValue.PreloadWithCopy)
 			{
+				Dbg.Log("Skipping preloading.");
 				_StartupGUI.ClosePreloading();
 				IsPreloading = false;
 				return;
 			}
 
+			// Start loading if we haven't already.
 			GameObject geometryCache = GameObject.Find("VesselsGeometryCache");
-
-			// Create new VesselsGeometryCarche if it doesn't exist.
 			if (geometryCache == null)
 			{
 				geometryCache = new GameObject("VesselsGeometryCache");
@@ -100,6 +95,7 @@ namespace ZeroGravity
 
 				// Do the loading.
 				StartCoroutine(PreLoadScenesCoroutine());
+				Dbg.Log("Started preloading...");
 				return;
 			}
 			_GeometryCacheTransform = geometryCache.transform;
@@ -134,19 +130,19 @@ namespace ZeroGravity
 		/// </summary>
 		private IEnumerator PreLoadScenesCoroutine()
 		{
-			float totalNumberOfScenes = structures.Count + asteroids.Count;
+			float totalNumberOfScenes = _Structures.Count + _Asteroids.Count;
 			float currentSceneNumber = 0f;
 
-			// Load asteroids.
-			foreach (KeyValuePair<long, string> ast in asteroids)
+			// Load _Asteroids.
+			foreach (KeyValuePair<long, string> ast in _Asteroids)
 			{
 				currentSceneNumber += 1f;
 				_StartupGUI.UpdateProgressBar(currentSceneNumber / totalNumberOfScenes);
 				yield return StartCoroutine(LoadSceneCoroutine(SceneType.Asteroid, ast.Key));
 			}
 
-			// Load structures.
-			foreach (KeyValuePair<long, string> str in structures)
+			// Load _Structures.
+			foreach (KeyValuePair<long, string> str in _Structures)
 			{
 				currentSceneNumber += 1f;
 				_StartupGUI.UpdateProgressBar(currentSceneNumber / totalNumberOfScenes);
@@ -154,6 +150,7 @@ namespace ZeroGravity
 			}
 			_StartupGUI.ClosePreloading();
 			IsPreloading = false;
+			Dbg.Log("Done preloading.");
 		}
 
 		public void LoadScenesWithIDs(List<GameScenes.SceneID> sceneIDs)
@@ -169,13 +166,13 @@ namespace ZeroGravity
 			}
 			foreach (GameScenes.SceneID sceneID in sceneIDs)
 			{
-				KeyValuePair<long, string> kv2 = structures.FirstOrDefault((KeyValuePair<long, string> m) => m.Key == (long)sceneID);
+				KeyValuePair<long, string> kv2 = _Structures.FirstOrDefault((KeyValuePair<long, string> m) => m.Key == (long)sceneID);
 				if (kv2.Key != 0)
 				{
 					yield return StartCoroutine(LoadSceneCoroutine(SceneType.Structure, kv2.Key));
 					continue;
 				}
-				kv2 = asteroids.FirstOrDefault((KeyValuePair<long, string> m) => m.Key == (long)sceneID);
+				kv2 = _Asteroids.FirstOrDefault((KeyValuePair<long, string> m) => m.Key == (long)sceneID);
 				if (kv2.Key != 0)
 				{
 					yield return StartCoroutine(LoadSceneCoroutine(SceneType.Asteroid, kv2.Key));
@@ -205,7 +202,7 @@ namespace ZeroGravity
 			{
 				yield break;
 			}
-			string sceneName = ((type != 0) ? asteroids[GUID] : structures[GUID]);
+			string sceneName = ((type != 0) ? _Asteroids[GUID] : _Structures[GUID]);
 			if (sceneName.IsNullOrEmpty())
 			{
 				yield break;

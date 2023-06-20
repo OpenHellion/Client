@@ -115,11 +115,11 @@ namespace OpenHellion.Networking
 		}
 
 		// Executed when we connect to a server.
-		private async void OnConnected()
+		private void OnConnected()
 		{
 			LogInRequest logInRequest = new LogInRequest
 			{
-				PlayerId = await Client.Nakama.GetUserId(),
+				PlayerId = Client.Instance.Nakama.GetUserId(),
 				NativeId = PresenceManager.NativeId,
 				CharacterData = NetworkController.CharacterData,
 				ServerID = m_ServerId,

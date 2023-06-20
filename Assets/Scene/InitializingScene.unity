@@ -297,9 +297,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 693752388}
-  - component: {fileID: 693752389}
+  - component: {fileID: 693752390}
   m_Layer: 0
-  m_Name: NakamaManager
+  m_Name: NakamaClient
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -318,9 +318,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &693752389
+--- !u!114 &693752390
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -329,9 +329,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 693752386}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f3cb06e6826b994bb019ffd68b87fd4, type: 3}
+  m_Script: {fileID: 11500000, guid: be9e170271ac56ca8ac3d951c167489a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnRequireAuthentification:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1130133856
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,7 +365,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1130133858
 MonoBehaviour:
@@ -376,8 +379,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dff90e9837a95324eb6a534c90ad9661, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _StartupGUI: {fileID: 0}
+  _StartupGUI: {fileID: 1216738502}
   _SceneLoader: {fileID: 2063511445}
+  _NakamaClient: {fileID: 693752390}
 --- !u!1 &1216738499
 GameObject:
   m_ObjectHideFlags: 0
@@ -446,6 +450,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ec1aa9e88880f9c46a170f034b5312a6, type: 3}
   - {fileID: 21300000, guid: 2a546a4b9da0c6844a0c4fdacf36f1ab, type: 3}
   - {fileID: 21300000, guid: facd40e18fa03654d8655941cb8c63a7, type: 3}
+  _NakamaClient: {fileID: 693752390}
 --- !u!1 &2063511444
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,5 +494,5 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

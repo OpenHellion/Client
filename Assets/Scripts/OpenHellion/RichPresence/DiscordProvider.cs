@@ -56,7 +56,7 @@ namespace OpenHellion.RichPresence
 			{ 19L, "Ia" }
 		};
 
-		private static readonly List<string> s_Descriptions = new List<string> { "Building a huuuuuge station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job", "Repairing a hull breach" };
+		private static readonly List<string> s_Descriptions = new List<string> { "Building a huuuuuge station", "Mining _Asteroids", "In a salvaging mission", "Doing a piracy job", "Repairing a hull breach" };
 
 		private const long m_clientId = 349114016968474626L;
 		private const uint m_optionalSteamId = 588210;

@@ -299,12 +299,15 @@ namespace ZeroGravity
 
 		private Task m_RestoreMapDetailsTask;
 
+		public NakamaClient Nakama { get; private set; }
+
+		public SceneLoader SceneLoader { get; private set; }
+
 		private static Client s_Instance = null;
 		public static Client Instance => s_Instance;
 
 		public static bool IsGameBuild => Instance != null;
 
-		public NakamaClient Nakama { get; private set; }
 
 		public float HeadbobStrength
 		{
@@ -387,6 +390,7 @@ namespace ZeroGravity
 		private void Awake()
 		{
 			Nakama = FindObjectOfType<NakamaClient>();
+			SceneLoader = FindObjectOfType<SceneLoader>();
 
 			Texture[] emblems = Resources.LoadAll<Texture>("Emblems");
 			SceneVesselEmblem.Textures = emblems.ToDictionary((Texture x) => x.name, (Texture y) => y);
@@ -629,7 +633,7 @@ namespace ZeroGravity
 				{
 					MyPlayer.Instance.HomeStationGUID = s.HomeGUID.Value;
 				}
-				SceneLoader.Instance.LoadScenesWithIDs(s.Scenes);
+				SceneLoader.LoadScenesWithIDs(s.Scenes);
 				if (s.ParentType == SpaceObjectType.Ship)
 				{
 					Ship ship = Ship.Create(s.MainVesselID, s.VesselData, s.ParentTransform, isMainObject: true);

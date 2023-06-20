@@ -1377,8 +1377,8 @@ namespace ZeroGravity.Objects
 
 		private IEnumerator LoadStructureScenes(GameScenes.SceneID sceneID, Transform rootTransform, VesselObjects shipObjects)
 		{
-			yield return StartCoroutine(SceneLoader.Instance.LoadSceneCoroutine(SceneLoader.SceneType.Structure, (long)sceneID));
-			GameObject sceneRoot = SceneLoader.Instance.GetLoadedScene(SceneLoader.SceneType.Structure, (long)sceneID);
+			yield return StartCoroutine(Client.Instance.SceneLoader.LoadSceneCoroutine(SceneLoader.SceneType.Structure, (long)sceneID));
+			GameObject sceneRoot = Client.Instance.SceneLoader.GetLoadedScene(SceneLoader.SceneType.Structure, (long)sceneID);
 			sceneRoot.transform.SetParent(rootTransform);
 			sceneRoot.transform.localRotation = Quaternion.identity;
 			RootObject = sceneRoot;

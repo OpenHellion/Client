@@ -35,51 +35,95 @@ namespace OpenHellion.UI
 
 		[SerializeField] private NakamaClient _NakamaClient;
 
+		private VisualElement _PreloadBackground;
 		private Label _PreloadText;
 		private ProgressBar _PreloadProgress;
-		private VisualElement _PreloadBackground;
 
+		private VisualElement _AuthentificationScreen;
+		private TextField _AuthentificationEmail;
+		private TextField _AuthentificationPassword;
+		private Button _AuthentificateButton;
+
+		private VisualElement _ErrorBox;
+		private TextField _ErrorTitle;
+		private TextField _ErrorDescription;
+		private Button _ErrorBoxClose;
 
 		private void OnEnable()
 		{
-			_NakamaClient.OnRequireAuthentification = OpenAuthScreen;
+			_NakamaClient.OnRequireAuthentification.AddListener(OpenAuthentificationScreen);
 
 			// The UXML is already instantiated by the UIDocument component
 			var uiDocument = GetComponent<UIDocument>();
 
-			_PreloadText = uiDocument.rootVisualElement.Q("TipText") as Label;
 			_PreloadBackground = uiDocument.rootVisualElement.Q("Background");
+			_PreloadText = uiDocument.rootVisualElement.Q("TipText") as Label;
 			_PreloadProgress = uiDocument.rootVisualElement.Q("ProgressBar") as ProgressBar;
 
+			_AuthentificationScreen = uiDocument.rootVisualElement.Q("AuthentificationScreen");
+			_AuthentificationEmail = uiDocument.rootVisualElement.Q("Email") as TextField;
+			_AuthentificationPassword = uiDocument.rootVisualElement.Q("Password") as TextField;
+			_AuthentificateButton = uiDocument.rootVisualElement.Q("AuthenticateButton") as Button;
+
 			_PreloadBackground.visible = false;
+			_AuthentificationScreen.visible = false;
+
+			_AuthentificateButton.clicked += EnterGameCredentials;
 		}
 
 		private void OnDisable()
 		{
+			CloseAuthentificationScreen();
 			ClosePreloading();
 		}
 
 		public void ShowErrorMessage(string title, string text, Action onClose)
 		{
+			// TODO: Add error box.
+#if false
+			_ErrorBox.visible = true;
+			_ErrorTitle.label = title;
+			_ErrorDescription.label = text;
 
+			_ErrorBoxClose.clicked += CloseErrorBox;
+			_ErrorBoxClose.clicked += onClose;
+#endif
 		}
 
-		// Opens the authentification menu and preparing it for connection.
-		private void OpenAuthScreen()
+		private void CloseErrorBox()
 		{
-			// Add confirm button call to execute
+			_ErrorBox.visible = false;
+		}
+
+		private void OpenAuthentificationScreen()
+		{
+			_AuthentificationScreen.visible = true;
 		}
 
 		private async void EnterGameCredentials()
 		{
-			await _NakamaClient.Authenticate("email", "password");
+			string email = _AuthentificationEmail.value;
+			string password = _AuthentificationPassword.value;
+			bool success = await _NakamaClient.Authenticate(email, password);
 
-			// If fail: call OpenAuthScreen
-			// Complete: call CloseAuthScreen
+			// Clear the contents for next time.
+			_AuthentificationEmail.value = string.Empty;
+			_AuthentificationPassword.value = string.Empty;
+
+			if (success)
+			{
+				CloseAuthentificationScreen();
+			}
+			else
+			{
+				OpenAuthentificationScreen();
+			}
 		}
 
-		private void CloseAuthScreen()
+		private void CloseAuthentificationScreen()
 		{
+			_AuthentificationScreen.visible = false;
+
 			// Close menu and continue loading/open game.
 		}
 

@@ -19,19 +19,30 @@
 
 using Nakama;
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace OpenHellion.Nakama
 {
 	public class NakamaClient : MonoBehaviour
 	{
-		public static UnityEvent OnRequireAuthentification;
+		[Tooltip("Called when Nakama requires authentification.")]
+		public UnityEvent OnRequireAuthentification;
 
-		private Nakama.Client _Client;
+		public bool HasAuthenticated { get; private set; }
+
+		private Client _Client;
 
 		private ISession _Session;
 
-		async void Start()
+		private void Awake()
+		{
+			HasAuthenticated = false;
+			DontDestroyOnLoad(this);
+		}
+
+		private async void Start()
 		{
 			_Client = new Client("http", "127.0.0.1", 7350, "defaultkey");
 			_Client.Timeout = 20;
@@ -44,41 +55,58 @@ namespace OpenHellion.Nakama
 			if (_Session is null)
 			{
 				OnRequireAuthentification.Invoke();
+				HasAuthenticated = false;
 			}
 			else if (_Session.HasExpired(DateTime.UtcNow.AddDays(1)))
 			{
 				try
 				{
-					_Session = await client.SessionRefreshAsync(_Session);
+					_Session = await _Client.SessionRefreshAsync(_Session);
+					HasAuthenticated = true;
 				}
 				catch (ApiResponseException)
 				{
 					Dbg.Log("Nakama session can no longer be refreshed. Must reauthenticate!");
 
 					OnRequireAuthentification.Invoke();
+					HasAuthenticated = false;
 				}
 			}
 		}
 
 		// Authenticates and saves the result.
-		public async void Authenticate(string email, string password)
+		public async Task<bool> Authenticate(string email, string password)
 		{
-			_Session = await _Client.AuthenticateEmailAsync(email, password);
-			Dbg.Log(_Session);
+			return await Task.Run(() =>
+			{
+				try
+				{
+					_Session = _Client.AuthenticateEmailAsync(email, password).Result;
+					Dbg.Log(_Session);
 
-			PlayerPrefs.SetString("authToken", _Session.AuthToken);
-			PlayerPrefs.SetString("refreshToken", _Session.RefreshToken);
+					PlayerPrefs.SetString("authToken", _Session.AuthToken);
+					PlayerPrefs.SetString("refreshToken", _Session.RefreshToken);
+					HasAuthenticated = true;
+					return true;
+				}
+				catch (Exception ex)
+				{
+					Debug.LogError("Failed to authenticate user: " + ex.Message);
+					HasAuthenticated = false;
+					return false;
+				}
+			});
 		}
 
-		public async String GetUserId()
+		public string GetUserId()
 		{
-			var account = await _Client.GetAccountAsync(session);
-			return account.User.UserId;
+			var account = _Client.GetAccountAsync(_Session).Result;
+			return account.User.Id;
 		}
 
-		public async String GetUsername()
+		public string GetUsername()
 		{
-			var account = await _Client.GetAccountAsync(session);
+			var account = _Client.GetAccountAsync(_Session).Result;
 			return account.User.Username;
 		}
 	}

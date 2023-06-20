@@ -22,6 +22,9 @@ using ZeroGravity;
 using OpenHellion.RichPresence;
 using System;
 using OpenHellion.UI;
+using System.Collections;
+using OpenHellion.Nakama;
+using UnityEngine.SceneManagement;
 
 namespace OpenHellion
 {
@@ -38,6 +41,7 @@ namespace OpenHellion
 
 		[SerializeField] private StartupGUI _StartupGUI;
 		[SerializeField] private SceneLoader _SceneLoader;
+		[SerializeField] private NakamaClient _NakamaClient;
 
 		public static SceneLoadTypeValue SceneLoadType = SceneLoadTypeValue.PreloadWithCopy;
 
@@ -57,7 +61,7 @@ namespace OpenHellion
 				}
 			}
 		}
-
+		
 		private void Start()
 		{
 			HiResTime.Start();
@@ -70,15 +74,22 @@ namespace OpenHellion
 			}
 			else if (SystemInfo.systemMemorySize < 4000 || SystemInfo.processorFrequency < 2000)
 			{
-				Dbg.Error("System has invalid specifcations. Exiting...");
+				Dbg.Error("System has invalid spesifications. Exiting...");
 				_StartupGUI.ShowErrorMessage(Localization.SystemError, Localization.InvalidSystemSpesifications, Application.Quit);
 				HiResTime.Stop();
 			}
 			else
 			{
 				_SceneLoader.InitializeScenes();
-				//SceneManager.LoadScene("Client", LoadSceneMode.Single);
+				StartCoroutine(CheckStartGame());
 			}
+		}
+
+		// Start game when we are done preloading and we have authenticated with Nakama.
+		private IEnumerator CheckStartGame()
+		{
+			yield return new WaitWhile(() => _SceneLoader.IsPreloading || !_NakamaClient.HasAuthenticated);
+			SceneManager.LoadScene("Client", LoadSceneMode.Single);
 		}
 	}
 }
