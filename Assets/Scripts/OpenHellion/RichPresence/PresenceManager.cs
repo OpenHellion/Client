@@ -85,18 +85,6 @@ namespace OpenHellion.RichPresence
 		}
 
 		/// <summary>
-		/// 	If any of the underlying providers is initialized.
-		/// </summary>
-		public static bool AnyInitialised
-		{
-			get
-			{
-				if (Instance.m_MainProvider == null) return false;
-				return true;
-			}
-		}
-
-		/// <summary>
 		/// 	Get the id of our local player with a prefix. The prefix tells us what provider it is from.
 		/// </summary>
 		public static string NativeId
@@ -193,8 +181,7 @@ namespace OpenHellion.RichPresence
 			// Exit game if no providers could be found.
 			if (m_MainProvider == null)
 			{
-				Dbg.Error("No provider could be found.");
-				Application.Quit();
+				Dbg.Error("No external provider could be found.");
 				return;
 			}
 

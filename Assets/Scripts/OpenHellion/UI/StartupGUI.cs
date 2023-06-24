@@ -65,8 +65,14 @@ namespace OpenHellion.UI
 			_AuthentificationPassword = uiDocument.rootVisualElement.Q("Password") as TextField;
 			_AuthentificateButton = uiDocument.rootVisualElement.Q("AuthenticateButton") as Button;
 
+			_ErrorBox = uiDocument.rootVisualElement.Q("ErrorBox");
+			_ErrorTitle = uiDocument.rootVisualElement.Q("ErrorTitle") as TextField;
+			_ErrorDescription = uiDocument.rootVisualElement.Q("ErrorDescription") as TextField;
+			_ErrorBoxClose = uiDocument.rootVisualElement.Q("ErrorBoxClose") as Button;
+
 			_PreloadBackground.visible = false;
 			_AuthentificationScreen.visible = false;
+			_ErrorBox.visible = false;
 
 			_AuthentificateButton.clicked += EnterGameCredentials;
 		}
@@ -75,19 +81,17 @@ namespace OpenHellion.UI
 		{
 			CloseAuthentificationScreen();
 			ClosePreloading();
+			CloseErrorBox();
 		}
 
 		public void ShowErrorMessage(string title, string text, Action onClose)
 		{
-			// TODO: Add error box.
-#if false
 			_ErrorBox.visible = true;
 			_ErrorTitle.label = title;
 			_ErrorDescription.label = text;
 
 			_ErrorBoxClose.clicked += CloseErrorBox;
 			_ErrorBoxClose.clicked += onClose;
-#endif
 		}
 
 		private void CloseErrorBox()

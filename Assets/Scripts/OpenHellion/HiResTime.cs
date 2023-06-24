@@ -23,7 +23,7 @@ using System.Diagnostics;
 namespace OpenHellion
 {
 	/// <summary>
-	/// 	High-Resolution time. Counts milliseconds and uses a long.
+	/// 	High-Resolution time. Counts milliseconds and uses a long to store this.
 	/// 	This should make it be able to run continuously for 300 000 000 years.
 	/// 	Perhaps slightly overkill.
 	/// </summary>

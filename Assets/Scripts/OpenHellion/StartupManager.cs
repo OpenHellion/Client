@@ -19,12 +19,12 @@
 
 using UnityEngine;
 using ZeroGravity;
-using OpenHellion.RichPresence;
 using System;
 using OpenHellion.UI;
 using System.Collections;
 using OpenHellion.Nakama;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 namespace OpenHellion
 {
@@ -60,19 +60,15 @@ namespace OpenHellion
 					SceneLoadType = (SceneLoadTypeValue)property;
 				}
 			}
+
+			_NakamaClient.OnError.AddListener(HandleNakamaError);
 		}
 		
 		private void Start()
 		{
 			HiResTime.Start();
 
-			if (!PresenceManager.AnyInitialised)
-			{
-				Dbg.Error("No external provider could be found. Exiting...");
-				_StartupGUI.ShowErrorMessage(Localization.SystemError, Localization.NoProvider, Application.Quit);
-				HiResTime.Stop();
-			}
-			else if (SystemInfo.systemMemorySize < 4000 || SystemInfo.processorFrequency < 2000)
+			if (SystemInfo.systemMemorySize < 4000 || SystemInfo.processorFrequency < 2000)
 			{
 				Dbg.Error("System has invalid spesifications. Exiting...");
 				_StartupGUI.ShowErrorMessage(Localization.SystemError, Localization.InvalidSystemSpesifications, Application.Quit);
@@ -83,6 +79,11 @@ namespace OpenHellion
 				_SceneLoader.InitializeScenes();
 				StartCoroutine(CheckStartGame());
 			}
+		}
+
+		private void HandleNakamaError(string text, Action action)
+		{
+			_StartupGUI.ShowErrorMessage(Localization.SystemError, text, action);
 		}
 
 		// Start game when we are done preloading and we have authenticated with Nakama.

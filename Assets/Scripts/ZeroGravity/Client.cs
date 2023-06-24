@@ -2152,12 +2152,6 @@ namespace ZeroGravity
 		/// </summary>
 		public IEnumerator PlaySPCoroutine(string filename = null)
 		{
-			if (!PresenceManager.AnyInitialised)
-			{
-				ShowMessageBox(Localization.Error, Localization.NoProvider);
-				yield break;
-			}
-
 			// Enable loading screen.
 			CanvasManager.SelectScreen(CanvasManager.Screen.Loading);
 			yield return null;

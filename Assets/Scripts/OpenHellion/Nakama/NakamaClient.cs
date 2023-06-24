@@ -29,6 +29,7 @@ namespace OpenHellion.Nakama
 	{
 		[Tooltip("Called when Nakama requires authentification.")]
 		public UnityEvent OnRequireAuthentification;
+		public UnityEvent<string, Action> OnError;
 
 		public bool HasAuthenticated { get; private set; }
 
@@ -89,6 +90,7 @@ namespace OpenHellion.Nakama
 				catch (Exception ex)
 				{
 					Debug.LogError("Failed to authenticate user: " + ex.Message);
+					OnError.Invoke(ex.Message, null);
 					HasAuthenticated = false;
 					return false;
 				}
