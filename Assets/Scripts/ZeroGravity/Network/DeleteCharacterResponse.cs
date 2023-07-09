@@ -1,3 +1,4 @@
+using OpenHellion.Networking.Message;
 using OpenHellion.Networking.Message.MainServer;
 using ProtoBuf;
 

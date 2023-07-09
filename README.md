@@ -2,8 +2,8 @@
 ![Image of the Hellion Project open in the Unity game engine.](https://user-images.githubusercontent.com/37084190/196989422-4079d0fe-c16a-416b-80f7-27df3077c366.png)
 
 This is the client for the Hellion game. It is the main part of the game, with the server always accompanying the client in every release.
-In the basegame, the server is located in the HELLION_SP folder, and contains data such as world saves.
-A [separate repository](https://github.com/Hellion-Revived/Hellion_SP) for the development of the single player server also exists.
+In the base game, the server is located in the HELLION_SP folder, and contains data such as world saves.
+A [separate repository](https://github.com/OpenHellion/Server) for the development of the game server also exists.
 
 ## About Hellion
 Hellion Revived is a multiplayer game set in space. You're a part of a mission-gone-wrong to colonise the nearest star. The goal is to survive in space, and to do such you need to follow some quests. The game is an open-world sandbox game, and have features that allow you to build and manage your own space stations and ships.
@@ -33,11 +33,15 @@ You will now have the whole project at your hands.
 Processor and graphics card shouldn't matter much, but it has to at least run Unity; Settings can be modified to increase performance.
 
 ## Coding style and conventions
-It is recommended to follow the Unity [style guide](https://resources.unity.com/games/create-code-style-guide-e-book) when writing code for the project, as well as learning about [programming patterns](https://resources.unity.com/games/level-up-your-code-with-game-programming-patterns).
+It is recommended to read the Unity [style guide](https://resources.unity.com/games/create-code-style-guide-e-book) before writing code for the project, as well as learning about [programming patterns](https://resources.unity.com/games/level-up-your-code-with-game-programming-patterns).
+
+A rule of thumb when working with this project is to look at other code in the OpenHellion folder when in doubt.
 
 ## License
-All software written by members of the Hellion-Revived project and affiliates is licenced under GPL-3.0.
+All code written by members of the OpenHellion project and affiliates is licenced under GPL-3.0.
 
-All remaining files by members of the Hellion-Revived project and affiliates, not falling under the definition of "software", is licensed under CC BY-SA 4.0.
+All media and assets by members of the OpenHellion project and affiliates, excluding code, is licensed under CC BY-SA 4.0.
+
+Content not produced by members of the OpenHellion project and affiliates belong to their respective authors. No copyright infringement intended.
 
 Resources in the Assets/Plugins and Assets/Wwise folders are licensed under their own terms.

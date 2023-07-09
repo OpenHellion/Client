@@ -37,16 +37,12 @@ namespace ZeroGravity
 			None,
 			Loading,
 			ConnectingToMain,
-			FindingPlayer,
-			NewPlayer,
 			SigningIn,
 			ConnectingToGame
 		}
 
 		public enum StartingPointOption
 		{
-			StandardGameMod,
-			SandboxGameMod,
 			NewGame,
 			FreshStart,
 			Continue,
@@ -544,7 +540,7 @@ namespace ZeroGravity
 
 		public void ToggleLoadingScreen(LoadingScreenType type)
 		{
-			LoadingCanvas.Activate(type != LoadingScreenType.None);
+			LoadingCanvas.SetActive(type is not LoadingScreenType.None);
 			LoadingScreenText.text = type.ToLocalizedString();
 			Client.Instance.LastLoadingTipsChangeTime = Time.realtimeSinceStartup;
 		}

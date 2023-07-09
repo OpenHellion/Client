@@ -23,7 +23,6 @@ using ZeroGravity;
 using Discord;
 using OpenHellion.Networking.Message;
 using OpenHellion.IO;
-using static Discord.UserManager;
 
 namespace OpenHellion.RichPresence
 {
@@ -33,7 +32,7 @@ namespace OpenHellion.RichPresence
 	/// <seealso cref="SteamProvider"/>
 	internal class DiscordProvider : IPresenceProvider
 	{
-		private static readonly Dictionary<long, string> s_Planets = new Dictionary<long, string>
+		private static readonly Dictionary<long, string> Planets = new()
 		{
 			{ 1L, "Hellion" },
 			{ 2L, "Nimath" },
@@ -56,62 +55,52 @@ namespace OpenHellion.RichPresence
 			{ 19L, "Ia" }
 		};
 
-		private static readonly List<string> s_Descriptions = new List<string> { "Building a huuuuuge station", "Mining _Asteroids", "In a salvaging mission", "Doing a piracy job", "Repairing a hull breach" };
+		private static readonly List<string> Descriptions = new() { "Building a huuuuuge station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job", "Repairing a hull breach" };
 
-		private const long m_clientId = 349114016968474626L;
-		private const uint m_optionalSteamId = 588210;
+		private const long ClientId = 349114016968474626L;
+		private const uint OptionalSteamId = 588210;
 
-		private Discord.Discord m_Discord;
-		private ActivityManager m_ActivityManager;
-		private RelationshipManager m_RelationshipManager;
-		private UserManager m_UserManager;
+		private Discord.Discord _discord;
+		private ActivityManager _activityManager;
+		private UserManager _userManager;
 
-		private User m_JoinUser;
-		private Activity m_Activity = new();
-
-		public CurrentUserUpdateHandler OnUserUpdate
-		{
-			set
-			{
-				m_UserManager.OnCurrentUserUpdate += value;
-			}
-		}
+		private User _joinUser;
+		private Activity _activity;
 
 		bool IPresenceProvider.Initialise()
 		{
 			// Init Discord API.
 			try
 			{
-				m_Discord = new(m_clientId, (ulong)CreateFlags.NoRequireDiscord);
+				_discord = new(ClientId, (ulong)CreateFlags.NoRequireDiscord);
 			}
 			catch (ResultException)
 			{
 				return false;
 			}
 
-			m_Discord.SetLogHook(LogLevel.Debug, (level, message) =>
+			_discord.SetLogHook(LogLevel.Debug, (level, message) =>
 			{
 				Dbg.Log("Log[{0}] {1}", level, message);
 			});
 
-			m_ActivityManager = m_Discord.GetActivityManager();
+			_activityManager = _discord.GetActivityManager();
 
 			// Required to work with Steam.
-			m_ActivityManager.RegisterSteam(m_optionalSteamId);
-			m_ActivityManager.RegisterCommand();
+			_activityManager.RegisterSteam(OptionalSteamId);
+			_activityManager.RegisterCommand();
 
 			// Callbacks.
-			m_ActivityManager.OnActivitySpectate += JoinCallback;
-			m_ActivityManager.OnActivityJoin += JoinCallback;
-			m_ActivityManager.OnActivityInvite += InviteCallback;
-			m_ActivityManager.OnActivityJoinRequest += JoinRequestCallback;
+			_activityManager.OnActivitySpectate += JoinCallback;
+			_activityManager.OnActivityJoin += JoinCallback;
+			_activityManager.OnActivityInvite += InviteCallback;
+			_activityManager.OnActivityJoinRequest += JoinRequestCallback;
 
-			m_RelationshipManager = m_Discord.GetRelationshipManager();
-			m_UserManager = m_Discord.GetUserManager();
+			_userManager = _discord.GetUserManager();
 
 			Dbg.Log("Discord API initialised.");
 
-			m_Discord.RunCallbacks();
+			_discord.RunCallbacks();
 
 			return true;
 		}
@@ -123,7 +112,7 @@ namespace OpenHellion.RichPresence
 
 		void IPresenceProvider.Update()
 		{
-			m_Discord.RunCallbacks();
+			_discord.RunCallbacks();
 		}
 
 		// When we are joining a game.
@@ -144,7 +133,7 @@ namespace OpenHellion.RichPresence
 		private void InviteCallback(ActivityActionType Type, ref User user, ref Activity activity2)
 		{
 			// TODO: Make this safer.
-			m_ActivityManager.AcceptInvite(user.Id, result =>
+			_activityManager.AcceptInvite(user.Id, result =>
 			{
 				Dbg.Log("AcceptInvite {0}", result);
 			});
@@ -154,7 +143,7 @@ namespace OpenHellion.RichPresence
 		private void JoinRequestCallback(ref User user)
 		{
 			Dbg.Log(string.Format("Discord: Join request {0}#{1}: {2}", user.Username, user.Discriminator, user.Id));
-			m_JoinUser = user;
+			_joinUser = user;
 
 			RequestRespondYes();
 		}
@@ -162,7 +151,7 @@ namespace OpenHellion.RichPresence
 		private void RequestRespondYes()
 		{
 			Dbg.Log("Discord: Responding yes to Ask to Join request");
-			m_ActivityManager.SendRequestReply(m_JoinUser.Id, ActivityJoinRequestReply.Yes, res =>
+			_activityManager.SendRequestReply(_joinUser.Id, ActivityJoinRequestReply.Yes, res =>
 			{
 				if (res == Result.Ok)
 				{
@@ -174,7 +163,7 @@ namespace OpenHellion.RichPresence
 		private void RequestRespondNo()
 		{
 			Dbg.Log("Discord: Responding no to Ask to Join request");
-			m_ActivityManager.SendRequestReply(m_JoinUser.Id, ActivityJoinRequestReply.No, res =>
+			_activityManager.SendRequestReply(_joinUser.Id, ActivityJoinRequestReply.No, res =>
 			{
 				if (res == Result.Ok)
 				{
@@ -186,7 +175,7 @@ namespace OpenHellion.RichPresence
 		void IPresenceProvider.Destroy()
 		{
 			Dbg.Log("Discord: Shutdown");
-			m_Discord?.Dispose();
+			_discord?.Dispose();
 		}
 
 		/// <inheritdoc/>
@@ -196,70 +185,70 @@ namespace OpenHellion.RichPresence
 			{
 				if (Client.Instance != null && Client.Instance.SinglePlayerMode)
 				{
-					m_Activity.State = "Playing single player game";
-					m_Activity.Details = "Having so much fun.";
-					m_Activity.Assets.LargeImage = "cover";
-					m_Activity.Assets.LargeText = string.Empty;
-					m_Activity.Assets.SmallImage = string.Empty;
-					m_Activity.Assets.SmallText = string.Empty;
-					m_Activity.Secrets.Join = string.Empty;
-					m_Activity.Party.Size.CurrentSize = 0;
-					m_Activity.Party.Size.MaxSize = 0;
-					m_Activity.Party.Id = string.Empty;
+					_activity.State = "Playing single player game";
+					_activity.Details = "Having so much fun.";
+					_activity.Assets.LargeImage = "cover";
+					_activity.Assets.LargeText = string.Empty;
+					_activity.Assets.SmallImage = string.Empty;
+					_activity.Assets.SmallText = string.Empty;
+					_activity.Secrets.Join = string.Empty;
+					_activity.Party.Size.CurrentSize = 0;
+					_activity.Party.Size.MaxSize = 0;
+					_activity.Party.Id = string.Empty;
 				}
 				else if (MyPlayer.Instance != null && MyPlayer.Instance.PlayerReady)
 				{
-					m_Activity.Secrets.Join = Client.Instance.GetInviteString(null);
-					m_Activity.Assets.LargeText = Localization.InGameDescription + ": " + Client.LastConnectedServer.Name;
-					m_Activity.Details = s_Descriptions[UnityEngine.Random.Range(0, s_Descriptions.Count - 1)];
+					_activity.Secrets.Join = Client.Instance.GetInviteString(null);
+					_activity.Assets.LargeText = Localization.InGameDescription + ": " + Client.LastConnectedServer.Name;
+					_activity.Details = Descriptions[UnityEngine.Random.Range(0, Descriptions.Count - 1)];
 					ArtificialBody artificialBody = MyPlayer.Instance.Parent as ArtificialBody;
 					if (artificialBody != null && artificialBody.ParentCelesitalBody != null)
 					{
 						string value;
-						if (s_Planets.TryGetValue(artificialBody.ParentCelesitalBody.GUID, out value))
+						if (Planets.TryGetValue(artificialBody.ParentCelesitalBody.GUID, out value))
 						{
-							m_Activity.Assets.LargeImage = artificialBody.ParentCelesitalBody.GUID.ToString();
+							_activity.Assets.LargeImage = artificialBody.ParentCelesitalBody.GUID.ToString();
 						}
 						else
 						{
-							m_Activity.Assets.LargeImage = "default";
+							_activity.Assets.LargeImage = "default";
 							value = artificialBody.ParentCelesitalBody.Name;
 						}
 
 						if (artificialBody is Ship && (artificialBody as Ship).IsWarpOnline)
 						{
-							m_Activity.State = Localization.WarpingNear + " " + value.ToUpper();
+							_activity.State = Localization.WarpingNear + " " + value.ToUpper();
 						}
 						else if (artificialBody is Pivot)
 						{
-							m_Activity.State = Localization.FloatingFreelyNear + " " + value.ToUpper();
+							_activity.State = Localization.FloatingFreelyNear + " " + value.ToUpper();
 						}
 						else
 						{
-							m_Activity.State = Localization.OrbitingNear + " " + value.ToUpper();
+							_activity.State = Localization.OrbitingNear + " " + value.ToUpper();
 						}
 					}
-					m_Activity.Assets.SmallImage = Client.Instance.CurrentGender.ToLocalizedString().ToLower();
-					m_Activity.Assets.SmallText = MyPlayer.Instance.PlayerName;
-					m_Activity.Party.Size.CurrentSize = Client.LastConnectedServer.CurrentPlayers + 1;
-					m_Activity.Party.Size.MaxSize = Client.LastConnectedServer.MaxPlayers;
-					m_Activity.Party.Id = Client.LastConnectedServer.Hash.ToString();
+					_activity.Assets.SmallImage = Client.Instance.CurrentGender.ToLocalizedString().ToLower();
+					_activity.Assets.SmallText = MyPlayer.Instance.PlayerName;
+					_activity.Party.Size.CurrentSize = Client.LastConnectedServer.CurrentPlayers + 1;
+					_activity.Party.Size.MaxSize = Client.LastConnectedServer.MaxPlayers;
+					_activity.Party.Id = Client.LastConnectedServer.Hash.ToString();
 				}
 				else
 				{
-					m_Activity.State = "In Menus";
-					m_Activity.Details = "Launch Sequence Initiated";
-					m_Activity.Assets.LargeImage = "cover";
-					m_Activity.Assets.LargeText = string.Empty;
-					m_Activity.Assets.SmallImage = string.Empty;
-					m_Activity.Assets.SmallText = string.Empty;
-					m_Activity.Secrets.Join = string.Empty;
-					m_Activity.Party.Size.CurrentSize = 0;
-					m_Activity.Party.Size.MaxSize = 0;
-					m_Activity.Party.Id = string.Empty;
+					_activity.State = "In Menus";
+					_activity.Details = "Launch Sequence Initiated";
+					_activity.Assets.LargeImage = "cover";
+					_activity.Assets.LargeText = string.Empty;
+					_activity.Assets.SmallImage = string.Empty;
+					_activity.Assets.SmallText = string.Empty;
+					_activity.Secrets.Join = string.Empty;
+					_activity.Party.Size.CurrentSize = 0;
+					_activity.Party.Size.MaxSize = 0;
+					_activity.Party.Id = string.Empty;
 				}
 
-				m_ActivityManager.UpdateActivity(m_Activity, result => {});
+				_activityManager.UpdateActivity(_activity, result => {});
 			}
 			catch (Exception ex)
 			{
@@ -268,25 +257,12 @@ namespace OpenHellion.RichPresence
 		}
 
 		/// <inheritdoc/>
-		public bool GetAchievement(AchievementID id, out bool achieved)
-		{
-			achieved = false;
-			return false;
-		}
-
-		/// <inheritdoc/>
-		public void SetAchievement(AchievementID id)
-		{
-
-		}
-
-		/// <inheritdoc/>
 		public string GetUsername()
 		{
 			User user;
 			try
 			{
-				user = m_UserManager.GetCurrentUser();
+				user = _userManager.GetCurrentUser();
 			}
 			catch (ResultException ex)
 			{
@@ -295,92 +271,6 @@ namespace OpenHellion.RichPresence
 			}
 
 			return user.Username;
-		}
-
-		/// <inheritdoc/>
-		public string GetPrefixedNativeId()
-		{
-			User user;
-			try
-			{
-				user = m_UserManager.GetCurrentUser();
-			}
-			catch (ResultException ex)
-			{
-				Dbg.Error("Error when getting discord user.", ex);
-				return null;
-			}
-
-			return "d" + user.Id.ToString();
-		}
-
-		/// <inheritdoc/>
-		public string GetNativeId()
-		{
-			User user;
-			try
-			{
-				user = m_UserManager.GetCurrentUser();
-			}
-			catch (ResultException ex)
-			{
-				Dbg.Error("Error when getting discord user.", ex);
-				return null;
-			}
-
-			return user.Id.ToString();
-		}
-
-		/// <inheritdoc/>
-		public IPresenceProvider.Friend[] GetFriends()
-		{
-			// Filter our list of relationships to users online and friends of us.
-			m_RelationshipManager.Filter((ref Relationship relationship) =>
-			{
-				return relationship.Type == RelationshipType.Friend;
-			});
-
-			List<IPresenceProvider.Friend> friends = new();
-
-			// Get all relationships.
-			for (uint i = 0; i < m_RelationshipManager.Count(); i++)
-			{
-				// Get an individual relationship from the list.
-				Relationship r = m_RelationshipManager.GetAt(i);
-
-				// Add the relationship to our friends list.
-				friends.Add(new IPresenceProvider.Friend
-				{
-					NativeId = "d" + r.User.Id.ToString(),
-					Name = r.User.Username,
-					Status = r.Presence.Status == Status.Online ? IPresenceProvider.FriendStatus.ONLINE : IPresenceProvider.FriendStatus.OFFLINE
-				});
-			}
-
-			return friends.ToArray();
-		}
-
-		/// <inheritdoc/>
-		public Texture2D GetAvatar(string id)
-		{
-			Texture2D texture = Resources.Load<Texture2D>("UI/default_avatar");
-
-			// Check for correct prefix.
-			if (!id.StartsWith("d"))
-			{
-				return texture;
-			}
-
-			// Read the id without the prefix.
-			m_Discord.GetImageManager().Fetch(ImageHandle.User(long.Parse(id[1..])), false, (result, handle) =>
-			{
-				if (result == Result.Ok)
-				{
-					texture = m_Discord.GetImageManager().GetTexture(handle);
-				}
-			});
-
-			return texture;
 		}
 
 		/// <inheritdoc/>
@@ -394,12 +284,12 @@ namespace OpenHellion.RichPresence
 
 			Dbg.Log("Inviting user through Discord.");
 
-			m_Activity.Secrets.Join = secret;
-			m_Activity.Secrets.Spectate = secret;
-			m_ActivityManager.UpdateActivity(m_Activity, result => {});
+			_activity.Secrets.Join = secret;
+			_activity.Secrets.Spectate = secret;
+			_activityManager.UpdateActivity(_activity, result => {});
 
 			// Read the id without the prefix.
-			m_ActivityManager.SendInvite(long.Parse(id[1..]), ActivityActionType.Join, "You have been invited to play Hellion!", result =>
+			_activityManager.SendInvite(long.Parse(id[1..]), ActivityActionType.Join, "You have been invited to play Hellion!", result =>
 			{
 				if (result == Result.Ok)
 				{

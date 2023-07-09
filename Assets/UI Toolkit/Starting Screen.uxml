@@ -7,18 +7,32 @@
             <ui:Label display-tooltip-when-elided="true" name="TipText" text="Quibusdam ducimus porro expedita esse est eius hic. Aliquam architecto et reiciendis facilis dolorem et a. Ipsam commodi laudantium distinctio praesentium optio nostrum cupiditate sit." style="-unity-font: resource(&apos;Fonts/MainMenuRegular&apos;); font-size: 16%; -unity-text-align: middle-center; white-space: normal; color: rgba(255, 255, 255, 0.71); margin-bottom: 0; width: 80%; margin-left: 0; margin-right: 0; margin-top: 0;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="Popup" style="align-items: center; justify-content: center; width: 100%; height: 100%; display: flex; position: absolute;">
-        <ui:VisualElement name="AuthentificationScreen" style="width: 30%; height: 60%; background-color: rgba(2, 2, 2, 0.94); padding-left: 1%; padding-right: 1%; padding-top: 5px; padding-bottom: 30px; justify-content: flex-start; align-items: stretch; flex-direction: column; display: none;">
+    <ui:VisualElement name="Popups" style="align-items: center; justify-content: center; width: 100%; height: 100%; display: flex; position: absolute;">
+        <ui:VisualElement name="SignInScreen" style="width: 30%; height: 60%; background-color: rgba(2, 2, 2, 0.94); padding-left: 1%; padding-right: 1%; padding-top: 5px; padding-bottom: 30px; justify-content: flex-start; align-items: stretch; flex-direction: column; position: absolute;">
             <ui:VisualElement name="HellionLogo" style="background-image: url(&apos;project://database/Assets/Generic/Texture2D/hellionLogo.png?fileID=2800000&amp;guid=20a95a8955fdbb54e939df9610b109b1&amp;type=3#hellionLogo&apos;); -unity-background-scale-mode: scale-to-fit; width: 100%; height: 25%;" />
             <ui:Label text="ENTER USER ACCOUNT CREDENTIALS" display-tooltip-when-elided="true" class="main-menu-header" style="margin-bottom: 6%;" />
-            <ui:TextField picking-mode="Ignore" label="User Email" text="email@example.com" name="Email" style="margin-bottom: 6%;" />
-            <ui:TextField picking-mode="Ignore" label="User Password" name="Password" mask-character="•" style="margin-bottom: 6%;" />
-            <ui:VisualElement focusable="true" style="justify-content: center; align-items: center; bottom: 5%; position: absolute; left: 0; right: 0;">
+            <ui:TextField picking-mode="Ignore" label="User Email" name="Email" max-length="256" style="margin-bottom: 6%;" />
+            <ui:TextField label="User Password" name="Password" mask-character="*" password="true" max-length="120" style="margin-bottom: 6%;" />
+            <ui:VisualElement focusable="true" style="justify-content: space-around; align-items: center; bottom: 5%; position: absolute; left: 0; right: 0; flex-direction: row;">
+                <ui:Button display-tooltip-when-elided="true" name="CreateAccountScreenButton" text="Create account" class="hellion-button" style="-unity-font: resource(&apos;Fonts/MainMenuRegular&apos;);" />
                 <ui:Button text="Sign In" display-tooltip-when-elided="true" name="AuthenticateButton" class="hellion-button" style="-unity-font: resource(&apos;Fonts/MainMenuRegular&apos;);" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="ErrorBox" style="background-color: rgba(0, 0, 0, 0.68); width: 40%; height: 40%; padding-left: 1%; padding-right: 1%; padding-top: 2%; padding-bottom: 2%;">
-            <ui:Label text="Label" display-tooltip-when-elided="true" name="ErrorTitle" class="main-menu-header" style="margin-bottom: 2%;" />
+        <ui:VisualElement name="CreateAccountScreen" style="width: 30%; height: 60%; background-color: rgba(2, 2, 2, 0.94); padding-left: 1%; padding-right: 1%; padding-top: 5px; padding-bottom: 30px; justify-content: flex-start; align-items: stretch; flex-direction: column; position: absolute;">
+            <ui:VisualElement name="HellionLogo" style="background-image: url(&apos;project://database/Assets/Generic/Texture2D/hellionLogo.png?fileID=2800000&amp;guid=20a95a8955fdbb54e939df9610b109b1&amp;type=3#hellionLogo&apos;); -unity-background-scale-mode: scale-to-fit; width: 100%; height: 25%;" />
+            <ui:Label text="CREATE USER ACCOUNT" display-tooltip-when-elided="true" class="main-menu-header" style="margin-bottom: 6%;" />
+            <ui:TextField picking-mode="Ignore" label="Username" name="Username" max-length="128" style="margin-bottom: 4%;" />
+            <ui:TextField picking-mode="Ignore" label="Display Name" name="DisplayName" max-length="128" style="margin-bottom: 4%;" />
+            <ui:TextField picking-mode="Ignore" label="User Email" name="Email" max-length="256" style="margin-bottom: 4%;" />
+            <ui:TextField label="User Password" name="Password" mask-character="*" password="true" max-length="120" style="margin-bottom: 3%;" />
+            <ui:Toggle label="Do you consent the storage of username, email, language, timezone, and region?" name="Consent" />
+            <ui:VisualElement focusable="true" style="justify-content: space-around; align-items: center; bottom: 5%; position: absolute; left: 0; right: 0; flex-direction: row;">
+                <ui:Button text="Back" display-tooltip-when-elided="true" name="BackButton" class="hellion-button" style="-unity-font: resource(&apos;Fonts/MainMenuRegular&apos;);" />
+                <ui:Button text="Create account" display-tooltip-when-elided="true" name="CreateAccount" class="hellion-button" style="-unity-font: resource(&apos;Fonts/MainMenuRegular&apos;);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="ErrorBox" style="background-color: rgba(0, 0, 0, 0.8); width: 40%; height: 40%; padding-left: 1%; padding-right: 1%; padding-top: 2%; padding-bottom: 2%; position: absolute; visibility: hidden;">
+            <ui:Label text="Label" name="ErrorTitle" class="main-menu-header" style="margin-bottom: 2%;" />
             <ui:Label text="Error text here" name="ErrorDescription" style="font-size: 20px; -unity-text-align: middle-center; color: rgb(255, 255, 255); -unity-font: resource(&apos;Fonts/MainMenuRegular&apos;); white-space: normal; height: 70%;" />
             <ui:VisualElement style="align-items: center; justify-content: center; position: absolute; bottom: 10%; left: 0; right: 0;">
                 <ui:Button text="OK" display-tooltip-when-elided="true" name="ErrorBoxClose" class="hellion-button" />

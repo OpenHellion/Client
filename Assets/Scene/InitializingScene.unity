@@ -227,8 +227,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_SendPointerHoverToParent: 1
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
@@ -268,8 +268,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
@@ -330,9 +330,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: be9e170271ac56ca8ac3d951c167489a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnRequireAuthentification:
+  m_Name:
+  m_EditorClassIdentifier:
+  _OnRequireAuthentication:
+    m_PersistentCalls:
+      m_Calls: []
+  _OnError:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &1130133856
@@ -377,8 +380,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dff90e9837a95324eb6a534c90ad9661, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   _StartupGUI: {fileID: 1216738502}
   _SceneLoader: {fileID: 2063511445}
   _NakamaClient: {fileID: 693752390}
@@ -410,8 +413,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_PanelSettings: {fileID: 11400000, guid: 48f7b5f759a6e6f4a8d7966312285ce2, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 3ee3282381a13c44ab54e2fa04b27ba8,
@@ -442,12 +445,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ca0e3c59ca6ec34bac05c2445bdfda0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   _PreloadImages:
+  - {fileID: 21300000, guid: ec1aa9e88880f9c46a170f034b5312a6, type: 3}
   - {fileID: 21300000, guid: da77ea9e4da469f4dbe642cd4c297198, type: 3}
   - {fileID: 21300000, guid: 24001ef337aff40498219bb450f71331, type: 3}
-  - {fileID: 21300000, guid: ec1aa9e88880f9c46a170f034b5312a6, type: 3}
   - {fileID: 21300000, guid: 2a546a4b9da0c6844a0c4fdacf36f1ab, type: 3}
   - {fileID: 21300000, guid: facd40e18fa03654d8655941cb8c63a7, type: 3}
   _NakamaClient: {fileID: 693752390}
@@ -478,8 +481,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4318f3459b5a5d04cbf9a6ae8ee08bbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   _StartupGUI: {fileID: 1216738502}
 --- !u!4 &2063511446
 Transform:

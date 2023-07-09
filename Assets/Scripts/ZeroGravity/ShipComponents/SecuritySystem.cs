@@ -1,15 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nakama;
 using OpenHellion.Networking;
-using OpenHellion.RichPresence;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
-using OpenHellion.Networking.Message.MainServer;
-using OpenHellion.Networking.Message;
 
 namespace ZeroGravity.ShipComponents
 {
@@ -29,7 +27,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void Awake()
 		{
-			if (m_parentShip == null)
+			if (m_parentShip is null)
 			{
 				m_parentShip = GetComponentInParent<GeometryRoot>().MainObject as Ship;
 			}
@@ -37,7 +35,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void ChangeVesselName(string newName)
 		{
-			if (!(m_parentShip == null) && !newName.IsNullOrEmpty())
+			if (m_parentShip is not null && !newName.IsNullOrEmpty())
 			{
 				NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 				{
@@ -75,7 +73,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void Hack()
 		{
-			if (!(MyPlayer.Instance.CurrentActiveItem == null) && ItemTypeRange.IsHackingTool(MyPlayer.Instance.CurrentActiveItem.Type))
+			if (MyPlayer.Instance.CurrentActiveItem is not null && ItemTypeRange.IsHackingTool(MyPlayer.Instance.CurrentActiveItem.Type))
 			{
 				NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 				{
@@ -85,50 +83,30 @@ namespace ZeroGravity.ShipComponents
 			}
 		}
 
-		public void GetPlayersForAuthorization(bool getFriends, bool getPlayerFromServer, GetInvitedPlayersDelegate onPlayersLoaded)
+		public async void GetPlayersForAuthorization(bool getFriends, bool getPlayerFromServer, GetInvitedPlayersDelegate updatePlayerListUI)
 		{
-			// Cannot be run in singleplayer mode.
+			// Cannot be run in single player mode.
 			if (getFriends && !Client.Instance.SinglePlayerMode)
 			{
 				List<AuthorizedPerson> list = new List<AuthorizedPerson>();
-				GetPlayerIdRequest req = new GetPlayerIdRequest();
 
-				List<IPresenceProvider.Friend> friends = new List<IPresenceProvider.Friend>();
-
-				// Loop through each friend and add it to the list.
-				foreach (IPresenceProvider.Friend friend in PresenceManager.Friends)
+				IApiFriend[] nakamaFriends = await Client.Instance.Nakama.GetFriends();
+				foreach (IApiFriend friend in nakamaFriends)
 				{
-					req.Ids.Add(new GetPlayerIdRequest.Entry {
-						SteamId = PresenceManager.SteamId,
-						DiscordId = PresenceManager.DiscordId
-					});
-
-					friends.Add(friend);
+					// If friend is online, and not already authorised.
+					if (friend.User.Online && AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == friend.User.Id) is null)
+					{
+						list.Add(new AuthorizedPerson
+						{
+							PlayerId = friend.User.Id,
+							IsFriend = true,
+							Name = friend.User.DisplayName,
+							Rank = AuthorizedPersonRank.None
+						});
+					}
 				}
 
-				// This has the added benefit of filtering out all non-players.
-				MSConnection.Post<PlayerIdResponse>(req, (res) => {
-					// Loop through all entries in the same order as before.
-					for (int i = 0; i < res.PlayerIds.Count; i++)
-					{
-						if (res.PlayerIds[i] == "-1") continue;
-
-						// If friend is online, and not already authorised.
-						if (friends[i].Status == IPresenceProvider.FriendStatus.ONLINE && AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == res.PlayerIds[i]) == null)
-						{
-							list.Add(new AuthorizedPerson
-							{
-								PlayerNativeId = friends[i].NativeId,
-								PlayerId = res.PlayerIds[i],
-								IsFriend = true,
-								Name = friends[i].Name,
-								Rank = AuthorizedPersonRank.None
-							});
-						}
-					}
-
-					onPlayersLoaded(list);
-				});
+				updatePlayerListUI(list);
 			}
 
 			if (getPlayerFromServer)
@@ -141,18 +119,18 @@ namespace ZeroGravity.ShipComponents
 						InSceneID = 0
 					}
 				});
-				m_onPlayersLodedDelegate = onPlayersLoaded;
+				m_onPlayersLodedDelegate = updatePlayerListUI;
 			}
 		}
 
 		public void ParseSecurityData(VesselSecurityData data)
 		{
-			if (data == null || m_parentShip == null)
+			if (data is null || m_parentShip is null)
 			{
 				return;
 			}
 			AuthorizedPersonRank originalRank = GetPlayerRank(MyPlayer.Instance);
-			if (m_parentShip.VesselData == null)
+			if (m_parentShip.VesselData is null)
 			{
 				m_parentShip.VesselData = new VesselData();
 			}
@@ -162,7 +140,7 @@ namespace ZeroGravity.ShipComponents
 				Client.Instance.Map.InitializeMapObject(m_parentShip);
 			}
 			AuthorizedPlayers.Clear();
-			if (data.AuthorizedPersonel != null)
+			if (data.AuthorizedPersonel is not null)
 			{
 				foreach (VesselSecurityAuthorizedPerson item in data.AuthorizedPersonel)
 				{
@@ -170,7 +148,6 @@ namespace ZeroGravity.ShipComponents
 					{
 						IsFriend = false,
 						Name = item.Name,
-						PlayerNativeId = item.PlayerNativeId,
 						PlayerId = item.PlayerId,
 						Rank = item.Rank
 					});
@@ -207,7 +184,7 @@ namespace ZeroGravity.ShipComponents
 				return;
 			}
 			List<AuthorizedPerson> list = new List<AuthorizedPerson>();
-			if (data.PlayersOnServer != null && data.PlayersOnServer.Count > 0)
+			if (data.PlayersOnServer is not null && data.PlayersOnServer.Count > 0)
 			{
 				foreach (PlayerOnServerData item in data.PlayersOnServer)
 				{
@@ -216,7 +193,6 @@ namespace ZeroGravity.ShipComponents
 						list.Add(new AuthorizedPerson
 						{
 							IsFriend = false,
-							PlayerNativeId = item.PlayerNativeId,
 							PlayerId = item.PlayerId,
 							Name = item.Name,
 							Rank = AuthorizedPersonRank.None
@@ -232,7 +208,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void UpdateUI()
 		{
-			if (MyPlayer.Instance.LockedToTrigger != null && MyPlayer.Instance.LockedToTrigger.TriggerType == SceneTriggerType.SecurityScreen)
+			if (MyPlayer.Instance.LockedToTrigger is not null && MyPlayer.Instance.LockedToTrigger.TriggerType == SceneTriggerType.SecurityScreen)
 			{
 				Client.Instance.InGamePanels.Security.UpdateUI();
 			}
@@ -240,7 +216,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void UpdateSelfDestructTimer()
 		{
-			if (MyPlayer.Instance.LockedToTrigger != null && MyPlayer.Instance.LockedToTrigger.TriggerType == SceneTriggerType.SecurityScreen)
+			if (MyPlayer.Instance.LockedToTrigger is not null && MyPlayer.Instance.LockedToTrigger.TriggerType == SceneTriggerType.SecurityScreen)
 			{
 				Client.Instance.InGamePanels.Security.RefreshSelfDestructTimer();
 			}

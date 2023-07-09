@@ -20,120 +20,43 @@ using UnityEngine;
 
 namespace OpenHellion.RichPresence
 {
-	// Should be self-contained, and it should therefore not reference any gameplay-related classes.
 	/// <summary>
-	/// 	A system to make the underlying connections to external game providers, such as Steam and Discord.
-	/// 	The point is to make the game be interoperable with any provider of gaming services.
+	/// 	Manages rich presence on Steam and Discord.
+	///		TODO: Support Steam.
 	/// </summary>
 	/// <seealso cref="DiscordProvider"/>
 	/// <seealso cref="SteamProvider"/>
 	/// <seealso cref="IPresenceProvider"/>
 	internal class PresenceManager : MonoBehaviour
 	{
-		private static PresenceManager s_Instance;
+		private static PresenceManager _instance;
 		private static PresenceManager Instance
 		{
 			get
 			{
-				if (s_Instance != null) return s_Instance;
+				if (_instance is not null) return _instance;
 
-				return new GameObject("PresenseManager").AddComponent<PresenceManager>();
+				return new GameObject("PresenceManager").AddComponent<PresenceManager>();
 			}
 		}
 
-		private List<IPresenceProvider> m_AllProviders;
+		public static bool HasSteam { get; private set; }
 
-		// The most important of the two providers.
-		private IPresenceProvider m_MainProvider = null;
-
-		/// <summary>
-		/// 	Get our stream id without a prefix. Returns null if steam is inaccessible.
-		/// </summary>
-		public static string SteamId
-		{
-			get
-			{
-				foreach (IPresenceProvider provider in Instance.m_AllProviders)
-				{
-					if (provider is SteamProvider)
-					{
-						return provider.GetNativeId();
-					}
-				}
-
-				return null;
-			}
-		}
-
-		/// <summary>
-		/// 	Get our discord id without a prefix. Returns null if discord is inaccessible.
-		/// </summary>
-		public static string DiscordId
-		{
-			get
-			{
-				foreach (IPresenceProvider provider in Instance.m_AllProviders)
-				{
-					if (provider is DiscordProvider)
-					{
-						return provider.GetNativeId();
-					}
-				}
-
-				return null;
-			}
-		}
-
-		/// <summary>
-		/// 	Get the id of our local player with a prefix. The prefix tells us what provider it is from.
-		/// </summary>
-		public static string NativeId
-		{
-			get
-			{
-				return Instance.m_MainProvider.GetPrefixedNativeId();
-			}
-		}
-
-		/// <summary>
-		/// 	Get the username of our local player.
-		/// </summary>
-		public static string Username
-		{
-			get
-			{
-				return Instance.m_MainProvider.GetUsername();
-			}
-		}
-
-		/// <summary>
-		/// 	Get a list of all our friends.
-		/// </summary>
-		public static IPresenceProvider.Friend[] Friends
-		{
-			get
-			{
-				return Instance.m_MainProvider.GetFriends();
-			}
-		}
-
-		public static bool HasStarted { get; private set; }
+		private List<IPresenceProvider> _providers;
 
 		void Awake()
 		{
-			HasStarted = false;
-
 			// Only one instance can exist at a time.
-			if (s_Instance != null)
+			if (_instance is not null)
 			{
 				Destroy(gameObject, 0f);
 				Dbg.Error("Tried to create new ProviderManager, but there already exists another manager.");
 			}
-			s_Instance = this;
+			_instance = this;
 
 			DontDestroyOnLoad(gameObject);
 
-			m_AllProviders = new()
+			_providers = new()
 			{
 				new SteamProvider(),
 				new DiscordProvider()
@@ -141,57 +64,30 @@ namespace OpenHellion.RichPresence
 
 			// Initialise our providers.
 			// Loop backwards to prevent an InvalidOperationException.
-			for (int i = m_AllProviders.Count - 1; i >= 0; i--)
+			for (int i = _providers.Count - 1; i >= 0; i--)
 			{
 				// Remove the provider if it doesn't start properly.
-				if (!m_AllProviders[i].Initialise())
+				if (!_providers[i].Initialise())
 				{
-					// Only the discord provider actually sets the HasStarted to true, so if the provider isn't
-					// enabled, we have to enable HasStarted to make sure the program doesn't get stuck loading.
-					if (m_AllProviders[i] is DiscordProvider)
-					{
-						HasStarted = true;
-					}
-
-					m_AllProviders.RemoveAt(i);
-
-					continue;
-				}
-
-				// Enable the custom start callback for the DiscordProvider.
-				if (m_AllProviders[i] is DiscordProvider)
-				{
-					((DiscordProvider)m_AllProviders[i]).OnUserUpdate = () =>
-					{
-						HasStarted = true;
-					};
+					_providers.RemoveAt(i);
 				}
 			}
 
 			// Find our main provider, Steam is preferable.
-			foreach (IPresenceProvider provider in m_AllProviders)
+			foreach (IPresenceProvider provider in _providers)
 			{
-				m_MainProvider = provider;
 				if (provider is SteamProvider)
 				{
+					HasSteam = true;
 					break;
 				}
 			}
-
-			// Exit game if no providers could be found.
-			if (m_MainProvider == null)
-			{
-				Dbg.Error("No external provider could be found.");
-				return;
-			}
-
-			Dbg.Log("Setting main provider to", m_MainProvider);
 		}
 
 		void Start()
 		{
 			// Enable our providers.
-			foreach (IPresenceProvider provider in m_AllProviders)
+			foreach (IPresenceProvider provider in _providers)
 			{
 				provider.Enable();
 			}
@@ -200,7 +96,7 @@ namespace OpenHellion.RichPresence
 		void Update()
 		{
 			// Update our providers.
-			foreach (IPresenceProvider provider in m_AllProviders)
+			foreach (IPresenceProvider provider in _providers)
 			{
 				provider.Update();
 			}
@@ -209,7 +105,7 @@ namespace OpenHellion.RichPresence
 		void OnDestroy()
 		{
 			// Destroy our providers.
-			foreach (IPresenceProvider provider in m_AllProviders)
+			foreach (IPresenceProvider provider in _providers)
 			{
 				provider.Destroy();
 			}
@@ -221,7 +117,7 @@ namespace OpenHellion.RichPresence
 		public static void UpdateStatus()
 		{
 			// Update rich presence for all providers.
-			foreach (IPresenceProvider provider in Instance.m_AllProviders)
+			foreach (IPresenceProvider provider in Instance._providers)
 			{
 				provider.UpdateStatus();
 			}
@@ -232,7 +128,8 @@ namespace OpenHellion.RichPresence
 		/// </summary>
 		public static bool GetAchievement(AchievementID id, out bool achieved)
 		{
-			return Instance.m_MainProvider.GetAchievement(id, out achieved);
+			achieved = false;
+			return false;
 		}
 
 		/// <summary>
@@ -240,7 +137,6 @@ namespace OpenHellion.RichPresence
 		/// </summary>
 		public static void SetAchievement(AchievementID id)
 		{
-			Instance.m_MainProvider.SetAchievement(id);
 		}
 
 		/// <summary>
@@ -248,23 +144,7 @@ namespace OpenHellion.RichPresence
 		/// </summary>
 		public static Texture2D GetAvatar(string id)
 		{
-			foreach (IPresenceProvider provider in Instance.m_AllProviders)
-			{
-				return provider.GetAvatar(id);
-			}
-
 			return Resources.Load<Texture2D>("UI/default_avatar");
-		}
-
-		/// <summary>
-		/// 	Send an invite to a user with a specified id.
-		/// </summary>
-		public static void InviteUser(string id, string secret)
-		{
-			foreach (IPresenceProvider provider in Instance.m_AllProviders)
-			{
-				provider.InviteUser(id, secret);
-			}
 		}
 	}
 }

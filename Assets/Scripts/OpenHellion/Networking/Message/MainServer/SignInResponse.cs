@@ -22,8 +22,9 @@ namespace OpenHellion.Networking.Message.MainServer
 {
 	[Serializable]
 	[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
-	public class SignInResponse : BasicResponse
+	public class SignInResponse
 	{
+		public ResponseResult Result;
 		public ServerDataPacket Server;
 		public string LastSignIn;
 	}

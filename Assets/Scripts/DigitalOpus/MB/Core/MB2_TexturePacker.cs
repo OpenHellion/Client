@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace DigitalOpus.MB.Core
 {
@@ -698,7 +699,7 @@ namespace DigitalOpus.MB.Core
 			List<Vector2> list = new List<Vector2>();
 			for (int i = 0; i < num; i++)
 			{
-				list.Add(new Vector2(UnityEngine.Random.Range(min, max), UnityEngine.Random.Range(min, max) * 5));
+				list.Add(new Vector2(Random.Range(min, max), Random.Range(min, max) * 5));
 			}
 			doPowerOfTwoTextures = true;
 			LOG_LEVEL = MB2_LogLevel.trace;

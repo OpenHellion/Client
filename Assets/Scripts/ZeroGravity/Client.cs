@@ -26,7 +26,7 @@ using OpenHellion.Networking.Message;
 using OpenHellion.IO;
 using OpenHellion;
 using UnityEngine.InputSystem;
-using OpenHellion.Nakama;
+using OpenHellion.Social;
 
 namespace ZeroGravity
 {
@@ -110,13 +110,9 @@ namespace ZeroGravity
 
 		public static int ControlsVersion = 2;
 
-		public static volatile bool IsRunning = false;
-
 		public SolarSystem SolarSystem;
 
 		public CanvasManager CanvasManager;
-
-		public static SignInRequest LastSignInRequest = null;
 
 		public static SignInResponse LastSignInResponse = null;
 
@@ -223,8 +219,6 @@ namespace ZeroGravity
 		[NonSerialized]
 		public Dictionary<long, CharacterInteractionState> CharacterInteractionStatesQueue = new Dictionary<long, CharacterInteractionState>();
 
-		public bool SignInFailed;
-
 		public static volatile bool ForceRespawn = false;
 
 		public static volatile bool IsLogout = false;
@@ -298,6 +292,10 @@ namespace ZeroGravity
 		private Task m_LoadingFinishedTask;
 
 		private Task m_RestoreMapDetailsTask;
+
+		public string UserId { get; private set; }
+
+		public string Username { get; private set; }
 
 		public NakamaClient Nakama { get; private set; }
 
@@ -387,14 +385,8 @@ namespace ZeroGravity
 		}
 
 
-		private void Awake()
+		private async void Awake()
 		{
-			Nakama = FindObjectOfType<NakamaClient>();
-			SceneLoader = FindObjectOfType<SceneLoader>();
-
-			Texture[] emblems = Resources.LoadAll<Texture>("Emblems");
-			SceneVesselEmblem.Textures = emblems.ToDictionary((Texture x) => x.name, (Texture y) => y);
-
 			RCS_THRUST_SENSITIVITY = Properties.GetProperty("rcs_thrust_sensitivity", RCS_THRUST_SENSITIVITY);
 			RCS_ROTATION_SENSITIVITY = Properties.GetProperty("rcs_rotation_sensitivity", RCS_ROTATION_SENSITIVITY);
 			CELESTIAL_BODY_RADIUS_MULTIPLIER = Properties.GetProperty("celestial_body_radius_multiplier", CELESTIAL_BODY_RADIUS_MULTIPLIER);
@@ -411,13 +403,21 @@ namespace ZeroGravity
 			Application.runInBackground = true;
 			MainThreadID = Thread.CurrentThread.ManagedThreadId;
 			s_Instance = this;
-			IsRunning = true;
 			m_OpenMainSceneStarted = false;
+
+			Nakama = FindObjectOfType<NakamaClient>();
+			SceneLoader = FindObjectOfType<SceneLoader>();
+
+			Texture[] emblems = Resources.LoadAll<Texture>("Emblems");
+			SceneVesselEmblem.Textures = emblems.ToDictionary(x => x.name, y => y);
+
+			UserId = await Nakama.GetUserId();
+			Username = await Nakama.GetUsername();
 		}
 
 		private void Start()
 		{
-			ShuffledTexts = Localization.PreloadText.OrderBy((string m) => MathHelper.RandomNextDouble()).ToList().GetEnumerator();
+			ShuffledTexts = Localization.PreloadText.OrderBy(m => MathHelper.RandomNextDouble()).ToList().GetEnumerator();
 			if (ExperimentalGameObject != null)
 			{
 				if (ExperimentalBuild)
@@ -991,12 +991,12 @@ namespace ZeroGravity
 				m_OpenMainSceneStarted = true;
 				InGamePanels.Detach();
 				ToggleCursor(true);
-				if (MyPlayer.Instance != null)
+				if (MyPlayer.Instance is not null)
 				{
 					Destroy(MyPlayer.Instance.gameObject);
 				}
 				SceneManager.LoadScene("Client", LoadSceneMode.Single);
-				if (MainMenuSceneController != null)
+				if (MainMenuSceneController is not null)
 				{
 					MainMenuSceneController.gameObject.SetActive(value: true);
 				}
@@ -1007,7 +1007,7 @@ namespace ZeroGravity
 		{
 			CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
 			ReconnectAutomatically = false;
-			SignInResponseListener(LastSignInResponse);
+			StartMultiplayer(true);
 		}
 
 		public void CloseAllLoadingScreensListener(EventSystem.InternalEventData data)
@@ -1028,7 +1028,7 @@ namespace ZeroGravity
 			m_ReceivedSignInResponse = false;
 			InviteScreen.SetActive(value: true);
 
-			SignIn();
+			StartMultiplayer();
 			CanvasManager.Disclamer.SetActive(value: false);
 
 			yield return new WaitUntil(() => m_ReceivedSignInResponse);
@@ -1091,7 +1091,6 @@ namespace ZeroGravity
 		private void QuitApplication()
 		{
 			if (IsInGame) LogOut();
-			IsRunning = false;
 			OnDestroy();
 			NetworkController.Instance.Disconnect();
 			HiResTime.Stop();
@@ -1205,12 +1204,6 @@ namespace ZeroGravity
 				{
 					QuitApplication();
 				}
-			}
-			if (SignInFailed)
-			{
-				SignInFailed = false;
-				CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
-				ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
 			}
 			if (MyPlayer.Instance != null && MyPlayer.Instance.IsAlive && !CanvasManager.InGameMenuCanvas.activeInHierarchy && k_AutosaveInterval > 0 && SinglePlayerMode && m_LastSPAutosaveTime + (float)k_AutosaveInterval < Time.time)
 			{
@@ -1745,7 +1738,7 @@ namespace ZeroGravity
 			}
 
 			// Get user input for password to server if it is locked.
-			if (server.Locked && serverPassword == null)
+			if (server.Locked && serverPassword is null)
 			{
 				PasswordEnterPanel.SetActive(value: true);
 				PasswordInputField.text = string.Empty;
@@ -1755,12 +1748,12 @@ namespace ZeroGravity
 			}
 
 			// Create new character if you don't have it from before.
-			if (server.CharacterData == null && m_NewCharacterData == null)
+			if (server.CharacterData is null && m_NewCharacterData is null)
 			{
 				CreateCharacterPanel.SetActive(value: true);
 				CurrentGenderText.text = CurrentGender.ToLocalizedString();
 				InventoryCharacterPreview.instance.ResetPosition();
-				CharacterInputField.text = PresenceManager.Username;
+				CharacterInputField.text = Username;
 				CharacterInputField.Select();
 				yield return new WaitWhile(() => CreateCharacterPanel.activeInHierarchy);
 				string newCharacterName = CharacterInputField.text.Trim();
@@ -1899,7 +1892,7 @@ namespace ZeroGravity
 			{
 				Dbg.Error("Server dropped connection.");
 				CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
-				ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
+				ShowMessageBox(Localization.ConnectionError, Localization.NoServerConnection);
 			}
 		}
 
@@ -1907,55 +1900,64 @@ namespace ZeroGravity
 		{
 			CanvasManager.SelectScreen(CanvasManager.Screen.Loading);
 			SinglePlayerMode = false;
-			SignIn();
+			StartMultiplayer();
 		}
 
 		/// <summary>
-		/// 	Sign in to the main server.
+		/// 	Get server to connect to from the main server, then start multiplayer game.
 		/// </summary>
-		private void SignIn()
+		private void StartMultiplayer(bool reconnecting = false)
 		{
 			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.SigningIn);
-			Regex regex = new Regex("[^0-9.]");
 
-			SignInRequest signInRequest = new SignInRequest()
+			SignInResponse signInResponse = LastSignInResponse;
+			if (!reconnecting)
 			{
-				PlayerId = NetworkController.PlayerId,
-				Version = regex.Replace(Application.version, string.Empty),
-				Hash = CombinedHash,
-				JoiningId = InvitedToServerId
-			};
+				Regex regex = new Regex("[^0-9.]");
+				SignInRequest signInRequest = new SignInRequest()
+				{
+					Version = regex.Replace(Application.version, string.Empty),
+					Hash = CombinedHash,
+					JoiningId = InvitedToServerId
+				};
 
-			LastSignInRequest = signInRequest;
-			try
-			{
-				MSConnection.Post<SignInResponse>(signInRequest, SignInResponseListener);
+				try
+				{
+					//  TODO: Send connection message to Nakama.
+					// signInResponse = await Nakama.DoSomething();
+				}
+				catch (Exception)
+				{
+					ShowMessageBox(Localization.ConnectionError, Localization.NoNakamaConnection);
+					OpenMainScreen();
+				}
 			}
-			catch (Exception)
-			{
-				ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
-				OpenMainScreen();
-			}
-		}
 
-		// Set the settings for the server to connect to later.
-		private void SignInResponseListener(SignInResponse signInResponse)
-		{
 			if (ReconnectAutomatically)
 			{
 				return;
 			}
 
-			if (signInResponse == null)
-			{
-				ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
-				Dbg.Error("Sign in responded with null.");
-			}
+			CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
 
-			if (signInResponse.Result == ResponseResult.Success)
+			// TODO: Move this to InitialisingScene.
+			//if (signInResponse.Result is ResponseResult.Error or ResponseResult.AlreadyLoggedInError)
+			//{
+			//	CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
+			//	ShowMessageBox(Localization.ConnectionError, Localization.NoNakamaConnection);
+			//}
+			//else if (signInResponse.Result is ResponseResult.ServerNotFound)
+			//{
+			//	CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
+			//	ShowMessageBox(Localization.ConnectionError, Localization.NoServerConnection);
+			//}
+			//else if (signInResponse.Result is ResponseResult.ClientVersionError)
+			//{
+			//	CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
+			//	ShowMessageBox(Localization.VersionError, Localization.VersionErrorMessage);
+			//}
+			//else
 			{
-				CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
-
 				// Save connection details for later use.
 				LastConnectedServer = new()
 				{
@@ -1970,105 +1972,9 @@ namespace ZeroGravity
 				// Connect to server!
 				ConnectToServer(LastConnectedServer);
 			}
-			else if (signInResponse.Result is ResponseResult.Error or ResponseResult.AlreadyLoggedInError)
-			{
-				CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
-				ShowMessageBox(Localization.ConnectionError, Localization.SignInError);
-			}
-			else if (signInResponse.Result == ResponseResult.ServerNotFound)
-			{
-				ShowMessageBox(Localization.Error, Localization.ServerNotFound);
-			}
-			else if (signInResponse.Result == ResponseResult.ClientVersionError)
-			{
-				ShowMessageBox(Localization.VersionError, Localization.VersionErrorMessage);
-			}
-			else if (signInResponse.Result == ResponseResult.AccountNotFound)
-			{
-				FindPlayerId((res) => SignIn());
-			}
-			else
-			{
-				ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
-			}
 
 			LastSignInResponse = signInResponse;
 			m_ReceivedSignInResponse = true;
-		}
-
-		/// <summary>
-		/// 	Attempts to get player id from the main server by using steam and discord ids. If it doesn't find the id, a new account is created.
-		/// </summary>
-		public void FindPlayerId(Action<PlayerIdResponse> callback)
-		{
-			GetPlayerIdRequest idRequest = new();
-
-			idRequest.Ids.Add(new GetPlayerIdRequest.Entry
-			{
-				SteamId = PresenceManager.SteamId,
-				DiscordId = PresenceManager.DiscordId
-			});
-
-			try
-			{
-				// First time booting, so we need to download id from the main server.
-				MSConnection.Post<PlayerIdResponse>(idRequest, (data) =>
-				{
-					if (data == null)
-					{
-						ShowMessageBox(Localization.SignInError, Localization.ServerUnreachable);
-						return;
-					}
-					CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.FindingPlayer);
-
-					// Get id from server and save it as a PlayerPref.
-					if (data.Result == ResponseResult.Success)
-					{
-						callback(data);
-					}
-					else if (data.Result == ResponseResult.AccountNotFound) // No account exists with that id, so we need to create a new player account.
-					{
-						CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.NewPlayer);
-
-						CreatePlayerRequest createRequest = new()
-						{
-							Name = PresenceManager.Username,
-							Region = Region.Europe,
-							PlayerId = NetworkController.PlayerId,
-							SteamId = PresenceManager.SteamId,
-							DiscordId = PresenceManager.DiscordId
-						};
-
-						// Send request to server.
-						MSConnection.Post<PlayerIdResponse>(createRequest, (data) =>
-						{
-							if (data == null)
-							{
-								ShowMessageBox(Localization.SignInError, Localization.ServerUnreachable);
-								return;
-							}
-
-							if (data.Result == ResponseResult.Success)
-							{
-								Dbg.Log("Successfully created a new player account with id", data.PlayerIds);
-								callback(data);
-							}
-							else
-							{
-								ShowMessageBox(Localization.SignInError, Localization.ServerUnreachable);
-							}
-						});
-					}
-					else
-					{
-						ShowMessageBox(Localization.SignInError, Localization.ServerUnreachable);
-					}
-				});
-			}
-			catch
-			{
-				ShowMessageBox(Localization.ConnectionError, Localization.ServerUnreachable);
-			}
 		}
 
 		public void CreateCharacterButton()
@@ -2228,11 +2134,11 @@ namespace ZeroGravity
 				if (NetworkController.SendTCP(serverStatusRequest, "127.0.0.1", statusPort, out latency, true, true) is ServerStatusResponse serverStatusResponse && serverStatusResponse.Response == ResponseResult.Success)
 				{
 					// Create new character if it doesn't exist.
-					if (serverStatusResponse.CharacterData == null)
+					if (serverStatusResponse.CharacterData is null)
 					{
 						serverStatusResponse.CharacterData = new CharacterData
 						{
-							Name = PresenceManager.Username,
+							Name = Username,
 							Gender = Gender.Male,
 							HairType = 1,
 							HeadType = 1

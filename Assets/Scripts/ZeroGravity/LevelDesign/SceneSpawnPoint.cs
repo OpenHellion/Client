@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nakama;
 using OpenHellion;
 using OpenHellion.Networking;
 using OpenHellion.RichPresence;
@@ -14,7 +15,7 @@ namespace ZeroGravity.LevelDesign
 	{
 		public class PlayerInviteData
 		{
-			public string PlayerNativeId;
+			public string PlayerId;
 
 			public string Name;
 
@@ -66,7 +67,7 @@ namespace ZeroGravity.LevelDesign
 
 		public string PlayerName { get; private set; }
 
-		public string PlayerNativeId { get; private set; }
+		public string PlayerId { get; private set; }
 
 		public SpawnPointState State { get; private set; }
 
@@ -99,14 +100,14 @@ namespace ZeroGravity.LevelDesign
 				{
 					PlayerGUID = details.PlayerGUID.Value;
 					PlayerName = ((PlayerGUID <= 0) ? string.Empty : details.PlayerName);
-					PlayerNativeId = details.PlayerSteamID;
+					PlayerId = details.PlayerId;
 				}
 				InvitedPlayerName = details.InvitedPlayerName;
 				if (InvitedPlayerName == null)
 				{
 					InvitedPlayerName = string.Empty;
 				}
-				InvitedPlayerId = details.InvitedPlayerSteamID;
+				InvitedPlayerId = details.InvitedPlayerId;
 				UpdateState();
 			}
 		}
@@ -230,69 +231,70 @@ namespace ZeroGravity.LevelDesign
 
 		public void InvitePlayer(PlayerInviteData player)
 		{
-			if (ParentVessel == null)
+			if (ParentVessel is null)
 			{
 				Dbg.Error("InvitePlayer, Spawn point vessel is NULL", base.name, InSceneID);
 			}
 			else
 			{
-				if (SpawnType == SpawnPointType.SimpleSpawn || State == SpawnPointState.Authorized || (State == SpawnPointState.Locked && PlayerGUID != MyPlayer.Instance.GUID))
+				if (SpawnType is SpawnPointType.SimpleSpawn || State is SpawnPointState.Authorized || (State is SpawnPointState.Locked && PlayerGUID != MyPlayer.Instance.GUID))
 				{
 					return;
 				}
 				SpawnPointStats spawnPoint;
-				if (player == null)
+				if (player is null)
 				{
-					SpaceObjectVessel parentVessel = ParentVessel;
 					spawnPoint = new SpawnPointStats
 					{
 						InSceneID = InSceneID,
 						PlayerInvite = false,
-						InvitedPlayerSteamID = string.Empty,
+						InvitedPlayerId = string.Empty,
 						InvitedPlayerName = string.Empty
 					};
-					parentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, spawnPoint);
+					ParentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, spawnPoint);
 					return;
 				}
-				SpaceObjectVessel parentVessel2 = ParentVessel;
+
 				spawnPoint = new SpawnPointStats
 				{
 					InSceneID = InSceneID,
 					PlayerInvite = true,
-					InvitedPlayerSteamID = player.PlayerNativeId,
+					InvitedPlayerId = player.PlayerId,
 					InvitedPlayerName = player.Name
 				};
-				parentVessel2.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, spawnPoint);
+				ParentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, spawnPoint);
 
 				// Send invite.
 				if (!Client.Instance.SinglePlayerMode)
 				{
-					PresenceManager.InviteUser(player.PlayerNativeId, Client.Instance.GetInviteString(new VesselObjectID(ParentVessel.GUID, InSceneID)));
+					// TODO: Invite using Nakama.
+					//Client.Instance.Nakama.Invite(player.PlayerId, Client.Instance.GetInviteString(new VesselObjectID(ParentVessel.GUID, InSceneID)));
 				}
 			}
 		}
 
-		public void GetPlayersForInvite(bool getSteamFriends, bool getPlayerFromServer, GetInvitedPlayersDelegate onPlayersLoaded)
+		public async void GetPlayersForInvite(bool getNakamaFriends, bool getPlayerFromServer, GetInvitedPlayersDelegate onPlayersLoaded)
 		{
 			if (SpawnType == SpawnPointType.SimpleSpawn || State == SpawnPointState.Authorized || (State == SpawnPointState.Locked && PlayerGUID != MyPlayer.Instance.GUID))
 			{
 				return;
 			}
-			if (getSteamFriends)
+			if (getNakamaFriends)
 			{
 				List<PlayerInviteData> list = new List<PlayerInviteData>();
 
-				// Loop through each friend and add it to the list.
-				foreach (IPresenceProvider.Friend friend in PresenceManager.Friends)
+				// Loop through each friend and add them to the list.
+				IApiFriend[] nakamaFriends = await Client.Instance.Nakama.GetFriends();
+				foreach (IApiFriend friend in nakamaFriends)
 				{
 					// If friend is online.
-					if (friend.Status == IPresenceProvider.FriendStatus.ONLINE)
+					if (friend.User.Online)
 					{
 						list.Add(new PlayerInviteData
 						{
-							PlayerNativeId = friend.NativeId,
+							PlayerId = friend.User.Id,
 							IsFriend = true,
-							Name = friend.Name,
+							Name = friend.User.DisplayName,
 							AlreadyHasInvite = false
 						});
 					}
@@ -325,12 +327,12 @@ namespace ZeroGravity.LevelDesign
 			{
 				foreach (PlayerOnServerData item in data.PlayersOnServer)
 				{
-					if (item.PlayerNativeId != NetworkController.PlayerId)
+					if (item.PlayerId != NetworkController.PlayerId)
 					{
 						list.Add(new PlayerInviteData
 						{
 							IsFriend = false,
-							PlayerNativeId = item.PlayerNativeId,
+							PlayerId = item.PlayerId,
 							Name = item.Name,
 							AlreadyHasInvite = item.AlreadyHasInvite
 						});

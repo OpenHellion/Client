@@ -1,4 +1,4 @@
-using OpenHellion.Networking.Message.MainServer;
+using OpenHellion.Networking.Message;
 using ProtoBuf;
 
 namespace ZeroGravity.Network

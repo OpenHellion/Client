@@ -21,8 +21,6 @@ namespace ZeroGravity.Network
 
 		public string Name;
 
-		public string NativeId;
-
 		public string PlayerId;
 
 		public CharacterTransformData TransformData;

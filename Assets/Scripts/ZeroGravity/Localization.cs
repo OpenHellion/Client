@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -11,9 +12,11 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
 using ZeroGravity.UI;
+using Debug = System.Diagnostics.Debug;
 
 namespace ZeroGravity
 {
+	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 	public static class Localization
 	{
 		public enum StandardInteractionTip
@@ -340,8 +343,6 @@ namespace ZeroGravity
 
 		public static string JoinDiscord;
 
-		public static string Gamepedia;
-
 		public static string Movement;
 
 		public static string Actions;
@@ -482,17 +483,11 @@ namespace ZeroGravity
 
 		public static string SystemError;
 
-		public static string UpdatingStatus;
-
 		public static string Disabled;
 
 		public static string ServerOffline;
 
-		public static string ServerUnreachable;
-
 		public static string InvalidSystemSpesifications;
-
-		public static string UnableToConnectToMainServer;
 
 		public static string ConnectionToGameBroken;
 
@@ -557,10 +552,6 @@ namespace ZeroGravity
 		public static string Melee;
 
 		public static string Chat;
-
-		public static string SignInError;
-
-		public static string ServerNotFound;
 
 		public static string HoldToLoot;
 
@@ -1886,8 +1877,6 @@ namespace ZeroGravity
 
 		public static string SunExposureRateTootlip;
 
-		public static string NotInGameDescription;
-
 		public static string InGameDescription;
 
 		public static string OrbitingNear;
@@ -2188,7 +2177,19 @@ namespace ZeroGravity
 
 		public static string SystemServerRestart;
 
-		public static string NoProvider;
+		public static string NoNakamaConnection;
+
+		public static string NoServerConnection;
+
+		public static string AccountNotFound;
+
+		public static string AccountAlreadyExists;
+
+		public static string InvalidEmail;
+
+		public static string InvalidUsername;
+
+		public static string ConsentToDataStorage;
 
 		public static Dictionary<Enum, string> Enums;
 
@@ -2301,9 +2302,9 @@ namespace ZeroGravity
 			KeyboardSettings = "Keyboard settings";
 			AltKey = "AltKey";
 			AmbientOcclusion = "Ambient occlusion";
-			AntiAliasing = "Anti aliasing";
+			AntiAliasing = "Anti-aliasing";
 			Audio = "Audio";
-			AutoStabilization = "Auto stabilization";
+			AutoStabilization = "Auto-stabilization";
 			Back = "Back";
 			BasicVideoSettings = "Basic video settings";
 			BasicAudioSettings = "Basic audio settings";
@@ -2379,12 +2380,11 @@ namespace ZeroGravity
 			AreYouSureDeleteSaveGame = "Are you sure you want to delete save game?";
 			Multiplayer = "Multiplayer";
 			JoinDiscord = "Join discord";
-			Gamepedia = "Gamepedia";
 			Movement = "Movement";
 			Actions = "Actions";
 			Ship = "Ship";
 			Suit = "Suit";
-			Communications = "Communicaitons";
+			Communications = "Communications";
 			QuickActions = "Quick actions";
 			Male = "Male";
 			Female = "Female";
@@ -2450,12 +2450,9 @@ namespace ZeroGravity
 			Game = "Game";
 			ConnectionError = "Connection Error";
 			SystemError = "System Error";
-			UpdatingStatus = "updating status...";
 			Disabled = "Disabled";
 			ServerOffline = "Server is offline";
-			ServerUnreachable = "Main server unreachable";
 			InvalidSystemSpesifications = "This computer has invalid system specifications. You need at least 4 gigabytes of RAM and a processor with at least a 2 GHz clock speed.";
-			UnableToConnectToMainServer = "Connection to the main server could not be established.";
 			ConnectionToGameBroken = "Connection to the game server has been lost.";
 			DeleteCharacter = "Delete character";
 			DuplicatedControl = "Duplicated Control";
@@ -2488,8 +2485,6 @@ namespace ZeroGravity
 			InventoryFull = "Full";
 			Melee = "Melee";
 			Chat = "Chat";
-			SignInError = "Unable to sign in.";
-			ServerNotFound = "The server you tried to join does not exist.";
 			HoldToLoot = "Hold [{0}] to loot";
 			PressToInteract = "'{0}' to interact";
 			HoldToEquip = "Hold [{0}] to equip";
@@ -2559,7 +2554,7 @@ namespace ZeroGravity
 			CryoChamber = "Cryo chamber";
 			InvitePending = "Invite pending";
 			InviteSent = "Invite sent";
-			RegisterToAccess = "Register to access cryo controls";
+			RegisterToAccess = "Register to access cryopod controls";
 			SpawnPointNotSet = "Spawn point not set";
 			SpawnPointSet = "Spawn point set";
 			SelectFriend = "Select a friend to invite";
@@ -2782,7 +2777,7 @@ namespace ZeroGravity
 			SoeHelmet = "Sons of Earth Mk9 - Helmet";
 			SoeJetpack = "Sons of Earth Mk9 - Jetpack";
 			AegisAssaultRifle = "Aegis assault rifle";
-			AltairRifleDescription = "A compact AltCorp carabine that combines good stopping power and decent rate of fire with exceptional accuracy.\n\nSingle: Dmg - 20, RPM - 150\nAuto: Dmg - 18, RPM - 300\n";
+			AltairRifleDescription = "A compact AltCorp carbine that combines good stopping power and decent rate of fire with exceptional accuracy.\n\nSingle: Dmg - 20, RPM - 150\nAuto: Dmg - 18, RPM - 300\n";
 			MilitaryAssaultRifleDescription = "SDS assault rifle designed to provide reliable firepower in any situation.\n\nAuto: Dmg - 21, RPM - 600\n";
 			MilitarySniperRifleDescription = "Magnetic version of the old anti-materiel rifle, the SDS ‘Lance’ is capable of delivering lethal force at any range with pinpoint accuracy.\n\nSingle: Dmg - 75, RPM - 36\n";
 			MilitaryHandGun01Description = "Small and compact, SDS ‘Rapier’ provides lethal firepower ideal for close quarters, making it perfect for peacekeeping duties.\n\nSingle: Dmg - 16, RPM - 180\nAuto: Dmg - 14, RPM - 480\n";
@@ -2812,7 +2807,7 @@ namespace ZeroGravity
 			LogItemDescription = "Portable data storage device";
 			GenericItemDescription = "Nothing to see here, move along...";
 			APGrenadeDescription = "Standard issue SDS anti-personnel frag grenade.\n\nFuse time - 5s\nBlast Radius - 6m\nDmg - 103\n";
-			EMPGrenadeDescription = "SDS electro magnetic pulse grenade designed to disable high-end weapon systems without affecting personnel.\n\nFuse time - 5s\nBlast Radius - 10m\n";
+			EMPGrenadeDescription = "SDS electromagnetic pulse grenade designed to disable high-end weapon systems without affecting personnel.\n\nFuse time - 5s\nBlast Radius - 10m\n";
 			PortableTurretDescription = "Automated sentry.\n\nFully automated SDS anti-personnel weapon that works as part of the station’s security system.\n";
 			SoeSuitDescription = "Mk9 Pressure Suit worn by Sons of Earth and customised for combat. Offers added ammo slots over storage capacity.\n\nBallistic Protection - 4\n";
 			SoeHelmetDescription = "Mk9 helmet worn by Sons of Earth. Heavily modified and adorned with their logos and symbols.\n";
@@ -2829,8 +2824,8 @@ namespace ZeroGravity
 			Poster = "Poster";
 			PosterBethyr = "Big Blue poster";
 			PosterBurner = "Live at Burner poster";
-			PosterEverest = "Everest stqation poster";
-			PosterHellion = "Wellcome to Hellion Poster";
+			PosterEverest = "Everest station poster";
+			PosterHellion = "Welcome to Hellion Poster";
 			PosterTurret = "S.D.S. Trident poster";
 			PosterCrewQuarters = "Stellar Resorts poster";
 			PosterSonsOfEarth = "Sons of Earth poster";
@@ -2841,7 +2836,7 @@ namespace ZeroGravity
 			BrokenArmature = "Broken armature";
 			ShatteredPlating = "Shattered plating";
 			FriedElectronics = "Fried electronics";
-			DamagedTransmiter = "Damaged transmiter";
+			DamagedTransmiter = "Damaged transmitter";
 			RupturedInsulation = "Ruptured insulation";
 			BurnedPDU = "Burned PDU";
 			DiamondCore = "Detachable G5p Drill Bit";
@@ -2859,7 +2854,7 @@ namespace ZeroGravity
 			AltCorp_CupDescription = "Nothing like a warm cup of that special blend.";
 			CoffeeMachineDescription = "Do not use in zero gravity conditions";
 			ScrapDescription = "Recyclable. Otherwise useless.";
-			DiamondCoreDescription = "A replacable diamond core drill bit specifically designed for the G5p Drilling System\n";
+			DiamondCoreDescription = "A replaceable diamond core drill bit specifically designed for the G5p Drilling System\n";
 			Fuse = "Fuse";
 			ServoMotor = "Servo motor";
 			SolarPanel = "Solar panel";
@@ -3042,13 +3037,13 @@ namespace ZeroGravity
 			Helmets = "Helmets";
 			ToggleGravity = "Toggle artificial gravity";
 			AirTankNotConnected = "Air tank not connected";
-			ExitCryo = "Exit cryo pod";
-			EnterCryo = "Enter cryo pod";
+			ExitCryo = "Exit cryopod";
+			EnterCryo = "Enter cryopod";
 			RecyclerSlot = "Recycler slot";
 			ResearchSlot = "Research slot";
 			Piloting = "Pilot Ship";
 			ServerRestartIn = "Server restart in";
-			EngineNotAvailable = "Engine not availbale";
+			EngineNotAvailable = "Engine not available";
 			CargoFull = "Cargo full";
 			SaveGame = "Quick save";
 			LoadGame = "Quick load";
@@ -3074,7 +3069,7 @@ namespace ZeroGravity
 			AllTiersUnlocked = "All tiers unlocked";
 			FurtherResearchRequired = "Further research required to unlock all tiers";
 			Radiation = "Radiation";
-			SystemFailiure = "System failiure";
+			SystemFailiure = "System failure";
 			Researching = "Researching";
 			Recycling = "Recycling";
 			Weapons = "Weapons";
@@ -3098,7 +3093,7 @@ namespace ZeroGravity
 			PowerSupplyPanel = "Power supply panel controls";
 			AirlockPanel = "Airlock panel controls";
 			NavigationPanel = "Navigation panel";
-			DockingPortController = "Dockign port controller";
+			DockingPortController = "Docking port controller";
 			MessageTerminal = "Message terminal";
 			HackingDescription = "Use hacking tool to open door";
 			PullToUndock = "Pull to undock";
@@ -3118,7 +3113,7 @@ namespace ZeroGravity
 			HeliumChangeRateTitle = Helium3;
 			SunExposureRateTitle = SunExposure;
 			PowerOutputTooltip = "Current output of power";
-			PowerConsumptionTooltip = "Current consuption of power";
+			PowerConsumptionTooltip = "Current consumption of power";
 			ChangeRateTooltip = "Charge rate";
 			AirTankTooltip = AirTankDescription;
 			VesselsOutputTooltip = "Connected vessels";
@@ -3149,7 +3144,6 @@ namespace ZeroGravity
 			ChangeRateNitrogenTooltip = "Nitrogen consumption rate";
 			HeliumChangeRateTootlip = "Helium-3 consumption rate";
 			SunExposureRateTootlip = "Sun exposure efficiency";
-			NotInGameDescription = "Derping around in menus";
 			InGameDescription = "Playing on server";
 			OrbitingNear = "Orbiting near";
 			WarpingNear = "Warping near";
@@ -3229,7 +3223,7 @@ namespace ZeroGravity
 			OffSpeedAssistant = "Toggle off speed assistance";
 			ChangeRadarRange = "Change radar range";
 			OffTarget = "Off target";
-			NoTargetModulesInRange = "Unauthroized access to target modules or out of range";
+			NoTargetModulesInRange = "Unauthorized access to target modules or out of range";
 			CreateCharacterLore = "The industrialists behind the Expedition project, the Altair Corporation was one of the largest groups involved in the colonization of Hellion second only to UN Government. It was responsible for the production of majority of resources as well as orbital construction from shipyards and refineries to large habitats.\n\nLike the company itself, their equipment is exceptionally robust and flexible. Their ships are among the most versatile in Hellion and can usually fit any role from mining and exploration to military applications. If you want something built safe and reliable, you can\ufffdt go wrong with Alt-Corp!";
 			RcsCancelManeuver = "Using RCS thrusters will cancel warp maneuver!";
 			QuestTerminalHint = "Check quest terminal for new available quests";
@@ -3264,7 +3258,7 @@ namespace ZeroGravity
 			RadarSignature = "Radar signature";
 			SpawnMiningDescription = "Start with a ship and basic equipment close to a random ore rich asteroid";
 			SpawnFreeRoamDescription = "Start with a ship and basic equipment on a random stable orbit";
-			SpawnPremadeStationDescription = "Start with a ship and basic equipment close to a random premade station";
+			SpawnPremadeStationDescription = "Start with a ship and basic equipment close to a random pre-made station";
 			SpawnDoomedDescription = "Start with a ship and basic equipment on a collision orbit close to a Doomed outpost";
 			FreeRoamSteropes = "New free roam Steropes";
 			FreeRoamSteropesDescription = SpawnFreeRoamDescription;
@@ -3283,7 +3277,7 @@ namespace ZeroGravity
 			RotationControls = "In zero-g use [Q] and [E] to rotate";
 			HoldToStabilize = "Hold [SHIFT] to stabilize rotation and grab onto nearby walls";
 			UseResourceCanister = "Place Resource Canister into hands and press [LMB] to refill your Jetpack with Oxygen";
-			AssignOnCryo = "Asign on cryo pod to make it your default spawn point";
+			AssignOnCryo = "Assign on cryopod to make it your default spawn point";
 			DragItemToHands = "Press [TAB] and drag item to hands slot in order to use it";
 			WelderTooltip = "Welder can be used to fix both internal and external hull damage";
 			PressForNavigation = "Press [2] to activate navigation screen";
@@ -3300,13 +3294,19 @@ namespace ZeroGravity
 			SystemShipInRange = "Ship is already in range.";
 			SystemShipArrive = "Ship will arrive in {0}";
 			SystemServerRestart = "Server will restart in {0} {1}";
-			NoProvider = "No provider is available. Try launching Steam or Discord.";
+			NoNakamaConnection = "Encountered error when trying to connect to server. Check your internet connection.";
+			NoServerConnection = "Server refused connection. Please try again later.";
+			AccountNotFound = "Account with this email or username doesn't exist.";
+			AccountAlreadyExists = "Account with this email or username already exists.";
+			InvalidEmail = "Email is invalid. Should be written as example@mail.com";
+			InvalidUsername = "Username is invalid. Valid characters are letters (a-z), numbers (0-9), full stops (.), and underscores (_).";
+			ConsentToDataStorage = "You need to give consent to storing data before you can create an account";
 			defaultValues = GetJsonString();
 			Initialize();
 			ControlsRebinder.Initialize();
 		}
 
-		public static void Initialize()
+		private static void Initialize()
 		{
 			TutorialText = new Dictionary<int, string>
 			{
@@ -3320,7 +3320,7 @@ namespace ZeroGravity
 				{ 7, Tut_7 }
 			};
 
-			PreloadText = new string[48]
+			PreloadText = new[]
 			{
 				Preload01, Preload02, Preload03, Preload04, Preload05, Preload06, Preload07, Preload08, Preload09, Preload10,
 				Preload11, Preload12, Preload13, Preload14, Preload15, Preload16, Preload17, Preload18, Preload19, Preload20,
@@ -3329,7 +3329,7 @@ namespace ZeroGravity
 				Preload41, Preload42, Preload43, Preload44, Preload45, Preload46, Preload47, Preload48
 			};
 
-			SystemChatName = new string[6] { AutomatedDistress, System, System, System, System, System };
+			SystemChatName = new[] { AutomatedDistress, System, System, System, System, System };
 
 			GenericItemsDescriptions = new Dictionary<GenericItemSubType, string>
 			{
@@ -3436,7 +3436,7 @@ namespace ZeroGravity
 				{ ItemType.AegisAssaultRifle, AegisAssaultRifleDescription }
 			};
 
-			SystemChat = new string[6] { SystemNothing, SystemUnstable, SystemShipCalled, SystemShipInRange, SystemShipArrive, SystemServerRestart };
+			SystemChat = new[] { SystemNothing, SystemUnstable, SystemShipCalled, SystemShipInRange, SystemShipArrive, SystemServerRestart };
 
 			Enums = new Dictionary<Enum, string>
 			{
@@ -3719,7 +3719,6 @@ namespace ZeroGravity
 				{ "MultiplayerText", Multiplayer.ToUpper() },
 				{ "NameText", Name.ToUpper() },
 				{ "JoinDiscordText", JoinDiscord.ToUpper() },
-				{ "GamepediaText", Gamepedia.ToUpper() },
 				{ "ActionsText", Actions.ToUpper() },
 				{ "MovementText", Movement.ToUpper() },
 				{ "ShipText", Ship.ToUpper() },
@@ -4187,7 +4186,7 @@ namespace ZeroGravity
 			}
 		}
 
-		public static void ImportFromDictionary(Dictionary<string, string> dict)
+		private static void ImportFromDictionary(Dictionary<string, string> dict)
 		{
 			try
 			{
@@ -4233,32 +4232,36 @@ namespace ZeroGravity
 			}
 		}
 
-		public static string GetJsonString()
+		private static string GetJsonString()
 		{
 			try
 			{
-				Dictionary<string, string> dictionary = new Dictionary<string, string>();
+				// Gets all static or public fields in this class and puts them in a dictionary of keys.
+				Dictionary<string, string> localisationKeys = new Dictionary<string, string>();
 				FieldInfo[] fields = typeof(Localization).GetFields(BindingFlags.Static | BindingFlags.Public);
 				foreach (FieldInfo fieldInfo in fields)
 				{
 					if (fieldInfo.FieldType == typeof(string))
 					{
-						dictionary[fieldInfo.Name] = (string)fieldInfo.GetValue(null);
+						localisationKeys[fieldInfo.Name] = (string)fieldInfo.GetValue(null);
 					}
 				}
-				ScriptableObject[] array = Resources.FindObjectsOfTypeAll(typeof(ScriptableObject)) as ScriptableObject[];
-				foreach (ScriptableObject scriptableObject in array)
+
+				// Gets all fields on scriptable objects in the resources folder and adds them as keys.
+				ScriptableObject[] scriptableObjects = Resources.FindObjectsOfTypeAll(typeof(ScriptableObject)) as ScriptableObject[];
+				Debug.Assert(scriptableObjects != null, nameof(scriptableObjects) + " != null");
+				foreach (ScriptableObject scriptableObject in scriptableObjects)
 				{
 					FieldInfo[] fields2 = scriptableObject.GetType().GetFields();
 					foreach (FieldInfo fieldInfo2 in fields2)
 					{
 						if (fieldInfo2.CustomAttributes.FirstOrDefault((CustomAttributeData m) => m.AttributeType == typeof(LocalizeField)) != null && fieldInfo2.FieldType == typeof(string) && (string)fieldInfo2.GetValue(scriptableObject) != string.Empty)
 						{
-							dictionary["SO_" + scriptableObject.GetType().Name + "." + scriptableObject.name + "." + fieldInfo2.Name] = (string)fieldInfo2.GetValue(scriptableObject);
+							localisationKeys["SO_" + scriptableObject.GetType().Name + "." + scriptableObject.name + "." + fieldInfo2.Name] = (string)fieldInfo2.GetValue(scriptableObject);
 						}
 					}
 				}
-				return JsonConvert.SerializeObject(dictionary, Formatting.Indented);
+				return JsonConvert.SerializeObject(localisationKeys, Formatting.Indented);
 			}
 			catch (Exception ex)
 			{

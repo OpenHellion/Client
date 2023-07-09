@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using OpenHellion.Networking.Message;
 using OpenHellion.Networking.Message.MainServer;
 using ProtoBuf;
 using ZeroGravity.Data;

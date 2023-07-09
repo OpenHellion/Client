@@ -160,7 +160,7 @@ namespace ZeroGravity.UI
 			else
 			{
 				PlayerName.text = commandingOfficer.Name;
-				PlayerImage.texture = Player.GetAvatar(commandingOfficer.PlayerNativeId);
+				PlayerImage.texture = Player.GetAvatar(commandingOfficer.PlayerId);
 				if (!SecuritySystem.ParentShip.SelfDestructTimer.HasValue)
 				{
 					ResignButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) != AuthorizedPersonRank.None);
@@ -261,7 +261,7 @@ namespace ZeroGravity.UI
 		private void GetPlayerList()
 		{
 			PurgeList();
-			SecuritySystem.GetPlayersForAuthorization(getFriends: true, getPlayerFromServer: true, GetPlayersDelegate);
+			SecuritySystem.GetPlayersForAuthorization(getFriends: true, getPlayerFromServer: true, UpdatePlayerList);
 		}
 
 		public void UpdateSecurityList()
@@ -280,7 +280,7 @@ namespace ZeroGravity.UI
 				component.Player = crewman;
 				m_crewMembersList.Add(component);
 				component.PlayerNameText.text = crewman.Name;
-				component.Avatar.texture = Player.GetAvatar(crewman.PlayerNativeId);
+				component.Avatar.texture = Player.GetAvatar(crewman.PlayerId);
 				if (ourPerson != null && ourPerson.Rank == AuthorizedPersonRank.CommandingOfficer)
 				{
 					component.GetComponent<Button>().interactable = true;
@@ -300,7 +300,7 @@ namespace ZeroGravity.UI
 		public void CrewMemberActions(AuthorizedPerson crewman)
 		{
 			CrewMemberPanel.SetActive(value: true);
-			CrewMemberPanel.GetComponentInChildren<CrewMembersUI>().Avatar.texture = Player.GetAvatar(crewman.PlayerNativeId);
+			CrewMemberPanel.GetComponentInChildren<CrewMembersUI>().Avatar.texture = Player.GetAvatar(crewman.PlayerId);
 			CrewMemberPanel.GetComponentInChildren<CrewMembersUI>().PlayerNameText.text = crewman.Name;
 			m_selectedCrewman = crewman;
 		}
@@ -392,7 +392,7 @@ namespace ZeroGravity.UI
 			UpdateUI();
 		}
 
-		private void GetPlayersDelegate(List<AuthorizedPerson> availablePlayers)
+		private void UpdatePlayerList(List<AuthorizedPerson> availablePlayers)
 		{
 			InviteList.SetActive(value: true);
 			InviteList.GetComponentInChildren<Scrollbar>(includeInactive: true).value = 1f;
@@ -411,7 +411,7 @@ namespace ZeroGravity.UI
 					if (pl.IsFriend)
 					{
 						component.IsFriend.SetActive(value: false);
-						component.Avatar.texture = Player.GetAvatar(pl.PlayerNativeId);
+						component.Avatar.texture = Player.GetAvatar(pl.PlayerId);
 					}
 					else
 					{

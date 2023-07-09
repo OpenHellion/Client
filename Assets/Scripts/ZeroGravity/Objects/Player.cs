@@ -8,8 +8,6 @@ namespace ZeroGravity.Objects
 	{
 		public string PlayerName;
 
-		public string NativeId;
-
 		public string PlayerId;
 
 		private BaseSceneTrigger _LockedToTrigger;
@@ -88,9 +86,9 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public static Texture GetAvatar(string ProviderId)
+		public static Texture GetAvatar(string PlayerId)
 		{
-			return PresenceManager.GetAvatar(ProviderId);
+			return Resources.Load<Texture2D>("UI/default_avatar");
 		}
 	}
 }

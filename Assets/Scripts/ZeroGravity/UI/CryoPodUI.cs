@@ -51,18 +51,9 @@ namespace ZeroGravity.UI
 			{
 				ToggleLock(val: false);
 			});
-			CancelInviteButton.onClick.AddListener(delegate
-			{
-				CancelInvite();
-			});
-			AuthorizePodButton.onClick.AddListener(delegate
-			{
-				AssignOnCryo();
-			});
-			InviteToPodButton.onClick.AddListener(delegate
-			{
-				OpenPlayerList();
-			});
+			CancelInviteButton.onClick.AddListener(CancelInvite);
+			AuthorizePodButton.onClick.AddListener(AssignOnCryo);
+			InviteToPodButton.onClick.AddListener(OpenPlayerList);
 		}
 
 		private void OnDestroy()
@@ -96,13 +87,13 @@ namespace ZeroGravity.UI
 			InviteList.SetActive(value: true);
 			foreach (SceneSpawnPoint.PlayerInviteData availablePlayer in availablePlayers)
 			{
-				if (AvailablePlayersForInvite.ContainsKey(availablePlayer.PlayerNativeId))
+				if (AvailablePlayersForInvite.ContainsKey(availablePlayer.PlayerId))
 				{
-					AvailablePlayersForInvite[availablePlayer.PlayerNativeId].InGameName.text = availablePlayer.Name;
-					AvailablePlayersForInvite[availablePlayer.PlayerNativeId].InvitePlayerButton.interactable = !availablePlayer.AlreadyHasInvite;
+					AvailablePlayersForInvite[availablePlayer.PlayerId].InGameName.text = availablePlayer.Name;
+					AvailablePlayersForInvite[availablePlayer.PlayerId].InvitePlayerButton.interactable = !availablePlayer.AlreadyHasInvite;
 					continue;
 				}
-				GameObject gameObject = Object.Instantiate(PlayerToInvitePref, PlayerToInvitePref.transform.parent);
+				GameObject gameObject = Instantiate(PlayerToInvitePref, PlayerToInvitePref.transform.parent);
 				gameObject.SetActive(value: true);
 				InvitePlayerToPod component = gameObject.GetComponent<InvitePlayerToPod>();
 				component.PlayerName.text = availablePlayer.Name;
@@ -110,7 +101,7 @@ namespace ZeroGravity.UI
 				if (availablePlayer.IsFriend)
 				{
 					component.IsFriend.SetActive(value: false);
-					component.Avatar.texture = Player.GetAvatar(availablePlayer.PlayerNativeId);
+					component.Avatar.texture = Player.GetAvatar(availablePlayer.PlayerId);
 				}
 				else
 				{
@@ -122,7 +113,7 @@ namespace ZeroGravity.UI
 				{
 					InvitePlayer(plForDeleg);
 				});
-				AvailablePlayersForInvite.Add(availablePlayer.PlayerNativeId, component);
+				AvailablePlayersForInvite.Add(availablePlayer.PlayerId, component);
 			}
 		}
 
@@ -157,7 +148,7 @@ namespace ZeroGravity.UI
 			}
 			else if (SpawnPoint.State == SpawnPointState.Locked)
 			{
-				PlayerImage.texture = Player.GetAvatar(SpawnPoint.PlayerNativeId);
+				PlayerImage.texture = Player.GetAvatar(SpawnPoint.PlayerId);
 				DefaultPlayerImage.gameObject.SetActive(value: false);
 				LockedPlayerName.text = SpawnPoint.PlayerName.ToString();
 				LockedStateText.text = Localization.Registered.ToUpper();
@@ -166,7 +157,7 @@ namespace ZeroGravity.UI
 			}
 			else if (SpawnPoint.State == SpawnPointState.Authorized)
 			{
-				PlayerImage.texture = Player.GetAvatar(SpawnPoint.PlayerNativeId);
+				PlayerImage.texture = Player.GetAvatar(SpawnPoint.PlayerId);
 				DefaultPlayerImage.gameObject.SetActive(value: false);
 				LockedPlayerName.text = SpawnPoint.PlayerName.ToString();
 				LockedStateText.text = Localization.Registered.ToUpper();
@@ -185,7 +176,7 @@ namespace ZeroGravity.UI
 				InviteToPodButton.gameObject.SetActive(value: false);
 				UnregisterPodButton.gameObject.SetActive(value: false);
 			}
-			else if (SpawnPoint.State == SpawnPointState.Locked && SpawnPoint.PlayerGUID == MyPlayer.Instance.GUID)
+			else if (SpawnPoint.State is SpawnPointState.Locked && SpawnPoint.PlayerGUID == MyPlayer.Instance.GUID)
 			{
 				if (!SpawnPoint.InvitedPlayerName.IsNullOrEmpty())
 				{
@@ -204,7 +195,7 @@ namespace ZeroGravity.UI
 					UnregisterPodButton.gameObject.SetActive(value: true);
 				}
 			}
-			else if (SpawnPoint.State == SpawnPointState.Locked || SpawnPoint.State == SpawnPointState.Authorized)
+			else if (SpawnPoint.State is SpawnPointState.Locked or SpawnPointState.Authorized)
 			{
 				RegisterPodButton.gameObject.SetActive(value: false);
 				CancelInviteButton.gameObject.SetActive(value: false);
@@ -254,7 +245,7 @@ namespace ZeroGravity.UI
 				Destroy(value.gameObject);
 			}
 			AvailablePlayersForInvite.Clear();
-			SpawnPoint.GetPlayersForInvite(getSteamFriends: true, getPlayerFromServer: true, OnInvitePlayersLoaded);
+			SpawnPoint.GetPlayersForInvite(getNakamaFriends: true, getPlayerFromServer: true, OnInvitePlayersLoaded);
 		}
 
 		public void InvitePlayer(SceneSpawnPoint.PlayerInviteData pl)

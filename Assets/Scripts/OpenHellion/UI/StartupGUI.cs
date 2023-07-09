@@ -17,11 +17,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using OpenHellion.Nakama;
+using OpenHellion.Social;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UIElements;
 using ZeroGravity;
@@ -35,128 +36,226 @@ namespace OpenHellion.UI
 
 		[SerializeField] private NakamaClient _NakamaClient;
 
-		private VisualElement _PreloadBackground;
-		private Label _PreloadText;
-		private ProgressBar _PreloadProgress;
+		private VisualElement _preloadBackground;
+		private VisualElement _preloadBottom;
+		private Label _preloadText;
+		private ProgressBar _preloadProgress;
 
-		private VisualElement _AuthentificationScreen;
-		private TextField _AuthentificationEmail;
-		private TextField _AuthentificationPassword;
-		private Button _AuthentificateButton;
+		private VisualElement _authenticationScreen;
+		private TextField _authenticationEmail;
+		private TextField _authenticationPassword;
+		private Button _createAccountScreenButton;
+		private Button _authenticateButton;
 
-		private VisualElement _ErrorBox;
-		private TextField _ErrorTitle;
-		private TextField _ErrorDescription;
-		private Button _ErrorBoxClose;
+		private VisualElement _createAccountScreen;
+		private TextField _createScreenUsername;
+		private TextField _createScreenDisplayName;
+		private TextField _createScreenEmail;
+		private TextField _createScreenPassword;
+		private Toggle _createScreenConsent;
+		private Button _createScreenBackButton;
+		private Button _createScreenButton;
+
+		private VisualElement _errorBox;
+		private Label _errorTitle;
+		private Label _errorDescription;
+		private Button _errorBoxClose;
+
+		private IEnumerator<string> _shuffledTexts;
+		private IEnumerator<Sprite> _shuffledImages;
 
 		private void OnEnable()
 		{
-			_NakamaClient.OnRequireAuthentification.AddListener(OpenAuthentificationScreen);
+			_NakamaClient._OnRequireAuthentication.AddListener(OpenAuthenticationScreen);
 
 			// The UXML is already instantiated by the UIDocument component
 			var uiDocument = GetComponent<UIDocument>();
 
-			_PreloadBackground = uiDocument.rootVisualElement.Q("Background");
-			_PreloadText = uiDocument.rootVisualElement.Q("TipText") as Label;
-			_PreloadProgress = uiDocument.rootVisualElement.Q("ProgressBar") as ProgressBar;
+			_preloadBackground = uiDocument.rootVisualElement.Q("Background");
+			_preloadBottom = _preloadBackground.Q("Bottom");
+			_preloadText = _preloadBackground.Q("TipText") as Label;
+			_preloadProgress = _preloadBackground.Q("ProgressBar") as ProgressBar;
 
-			_AuthentificationScreen = uiDocument.rootVisualElement.Q("AuthentificationScreen");
-			_AuthentificationEmail = uiDocument.rootVisualElement.Q("Email") as TextField;
-			_AuthentificationPassword = uiDocument.rootVisualElement.Q("Password") as TextField;
-			_AuthentificateButton = uiDocument.rootVisualElement.Q("AuthenticateButton") as Button;
+			_authenticationScreen = uiDocument.rootVisualElement.Q("SignInScreen");
+			_authenticationEmail = _authenticationScreen.Q("Email") as TextField;
+			_authenticationPassword = _authenticationScreen.Q("Password") as TextField;
+			_createAccountScreenButton = _authenticationScreen.Q("CreateAccountScreenButton") as Button;
+			_authenticateButton = _authenticationScreen.Q("AuthenticateButton") as Button;
 
-			_ErrorBox = uiDocument.rootVisualElement.Q("ErrorBox");
-			_ErrorTitle = uiDocument.rootVisualElement.Q("ErrorTitle") as TextField;
-			_ErrorDescription = uiDocument.rootVisualElement.Q("ErrorDescription") as TextField;
-			_ErrorBoxClose = uiDocument.rootVisualElement.Q("ErrorBoxClose") as Button;
+			_createAccountScreen = uiDocument.rootVisualElement.Q("CreateAccountScreen");
+			_createScreenUsername = _createAccountScreen.Q("Username") as TextField;
+			_createScreenDisplayName = _createAccountScreen.Q("DisplayName") as TextField;
+			_createScreenEmail = _createAccountScreen.Q("Email") as TextField;
+			_createScreenPassword = _createAccountScreen.Q("Password") as TextField;
+			_createScreenConsent = _createAccountScreen.Q("Consent") as Toggle;
+			_createScreenBackButton = _createAccountScreen.Q("BackButton") as Button;
+			_createScreenButton = _createAccountScreen.Q("CreateAccount") as Button;
 
-			_PreloadBackground.visible = false;
-			_AuthentificationScreen.visible = false;
-			_ErrorBox.visible = false;
+			_errorBox = uiDocument.rootVisualElement.Q("ErrorBox");
+			_errorTitle = _errorBox.Q("ErrorTitle") as Label;
+			_errorDescription = _errorBox.Q("ErrorDescription") as Label;
+			_errorBoxClose = _errorBox.Q("ErrorBoxClose") as Button;
 
-			_AuthentificateButton.clicked += EnterGameCredentials;
+			_preloadBottom.visible = false;
+			_authenticationScreen.visible = false;
+			_createAccountScreen.visible = false;
+			_errorBox.visible = false;
+
+			_preloadBackground.style.backgroundImage = new StyleBackground(_PreloadImages[0]);
+
+			Debug.Assert(_authenticateButton is not null);
+			_authenticateButton.clicked += EnterGameCredentials;
+
+			Debug.Assert(_createAccountScreenButton is not null);
+			_createAccountScreenButton.clicked += OpenCreateAccountScreen;
+
+			Debug.Assert(_createScreenBackButton is not null);
+			_createScreenBackButton.clicked += OpenAuthenticationScreen;
+
+			Debug.Assert(_createScreenButton is not null);
+			_createScreenButton.clicked += CreateNewAccount;
 		}
 
 		private void OnDisable()
 		{
-			CloseAuthentificationScreen();
+			CloseAuthenticationScreen();
+			CloseCreateAccountScreen();
 			ClosePreloading();
 			CloseErrorBox();
 		}
 
-		public void ShowErrorMessage(string title, string text, Action onClose)
+		private void OpenAuthenticationScreen()
 		{
-			_ErrorBox.visible = true;
-			_ErrorTitle.label = title;
-			_ErrorDescription.label = text;
-
-			_ErrorBoxClose.clicked += CloseErrorBox;
-			_ErrorBoxClose.clicked += onClose;
-		}
-
-		private void CloseErrorBox()
-		{
-			_ErrorBox.visible = false;
-		}
-
-		private void OpenAuthentificationScreen()
-		{
-			_AuthentificationScreen.visible = true;
+			_createAccountScreen.visible = false;
+			_authenticationScreen.visible = true;
 		}
 
 		private async void EnterGameCredentials()
 		{
-			string email = _AuthentificationEmail.value;
-			string password = _AuthentificationPassword.value;
+			string email = _authenticationEmail.value;
+			string password = _authenticationPassword.value;
+
+			if (!Regex.IsMatch(email, "\\S+@\\S+\\.\\w+"))
+			{
+				ShowErrorMessage(Localization.Error, Localization.InvalidEmail, null);
+				return;
+			}
+
 			bool success = await _NakamaClient.Authenticate(email, password);
 
 			// Clear the contents for next time.
-			_AuthentificationEmail.value = string.Empty;
-			_AuthentificationPassword.value = string.Empty;
+			_authenticationEmail.value = string.Empty;
+			_authenticationPassword.value = string.Empty;
 
 			if (success)
 			{
 				Dbg.Log("Successfully authenticated with Nakama.");
-				CloseAuthentificationScreen();
-			}
-			else
-			{
-				OpenAuthentificationScreen();
+				CloseAuthenticationScreen();
 			}
 		}
 
-		private void CloseAuthentificationScreen()
+		private void CloseAuthenticationScreen()
 		{
-			_AuthentificationScreen.visible = false;
+			_authenticationScreen.visible = false;
+		}
 
-			// Close menu and continue loading/open game.
+		private void OpenCreateAccountScreen()
+		{
+			_authenticationScreen.visible = false;
+			_createAccountScreen.visible = true;
+		}
+
+		private async void CreateNewAccount()
+		{
+			if (!_createScreenConsent.value)
+			{
+				ShowErrorMessage(Localization.Error, Localization.ConsentToDataStorage, null);
+				return;
+			}
+
+			string username = _createScreenUsername.value;
+			string displayName = _createScreenDisplayName.value;
+			string email = _createScreenEmail.value;
+			string password = _createScreenPassword.value;
+
+			if (Regex.IsMatch(username, "[^a-z0-9_.]"))
+			{
+				ShowErrorMessage(Localization.Error, Localization.InvalidUsername, null);
+				return;
+			}
+
+			if (!Regex.IsMatch(email, "\\S+@\\S+\\.\\w+"))
+			{
+				ShowErrorMessage(Localization.Error, Localization.InvalidEmail, null);
+				return;
+			}
+
+			bool success = await _NakamaClient.CreateAccount(email, password, username, displayName);
+
+
+			// Clear the contents for next time.
+			_createScreenUsername.value = string.Empty;
+			_createScreenEmail.value = string.Empty;
+			_createScreenPassword.value = string.Empty;
+
+			if (success)
+			{
+				Dbg.Log("Successfully created a new Nakama account.");
+				CloseCreateAccountScreen();
+			}
+
+		}
+
+		private void CloseCreateAccountScreen()
+		{
+			_createAccountScreen.visible = false;
 		}
 
 		public void OpenPreloading()
 		{
-			_PreloadBackground.visible = true;
+			_preloadBottom.visible = true;
+
+			_shuffledTexts = Localization.PreloadText.OrderBy(m => MathHelper.RandomNextDouble()).GetEnumerator();
+			_shuffledImages = _PreloadImages.OrderBy(m => MathHelper.RandomNextDouble()).ToList().GetEnumerator();
+
 			StartCoroutine(Preload());
 		}
 
 		public void UpdateProgressBar(float progress)
 		{
-			_PreloadProgress.value = progress;
+			_preloadProgress.value = progress;
 		}
 
 		public void ClosePreloading()
 		{
-			_PreloadBackground.visible = false;
+			_preloadBottom.visible = false;
 			StopCoroutine(Preload());
+			_preloadBackground.style.backgroundImage = new StyleBackground(_PreloadImages[0]);
+
+			_shuffledTexts?.Dispose();
+			_shuffledImages?.Dispose();
 		}
 
 		private IEnumerator Preload()
 		{
-			IEnumerator<string> shuffledTexts = Localization.PreloadText.OrderBy((string m) => MathHelper.RandomNextDouble()).GetEnumerator();
-			IEnumerator<Sprite> shuffledImages = _PreloadImages.OrderBy((Sprite m) => MathHelper.RandomNextDouble()).ToList().GetEnumerator();
-
 			yield return new WaitForSeconds(10f);
-			_PreloadText.text = shuffledTexts.GetNextInLoop();
-			_PreloadBackground.style.backgroundImage = new StyleBackground(shuffledImages.GetNextInLoop());
+			_preloadText.text = _shuffledTexts.GetNextInLoop();
+			_preloadBackground.style.backgroundImage = new StyleBackground(_shuffledImages.GetNextInLoop());
+		}
+
+		public void ShowErrorMessage(string title, string text, Action onClose)
+		{
+			_errorBox.visible = true;
+			_errorTitle.text = title;
+			_errorDescription.text = text;
+
+			_errorBoxClose.clicked += CloseErrorBox;
+			_errorBoxClose.clicked += onClose;
+		}
+
+		private void CloseErrorBox()
+		{
+			_errorBox.visible = false;
 		}
 	}
 }

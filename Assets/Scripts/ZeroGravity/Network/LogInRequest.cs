@@ -13,8 +13,6 @@ namespace ZeroGravity.Network
 
 		public string PlayerId;
 
-		public string NativeId;
-
 		public CharacterData CharacterData;
 	}
 }

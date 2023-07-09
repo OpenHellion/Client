@@ -1,6 +1,8 @@
-// BasicResponse.cs
+﻿// HellionNakamaLogger.cs
 //
 // Copyright (C) 2023, OpenHellion contributors
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,14 +18,33 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using Newtonsoft.Json;
+using Nakama;
 
-namespace OpenHellion.Networking.Message.MainServer
+namespace OpenHellion.Social
 {
-	[Serializable]
-	[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
-	public class BasicResponse : DataPacket
+	/// <summary>
+	///		Implementation of Nakama's ILogger that uses Hellion's own logger.
+	/// </summary>
+	public class HellionNakamaLogger : ILogger
 	{
-		public ResponseResult Result;
+		public void DebugFormat(string format, params object[] args)
+		{
+			Dbg.Log(String.Format(format, args));
+		}
+
+		public void ErrorFormat(string format, params object[] args)
+		{
+			Dbg.Error(String.Format(format, args));
+		}
+
+		public void InfoFormat(string format, params object[] args)
+		{
+			Dbg.Info(String.Format(format, args));
+		}
+
+		public void WarnFormat(string format, params object[] args)
+		{
+			Dbg.Warning(String.Format(format, args));
+		}
 	}
 }

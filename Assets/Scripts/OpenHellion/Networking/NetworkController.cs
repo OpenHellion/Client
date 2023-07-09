@@ -139,7 +139,7 @@ namespace OpenHellion.Networking
 				UnprocessedPackets = m_GameConnection.Tick();
 
 			// Handle Steam P2P packets.
-			if (!PresenceManager.SteamId.IsNullOrEmpty() && !m_GetP2PPacketsThreadActive)
+			if (PresenceManager.HasSteam && !m_GetP2PPacketsThreadActive)
 			{
 				new Thread(P2PPacketListener).Start();
 			}

@@ -22,9 +22,8 @@ using ZeroGravity;
 using System;
 using OpenHellion.UI;
 using System.Collections;
-using OpenHellion.Nakama;
+using OpenHellion.Social;
 using UnityEngine.SceneManagement;
-using UnityEngine.Events;
 
 namespace OpenHellion
 {
@@ -61,16 +60,16 @@ namespace OpenHellion
 				}
 			}
 
-			_NakamaClient.OnError.AddListener(HandleNakamaError);
+			_NakamaClient._OnError.AddListener(HandleNakamaError);
 		}
-		
+
 		private void Start()
 		{
 			HiResTime.Start();
 
 			if (SystemInfo.systemMemorySize < 4000 || SystemInfo.processorFrequency < 2000)
 			{
-				Dbg.Error("System has invalid spesifications. Exiting...");
+				Dbg.Error("System has invalid specifications. Exiting...");
 				_StartupGUI.ShowErrorMessage(Localization.SystemError, Localization.InvalidSystemSpesifications, Application.Quit);
 				HiResTime.Stop();
 			}

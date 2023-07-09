@@ -1,4 +1,4 @@
-// MSMessage.cs
+// ResponseResult.cs
 //
 // Copyright (C) 2023, OpenHellion contributors
 //
@@ -15,10 +15,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace OpenHellion.Networking.Message.MainServer
+namespace OpenHellion.Networking.Message
 {
-	public abstract class MSMessage : DataPacket
-	{
-		public abstract string GetDestination();
+	public enum ResponseResult : byte {
+		Success = 0,
+		Error = 1,
+		WrongPassword = 3,
+		AlreadyLoggedInError = 4,
+		ClientVersionError = 5,
+		ServerNotFound = 6
 	}
 }

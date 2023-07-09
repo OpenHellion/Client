@@ -96,9 +96,21 @@
 }
 
 .unity-text-field__label {
-    color: rgba(255, 255, 255, 255);
+    color: rgb(255, 255, 255);
     -unity-font: resource('Fonts/MainMenuBold');
     -unity-font-style: bold;
     font-size: 18px;
     -unity-text-align: middle-left;
+}
+
+.unity-text-field__label:focus {
+}
+
+.unity-toggle {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 255);
+    -unity-font: resource('Fonts/MainMenuRegular');
+    justify-content: center;
+    flex-grow: 0;
+    flex-wrap: wrap;
 }

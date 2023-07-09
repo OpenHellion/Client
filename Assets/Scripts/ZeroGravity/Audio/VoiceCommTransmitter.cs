@@ -15,6 +15,7 @@ using OpenHellion.IO;
 
 namespace ZeroGravity.Audio
 {
+	// TODO: Make this use Nakama instead.
 	public class VoiceCommTransmitter : MonoBehaviour
 	{
 		private AudioClip inAudioClip;
@@ -41,7 +42,7 @@ namespace ZeroGravity.Audio
 
 		private void Update()
 		{
-			if (PresenceManager.SteamId.IsNullOrEmpty())
+			if (!PresenceManager.HasSteam)
 			{
 				return;
 			}
@@ -84,13 +85,13 @@ namespace ZeroGravity.Audio
 
 		private void FixedUpdate()
 		{
-			if (PresenceManager.SteamId.IsNullOrEmpty())
+			if (!PresenceManager.HasSteam)
 			{
 				return;
 			}
 			SceneTriggerRoom currentRoomTrigger = MyPlayer.Instance.CurrentRoomTrigger;
 			Helmet currentHelmet = MyPlayer.Instance.CurrentHelmet;
-			if (!talk || !(inAudioClip != null) || ((!(currentRoomTrigger != null) || !(currentRoomTrigger.AirPressure > 0f)) && (!(currentHelmet != null) || !currentHelmet.IsVisorActive)))
+			if (!talk || inAudioClip is null || ((currentRoomTrigger is null || !(currentRoomTrigger.AirPressure > 0f)) && (currentHelmet is null || !currentHelmet.IsVisorActive)))
 			{
 				return;
 			}
@@ -197,7 +198,7 @@ namespace ZeroGravity.Audio
 					{
 						// Get player's steam identity.
 						SteamNetworkingIdentity sni = new SteamNetworkingIdentity();
-						sni.SetSteamID(new CSteamID(ulong.Parse(otherPlayer.NativeId)));
+						//sni.SetSteamID(new CSteamID(ulong.Parse(otherPlayer.NativeId)));
 
 						// https://partner.steamgames.com/doc/api/steamnetworkingtypes#message_sending_flags
 						SteamNetworkingMessages.SendMessageToUser(ref sni, msg, (uint) msgBytes.Length, 8, 0);

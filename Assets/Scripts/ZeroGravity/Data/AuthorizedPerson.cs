@@ -9,9 +9,6 @@ namespace ZeroGravity.Data
 
 		public string PlayerId;
 
-		// Used to get avatar.
-		public string PlayerNativeId;
-
 		public string Name;
 
 		public bool IsFriend;

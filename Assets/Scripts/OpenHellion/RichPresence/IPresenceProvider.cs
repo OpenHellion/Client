@@ -21,7 +21,6 @@ namespace OpenHellion.RichPresence
 {
 	/// <summary>
 	/// 	Wrapper around APIs like Steamworks and Discord Game API.
-	/// 	Everything here should be provider independent (or as independent as possible).
 	/// </summary>
 	/// <seealso cref="DiscordProvider"/>
 	/// <seealso cref="SteamProvider"/>
@@ -33,64 +32,14 @@ namespace OpenHellion.RichPresence
 		internal void Destroy();
 		internal void Update();
 
-		// API
-		struct Friend
-		{
-			public string NativeId;
-			public string Name;
-			public FriendStatus Status;
-		}
-
-		enum FriendStatus
-		{
-			ONLINE,
-			OFFLINE
-		}
-
 		/// <summary>
 		/// 	Used to update rich presence.
 		/// </summary>
 		void UpdateStatus();
 
 		/// <summary>
-		/// 	Get if we have achieved a specific achievement.
-		/// </summary>
-		bool GetAchievement(AchievementID id, out bool achieved);
-
-		/// <summary>
-		/// 	Award the player an achievement.
-		/// </summary>
-		void SetAchievement(AchievementID id);
-
-		/// <summary>
 		/// 	Get the username of our local player.
 		/// </summary>
-		string GetUsername();
-
-		/// <summary>
-		/// 	Get the id of our local player with a prefix. The prefix tells us what provider it is from.
-		/// </summary>
-		string GetPrefixedNativeId();
-
-		/// <summary>
-		/// 	Get the id of our local player without a prefix.
-		/// </summary>
-		string GetNativeId();
-
-		/// <summary>
-		/// 	Get a list of all our friends.
-		/// </summary>
-		Friend[] GetFriends();
-
-		/// <summary>
-		/// 	Get the avatar of a specified user as a texture.
-		/// </summary>
-		Texture2D GetAvatar(string id);
-
-
-		/// <summary>
-		/// 	Send an invite to a user with a specified id.
-		/// </summary>
-		void InviteUser(string id, string secret);
+		public string GetUsername();
 	}
 }

@@ -119,8 +119,7 @@ namespace OpenHellion.Networking
 		{
 			LogInRequest logInRequest = new LogInRequest
 			{
-				PlayerId = Client.Instance.Nakama.GetUserId(),
-				NativeId = PresenceManager.NativeId,
+				PlayerId = Client.Instance.UserId,
 				CharacterData = NetworkController.CharacterData,
 				ServerID = m_ServerId,
 				Password = m_ServerPassword,
