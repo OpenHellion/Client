@@ -30,13 +30,7 @@ namespace ZeroGravity.UI
 
 		internal bool RestartOnSave;
 
-		public static Settings Instance
-		{
-			get
-			{
-				return _instance;
-			}
-		}
+		public static Settings Instance => _instance;
 
 		private void Start()
 		{
@@ -60,13 +54,13 @@ namespace ZeroGravity.UI
 				{
 					SettingsData = new SettingsData();
 				}
-				if (SettingsData.ControlsVersion != Client.ControlsVersion)
+				if (SettingsData.ControlsVersion != Client.Instance.ControlsVersion)
 				{
 					GameComponent.SetDefault();
 					AudioComponent.SetDefault();
 					ControlsComponent.SetDefault();
 					VideoComponent.SetDefault();
-					SettingsData.ControlsVersion = Client.ControlsVersion;
+					SettingsData.ControlsVersion = Client.Instance.ControlsVersion;
 					SaveSettings(SettingsType.All);
 					return;
 				}
@@ -100,13 +94,13 @@ namespace ZeroGravity.UI
 				SettingsData.AudioSettings = AudioComponent.AudioData;
 				ControlsComponent.SaveControlsSettings();
 				SettingsData.ControlsSettings = ControlsComponent.ControlsData;
-				SettingsData.ControlsVersion = Client.ControlsVersion;
+				SettingsData.ControlsVersion = Client.Instance.ControlsVersion;
 			}
 			if (type == SettingsType.Controls)
 			{
 				ControlsComponent.SaveControlsSettings();
 				SettingsData.ControlsSettings = ControlsComponent.ControlsData;
-				SettingsData.ControlsVersion = Client.ControlsVersion;
+				SettingsData.ControlsVersion = Client.Instance.ControlsVersion;
 			}
 			JsonSerialiser.SerializePersistent(SettingsData, "Settings.json");
 			if (RestartOnSave)

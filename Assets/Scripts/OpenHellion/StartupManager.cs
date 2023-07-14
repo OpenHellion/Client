@@ -67,6 +67,7 @@ namespace OpenHellion
 		{
 			HiResTime.Start();
 
+			// Set some hard limits.
 			if (SystemInfo.systemMemorySize < 4000 || SystemInfo.processorFrequency < 2000)
 			{
 				Dbg.Error("System has invalid specifications. Exiting...");
@@ -80,16 +81,16 @@ namespace OpenHellion
 			}
 		}
 
-		private void HandleNakamaError(string text, Action action)
-		{
-			_StartupGUI.ShowErrorMessage(Localization.SystemError, text, action);
-		}
-
 		// Start game when we are done preloading and we have authenticated with Nakama.
 		private IEnumerator CheckStartGame()
 		{
 			yield return new WaitWhile(() => _SceneLoader.IsPreloading || !_NakamaClient.HasAuthenticated);
 			SceneManager.LoadScene("Client", LoadSceneMode.Single);
+		}
+
+		private void HandleNakamaError(string text, Action action)
+		{
+			_StartupGUI.ShowErrorMessage(Localization.SystemError, text, action);
 		}
 	}
 }

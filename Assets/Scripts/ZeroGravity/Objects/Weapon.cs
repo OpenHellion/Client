@@ -112,14 +112,14 @@ namespace ZeroGravity.Objects
 				MyPlayer instance = MyPlayer.Instance;
 				if (instance.CurrentStance == MyPlayer.PlayerStance.Special)
 				{
-					instance.ChangeCamerasFov(Client.DefaultCameraFov);
+					instance.ChangeCamerasFov(Client.Instance.DefaultCameraFov);
 					instance.ChangeStance(MyPlayer.PlayerStance.Active, ActiveSpeedMultiplier);
 					IsSpecialStance = false;
 					UpdateUI();
 				}
 				else
 				{
-					instance.ChangeCamerasFov(Client.SpecialCameraFov);
+					instance.ChangeCamerasFov(Client.Instance.SpecialCameraFov);
 					instance.ChangeStance(MyPlayer.PlayerStance.Special, SpecialSpeedMultiplier);
 					IsSpecialStance = true;
 					UpdateUI();
@@ -153,12 +153,12 @@ namespace ZeroGravity.Objects
 
 		public override void Reload(Item newItem)
 		{
-			if (!(newItem == null) && newItem is Magazine && CanReloadWithType((newItem as Magazine).Type))
+			if (newItem is not null && newItem is Magazine && CanReloadWithType((newItem as Magazine).Type))
 			{
 				Magazine newReloadingItem = (Magazine)newItem;
-				if (magazinePos != null)
+				if (magazinePos is not null)
 				{
-					MyPlayer.Instance.ChangeCamerasFov(Client.DefaultCameraFov);
+					MyPlayer.Instance.ChangeCamerasFov(Client.Instance.DefaultCameraFov);
 					MyPlayer.Instance.ReloadItem(newReloadingItem, Magazine, (!(Magazine != null)) ? AnimatorHelper.ReloadType.JustLoad : AnimatorHelper.ReloadType.FullReload, Type);
 					ToggleZoomCamera(status: false);
 				}

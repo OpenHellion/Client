@@ -42,7 +42,10 @@ public class SaveGameOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerExi
 		Name.text = Localization.NewGame.ToUpper();
 		Screenshot = Client.Instance.SpriteManager.NewGameTexture;
 		Description = Localization.NewGameDescription;
-		GetComponent<Button>().onClick.AddListener(Client.Instance.PlayNewSPGame);
+		GetComponent<Button>().onClick.AddListener(delegate
+		{
+			Client.Instance.PlaySingleplayer();
+		});
 	}
 
 	public void CreateSaveGameButton()
@@ -94,7 +97,7 @@ public class SaveGameOptionUI : MonoBehaviour, IPointerEnterHandler, IPointerExi
 		}
 		Client.Instance.CanvasManager.StartingPointScreen.SetActive(false);
 		Client.Instance.CanvasManager.SaveAndSpawnPointScreen.SetActive(false);
-		Client.Instance.StartCoroutine(Client.Instance.PlaySPCoroutine(SaveFile.Name));
+		Client.Instance.PlaySingleplayer(SaveFile.Name);
 	}
 
 	public void DeleteAction()

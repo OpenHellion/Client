@@ -191,7 +191,7 @@ namespace ZeroGravity.Objects
 
 		private float m_CameraFovLerpStrength = 7.5f;
 
-		public float CurrentPanelFov = Client.DefaultCameraFov;
+		public float CurrentPanelFov;
 
 		public bool InLadderTrigger;
 
@@ -552,6 +552,9 @@ namespace ZeroGravity.Objects
 				// Don't return here because it might make it impossible to return to the main menu and restart a game.
 			}
 			_instance = this;
+
+			CurrentPanelFov = Client.Instance.DefaultCameraFov;
+
 			sunRaycastLayerMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("FirstPerson"));
 			planetsRaycastLayer = 1 << LayerMask.NameToLayer("Planets");
 			dropThrowLayerMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("DynamicObjectCollision"));
@@ -1748,9 +1751,9 @@ namespace ZeroGravity.Objects
 					AnimatorHelper animatorHelper2 = animHelper;
 					PlayerStance? playerStance = currentStance;
 					animatorHelper2.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, playerStance);
-					if (!FpsController.MainCamera.fieldOfView.IsEpsilonEqual(Client.DefaultCameraFov))
+					if (!FpsController.MainCamera.fieldOfView.IsEpsilonEqual(Client.Instance.DefaultCameraFov))
 					{
-						ChangeCamerasFov(Client.DefaultCameraFov);
+						ChangeCamerasFov(Client.Instance.DefaultCameraFov);
 					}
 					if (Inventory.ItemInHands is Weapon)
 					{
@@ -1773,9 +1776,9 @@ namespace ZeroGravity.Objects
 			// Handle right-click zoom.
 			if (IsLockedToTrigger)
 			{
-				if (InputManager.GetButtonDown(InputManager.ConfigAction.FreeLook) && FpsController.MainCamera.fieldOfView != Client.DefaultCameraFov)
+				if (InputManager.GetButtonDown(InputManager.ConfigAction.FreeLook) && FpsController.MainCamera.fieldOfView != Client.Instance.DefaultCameraFov)
 				{
-					ChangeCamerasFov(Client.DefaultCameraFov);
+					ChangeCamerasFov(Client.Instance.DefaultCameraFov);
 				}
 				else if (InputManager.GetButtonUp(InputManager.ConfigAction.FreeLook) && FpsController.MainCamera.fieldOfView != CurrentPanelFov && CurrentPanelFov > 10f)
 				{
@@ -1787,7 +1790,7 @@ namespace ZeroGravity.Objects
 				}
 				else if (Mouse.current.rightButton.wasReleasedThisFrame && InputManager.GetButton(InputManager.ConfigAction.FreeLook))
 				{
-					ChangeCamerasFov(Client.DefaultCameraFov);
+					ChangeCamerasFov(Client.Instance.DefaultCameraFov);
 				}
 			}
 			else if (Mouse.current.rightButton.wasPressedThisFrame && Client.IsGameBuild && CurrentStance != PlayerStance.Special)
@@ -1803,17 +1806,17 @@ namespace ZeroGravity.Objects
 			}
 			else if (Mouse.current.rightButton.wasReleasedThisFrame && Client.IsGameBuild && !m_CameraFovLerpValue.IsNotEpsilonZero())
 			{
-				if (Inventory.ItemInHands != null)
+				if (Inventory.ItemInHands is not null)
 				{
 					Inventory.ItemInHands.SecondaryFunction();
 				}
 			}
 			else if (Mouse.current.rightButton.wasReleasedThisFrame && m_CameraFovLerpValue.IsNotEpsilonZero() && currentStance != PlayerStance.Special)
 			{
-				ChangeCamerasFov(Client.DefaultCameraFov);
+				ChangeCamerasFov(Client.Instance.DefaultCameraFov);
 			}
 
-			if (inventoryUI != null && ((Inventory != null) ? Inventory.Outfit : null) != null && animHelper.CanDrop)
+			if (inventoryUI is not null && Inventory?.Outfit is not null && animHelper.CanDrop)
 			{
 				if (InputManager.GetButtonDown(InputManager.ConfigAction.Quick1))
 				{
@@ -2875,7 +2878,7 @@ namespace ZeroGravity.Objects
 			FpsController.ResetVelocity();
 			FpsController.ToggleAttached(false);
 			FpsController.ToggleCameraMovement(true);
-			ChangeCamerasFov(Client.DefaultCameraFov);
+			ChangeCamerasFov(Client.Instance.DefaultCameraFov);
 			FpsController.ToggleMovement(!SittingOnPilotSeat);
 			if (SittingOnPilotSeat)
 			{
@@ -3007,7 +3010,7 @@ namespace ZeroGravity.Objects
 				m_CameraFovLerpTo = FpsController.MainCamera.fieldOfView;
 				m_CameraFovLerpValue = 1f;
 				Client.Instance.CanvasManager.CanvasUI.HelmetHud.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
-				if (fovVal == Client.DefaultCameraFov)
+				if (fovVal == Client.Instance.DefaultCameraFov)
 				{
 					Client.Instance.CanvasManager.CanvasUI.HelmetHud.transform.localScale = new Vector3(1f, 1f, 1f);
 					InputManager.RealSensitivity = InputManager.SavedSensitivity;
@@ -3022,9 +3025,9 @@ namespace ZeroGravity.Objects
 
 		public void ResetCameraFov()
 		{
-			if (!FpsController.MainCamera.fieldOfView.IsEpsilonEqual(Client.DefaultCameraFov))
+			if (!FpsController.MainCamera.fieldOfView.IsEpsilonEqual(Client.Instance.DefaultCameraFov))
 			{
-				ChangeCamerasFov(Client.DefaultCameraFov);
+				ChangeCamerasFov(Client.Instance.DefaultCameraFov);
 			}
 		}
 

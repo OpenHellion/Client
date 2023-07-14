@@ -83,7 +83,7 @@ namespace ZeroGravity.Audio
 			}
 		}
 
-		private void FixedUpdate()
+		private async void FixedUpdate()
 		{
 			if (!PresenceManager.HasSteam)
 			{
@@ -149,7 +149,7 @@ namespace ZeroGravity.Audio
 					IsRadioComm = radio,
 					AudioPackets = list
 				};
-				byte[] msgBytes = ProtoSerialiser.Package(voiceCommDataMessage);
+				byte[] msgBytes = await ProtoSerialiser.Package(voiceCommDataMessage);
 				HashSet<OtherPlayer> hashSet = new HashSet<OtherPlayer>();
 				hashSet.UnionWith(GetAllPlayersFromSameVessel());
 				if (radio)

@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Steamworks;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Network;
@@ -217,7 +216,7 @@ namespace ZeroGravity
 				}
 			}
 
-			if (Client.IsLogout || Client.IsDisconected)
+			if (Client.IsLogout || Client.IsDisconnected)
 			{
 				SelectScreen(Screen.MainMenu);
 			}
@@ -284,10 +283,6 @@ namespace ZeroGravity
 				{
 					Client.Instance.SignInButton();
 				}
-				else if (Client.Instance.PasswordEnterPanel.activeInHierarchy)
-				{
-					Client.Instance.EnterPasswordMenu(true);
-				}
 				else if (Client.Instance.CreateCharacterPanel.activeInHierarchy)
 				{
 					Client.Instance.CreateCharacterButton();
@@ -312,10 +307,6 @@ namespace ZeroGravity
 					{
 						PlayerOverview.Toggle(val: false);
 					}
-				}
-				else if (Client.Instance.PasswordEnterPanel.activeInHierarchy)
-				{
-					Client.Instance.EnterPasswordMenu(false);
 				}
 				else if (Client.Instance.CreateCharacterPanel.activeInHierarchy)
 				{
@@ -414,7 +405,7 @@ namespace ZeroGravity
 
 			if (hasNoSaves)
 			{
-				Client.Instance.PlayNewSPGame();
+				Client.Instance.PlaySingleplayer();
 			}
 		}
 
@@ -454,7 +445,7 @@ namespace ZeroGravity
 				Client.Instance.InGamePanels.Detach();
 				DisconectScreen.SetActive(value: true);
 				StartCoroutine(InvokeDeath());
-				Client.IsDisconected = true;
+				Client.IsDisconnected = true;
 			}
 			else
 			{
@@ -625,17 +616,11 @@ namespace ZeroGravity
 			freshStartOptionUI.Type = StartingPointOption.NewGame;
 			if (canContinue)
 			{
-				freshStartOptionUI.GetComponent<Button>().onClick.AddListener(delegate
-				{
-					OnFreshStartConfirm();
-				});
+				freshStartOptionUI.GetComponent<Button>().onClick.AddListener(OnFreshStartConfirm);
 			}
 			else
 			{
-				freshStartOptionUI.GetComponent<Button>().onClick.AddListener(delegate
-				{
-					ShowFreshStartOptions();
-				});
+				freshStartOptionUI.GetComponent<Button>().onClick.AddListener(ShowFreshStartOptions);
 			}
 
 			// Add continue button if this isn't singleplayer.
@@ -694,10 +679,7 @@ namespace ZeroGravity
 
 		private void OnFreshStartConfirm()
 		{
-			Client.Instance.ShowConfirmMessageBox(Localization.FreshStartConfrimTitle, Localization.FreshStartConfrimText, Localization.Yes, Localization.No, delegate
-			{
-				ShowFreshStartOptions();
-			});
+			Client.Instance.ShowConfirmMessageBox(Localization.FreshStartConfrimTitle, Localization.FreshStartConfrimText, Localization.Yes, Localization.No, ShowFreshStartOptions);
 		}
 
 		public void ShowInteractionCanvasMessage(string text, float hideTime = 1f)
@@ -734,7 +716,7 @@ namespace ZeroGravity
 				StartingPointScreen.SetActive(value: false);
 				ToggleLoadingScreen(LoadingScreenType.None);
 				Client.IsLogout = false;
-				Client.IsDisconected = false;
+				Client.IsDisconnected = false;
 				break;
 			case Screen.StartingPoint:
 				MainMenu.SetActive(value: false);

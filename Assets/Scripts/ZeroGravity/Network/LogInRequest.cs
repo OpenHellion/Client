@@ -7,8 +7,6 @@ namespace ZeroGravity.Network
 	{
 		public string ServerID;
 
-		public string Password;
-
 		public uint ClientHash;
 
 		public string PlayerId;

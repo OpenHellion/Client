@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using ProtoBuf;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
@@ -14,7 +15,7 @@ namespace OpenHellion.IO
 	/// </summary>
 	public static class ProtoSerialiser
 	{
-		public class ZeroDataException : Exception
+		private class ZeroDataException : Exception
 		{
 			public ZeroDataException(string message)
 				: base(message)
@@ -22,31 +23,31 @@ namespace OpenHellion.IO
 			}
 		}
 
-		public class StatisticsHelper
+		private class StatisticsHelper
 		{
 			public long ByteSum;
 
-			public int PacketNubmer;
+			public int PacketNumber;
 
 			public long BytesSinceLastCheck;
 
 			public StatisticsHelper(long bytes)
 			{
 				ByteSum = bytes;
-				PacketNubmer = 1;
+				PacketNumber = 1;
 				BytesSinceLastCheck = bytes;
 			}
 		}
 
-		private static DateTime s_statisticUpdateResetTime = DateTime.UtcNow;
+		private static DateTime _statisticUpdateResetTime = DateTime.UtcNow;
 
-		private static DateTime s_lastStatisticUpdateTime;
+		private static DateTime _lastStatisticUpdateTime;
 
 		private static readonly double _statisticsLogUpdateTime = 1.0;
 
-		private static readonly Dictionary<Type, StatisticsHelper> s_sentStatistics = new Dictionary<Type, StatisticsHelper>();
+		private static readonly Dictionary<Type, StatisticsHelper> _sentStatistics = new Dictionary<Type, StatisticsHelper>();
 
-		private static readonly Dictionary<Type, StatisticsHelper> s_receivedStatistics = new Dictionary<Type, StatisticsHelper>();
+		private static readonly Dictionary<Type, StatisticsHelper> _receivedStatistics = new Dictionary<Type, StatisticsHelper>();
 
 		/// <summary>
 		/// 	For deserialisation of data not sent through network.
@@ -67,7 +68,7 @@ namespace OpenHellion.IO
 			{
 				try
 				{
-					ProcessStatistics(networkData, ms, s_receivedStatistics);
+					ProcessStatistics(networkData, ms, _receivedStatistics);
 					return networkData;
 				}
 				catch
@@ -78,23 +79,16 @@ namespace OpenHellion.IO
 			return networkData;
 		}
 
-		public static NetworkData ReceiveData(Socket soc)
+		public static async Task<NetworkData> Unpackage(Stream str)
 		{
-			if (soc == null || !soc.Connected)
-			{
-				return null;
-			}
-			return Unpackage(new NetworkStream(soc));
-		}
-
-		public static NetworkData Unpackage(Stream str)
-		{
-			byte[] bufferSize = new byte[4];
 			int dataReadSize = 0;
 			int size;
+
+			// Get size of buffer
+			byte[] bufferSize = new byte[4];
 			do
 			{
-				size = str.Read(bufferSize, dataReadSize, bufferSize.Length - dataReadSize);
+				size = await str.ReadAsync(bufferSize, dataReadSize, bufferSize.Length - dataReadSize);
 				if (size == 0)
 				{
 					throw new ZeroDataException("Received zero data message.");
@@ -102,12 +96,15 @@ namespace OpenHellion.IO
 				dataReadSize += size;
 			}
 			while (dataReadSize < bufferSize.Length);
+
 			uint bufferLength = BitConverter.ToUInt32(bufferSize, 0);
+
+			// Read following contents.
 			byte[] buffer = new byte[bufferLength];
 			dataReadSize = 0;
 			do
 			{
-				size = str.Read(buffer, dataReadSize, buffer.Length - dataReadSize);
+				size = await str.ReadAsync(buffer, dataReadSize, buffer.Length - dataReadSize);
 				if (size == 0)
 				{
 					throw new ZeroDataException("Received zero data message.");
@@ -115,22 +112,24 @@ namespace OpenHellion.IO
 				dataReadSize += size;
 			}
 			while (dataReadSize < buffer.Length);
+
+			// Make the stream into NetworkData.
 			MemoryStream ms = new MemoryStream(buffer, 0, buffer.Length);
 			return Deserialize(ms);
 		}
 
-		public static byte[] Package(NetworkData data)
+		public static async Task<byte[]> Package(NetworkData data)
 		{
-			using MemoryStream outMs = new MemoryStream();
-			using MemoryStream ms = new MemoryStream();
+			await using MemoryStream outMs = new MemoryStream();
+			await using MemoryStream ms = new MemoryStream();
 			try
 			{
-				NetworkDataTransportWrapper ndtw = new NetworkDataTransportWrapper
+				NetworkDataTransportWrapper dataWrapper = new NetworkDataTransportWrapper
 				{
 					data = data
 				};
-				NetworkDataTransportWrapper instance = ndtw;
-				ProtoBuf.Serializer.Serialize(ms, instance);
+
+				await Task.Run(() => Serializer.Serialize(ms, dataWrapper));
 			}
 			catch (Exception ex)
 			{
@@ -141,15 +140,15 @@ namespace OpenHellion.IO
 			{
 				try
 				{
-					ProcessStatistics(data, ms, s_sentStatistics);
+					ProcessStatistics(data, ms, _sentStatistics);
 				}
 				catch
 				{
 				}
 			}
-			outMs.Write(BitConverter.GetBytes((uint)ms.Length), 0, 4);
-			outMs.Write(ms.ToArray(), 0, (int)ms.Length);
-			outMs.Flush();
+			await outMs.WriteAsync(BitConverter.GetBytes((uint)ms.Length), 0, 4);
+			await outMs.WriteAsync(ms.ToArray(), 0, (int)ms.Length);
+			await outMs.FlushAsync();
 			return outMs.ToArray();
 		}
 
@@ -159,25 +158,25 @@ namespace OpenHellion.IO
 			if (stat.TryGetValue(type, out var value))
 			{
 				value.ByteSum += ms.Length;
-				value.PacketNubmer++;
+				value.PacketNumber++;
 				value.BytesSinceLastCheck += ms.Length;
 			}
 			else
 			{
 				stat[type] = new StatisticsHelper(ms.Length);
 			}
-			if (!(DateTime.UtcNow.Subtract(s_lastStatisticUpdateTime).TotalSeconds >= _statisticsLogUpdateTime))
+			if (!(DateTime.UtcNow.Subtract(_lastStatisticUpdateTime).TotalSeconds >= _statisticsLogUpdateTime))
 			{
 				return;
 			}
-			TimeSpan timeSpan = DateTime.UtcNow.Subtract(s_statisticUpdateResetTime);
-			string text = (stat != s_sentStatistics) ? ("Received packets statistics (" + timeSpan.ToString("h':'mm':'ss") + "): \n") : ("Sent packets statistics (" + timeSpan.ToString("h':'mm':'ss") + "): \n");
+			TimeSpan timeSpan = DateTime.UtcNow.Subtract(_statisticUpdateResetTime);
+			string text = (stat != _sentStatistics) ? ("Received packets statistics (" + timeSpan.ToString("h':'mm':'ss") + "): \n") : ("Sent packets statistics (" + timeSpan.ToString("h':'mm':'ss") + "): \n");
 			long num = 0L;
 			string text2;
 			foreach (KeyValuePair<Type, StatisticsHelper> item in stat.OrderBy((KeyValuePair<Type, StatisticsHelper> m) => m.Value.ByteSum).Reverse())
 			{
 				text2 = text;
-				text = text2 + item.Key.Name + ": " + item.Value.PacketNubmer + " (" + ((float)item.Value.ByteSum / 1000f).ToString("##,0") + " kB), \n";
+				text = text2 + item.Key.Name + ": " + item.Value.PacketNumber + " (" + ((float)item.Value.ByteSum / 1000f).ToString("##,0") + " kB), \n";
 				item.Value.BytesSinceLastCheck = 0L;
 				num += item.Value.ByteSum;
 			}
@@ -185,7 +184,7 @@ namespace OpenHellion.IO
 			text = text2 + "-----------------------------------------\nTotal: " + ((float)num / 1000f).ToString("##,0") + " kB (avg: " + ((double)num / timeSpan.TotalSeconds / 1000.0).ToString("##,0") + " kB/s)";
 			if (MyPlayer.Instance != null)
 			{
-				if (stat == s_sentStatistics)
+				if (stat == _sentStatistics)
 				{
 					MyPlayer.Instance.SentPacketStatistics = text;
 				}
@@ -194,15 +193,15 @@ namespace OpenHellion.IO
 					MyPlayer.Instance.ReceivedPacketStatistics = text;
 				}
 			}
-			s_lastStatisticUpdateTime = DateTime.UtcNow;
+			_lastStatisticUpdateTime = DateTime.UtcNow;
 		}
 
 		public static void ResetStatistics()
 		{
-			s_sentStatistics.Clear();
-			s_receivedStatistics.Clear();
-			s_statisticUpdateResetTime = DateTime.UtcNow;
-			s_lastStatisticUpdateTime = DateTime.UtcNow;
+			_sentStatistics.Clear();
+			_receivedStatistics.Clear();
+			_statisticUpdateResetTime = DateTime.UtcNow;
+			_lastStatisticUpdateTime = DateTime.UtcNow;
 		}
 	}
 }

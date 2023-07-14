@@ -10,12 +10,8 @@ namespace ZeroGravity.Network
 
 		public short CurrentPlayers;
 
-		public short AlivePlayers;
-
 		public short MaxPlayers;
 
 		public CharacterData CharacterData;
-
-		public string Description;
 	}
 }

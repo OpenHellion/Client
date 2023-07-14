@@ -51,7 +51,7 @@ namespace OpenHellion
 
 		public static void Stop()
 		{
-			_stopwatch.Stop();
+			_stopwatch?.Stop();
 			_stopwatch = null;
 		}
 	}

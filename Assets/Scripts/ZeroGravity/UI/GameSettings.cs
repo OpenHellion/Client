@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -41,11 +40,11 @@ namespace ZeroGravity.UI
 			}
 			LanguageDropdown.value = ((GameSettingsData.LanguageIndex < LanguageDropdown.options.Count) ? GameSettingsData.LanguageIndex : 0);
 			LanguageDropdown.RefreshShownValue();
-			DisableChatToggle.onValueChanged.AddListener(_003CStart_003Em__0);
-			HideTipsToggle.onValueChanged.AddListener(_003CStart_003Em__1);
-			ShowCrosshairToggle.onValueChanged.AddListener(_003CStart_003Em__2);
-			AutoStabilization.onValueChanged.AddListener(_003CStart_003Em__3);
-			LanguageDropdown.onValueChanged.AddListener(_003CStart_003Em__4);
+			DisableChatToggle.onValueChanged.AddListener(OnDisableChatChange);
+			HideTipsToggle.onValueChanged.AddListener(OnHideTipsChange);
+			ShowCrosshairToggle.onValueChanged.AddListener(OnShowCrosshairChange);
+			AutoStabilization.onValueChanged.AddListener(OnAutoStabilizationChange);
+			LanguageDropdown.onValueChanged.AddListener(OnLanguageChange);
 		}
 
 		public void Load(GameSettingsData gameSettings)
@@ -119,33 +118,28 @@ namespace ZeroGravity.UI
 			GameSettingsData.ShowTutorial = (Client.Instance.CanvasManager.ShowTutorial = !HideTutorialToggle.isOn);
 		}
 
-		public void OnDisableChatChange()
+		public void OnDisableChatChange(bool value)
 		{
 			GameSettingsData.DisableChat = (Client.Instance.CanvasManager.DisableChat = DisableChatToggle.isOn);
 		}
 
-		public void OnHideTipsChange()
+		public void OnHideTipsChange(bool value)
 		{
 			GameSettingsData.ShowTips = (Client.Instance.CanvasManager.ShowTips = !HideTipsToggle.isOn);
 		}
 
-		public void OnAutoStabilizationChange()
+		public void OnAutoStabilizationChange(bool value)
 		{
 			GameSettingsData.AutoStabilization = (Client.Instance.CanvasManager.AutoStabilization = AutoStabilization.isOn);
 		}
 
-		public void OnShowCrosshairChange()
+		public void OnShowCrosshairChange(bool value)
 		{
 			GameSettingsData.ShowCrosshair = (Client.Instance.CanvasManager.ShowCrosshair = ShowCrosshairToggle.isOn);
 			Client.Instance.CanvasManager.CanvasUI.CheckDotCroshair();
 		}
 
-		public void OnLanguageChange()
-		{
-			ChangeLanguage();
-		}
-
-		public void ChangeLanguage()
+		public void OnLanguageChange(int value)
 		{
 			GameSettingsData.LanguageIndex = (Client.Instance.CurrentLanguageIndex = LanguageDropdown.value);
 			Settings.Instance.RestartOnSave = true;
@@ -153,36 +147,6 @@ namespace ZeroGravity.UI
 
 		public void UpdateUI()
 		{
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__0(bool P_0)
-		{
-			OnDisableChatChange();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__1(bool P_0)
-		{
-			OnHideTipsChange();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__2(bool P_0)
-		{
-			OnShowCrosshairChange();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__3(bool P_0)
-		{
-			OnAutoStabilizationChange();
-		}
-
-		[CompilerGenerated]
-		private void _003CStart_003Em__4(int P_0)
-		{
-			OnLanguageChange();
 		}
 	}
 }

@@ -1365,7 +1365,7 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
-			if (SecuritySystem != null && res.Data != null)
+			if (SecuritySystem is not null && res.Data != null)
 			{
 				SceneNameTag[] shipNameTags = SecuritySystem.ShipNameTags;
 				foreach (SceneNameTag sceneNameTag in shipNameTags)
@@ -1382,10 +1382,10 @@ namespace ZeroGravity.Objects
 			sceneRoot.transform.SetParent(rootTransform);
 			sceneRoot.transform.localRotation = Quaternion.identity;
 			RootObject = sceneRoot;
-			if (GeometryRoot != null)
+			if (GeometryRoot is not null)
 			{
 				DestructionEffects = GeometryRoot.GetComponentInChildren<VesselDestructionEffects>(includeInactive: true);
-				if (DestructionEffects != null)
+				if (DestructionEffects is not null)
 				{
 					DestructionEffects.gameObject.SetActive(value: false);
 				}
@@ -1426,9 +1426,9 @@ namespace ZeroGravity.Objects
 			Capacitor = sceneRoot.GetComponentInChildren<GeneratorCapacitor>();
 			CargoBay = sceneRoot.GetComponentInChildren<SceneCargoBay>();
 			NavPanel = sceneRoot.GetComponentInChildren<NavigationPanel>(includeInactive: true);
-			base.RadarSystem = sceneRoot.GetComponentInChildren<SubSystemRadar>();
+			RadarSystem = sceneRoot.GetComponentInChildren<SubSystemRadar>();
 			SecuritySystem = sceneRoot.GetComponentInChildren<SecuritySystem>(includeInactive: true);
-			base.MaxHealth = sscene.MaxHealth;
+			MaxHealth = sscene.MaxHealth;
 			DamagePointEffectFrequency = sscene.DamageEffectsFrequency;
 			foreach (StructureSceneConnection item in sceneConnections)
 			{

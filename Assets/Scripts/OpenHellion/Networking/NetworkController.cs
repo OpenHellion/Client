@@ -12,8 +12,8 @@ using ZeroGravity.Network;
 using System.Collections.Concurrent;
 using System.Linq;
 using ZeroGravity;
-using UnityEditor;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using OpenHellion.IO;
 
 namespace OpenHellion.Networking
@@ -50,7 +50,7 @@ namespace OpenHellion.Networking
 		{
 			get
 			{
-				if (s_Instance == null)
+				if (s_Instance is null)
 				{
 					Dbg.Error("Tried to get network controller before it has been initialised.");
 				}
@@ -162,14 +162,14 @@ namespace OpenHellion.Networking
 			m_SubscribeToObjectsList.Remove(guid);
 		}
 
-		public void ConnectToGame(ServerData serverData, CharacterData characterData, string password)
+		public void ConnectToGame(ServerData serverData, CharacterData characterData)
 		{
 			CharacterData = characterData;
 			m_GameConnection?.Disconnect();
 			m_GameConnection = new GSConnection();
 
 			NameOfCurrentServer = serverData.Name;
-			m_GameConnection.Connect(serverData.IpAddress, serverData.GamePort, serverData.Id, password);
+			m_GameConnection.Connect(serverData.IpAddress, serverData.GamePort, serverData.Id);
 		}
 
 		public void ConnectToGameSP(int port, CharacterData characterData)
@@ -179,7 +179,7 @@ namespace OpenHellion.Networking
 
 			Dbg.Log("Connecting to singleplayer server with port", port);
 			m_GameConnection = new GSConnection();
-			m_GameConnection.Connect("127.0.0.1", port, string.Empty, string.Empty);
+			m_GameConnection.Connect("127.0.0.1", port, string.Empty);
 		}
 
 		public void SendToGameServer(NetworkData data)
@@ -188,48 +188,66 @@ namespace OpenHellion.Networking
 		}
 
 		/// <summary>
-		/// 	Send a request directly to a TCP endpoint.<br />
-		/// 	Useful for status requests.
+		/// 	Checks the latency between the client and server.
 		/// </summary>
-		public static NetworkData SendTCP(NetworkData data, string address, int port, out int latency, bool getResponse = true, bool logException = false)
+		public static async Task<int> LatencyTest(string address, int port, bool logException = false)
 		{
-			latency = -1;
 			try
 			{
-				TcpClient tcpClient = new TcpClient();
-				IAsyncResult asyncResult = tcpClient.BeginConnect(address, port, null, null);
-				WaitHandle asyncWaitHandle = asyncResult.AsyncWaitHandle;
-
-				// Check if connection has timed out.
-				try
-				{
-					if (!asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(4.0), exitContext: false))
-					{
-						tcpClient.Close();
-						throw new TimeoutException();
-					}
-					tcpClient.EndConnect(asyncResult);
-				}
-				finally
-				{
-					asyncWaitHandle.Close();
-				}
+				TcpClient tcpClient = new TcpClient(address, port);
 
 				NetworkStream networkStream = tcpClient.GetStream();
 				networkStream.ReadTimeout = 1000;
 				networkStream.WriteTimeout = 1000;
 
-				byte[] rawData = ProtoSerialiser.Package(data);
+				byte[] rawData = await ProtoSerialiser.Package(new LatencyTestMessage());
 				DateTime dateTime = DateTime.UtcNow.ToUniversalTime();
 
 				// Send data.
-				networkStream.Write(rawData, 0, rawData.Length);
-				networkStream.Flush();
+				await networkStream.WriteAsync(rawData, 0, rawData.Length);
+				await networkStream.FlushAsync();
+
+				return (int)(DateTime.UtcNow - dateTime).TotalMilliseconds;
+			}
+			catch (Exception ex)
+			{
+				if (logException)
+				{
+					Dbg.Error(ex.Message, ex.StackTrace);
+				}
+
+				return -1;
+			}
+		}
+
+		/// <summary>
+		/// 	Send a request directly to a TCP endpoint.<br />
+		/// 	Useful for status requests.
+		/// </summary>
+		/// <remarks>
+		///		This code is an example of bad coding practice evolving over time. This is low-level code called directly by high level code
+		///		and will result in errors/ problems if used.<br />
+		///		It used to be blocking, but I made it async. This is still called blocking in some places, though.
+		/// </remarks>
+		public static async Task<NetworkData> SendTcp(NetworkData data, string address, int port, bool getResponse = true, bool logException = false)
+		{
+			try
+			{
+				TcpClient tcpClient = new TcpClient(address, port);
+
+				NetworkStream networkStream = tcpClient.GetStream();
+				networkStream.ReadTimeout = 1000;
+				networkStream.WriteTimeout = 1000;
+
+				byte[] rawData = await ProtoSerialiser.Package(data);
+
+				// Send data.
+				await networkStream.WriteAsync(rawData, 0, rawData.Length);
+				await networkStream.FlushAsync();
 
 				if (getResponse)
 				{
-					latency = (int)(DateTime.UtcNow - dateTime).TotalMilliseconds;
-					NetworkData result = ProtoSerialiser.Unpackage(networkStream);
+					NetworkData result = await ProtoSerialiser.Unpackage(networkStream);
 					return result;
 				}
 			}
@@ -257,7 +275,7 @@ namespace OpenHellion.Networking
 		/// 	Read and invoke P2P packets sent though Steam.<br/>
 		/// 	TODO: Create a new class.
 		/// </summary>
-		private void P2PPacketListener()
+		private async void P2PPacketListener()
 		{
 			m_GetP2PPacketsThreadActive = true;
 
@@ -280,7 +298,7 @@ namespace OpenHellion.Networking
 					Marshal.Copy(netMessage.m_pData, message, 0, message.Length);
 
 					// Deseralise data and invoke code.
-					NetworkData networkData = ProtoSerialiser.Unpackage((Stream)new MemoryStream(message));
+					NetworkData networkData = await ProtoSerialiser.Unpackage((Stream)new MemoryStream(message));
 					Debug.Log(networkData);
 					if (networkData is ISteamP2PMessage)
 					{

@@ -17,8 +17,8 @@
 
 using System;
 using System.IO;
-using OpenHellion.RichPresence;
 using OpenHellion.IO;
+using UnityEngine;
 using ZeroGravity;
 using ZeroGravity.Network;
 
@@ -29,32 +29,23 @@ namespace OpenHellion.Networking
 	/// </summary>
 	internal sealed class GSConnection
 	{
-		private string m_ServerIp;
+		private string _serverId;
 
-		private int m_ServerPort;
-
-		private string m_ServerId;
-
-		private string m_ServerPassword;
-
-		private Telepathy.Client m_Client;
+		private Telepathy.Client _client;
 
 		/// <summary>
 		/// 	Establish a connection to a specified game server.<br />
 		/// 	When connection is established, a login request is sent.
 		/// </summary>
-		internal void Connect(string ip, int port, string serverId, string password)
+		internal void Connect(string ip, int port, string serverId)
 		{
 			Telepathy.Log.Info = Dbg.Info;
 			Telepathy.Log.Warning = Dbg.Warning;
 			Telepathy.Log.Error = Dbg.Error;
 
-			m_ServerIp = ip;
-			m_ServerPort = port;
-			m_ServerId = serverId;
-			m_ServerPassword = password;
+			_serverId = serverId;
 
-			m_Client = new(100000)
+			_client = new(100000)
 			{
 				OnConnected = OnConnected,
 				OnData = OnData,
@@ -63,20 +54,20 @@ namespace OpenHellion.Networking
 				ReceiveQueueLimit = 1000
 			};
 
-			m_Client.Connect(ip, port);
+			_client.Connect(ip, port);
 		}
 
 		internal int Tick()
 		{
-			return m_Client.Tick(50);
+			return _client.Tick(50);
 		}
 
 		/// <summary>
 		/// 	Send network data to the server.
 		/// </summary>
-		internal void Send(NetworkData data)
+		internal async void Send(NetworkData data)
 		{
-			if (!m_Client.Connected)
+			if (!_client.Connected)
 			{
 				EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.OpenMainScreen));
 				Dbg.Log("Tried to send data when not connected to any server.");
@@ -86,12 +77,12 @@ namespace OpenHellion.Networking
 			try
 			{
 				// Package data.
-				ArraySegment<byte> binary = new(ProtoSerialiser.Package(data));
+				ArraySegment<byte> binary = new(await ProtoSerialiser.Package(data));
 
 				// Send data to server.
-				if (binary.Count <= m_Client.MaxMessageSize)
+				if (binary.Count <= _client.MaxMessageSize)
 				{
-					m_Client.Send(binary);
+					_client.Send(binary);
 				}
 				else
 				{
@@ -111,7 +102,7 @@ namespace OpenHellion.Networking
 		/// </summary>
 		internal void Disconnect()
 		{
-			m_Client.Disconnect();
+			_client.Disconnect();
 		}
 
 		// Executed when we connect to a server.
@@ -121,8 +112,7 @@ namespace OpenHellion.Networking
 			{
 				PlayerId = Client.Instance.UserId,
 				CharacterData = NetworkController.CharacterData,
-				ServerID = m_ServerId,
-				Password = m_ServerPassword,
+				ServerID = _serverId,
 				ClientHash = Client.CombinedHash
 			};
 
@@ -133,11 +123,12 @@ namespace OpenHellion.Networking
 
 
 		// Handles a network package.
-		private void OnData(ArraySegment<byte> message)
+		private async void OnData(ArraySegment<byte> message)
 		{
 			try
 			{
-				NetworkData networkData = ProtoSerialiser.Unpackage(new MemoryStream(message.Array));
+				Debug.Assert(message.Array != null);
+				NetworkData networkData = await ProtoSerialiser.Unpackage(new MemoryStream(message.Array));
 				if (networkData != null)
 				{
 					EventSystem.Instance.Invoke(networkData);

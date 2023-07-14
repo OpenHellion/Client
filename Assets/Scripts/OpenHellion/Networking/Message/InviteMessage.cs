@@ -12,8 +12,6 @@ namespace OpenHellion.Networking.Message
 
 		public string ServerId;
 
-		public string Password;
-
 		public VesselObjectID SpawnPointId;
 	}
 }

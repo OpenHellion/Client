@@ -20,8 +20,6 @@ namespace OpenHellion.Networking.Message
 	public enum ResponseResult : byte {
 		Success = 0,
 		Error = 1,
-		WrongPassword = 3,
-		AlreadyLoggedInError = 4,
 		ClientVersionError = 5,
 		ServerNotFound = 6
 	}

@@ -16,7 +16,7 @@ namespace ZeroGravity
 		public enum SceneType
 		{
 			Structure,
-			Asteroid
+			CelestialBody
 		}
 
 		private class SceneReference
@@ -28,17 +28,17 @@ namespace ZeroGravity
 			public GameObject RootObject;
 		}
 
-		private List<SceneReference> _LoadedSceneReferences = new List<SceneReference>();
+		private readonly List<SceneReference> _loadedSceneReferences = new List<SceneReference>();
 
-		private Dictionary<long, string> _Structures = new Dictionary<long, string>();
+		private readonly Dictionary<long, string> _structureScenes = new Dictionary<long, string>();
 
-		private Dictionary<long, string> _Asteroids = new Dictionary<long, string>();
+		private readonly Dictionary<long, string> _celestialScenes = new Dictionary<long, string>();
 
 		public bool IsPreloading { get; private set; }
 
-		private Transform _GeometryCacheTransform;
+		private Transform _geometryCacheTransform;
 
-		private List<long> _LoadingScenes = new List<long>();
+		private readonly List<long> _scenesCurrentlyLoading = new List<long>();
 
 		// Only call this when preloading.
 		[SerializeField] private StartupGUI _StartupGUI;
@@ -49,23 +49,23 @@ namespace ZeroGravity
 
 			DontDestroyOnLoad(this);
 
-			_GeometryCacheTransform = transform.root;
+			_geometryCacheTransform = transform.root;
 			List<StructureSceneData> structureJson = JsonSerialiser.LoadResource<List<StructureSceneData>>("Data/Structures");
 			if (structureJson != null)
 			{
 				foreach (StructureSceneData item in structureJson)
 				{
-					_Structures.Add(item.ItemID, item.SceneName);
+					_structureScenes.Add(item.ItemID, item.SceneName);
 				}
 			}
-			List<AsteroidSceneData> asteroidsJson = JsonSerialiser.LoadResource<List<AsteroidSceneData>>("Data/Asteroids");
-			if (asteroidsJson == null)
+			List<CelestialSceneData> celestialSceneJson = JsonSerialiser.LoadResource<List<CelestialSceneData>>("Data/Asteroids");
+			if (celestialSceneJson == null)
 			{
 				return;
 			}
-			foreach (AsteroidSceneData item2 in asteroidsJson)
+			foreach (CelestialSceneData sceneData in celestialSceneJson)
 			{
-				_Asteroids.Add(item2.ItemID, item2.SceneName);
+				_celestialScenes.Add(sceneData.ItemID, sceneData.SceneName);
 			}
 		}
 
@@ -89,7 +89,7 @@ namespace ZeroGravity
 				geometryCache = new GameObject("VesselsGeometryCache");
 				geometryCache.transform.SetParent(null);
 				DontDestroyOnLoad(geometryCache);
-				_GeometryCacheTransform = geometryCache.transform;
+				_geometryCacheTransform = geometryCache.transform;
 				_StartupGUI.OpenPreloading();
 				IsPreloading = true;
 
@@ -98,13 +98,13 @@ namespace ZeroGravity
 				Dbg.Log("Started preloading...");
 				return;
 			}
-			_GeometryCacheTransform = geometryCache.transform;
+			_geometryCacheTransform = geometryCache.transform;
 
 			// Initialize structures.
-			StructureScene[] structureCache = _GeometryCacheTransform.gameObject.GetComponentsInChildren<StructureScene>(includeInactive: true);
+			StructureScene[] structureCache = _geometryCacheTransform.gameObject.GetComponentsInChildren<StructureScene>(includeInactive: true);
 			foreach (StructureScene structureScene in structureCache)
 			{
-				_LoadedSceneReferences.Add(new SceneReference
+				_loadedSceneReferences.Add(new SceneReference
 				{
 					GUID = structureScene.GUID,
 					Type = SceneType.Structure,
@@ -112,14 +112,14 @@ namespace ZeroGravity
 				});
 			}
 
-			// Initialize asteroids.
-			AsteroidScene[] astreoidCache = _GeometryCacheTransform.gameObject.GetComponentsInChildren<AsteroidScene>(includeInactive: true);
-			foreach (AsteroidScene asteroidScene in astreoidCache)
+			// Initialize celestial bodies.
+			AsteroidScene[] celestialScene = _geometryCacheTransform.gameObject.GetComponentsInChildren<AsteroidScene>(includeInactive: true);
+			foreach (AsteroidScene asteroidScene in celestialScene)
 			{
-				_LoadedSceneReferences.Add(new SceneReference
+				_loadedSceneReferences.Add(new SceneReference
 				{
 					GUID = asteroidScene.GUID,
-					Type = SceneType.Asteroid,
+					Type = SceneType.CelestialBody,
 					RootObject = asteroidScene.gameObject
 				});
 			}
@@ -130,19 +130,19 @@ namespace ZeroGravity
 		/// </summary>
 		private IEnumerator PreLoadScenesCoroutine()
 		{
-			float totalNumberOfScenes = _Structures.Count + _Asteroids.Count;
+			float totalNumberOfScenes = _structureScenes.Count + _celestialScenes.Count;
 			float currentSceneNumber = 0f;
 
-			// Load _Asteroids.
-			foreach (KeyValuePair<long, string> ast in _Asteroids)
+			// Load _celestialScenes.
+			foreach (KeyValuePair<long, string> celestial in _celestialScenes)
 			{
 				currentSceneNumber += 1f;
 				_StartupGUI.UpdateProgressBar(currentSceneNumber / totalNumberOfScenes);
-				yield return StartCoroutine(LoadSceneCoroutine(SceneType.Asteroid, ast.Key));
+				yield return StartCoroutine(LoadSceneCoroutine(SceneType.CelestialBody, celestial.Key));
 			}
 
-			// Load _Structures.
-			foreach (KeyValuePair<long, string> str in _Structures)
+			// Load _structureScenes.
+			foreach (KeyValuePair<long, string> str in _structureScenes)
 			{
 				currentSceneNumber += 1f;
 				_StartupGUI.UpdateProgressBar(currentSceneNumber / totalNumberOfScenes);
@@ -166,99 +166,100 @@ namespace ZeroGravity
 			}
 			foreach (GameScenes.SceneID sceneID in sceneIDs)
 			{
-				KeyValuePair<long, string> kv2 = _Structures.FirstOrDefault((KeyValuePair<long, string> m) => m.Key == (long)sceneID);
+				KeyValuePair<long, string> kv2 = _structureScenes.FirstOrDefault((KeyValuePair<long, string> m) => m.Key == (long)sceneID);
 				if (kv2.Key != 0)
 				{
 					yield return StartCoroutine(LoadSceneCoroutine(SceneType.Structure, kv2.Key));
 					continue;
 				}
-				kv2 = _Asteroids.FirstOrDefault((KeyValuePair<long, string> m) => m.Key == (long)sceneID);
+				kv2 = _celestialScenes.FirstOrDefault((KeyValuePair<long, string> m) => m.Key == (long)sceneID);
 				if (kv2.Key != 0)
 				{
-					yield return StartCoroutine(LoadSceneCoroutine(SceneType.Asteroid, kv2.Key));
+					yield return StartCoroutine(LoadSceneCoroutine(SceneType.CelestialBody, kv2.Key));
 				}
 			}
 		}
 
-		public GameObject GetLoadedScene(SceneType type, long GUID)
+		public GameObject GetLoadedScene(SceneType type, long guid)
 		{
-			SceneReference sceneItem = _LoadedSceneReferences.Find((SceneReference m) => m.GUID == GUID && m.Type == type);
+			SceneReference sceneItem = _loadedSceneReferences.Find((SceneReference m) => m.GUID == guid && m.Type == type);
 			if (sceneItem != null)
 			{
 				if (StartupManager.SceneLoadType == StartupManager.SceneLoadTypeValue.PreloadWithCopy)
 				{
 					return Instantiate(sceneItem.RootObject);
 				}
-				_LoadedSceneReferences.Remove(sceneItem);
+				_loadedSceneReferences.Remove(sceneItem);
 				return sceneItem.RootObject;
 			}
-			Dbg.Error("Cannot find loaded scene", type, GUID);
+			Dbg.Error("Cannot find loaded scene of type", type, "with guid", guid);
 			return null;
 		}
 
-		public IEnumerator LoadSceneCoroutine(SceneType type, long GUID)
+		public IEnumerator LoadSceneCoroutine(SceneType type, long guid)
 		{
-			if (StartupManager.SceneLoadType == StartupManager.SceneLoadTypeValue.PreloadWithCopy && _LoadedSceneReferences.FirstOrDefault((SceneReference m) => m.GUID == GUID && m.Type == type) != null)
+			if (StartupManager.SceneLoadType == StartupManager.SceneLoadTypeValue.PreloadWithCopy && _loadedSceneReferences.FirstOrDefault((SceneReference m) => m.GUID == guid && m.Type == type) != null)
 			{
 				yield break;
 			}
-			string sceneName = ((type != 0) ? _Asteroids[GUID] : _Structures[GUID]);
+			string sceneName = ((type != 0) ? _celestialScenes[guid] : _structureScenes[guid]);
 			if (sceneName.IsNullOrEmpty())
 			{
 				yield break;
 			}
 			Client.Instance.LoadingScenesCount++;
-			if (_LoadingScenes.Contains(GUID))
+			if (_scenesCurrentlyLoading.Contains(guid))
 			{
-				yield return new WaitWhile(() => _LoadingScenes.Contains(GUID));
+				yield return new WaitWhile(() => _scenesCurrentlyLoading.Contains(guid));
 			}
 			else
 			{
-				_LoadingScenes.Add(GUID);
+				_scenesCurrentlyLoading.Add(guid);
 				AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 				yield return new WaitUntil(() => asyncLoad.isDone);
-				UnityEngine.SceneManagement.Scene sc = SceneManager.GetSceneByName(sceneName);
+				UnityEngine.SceneManagement.Scene scene = SceneManager.GetSceneByName(sceneName);
+
 				if (type == SceneType.Structure)
 				{
-					GameObject[] rootGameObjects = sc.GetRootGameObjects();
-					foreach (GameObject gameObject in rootGameObjects)
+					GameObject[] rootGameObjects = scene.GetRootGameObjects();
+					foreach (GameObject rootObject in rootGameObjects)
 					{
-						StructureScene component = gameObject.GetComponent<StructureScene>();
-						if (component != null)
+						StructureScene sceneScript = rootObject.GetComponent<StructureScene>();
+						if (sceneScript is not null)
 						{
-							_LoadedSceneReferences.Add(new SceneReference
+							_loadedSceneReferences.Add(new SceneReference
 							{
 								Type = SceneType.Structure,
-								GUID = component.GUID,
-								RootObject = component.gameObject
+								GUID = sceneScript.GUID,
+								RootObject = sceneScript.gameObject
 							});
-							component.transform.SetParent(_GeometryCacheTransform.transform);
-							SceneManager.UnloadSceneAsync(sc);
+							sceneScript.transform.SetParent(_geometryCacheTransform.transform);
+							SceneManager.UnloadSceneAsync(scene);
 							break;
 						}
 					}
 				}
-				else
+				else if (type == SceneType.CelestialBody)
 				{
-					GameObject[] rootGameObjects2 = sc.GetRootGameObjects();
-					foreach (GameObject gameObject2 in rootGameObjects2)
+					GameObject[] rootGameObjects = scene.GetRootGameObjects();
+					foreach (GameObject rootObject in rootGameObjects)
 					{
-						AsteroidScene component2 = gameObject2.GetComponent<AsteroidScene>();
-						if (component2 != null)
+						AsteroidScene sceneScript = rootObject.GetComponent<AsteroidScene>();
+						if (sceneScript is not null)
 						{
-							_LoadedSceneReferences.Add(new SceneReference
+							_loadedSceneReferences.Add(new SceneReference
 							{
-								Type = SceneType.Asteroid,
-								GUID = component2.GUID,
-								RootObject = component2.gameObject
+								Type = SceneType.CelestialBody,
+								GUID = sceneScript.GUID,
+								RootObject = sceneScript.gameObject
 							});
-							component2.transform.SetParent(_GeometryCacheTransform.transform);
-							SceneManager.UnloadSceneAsync(sc);
+							sceneScript.transform.SetParent(_geometryCacheTransform.transform);
+							SceneManager.UnloadSceneAsync(scene);
 							break;
 						}
 					}
 				}
-				_LoadingScenes.Remove(GUID);
+				_scenesCurrentlyLoading.Remove(guid);
 			}
 			Client.Instance.LoadingScenesCount--;
 		}

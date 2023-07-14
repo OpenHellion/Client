@@ -30,6 +30,9 @@ using ZeroGravity.Math;
 
 namespace OpenHellion.UI
 {
+	/// <summary>
+	///		Controls the graphical user interface of the startup menu. This is the preloading menu, account login and creation menu, and the starting error box.
+	/// </summary>
 	public class StartupGUI : MonoBehaviour
 	{
 		[SerializeField] private List<Sprite> _PreloadImages = new List<Sprite>();
@@ -221,6 +224,10 @@ namespace OpenHellion.UI
 			StartCoroutine(Preload());
 		}
 
+		/// <summary>
+		///		Sets the bars progress. A value between 0 and 100.
+		/// </summary>
+		/// <param name="progress">Progress from 0 to 100.</param>
 		public void UpdateProgressBar(float progress)
 		{
 			_preloadProgress.value = progress;
@@ -238,9 +245,9 @@ namespace OpenHellion.UI
 
 		private IEnumerator Preload()
 		{
-			yield return new WaitForSeconds(10f);
 			_preloadText.text = _shuffledTexts.GetNextInLoop();
 			_preloadBackground.style.backgroundImage = new StyleBackground(_shuffledImages.GetNextInLoop());
+			yield return new WaitForSeconds(10f);
 		}
 
 		public void ShowErrorMessage(string title, string text, Action onClose)

@@ -1122,7 +1122,7 @@ public class AnimatorHelper : MonoBehaviour
 			animMain.SetBool("Reloading", reload.Value);
 			if (player is MyPlayer && !reload.Value && currentPlayerStance == MyPlayer.PlayerStance.Special)
 			{
-				(player as MyPlayer).ChangeCamerasFov(Client.SpecialCameraFov);
+				(player as MyPlayer).ChangeCamerasFov(Client.Instance.SpecialCameraFov);
 			}
 			if (oldReload == reload.Value)
 			{

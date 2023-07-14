@@ -6,8 +6,6 @@ namespace OpenHellion.Networking {
 	{
 		public CharacterData CharacterData;
 
-		public DateTime LastUpdateTime;
-
 		public string Id;
 
 		public string Name;
@@ -18,19 +16,13 @@ namespace OpenHellion.Networking {
 
 		public int StatusPort;
 
-		public bool Locked;
-
 		public uint Hash;
 
 		public int CurrentPlayers;
 
-		public int AlivePlayers;
-
 		public int MaxPlayers;
 
 		public bool Online;
-
-		public int PingTime;
 
 		public string Description;
 

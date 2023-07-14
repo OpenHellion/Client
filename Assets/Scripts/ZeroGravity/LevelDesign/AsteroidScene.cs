@@ -19,13 +19,13 @@ namespace ZeroGravity.LevelDesign
 		[Tooltip("Object radar signature")]
 		public float RadarSignature = 250000000f;
 
-		private float radius;
+		private float _radius;
 
 		public GameObject ExteriorObject;
 
 		public float RelativeDensity = 2.5f;
 
-		public bool SaveSceneData(out string error, List<AsteroidSceneData> asteroids = null)
+		public bool SaveSceneData(out string error, List<CelestialSceneData> asteroids = null)
 		{
 			error = string.Empty;
 			return true;
@@ -35,37 +35,37 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (Client.IsGameBuild)
 			{
-				base.gameObject.SetActive(false);
+				gameObject.SetActive(false);
 			}
 		}
 
 		public float GetMass()
 		{
-			float num = 0f;
-			SceneTriggerRoom[] componentsInChildren = base.gameObject.GetComponentsInChildren<SceneTriggerRoom>();
+			float triggerVolume = 0f;
+			SceneTriggerRoom[] componentsInChildren = gameObject.GetComponentsInChildren<SceneTriggerRoom>();
 			foreach (SceneTriggerRoom sceneTriggerRoom in componentsInChildren)
 			{
-				num += sceneTriggerRoom.Volume;
+				triggerVolume += sceneTriggerRoom.Volume;
 			}
-			float num2 = 0f;
+			float objectVolume = 0f;
 			if (ExteriorObject != null)
 			{
-				num2 = SceneHelper.VolumeOfGameObject(ExteriorObject);
-				if (num2 <= 0f)
+				objectVolume = SceneHelper.VolumeOfGameObject(ExteriorObject);
+				if (objectVolume <= 0f)
 				{
 					Dbg.Warning("Unable to calculate volume of '" + ExteriorObject.name + "'");
 					ExteriorObject = null;
 				}
 			}
-			if (num2 <= float.Epsilon || num2 < num)
+			if (objectVolume <= float.Epsilon || objectVolume < triggerVolume)
 			{
-				SceneColliderShipCollision[] componentsInChildren2 = base.gameObject.GetComponentsInChildren<SceneColliderShipCollision>();
+				SceneColliderShipCollision[] componentsInChildren2 = gameObject.GetComponentsInChildren<SceneColliderShipCollision>();
 				foreach (SceneColliderShipCollision sceneColliderShipCollision in componentsInChildren2)
 				{
-					num2 += SceneHelper.VolumeOfGameObject(sceneColliderShipCollision.gameObject);
+					objectVolume += SceneHelper.VolumeOfGameObject(sceneColliderShipCollision.gameObject);
 				}
 			}
-			float num3 = (num2 - num) * RelativeDensity;
+			float num3 = (objectVolume - triggerVolume) * RelativeDensity;
 			if (num3 <= 0f)
 			{
 				throw new Exception("Error calculating structure mass (ExteriorObject field invalid OR room triggers summary volume too big OR ship colliders invalid)");

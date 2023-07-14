@@ -577,8 +577,6 @@ namespace ZeroGravity
 
 		public static string Scanning;
 
-		public static string WrongPassword;
-
 		public static string All;
 
 		public static string SaveGameSettings;
@@ -2497,7 +2495,6 @@ namespace ZeroGravity
 			Ready = "Ready";
 			Radio = "Radio";
 			Scanning = "Scanning";
-			WrongPassword = "Wrong Password";
 			All = "All";
 			SaveGameSettings = "Are you sure you want to save game settings?";
 			SaveQualitySettings = "Changing quality settings will take some time, please confirm changes?";
