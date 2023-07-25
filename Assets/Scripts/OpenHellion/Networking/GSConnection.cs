@@ -77,7 +77,7 @@ namespace OpenHellion.Networking
 			try
 			{
 				// Package data.
-				ArraySegment<byte> binary = new(await ProtoSerialiser.Package(data));
+				ArraySegment<byte> binary = new(await ProtoSerialiser.Pack(data));
 
 				// Send data to server.
 				if (binary.Count <= _client.MaxMessageSize)
@@ -128,7 +128,7 @@ namespace OpenHellion.Networking
 			try
 			{
 				Debug.Assert(message.Array != null);
-				NetworkData networkData = await ProtoSerialiser.Unpackage(new MemoryStream(message.Array));
+				NetworkData networkData = await ProtoSerialiser.Unpack(new MemoryStream(message.Array));
 				if (networkData != null)
 				{
 					EventSystem.Instance.Invoke(networkData);

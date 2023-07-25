@@ -485,8 +485,6 @@ namespace ZeroGravity
 
 		public static string Disabled;
 
-		public static string ServerOffline;
-
 		public static string InvalidSystemSpesifications;
 
 		public static string ConnectionToGameBroken;
@@ -2449,7 +2447,6 @@ namespace ZeroGravity
 			ConnectionError = "Connection Error";
 			SystemError = "System Error";
 			Disabled = "Disabled";
-			ServerOffline = "Server is offline";
 			InvalidSystemSpesifications = "This computer has invalid system specifications. You need at least 4 gigabytes of RAM and a processor with at least a 2 GHz clock speed.";
 			ConnectionToGameBroken = "Connection to the game server has been lost.";
 			DeleteCharacter = "Delete character";

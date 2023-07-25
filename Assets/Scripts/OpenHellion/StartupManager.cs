@@ -60,7 +60,7 @@ namespace OpenHellion
 				}
 			}
 
-			_NakamaClient._OnError.AddListener(HandleNakamaError);
+			_NakamaClient.OnNakamaError.AddListener(HandleNakamaError);
 		}
 
 		private void Start()

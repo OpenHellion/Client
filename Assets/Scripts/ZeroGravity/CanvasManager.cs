@@ -220,7 +220,7 @@ namespace ZeroGravity
 			{
 				SelectScreen(Screen.MainMenu);
 			}
-			else if (Client.ReconnectAutomatically || Client.ForceRespawn)
+			else if (Client.ShouldReconnectAfterDeath || Client.ForceRespawn)
 			{
 				ToggleLoadingScreen(LoadingScreenType.ConnectingToGame);
 			}
@@ -281,7 +281,7 @@ namespace ZeroGravity
 				}
 				if (MainMenu.activeInHierarchy && !InGameMenuCanvas.activeInHierarchy)
 				{
-					Client.Instance.SignInButton();
+					Client.Instance.PlayMultiplayer();
 				}
 				else if (Client.Instance.CreateCharacterPanel.activeInHierarchy)
 				{
@@ -502,7 +502,7 @@ namespace ZeroGravity
 				m_ShowDeadMsgTime = 0f;
 				if (!Client.Instance.SinglePlayerMode)
 				{
-					Client.ReconnectAutomatically = true;
+					Client.ShouldReconnectAfterDeath = true;
 				}
 				DeadScreen.SetActive(value: false);
 				ToggleLoadingScreen(LoadingScreenType.ConnectingToMain);
@@ -750,7 +750,7 @@ namespace ZeroGravity
 		/// </summary>
 		public void PlayMP()
 		{
-			Client.Instance.SignInButton();
+			Client.Instance.PlayMultiplayer();
 		}
 
 		/// <summary>

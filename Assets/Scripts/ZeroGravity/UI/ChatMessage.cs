@@ -1,27 +1,25 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace ZeroGravity.UI
 {
 	public class ChatMessage : MonoBehaviour
 	{
-		public float thresholdTime;
+		[FormerlySerializedAs("thresholdTime")] public float ThresholdTime;
 
-		private float startTime;
+		private float _startTime;
 
 		public bool IsOverriden;
 
-		private void Start()
-		{
-		}
 
 		private void Update()
 		{
 			if (!IsOverriden)
 			{
-				startTime += Time.deltaTime;
-				if (startTime >= thresholdTime)
+				_startTime += Time.deltaTime;
+				if (_startTime >= ThresholdTime)
 				{
-					base.gameObject.SetActive(false);
+					gameObject.SetActive(false);
 				}
 			}
 		}
@@ -29,16 +27,16 @@ namespace ZeroGravity.UI
 		public void ShowMessage(bool val)
 		{
 			IsOverriden = val;
-			if (startTime >= thresholdTime)
+			if (_startTime >= ThresholdTime)
 			{
-				base.gameObject.SetActive(val);
+				gameObject.SetActive(val);
 			}
 		}
 
 		public void RemoveThisMessage()
 		{
 			IsOverriden = true;
-			Object.Destroy(base.gameObject);
+			Destroy(gameObject);
 		}
 	}
 }

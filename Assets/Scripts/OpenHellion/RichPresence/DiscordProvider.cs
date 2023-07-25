@@ -183,7 +183,7 @@ namespace OpenHellion.RichPresence
 		{
 			try
 			{
-				if (Client.Instance != null && Client.Instance.SinglePlayerMode)
+				if (Client.Instance is not null && Client.Instance.SinglePlayerMode)
 				{
 					_activity.State = "Playing single player game";
 					_activity.Details = "Having so much fun.";
@@ -196,13 +196,13 @@ namespace OpenHellion.RichPresence
 					_activity.Party.Size.MaxSize = 0;
 					_activity.Party.Id = string.Empty;
 				}
-				else if (MyPlayer.Instance != null && MyPlayer.Instance.PlayerReady)
+				else if (MyPlayer.Instance is not null && MyPlayer.Instance.PlayerReady)
 				{
 					_activity.Secrets.Join = Client.Instance.GetInviteString(null);
 					_activity.Assets.LargeText = Localization.InGameDescription + ": " + Client.LastConnectedServer.Name;
 					_activity.Details = Descriptions[UnityEngine.Random.Range(0, Descriptions.Count - 1)];
 					ArtificialBody artificialBody = MyPlayer.Instance.Parent as ArtificialBody;
-					if (artificialBody != null && artificialBody.ParentCelesitalBody != null)
+					if (artificialBody is not null && artificialBody.ParentCelesitalBody != null)
 					{
 						string value;
 						if (Planets.TryGetValue(artificialBody.ParentCelesitalBody.GUID, out value))

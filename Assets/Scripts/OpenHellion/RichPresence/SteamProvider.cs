@@ -130,7 +130,10 @@ namespace OpenHellion.RichPresence
 		}
 
 		/// <inheritdoc/>
-		public void UpdateStatus() { }
+		public void UpdateStatus()
+		{
+
+		}
 
 		/// <inheritdoc/>
 		public bool GetAchievement(AchievementID id, out bool achieved)

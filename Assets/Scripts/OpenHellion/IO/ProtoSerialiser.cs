@@ -58,7 +58,7 @@ namespace OpenHellion.IO
 			ms.Position = 0L;
 			try
 			{
-				networkData = ProtoBuf.Serializer.Deserialize<NetworkDataTransportWrapper>(ms).data;
+				networkData = Serializer.Deserialize<NetworkDataTransportWrapper>(ms).data;
 			}
 			catch (Exception ex)
 			{
@@ -79,7 +79,7 @@ namespace OpenHellion.IO
 			return networkData;
 		}
 
-		public static async Task<NetworkData> Unpackage(Stream str)
+		public static async Task<NetworkData> Unpack(Stream str)
 		{
 			int dataReadSize = 0;
 			int size;
@@ -118,10 +118,11 @@ namespace OpenHellion.IO
 			return Deserialize(ms);
 		}
 
-		public static async Task<byte[]> Package(NetworkData data)
+		public static async Task<byte[]> Pack(NetworkData data)
 		{
 			await using MemoryStream outMs = new MemoryStream();
 			await using MemoryStream ms = new MemoryStream();
+
 			try
 			{
 				NetworkDataTransportWrapper dataWrapper = new NetworkDataTransportWrapper
@@ -136,6 +137,7 @@ namespace OpenHellion.IO
 				Dbg.Error("Failed to serialize communication data", ex.Message, ex.StackTrace);
 				return null;
 			}
+
 			if (_statisticsLogUpdateTime > 0.0)
 			{
 				try
@@ -144,8 +146,10 @@ namespace OpenHellion.IO
 				}
 				catch
 				{
+					// Ignored.
 				}
 			}
+
 			await outMs.WriteAsync(BitConverter.GetBytes((uint)ms.Length), 0, 4);
 			await outMs.WriteAsync(ms.ToArray(), 0, (int)ms.Length);
 			await outMs.FlushAsync();

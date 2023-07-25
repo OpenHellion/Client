@@ -217,7 +217,7 @@ namespace OpenHellion.IO
 
 		public static void ResetInputAxis()
 		{
-			Debug.Log("Reset input axes!");
+			Dbg.Log("Reset input axes!");
 			//InputManager.ResetInputAxes();
 		}
 

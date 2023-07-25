@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using OpenHellion.IO;
@@ -12,7 +13,15 @@ namespace ZeroGravity.UI
 {
 	public class Chat : MonoBehaviour
 	{
-		public GameObject ChatGO;
+		/// <summary>
+		///		The chat state we are currently reading.
+		/// </summary>
+		public enum ChatState
+		{
+			Global,
+			Party,
+			Local
+		}
 
 		public GameObject ChatInputBox;
 
@@ -24,11 +33,11 @@ namespace ZeroGravity.UI
 
 		public Scrollbar ScrollBarVertical;
 
-		private GameObject ScrollBarHandle;
+		public GameObject ScrollBarHandle;
 
 		public List<ChatMessage> Messages = new List<ChatMessage>();
 
-		public int KeepMessegesCount = 30;
+		public int KeepMessagesCount = 30;
 
 		public Color GlobalColor = Colors.White;
 
@@ -36,11 +45,11 @@ namespace ZeroGravity.UI
 
 		public Color SystemColor = Colors.Orange;
 
-		private bool local;
+		private ChatState _chatState;
 
 		private void Start()
 		{
-			ScrollBarHandle = ScrollBarVertical.transform.Find("SlidingArea/Handle").gameObject;
+			Client.Instance.Nakama.OnChatMessageReceived += ReceiveMessage;
 		}
 
 		private void Update()
@@ -74,6 +83,11 @@ namespace ZeroGravity.UI
 			}
 		}
 
+		private void OnDestroy()
+		{
+			Client.Instance.Nakama.OnChatMessageReceived -= ReceiveMessage;
+		}
+
 		public void CreateSystemMessage(SystemMessagesTypes type, object[] param)
 		{
 			if (type == SystemMessagesTypes.RestartServerTime)
@@ -81,77 +95,89 @@ namespace ZeroGravity.UI
 				Client.Instance.CanvasManager.CanvasUI.Notification(string.Format(Localization.SystemChat[(int)type], param[0], param[1]), CanvasUI.NotificationType.Alert);
 				return;
 			}
-			GameObject gameObject = Object.Instantiate(ChatItemPref, base.transform.position, base.transform.rotation);
-			gameObject.transform.SetParent(ContentTrans);
-			gameObject.SetActive(true);
-			gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
-			string empty = string.Empty;
-			switch (type)
-			{
-			case SystemMessagesTypes.Custom:
-				empty = param[0].ToString();
-				break;
-			case SystemMessagesTypes.DoomedOutpostSpawned:
-				empty = string.Format(Localization.SystemChat[(int)type], param[0], param[1], param[2]);
-				break;
-			case SystemMessagesTypes.ShipTimerAllreadyStarted:
-			case SystemMessagesTypes.ShipInRange:
-				empty = Localization.SystemChat[(int)type];
-				break;
-			case SystemMessagesTypes.ShipWillArriveIn:
-				empty = string.Format(Localization.SystemChat[(int)type], param[0]);
-				break;
-			default:
-				empty = Localization.SystemChat[0];
-				break;
-			}
-			float num = 0f;
-			float num2 = empty.Length;
-			num = ((num2 <= 75f) ? 30f : ((!(num2 > 75f) || !(num2 <= 150f)) ? 90f : 60f));
-			gameObject.GetComponent<LayoutElement>().minHeight = num;
-			gameObject.transform.Find("UsernameText").GetComponent<Text>().text = Localization.System.ToUpper();
-			Text component = gameObject.transform.Find("BodyText").GetComponent<Text>();
-			component.color = SystemColor;
-			component.text = empty;
-			ChatMessage component2 = gameObject.GetComponent<ChatMessage>();
-			Messages.Add(component2);
-			if (Messages.Count > KeepMessegesCount)
-			{
-				Messages[0].RemoveThisMessage();
-				Messages.RemoveAt(0);
-			}
-			Client.Instance.CanvasManager.CanvasUI.Notification(empty, CanvasUI.NotificationType.Alert);
-		}
-
-		public void CreateMessage(string user, string body, bool local)
-		{
-			GameObject chatItem = Object.Instantiate(ChatItemPref, base.transform.position, base.transform.rotation);
+			GameObject chatItem = Instantiate(ChatItemPref, base.transform.position, base.transform.rotation);
 			chatItem.transform.SetParent(ContentTrans);
 			chatItem.SetActive(true);
 			chatItem.transform.localScale = new Vector3(1f, 1f, 1f);
-			float num = 0f;
-			float num2 = body.Length;
-			num = ((num2 <= 75f) ? 30f : ((!(num2 > 75f) || !(num2 <= 150f)) ? 90f : 60f));
-			chatItem.GetComponent<LayoutElement>().minHeight = num;
-			chatItem.transform.Find("UsernameText").GetComponent<Text>().text = user;
+			string messageText;
+			switch (type)
+			{
+			case SystemMessagesTypes.Custom:
+				messageText = param[0].ToString();
+				break;
+			case SystemMessagesTypes.DoomedOutpostSpawned:
+				messageText = string.Format(Localization.SystemChat[(int)type], param[0], param[1], param[2]);
+				break;
+			case SystemMessagesTypes.ShipTimerAllreadyStarted:
+			case SystemMessagesTypes.ShipInRange:
+				messageText = Localization.SystemChat[(int)type];
+				break;
+			case SystemMessagesTypes.ShipWillArriveIn:
+				messageText = string.Format(Localization.SystemChat[(int)type], param[0]);
+				break;
+			default:
+				messageText = Localization.SystemChat[0];
+				break;
+			}
+			float messageLength = messageText.Length;
+			float messageHeight = messageLength <= 75f ? 30f : !(messageLength > 75f) || !(messageLength <= 150f) ? 90f : 60f;
+			chatItem.GetComponent<LayoutElement>().minHeight = messageHeight;
+			chatItem.transform.Find("UsernameText").GetComponent<Text>().text = Localization.System.ToUpper();
 			Text component = chatItem.transform.Find("BodyText").GetComponent<Text>();
-			component.color = ((!local) ? GlobalColor : LocalColor);
-			component.text = body;
-			ChatMessage component2 = chatItem.GetComponent<ChatMessage>();
-			Messages.Add(component2);
-			if (Messages.Count > KeepMessegesCount)
+			component.color = SystemColor;
+			component.text = messageText;
+			ChatMessage chatMessage = chatItem.GetComponent<ChatMessage>();
+			Messages.Add(chatMessage);
+			if (Messages.Count > KeepMessagesCount)
+			{
+				Messages[0].RemoveThisMessage();
+				Messages.RemoveAt(0);
+			}
+			Client.Instance.CanvasManager.CanvasUI.Notification(messageText, CanvasUI.NotificationType.Alert);
+		}
+
+		private void ReceiveMessage(string username, string messageText)
+		{
+			// TODO: Workaround. All chat states should be supported.
+			CreateMessageElement(username, messageText, _chatState is ChatState.Local);
+		}
+
+		public void CreateMessageElement(string username, string messageText, bool local)
+		{
+			GameObject chatItem = Instantiate(ChatItemPref, transform.position, transform.rotation);
+			chatItem.transform.SetParent(ContentTrans);
+			chatItem.SetActive(true);
+			chatItem.transform.localScale = new Vector3(1f, 1f, 1f);
+			float messageHeight = messageText.Length <= 75f ? 30f : !(messageText.Length > 75f) || !(messageText.Length <= 150f) ? 90f : 60f;
+			chatItem.GetComponent<LayoutElement>().minHeight = messageHeight;
+			chatItem.transform.Find("UsernameText").GetComponent<Text>().text = username;
+
+			Text textComponent = chatItem.transform.Find("BodyText").GetComponent<Text>();
+			textComponent.color = !local ? GlobalColor : LocalColor;
+			textComponent.text = messageText;
+
+			ChatMessage messageComponent = chatItem.GetComponent<ChatMessage>();
+			Messages.Add(messageComponent);
+			if (Messages.Count > KeepMessagesCount)
 			{
 				Messages[0].RemoveThisMessage();
 				Messages.RemoveAt(0);
 			}
 		}
 
-		private void SendChatMessage(string msg)
+		private void SendChatMessage(string messageText)
 		{
-			TextChatMessage textChatMessage = new TextChatMessage();
-			textChatMessage.MessageText = msg;
-			textChatMessage.Local = local;
-			NetworkController.Instance.SendToGameServer(textChatMessage);
+			if (_chatState is ChatState.Local)
+			{
+				TextChatMessage textChatMessage = new TextChatMessage();
+				textChatMessage.MessageText = messageText;
+				textChatMessage.Local = true;
+				NetworkController.Instance.SendToGameServer(textChatMessage);
+			}
+			else
+			{
+				// TODO: Do this through nakama.
+			}
 		}
 
 		private IEnumerator ResetInputAndShowChat(bool show)
@@ -165,12 +191,13 @@ namespace ZeroGravity.UI
 			{
 				MyPlayer.Instance.FpsController.ToggleMovement(false);
 			}
-			else if (MyPlayer.Instance.LockedToTrigger == null && !MyPlayer.Instance.InLockState && !MyPlayer.Instance.InInteractState && !MyPlayer.Instance.InLerpingState)
+			else if (MyPlayer.Instance.LockedToTrigger is null && !MyPlayer.Instance.InLockState && !MyPlayer.Instance.InInteractState && !MyPlayer.Instance.InLerpingState)
 			{
 				MyPlayer.Instance.FpsController.ToggleMovement(true);
 			}
 		}
 
+		// Shows or hides the chat box.
 		private void ShowChat(bool show)
 		{
 			if (Client.Instance.CanvasManager.DisableChat)
@@ -183,43 +210,71 @@ namespace ZeroGravity.UI
 			ScrollBarHandle.SetActive(show);
 			ChatInputBox.SetActive(show);
 			OverrideChatMessages(show);
-			ChatInput.textComponent.color = ((!local) ? GlobalColor : LocalColor);
+			ChatInput.textComponent.color = _chatState is ChatState.Global ? GlobalColor : LocalColor;
 			if (show)
 			{
 				FocusInput();
 				return;
 			}
-			if (ChatInput.text == "/l" || ChatInput.text == "/L")
-			{
-				local = true;
-				ChatInput.text = string.Empty;
-				ShowChat(true);
-				return;
-			}
-			if (ChatInput.text == "/g" || ChatInput.text == "/G")
-			{
-				local = false;
-				ChatInput.text = string.Empty;
-				ShowChat(true);
-				return;
-			}
+
+			ParseMessageCommands();
+
 			if (ChatInput.text.Length > 0)
 			{
-				CreateMessage("me:", ChatInput.text, local);
-				string text = ChatInput.text;
-				if (text.Length > 250)
+				CreateMessageElement("me:", ChatInput.text, _chatState is ChatState.Local);
+				string truncatedString = ChatInput.text;
+				if (truncatedString.Length > 250)
 				{
-					text = text.Substring(0, 250);
+					truncatedString = truncatedString.Substring(0, 250);
 				}
-				SendChatMessage(text);
+				SendChatMessage(truncatedString);
 			}
 			ChatInput.text = string.Empty;
+		}
+
+		// Parses message and modifies the state directly.
+		private async void ParseMessageCommands()
+		{
+			if (ChatInput.text.Equals("/l", StringComparison.OrdinalIgnoreCase))
+			{
+				_chatState = ChatState.Local;
+				ChatInput.text = string.Empty;
+				ShowChat(true);
+			}
+			else if (ChatInput.text.Equals("/g", StringComparison.OrdinalIgnoreCase))
+			{
+				if (await Client.Instance.Nakama.JoinChatRoom(ChatState.Global))
+				{
+					_chatState = ChatState.Global;
+					ChatInput.text = string.Empty;
+					ShowChat(true);
+				}
+				else
+				{
+					Dbg.Error("Setting chat mode to party failed.");
+				}
+			}
+			else if (ChatInput.text.Equals("/p", StringComparison.OrdinalIgnoreCase))
+			{
+				if (await Client.Instance.Nakama.JoinChatRoom(ChatState.Party))
+				{
+					_chatState = ChatState.Party;
+					ChatInput.text = string.Empty;
+					ShowChat(true);
+				}
+				else
+				{
+					Dbg.Error("Setting chat mode to party failed.");
+				}
+			}
+
+			// TODO: ad the rest of the states.
 		}
 
 		public void CloseChat()
 		{
 			ShowChat(false);
-			if (MyPlayer.Instance.LockedToTrigger == null)
+			if (MyPlayer.Instance.LockedToTrigger is null)
 			{
 				MyPlayer.Instance.FpsController.ToggleMovement(true);
 			}

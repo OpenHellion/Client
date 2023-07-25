@@ -129,7 +129,7 @@ namespace ZeroGravity.UI
 				ServerInfoScreen.SetActive(false);
 				InGameMenuScreen.SetActive(true);
 				//Client.Instance.InputModule.UseCustomCursorPosition = false;
-				ServerNameText.text = (!Client.Instance.SinglePlayerMode) ? Client.LastConnectedServer.Name : Localization.SinglePlayer;
+				ServerNameText.text = (!Client.Instance.SinglePlayerMode) ? Localization.Multiplayer : Localization.SinglePlayer;
 				ServerDescriptionText.text = (!Client.Instance.SinglePlayerMode) ? Client.LastConnectedServer.Description : Localization.SinglePlayerModeDescription;
 				SaveButton.SetActive(Client.Instance.SinglePlayerMode);
 				LoadButton.SetActive(Client.Instance.SinglePlayerMode);

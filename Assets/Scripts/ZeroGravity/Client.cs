@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -27,6 +28,8 @@ using OpenHellion.IO;
 using OpenHellion;
 using UnityEngine.InputSystem;
 using OpenHellion.Social;
+using OpenHellion.Social.NakamaRpc;
+using WebSocketSharp;
 using Debug = UnityEngine.Debug;
 
 namespace ZeroGravity
@@ -238,7 +241,7 @@ namespace ZeroGravity
 
 		private IEnumerator _inviteCoroutine;
 
-		public static bool ReconnectAutomatically;
+		public static bool ShouldReconnectAfterDeath;
 
 		public static ServerData LastConnectedServer;
 
@@ -267,11 +270,9 @@ namespace ZeroGravity
 		[NonSerialized]
 		public double ExposureRange;
 
-		[NonSerialized]
-		public float[] VesselExposureValues;
+		private float[] _vesselExposureValues;
 
-		[NonSerialized]
-		public float[] PlayerExposureValues;
+		private float[] _playerExposureValues;
 
 		/// <summary>
 		/// 	If we have loaded up a save or joined a server, and is in game.<br/>
@@ -303,10 +304,7 @@ namespace ZeroGravity
 		private float _headbobStrength;
 		public float HeadbobStrength
 		{
-			get
-			{
-				return _headbobStrength;
-			}
+			get => _headbobStrength;
 			set
 			{
 				_headbobStrength = value;
@@ -320,10 +318,7 @@ namespace ZeroGravity
 		private int _antialiasingOption;
 		public int AntialiasingOption
 		{
-			get
-			{
-				return _antialiasingOption;
-			}
+			get => _antialiasingOption;
 			set
 			{
 				_antialiasingOption = value;
@@ -337,10 +332,7 @@ namespace ZeroGravity
 		private bool _volumetricOption;
 		public bool VolumetricOption
 		{
-			get
-			{
-				return _volumetricOption;
-			}
+			get => _volumetricOption;
 			set
 			{
 				_volumetricOption = value;
@@ -398,7 +390,7 @@ namespace ZeroGravity
 			SceneVesselEmblem.Textures = emblems.ToDictionary(x => x.name, y => y);
 
 			UserId = await Nakama.GetUserId();
-			Username = await Nakama.GetUsername();
+			Username = await Nakama.GetDisplayName();
 		}
 
 		private void Start()
@@ -442,7 +434,9 @@ namespace ZeroGravity
 			{
 				Localization.RevertToDefault();
 			}
+
 			InGamePanels.LocalizePanels();
+
 			EventSystem.AddListener(typeof(LogInResponse), LogInResponseListener);
 			EventSystem.AddListener(typeof(KillPlayerMessage), KillPlayerMessageListener);
 			EventSystem.AddListener(typeof(LogOutResponse), LogOutResponseListener);
@@ -476,7 +470,7 @@ namespace ZeroGravity
 					CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.ConnectingToMain);
 					CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
 				}
-				if (ReconnectAutomatically)
+				if (ShouldReconnectAfterDeath)
 				{
 					if (SinglePlayerRespawn)
 					{
@@ -490,10 +484,12 @@ namespace ZeroGravity
 					}
 				}
 			}
+
 			if (Settings.Instance != null)
 			{
 				Settings.Instance.LoadSettings(Settings.SettingsType.Game);
 			}
+
 			if (SinglePlayerQuickLoad)
 			{
 				PlaySingleplayer();
@@ -511,18 +507,6 @@ namespace ZeroGravity
 			return JsonSerialiser.Serialize(inviteMessage);
 		}
 
-		private IEnumerator LoadMainMenuScene()
-		{
-			yield return SceneManager.LoadSceneAsync("MainMenu", LoadSceneMode.Additive);
-			yield return new WaitForEndOfFrame();
-			yield return new WaitForEndOfFrame();
-			GameObject[] rootGameObjects = SceneManager.GetSceneByName("MainMenu").GetRootGameObjects();
-			foreach (GameObject gameObject in rootGameObjects)
-			{
-				gameObject.transform.parent = MainMenuRoot.transform;
-			}
-		}
-
 		private void RemoveLoadingCanvasListener(EventSystem.InternalEventData data)
 		{
 			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.None);
@@ -534,7 +518,7 @@ namespace ZeroGravity
 			foreach (DynamicObjectInfo info in dynamicObjectsInfoMessage.Infos)
 			{
 				DynamicObject dynamicObject = GetObject(info.GUID, SpaceObjectType.DynamicObject) as DynamicObject;
-				if (dynamicObject != null && dynamicObject.Item != null)
+				if (dynamicObject is not null && dynamicObject.Item is not null)
 				{
 					dynamicObject.Item.ProcesStatsData(info.Stats);
 				}
@@ -557,15 +541,15 @@ namespace ZeroGravity
 							Map.InitializeMapObject(spaceObjectVessel);
 						}
 					}
-					else if (datum.Type == SpaceObjectType.DynamicObject && GetDynamicObject(datum.GUID) == null)
+					else if (datum.Type == SpaceObjectType.DynamicObject && GetDynamicObject(datum.GUID) is null)
 					{
 						DynamicObject.SpawnDynamicObject(datum);
 					}
-					else if (datum.Type == SpaceObjectType.Corpse && GetCorpse(datum.GUID) == null)
+					else if (datum.Type == SpaceObjectType.Corpse && GetCorpse(datum.GUID) is null)
 					{
 						Corpse.SpawnCorpse(datum);
 					}
-					else if (datum.Type == SpaceObjectType.Player && GetPlayer(datum.GUID) == null)
+					else if (datum.Type == SpaceObjectType.Player && GetPlayer(datum.GUID) is null)
 					{
 						OtherPlayer.SpawnPlayer(datum);
 					}
@@ -690,11 +674,11 @@ namespace ZeroGravity
 						{
 							spaceObjectVessel = SolarSystem.ArtificialBodies.FirstOrDefault((ArtificialBody m) => m is SpaceObjectVessel && (m as SpaceObjectVessel).IsMainVessel && (m as SpaceObjectVessel).VesselData != null && (m as SpaceObjectVessel).VesselData.SpawnRuleID == det.SpawnRuleID) as SpaceObjectVessel;
 						}
-						if (spaceObjectVessel == null)
+						if (spaceObjectVessel is null)
 						{
 							spaceObjectVessel = GetVessel(det.GUID);
 						}
-						if (spaceObjectVessel != null)
+						if (spaceObjectVessel is not null)
 						{
 							spaceObjectVessel.RadarVisibilityType = RadarVisibilityType.Unknown;
 							spaceObjectVessel.LastKnownMapOrbit = new OrbitParameters();
@@ -726,7 +710,7 @@ namespace ZeroGravity
 
 		private IEnumerator LoadMainScenesCoroutine(PlayerSpawnResponse s, Ship sh, VesselObjects shipObjects)
 		{
-			if (sh != null)
+			if (sh is not null)
 			{
 				yield return StartCoroutine(sh.LoadShipScenesCoroutine(isMainShip: true, shipObjects));
 				if (s.DockedVessels != null && s.DockedVessels.Count > 0)
@@ -820,7 +804,7 @@ namespace ZeroGravity
 			}
 			catch
 			{
-				ReconnectAutomatically = false;
+				ShouldReconnectAfterDeath = false;
 				OpenMainScreen();
 			}
 		}
@@ -906,7 +890,7 @@ namespace ZeroGravity
 		private void LogOutResponseListener(NetworkData data)
 		{
 			LogOutResponse logOutResponse = data as LogOutResponse;
-			if (logOutResponse.Response == ResponseResult.Error)
+			if (logOutResponse is null || logOutResponse.Response == ResponseResult.Error)
 			{
 				Dbg.Error("Failed to log out properly");
 			}
@@ -930,18 +914,18 @@ namespace ZeroGravity
 		{
 			DestroyObjectMessage destroyObjectMessage = data as DestroyObjectMessage;
 			SpaceObject obj = GetObject(destroyObjectMessage.ID, destroyObjectMessage.ObjectType);
-			if (obj != null && obj.Type != SpaceObjectType.PlayerPivot && obj.Type != SpaceObjectType.DynamicObjectPivot && obj.Type != SpaceObjectType.CorpsePivot)
+			if (obj is not null && obj.Type != SpaceObjectType.PlayerPivot && obj.Type != SpaceObjectType.DynamicObjectPivot && obj.Type != SpaceObjectType.CorpsePivot)
 			{
 				obj.DestroyGeometry();
-				if (obj is DynamicObject && (obj as DynamicObject).Item != null && (obj as DynamicObject).Item.AttachPoint != null)
+				if (obj is DynamicObject && (obj as DynamicObject).Item is not null && (obj as DynamicObject).Item.AttachPoint is not null)
 				{
 					(obj as DynamicObject).Item.AttachPoint.DetachItem((obj as DynamicObject).Item);
 				}
-				if (MyPlayer.Instance != null && MyPlayer.Instance.CurrentActiveItem != null && MyPlayer.Instance.CurrentActiveItem.GUID == obj.GUID)
+				if (MyPlayer.Instance is not null && MyPlayer.Instance.CurrentActiveItem is not null && MyPlayer.Instance.CurrentActiveItem.GUID == obj.GUID)
 				{
 					MyPlayer.Instance.Inventory.RemoveItemFromHands(resetStance: true);
 				}
-				UnityEngine.Object.Destroy(obj.gameObject);
+				Destroy(obj.gameObject);
 			}
 		}
 
@@ -990,8 +974,8 @@ namespace ZeroGravity
 		public void ConnectionFailedListener(EventSystem.InternalEventData data)
 		{
 			CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
-			ReconnectAutomatically = false;
-			StartMultiplayer(true);
+			ShouldReconnectAfterDeath = false;
+			SignInAnStartMultiplayer(true);
 		}
 
 		public void CloseAllLoadingScreensListener(EventSystem.InternalEventData data)
@@ -1012,7 +996,7 @@ namespace ZeroGravity
 			_receivedSignInResponse = false;
 			InviteScreen.SetActive(value: true);
 
-			StartMultiplayer();
+			SignInAnStartMultiplayer();
 			CanvasManager.Disclamer.SetActive(value: false);
 
 			yield return new WaitUntil(() => _receivedSignInResponse);
@@ -1205,7 +1189,7 @@ namespace ZeroGravity
 			MyPlayer.Instance.IsAlive = false;
 			if (ForceRespawn)
 			{
-				ReconnectAutomatically = true;
+				ShouldReconnectAfterDeath = true;
 				LogoutRequestSent = true;
 				return;
 			}
@@ -1464,7 +1448,7 @@ namespace ZeroGravity
 
 		private void MovementMessageListener(NetworkData data)
 		{
-			if (MyPlayer.Instance == null)
+			if (MyPlayer.Instance is null)
 			{
 				return;
 			}
@@ -1472,30 +1456,31 @@ namespace ZeroGravity
 			float num = 0f;
 			MovementMessage movementMessage = data as MovementMessage;
 			LastMovementMessageTime = Time.realtimeSinceStartup;
-			List<ArtificialBody> list = new List<ArtificialBody>(SolarSystem.ArtificialBodies);
+			var artificialBodies = SolarSystem.ArtificialBodies;
 			if (movementMessage.Transforms != null && movementMessage.Transforms.Count > 0)
 			{
 				foreach (ObjectTransform transform in movementMessage.Transforms)
 				{
 					bool flag = false;
 					ArtificialBody artificialBody = SolarSystem.GetArtificialBody(transform.GUID);
-					if (artificialBody != null)
+					if (artificialBody is not null)
 					{
-						list.Remove(artificialBody);
+						artificialBodies.Remove(artificialBody);
 					}
-					if (artificialBody == null && transform.GUID == MyPlayer.Instance.GUID)
+					switch (artificialBody)
 					{
-						continue;
+						case null when transform.GUID == MyPlayer.Instance.GUID:
+							continue;
+						case null when (transform.Orbit != null || transform.Realtime != null || (transform.StabilizeToTargetGUID.HasValue && transform.StabilizeToTargetGUID.Value > 0)):
+							artificialBody = ArtificialBody.CreateArtificialBody(transform);
+							flag = true;
+							break;
 					}
-					if (artificialBody == null && (transform.Orbit != null || transform.Realtime != null || (transform.StabilizeToTargetGUID.HasValue && transform.StabilizeToTargetGUID.Value > 0)))
+
+					if (artificialBody is not null || transform.Type == SpaceObjectType.DynamicObject || transform.Type != SpaceObjectType.PlayerPivot)
 					{
-						artificialBody = ArtificialBody.CreateArtificialBody(transform);
-						flag = true;
 					}
-					if (!(artificialBody == null) || transform.Type == SpaceObjectType.DynamicObject || transform.Type != SpaceObjectType.PlayerPivot)
-					{
-					}
-					if (!(artificialBody != null))
+					if (artificialBody is null)
 					{
 						continue;
 					}
@@ -1507,9 +1492,9 @@ namespace ZeroGravity
 					{
 						CelestialBody celestialBody = artificialBody.Orbit.Parent.CelestialBody;
 						artificialBody.DisableStabilization();
-						if (artificialBody is Ship && (artificialBody as Ship).WarpStartEffectTask != null)
+						if (artificialBody is Ship ship && ship.WarpStartEffectTask != null)
 						{
-							(artificialBody as Ship).WarpStartEffectTask.RunSynchronously();
+							ship.WarpStartEffectTask.RunSynchronously();
 						}
 						artificialBody.Orbit.ParseNetworkData(transform.Orbit);
 						artificialBody.UpdateOrbitPosition(SolarSystem.CurrentTime, resetTime: true);
@@ -1558,7 +1543,7 @@ namespace ZeroGravity
 								continue;
 							}
 							OtherPlayer player = Instance.GetPlayer(item.GUID);
-							if (player != null)
+							if (player is not null)
 							{
 								player.ProcessMovementMessage(item);
 							}
@@ -1571,7 +1556,7 @@ namespace ZeroGravity
 							if (item2 != null)
 							{
 								DynamicObject dynamicObject = Instance.GetDynamicObject(item2.GUID);
-								if (dynamicObject != null)
+								if (dynamicObject is not null)
 								{
 									dynamicObject.ProcessDynamicObectMovementMessage(item2);
 								}
@@ -1585,7 +1570,7 @@ namespace ZeroGravity
 							if (item3 != null)
 							{
 								Corpse corpse = Instance.GetCorpse(item3.GUID);
-								if (corpse != null)
+								if (corpse is not null)
 								{
 									corpse.ProcessMoveCorpseObectMessage(item3);
 								}
@@ -1600,14 +1585,14 @@ namespace ZeroGravity
 					}
 				}
 			}
-			if (list.Count > 0)
+			if (artificialBodies.Count > 0)
 			{
-				foreach (ArtificialBody item4 in list)
+				foreach (ArtificialBody body in artificialBodies)
 				{
-					float num3 = (item4.transform.position - MyPlayer.Instance.transform.position).sqrMagnitude - (float)(item4.Radius * item4.Radius);
-					if (item4 is SpaceObjectVessel && !(item4 as SpaceObjectVessel).IsDebrisFragment && (spaceObjectVessel == null || (num > num3 && (spaceObjectVessel.FTLEngine == null || spaceObjectVessel.FTLEngine.Status != SystemStatus.Online || (spaceObjectVessel.Velocity - MyPlayer.Instance.Parent.Velocity).SqrMagnitude < 900.0))))
+					float num3 = (body.transform.position - MyPlayer.Instance.transform.position).sqrMagnitude - (float)(body.Radius * body.Radius);
+					if (body is SpaceObjectVessel && !(body as SpaceObjectVessel).IsDebrisFragment && (spaceObjectVessel == null || (num > num3 && (spaceObjectVessel.FTLEngine == null || spaceObjectVessel.FTLEngine.Status != SystemStatus.Online || (spaceObjectVessel.Velocity - MyPlayer.Instance.Parent.Velocity).SqrMagnitude < 900.0))))
 					{
-						spaceObjectVessel = item4 as SpaceObjectVessel;
+						spaceObjectVessel = body as SpaceObjectVessel;
 						num = num3;
 					}
 				}
@@ -1712,15 +1697,6 @@ namespace ZeroGravity
 		/// </summary>
 		public IEnumerator ConnectToServerCoroutine(ServerData server)
 		{
-
-			// Cancel if server is offline.
-			if (!server.Online)
-			{
-				ShowMessageBox(Localization.ConnectionError, Localization.ServerOffline);
-				_connectToServerCoroutine = null;
-				yield break;
-			}
-
 			// TODO: Make this a function call to a class for the CreateCharacterPanel and get the result from there.
 			// Create new character if you don't have it from before.
 			if (server.CharacterData is null && _newCharacterData is null)
@@ -1743,14 +1719,6 @@ namespace ZeroGravity
 						HairType = 1
 					};
 				}
-			}
-
-			// Check if server is still online.
-			if (!server.Online)
-			{
-				ShowMessageBox(Localization.ConnectionError, Localization.ServerOffline);
-				_connectToServerCoroutine = null;
-				yield break;
 			}
 
 			// Prepare for connection.
@@ -1789,7 +1757,7 @@ namespace ZeroGravity
 					PlayerId = NetworkController.PlayerId
 				};
 
-				await NetworkController.SendTcp(deleteCharacterRequest, gs.IpAddress, gs.StatusPort, false, true);
+				await NetworkController.SendTcp(deleteCharacterRequest, gs.IpAddress, (int) gs.StatusPort, false, true);
 			});
 		}
 
@@ -1807,10 +1775,10 @@ namespace ZeroGravity
 			LogInResponse logInResponse = data as LogInResponse;
 			LogInResponseReceived = true;
 
-			// If we're reconnecting we don't need to initalise game state again.
-			if (ReconnectAutomatically)
+			// If we're respawning we don't need to initialise game state again.
+			if (ShouldReconnectAfterDeath)
 			{
-				ReconnectAutomatically = false;
+				ShouldReconnectAfterDeath = false;
 			}
 
 			if (logInResponse.Response == ResponseResult.Success)
@@ -1854,8 +1822,8 @@ namespace ZeroGravity
 				Quests = logInResponse.Quests.Select((QuestData m) => new Quest(m)).ToList();
 				SpaceObjectVessel.VesselDecayRateMultiplier = logInResponse.VesselDecayRateMultiplier;
 				ExposureRange = logInResponse.ExposureRange;
-				VesselExposureValues = logInResponse.VesselExposureValues;
-				PlayerExposureValues = logInResponse.PlayerExposureValues;
+				_vesselExposureValues = logInResponse.VesselExposureValues;
+				_playerExposureValues = logInResponse.PlayerExposureValues;
 			}
 			else
 			{
@@ -1865,22 +1833,25 @@ namespace ZeroGravity
 			}
 		}
 
-		public void SignInButton()
+		/// <summary>
+		///		Starts connecting to multiplayer assuming you are on the main menu screen.
+		/// </summary>
+		public void PlayMultiplayer()
 		{
 			CanvasManager.SelectScreen(CanvasManager.Screen.Loading);
 			SinglePlayerMode = false;
-			StartMultiplayer();
+			SignInAnStartMultiplayer();
 		}
 
 		/// <summary>
 		/// 	Get server to connect to from the main server, then start multiplayer game.
 		/// </summary>
-		private void StartMultiplayer(bool reconnecting = false)
+		private async void SignInAnStartMultiplayer(bool reconnecting = false)
 		{
 			CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.SigningIn);
 
-			// Reconnecting is handled elsewhere, so we just cancel the rest of this code.
-			if (ReconnectAutomatically)
+			// Respawning is handled elsewhere, so we just cancel the rest of this code.
+			if (ShouldReconnectAfterDeath)
 			{
 				return;
 			}
@@ -1889,26 +1860,40 @@ namespace ZeroGravity
 			ServerData connectingServerData = LastConnectedServer;
 			if (!reconnecting)
 			{
-				Regex regex = new Regex("[^0-9.]");
-				SignInRequest signInRequest = new SignInRequest()
+				if (LastConnectedServer is null)
 				{
-					Version = regex.Replace(Application.version, string.Empty),
-					Hash = CombinedHash,
-					JoiningId = InvitedToServerId
-				};
-
-				SignInResponse signInResponse;
-				try
-				{
-					//  TODO: Send connection message to Nakama.
-					// signInResponse = await Nakama.DoSomething();
-					signInResponse = new SignInResponse();
+					await Nakama.CreateSocket();
 				}
-				catch (Exception)
+
+				if (InvitedToServerId is not null)
 				{
-					ShowMessageBox(Localization.ConnectionError, Localization.NoNakamaConnection);
-					OpenMainScreen();
-					return;
+					connectingServerData = await Nakama.JoinMatch(InvitedToServerId);
+				}
+				else
+				{
+					string[] result;
+					try
+					{
+						Regex regex = new Regex("[^0-9.]");
+						result = await Nakama.FindMatches(new FindMatchesRequest()
+						{
+							Version = regex.Replace(Application.version, string.Empty),
+							Hash = CombinedHash,
+							Location = CultureInfo.CurrentCulture.EnglishName
+						});
+					}
+					catch (WebSocketException ex)
+					{
+						CanvasManager.ToggleLoadingScreen(CanvasManager.LoadingScreenType.None);
+						ShowMessageBox(Localization.ConnectionError, Localization.VersionError);
+						Dbg.Error("Encountered server error with message: " + ex.Message);
+						return;
+					}
+
+
+					// TODO: Add selection menu or something-
+					connectingServerData = await Nakama.JoinMatch(result[0]);
+					connectingServerData.Hash = CombinedHash;
 				}
 
 				// TODO: Move this to InitialisingScene.
@@ -1922,18 +1907,6 @@ namespace ZeroGravity
 				//	CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
 				//	ShowMessageBox(Localization.VersionError, Localization.VersionErrorMessage);
 				//}
-				//else
-				{
-					connectingServerData = new()
-					{
-						Id = signInResponse.Server.Id,
-						IpAddress = signInResponse.Server.IpAddress,
-						GamePort = signInResponse.Server.GamePort,
-						StatusPort = signInResponse.Server.StatusPort,
-						Hash = signInResponse.Server.Hash,
-						Online = true
-					};
-				}
 			}
 
 			CanvasManager.SelectScreen(CanvasManager.Screen.CharacterSelect);
@@ -2106,7 +2079,7 @@ namespace ZeroGravity
 						};
 					}
 
-					NetworkController.Instance.ConnectToGameSP(gamePort, response.CharacterData);
+					NetworkController.Instance.ConnectToGameSp(gamePort, response.CharacterData);
 
 					this.InvokeRepeating(CheckLoadingComplete, 3f, 1f);
 
@@ -2143,9 +2116,9 @@ namespace ZeroGravity
 			{
 				CanvasManager.DeadScreen.SetActive(value: false);
 			}
-			CanvasManager.TextChat.CreateMessage(null, "LOADING GAME.", local: false);
+			CanvasManager.TextChat.CreateMessageElement(null, "LOADING GAME.", local: false);
 			SinglePlayerQuickLoad = true;
-			if (MyPlayer.Instance == null || !MyPlayer.Instance.IsAlive)
+			if (MyPlayer.Instance is null || !MyPlayer.Instance.IsAlive)
 			{
 				OpenMainScreen();
 				return;
@@ -2159,7 +2132,7 @@ namespace ZeroGravity
 
 		public void QuickSave()
 		{
-			CanvasManager.TextChat.CreateMessage(null, "SAVING GAME.", local: false);
+			CanvasManager.TextChat.CreateMessageElement(null, "SAVING GAME.", local: false);
 			NetworkController.Instance.SendToGameServer(new SaveGameMessage
 			{
 				FileName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".save",
@@ -2170,7 +2143,7 @@ namespace ZeroGravity
 		public void AutoSave()
 		{
 			_lastSpAutosaveTime = Time.time;
-			CanvasManager.TextChat.CreateMessage(null, "SAVING GAME.", local: false);
+			CanvasManager.TextChat.CreateMessageElement(null, "SAVING GAME.", local: false);
 			NetworkController.Instance.SendToGameServer(new SaveGameMessage
 			{
 				FileName = "autosave.save",
@@ -2211,7 +2184,7 @@ namespace ZeroGravity
 		{
 			_lastLatencyMessageTime = Time.realtimeSinceStartup;
 
-			int latency = await NetworkController.LatencyTest(LastConnectedServer.IpAddress, LastConnectedServer.StatusPort);
+			int latency = await NetworkController.LatencyTest(LastConnectedServer.IpAddress, (int) LastConnectedServer.StatusPort);
 			_latencyMs = latency;
 
 			if (MyPlayer.Instance.IsAlive)
@@ -2282,7 +2255,7 @@ namespace ZeroGravity
 		private IEnumerator FixPlayerInCryo()
 		{
 			SceneTriggerExecuter exec = MyPlayer.Instance.Parent.GetComponentsInChildren<SceneTriggerExecuter>(includeInactive: true).FirstOrDefault((SceneTriggerExecuter m) => m.IsMyPlayerInLockedState && m.CurrentState == "spawn");
-			if (!(exec == null))
+			if (exec is not null)
 			{
 				yield return new WaitUntil(() => MyPlayer.Instance.gameObject.activeInHierarchy);
 				yield return new WaitForSecondsRealtime(0.5f);
@@ -2292,20 +2265,20 @@ namespace ZeroGravity
 
 		public float GetVesselExposureDamage(double distance)
 		{
-			if (VesselExposureValues == null)
+			if (_vesselExposureValues == null)
 			{
 				return 1f;
 			}
-			return VesselExposureValues[(int)(Mathf.Clamp01((float)(distance / ExposureRange)) * 99f)];
+			return _vesselExposureValues[(int)(Mathf.Clamp01((float)(distance / ExposureRange)) * 99f)];
 		}
 
 		public float GetPlayerExposureDamage(double distance)
 		{
-			if (PlayerExposureValues == null)
+			if (_playerExposureValues == null)
 			{
 				return 0f;
 			}
-			return PlayerExposureValues[(int)(Mathf.Clamp01((float)(distance / ExposureRange)) * 99f)];
+			return _playerExposureValues[(int)(Mathf.Clamp01((float)(distance / ExposureRange)) * 99f)];
 		}
 
 		private void UpdateVesselDataMessageListener(NetworkData data)

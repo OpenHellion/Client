@@ -13,8 +13,6 @@ namespace ZeroGravity.Objects
 
 		public bool ManeuverExited;
 
-		private CelestialBody _ParentCelesitalBody;
-
 		public VesselDestructionEffects DestructionEffects;
 
 		private RadarVisibilityType _RadarVisibilityType;
@@ -29,31 +27,13 @@ namespace ZeroGravity.Objects
 
 		public virtual OrbitParameters Orbit { get; set; }
 
-		public virtual CelestialBody ParentCelesitalBody
-		{
-			get
-			{
-				return Orbit.Parent.CelestialBody;
-			}
-		}
+		public virtual CelestialBody ParentCelesitalBody => Orbit.Parent.CelestialBody;
 
 		public double Radius { get; protected set; }
 
-		public override Vector3D Velocity
-		{
-			get
-			{
-				return Orbit.Velocity;
-			}
-		}
+		public override Vector3D Velocity => Orbit.Velocity;
 
-		public override Vector3D Position
-		{
-			get
-			{
-				return Orbit.Position;
-			}
-		}
+		public override Vector3D Position => Orbit.Position;
 
 		public RadarVisibilityType RadarVisibilityType
 		{
@@ -76,37 +56,13 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public virtual bool IsDistressSignalActive
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public virtual bool IsDistressSignalActive => false;
 
-		public virtual bool IsAlwaysVisible
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public virtual bool IsAlwaysVisible => false;
 
-		public virtual double RadarSignature
-		{
-			get
-			{
-				return 0.0;
-			}
-		}
+		public virtual double RadarSignature => 0.0;
 
-		public bool IsStabilized
-		{
-			get
-			{
-				return StabilizeToTargetObj != null;
-			}
-		}
+		public bool IsStabilized => StabilizeToTargetObj is not null;
 
 		public static ArtificialBody Create(SpaceObjectType type, long guid, ObjectTransform trans, bool isMainObject)
 		{

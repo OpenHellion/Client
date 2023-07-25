@@ -69,7 +69,7 @@ namespace OpenHellion.UI
 
 		private void OnEnable()
 		{
-			_NakamaClient._OnRequireAuthentication.AddListener(OpenAuthenticationScreen);
+			_NakamaClient.OnRequireAuthentication.AddListener(OpenAuthenticationScreen);
 
 			// The UXML is already instantiated by the UIDocument component
 			var uiDocument = GetComponent<UIDocument>();

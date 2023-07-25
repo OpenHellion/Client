@@ -12,9 +12,9 @@ namespace OpenHellion.Networking {
 
 		public string IpAddress;
 
-		public int GamePort;
+		public uint GamePort;
 
-		public int StatusPort;
+		public uint StatusPort;
 
 		public uint Hash;
 
@@ -22,10 +22,6 @@ namespace OpenHellion.Networking {
 
 		public int MaxPlayers;
 
-		public bool Online;
-
 		public string Description;
-
-		public int Ping;
 	}
 }

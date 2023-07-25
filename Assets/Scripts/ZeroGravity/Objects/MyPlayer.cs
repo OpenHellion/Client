@@ -594,7 +594,7 @@ namespace ZeroGravity.Objects
 			}
 			else
 			{
-				Client.Instance.CanvasManager.TextChat.CreateMessage(textChatMessage.Name, textChatMessage.MessageText, textChatMessage.Local);
+				Client.Instance.CanvasManager.TextChat.CreateMessageElement(textChatMessage.Name, textChatMessage.MessageText, true);
 			}
 		}
 

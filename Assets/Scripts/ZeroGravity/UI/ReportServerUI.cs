@@ -31,7 +31,6 @@ namespace ZeroGravity.UI
 		{
 			reportInfo = new List<string>
 			{
-				Localization.ServerOffline,
 				Localization.LatencyProblems,
 				Localization.Rubberbanding,
 				Localization.ServerStuck,
@@ -44,10 +43,6 @@ namespace ZeroGravity.UI
 			}
 			ReportReason.RefreshShownValue();
 			ReportReason.value = 0;
-		}
-
-		private void Start()
-		{
 		}
 
 		private void Update()
@@ -65,7 +60,7 @@ namespace ZeroGravity.UI
 			}
 			if (sendFile)
 			{
-				StartCoroutine("PostFileOnServer");
+				StartCoroutine(PostFileOnServer());
 				sendFile = false;
 			}
 		}
@@ -76,7 +71,7 @@ namespace ZeroGravity.UI
 			{
 				nameOfServer = NetworkController.NameOfCurrentServer;
 			}
-			base.gameObject.SetActive(true);
+			gameObject.SetActive(true);
 			Client.Instance.CanvasManager.IsInputFieldIsActive = true;
 			ReportServerHeading.text = Localization.ReportServer + " - " + nameOfServer;
 			sendFile = true;
@@ -101,10 +96,9 @@ namespace ZeroGravity.UI
 			{
 				string text = "http://api.playhellion.com/add-report.php?";
 				text = text + "reporter=" + Uri.EscapeUriString(NetworkController.PlayerId);
-				text = text + "&server=" + Uri.EscapeUriString(Client.LastConnectedServer.Name);
+				text = text + "&server=" + Uri.EscapeUriString(Client.LastConnectedServer.Id);
 				text = text + "&reason=" + Uri.EscapeUriString(reportInfo[ReportReason.value].ToString());
 				text = text + "&other=" + Uri.EscapeUriString(OtherText.textComponent.text);
-				text = text + "&ping=" + Uri.EscapeUriString(Client.LastConnectedServer.Ping.ToString());
 				text = text.Replace("#", "%23");
 				UnityWebRequest request = new UnityWebRequest(text);
 				StartCoroutine(WaitForRequest(request));
