@@ -1,4 +1,4 @@
-using OpenHellion.Networking;
+using OpenHellion.Net;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;

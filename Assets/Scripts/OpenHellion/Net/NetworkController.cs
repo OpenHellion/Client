@@ -7,7 +7,7 @@ using UnityEngine;
 using Steamworks;
 using System;
 using System.Runtime.InteropServices;
-using OpenHellion.RichPresence;
+using OpenHellion.Social.RichPresence;
 using ZeroGravity.Network;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -16,7 +16,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using OpenHellion.IO;
 
-namespace OpenHellion.Networking
+namespace OpenHellion.Net
 {
 	public class NetworkController : MonoBehaviour
 	{
@@ -139,7 +139,7 @@ namespace OpenHellion.Networking
 				UnprocessedPackets = _gameConnection.Tick();
 
 			// Handle Steam P2P packets.
-			if (PresenceManager.HasSteam && !_getP2PPacketsThreadActive)
+			if (RichPresenceManager.HasSteam && !_getP2PPacketsThreadActive)
 			{
 				new Thread(P2PPacketListener).Start();
 			}

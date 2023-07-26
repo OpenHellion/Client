@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using OpenHellion.Networking;
+using OpenHellion.Net;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;

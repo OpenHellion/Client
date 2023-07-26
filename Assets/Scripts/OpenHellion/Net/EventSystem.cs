@@ -5,7 +5,7 @@ using System.Threading;
 using ZeroGravity.Network;
 using ZeroGravity;
 
-namespace OpenHellion.Networking
+namespace OpenHellion.Net
 {
 	public class EventSystem
 	{

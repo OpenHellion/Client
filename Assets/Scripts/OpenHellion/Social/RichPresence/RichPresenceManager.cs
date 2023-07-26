@@ -1,4 +1,4 @@
-// ProviderManager.cs
+// RichPresenceManager.cs
 //
 // Copyright (C) 2023, OpenHellion contributors
 //
@@ -18,7 +18,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace OpenHellion.RichPresence
+namespace OpenHellion.Social.RichPresence
 {
 	/// <summary>
 	/// 	Manages rich presence on Steam and Discord.
@@ -26,23 +26,23 @@ namespace OpenHellion.RichPresence
 	/// </summary>
 	/// <seealso cref="DiscordProvider"/>
 	/// <seealso cref="SteamProvider"/>
-	/// <seealso cref="IPresenceProvider"/>
-	internal class PresenceManager : MonoBehaviour
+	/// <seealso cref="IRichPresenceProvider"/>
+	internal class RichPresenceManager : MonoBehaviour
 	{
-		private static PresenceManager _instance;
-		private static PresenceManager Instance
+		private static RichPresenceManager _instance;
+		private static RichPresenceManager Instance
 		{
 			get
 			{
 				if (_instance is not null) return _instance;
 
-				return new GameObject("PresenceManager").AddComponent<PresenceManager>();
+				return new GameObject("PresenceManager").AddComponent<RichPresenceManager>();
 			}
 		}
 
 		public static bool HasSteam { get; private set; }
 
-		private List<IPresenceProvider> _providers;
+		private List<IRichPresenceProvider> _providers;
 
 		void Awake()
 		{
@@ -74,7 +74,7 @@ namespace OpenHellion.RichPresence
 			}
 
 			// Find our main provider, Steam is preferable.
-			foreach (IPresenceProvider provider in _providers)
+			foreach (IRichPresenceProvider provider in _providers)
 			{
 				if (provider is SteamProvider)
 				{
@@ -87,7 +87,7 @@ namespace OpenHellion.RichPresence
 		void Start()
 		{
 			// Enable our providers.
-			foreach (IPresenceProvider provider in _providers)
+			foreach (IRichPresenceProvider provider in _providers)
 			{
 				provider.Enable();
 			}
@@ -96,7 +96,7 @@ namespace OpenHellion.RichPresence
 		void Update()
 		{
 			// Update our providers.
-			foreach (IPresenceProvider provider in _providers)
+			foreach (IRichPresenceProvider provider in _providers)
 			{
 				provider.Update();
 			}
@@ -105,7 +105,7 @@ namespace OpenHellion.RichPresence
 		void OnDestroy()
 		{
 			// Destroy our providers.
-			foreach (IPresenceProvider provider in _providers)
+			foreach (IRichPresenceProvider provider in _providers)
 			{
 				provider.Destroy();
 			}
@@ -117,7 +117,7 @@ namespace OpenHellion.RichPresence
 		public static void UpdateStatus()
 		{
 			// Update rich presence for all providers.
-			foreach (IPresenceProvider provider in Instance._providers)
+			foreach (IRichPresenceProvider provider in Instance._providers)
 			{
 				provider.UpdateStatus();
 			}

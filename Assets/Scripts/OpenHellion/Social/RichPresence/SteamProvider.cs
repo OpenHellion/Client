@@ -20,14 +20,14 @@ using Steamworks;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using OpenHellion.Networking.Message;
+using OpenHellion.Net.Message;
 using ZeroGravity;
 using OpenHellion.IO;
 
-namespace OpenHellion.RichPresence
+namespace OpenHellion.Social.RichPresence
 {
 	/// <seealso cref="DiscordProvider"/>
-	internal class SteamProvider : IPresenceProvider
+	internal class SteamProvider : IRichPresenceProvider
 	{
 		private bool m_currentStatsRequested;
 		private bool m_userStatsReceived;
@@ -44,7 +44,7 @@ namespace OpenHellion.RichPresence
 			Dbg.Warning(pchDebugText);
 		}
 
-		bool IPresenceProvider.Initialise()
+		bool IRichPresenceProvider.Initialise()
 		{
 			if (!Packsize.Test())
 			{
@@ -68,7 +68,7 @@ namespace OpenHellion.RichPresence
 		}
 
 		// This should only ever get called on first load and after an Assembly reload, You should never Disable the Steamworks Manager yourself.
-		void IPresenceProvider.Enable()
+		void IRichPresenceProvider.Enable()
 		{
 			if (m_SteamAPIWarningMessageHook == null)
 			{
@@ -89,13 +89,13 @@ namespace OpenHellion.RichPresence
 		// OnApplicationQuit gets called too early to shutdown the SteamAPI.
 		// Because the SteamManager should be persistent and never disabled or destroyed we can shutdown the SteamAPI here.
 		// Thus it is not recommended to perform any Steamworks work in other OnDestroy functions as the order of execution can not be garenteed upon Shutdown. Prefer OnDisable().
-		void IPresenceProvider.Destroy()
+		void IRichPresenceProvider.Destroy()
 		{
 			Dbg.Log("Steam: Shutdown");
 			SteamAPI.Shutdown();
 		}
 
-		void IPresenceProvider.Update()
+		void IRichPresenceProvider.Update()
 		{
 			// Run Steam client callbacks
 			SteamAPI.RunCallbacks();

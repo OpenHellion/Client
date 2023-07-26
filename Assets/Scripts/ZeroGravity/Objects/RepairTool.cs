@@ -6,7 +6,7 @@ using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.UI;
-using OpenHellion.Networking;
+using OpenHellion.Net;
 using OpenHellion.IO;
 
 namespace ZeroGravity.Objects

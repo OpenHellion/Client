@@ -18,7 +18,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace OpenHellion.Networking.Message.MainServer
+namespace OpenHellion.Net.Message.MainServer
 {
 	[Serializable]
 	[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]

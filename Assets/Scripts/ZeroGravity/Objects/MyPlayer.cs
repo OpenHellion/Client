@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using OpenHellion.Networking;
-using OpenHellion.RichPresence;
+using OpenHellion.Net;
+using OpenHellion.Social.RichPresence;
 using OpenHellion.IO;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -471,7 +471,7 @@ namespace ZeroGravity.Objects
 				base.Parent = value;
 				if (flag)
 				{
-					PresenceManager.UpdateStatus();
+					RichPresenceManager.UpdateStatus();
 				}
 			}
 		}
@@ -3592,7 +3592,7 @@ namespace ZeroGravity.Objects
 		{
 			if (!(CurrentOutfit == null) && !(CurrentHelmet == null) && !(FpsController.CurrentJetpack == null) && !IsAdmin && CurrentOutfit.Type == ItemType.SoePressurisedSuit && CurrentHelmet.Type == ItemType.SoePressurisedHelmet && FpsController.CurrentJetpack.Type == ItemType.SoePressurisedJetpack)
 			{
-				PresenceManager.SetAchievement(AchievementID.collection_full_soe_outfit);
+				RichPresenceManager.SetAchievement(AchievementID.collection_full_soe_outfit);
 			}
 		}
 

@@ -4,7 +4,7 @@ using UnityEngine.Playables;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
-using OpenHellion.Networking;
+using OpenHellion.Net;
 
 namespace ZeroGravity.LevelDesign
 {

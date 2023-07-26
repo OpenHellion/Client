@@ -6,7 +6,7 @@ using UnityEngine.Rendering;
 using ZeroGravity.CharacterMovement;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
-using OpenHellion.Networking;
+using OpenHellion.Net;
 
 namespace ZeroGravity.Objects
 {

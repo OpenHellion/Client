@@ -20,14 +20,12 @@
 using Nakama;
 using System;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Runtime.Remoting;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenHellion.IO;
-using OpenHellion.Networking;
-using OpenHellion.Networking.Message;
+using OpenHellion.Net;
 using OpenHellion.Social.NakamaRpc;
 using UnityEngine;
 using UnityEngine.Events;
@@ -60,6 +58,7 @@ namespace OpenHellion.Social
 		private const int NakamaPort = 7350;
 
 		private readonly CancellationTokenSource _cancelToken = new();
+		private TaskCompletionSource<MatchState> _matchStateReceivedCompletionSource;
 
 		private void Awake()
 		{
@@ -291,6 +290,20 @@ namespace OpenHellion.Social
 			{
 				OnNakamaError.Invoke(exception.Message, null);
 			};
+
+			_socket.ReceivedMatchState += matchState =>
+			{
+				_matchStateReceivedCompletionSource = new();
+				var result = JsonSerialiser.Deserialize<MatchState>(Encoding.UTF8.GetString(matchState.State));
+				if (result is not null)
+				{
+					_matchStateReceivedCompletionSource.SetResult(result);
+				}
+				else
+				{
+					_matchStateReceivedCompletionSource.SetException(new Exception("Failed to deserialise match state."));
+				}
+			};
 		}
 
 		/// <summary>
@@ -302,7 +315,7 @@ namespace OpenHellion.Social
 		{
 			try
 			{
-				IApiRpc response = await _socket.RpcAsync("client_find_match", JsonSerialiser.Serialize(request));
+				IApiRpc response = await _socket.RpcAsync("client_find_match", JsonSerialiser.Serialize(request, JsonSerialiser.Formatting.None));
 				var result = JsonSerialiser.Deserialize<FindMatchesResponse>(response.Payload);
 
 				return result.MatchesId;
@@ -328,8 +341,7 @@ namespace OpenHellion.Social
 			{
 				_match = await _socket.JoinMatchAsync(matchId);
 
-				IApiRpc response = await _socket.RpcAsync("client_get_match_info", matchId);
-				var result = JsonSerialiser.Deserialize<MatchState>(response.Payload);
+				var result = await _matchStateReceivedCompletionSource.Task;
 
 				return new ServerData()
 				{

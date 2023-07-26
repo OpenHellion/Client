@@ -17,7 +17,7 @@
 
 using OpenHellion.IO;
 
-namespace OpenHellion.Networking.Message
+namespace OpenHellion.Net.Message
 {
 	/// <summary>
 	/// 	Object that can be sent and recieved by the main server API.

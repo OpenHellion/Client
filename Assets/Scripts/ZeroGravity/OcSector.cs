@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using OpenHellion.Networking;
+using OpenHellion.Net;
 
 namespace ZeroGravity
 {

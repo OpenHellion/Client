@@ -20,10 +20,9 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
 using ZeroGravity.UI;
-using OpenHellion.RichPresence;
-using OpenHellion.Networking;
-using OpenHellion.Networking.Message.MainServer;
-using OpenHellion.Networking.Message;
+using OpenHellion.Social.RichPresence;
+using OpenHellion.Net;
+using OpenHellion.Net.Message;
 using OpenHellion.IO;
 using OpenHellion;
 using UnityEngine.InputSystem;
@@ -402,7 +401,7 @@ namespace ZeroGravity
 				{
 					ExperimentalGameObject.SetActive(value: true);
 					ExperimentalGameObject.GetComponentInChildren<Text>().text = ExperimentalText.Trim() + " " + Application.version;
-					PresenceManager.SetAchievement(AchievementID.other_testing_squad_member);
+					RichPresenceManager.SetAchievement(AchievementID.other_testing_squad_member);
 				}
 				else
 				{
@@ -1623,7 +1622,7 @@ namespace ZeroGravity
 				}
 				if (MyPlayer.Instance != null && this == MyPlayer.Instance.Parent)
 				{
-					PresenceManager.UpdateStatus();
+					RichPresenceManager.UpdateStatus();
 				}
 			}
 			if (MyPlayer.Instance.LockedToTrigger is SceneTriggerNavigationPanel || MyPlayer.Instance.ShipControlMode == ShipControlMode.Navigation)
@@ -1860,6 +1859,7 @@ namespace ZeroGravity
 			ServerData connectingServerData = LastConnectedServer;
 			if (!reconnecting)
 			{
+				// Create socket if we are connecting to the game for the first time this session.
 				if (LastConnectedServer is null)
 				{
 					await Nakama.CreateSocket();
@@ -2234,7 +2234,7 @@ namespace ZeroGravity
 			this.CancelInvoke(CheckLoadingComplete);
 			AkSoundEngine.SetRTPCValue(SoundManager.Instance.InGameVolume, 1f);
 			MyPlayer.Instance.PlayerReady = true;
-			PresenceManager.UpdateStatus();
+			RichPresenceManager.UpdateStatus();
 			MyPlayer.Instance.InitializeCameraEffects();
 
 			Instance.CanvasManager.SaveAndSpawnPointScreen.Activate(value: false);

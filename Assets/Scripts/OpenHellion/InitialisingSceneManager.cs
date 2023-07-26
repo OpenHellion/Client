@@ -1,4 +1,4 @@
-// StartupManager.cs
+// InitialisingSceneManager.cs
 //
 // Copyright (C) 2023, OpenHellion contributors
 //
@@ -30,7 +30,7 @@ namespace OpenHellion
 	/// <summary>
 	/// 	Checks if the program has all required specifications and dependencies it needs to run.
 	/// </summary>
-	public class StartupManager : MonoBehaviour
+	public class InitialisingSceneManager : MonoBehaviour
 	{
 		public enum SceneLoadTypeValue
 		{

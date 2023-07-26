@@ -7,7 +7,7 @@ using UnityEngine;
 using ZeroGravity.Math;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
-using OpenHellion.Networking;
+using OpenHellion.Net;
 
 namespace ZeroGravity.Audio
 {

@@ -74,7 +74,7 @@ namespace ZeroGravity
 		/// </summary>
 		public void InitializeScenes()
 		{
-			if (StartupManager.SceneLoadType != StartupManager.SceneLoadTypeValue.PreloadWithCopy)
+			if (InitialisingSceneManager.SceneLoadType != InitialisingSceneManager.SceneLoadTypeValue.PreloadWithCopy)
 			{
 				Dbg.Log("Skipping preloading.");
 				_StartupGUI.ClosePreloading();
@@ -185,7 +185,7 @@ namespace ZeroGravity
 			SceneReference sceneItem = _loadedSceneReferences.Find((SceneReference m) => m.GUID == guid && m.Type == type);
 			if (sceneItem != null)
 			{
-				if (StartupManager.SceneLoadType == StartupManager.SceneLoadTypeValue.PreloadWithCopy)
+				if (InitialisingSceneManager.SceneLoadType == InitialisingSceneManager.SceneLoadTypeValue.PreloadWithCopy)
 				{
 					return Instantiate(sceneItem.RootObject);
 				}
@@ -198,7 +198,7 @@ namespace ZeroGravity
 
 		public IEnumerator LoadSceneCoroutine(SceneType type, long guid)
 		{
-			if (StartupManager.SceneLoadType == StartupManager.SceneLoadTypeValue.PreloadWithCopy && _loadedSceneReferences.FirstOrDefault((SceneReference m) => m.GUID == guid && m.Type == type) != null)
+			if (InitialisingSceneManager.SceneLoadType == InitialisingSceneManager.SceneLoadTypeValue.PreloadWithCopy && _loadedSceneReferences.FirstOrDefault((SceneReference m) => m.GUID == guid && m.Type == type) != null)
 			{
 				yield break;
 			}

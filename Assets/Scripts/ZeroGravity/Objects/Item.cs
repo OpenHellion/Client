@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OpenHellion.IO;
-using OpenHellion.Networking;
+using OpenHellion.Net;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;

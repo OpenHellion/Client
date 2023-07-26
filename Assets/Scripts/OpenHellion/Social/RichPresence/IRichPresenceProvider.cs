@@ -1,4 +1,4 @@
-// IProvider.cs
+// IRichPresenceProvider.cs
 //
 // Copyright (C) 2023, OpenHellion contributors
 //
@@ -17,15 +17,15 @@
 
 using UnityEngine;
 
-namespace OpenHellion.RichPresence
+namespace OpenHellion.Social.RichPresence
 {
 	/// <summary>
 	/// 	Wrapper around APIs like Steamworks and Discord Game API.
 	/// </summary>
 	/// <seealso cref="DiscordProvider"/>
 	/// <seealso cref="SteamProvider"/>
-	/// <seealso cref="PresenceManager"/>
-	internal interface IPresenceProvider
+	/// <seealso cref="RichPresenceManager"/>
+	internal interface IRichPresenceProvider
 	{
 		internal bool Initialise();
 		internal void Enable();

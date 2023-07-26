@@ -12,7 +12,7 @@ using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
-using OpenHellion.Networking;
+using OpenHellion.Net;
 using UnityEngine.InputSystem;
 
 namespace ZeroGravity.ShipComponents

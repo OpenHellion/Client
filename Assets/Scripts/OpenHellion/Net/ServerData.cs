@@ -1,7 +1,7 @@
 using System;
 using ZeroGravity.Network;
 
-namespace OpenHellion.Networking {
+namespace OpenHellion.Net {
 	public class ServerData
 	{
 		public CharacterData CharacterData;

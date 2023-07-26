@@ -8,7 +8,7 @@ using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
-using OpenHellion.Networking;
+using OpenHellion.Net;
 
 namespace ZeroGravity.UI
 {

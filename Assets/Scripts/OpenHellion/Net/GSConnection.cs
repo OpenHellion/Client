@@ -22,7 +22,7 @@ using UnityEngine;
 using ZeroGravity;
 using ZeroGravity.Network;
 
-namespace OpenHellion.Networking
+namespace OpenHellion.Net
 {
 	/// <summary>
 	/// 	Handles connecting to a game server.

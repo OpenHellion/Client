@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using OpenHellion.Networking;
-using OpenHellion.RichPresence;
+using OpenHellion.Net;
+using OpenHellion.Social.RichPresence;
 using ThreeEyedGames;
 using UnityEngine;
 using ZeroGravity.Data;
@@ -658,7 +658,7 @@ namespace ZeroGravity.Objects
 					});
 				}
 			}
-			PresenceManager.UpdateStatus();
+			RichPresenceManager.UpdateStatus();
 		}
 
 		public void ActivateWarpStartEffect()

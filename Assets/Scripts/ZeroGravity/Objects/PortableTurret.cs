@@ -7,7 +7,7 @@ using ZeroGravity.LevelDesign;
 using ZeroGravity.Math;
 using ZeroGravity.Network;
 using ZeroGravity.ShipComponents;
-using OpenHellion.Networking;
+using OpenHellion.Net;
 
 namespace ZeroGravity.Objects
 {

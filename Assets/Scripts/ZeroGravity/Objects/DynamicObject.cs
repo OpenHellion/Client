@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using OpenHellion.Networking;
+using OpenHellion.Net;
 using UnityEngine;
 using ZeroGravity.CharacterMovement;
 using ZeroGravity.Data;

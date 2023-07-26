@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenHellion.Networking;
+using OpenHellion.Net;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;

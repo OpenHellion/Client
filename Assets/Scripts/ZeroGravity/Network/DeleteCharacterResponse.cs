@@ -1,5 +1,5 @@
-using OpenHellion.Networking.Message;
-using OpenHellion.Networking.Message.MainServer;
+using OpenHellion.Net.Message;
+using OpenHellion.Net.Message.MainServer;
 using ProtoBuf;
 
 namespace ZeroGravity.Network

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using OpenHellion.RichPresence;
+using OpenHellion.Social.RichPresence;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 
@@ -64,7 +64,7 @@ namespace ZeroGravity.Objects
 			QuestObject.Quest = this;
 			if (QuestObject != null && QuestObject.Achivement != 0)
 			{
-				PresenceManager.GetAchievement(QuestObject.Achivement, out CanSkip);
+				RichPresenceManager.GetAchievement(QuestObject.Achivement, out CanSkip);
 			}
 		}
 
@@ -90,7 +90,7 @@ namespace ZeroGravity.Objects
 			}
 			if (Status == QuestStatus.Completed && QuestObject != null && QuestObject.Achivement != 0)
 			{
-				PresenceManager.SetAchievement(QuestObject.Achivement);
+				RichPresenceManager.SetAchievement(QuestObject.Achivement);
 			}
 		}
 	}

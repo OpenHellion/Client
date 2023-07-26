@@ -2,7 +2,7 @@ using System;
 using ZeroGravity.Network;
 using Newtonsoft.Json;
 
-namespace OpenHellion.Networking.Message
+namespace OpenHellion.Net.Message
 {
 	[Serializable]
 	[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]

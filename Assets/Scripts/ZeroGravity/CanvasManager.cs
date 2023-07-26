@@ -10,8 +10,8 @@ using UnityEngine.UI;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
-using OpenHellion.RichPresence;
-using OpenHellion.Networking;
+using OpenHellion.Social.RichPresence;
+using OpenHellion.Net;
 using UnityEngine.InputSystem;
 using OpenHellion.IO;
 using OpenHellion;
@@ -557,7 +557,7 @@ namespace ZeroGravity
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start1));
 			});
 
-			PresenceManager.GetAchievement(AchievementID.quest_sound_of_silence, out var achieved);
+			RichPresenceManager.GetAchievement(AchievementID.quest_sound_of_silence, out var achieved);
 			StartingPointOptionUI strandedMinerUI = Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			strandedMinerUI.Type = StartingPointOption.StrandedMiner;
 			strandedMinerUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
@@ -566,7 +566,7 @@ namespace ZeroGravity
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start2));
 			});
 
-			PresenceManager.GetAchievement(AchievementID.quest_shattered_dreams, out achieved);
+			RichPresenceManager.GetAchievement(AchievementID.quest_shattered_dreams, out achieved);
 			StartingPointOptionUI evaUI = Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			evaUI.Type = StartingPointOption.Eva;
 			evaUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
@@ -575,7 +575,7 @@ namespace ZeroGravity
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start3));
 			});
 
-			PresenceManager.GetAchievement(AchievementID.quest_heart_of_stone, out achieved);
+			RichPresenceManager.GetAchievement(AchievementID.quest_heart_of_stone, out achieved);
 			StartingPointOptionUI soeUI = Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			soeUI.Type = StartingPointOption.Soe;
 			soeUI.GetComponent<Button>().interactable = achieved || Client.Instance.ExperimentalBuild;
@@ -813,7 +813,7 @@ namespace ZeroGravity
 
 		public void ToggleBusyLoading(bool isActive)
 		{
-			if (StartupManager.SceneLoadType == StartupManager.SceneLoadTypeValue.PreloadWithCopy)
+			if (InitialisingSceneManager.SceneLoadType == InitialisingSceneManager.SceneLoadTypeValue.PreloadWithCopy)
 			{
 				isActive = false;
 			}

@@ -21,16 +21,16 @@ using UnityEngine;
 using ZeroGravity.Objects;
 using ZeroGravity;
 using Discord;
-using OpenHellion.Networking.Message;
+using OpenHellion.Net.Message;
 using OpenHellion.IO;
 
-namespace OpenHellion.RichPresence
+namespace OpenHellion.Social.RichPresence
 {
 	/// <summary>
 	/// 	This class handles everything related to Discord. Acts as a bridge between the game and the API.
 	/// </summary>
 	/// <seealso cref="SteamProvider"/>
-	internal class DiscordProvider : IPresenceProvider
+	internal class DiscordProvider : IRichPresenceProvider
 	{
 		private static readonly Dictionary<long, string> Planets = new()
 		{
@@ -67,7 +67,7 @@ namespace OpenHellion.RichPresence
 		private User _joinUser;
 		private Activity _activity;
 
-		bool IPresenceProvider.Initialise()
+		bool IRichPresenceProvider.Initialise()
 		{
 			// Init Discord API.
 			try
@@ -105,12 +105,12 @@ namespace OpenHellion.RichPresence
 			return true;
 		}
 
-		void IPresenceProvider.Enable()
+		void IRichPresenceProvider.Enable()
 		{
 			UpdateStatus();
 		}
 
-		void IPresenceProvider.Update()
+		void IRichPresenceProvider.Update()
 		{
 			_discord.RunCallbacks();
 		}
@@ -172,7 +172,7 @@ namespace OpenHellion.RichPresence
 			});
 		}
 
-		void IPresenceProvider.Destroy()
+		void IRichPresenceProvider.Destroy()
 		{
 			Dbg.Log("Discord: Shutdown");
 			_discord?.Dispose();

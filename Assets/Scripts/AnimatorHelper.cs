@@ -7,7 +7,7 @@ using ZeroGravity.Data;
 using ZeroGravity.Math;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
-using OpenHellion.Networking;
+using OpenHellion.Net;
 
 public class AnimatorHelper : MonoBehaviour
 {

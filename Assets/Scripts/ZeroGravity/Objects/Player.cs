@@ -1,4 +1,4 @@
-using OpenHellion.RichPresence;
+using OpenHellion.Social.RichPresence;
 using UnityEngine;
 using ZeroGravity.LevelDesign;
 

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using OpenHellion.Networking;
+using OpenHellion.Net;
 using UnityEngine;
 using UnityEngine.Events;
 using ZeroGravity.Data;

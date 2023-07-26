@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Nakama;
 using OpenHellion;
-using OpenHellion.Networking;
-using OpenHellion.RichPresence;
+using OpenHellion.Net;
+using OpenHellion.Social.RichPresence;
 using ThreeEyedGames;
 using UnityEngine;
 using ZeroGravity.Data;
