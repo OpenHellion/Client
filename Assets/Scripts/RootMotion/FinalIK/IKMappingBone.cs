@@ -8,8 +8,7 @@ namespace RootMotion.FinalIK
 	{
 		public Transform bone;
 
-		[Range(0f, 1f)]
-		public float maintainRotationWeight = 1f;
+		[Range(0f, 1f)] public float maintainRotationWeight = 1f;
 
 		private BoneMap boneMap = new BoneMap();
 
@@ -28,11 +27,13 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			if (bone == null)
 			{
 				message = "IKMappingBone's bone is null.";
 				return false;
 			}
+
 			return true;
 		}
 
@@ -52,6 +53,7 @@ namespace RootMotion.FinalIK
 			{
 				boneMap = new BoneMap();
 			}
+
 			boneMap.Initiate(bone, solver);
 		}
 

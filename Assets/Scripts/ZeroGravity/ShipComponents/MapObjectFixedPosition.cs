@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using ZeroGravity.Math;
+using ZeroGravity.UI;
 
 namespace ZeroGravity.ShipComponents
 {
@@ -24,19 +25,15 @@ namespace ZeroGravity.ShipComponents
 
 		public string FadeMaterialField;
 
-		[SerializeField]
-		private FadeMaterialFieldType FadeFieldType;
+		[SerializeField] private FadeMaterialFieldType FadeFieldType;
 
 		public bool RandomOffsetPosition;
 
-		[NonSerialized]
-		public Vector3D FixedPosition;
+		[NonSerialized] public Vector3D FixedPosition;
 
-		[NonSerialized]
-		public double MinMaxScale;
+		[NonSerialized] public double MinMaxScale;
 
-		[SerializeField]
-		private Sprite _Icon;
+		[SerializeField] private Sprite _Icon;
 
 		private Material fixedPositionObjectVisualMaterial;
 
@@ -48,29 +45,18 @@ namespace ZeroGravity.ShipComponents
 
 		public override Sprite Icon
 		{
-			get
-			{
-				return (!(_Icon != null)) ? Client.Instance.SpriteManager.DefaultRadarObject : _Icon;
-			}
-			set
-			{
-			}
+			get { return (!(_Icon != null)) ? SpriteManager.Instance.DefaultRadarObject : _Icon; }
+			set { }
 		}
 
 		protected double ObjectVisualScale
 		{
-			get
-			{
-				return MinScale + (MaxScale - MinScale) * MinMaxScale;
-			}
+			get { return MinScale + (MaxScale - MinScale) * MinMaxScale; }
 		}
 
 		public override Vector3D TruePosition
 		{
-			get
-			{
-				return FixedPosition;
-			}
+			get { return FixedPosition; }
 		}
 
 		public override void CreateVisual()
@@ -85,28 +71,36 @@ namespace ZeroGravity.ShipComponents
 					float @float = fixedPositionObjectVisualMaterial.GetFloat(FadeMaterialField);
 					fadeIncrement = @float / TimeToLive;
 				}
+
 				if (FadeFieldType == FadeMaterialFieldType.Color)
 				{
 					Color color = fixedPositionObjectVisualMaterial.GetColor(FadeMaterialField);
 					fadeIncrement = color / TimeToLive;
 				}
 			}
+
 			base.gameObject.SetLayerRecursively("Map");
 			if (RandomOffsetPosition)
 			{
-				FixedPosition += new Vector3D(MathHelper.RandomRange(-1, 1), MathHelper.RandomRange(-1, 1), MathHelper.RandomRange(-1, 1)).Normalized * (float)MathHelper.RandomRange(ObjectVisualScale / 10.0, ObjectVisualScale) / 2.0;
+				FixedPosition +=
+					new Vector3D(MathHelper.RandomRange(-1, 1), MathHelper.RandomRange(-1, 1),
+						MathHelper.RandomRange(-1, 1)).Normalized *
+					(float)MathHelper.RandomRange(ObjectVisualScale / 10.0, ObjectVisualScale) / 2.0;
 			}
+
 			if (TimeToLive > 0f)
 			{
 				UnityEngine.Object.Destroy(base.gameObject, TimeToLive);
 			}
+
 			UpdateObject();
 		}
 
 		public override void UpdateObject()
 		{
 			Position.position = base.ObjectPosition;
-			FixedPositionObjectVisual.transform.localScale = Vector3.one * (float)(ObjectVisualScale * base.ObjectScale);
+			FixedPositionObjectVisual.transform.localScale =
+				Vector3.one * (float)(ObjectVisualScale * base.ObjectScale);
 		}
 
 		public override void UpdateVisibility()
@@ -125,12 +119,15 @@ namespace ZeroGravity.ShipComponents
 				if (FadeFieldType == FadeMaterialFieldType.Float01)
 				{
 					float @float = fixedPositionObjectVisualMaterial.GetFloat(FadeMaterialField);
-					fixedPositionObjectVisualMaterial.SetFloat(FadeMaterialField, Mathf.Clamp01(@float - (float)fadeIncrement * Time.deltaTime));
+					fixedPositionObjectVisualMaterial.SetFloat(FadeMaterialField,
+						Mathf.Clamp01(@float - (float)fadeIncrement * Time.deltaTime));
 				}
+
 				if (FadeFieldType == FadeMaterialFieldType.Color)
 				{
 					Color color = fixedPositionObjectVisualMaterial.GetColor(FadeMaterialField);
-					fixedPositionObjectVisualMaterial.SetColor(FadeMaterialField, color - (Color)fadeIncrement * Time.deltaTime);
+					fixedPositionObjectVisualMaterial.SetColor(FadeMaterialField,
+						color - (Color)fadeIncrement * Time.deltaTime);
 				}
 			}
 		}

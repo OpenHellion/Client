@@ -11,10 +11,7 @@ namespace RootMotion.FinalIK
 		{
 			public Vector3 forward
 			{
-				get
-				{
-					return transform.rotation * axis;
-				}
+				get { return transform.rotation * axis; }
 			}
 
 			public LookAtBone()
@@ -50,26 +47,19 @@ namespace RootMotion.FinalIK
 
 		public LookAtBone[] eyes = new LookAtBone[0];
 
-		[Range(0f, 1f)]
-		public float bodyWeight = 0.5f;
+		[Range(0f, 1f)] public float bodyWeight = 0.5f;
 
-		[Range(0f, 1f)]
-		public float headWeight = 0.5f;
+		[Range(0f, 1f)] public float headWeight = 0.5f;
 
-		[Range(0f, 1f)]
-		public float eyesWeight = 1f;
+		[Range(0f, 1f)] public float eyesWeight = 1f;
 
-		[Range(0f, 1f)]
-		public float clampWeight = 0.5f;
+		[Range(0f, 1f)] public float clampWeight = 0.5f;
 
-		[Range(0f, 1f)]
-		public float clampWeightHead = 0.5f;
+		[Range(0f, 1f)] public float clampWeightHead = 0.5f;
 
-		[Range(0f, 1f)]
-		public float clampWeightEyes = 0.5f;
+		[Range(0f, 1f)] public float clampWeightEyes = 0.5f;
 
-		[Range(0f, 2f)]
-		public int clampSmoothing = 2;
+		[Range(0f, 2f)] public int clampSmoothing = 2;
 
 		public AnimationCurve spineWeightCurve = new AnimationCurve(new Keyframe(0f, 0.3f), new Keyframe(1f, 1f));
 
@@ -87,10 +77,12 @@ namespace RootMotion.FinalIK
 				{
 					return false;
 				}
+
 				if (spine.Length == 0)
 				{
 					return true;
 				}
+
 				for (int i = 0; i < spine.Length; i++)
 				{
 					if (spine[i] == null || spine[i].transform == null)
@@ -98,16 +90,14 @@ namespace RootMotion.FinalIK
 						return false;
 					}
 				}
+
 				return true;
 			}
 		}
 
 		private bool spineIsEmpty
 		{
-			get
-			{
-				return spine.Length == 0;
-			}
+			get { return spine.Length == 0; }
 		}
 
 		private bool headIsValid
@@ -118,16 +108,14 @@ namespace RootMotion.FinalIK
 				{
 					return false;
 				}
+
 				return true;
 			}
 		}
 
 		private bool headIsEmpty
 		{
-			get
-			{
-				return head.transform == null;
-			}
+			get { return head.transform == null; }
 		}
 
 		private bool eyesIsValid
@@ -138,10 +126,12 @@ namespace RootMotion.FinalIK
 				{
 					return false;
 				}
+
 				if (eyes.Length == 0)
 				{
 					return true;
 				}
+
 				for (int i = 0; i < eyes.Length; i++)
 				{
 					if (eyes[i] == null || eyes[i].transform == null)
@@ -149,16 +139,14 @@ namespace RootMotion.FinalIK
 						return false;
 					}
 				}
+
 				return true;
 			}
 		}
 
 		private bool eyesIsEmpty
 		{
-			get
-			{
-				return eyes.Length == 0;
-			}
+			get { return eyes.Length == 0; }
 		}
 
 		public void SetLookAtWeight(float weight)
@@ -187,7 +175,8 @@ namespace RootMotion.FinalIK
 			this.eyesWeight = Mathf.Clamp(eyesWeight, 0f, 1f);
 		}
 
-		public void SetLookAtWeight(float weight, float bodyWeight, float headWeight, float eyesWeight, float clampWeight)
+		public void SetLookAtWeight(float weight, float bodyWeight, float headWeight, float eyesWeight,
+			float clampWeight)
 		{
 			IKPositionWeight = Mathf.Clamp(weight, 0f, 1f);
 			this.bodyWeight = Mathf.Clamp(bodyWeight, 0f, 1f);
@@ -198,7 +187,8 @@ namespace RootMotion.FinalIK
 			clampWeightEyes = this.clampWeight;
 		}
 
-		public void SetLookAtWeight(float weight, float bodyWeight = 0f, float headWeight = 1f, float eyesWeight = 0.5f, float clampWeight = 0.5f, float clampWeightHead = 0.5f, float clampWeightEyes = 0.3f)
+		public void SetLookAtWeight(float weight, float bodyWeight = 0f, float headWeight = 1f, float eyesWeight = 0.5f,
+			float clampWeight = 0.5f, float clampWeightHead = 0.5f, float clampWeightEyes = 0.3f)
 		{
 			IKPositionWeight = Mathf.Clamp(weight, 0f, 1f);
 			this.bodyWeight = Mathf.Clamp(bodyWeight, 0f, 1f);
@@ -215,10 +205,12 @@ namespace RootMotion.FinalIK
 			{
 				spine[i].StoreDefaultLocalState();
 			}
+
 			for (int j = 0; j < eyes.Length; j++)
 			{
 				eyes[j].StoreDefaultLocalState();
 			}
+
 			if (head != null && head.transform != null)
 			{
 				head.StoreDefaultLocalState();
@@ -233,10 +225,12 @@ namespace RootMotion.FinalIK
 				{
 					spine[i].FixTransform();
 				}
+
 				for (int j = 0; j < eyes.Length; j++)
 				{
 					eyes[j].FixTransform();
 				}
+
 				if (head != null && head.transform != null)
 				{
 					head.FixTransform();
@@ -251,33 +245,41 @@ namespace RootMotion.FinalIK
 				message = "IKSolverLookAt spine setup is invalid. Can't initiate solver.";
 				return false;
 			}
+
 			if (!headIsValid)
 			{
 				message = "IKSolverLookAt head transform is null. Can't initiate solver.";
 				return false;
 			}
+
 			if (!eyesIsValid)
 			{
 				message = "IKSolverLookAt eyes setup is invalid. Can't initiate solver.";
 				return false;
 			}
+
 			if (spineIsEmpty && headIsEmpty && eyesIsEmpty)
 			{
 				message = "IKSolverLookAt eyes setup is invalid. Can't initiate solver.";
 				return false;
 			}
+
 			Transform transform = IKSolver.ContainsDuplicateBone(spine);
 			if (transform != null)
 			{
-				message = transform.name + " is represented multiple times in a single IK chain. Can't initiate solver.";
+				message = transform.name +
+				          " is represented multiple times in a single IK chain. Can't initiate solver.";
 				return false;
 			}
+
 			Transform transform2 = IKSolver.ContainsDuplicateBone(eyes);
 			if (transform2 != null)
 			{
-				message = transform2.name + " is represented multiple times in a single IK chain. Can't initiate solver.";
+				message = transform2.name +
+				          " is represented multiple times in a single IK chain. Can't initiate solver.";
 				return false;
 			}
+
 			return true;
 		}
 
@@ -288,16 +290,19 @@ namespace RootMotion.FinalIK
 			{
 				array[i] = spine[i];
 			}
+
 			int num = 0;
 			for (int j = spine.Length; j < array.Length; j++)
 			{
 				array[j] = eyes[num];
 				num++;
 			}
+
 			if (head.transform != null)
 			{
 				array[array.Length - 1] = head;
 			}
+
 			return array;
 		}
 
@@ -311,6 +316,7 @@ namespace RootMotion.FinalIK
 					return lookAtBone;
 				}
 			}
+
 			LookAtBone[] array2 = eyes;
 			foreach (LookAtBone lookAtBone2 in array2)
 			{
@@ -319,10 +325,12 @@ namespace RootMotion.FinalIK
 					return lookAtBone2;
 				}
 			}
+
 			if (head.transform == transform)
 			{
 				return head;
 			}
+
 			return null;
 		}
 
@@ -352,28 +360,34 @@ namespace RootMotion.FinalIK
 					IKPosition = eyes[0].transform.position + root.forward * 3f;
 				}
 			}
+
 			LookAtBone[] array = spine;
 			foreach (LookAtBone lookAtBone in array)
 			{
 				lookAtBone.Initiate(root);
 			}
+
 			if (head != null)
 			{
 				head.Initiate(root);
 			}
+
 			LookAtBone[] array2 = eyes;
 			foreach (LookAtBone lookAtBone2 in array2)
 			{
 				lookAtBone2.Initiate(root);
 			}
+
 			if (spineForwards == null || spineForwards.Length != spine.Length)
 			{
 				spineForwards = new Vector3[spine.Length];
 			}
+
 			if (headForwards == null)
 			{
 				headForwards = new Vector3[1];
 			}
+
 			if (eyeForward == null)
 			{
 				eyeForward = new Vector3[1];
@@ -389,6 +403,7 @@ namespace RootMotion.FinalIK
 				{
 					IKPosition = target.position;
 				}
+
 				SolveSpine();
 				SolveHead();
 				SolveEyes();
@@ -412,8 +427,11 @@ namespace RootMotion.FinalIK
 		{
 			if (!(headWeight <= 0f) && !headIsEmpty)
 			{
-				Vector3 vector = ((spine.Length <= 0 || !(spine[spine.Length - 1].transform != null)) ? head.forward : spine[spine.Length - 1].forward);
-				Vector3 normalized = Vector3.Lerp(vector, (IKPosition - head.transform.position).normalized, headWeight * IKPositionWeight).normalized;
+				Vector3 vector = ((spine.Length <= 0 || !(spine[spine.Length - 1].transform != null))
+					? head.forward
+					: spine[spine.Length - 1].forward);
+				Vector3 normalized = Vector3.Lerp(vector, (IKPosition - head.transform.position).normalized,
+					headWeight * IKPositionWeight).normalized;
 				GetForwards(ref headForwards, vector, normalized, 1, clampWeightHead);
 				head.LookAt(headForwards[0], headWeight * IKPositionWeight);
 			}
@@ -426,13 +444,15 @@ namespace RootMotion.FinalIK
 				for (int i = 0; i < eyes.Length; i++)
 				{
 					Vector3 baseForward = ((!(head.transform != null)) ? eyes[i].forward : head.forward);
-					GetForwards(ref eyeForward, baseForward, (IKPosition - eyes[i].transform.position).normalized, 1, clampWeightEyes);
+					GetForwards(ref eyeForward, baseForward, (IKPosition - eyes[i].transform.position).normalized, 1,
+						clampWeightEyes);
 					eyes[i].LookAt(eyeForward[0], eyesWeight * IKPositionWeight);
 				}
 			}
 		}
 
-		private Vector3[] GetForwards(ref Vector3[] forwards, Vector3 baseForward, Vector3 targetForward, int bones, float clamp)
+		private Vector3[] GetForwards(ref Vector3[] forwards, Vector3 baseForward, Vector3 targetForward, int bones,
+			float clamp)
 		{
 			if (clamp >= 1f || IKPositionWeight <= 0f)
 			{
@@ -440,8 +460,10 @@ namespace RootMotion.FinalIK
 				{
 					forwards[i] = baseForward;
 				}
+
 				return forwards;
 			}
+
 			float num = Vector3.Angle(baseForward, targetForward);
 			float num2 = 1f - num / 180f;
 			float num3 = ((!(clamp > 0f)) ? 1f : Mathf.Clamp(1f - (clamp - num2) / (1f - num2), 0f, 1f));
@@ -451,6 +473,7 @@ namespace RootMotion.FinalIK
 				float f = num4 * (float)Math.PI * 0.5f;
 				num4 = Mathf.Sin(f);
 			}
+
 			if (forwards.Length == 1)
 			{
 				forwards[0] = Vector3.Slerp(baseForward, targetForward, num4 * num3);
@@ -460,9 +483,11 @@ namespace RootMotion.FinalIK
 				float num5 = 1f / (float)(forwards.Length - 1);
 				for (int k = 0; k < forwards.Length; k++)
 				{
-					forwards[k] = Vector3.Slerp(baseForward, targetForward, spineWeightCurve.Evaluate(num5 * (float)k) * num4 * num3);
+					forwards[k] = Vector3.Slerp(baseForward, targetForward,
+						spineWeightCurve.Evaluate(num5 * (float)k) * num4 * num3);
 				}
 			}
+
 			return forwards;
 		}
 
@@ -473,10 +498,12 @@ namespace RootMotion.FinalIK
 				bones = new LookAtBone[0];
 				return;
 			}
+
 			if (bones.Length != array.Length)
 			{
 				bones = new LookAtBone[array.Length];
 			}
+
 			for (int i = 0; i < array.Length; i++)
 			{
 				if (bones[i] == null)

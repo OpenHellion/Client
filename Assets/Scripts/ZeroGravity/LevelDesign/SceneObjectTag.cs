@@ -8,8 +8,7 @@ namespace ZeroGravity.LevelDesign
 	{
 		public TagAction TagAction;
 
-		[ContextMenuItem("Test", "Test")]
-		public List<SceneTagObject> Tags;
+		[ContextMenuItem("Test", "Test")] public List<SceneTagObject> Tags;
 
 		[Tooltip("If true same tag will be used for child executers")]
 		public bool OverrideChildTags = true;

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Objects;
 
@@ -7,88 +6,23 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneTriggerTextLogTerminal : SceneTriggerPanels
 	{
-		[SerializeField]
-		private bool _cancelExecuterAtSameTime;
-
-		[SerializeField]
-		private bool _isExteriorTrigger;
-
 		public LogObject LogObject;
 
-		private TextLogTerminal terminalUI;
+		private TextLogTerminal _terminalUI;
 
-		public override SceneTriggerType TriggerType
-		{
-			get
-			{
-				return SceneTriggerType.TextLogTerminal;
-			}
-		}
+		public override SceneTriggerType TriggerType => SceneTriggerType.TextLogTerminal;
 
-		public override PlayerHandsCheckType PlayerHandsCheck
-		{
-			get
-			{
-				return PlayerHandsCheckType.StoreItemInHands;
-			}
-		}
+		public override PlayerHandsCheckType PlayerHandsCheck => PlayerHandsCheckType.StoreItemInHands;
 
-		public override List<ItemType> PlayerHandsItemType
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public override List<ItemType> PlayerHandsItemType => null;
 
-		public override bool IsNearTrigger
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool IsNearTrigger => false;
 
-		public override bool IsInteractable
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool IsInteractable => true;
 
-		public bool CancelExecuterAtSameTime
-		{
-			get
-			{
-				return _cancelExecuterAtSameTime;
-			}
-		}
+		public override bool CameraMovementAllowed => false;
 
-		public bool IsExteriorTrigger
-		{
-			get
-			{
-				return _isExteriorTrigger;
-			}
-		}
-
-		public override bool CameraMovementAllowed
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		public TextLogTerminal TerminalUI
-		{
-			get
-			{
-				terminalUI = Client.Instance.InGamePanels.TextLogTerminal;
-				return terminalUI;
-			}
-		}
+		private TextLogTerminal TerminalUI => World.InWorldPanels.TextLogTerminal;
 
 		public override bool Interact(MyPlayer player, bool interactWithOverlappingTriggers = true)
 		{
@@ -96,10 +30,12 @@ namespace ZeroGravity.LevelDesign
 			{
 				return false;
 			}
+
 			if (player.CurrentActiveItem != null && (player.Inventory == null || !player.Inventory.StoreItemInHands()))
 			{
 				return false;
 			}
+
 			player.AttachToPanel(this);
 			TerminalUI.LogObject = LogObject;
 			TerminalUI.OnInteract();

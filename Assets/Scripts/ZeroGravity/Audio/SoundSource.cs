@@ -30,24 +30,24 @@ namespace ZeroGravity.Audio
 
 		public bool Loop;
 
-		[Range(0f, 1f)]
-		public float Volume = 1f;
+		[Range(0f, 1f)] public float Volume = 1f;
 
-		[Range(0f, 1f)]
-		public float Pitch = 1f;
+		[Range(0f, 1f)] public float Pitch = 1f;
 
 		public float MinDistance = 2f;
 
 		public float MaxDistance = 5f;
 
-		[Range(0f, 1f)]
-		public float SpatialBlend = 1f;
+		[Range(0f, 1f)] public float SpatialBlend = 1f;
 
-		public AnimationCurve CloseVolumeCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(0.5f, 0f), new Keyframe(1f, 0f));
+		public AnimationCurve CloseVolumeCurve =
+			new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(0.5f, 0f), new Keyframe(1f, 0f));
 
-		public AnimationCurve DistantVolumeCurve = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(0.5f, 1f), new Keyframe(1f, 0f));
+		public AnimationCurve DistantVolumeCurve =
+			new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(0.5f, 1f), new Keyframe(1f, 0f));
 
-		public AnimationCurve ObscuredVolumeCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(0.5f, 0f), new Keyframe(1f, 0f));
+		public AnimationCurve ObscuredVolumeCurve =
+			new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(0.5f, 0f), new Keyframe(1f, 0f));
 
 		private float fadeSpeed;
 
@@ -70,6 +70,7 @@ namespace ZeroGravity.Audio
 				CloseAudioSource.volume = Volume;
 				CloseAudioSource.pitch = Pitch;
 			}
+
 			if ((bool)DistantSound)
 			{
 				DistantAudioSource = base.gameObject.AddComponent<AudioSource>();
@@ -85,6 +86,7 @@ namespace ZeroGravity.Audio
 				DistantAudioSource.volume = Volume;
 				DistantAudioSource.pitch = Pitch;
 			}
+
 			if ((bool)ObscuredSound)
 			{
 				ObscuredAudioSource = base.gameObject.AddComponent<AudioSource>();
@@ -100,6 +102,7 @@ namespace ZeroGravity.Audio
 				ObscuredAudioSource.volume = Volume;
 				ObscuredAudioSource.pitch = Pitch;
 			}
+
 			if (PlayOnAwake && ((bool)CloseSound || (bool)DistantSound || (bool)ObscuredSound))
 			{
 				PlaySound();
@@ -115,12 +118,15 @@ namespace ZeroGravity.Audio
 					RandomIndexClose();
 					CloseAudioSource.clip = Sounds[closeIndex];
 				}
+
 				CloseAudioSource.Play();
 			}
+
 			if ((bool)DistantSound && DistantAudioSource.enabled)
 			{
 				DistantAudioSource.Play();
 			}
+
 			if ((bool)ObscuredSound && ObscuredAudioSource.enabled)
 			{
 				ObscuredAudioSource.Play();
@@ -133,10 +139,12 @@ namespace ZeroGravity.Audio
 			{
 				CloseAudioSource.Stop();
 			}
+
 			if ((bool)DistantSound)
 			{
 				DistantAudioSource.Stop();
 			}
+
 			if ((bool)ObscuredSound)
 			{
 				ObscuredAudioSource.Stop();
@@ -150,14 +158,17 @@ namespace ZeroGravity.Audio
 			{
 				flag = CloseAudioSource.isPlaying;
 			}
+
 			if ((bool)DistantSound && !flag)
 			{
 				flag = DistantAudioSource.isPlaying;
 			}
+
 			if ((bool)ObscuredSound && !flag)
 			{
 				flag = DistantAudioSource.isPlaying;
 			}
+
 			return flag;
 		}
 
@@ -207,6 +218,7 @@ namespace ZeroGravity.Audio
 					num = Mathf.Clamp01(num);
 					fadeSpeed = 0f;
 				}
+
 				setVolume(num);
 			}
 		}
@@ -217,14 +229,17 @@ namespace ZeroGravity.Audio
 			{
 				return CloseAudioSource.volume;
 			}
+
 			if ((bool)DistantSound)
 			{
 				return DistantAudioSource.volume;
 			}
+
 			if ((bool)ObscuredSound)
 			{
 				return ObscuredAudioSource.volume;
 			}
+
 			return Volume;
 		}
 
@@ -234,10 +249,12 @@ namespace ZeroGravity.Audio
 			{
 				CloseAudioSource.volume = newVolume;
 			}
+
 			if ((bool)DistantSound)
 			{
 				DistantAudioSource.volume = newVolume;
 			}
+
 			if ((bool)ObscuredSound)
 			{
 				ObscuredAudioSource.volume = newVolume;

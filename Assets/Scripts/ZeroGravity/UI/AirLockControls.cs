@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Objects;
@@ -9,15 +10,14 @@ namespace ZeroGravity.UI
 	{
 		public SceneTriggerAirlockPanel MySceneTrigger;
 
-		[Space(10f)]
-		public SceneTriggerRoom Room;
+		[Space(10f)] public SceneTriggerRoom Room;
 
 		public SceneDoor InnerDoor;
 
 		public SceneDoor OuterDoor;
 
-		[Space(10f)]
-		public SceneTriggerExecuter InnerDoorExecuter;
+		[FormerlySerializedAs("InnerDoorExecuter")] [Space(10f)]
+		public SceneTriggerExecutor InnerDoorExecutor;
 
 		public string InnerDoorOpenState;
 
@@ -25,8 +25,8 @@ namespace ZeroGravity.UI
 
 		public string InnerDoorForceOpen;
 
-		[Space(10f)]
-		public SceneTriggerExecuter OuterDoorExecuter;
+		[FormerlySerializedAs("OuterDoorExecuter")] [Space(10f)]
+		public SceneTriggerExecutor OuterDoorExecutor;
 
 		public string OuterDoorOpenState;
 
@@ -40,14 +40,11 @@ namespace ZeroGravity.UI
 
 		public Image ScreenCanvasStatus;
 
-		[SerializeField]
-		private Sprite SafeSprite;
+		[SerializeField] private Sprite SafeSprite;
 
-		[SerializeField]
-		private Sprite UnsafeSprite;
+		[SerializeField] private Sprite UnsafeSprite;
 
-		[SerializeField]
-		private Sprite CyclingSprite;
+		[SerializeField] private Sprite CyclingSprite;
 
 		public GameObject CyclingScreen;
 
@@ -55,18 +52,12 @@ namespace ZeroGravity.UI
 
 		public SceneTriggerRoom InnerRoom
 		{
-			get
-			{
-				return (!(InnerDoor.Room1 != Room)) ? InnerDoor.Room2 : InnerDoor.Room1;
-			}
+			get { return (!(InnerDoor.Room1 != Room)) ? InnerDoor.Room2 : InnerDoor.Room1; }
 		}
 
 		public SceneTriggerRoom OuterRoom
 		{
-			get
-			{
-				return (!(OuterDoor.Room1 != Room)) ? OuterDoor.Room2 : OuterDoor.Room1;
-			}
+			get { return (!(OuterDoor.Room1 != Room)) ? OuterDoor.Room2 : OuterDoor.Room1; }
 		}
 
 		public float pressurizeTarget
@@ -89,40 +80,32 @@ namespace ZeroGravity.UI
 			}
 		}
 
-		private void Awake()
-		{
-		}
-
 		private void Start()
 		{
-			if (Client.IsGameBuild)
+			if (Room != null)
 			{
-				if (Room != null)
-				{
-					Room.AddBehaviourScript(this);
-				}
-				if (InnerRoom != null)
-				{
-					InnerRoom.AddBehaviourScript(this);
-				}
-				if (OuterRoom != null)
-				{
-					OuterRoom.AddBehaviourScript(this);
-				}
-				if (Room != null)
-				{
-					UpdateUI();
-				}
+				Room.AddBehaviourScript(this);
 			}
-		}
 
-		private void Update()
-		{
+			if (InnerRoom != null)
+			{
+				InnerRoom.AddBehaviourScript(this);
+			}
+
+			if (OuterRoom != null)
+			{
+				OuterRoom.AddBehaviourScript(this);
+			}
+
+			if (Room != null)
+			{
+				UpdateUI();
+			}
 		}
 
 		public void UpdateUI()
 		{
-			if (Client.IsGameBuild && !(Room == null))
+			if (Room is not null)
 			{
 				RefreshScreenSaver();
 			}
@@ -136,7 +119,9 @@ namespace ZeroGravity.UI
 				ScreenCanvasStatus.sprite = CyclingSprite;
 				CyclingScreen.SetActive(true);
 			}
-			else if ((double)Mathf.Abs(((!(MyPlayer.Instance.CurrentRoomTrigger != null)) ? 0f : MyPlayer.Instance.CurrentRoomTrigger.AirPressure) - Room.AirPressure) < 0.1)
+			else if ((double)Mathf.Abs(((!(MyPlayer.Instance.CurrentRoomTrigger != null))
+				         ? 0f
+				         : MyPlayer.Instance.CurrentRoomTrigger.AirPressure) - Room.AirPressure) < 0.1)
 			{
 				ScreenCanvasStatus.sprite = SafeSprite;
 				CyclingScreen.SetActive(false);

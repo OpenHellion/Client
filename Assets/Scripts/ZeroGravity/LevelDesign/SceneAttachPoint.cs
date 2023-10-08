@@ -12,6 +12,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					return Localization.SlotFor + ": " + StandardTip.ToLocalizedString();
 				}
+
 				return base.InteractionTip;
 			}
 		}

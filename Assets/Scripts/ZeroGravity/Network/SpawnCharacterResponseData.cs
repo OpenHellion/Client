@@ -10,13 +10,8 @@ namespace ZeroGravity.Network
 
 		public override SpaceObjectType Type
 		{
-			get
-			{
-				return SpaceObjectType.Player;
-			}
-			set
-			{
-			}
+			get { return SpaceObjectType.Player; }
+			set { }
 		}
 	}
 }

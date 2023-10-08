@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion;
 using OpenHellion.Net;
 using UnityEngine;
 using ZeroGravity.Math;
@@ -11,31 +12,25 @@ namespace ZeroGravity.Objects
 {
 	public abstract class SpaceObject : MonoBehaviour
 	{
-		public static bool PositionAndRotationSmoothingEnabled = true;
+		private SpaceObject _parent;
 
-		private SpaceObject _Parent;
+		protected static World World;
 
-		[HideInInspector]
-		public GameObject TransferableObjectsRoot;
+		[HideInInspector] public GameObject TransferableObjectsRoot;
 
-		[HideInInspector]
-		public GameObject ConnectedObjectsRoot;
+		[HideInInspector] public GameObject ConnectedObjectsRoot;
 
-		[HideInInspector]
-		public GameObject GeometryRoot;
+		[HideInInspector] public GameObject GeometryRoot;
 
-		[HideInInspector]
-		public GameObject GeometryPlaceholder;
+		[HideInInspector] public GameObject GeometryPlaceholder;
 
-		[HideInInspector]
-		public Rigidbody ArtificalRigidbody;
+		[HideInInspector] public Rigidbody ArtificalRigidbody;
 
 		public bool IsInVisibilityRange = true;
 
 		public Quaternion? TargetRotation;
 
-		[NonSerialized]
-		public bool DelayedSubscribeRequested;
+		[NonSerialized] public bool DelayedSubscribeRequested;
 
 		private GameObject _otherCharacterGeometryRoot;
 
@@ -55,24 +50,15 @@ namespace ZeroGravity.Objects
 
 		public virtual SpaceObject Parent
 		{
-			get
-			{
-				return _Parent;
-			}
-			set
-			{
-				_Parent = value;
-			}
+			get { return _parent; }
+			set { _parent = value; }
 		}
 
-		[HideInInspector]
-		public bool IsSubscribedTo { get; protected set; }
+		[HideInInspector] public bool IsSubscribedTo { get; protected set; }
 
-		[HideInInspector]
-		public bool SceneObjectsLoaded { get; protected set; }
+		[HideInInspector] public bool SceneObjectsLoaded { get; protected set; }
 
-		[HideInInspector]
-		public bool SpawnRequested { get; private set; }
+		[HideInInspector] public bool SpawnRequested { get; private set; }
 
 		public GameObject OtherCharacterGeometryRoot
 		{
@@ -84,33 +70,34 @@ namespace ZeroGravity.Objects
 					_otherCharacterGeometryRoot.transform.parent = GeometryPlaceholder.transform;
 					_otherCharacterGeometryRoot.transform.Reset();
 				}
+
 				return _otherCharacterGeometryRoot;
 			}
 		}
 
 		public bool IsDummyObject
 		{
-			get
-			{
-				return _isDummyObject;
-			}
+			get { return _isDummyObject; }
 			protected set
 			{
 				if (_isDummyObject == value)
 				{
 					return;
 				}
+
 				if (this is SpaceObjectVessel && !_isDummyObject && value)
 				{
 					SpaceObjectVessel spaceObjectVessel = this as SpaceObjectVessel;
-					spaceObjectVessel.DummyDockedVessels = spaceObjectVessel.AllDockedVessels.Select((SpaceObjectVessel m) => new DockedVesselData
-					{
-						GUID = m.GUID,
-						Type = m.Type,
-						Data = m.VesselData,
-						VesselObjects = null
-					}).ToList();
+					spaceObjectVessel.DummyDockedVessels = spaceObjectVessel.AllDockedVessels.Select(
+						(SpaceObjectVessel m) => new DockedVesselData
+						{
+							GUID = m.GUID,
+							Type = m.Type,
+							Data = m.VesselData,
+							VesselObjects = null
+						}).ToList();
 				}
+
 				_isDummyObject = value;
 			}
 		}
@@ -121,46 +108,36 @@ namespace ZeroGravity.Objects
 
 		public virtual Vector3 Forward
 		{
-			get
-			{
-				return _forward;
-			}
-			set
-			{
-				_forward = ((!value.IsEpsilonEqual(Vector3.zero, 1E-10f)) ? value : _forward);
-			}
+			get { return _forward; }
+			set { _forward = ((!value.IsEpsilonEqual(Vector3.zero, 1E-10f)) ? value : _forward); }
 		}
 
 		public virtual Vector3 Up
 		{
-			get
-			{
-				return _up;
-			}
-			set
-			{
-				_up = ((!value.IsEpsilonEqual(Vector3.zero, 1E-10f)) ? value : _up);
-			}
+			get { return _up; }
+			set { _up = ((!value.IsEpsilonEqual(Vector3.zero, 1E-10f)) ? value : _up); }
 		}
 
-		[HideInInspector]
-		public bool IsMainObject => MyPlayer.Instance != null && (MyPlayer.Instance.Parent == this || MyPlayer.Instance.IsInVesselHierarchy(this as SpaceObjectVessel));
+		public bool IsMainObject => MyPlayer.Instance != null && (MyPlayer.Instance.Parent == this ||
+		                                                          MyPlayer.Instance.IsInVesselHierarchy(
+			                                                          this as SpaceObjectVessel));
 
 		public Vector3 AngularVelocity
 		{
-			get
-			{
-				return _angularVelocity;
-			}
-			set
-			{
-				_angularVelocity = value;
-			}
+			get { return _angularVelocity; }
+			set { _angularVelocity = value; }
 		}
 
-		protected virtual bool ShouldSetLocalTransform => MyPlayer.Instance == null || MyPlayer.Instance.Parent != this || MyPlayer.Instance.Parent is Pivot;
+		protected virtual bool ShouldSetLocalTransform => MyPlayer.Instance == null ||
+		                                                  MyPlayer.Instance.Parent != this ||
+		                                                  MyPlayer.Instance.Parent is Pivot;
 
 		protected virtual bool ShouldUpdateTransform => true;
+
+		private void Awake()
+		{
+			World ??= GameObject.Find("/World").GetComponent<World>();
+		}
 
 		public virtual void DestroyGeometry()
 		{
@@ -230,14 +207,16 @@ namespace ZeroGravity.Objects
 
 		public static T GetParent<T>(SpaceObject parent) where T : SpaceObject
 		{
-			if (parent == null)
+			if (parent is null)
 			{
 				return (T)null;
 			}
-			if (parent is T)
+
+			if (parent is T spaceObject)
 			{
-				return parent as T;
+				return spaceObject;
 			}
+
 			return GetParent<T>(parent.Parent);
 		}
 
@@ -257,27 +236,26 @@ namespace ZeroGravity.Objects
 			{
 				samples.RemoveAt(0);
 			}
-			float num = time;
-			foreach (float sample in samples)
-			{
-				float num2 = sample;
-				num += num2;
-			}
-			time = num / (float)(samples.Count + 1);
+
+			float num = time + samples.Sum();
+			time = num / (samples.Count + 1);
 			samples.Add(time);
 		}
 
-		public virtual void SetTargetPositionAndRotation(Vector3? localPosition, Quaternion? localRotation, bool instant = false, double time = -1.0)
+		public virtual void SetTargetPositionAndRotation(Vector3? localPosition, Quaternion? localRotation,
+			bool instant = false, double time = -1.0)
 		{
 			IsInVisibilityRange = true;
 			if (localPosition.HasValue && ShouldSetLocalTransform)
 			{
-				base.transform.localPosition = localPosition.Value;
+				transform.localPosition = localPosition.Value;
 			}
+
 			if (!localRotation.HasValue)
 			{
 				return;
 			}
+
 			if (instant)
 			{
 				Forward = localRotation.Value * Vector3.forward;
@@ -286,6 +264,7 @@ namespace ZeroGravity.Objects
 				{
 					base.transform.localRotation = localRotation.Value;
 				}
+
 				TargetRotation = null;
 			}
 			else
@@ -294,11 +273,13 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public virtual void SetTargetPositionAndRotation(Vector3? localPosition, Vector3? forward, Vector3? up, bool instant = false, double time = -1.0)
+		public virtual void SetTargetPositionAndRotation(Vector3? localPosition, Vector3? forward, Vector3? up,
+			bool instant = false, double time = -1.0)
 		{
 			if (forward.HasValue && up.HasValue)
 			{
-				SetTargetPositionAndRotation(localPosition, Quaternion.LookRotation(forward.Value, up.Value), instant, time);
+				SetTargetPositionAndRotation(localPosition, Quaternion.LookRotation(forward.Value, up.Value), instant,
+					time);
 			}
 			else
 			{
@@ -312,30 +293,34 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			if (position.HasValue && ShouldSetLocalTransform)
 			{
-				base.transform.localPosition += position.Value;
+				transform.localPosition += position.Value;
 			}
+
 			if (rotation.HasValue)
 			{
 				if (ShouldSetLocalTransform)
 				{
-					base.transform.localRotation *= rotation.Value;
+					transform.localRotation *= rotation.Value;
 				}
+
 				Quaternion quaternion = Quaternion.LookRotation(Forward, Up) * rotation.Value;
 				Forward = quaternion * Vector3.forward;
 				Up = quaternion * Vector3.up;
 			}
-			if ((position.HasValue || rotation.HasValue) && ArtificalRigidbody != null)
+
+			if ((position.HasValue || rotation.HasValue) && ArtificalRigidbody is not null)
 			{
 				UpdateArtificialBodyPosition(updateChildren: true);
-				base.transform.hasChanged = false;
+				transform.hasChanged = false;
 			}
 		}
 
 		public virtual void UpdateArtificialBodyPosition(bool updateChildren)
 		{
-			if (ArtificalRigidbody != null && GeometryPlaceholder != null)
+			if (ArtificalRigidbody is not null && GeometryPlaceholder is not null)
 			{
 				GeometryRoot.transform.position = GeometryPlaceholder.transform.position;
 				GeometryRoot.transform.rotation = GeometryPlaceholder.transform.rotation;
@@ -346,11 +331,11 @@ namespace ZeroGravity.Objects
 
 		protected virtual void UpdatePositionAndRotation(bool setLocalPositionAndRotation)
 		{
-			if (ArtificalRigidbody != null && GeometryPlaceholder != null && base.transform.hasChanged)
+			if (ArtificalRigidbody is not null && GeometryPlaceholder is not null && base.transform.hasChanged)
 			{
 				ArtificalRigidbody.position = GeometryPlaceholder.transform.position;
 				ArtificalRigidbody.rotation = GeometryPlaceholder.transform.rotation;
-				base.transform.hasChanged = false;
+				transform.hasChanged = false;
 			}
 		}
 	}

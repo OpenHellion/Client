@@ -18,57 +18,41 @@ namespace ZeroGravity
 
 		private static bool useOcclusion = true;
 
-		private static Dictionary<SpaceObjectVessel, ZeroOcclusionObject> zeroOccluders = new Dictionary<SpaceObjectVessel, ZeroOcclusionObject>();
+		private static Dictionary<SpaceObjectVessel, ZeroOcclusionObject> zeroOccluders =
+			new Dictionary<SpaceObjectVessel, ZeroOcclusionObject>();
 
 		public static GameObject BlackHole = null;
 
 		public static bool UseOcclusion
 		{
-			get
-			{
-				return useOcclusion;
-			}
+			get { return useOcclusion; }
 		}
 
 		public static void ToggleOcclusion(bool use)
 		{
 			useOcclusion = use;
-			if (Client.IsGameBuild)
+			foreach (KeyValuePair<SpaceObjectVessel, ZeroOcclusionObject> zeroOccluder2 in zeroOccluders)
 			{
-				foreach (KeyValuePair<SpaceObjectVessel, ZeroOcclusionObject> zeroOccluder2 in zeroOccluders)
+				if (!use)
 				{
-					if (!use)
+					foreach (ZeroOccluder item in zeroOccluder2.Value.Distance)
 					{
-						foreach (ZeroOccluder item in zeroOccluder2.Value.Distance)
-						{
-							item.ShowOccludedObjects(true);
-						}
-						if (zeroOccluder2.Value.PlayerOutside != null)
-						{
-							zeroOccluder2.Value.PlayerOutside.ShowOccludedObjects(true);
-						}
-						if (zeroOccluder2.Value.PlayerInside != null)
-						{
-							zeroOccluder2.Value.PlayerInside.ShowOccludedObjects(false);
-						}
+						item.ShowOccludedObjects(true);
 					}
-					else
+
+					if (zeroOccluder2.Value.PlayerOutside != null)
 					{
-						CheckOcclusionFor(zeroOccluder2.Key, false);
+						zeroOccluder2.Value.PlayerOutside.ShowOccludedObjects(true);
+					}
+
+					if (zeroOccluder2.Value.PlayerInside != null)
+					{
+						zeroOccluder2.Value.PlayerInside.ShowOccludedObjects(false);
 					}
 				}
-				return;
-			}
-			for (int i = 0; i < SceneManager.sceneCount; i++)
-			{
-				GameObject[] rootGameObjects = SceneManager.GetSceneAt(i).GetRootGameObjects();
-				foreach (GameObject gameObject in rootGameObjects)
+				else
 				{
-					ZeroOccluder[] componentsInChildren = gameObject.GetComponentsInChildren<ZeroOccluder>(true);
-					foreach (ZeroOccluder zeroOccluder in componentsInChildren)
-					{
-						zeroOccluder.ShowOccludedObjects(use);
-					}
+					CheckOcclusionFor(zeroOccluder2.Key, false);
 				}
 			}
 		}
@@ -82,6 +66,7 @@ namespace ZeroGravity
 				{
 					zeroOccluders.Add(ves, new ZeroOcclusionObject());
 				}
+
 				if (zeroOccluder.OccluderType == ZeroOccluder.Type.PlayerInside)
 				{
 					zeroOccluders[ves].PlayerInside = zeroOccluder;
@@ -111,38 +96,55 @@ namespace ZeroGravity
 			{
 				return;
 			}
+
 			if (onlyCheckDistance)
 			{
 				foreach (ZeroOccluder item in zeroOccluders[ves].Distance)
 				{
-					item.ShowOccludedObjects(MyPlayer.Instance.Parent == ves || MyPlayer.Instance.transform.position.DistanceSquared(ves.transform.position) < (double)item.OcclusionDistanceSquared);
+					item.ShowOccludedObjects(MyPlayer.Instance.Parent == ves ||
+					                         MyPlayer.Instance.transform.position.DistanceSquared(
+						                         ves.transform.position) < (double)item.OcclusionDistanceSquared);
 				}
+
 				return;
 			}
-			if (MyPlayer.Instance.Parent is SpaceObjectVessel && (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel == ves.MainVessel)
+
+			if (MyPlayer.Instance.Parent is SpaceObjectVessel &&
+			    (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel == ves.MainVessel)
 			{
 				foreach (ZeroOccluder item2 in zeroOccluders[ves].Distance)
 				{
 					item2.ShowOccludedObjects(true);
 				}
+
 				if (zeroOccluders[ves].PlayerOutside != null)
 				{
 					zeroOccluders[ves].PlayerOutside.ShowOccludedObjects(true);
 				}
-				if (zeroOccluders[ves].PlayerInside != null && (MyPlayer.Instance.CurrentRoomTrigger == null || !MyPlayer.Instance.CurrentRoomTrigger.DisablePlayerInsideOccluder) && (MyPlayer.Instance.EnterVesselRoomTrigger == null || !MyPlayer.Instance.EnterVesselRoomTrigger.DisablePlayerInsideOccluder))
+
+				if (zeroOccluders[ves].PlayerInside != null &&
+				    (MyPlayer.Instance.CurrentRoomTrigger == null ||
+				     !MyPlayer.Instance.CurrentRoomTrigger.DisablePlayerInsideOccluder) &&
+				    (MyPlayer.Instance.EnterVesselRoomTrigger == null ||
+				     !MyPlayer.Instance.EnterVesselRoomTrigger.DisablePlayerInsideOccluder))
 				{
 					zeroOccluders[ves].PlayerInside.ShowOccludedObjects(false);
 				}
+
 				return;
 			}
+
 			if (zeroOccluders[ves].PlayerInside != null)
 			{
 				zeroOccluders[ves].PlayerInside.ShowOccludedObjects(true);
 			}
+
 			foreach (ZeroOccluder item3 in zeroOccluders[ves].Distance)
 			{
-				item3.ShowOccludedObjects(MyPlayer.Instance.transform.position.DistanceSquared(ves.transform.position) < (double)item3.OcclusionDistanceSquared);
+				item3.ShowOccludedObjects(MyPlayer.Instance.transform.position.DistanceSquared(ves.transform.position) <
+				                          (double)item3.OcclusionDistanceSquared);
 			}
+
 			if (zeroOccluders[ves].PlayerOutside != null)
 			{
 				zeroOccluders[ves].PlayerOutside.ShowOccludedObjects(false);
@@ -155,18 +157,22 @@ namespace ZeroGravity
 			{
 				return;
 			}
+
 			foreach (ZeroOccluder item in zeroOccluders[ves].Distance)
 			{
 				item.DestroyOcclusionObjects();
 			}
+
 			if (zeroOccluders[ves].PlayerInside != null)
 			{
 				zeroOccluders[ves].PlayerInside.DestroyOcclusionObjects();
 			}
+
 			if (zeroOccluders[ves].PlayerOutside != null)
 			{
 				zeroOccluders[ves].PlayerOutside.DestroyOcclusionObjects();
 			}
+
 			RemoveOccludersFrom(ves);
 		}
 	}

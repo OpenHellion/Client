@@ -37,7 +37,7 @@ namespace Photon.Voice.Unity
 
         /// <summary>Key to save the "Best Region Summary" in the Player Preferences.</summary>
         private const string PlayerPrefsKey = "VoiceCloudBestRegion";
-        
+
         private LoadBalancingTransport client;
         [SerializeField]
         private bool enableSupportLogger = false;
@@ -129,7 +129,7 @@ namespace Photon.Voice.Unity
         /// and in case that there are multiple local users, the audio output might be sent to the headphones of a different user than intended.</remarks>
         public int PlayStationUserID = 0; // set from your games code
 #endif
-        
+
         /// <summary>Configures the minimal Time.timeScale at which Voice client will dispatch incoming messages within LateUpdate.</summary>
         /// <remarks>
         /// It may make sense to dispatch incoming messages, even if the timeScale is near 0.
@@ -137,10 +137,10 @@ namespace Photon.Voice.Unity
         /// Without dispatching messages, Voice client won't change state and does not handle updates.
         /// </remarks>
         public float MinimalTimeScaleToDispatchInFixedUpdate = -1f;
-        
+
         /// <summary> Auto instantiate a GameObject and attach a Speaker component to link to a remote audio stream if no candidate could be found </summary>
         public bool AutoCreateSpeakerIfNotFound = true;
-        
+
         /// <summary>Limits the number of datagrams that are created in each LateUpdate.</summary>
         /// <remarks>Helps spreading out sending of messages minimally.</remarks>
         public int MaxDatagrams = 3;
@@ -208,7 +208,7 @@ namespace Photon.Voice.Unity
                 return this.client;
             }
         }
-        
+
         /// <summary>Returns underlying Photon Voice client.</summary>
         public VoiceClient VoiceClient { get { return this.Client.VoiceClient; } }
 
@@ -251,7 +251,7 @@ namespace Photon.Voice.Unity
             }
         }
 
-        
+
         #if UNITY_EDITOR
         public List<RemoteVoiceLink> CachedRemoteVoices
         {
@@ -313,7 +313,7 @@ namespace Photon.Voice.Unity
         }
 
         [Obsolete("Use SetGlobalPlaybackDelayConfiguration methods instead")]
-        public int GlobalPlaybackDelay 
+        public int GlobalPlaybackDelay
         {
             get
             {
@@ -734,7 +734,7 @@ namespace Photon.Voice.Unity
                 Destroy(speaker.gameObject);
             }
         }
-        
+
         private void OnRemoteVoiceInfo(int channelId, int playerId, byte voiceId, VoiceInfo voiceInfo, ref RemoteVoiceOptions options)
         {
             RemoteVoiceLink remoteVoice = new RemoteVoiceLink(voiceInfo, playerId, voiceId, channelId);
@@ -1025,7 +1025,7 @@ namespace Photon.Voice.Unity
                 }
             }
         }
-        
+
         private bool TryGetFirstVoiceStreamByUserData(object userData, out RemoteVoiceLink remoteVoiceLink)
         {
             remoteVoiceLink = null;

@@ -29,16 +29,14 @@ namespace RootMotion.FinalIK
 		[Tooltip("The Grounding solver for the forelegs.")]
 		public Grounding forelegSolver = new Grounding();
 
-		[Tooltip("The weight of rotating the character root to the ground angle (range: 0 - 1).")]
-		[Range(0f, 1f)]
+		[Tooltip("The weight of rotating the character root to the ground angle (range: 0 - 1).")] [Range(0f, 1f)]
 		public float rootRotationWeight = 0.5f;
 
 		[Tooltip("The maximum angle of rotating the quadruped downwards (going downhill, range: -90 - 0).")]
 		[Range(-90f, 0f)]
 		public float minRootRotation = -25f;
 
-		[Tooltip("The maximum angle of rotating the quadruped upwards (going uphill, range: 0 - 90).")]
-		[Range(0f, 90f)]
+		[Tooltip("The maximum angle of rotating the quadruped upwards (going uphill, range: 0 - 90).")] [Range(0f, 90f)]
 		public float maxRootRotation = 45f;
 
 		[Tooltip("The speed of interpolating the character root rotation (range: 0 - inf).")]
@@ -50,7 +48,8 @@ namespace RootMotion.FinalIK
 		[Tooltip("The maximum IK offset for the forelegs (range: 0 - inf).")]
 		public float maxForeLegOffset = 0.5f;
 
-		[Tooltip("The weight of maintaining the head's rotation as it was before solving the Grounding (range: 0 - 1).")]
+		[Tooltip(
+			"The weight of maintaining the head's rotation as it was before solving the Grounding (range: 0 - 1).")]
 		[Range(0f, 1f)]
 		public float maintainHeadRotationWeight = 0.5f;
 
@@ -105,7 +104,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Scrpt Reference")]
 		protected override void OpenScriptReference()
 		{
-			Application.OpenURL("http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_grounder_quadruped.html");
+			Application.OpenURL(
+				"http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_grounder_quadruped.html");
 		}
 
 		public override void Reset()
@@ -120,30 +120,37 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			if (lastSpineBone == null)
 			{
 				return false;
 			}
+
 			if (legs.Length == 0)
 			{
 				return false;
 			}
+
 			if (forelegs.Length == 0)
 			{
 				return false;
 			}
+
 			if (characterRoot == null)
 			{
 				return false;
 			}
+
 			if (!IsReadyToInitiateLegs(legs))
 			{
 				return false;
 			}
+
 			if (!IsReadyToInitiateLegs(forelegs))
 			{
 				return false;
 			}
+
 			return true;
 		}
 
@@ -155,22 +162,29 @@ namespace RootMotion.FinalIK
 				{
 					return false;
 				}
+
 				if (iK is FullBodyBipedIK)
 				{
-					LogWarning("GrounderIK does not support FullBodyBipedIK, use CCDIK, FABRIK, LimbIK or TrigonometricIK instead. If you want to use FullBodyBipedIK, use the GrounderFBBIK component.");
+					LogWarning(
+						"GrounderIK does not support FullBodyBipedIK, use CCDIK, FABRIK, LimbIK or TrigonometricIK instead. If you want to use FullBodyBipedIK, use the GrounderFBBIK component.");
 					return false;
 				}
+
 				if (iK is FABRIKRoot)
 				{
-					LogWarning("GrounderIK does not support FABRIKRoot, use CCDIK, FABRIK, LimbIK or TrigonometricIK instead.");
+					LogWarning(
+						"GrounderIK does not support FABRIKRoot, use CCDIK, FABRIK, LimbIK or TrigonometricIK instead.");
 					return false;
 				}
+
 				if (iK is AimIK)
 				{
-					LogWarning("GrounderIK does not support AimIK, use CCDIK, FABRIK, LimbIK or TrigonometricIK instead.");
+					LogWarning(
+						"GrounderIK does not support AimIK, use CCDIK, FABRIK, LimbIK or TrigonometricIK instead.");
 					return false;
 				}
 			}
+
 			return true;
 		}
 
@@ -180,6 +194,7 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			for (int i = 0; i < feet.Length; i++)
 			{
 				if (feet[i].solver != null)
@@ -213,6 +228,7 @@ namespace RootMotion.FinalIK
 			{
 				animatedHeadLocalRotation = head.localRotation;
 			}
+
 			forefeetRoot = new GameObject().transform;
 			forefeetRoot.parent = base.transform;
 			forefeetRoot.name = "Forefeet Root";
@@ -222,10 +238,12 @@ namespace RootMotion.FinalIK
 			{
 				feet[i].leg = solver.legs[i];
 			}
+
 			for (int j = 0; j < array2.Length; j++)
 			{
 				feet[j + legs.Length].leg = forelegSolver.legs[j];
 			}
+
 			initiated = true;
 		}
 
@@ -238,10 +256,13 @@ namespace RootMotion.FinalIK
 				f[i + indexOffset] = new Foot(ikComponents[i].GetIKSolver(), points[points.Length - 1].transform);
 				array[i] = f[i + indexOffset].transform;
 				IKSolver iKSolver = f[i + indexOffset].solver;
-				iKSolver.OnPreUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(iKSolver.OnPreUpdate, new IKSolver.UpdateDelegate(OnSolverUpdate));
+				iKSolver.OnPreUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(iKSolver.OnPreUpdate,
+					new IKSolver.UpdateDelegate(OnSolverUpdate));
 				IKSolver iKSolver2 = f[i + indexOffset].solver;
-				iKSolver2.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(iKSolver2.OnPostUpdate, new IKSolver.UpdateDelegate(OnPostSolverUpdate));
+				iKSolver2.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(iKSolver2.OnPostUpdate,
+					new IKSolver.UpdateDelegate(OnPostSolverUpdate));
 			}
+
 			return array;
 		}
 
@@ -274,7 +295,8 @@ namespace RootMotion.FinalIK
 				float num = Mathf.Atan2(vector2.y, vector2.z) * 57.29578f;
 				num = Mathf.Clamp(num * rootRotationWeight, minRootRotation, maxRootRotation);
 				angle = Mathf.Lerp(angle, num, Time.deltaTime * rootRotationSpeed);
-				characterRoot.rotation = Quaternion.Slerp(characterRoot.rotation, Quaternion.AngleAxis(0f - angle, characterRoot.right) * quaternion, weight);
+				characterRoot.rotation = Quaternion.Slerp(characterRoot.rotation,
+					Quaternion.AngleAxis(0f - angle, characterRoot.right) * quaternion, weight);
 			}
 		}
 
@@ -284,23 +306,28 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			if (weight <= 0f)
 			{
 				if (lastWeight <= 0f)
 				{
 					return;
 				}
+
 				OnDisable();
 			}
+
 			lastWeight = weight;
 			if (solved)
 			{
 				return;
 			}
+
 			if (OnPreGrounder != null)
 			{
 				OnPreGrounder();
 			}
+
 			if (pelvis.localPosition != solvedPelvisLocalPosition)
 			{
 				animatedPelvisLocalPosition = pelvis.localPosition;
@@ -309,6 +336,7 @@ namespace RootMotion.FinalIK
 			{
 				pelvis.localPosition = animatedPelvisLocalPosition;
 			}
+
 			if (pelvis.localRotation != solvedPelvisLocalRotation)
 			{
 				animatedPelvisLocalRotation = pelvis.localRotation;
@@ -317,6 +345,7 @@ namespace RootMotion.FinalIK
 			{
 				pelvis.localRotation = animatedPelvisLocalRotation;
 			}
+
 			if (head != null)
 			{
 				if (head.localRotation != solvedHeadLocalRotation)
@@ -328,20 +357,26 @@ namespace RootMotion.FinalIK
 					head.localRotation = animatedHeadLocalRotation;
 				}
 			}
+
 			for (int i = 0; i < feet.Length; i++)
 			{
 				feet[i].rotation = feet[i].transform.rotation;
 			}
+
 			if (head != null)
 			{
 				headRotation = head.rotation;
 			}
+
 			UpdateForefeetRoot();
 			solver.Update();
 			forelegSolver.Update();
 			pelvis.position += solver.pelvis.IKOffset * weight;
 			Vector3 fromDirection = lastSpineBone.position - pelvis.position;
-			Vector3 vector = lastSpineBone.position + forelegSolver.root.up * Mathf.Clamp(forelegSolver.pelvis.heightOffset, float.NegativeInfinity, 0f) - solver.root.up * solver.pelvis.heightOffset;
+			Vector3 vector = lastSpineBone.position +
+			                 forelegSolver.root.up * Mathf.Clamp(forelegSolver.pelvis.heightOffset,
+				                 float.NegativeInfinity, 0f) -
+			                 solver.root.up * solver.pelvis.heightOffset;
 			Vector3 toDirection = vector - pelvis.position;
 			Quaternion b = Quaternion.FromToRotation(fromDirection, toDirection);
 			pelvis.rotation = Quaternion.Slerp(Quaternion.identity, b, weight) * pelvis.rotation;
@@ -349,6 +384,7 @@ namespace RootMotion.FinalIK
 			{
 				SetFootIK(feet[j], (j >= 2) ? maxForeLegOffset : maxLegOffset);
 			}
+
 			solved = true;
 			solvedFeet = 0;
 			if (OnPostGrounder != null)
@@ -364,6 +400,7 @@ namespace RootMotion.FinalIK
 			{
 				zero += forelegSolver.legs[i].transform.position;
 			}
+
 			zero /= (float)forelegs.Length;
 			Vector3 vector = zero - base.transform.position;
 			Vector3 normal = base.transform.up;
@@ -385,17 +422,21 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			solvedFeet++;
 			if (solvedFeet >= feet.Length)
 			{
 				for (int i = 0; i < feet.Length; i++)
 				{
-					feet[i].transform.rotation = Quaternion.Slerp(Quaternion.identity, feet[i].leg.rotationOffset, weight) * feet[i].rotation;
+					feet[i].transform.rotation =
+						Quaternion.Slerp(Quaternion.identity, feet[i].leg.rotationOffset, weight) * feet[i].rotation;
 				}
+
 				if (head != null)
 				{
 					head.rotation = Quaternion.Lerp(head.rotation, headRotation, maintainHeadRotationWeight * weight);
 				}
+
 				solvedPelvisLocalPosition = pelvis.localPosition;
 				solvedPelvisLocalRotation = pelvis.localRotation;
 				if (head != null)
@@ -421,9 +462,11 @@ namespace RootMotion.FinalIK
 				if (iK != null)
 				{
 					IKSolver iKSolver = iK.GetIKSolver();
-					iKSolver.OnPreUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(iKSolver.OnPreUpdate, new IKSolver.UpdateDelegate(OnSolverUpdate));
+					iKSolver.OnPreUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(iKSolver.OnPreUpdate,
+						new IKSolver.UpdateDelegate(OnSolverUpdate));
 					IKSolver iKSolver2 = iK.GetIKSolver();
-					iKSolver2.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(iKSolver2.OnPostUpdate, new IKSolver.UpdateDelegate(OnPostSolverUpdate));
+					iKSolver2.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(iKSolver2.OnPostUpdate,
+						new IKSolver.UpdateDelegate(OnPostSolverUpdate));
 				}
 			}
 		}

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
-using ZeroGravity;
+using OpenHellion;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Objects;
@@ -11,95 +11,61 @@ using ZeroGravity.Objects;
 [ExecuteInEditMode, RequireComponent(typeof(TextMeshPro))]
 public class SceneNameTag : BaseSceneTrigger, ISceneObject
 {
-	[SerializeField, FormerlySerializedAs("_InSceneID")]
-	private int m_inSceneId;
+	[SerializeField, FormerlySerializedAs("_InSceneID"), FormerlySerializedAs("m_inSceneId")]
+	private int _inSceneId;
 
 	public string NameTagText;
 
-	[NonSerialized]
-	public SpaceObjectVessel ParentVessel;
+	[NonSerialized] public SpaceObjectVessel ParentVessel;
 
-	[SerializeField]
-	private TMP_FontAsset m_font;
-
-	[SerializeField]
-	private Material m_sourceMat;
-
-	private TextMeshPro m_textComponent;
+	private TextMeshPro _textComponent;
 
 	public bool Local;
 
 	public override bool CameraMovementAllowed
 	{
-		get
-		{
-			return false;
-		}
+		get { return false; }
 	}
 
 	public override bool ExclusivePlayerLocking
 	{
-		get
-		{
-			return true;
-		}
+		get { return true; }
 	}
 
 	public int InSceneID
 	{
-		get
-		{
-			return m_inSceneId;
-		}
-		set
-		{
-			m_inSceneId = value;
-		}
+		get { return _inSceneId; }
+		set { _inSceneId = value; }
 	}
 
 	public override SceneTriggerType TriggerType
 	{
-		get
-		{
-			return SceneTriggerType.NameTag;
-		}
+		get { return SceneTriggerType.NameTag; }
 	}
 
 	public override bool IsNearTrigger
 	{
-		get
-		{
-			return true;
-		}
+		get { return true; }
 	}
 
 	public override bool IsInteractable
 	{
-		get
-		{
-			return true;
-		}
+		get { return true; }
 	}
 
 	public override PlayerHandsCheckType PlayerHandsCheck
 	{
-		get
-		{
-			return PlayerHandsCheckType.DontCheck;
-		}
+		get { return PlayerHandsCheckType.DontCheck; }
 	}
 
 	public override List<ItemType> PlayerHandsItemType
 	{
-		get
-		{
-			return null;
-		}
+		get { return null; }
 	}
 
 	private void Awake()
 	{
-		m_textComponent = GetComponent<TextMeshPro>();
+		_textComponent = GetComponent<TextMeshPro>();
 	}
 
 	protected override void Start()
@@ -111,13 +77,13 @@ public class SceneNameTag : BaseSceneTrigger, ISceneObject
 	public void SetNameTagText(string text)
 	{
 		NameTagText = text;
-		m_textComponent.text = NameTagText;
+		_textComponent.text = NameTagText;
 	}
 
 	public void SetNameTagTextEditor(string text)
 	{
 		NameTagText = text;
-		m_textComponent.text = NameTagText;
+		_textComponent.text = NameTagText;
 	}
 
 	public override bool Interact(MyPlayer player, bool interactWithOverlappingTriggers = true)
@@ -126,13 +92,14 @@ public class SceneNameTag : BaseSceneTrigger, ISceneObject
 		{
 			return false;
 		}
-		Client.Instance.InGamePanels.NameTagUI.ToggleNameCanvas(this, true, ParentVessel, m_inSceneId);
+
+		World.InWorldPanels.NameTagUI.ToggleNameCanvas(this, true, ParentVessel, _inSceneId);
 		return true;
 	}
 
 	public override void CancelInteract(MyPlayer player)
 	{
 		base.CancelInteract(player);
-		Client.Instance.InGamePanels.NameTagUI.ToggleNameCanvas(this, false, ParentVessel, m_inSceneId);
+		World.InWorldPanels.NameTagUI.ToggleNameCanvas(this, false, ParentVessel, _inSceneId);
 	}
 }

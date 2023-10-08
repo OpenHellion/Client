@@ -29,13 +29,14 @@ namespace ZeroGravity.UI
 			{
 				Destroy(gameObject);
 			}
+
 			Cursor.visible = wasCursorVisible;
-			GameMenu.DisableGameMenu = false;
+			PauseMenu.DisableGameMenu = false;
 		}
 
 		public void PopulateMessageBox(string title, string text, bool destroyOnClose)
 		{
-			GameMenu.DisableGameMenu = true;
+			PauseMenu.DisableGameMenu = true;
 			wasCursorVisible = Cursor.visible;
 			Cursor.visible = true;
 			this.destroyOnClose = destroyOnClose;

@@ -3,13 +3,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "LogObject", menuName = "Helpers/LogObject")]
 public class LogObject : ScriptableObject
 {
-	[Tooltip("Max characters = 60")]
-	public string Title;
+	[Tooltip("Max characters = 60")] public string Title;
 
 	public QuestCutSceneCharacter Character;
 
-	[Tooltip("Max characters = 4000")]
-	[TextArea]
+	[Tooltip("Max characters = 4000")] [TextArea]
 	public string LogText;
 
 	public string LogDate;
@@ -22,6 +20,7 @@ public class LogObject : ScriptableObject
 			{
 				return base.name;
 			}
+
 			return Title;
 		}
 	}

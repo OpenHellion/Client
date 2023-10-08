@@ -44,6 +44,7 @@ namespace ZeroGravity.UI
 				{
 					AirQuality.color = Colors.White;
 				}
+
 				Pressure.text = Room.AirPressure.ToString("0.0");
 				if (Room.AirPressure <= 0.4f)
 				{
@@ -53,6 +54,7 @@ namespace ZeroGravity.UI
 				{
 					Pressure.color = Colors.White;
 				}
+
 				Breach.SetActive(Room.Breach);
 				Fire.SetActive(Room.Fire);
 			}

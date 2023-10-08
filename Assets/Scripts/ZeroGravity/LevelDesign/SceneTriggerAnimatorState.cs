@@ -10,22 +10,27 @@ namespace ZeroGravity.LevelDesign
 			{
 				return SceneTriggerAnimation.AnimationState.Active;
 			}
+
 			if (stateInfo.IsName(SceneTriggerAnimation.AnimationState.Inactive.ToString()))
 			{
 				return SceneTriggerAnimation.AnimationState.Inactive;
 			}
+
 			if (stateInfo.IsName(SceneTriggerAnimation.AnimationState.Fail.ToString()))
 			{
 				return SceneTriggerAnimation.AnimationState.Fail;
 			}
+
 			if (stateInfo.IsName(SceneTriggerAnimation.AnimationState.ActiveIdle.ToString()))
 			{
 				return SceneTriggerAnimation.AnimationState.ActiveIdle;
 			}
+
 			if (stateInfo.IsName(SceneTriggerAnimation.AnimationState.InactiveIdle.ToString()))
 			{
 				return SceneTriggerAnimation.AnimationState.InactiveIdle;
 			}
+
 			return SceneTriggerAnimation.AnimationState.None;
 		}
 

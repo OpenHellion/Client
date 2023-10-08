@@ -27,16 +27,13 @@ namespace ZeroGravity.Objects
 
 		public float StanceChangeSpeedMultiplier = 1f;
 
-		[Space(10f)]
-		public ParticleSystem RepairEffect;
+		[Space(10f)] public ParticleSystem RepairEffect;
 
 		public SoundEffect RepairSoundEffect;
 
-		[Space(10f)]
-		public CargoCompartment FuelCompartment;
+		[Space(10f)] public CargoCompartment FuelCompartment;
 
-		[Tooltip("Units per HP")]
-		public float FuelConsumption = 0.001f;
+		[Tooltip("Units per HP")] public float FuelConsumption = 0.001f;
 
 		private AnimatorHelper animHelper;
 
@@ -56,18 +53,18 @@ namespace ZeroGravity.Objects
 
 		public override float MaxQuantity => FuelCompartment.Capacity;
 
-		public override float Quantity => (FuelCompartment.Resources == null) ? 0f : FuelCompartment.Resources.Sum((CargoResourceData m) => m.Quantity);
+		public override float Quantity => (FuelCompartment.Resources == null)
+			? 0f
+			: FuelCompartment.Resources.Sum((CargoResourceData m) => m.Quantity);
 
 		public float ResourcePercentage => Quantity / MaxQuantity;
 
 		private new void Awake()
 		{
 			base.Awake();
-			if (Client.IsGameBuild)
-			{
-				animHelper = MyPlayer.Instance.animHelper;
-			}
-			raycastMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("RepairTriggers")) | (1 << LayerMask.NameToLayer("DynamicObject")) | 1;
+			animHelper = MyPlayer.Instance.animHelper;
+			raycastMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("RepairTriggers")) |
+			              (1 << LayerMask.NameToLayer("DynamicObject")) | 1;
 			_Compartments = new List<ICargoCompartment> { FuelCompartment };
 		}
 
@@ -91,6 +88,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			RepairEffect.Play();
 			if (sendStats)
 			{
@@ -113,6 +111,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			RepairEffect.Stop();
 			if (sendStats)
 			{
@@ -142,26 +141,35 @@ namespace ZeroGravity.Objects
 
 		private void Update()
 		{
-			if (active && Type == ItemType.FireExtinguisher && FuelCompartment.Resources[0].Quantity > float.Epsilon && MyPlayer.Instance.FpsController.IsZeroG && !InputManager.GetButton(InputManager.ConfigAction.Sprint))
+			if (active && Type == ItemType.FireExtinguisher && FuelCompartment.Resources[0].Quantity > float.Epsilon &&
+			    MyPlayer.Instance.FpsController.IsZeroG && !InputManager.GetButton(InputManager.ConfigAction.Sprint))
 			{
-				MyPlayer.Instance.FpsController.AddForce(-(MyPlayer.Instance.FpsController.MainCamera.transform.rotation * Vector3.forward).normalized * 0.03f, ForceMode.VelocityChange);
+				MyPlayer.Instance.FpsController.AddForce(
+					-(MyPlayer.Instance.FpsController.MainCamera.transform.rotation * Vector3.forward).normalized *
+					0.03f, ForceMode.VelocityChange);
 			}
-			if (!active || Time.time - lastUsageTime < UsageCooldown || (base.InvSlot != null && !(base.InvSlot.Parent is MyPlayer)))
+
+			if (!active || Time.time - lastUsageTime < UsageCooldown ||
+			    (base.InvSlot != null && !(base.InvSlot.Parent is MyPlayer)))
 			{
 				return;
 			}
+
 			bool flag = false;
 			Vector3 position = MyPlayer.Instance.FpsController.MainCamera.transform.position;
 			Vector3 direction = MyPlayer.Instance.FpsController.MainCamera.transform.rotation * Vector3.forward;
-			RaycastHit[] array = (from x in Physics.RaycastAll(position, direction, Range, raycastMask, QueryTriggerInteraction.Collide)
-				orderby x.distance
-				select x).ToArray();
+			RaycastHit[] array =
+				(from x in Physics.RaycastAll(position, direction, Range, raycastMask, QueryTriggerInteraction.Collide)
+					orderby x.distance
+					select x).ToArray();
 			RaycastHit[] array2 = array;
 			for (int i = 0; i < array2.Length; i++)
 			{
 				RaycastHit raycastHit = array2[i];
 				Item componentInParent = raycastHit.collider.gameObject.GetComponentInParent<Item>();
-				if (Type != ItemType.FireExtinguisher && componentInParent != null && componentInParent.Repairable && componentInParent.MaxHealth - componentInParent.Health > float.Epsilon && FuelCompartment.Resources[0].Quantity > float.Epsilon)
+				if (Type != ItemType.FireExtinguisher && componentInParent != null && componentInParent.Repairable &&
+				    componentInParent.MaxHealth - componentInParent.Health > float.Epsilon &&
+				    FuelCompartment.Resources[0].Quantity > float.Epsilon)
 				{
 					NetworkController.Instance.SendToGameServer(new RepairItemMessage
 					{
@@ -170,8 +178,17 @@ namespace ZeroGravity.Objects
 					flag = true;
 					break;
 				}
-				VesselRepairPoint componentInParent2 = raycastHit.collider.gameObject.GetComponentInParent<VesselRepairPoint>();
-				if (componentInParent2 != null && componentInParent2.MaxHealth - componentInParent2.Health > float.Epsilon && FuelCompartment.Resources[0].Quantity > float.Epsilon && (Type != ItemType.FireExtinguisher || (Type == ItemType.FireExtinguisher && componentInParent2.DamageType == RepairPointDamageType.Fire && componentInParent2.SecondaryDamageActive)))
+
+				VesselRepairPoint componentInParent2 =
+					raycastHit.collider.gameObject.GetComponentInParent<VesselRepairPoint>();
+				if (componentInParent2 != null &&
+				    componentInParent2.MaxHealth - componentInParent2.Health > float.Epsilon &&
+				    FuelCompartment.Resources[0].Quantity > float.Epsilon && (Type != ItemType.FireExtinguisher ||
+				                                                              (Type == ItemType.FireExtinguisher &&
+				                                                               componentInParent2.DamageType ==
+				                                                               RepairPointDamageType.Fire &&
+				                                                               componentInParent2
+					                                                               .SecondaryDamageActive)))
 				{
 					NetworkController.Instance.SendToGameServer(new RepairVesselMessage
 					{
@@ -181,6 +198,7 @@ namespace ZeroGravity.Objects
 					break;
 				}
 			}
+
 			if (!flag && Type == ItemType.FireExtinguisher && FuelCompartment.Resources[0].Quantity > float.Epsilon)
 			{
 				NetworkController.Instance.SendToGameServer(new RepairItemMessage
@@ -189,6 +207,7 @@ namespace ZeroGravity.Objects
 				});
 				flag = true;
 			}
+
 			if (flag)
 			{
 				lastUsageTime = Time.time;
@@ -196,6 +215,7 @@ namespace ZeroGravity.Objects
 				{
 					animHelper.SetParameterTrigger(AnimatorHelperTrigger);
 				}
+
 				PlayRepairEffect(sendStats: true);
 			}
 			else
@@ -208,25 +228,31 @@ namespace ZeroGravity.Objects
 		{
 			base.ProcesStatsData(dos);
 			RepairToolStats repairToolStats = dos as RepairToolStats;
-			if (repairToolStats.Active.HasValue && base.InvSlot != null && base.InvSlot.Parent is Player && !(base.InvSlot.Parent is MyPlayer) && base.InvSlot.SlotType == InventorySlot.Type.Hands)
+			if (repairToolStats.Active.HasValue && base.InvSlot != null && base.InvSlot.Parent is Player &&
+			    !(base.InvSlot.Parent is MyPlayer) && base.InvSlot.SlotType == InventorySlot.Type.Hands)
 			{
 				if (repairToolStats.Active.Value)
 				{
 					PlayRepairEffect();
 				}
+
 				if (!repairToolStats.Active.Value)
 				{
 					StopRepairEffect();
 				}
 			}
+
 			if (repairToolStats.FuelResource != null)
 			{
 				FuelCompartment.Resources[0] = repairToolStats.FuelResource;
 				UpdateHealthIndicator(repairToolStats.FuelResource.Quantity, FuelCompartment.Capacity);
 			}
-			if (base.AttachPoint != null && MyPlayer.Instance.IsLockedToTrigger && MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
+
+			if (base.AttachPoint != null && MyPlayer.Instance.IsLockedToTrigger &&
+			    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
 			{
-				SceneTriggerCargoPanel sceneTriggerCargoPanel = MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel;
+				SceneTriggerCargoPanel sceneTriggerCargoPanel =
+					MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel;
 				sceneTriggerCargoPanel.CargoPanel.RefreshAttachedItemResources();
 			}
 		}

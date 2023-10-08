@@ -19,6 +19,7 @@ public class UpdateTimer
 			timePassed = 0f;
 			return true;
 		}
+
 		return false;
 	}
 

@@ -7,8 +7,7 @@ namespace ZeroGravity.Objects
 {
 	public class MilitaryCorpRailgunSniper : Weapon
 	{
-		[Title("UI")]
-		public GameObject zoomCamera;
+		[Title("UI")] public GameObject zoomCamera;
 
 		public GameObject rTexture;
 
@@ -41,6 +40,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			float axis = Mouse.current.scroll.y.ReadValue();
 			if (Mathf.Abs(axis) > float.Epsilon)
 			{
@@ -65,6 +65,7 @@ namespace ZeroGravity.Objects
 				zoomLerpHelper += Time.deltaTime * zoomingSpeed;
 				yield return new WaitForEndOfFrame();
 			}
+
 			yield return null;
 		}
 
@@ -78,6 +79,7 @@ namespace ZeroGravity.Objects
 			{
 				StartCoroutine(ChangeZoomCameraFov(ZoomSteps[currentZoomStep]));
 			}
+
 			yield return new WaitForSeconds(vreme);
 			CanZoom = true;
 		}

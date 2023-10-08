@@ -11,8 +11,7 @@ namespace ZeroGravity.UI
 {
 	public class PowerSupply : AbstractPanelUI
 	{
-		[Title("POWER SUPPLY UI")]
-		public GameObject MainScreen;
+		[Title("POWER SUPPLY UI")] public GameObject MainScreen;
 
 		public GameObject InfoScreen;
 
@@ -28,7 +27,8 @@ namespace ZeroGravity.UI
 
 		public VesselObjectScript SelectedVessel;
 
-		private static Dictionary<SpaceObjectVessel, VesselObjectScript> POVessels = new Dictionary<SpaceObjectVessel, VesselObjectScript>();
+		private static Dictionary<SpaceObjectVessel, VesselObjectScript> POVessels =
+			new Dictionary<SpaceObjectVessel, VesselObjectScript>();
 
 		public GameObject SelectedVesselHeader;
 
@@ -50,7 +50,8 @@ namespace ZeroGravity.UI
 
 		public GameObject SolarPanelObject;
 
-		private static Dictionary<Generator, PowerSupplyPowerGenerator> powerGenerators = new Dictionary<Generator, PowerSupplyPowerGenerator>();
+		private static Dictionary<Generator, PowerSupplyPowerGenerator> powerGenerators =
+			new Dictionary<Generator, PowerSupplyPowerGenerator>();
 
 		public Transform ConsumerListTransform;
 
@@ -58,13 +59,16 @@ namespace ZeroGravity.UI
 
 		public GameObject ConsumerItem;
 
-		private static Dictionary<VesselComponent, ConnectedVessel> ConsumerVessels = new Dictionary<VesselComponent, ConnectedVessel>();
+		private static Dictionary<VesselComponent, ConnectedVessel> ConsumerVessels =
+			new Dictionary<VesselComponent, ConnectedVessel>();
 
-		public Dictionary<VesselComponent, PowerSupplyPowerConsumer> powerConsumers = new Dictionary<VesselComponent, PowerSupplyPowerConsumer>();
+		public Dictionary<VesselComponent, PowerSupplyPowerConsumer> powerConsumers =
+			new Dictionary<VesselComponent, PowerSupplyPowerConsumer>();
 
 		public GameObject CapacitorItem;
 
-		private static Dictionary<Generator, PowerSupplyCapacitor> powerCapacitors = new Dictionary<Generator, PowerSupplyCapacitor>();
+		private static Dictionary<Generator, PowerSupplyCapacitor> powerCapacitors =
+			new Dictionary<Generator, PowerSupplyCapacitor>();
 
 		private void Start()
 		{
@@ -134,7 +138,8 @@ namespace ZeroGravity.UI
 			VesselObjectsTransform.DestroyAll<PowerSupplyCapacitor>();
 			foreach (SpaceObjectVessel allVessel in AllVessels)
 			{
-				IPowerProvider[] componentsInChildren = allVessel.GeometryRoot.GetComponentsInChildren<IPowerProvider>();
+				IPowerProvider[] componentsInChildren =
+					allVessel.GeometryRoot.GetComponentsInChildren<IPowerProvider>();
 				if (componentsInChildren != null && componentsInChildren.Length > 0)
 				{
 					GameObject gameObject = Object.Instantiate(VesselObject, vesselListTransform);
@@ -146,6 +151,7 @@ namespace ZeroGravity.UI
 					POVessels[component.Vessel] = component;
 				}
 			}
+
 			foreach (GeneratorCapacitor capacitor in Capacitors)
 			{
 				GameObject gameObject2 = Object.Instantiate(CapacitorItem, VesselObjectsTransform);
@@ -158,6 +164,7 @@ namespace ZeroGravity.UI
 				UpdateCapacitorUi(component2);
 				MakePartsForCapacitor(component2);
 			}
+
 			foreach (GeneratorPower powerGenerator in PowerGenerators)
 			{
 				GameObject gameObject3 = Object.Instantiate(PowerGeneratorObject, PowerSourcesTransform);
@@ -170,6 +177,7 @@ namespace ZeroGravity.UI
 				UpdateGeneratorUI(component3);
 				MakePartsForGenerator(component3);
 			}
+
 			foreach (GeneratorSolar solarGenerator in SolarGenerators)
 			{
 				GameObject gameObject4 = Object.Instantiate(SolarPanelObject, PowerSourcesTransform);
@@ -191,6 +199,7 @@ namespace ZeroGravity.UI
 				SelectedVesselHeader.SetActive(false);
 				return;
 			}
+
 			foreach (VesselObjectScript value in POVessels.Values)
 			{
 				if (vessel == value.Vessel)
@@ -203,20 +212,23 @@ namespace ZeroGravity.UI
 					value.Selected.SetActive(false);
 				}
 			}
+
 			foreach (KeyValuePair<Generator, PowerSupplyPowerGenerator> powerGenerator in powerGenerators)
 			{
 				powerGenerator.Value.gameObject.SetActive(powerGenerator.Key.ParentVessel == vessel);
 			}
+
 			foreach (KeyValuePair<Generator, PowerSupplyCapacitor> powerCapacitor in powerCapacitors)
 			{
 				powerCapacitor.Value.gameObject.SetActive(powerCapacitor.Key.ParentVessel == vessel);
 			}
+
 			if (SelectedVessel != null)
 			{
 				NotConnected.SetActive(false);
 				SelectedVesselHeader.SetActive(true);
 				SelectedVesselName.text = SelectedVessel.Vessel.CustomName;
-				SelectedVesselIcon.sprite = Client.Instance.SpriteManager.GetSprite(SelectedVessel.Vessel);
+				SelectedVesselIcon.sprite = SpriteManager.Instance.GetSprite(SelectedVessel.Vessel);
 				SelectedVesselPO.text = SelectedVessel.PS_Output.text;
 				AuthorizationFail.SetActive(!SelectedVessel.IsAuthorized);
 			}
@@ -233,11 +245,13 @@ namespace ZeroGravity.UI
 			float num = 0f;
 			foreach (KeyValuePair<Generator, PowerSupplyPowerGenerator> powerGenerator in powerGenerators)
 			{
-				if (powerGenerator.Key.ParentVessel == vessel && powerGenerator.Value.Generator.Status == SystemStatus.Online)
+				if (powerGenerator.Key.ParentVessel == vessel &&
+				    powerGenerator.Value.Generator.Status == SystemStatus.Online)
 				{
 					num += powerGenerator.Value.Generator.MaxOutput;
 				}
 			}
+
 			bool active = false;
 			float fillAmount = 0f;
 			foreach (KeyValuePair<Generator, PowerSupplyCapacitor> powerCapacitor in powerCapacitors)
@@ -248,6 +262,7 @@ namespace ZeroGravity.UI
 					active = true;
 				}
 			}
+
 			VesselObjectScript value;
 			if (POVessels.TryGetValue(vessel, out value))
 			{
@@ -255,6 +270,7 @@ namespace ZeroGravity.UI
 				{
 					return;
 				}
+
 				value.PS_Output.text = FormatHelper.FormatValue(num);
 				value.CapacitorHolder.SetActive(active);
 				value.CapacitorFiller.fillAmount = fillAmount;
@@ -263,16 +279,19 @@ namespace ZeroGravity.UI
 					SelectedVesselPO.text = FormatHelper.FormatValue(num, true);
 				}
 			}
+
 			GetGeneralStats();
 		}
 
 		public void MakeConsumerList()
 		{
-			PowerSupplyPowerConsumer[] componentsInChildren = ConsumerListTransform.GetComponentsInChildren<PowerSupplyPowerConsumer>(true);
+			PowerSupplyPowerConsumer[] componentsInChildren =
+				ConsumerListTransform.GetComponentsInChildren<PowerSupplyPowerConsumer>(true);
 			foreach (PowerSupplyPowerConsumer powerSupplyPowerConsumer in componentsInChildren)
 			{
 				Object.DestroyImmediate(powerSupplyPowerConsumer.gameObject);
 			}
+
 			foreach (SpaceObjectVessel allVessel in AllVessels)
 			{
 				GameObject gameObject = Object.Instantiate(ConsumerVessel, ConsumerListTransform);
@@ -305,13 +324,15 @@ namespace ZeroGravity.UI
 		private void UpdateShipConsumptionUi(ConnectedVessel vesselInfo)
 		{
 			float num = 0f;
-			IPowerConsumer[] componentsInChildren = vesselInfo.Vessel.GeometryRoot.GetComponentsInChildren<IPowerConsumer>();
+			IPowerConsumer[] componentsInChildren =
+				vesselInfo.Vessel.GeometryRoot.GetComponentsInChildren<IPowerConsumer>();
 			foreach (IPowerConsumer powerConsumer in componentsInChildren)
 			{
 				if (powerConsumer is GeneratorCapacitor)
 				{
 					continue;
 				}
+
 				num += powerConsumer.GetPowerConsumption();
 				PowerSupplyPowerConsumer value;
 				if (powerConsumers.TryGetValue(powerConsumer as VesselComponent, out value))
@@ -320,10 +341,13 @@ namespace ZeroGravity.UI
 					{
 						return;
 					}
+
 					UpdatePowerConsumers(value);
 				}
 			}
-			if (vesselInfo.Base.Status == SystemStatus.Online || vesselInfo.Base.SecondaryStatus == SystemSecondaryStatus.Malfunction)
+
+			if (vesselInfo.Base.Status == SystemStatus.Online ||
+			    vesselInfo.Base.SecondaryStatus == SystemSecondaryStatus.Malfunction)
 			{
 				vesselInfo.ToggleStatus.transform.localPosition = new Vector3(0f, 10f, 0f);
 				vesselInfo.IsOnline.SetActive(vesselInfo.Base.SecondaryStatus == SystemSecondaryStatus.Malfunction);
@@ -335,6 +359,7 @@ namespace ZeroGravity.UI
 				vesselInfo.IsOnline.SetActive(true);
 				vesselInfo.Consumption.text = "0";
 			}
+
 			GetGeneralStats();
 		}
 
@@ -367,6 +392,7 @@ namespace ZeroGravity.UI
 				cap.PowerPartsUI.Add(component);
 				component.PartSlot = partSlot;
 			}
+
 			foreach (PartSlotUI item in cap.PowerPartsUI)
 			{
 				item.UpdateUI();
@@ -403,13 +429,18 @@ namespace ZeroGravity.UI
 			{
 				PG.DisablePattern.SetActive(PG.Generator.Status != SystemStatus.Online);
 			}
+
 			if (PG.Generator.Type == GeneratorType.Power)
 			{
 				PG.PowerOutput.text = FormatHelper.FormatValue(PG.Generator.MaxOutput, true);
-				PG.Consumption.text = FormatHelper.PerHour(PG.Generator.GetResourceConsumption(DistributionSystemType.Helium3, true));
+				PG.Consumption.text =
+					FormatHelper.PerHour(PG.Generator.GetResourceConsumption(DistributionSystemType.Helium3, true));
 				PG.Filler.fillAmount = PG.Container.CargoCompartment.Resources[0].Quantity / PG.Container.Capacity;
-				PG.Capacity.text = FormatHelper.CurrentMax(PG.Container.CargoCompartment.Resources[0].Quantity, PG.Container.Capacity);
-				PG.ToggleText.text = ((!PG.Generator.IsSwitchedOn()) ? Localization.Powerup.ToUpper() : Localization.ShutDown.ToUpper());
+				PG.Capacity.text = FormatHelper.CurrentMax(PG.Container.CargoCompartment.Resources[0].Quantity,
+					PG.Container.Capacity);
+				PG.ToggleText.text = ((!PG.Generator.IsSwitchedOn())
+					? Localization.Powerup.ToUpper()
+					: Localization.ShutDown.ToUpper());
 			}
 			else if (PG.Generator.Type == GeneratorType.Solar)
 			{
@@ -417,9 +448,12 @@ namespace ZeroGravity.UI
 				PG.Filler.fillAmount = generatorSolar.ExposureToSunlight;
 				PG.Capacity.text = FormatHelper.Percentage(generatorSolar.ExposureToSunlight);
 				PG.PowerOutput.text = FormatHelper.FormatValue(PG.Generator.MaxOutput, true);
-				PG.ToggleText.text = ((!PG.Generator.IsSwitchedOn()) ? Localization.Deploy.ToUpper() : Localization.Retract.ToUpper());
+				PG.ToggleText.text = ((!PG.Generator.IsSwitchedOn())
+					? Localization.Deploy.ToUpper()
+					: Localization.Retract.ToUpper());
 				PG.Warning.SetActive(generatorSolar.ExposureToSunlight <= float.Epsilon);
 			}
+
 			UpdateVesselObjects(PG.Generator.ParentVessel);
 		}
 
@@ -436,6 +470,7 @@ namespace ZeroGravity.UI
 				generator.PowerPartsUI.Add(component);
 				component.PartSlot = partSlot;
 			}
+
 			foreach (PartSlotUI item in generator.PowerPartsUI)
 			{
 				item.UpdateUI();
@@ -481,6 +516,7 @@ namespace ZeroGravity.UI
 				powCon.Name.text = generator.Type.ToLocalizedString().ToUpper();
 				powCon.SetPowerConsumptionText(generator.GetPowerConsumption(true));
 			}
+
 			Color color;
 			powCon.Status.text = powCon.VesselSystem.GetStatus(out color);
 			powCon.Status.color = color;
@@ -489,8 +525,8 @@ namespace ZeroGravity.UI
 		public void GetGeneralStats()
 		{
 			GetPowerStatus();
-			GeneralPowerOutput.text = FormatHelper.FormatValue(generalOutput, true);
-			GeneralPowerConsumption.text = FormatHelper.FormatValue(generalConsumption, true);
+			GeneralPowerOutput.text = FormatHelper.FormatValue(GeneralOutput, true);
+			GeneralPowerConsumption.text = FormatHelper.FormatValue(GeneralConsumption, true);
 		}
 	}
 }

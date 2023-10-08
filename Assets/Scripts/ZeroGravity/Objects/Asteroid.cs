@@ -18,13 +18,15 @@ namespace ZeroGravity.Objects
 
 		public override SpaceObjectType Type
 		{
-			get
-			{
-				return SpaceObjectType.Asteroid;
-			}
+			get { return SpaceObjectType.Asteroid; }
 		}
 
-		public override void ChangeStats(Vector3? thrust = null, Vector3? rotation = null, Vector3? autoStabilize = null, float? engineThrustPercentage = null, SubSystemDetails subSystem = null, GeneratorDetails distributionSystem = null, RoomDetails roomTrigger = null, DoorDetails door = null, SceneTriggerExecuterDetails sceneTriggerExecuter = null, SceneDockingPortDetails dockingPort = null, AttachPointDetails attachPoint = null, long? stabilizationTarget = null, SpawnPointStats spawnPoint = null, float? selfDestructTime = null, string emblemId = null)
+		public override void ChangeStats(Vector3? thrust = null, Vector3? rotation = null,
+			Vector3? autoStabilize = null, float? engineThrustPercentage = null, SubSystemDetails subSystem = null,
+			GeneratorDetails distributionSystem = null, RoomDetails roomTrigger = null, DoorDetails door = null,
+			SceneTriggerExecutorDetails sceneTriggerExecutor = null, SceneDockingPortDetails dockingPort = null,
+			AttachPointDetails attachPoint = null, long? stabilizationTarget = null, SpawnPointStats spawnPoint = null,
+			float? selfDestructTime = null, string emblemId = null)
 		{
 		}
 
@@ -38,15 +40,17 @@ namespace ZeroGravity.Objects
 
 		public static Asteroid Create(ObjectTransform trans, VesselData data, bool isMainObject)
 		{
-			Asteroid asteroid = ArtificialBody.Create(SpaceObjectType.Asteroid, trans.GUID, trans, isMainObject) as Asteroid;
+			Asteroid asteroid =
+				ArtificialBody.Create(SpaceObjectType.Asteroid, trans.GUID, trans, isMainObject) as Asteroid;
 			if (data != null)
 			{
 				asteroid.VesselData = data;
 			}
+
 			asteroid.Radius = 1000.0;
 			asteroid.IsDummyObject = true;
 			asteroid.SceneObjectsLoaded = false;
-			Client.Instance.Map.InitializeMapObject(asteroid);
+			World.Map.InitializeMapObject(asteroid);
 			return asteroid;
 		}
 
@@ -63,10 +67,10 @@ namespace ZeroGravity.Objects
 		private void OnDestroy()
 		{
 			DisconnectMessageListeners();
-			Client.Instance.SolarSystem.RemoveArtificialBody(this);
-			Client.Instance.Map.RemoveMapObject(this);
-			SceneHelper.RemoveCubemapProbes(base.gameObject);
-			Client.Instance.ActiveVessels.Remove(base.GUID);
+			World.SolarSystem.RemoveArtificialBody(this);
+			World.Map.RemoveMapObject(this);
+			SceneHelper.RemoveCubemapProbes(base.gameObject, World);
+			World.ActiveVessels.Remove(base.GUID);
 		}
 
 		public void ConnectMessageListeners()
@@ -107,8 +111,10 @@ namespace ZeroGravity.Objects
 		private IEnumerator LoadScenes(Transform rootTransform)
 		{
 			CreateArtificalRigidbody();
-			yield return StartCoroutine(Client.Instance.SceneLoader.LoadSceneCoroutine(SceneLoader.SceneType.CelestialBody, (long)base.SceneID));
-			GameObject sceneRoot = Client.Instance.SceneLoader.GetLoadedScene(SceneLoader.SceneType.CelestialBody, (long)base.SceneID);
+			yield return StartCoroutine(
+				World.SceneLoader.LoadSceneCoroutine(SceneLoader.SceneType.CelestialBody, (long)base.SceneID));
+			GameObject sceneRoot =
+				World.SceneLoader.GetLoadedScene(SceneLoader.SceneType.CelestialBody, (long)base.SceneID);
 			sceneRoot.transform.SetParent(rootTransform);
 			sceneRoot.transform.Reset();
 			RootObject = sceneRoot;
@@ -120,26 +126,28 @@ namespace ZeroGravity.Objects
 					DestructionEffects.gameObject.SetActive(false);
 				}
 			}
+
 			if (TargetRotation.HasValue)
 			{
 				SetTargetPositionAndRotation(null, TargetRotation.Value, true);
 			}
+
 			sceneRoot.GetComponentInParent<SpaceObjectVessel>().ActivateGeometry = true;
-			Client.Instance.ActiveVessels[base.GUID] = this;
+			World.ActiveVessels[base.GUID] = this;
 			sceneRoot.SetActive(true);
 			sceneRoot.SetActive(true);
-			SceneHelper.FillCubemapProbes(sceneRoot);
+			SceneHelper.FillCubemapProbes(sceneRoot, World);
 			SceneHelper.CheckTags(sceneRoot, (VesselData == null) ? string.Empty : VesselData.Tag);
 		}
 
 		public IEnumerator LoadScenesCoroutine(List<AsteroidMiningPointDetails> miningPoints)
 		{
-			Client.Instance.CanvasManager.ToggleBusyLoading(true);
+			World.InGameGUI.ToggleBusyLoading(true);
 			yield return StartCoroutine(LoadScenes(GeometryRoot.transform));
 			SceneHelper.FillMiningPoints(this, base.gameObject, MiningPoints, miningPoints);
 			base.IsDummyObject = false;
 			base.SceneObjectsLoaded = true;
-			Client.Instance.CanvasManager.ToggleBusyLoading(false);
+			World.InGameGUI.ToggleBusyLoading(false);
 		}
 
 		private void Update()

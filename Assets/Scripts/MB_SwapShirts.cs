@@ -17,10 +17,12 @@ public class MB_SwapShirts : MonoBehaviour
 		{
 			ChangeOutfit(clothingAndBodyPartsHoodie);
 		}
+
 		if (GUILayout.Button("Bare Torso"))
 		{
 			ChangeOutfit(clothingAndBodyPartsBareTorso);
 		}
+
 		if (GUILayout.Button("Damaged Arm"))
 		{
 			ChangeOutfit(clothingAndBodyPartsBareTorsoDamagedArm);
@@ -42,12 +44,14 @@ public class MB_SwapShirts : MonoBehaviour
 					break;
 				}
 			}
+
 			if (!flag)
 			{
 				list.Add(component.gameObject);
 				Debug.Log("Removing " + component.gameObject);
 			}
 		}
+
 		List<GameObject> list2 = new List<GameObject>();
 		for (int j = 0; j < outfit.Length; j++)
 		{
@@ -57,6 +61,7 @@ public class MB_SwapShirts : MonoBehaviour
 				Debug.Log("Adding " + outfit[j].gameObject);
 			}
 		}
+
 		meshBaker.AddDeleteGameObjects(list2.ToArray(), list.ToArray(), true);
 		meshBaker.Apply();
 	}

@@ -18,7 +18,8 @@ namespace RootMotion.Demos
 			[Tooltip("Warping weight by normalized time of the animation state.")]
 			public AnimationCurve weightCurve;
 
-			[Tooltip("Animated point to warp from. This should be in character space so keep this Transform parented to the root of the character.")]
+			[Tooltip(
+				"Animated point to warp from. This should be in character space so keep this Transform parented to the root of the character.")]
 			public Transform warpFrom;
 
 			[Tooltip("World space point to warp to.")]
@@ -38,11 +39,11 @@ namespace RootMotion.Demos
 		[Tooltip("Reference to the Animator component to use")]
 		public Animator animator;
 
-		[Tooltip("Using effector.positionOffset or effector.position with effector.positionWeight? The former will enable you to use effector.position for other things, the latter will weigh in the effectors, hence using Reach and Pull in the process.")]
+		[Tooltip(
+			"Using effector.positionOffset or effector.position with effector.positionWeight? The former will enable you to use effector.position for other things, the latter will weigh in the effectors, hence using Reach and Pull in the process.")]
 		public EffectorMode effectorMode;
 
-		[Space(10f)]
-		[Tooltip("The array of warps, can have multiple simultaneous warps.")]
+		[Space(10f)] [Tooltip("The array of warps, can have multiple simultaneous warps.")]
 		public Warp[] warps;
 
 		private EffectorMode lastMode;
@@ -60,22 +61,28 @@ namespace RootMotion.Demos
 				Debug.LogError("Warp index out of range.");
 				return 0f;
 			}
+
 			if (warpIndex >= warps.Length)
 			{
 				Debug.LogError("Warp index out of range.");
 				return 0f;
 			}
+
 			if (animator == null)
 			{
 				Debug.LogError("Animator unassigned in AnimationWarping");
 				return 0f;
 			}
-			AnimatorStateInfo currentAnimatorStateInfo = animator.GetCurrentAnimatorStateInfo(warps[warpIndex].animationLayer);
+
+			AnimatorStateInfo currentAnimatorStateInfo =
+				animator.GetCurrentAnimatorStateInfo(warps[warpIndex].animationLayer);
 			if (!currentAnimatorStateInfo.IsName(warps[warpIndex].animationState))
 			{
 				return 0f;
 			}
-			return warps[warpIndex].weightCurve.Evaluate(currentAnimatorStateInfo.normalizedTime - (float)(int)currentAnimatorStateInfo.normalizedTime);
+
+			return warps[warpIndex].weightCurve.Evaluate(currentAnimatorStateInfo.normalizedTime -
+			                                             (float)(int)currentAnimatorStateInfo.normalizedTime);
 		}
 
 		protected override void OnModifyOffset()
@@ -86,15 +93,17 @@ namespace RootMotion.Demos
 				Vector3 vector = warps[i].warpTo.position - warps[i].warpFrom.position;
 				switch (effectorMode)
 				{
-				case EffectorMode.PositionOffset:
-					ik.solver.GetEffector(warps[i].effector).positionOffset += vector * warpWeight * weight;
-					break;
-				case EffectorMode.Position:
-					ik.solver.GetEffector(warps[i].effector).position = ik.solver.GetEffector(warps[i].effector).bone.position + vector;
-					ik.solver.GetEffector(warps[i].effector).positionWeight = weight * warpWeight;
-					break;
+					case EffectorMode.PositionOffset:
+						ik.solver.GetEffector(warps[i].effector).positionOffset += vector * warpWeight * weight;
+						break;
+					case EffectorMode.Position:
+						ik.solver.GetEffector(warps[i].effector).position =
+							ik.solver.GetEffector(warps[i].effector).bone.position + vector;
+						ik.solver.GetEffector(warps[i].effector).positionWeight = weight * warpWeight;
+						break;
 				}
 			}
+
 			if (lastMode == EffectorMode.Position && effectorMode == EffectorMode.PositionOffset)
 			{
 				Warp[] array = warps;
@@ -104,6 +113,7 @@ namespace RootMotion.Demos
 					ik.solver.GetEffector(warp.effector).positionWeight = 0f;
 				}
 			}
+
 			lastMode = effectorMode;
 		}
 

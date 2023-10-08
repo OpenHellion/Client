@@ -6,8 +6,7 @@ namespace RootMotion.Demos
 	[RequireComponent(typeof(Animator))]
 	public class FPSCharacter : MonoBehaviour
 	{
-		[Range(0f, 1f)]
-		public float walkSpeed = 0.5f;
+		[Range(0f, 1f)] public float walkSpeed = 0.5f;
 
 		private float sVel;
 
@@ -23,15 +22,18 @@ namespace RootMotion.Demos
 
 		private void Update()
 		{
-			FPSAiming.sightWeight = Mathf.SmoothDamp(FPSAiming.sightWeight, (!Input.GetMouseButton(1)) ? 0f : 1f, ref sVel, 0.1f);
+			FPSAiming.sightWeight =
+				Mathf.SmoothDamp(FPSAiming.sightWeight, (!Input.GetMouseButton(1)) ? 0f : 1f, ref sVel, 0.1f);
 			if (FPSAiming.sightWeight < 0.001f)
 			{
 				FPSAiming.sightWeight = 0f;
 			}
+
 			if (FPSAiming.sightWeight > 0.999f)
 			{
 				FPSAiming.sightWeight = 1f;
 			}
+
 			animator.SetFloat("Speed", walkSpeed);
 		}
 

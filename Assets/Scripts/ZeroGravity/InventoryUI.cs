@@ -31,8 +31,7 @@ namespace ZeroGravity
 
 		public InventoryGroupUI SlotGroup;
 
-		[Title("Slots")]
-		public Transform GroupsHolder;
+		[Title("Slots")] public Transform GroupsHolder;
 
 		public InventoryGroupUI GroupPrefab;
 
@@ -42,8 +41,7 @@ namespace ZeroGravity
 
 		public AttachPointSlotUI AttachPointPrefab;
 
-		[Title("PlayerInfo")]
-		public Text PlayerName;
+		[Title("PlayerInfo")] public Text PlayerName;
 
 		public Image CharacterPreview;
 
@@ -55,8 +53,7 @@ namespace ZeroGravity
 
 		public Text HealthValue;
 
-		[Title("CharacterSlots")]
-		public Transform HandSlot;
+		[Title("CharacterSlots")] public Transform HandSlot;
 
 		public Transform PrimarySlot;
 
@@ -68,8 +65,7 @@ namespace ZeroGravity
 
 		public Transform JetpackSlot;
 
-		[Title("SelectedItem")]
-		public Item SelectedItem;
+		[Title("SelectedItem")] public Item SelectedItem;
 
 		public GameObject SelectedItemHolder;
 
@@ -83,22 +79,19 @@ namespace ZeroGravity
 
 		public Transform ItemSlotsHolder;
 
-		[Title("Tooltip")]
-		public AbstractSlotUI HoveredSlot;
+		[Title("Tooltip")] public AbstractSlotUI HoveredSlot;
 
 		public TooltipInventory ToolTip;
 
 		public bool CanShowTooltip;
 
-		[Title("Dragging")]
-		public bool IsDragging;
+		[Title("Dragging")] public bool IsDragging;
 
 		public Item DraggingItem;
 
 		public GameObject DraggingObject;
 
-		[Title("Other")]
-		public GameObject OtherHolder;
+		[Title("Other")] public GameObject OtherHolder;
 
 		public Transform OtherGroupsHolder;
 
@@ -108,13 +101,13 @@ namespace ZeroGravity
 
 		private float lootRadius = 1.65f;
 
-		[Title("ItemSlots")]
-		public bool ShowItemSlots;
+		[Title("ItemSlots")] public bool ShowItemSlots;
 
 		public Inventory Inventory => MyPlayer.Instance.Inventory;
 
 		private void Start()
 		{
+			Inventory.OnOutfitChanged += UpdateArmorAndHealth;
 			PlayerName.text = MyPlayer.Instance.PlayerName;
 		}
 
@@ -124,14 +117,18 @@ namespace ZeroGravity
 			{
 				HideTooltip();
 			}
-			if (OtherHolder.activeInHierarchy && LootSlots.Count <= 0 && ApSlots.Count <= 0 && ContainerItemSlots.Count <= 0)
+
+			if (OtherHolder.activeInHierarchy && LootSlots.Count <= 0 && ApSlots.Count <= 0 &&
+			    ContainerItemSlots.Count <= 0)
 			{
 				OtherHolder.SetActive(value: false);
 			}
-			else if (!OtherHolder.activeInHierarchy && (LootSlots.Count > 0 || (ApSlots.Count > 0 && ContainerItemSlots.Count > 0)))
+			else if (!OtherHolder.activeInHierarchy &&
+			         (LootSlots.Count > 0 || (ApSlots.Count > 0 && ContainerItemSlots.Count > 0)))
 			{
 				OtherHolder.SetActive(value: true);
 			}
+
 			if (ApSlots.Count > 0)
 			{
 				ProximityLootRefresh();
@@ -201,11 +198,13 @@ namespace ZeroGravity
 			{
 				AllSlots.Remove(selectedItemSlot);
 			}
+
 			SelectedItemSlots.Clear();
 			if (itm.IsSlotContainer || itm.Slots.Count <= 0)
 			{
 				return;
 			}
+
 			foreach (ItemSlot value in itm.Slots.Values)
 			{
 				CreateItemSlot(value, ItemSlotsHolder);
@@ -279,29 +278,31 @@ namespace ZeroGravity
 			base.transform.DestroyAll<InventorySlotUI>();
 			base.transform.DestroyAll<InventoryGroupUI>();
 			AllSlots.Clear();
-			foreach (InventorySlot.Group item in Inventory.GetAllSlots().Values.Select((InventorySlot m) => m.SlotGroup).Distinct())
+			foreach (InventorySlot.Group item in Inventory.GetAllSlots().Values.Select((InventorySlot m) => m.SlotGroup)
+				         .Distinct())
 			{
 				switch (item)
 				{
-				case InventorySlot.Group.Outfit:
-					CreateInventorySlot(Inventory.GetSlotsByGroup(item).First().Value, SuitSlot);
-					continue;
-				case InventorySlot.Group.Hands:
-					CreateInventorySlot(Inventory.GetSlotsByGroup(item).First().Value, HandSlot);
-					continue;
-				case InventorySlot.Group.Helmet:
-					CreateInventorySlot(Inventory.GetSlotsByGroup(item).First().Value, HelmetSlot);
-					continue;
-				case InventorySlot.Group.Jetpack:
-					CreateInventorySlot(Inventory.GetSlotsByGroup(item).First().Value, JetpackSlot);
-					continue;
-				case InventorySlot.Group.Primary:
-					CreateInventorySlot(Inventory.GetSlotsByGroup(item).First().Value, PrimarySlot);
-					continue;
-				case InventorySlot.Group.Secondary:
-					CreateInventorySlot(Inventory.GetSlotsByGroup(item).First().Value, SecondarySlot);
-					continue;
+					case InventorySlot.Group.Outfit:
+						CreateInventorySlot(Inventory.GetSlotsByGroup(item).First().Value, SuitSlot);
+						continue;
+					case InventorySlot.Group.Hands:
+						CreateInventorySlot(Inventory.GetSlotsByGroup(item).First().Value, HandSlot);
+						continue;
+					case InventorySlot.Group.Helmet:
+						CreateInventorySlot(Inventory.GetSlotsByGroup(item).First().Value, HelmetSlot);
+						continue;
+					case InventorySlot.Group.Jetpack:
+						CreateInventorySlot(Inventory.GetSlotsByGroup(item).First().Value, JetpackSlot);
+						continue;
+					case InventorySlot.Group.Primary:
+						CreateInventorySlot(Inventory.GetSlotsByGroup(item).First().Value, PrimarySlot);
+						continue;
+					case InventorySlot.Group.Secondary:
+						CreateInventorySlot(Inventory.GetSlotsByGroup(item).First().Value, SecondarySlot);
+						continue;
 				}
+
 				InventoryGroupUI inventoryGroupUI = Instantiate(GroupPrefab, GroupsHolder);
 				inventoryGroupUI.transform.Reset();
 				inventoryGroupUI.Name.text = item.ToLocalizedString().ToUpper();
@@ -340,6 +341,7 @@ namespace ZeroGravity
 			{
 				slot.UI.GetComponent<Image>().color = Colors.Gray;
 			}
+
 			AllSlots.Add(componentInChildren);
 			LootSlots.Add(componentInChildren);
 		}
@@ -388,6 +390,7 @@ namespace ZeroGravity
 			{
 				ap.UI.GetComponent<Image>().color = Colors.Gray;
 			}
+
 			AllSlots.Add(componentInChildren);
 			ApSlots.Add(componentInChildren);
 		}
@@ -400,15 +403,18 @@ namespace ZeroGravity
 				Destroy(LootGroup.gameObject);
 				LootGroup = null;
 			}
+
 			foreach (AbstractSlotUI lootSlot in LootSlots)
 			{
 				AllSlots.Remove(lootSlot);
 			}
+
 			LootSlots.Clear();
 			if (LootingTarget == null)
 			{
 				return;
 			}
+
 			InventoryGroupUI inventoryGroupUI = Instantiate(GroupPrefab, OtherGroupsHolder.transform);
 			inventoryGroupUI.transform.Reset();
 			inventoryGroupUI.transform.SetAsFirstSibling();
@@ -433,6 +439,7 @@ namespace ZeroGravity
 					CreateItemSlot(value2, LootGroup.SlotHolder, looting: true);
 				}
 			}
+
 			OtherHolder.SetActive(value: true);
 		}
 
@@ -444,15 +451,18 @@ namespace ZeroGravity
 				Destroy(SlotGroup.gameObject);
 				SlotGroup = null;
 			}
+
 			foreach (AbstractSlotUI containerItemSlot in ContainerItemSlots)
 			{
 				AllSlots.Remove(containerItemSlot);
 			}
+
 			ContainerItemSlots.Clear();
 			if (!(SelectedItem != null) || !ShowItemSlots)
 			{
 				return;
 			}
+
 			InventoryGroupUI inventoryGroupUI = Instantiate(GroupPrefab, OtherGroupsHolder.transform);
 			inventoryGroupUI.transform.Reset();
 			inventoryGroupUI.transform.SetAsFirstSibling();
@@ -464,6 +474,7 @@ namespace ZeroGravity
 			{
 				CreateItemSlot(value, SlotGroup.SlotHolder, looting: false, isContainer: true);
 			}
+
 			OtherHolder.SetActive(value: true);
 		}
 
@@ -475,10 +486,12 @@ namespace ZeroGravity
 				Destroy(ProximityGroup.gameObject);
 				ProximityGroup = null;
 			}
+
 			foreach (AttachPointSlotUI apSlot in ApSlots)
 			{
 				AllSlots.Remove(apSlot);
 			}
+
 			ApSlots.Clear();
 			APLootingList.Clear();
 			fillAPList(APLootingList);
@@ -486,6 +499,7 @@ namespace ZeroGravity
 			{
 				return;
 			}
+
 			InventoryGroupUI inventoryGroupUI = Instantiate(GroupPrefab, OtherGroupsHolder.transform);
 			inventoryGroupUI.transform.Reset();
 			inventoryGroupUI.transform.SetAsFirstSibling();
@@ -495,11 +509,13 @@ namespace ZeroGravity
 			ProximityGroup = inventoryGroupUI;
 			foreach (BaseSceneAttachPoint item in APLootingList.OrderBy((BaseSceneAttachPoint m) => m.StandardTip))
 			{
-				if (item.Item == null || (Inventory.Parent is MyPlayer && item.Item.CanPlayerPickUp(Inventory.Parent as MyPlayer)))
+				if (item.Item == null || (Inventory.Parent is MyPlayer &&
+				                          item.Item.CanPlayerPickUp(Inventory.Parent as MyPlayer)))
 				{
 					CreateAPSlot(item, ProximityGroup.SlotHolder);
 				}
 			}
+
 			OtherHolder.SetActive(value: true);
 		}
 
@@ -515,7 +531,8 @@ namespace ZeroGravity
 
 		private void fillAPList(HashSet<BaseSceneAttachPoint> list)
 		{
-			Collider[] array = Physics.OverlapSphere(MyPlayer.Instance.FpsController.MainCamera.transform.position, lootRadius * 1.5f);
+			Collider[] array = Physics.OverlapSphere(MyPlayer.Instance.FpsController.MainCamera.transform.position,
+				lootRadius * 1.5f);
 			foreach (Collider collider in array)
 			{
 				BaseSceneAttachPoint componentInParent = collider.GetComponentInParent<BaseSceneAttachPoint>();
@@ -523,11 +540,14 @@ namespace ZeroGravity
 				{
 					continue;
 				}
-				Transform[] componentsInChildren = componentInParent.GetComponentsInChildren<Transform>(includeInactive: true);
+
+				Transform[] componentsInChildren =
+					componentInParent.GetComponentsInChildren<Transform>(includeInactive: true);
 				foreach (Transform transform in componentsInChildren)
 				{
 					Vector3 rhs = transform.position - MyPlayer.Instance.FpsController.MainCamera.transform.position;
-					if (rhs.magnitude <= lootRadius && Vector3.Dot(MyPlayer.Instance.FpsController.MainCamera.transform.forward, rhs) > 0f)
+					if (rhs.magnitude <= lootRadius &&
+					    Vector3.Dot(MyPlayer.Instance.FpsController.MainCamera.transform.forward, rhs) > 0f)
 					{
 						list.Add(componentInParent);
 						break;
@@ -540,10 +560,12 @@ namespace ZeroGravity
 		{
 			List<InventorySlot> skipSlots = new List<InventorySlot>();
 			foreach (AbstractSlotUI slot in from m in holder.GetComponentsInChildren<AbstractSlotUI>()
-				where m.Item != null
-				select m)
+			         where m.Item != null
+			         select m)
 			{
-				InventorySlot inventorySlot = Inventory.GetAllSlots().Values.OrderBy((InventorySlot m) => m.SlotType == InventorySlot.Type.Hands).FirstOrDefault((InventorySlot m) => m.CanFitItem(slot.Item) && m.Item == null && !skipSlots.Contains(m));
+				InventorySlot inventorySlot = Inventory.GetAllSlots().Values
+					.OrderBy((InventorySlot m) => m.SlotType == InventorySlot.Type.Hands).FirstOrDefault(
+						(InventorySlot m) => m.CanFitItem(slot.Item) && m.Item == null && !skipSlots.Contains(m));
 				if (inventorySlot != null)
 				{
 					slot.Item.RequestAttach(inventorySlot);
@@ -568,7 +590,8 @@ namespace ZeroGravity
 			{
 				ArmorValue.text = Inventory.OutfitSlot.Item.Armor.ToString("0.0") + " HP/s";
 			}
-			Hb.speed = 3f - (float)MyPlayer.Instance.Health / 100f * 2f;
+
+			Hb.speed = 3f - MyPlayer.Instance.Health / 100f * 2f;
 			if (MyPlayer.Instance.Health < 70 && MyPlayer.Instance.Health > 30)
 			{
 				HeartBeat.color = Colors.Yellow;

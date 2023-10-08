@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
-using ZeroGravity;
+using OpenHellion;
+using UnityEngine.Serialization;
 
 public class TextLogTerminal : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class TextLogTerminal : MonoBehaviour
 
 	public LogObject LogObject;
 
+	[FormerlySerializedAs("_worldState")] [SerializeField] private World _world;
+
 	public void OnInteract()
 	{
 		if (LogObject == null)
@@ -23,6 +26,7 @@ public class TextLogTerminal : MonoBehaviour
 			Dbg.Error("Log Object not set!");
 			return;
 		}
+
 		LogTitle.text = LogObject.LogTitle;
 		LogText.text = LogObject.LogText;
 		LogDate.text = LogObject.LogDate;
@@ -31,12 +35,13 @@ public class TextLogTerminal : MonoBehaviour
 			CharacterImage.sprite = LogObject.Character.CharacterImage;
 			CharacterInfo.text = LogObject.Character.CharacterInfo;
 		}
-		base.gameObject.SetActive(true);
+
+		gameObject.SetActive(true);
 	}
 
 	public void OnDetach()
 	{
-		Client.Instance.CanvasManager.IsInputFieldIsActive = false;
-		base.gameObject.SetActive(false);
+		_world.InGameGUI.IsInputFieldIsActive = false;
+		gameObject.SetActive(false);
 	}
 }

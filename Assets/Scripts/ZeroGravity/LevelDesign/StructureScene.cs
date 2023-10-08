@@ -85,73 +85,55 @@ namespace ZeroGravity.LevelDesign
 		[Tooltip("Unique ID for structure. ID will be populated automatially on save")]
 		public long GUID;
 
-		[Tooltip("Scene name used in game")]
-		public string GameName;
+		[Tooltip("Scene name used in game")] public string GameName;
 
-		[Tooltip("Scene mass in tons")]
-		public float Mass;
+		[Tooltip("Scene mass in tons")] public float Mass;
 
-		[Tooltip("Object radar signature")]
-		public float RadarSignature = 100f;
+		[Tooltip("Object radar signature")] public float RadarSignature = 100f;
 
 		[Tooltip("Health based radar signature multiplier")]
-		public AnimationCurve RadarSignatureHealthMultiplier = new AnimationCurve(new Keyframe(0f, 2f), new Keyframe(1f, 1f));
+		public AnimationCurve RadarSignatureHealthMultiplier =
+			new AnimationCurve(new Keyframe(0f, 2f), new Keyframe(1f, 1f));
 
 		public float HeatCollectionFactor = 10000f;
 
 		public float HeatDissipationFactor = 20f;
 
-		[Space(10f)]
-		[SerializeField]
-		private float _MaxHealth = 10000f;
+		[Space(10f)] [SerializeField] private float _MaxHealth = 10000f;
 
-		[SerializeField]
-		private float _Health = 10000f;
+		[SerializeField] private float _Health = 10000f;
 
 		public float BaseArmor;
 
 		public bool InvulnerableWhenDocked;
 
-		public AnimationCurve DamageEffectsFrequency = new AnimationCurve(new Keyframe(0f, 5f), new Keyframe(0.3f, 0f), new Keyframe(1f, 0f));
+		public AnimationCurve DamageEffectsFrequency =
+			new AnimationCurve(new Keyframe(0f, 5f), new Keyframe(0.3f, 0f), new Keyframe(1f, 0f));
 
-		[Space(10f)]
-		public SceneSpawnSettings[] SpawnSettings;
+		[Space(10f)] public SceneSpawnSettings[] SpawnSettings;
 
-		[Space(10f)]
-		public GameObject HullExterior;
+		[Space(10f)] public GameObject HullExterior;
 
 		public float RelativeDensity = 0.5f;
 
-		[Space(10f)]
-		public TagChance[] AdditionalTags;
+		[Space(10f)] public TagChance[] AdditionalTags;
 
 		public SceneStatisticData Statistic;
 
 		public float MaxHealth
 		{
-			get
-			{
-				return _MaxHealth;
-			}
-			set
-			{
-				_MaxHealth = Mathf.Clamp(value, 0f, float.MaxValue);
-			}
+			get { return _MaxHealth; }
+			set { _MaxHealth = Mathf.Clamp(value, 0f, float.MaxValue); }
 		}
 
 		public float Health
 		{
-			get
-			{
-				return _Health;
-			}
-			set
-			{
-				_Health = Mathf.Clamp(value, 0f, MaxHealth);
-			}
+			get { return _Health; }
+			set { _Health = Mathf.Clamp(value, 0f, MaxHealth); }
 		}
 
-		public bool SaveSceneData(out string error, List<StructureSceneData> structures = null, bool isAutoSaveAll = false)
+		public bool SaveSceneData(out string error, List<StructureSceneData> structures = null,
+			bool isAutoSaveAll = false)
 		{
 			error = string.Empty;
 			return true;
@@ -159,10 +141,7 @@ namespace ZeroGravity.LevelDesign
 
 		private void Awake()
 		{
-			if (Client.IsGameBuild)
-			{
-				base.gameObject.SetActive(false);
-			}
+			gameObject.SetActive(false);
 		}
 
 		public float GetMass()
@@ -173,6 +152,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				num += sceneTriggerRoom.Volume;
 			}
+
 			float num2 = 0f;
 			if (HullExterior != null)
 			{
@@ -183,39 +163,49 @@ namespace ZeroGravity.LevelDesign
 					HullExterior = null;
 				}
 			}
+
 			if (num2 <= float.Epsilon || num2 < num)
 			{
-				SceneColliderShipCollision[] componentsInChildren2 = base.gameObject.GetComponentsInChildren<SceneColliderShipCollision>();
+				SceneColliderShipCollision[] componentsInChildren2 =
+					base.gameObject.GetComponentsInChildren<SceneColliderShipCollision>();
 				foreach (SceneColliderShipCollision sceneColliderShipCollision in componentsInChildren2)
 				{
 					num2 += SceneHelper.VolumeOfGameObject(sceneColliderShipCollision.gameObject);
 				}
 			}
+
 			float num3 = (num2 - num) * RelativeDensity;
 			if (num3 <= 0f)
 			{
-				throw new Exception("Error calculating structure mass (HullExterior field invalid OR room triggers summary volume too big OR ship colliders invalid)");
+				throw new Exception(
+					"Error calculating structure mass (HullExterior field invalid OR room triggers summary volume too big OR ship colliders invalid)");
 			}
+
 			return num3;
 		}
 
 		private void ParseTransformStatistic(ref SceneStatisticData stats, Transform trans)
 		{
-			if (trans.GetComponent<DynamicSceneObject>() != null || trans.GetComponent<DynamicObject>() != null || trans.gameObject.layer == LayerMask.NameToLayer("ShipCollision"))
+			if (trans.GetComponent<DynamicSceneObject>() != null || trans.GetComponent<DynamicObject>() != null ||
+			    trans.gameObject.layer == LayerMask.NameToLayer("ShipCollision"))
 			{
 				return;
 			}
+
 			stats.IncrementGameObjectsCount();
 			Collider[] components = trans.GetComponents<Collider>();
 			foreach (Collider collider in components)
 			{
-				stats.IncrementCollider(collider.isTrigger, collider.tag == "DontOptimize", collider is MeshCollider, collider is MeshCollider && (collider as MeshCollider).convex);
+				stats.IncrementCollider(collider.isTrigger, collider.tag == "DontOptimize", collider is MeshCollider,
+					collider is MeshCollider && (collider as MeshCollider).convex);
 			}
+
 			Rigidbody[] components2 = trans.GetComponents<Rigidbody>();
 			foreach (Rigidbody rigidbody in components2)
 			{
 				stats.IncrementRigidbody();
 			}
+
 			IEnumerator enumerator = trans.transform.GetEnumerator();
 			try
 			{
@@ -245,6 +235,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				Statistic.Reset();
 			}
+
 			IEnumerator enumerator = base.transform.GetEnumerator();
 			try
 			{

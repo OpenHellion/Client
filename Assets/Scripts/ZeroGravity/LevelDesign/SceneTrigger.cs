@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using ZeroGravity.CharacterMovement;
 using ZeroGravity.Data;
 using ZeroGravity.Objects;
@@ -12,7 +13,7 @@ namespace ZeroGravity.LevelDesign
 
 		private List<ItemType> _itemInHandsTypes;
 
-		public SceneTriggerExecuter Executer;
+		[FormerlySerializedAs("Executer")] public SceneTriggerExecutor Executor;
 
 		private int executerStateID;
 
@@ -24,74 +25,49 @@ namespace ZeroGravity.LevelDesign
 
 		public string ExecuterAltStateName;
 
-		[SerializeField]
-		private bool _isNearTrigger = true;
+		[SerializeField] private bool _isNearTrigger = true;
 
-		[SerializeField]
-		private bool _isProximityTrigger;
+		[SerializeField] private bool _isProximityTrigger;
 
-		[SerializeField]
-		private PlayerHandsCheckType playerHandsCheck = PlayerHandsCheckType.DontCheck;
+		[SerializeField] private PlayerHandsCheckType playerHandsCheck = PlayerHandsCheckType.DontCheck;
 
-		[SerializeField]
-		private ItemType itemInHandsType;
+		[SerializeField] private ItemType itemInHandsType;
 
 		private bool allowNextTriggerEnter = true;
 
 		public override bool ExclusivePlayerLocking
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public override bool IsInteractable
 		{
-			get
-			{
-				return !_isProximityTrigger;
-			}
+			get { return !_isProximityTrigger; }
 		}
 
 		public bool IsProximity
 		{
-			get
-			{
-				return _isProximityTrigger;
-			}
+			get { return _isProximityTrigger; }
 		}
 
 		public override bool IsNearTrigger
 		{
-			get
-			{
-				return _isNearTrigger;
-			}
+			get { return _isNearTrigger; }
 		}
 
 		public override SceneTriggerType TriggerType
 		{
-			get
-			{
-				return SceneTriggerType.General;
-			}
+			get { return SceneTriggerType.General; }
 		}
 
 		public override PlayerHandsCheckType PlayerHandsCheck
 		{
-			get
-			{
-				return playerHandsCheck;
-			}
+			get { return playerHandsCheck; }
 		}
 
 		public override bool CameraMovementAllowed
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public override List<ItemType> PlayerHandsItemType
@@ -102,6 +78,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					_itemInHandsTypes = new List<ItemType> { itemInHandsType };
 				}
+
 				return _itemInHandsTypes;
 			}
 		}
@@ -113,26 +90,30 @@ namespace ZeroGravity.LevelDesign
 
 		private void Awake()
 		{
-			if (Executer == null)
+			if (Executor == null)
 			{
-				Executer = GetComponentInParent<SceneTriggerExecuter>();
+				Executor = GetComponentInParent<SceneTriggerExecutor>();
 			}
-			if (!(Executer != null))
+
+			if (!(Executor != null))
 			{
 				return;
 			}
+
 			executerStateID = -1;
 			string[] array = ExecuterStateName.Split(';');
 			foreach (string stateName in array)
 			{
-				int stateID = Executer.GetStateID(stateName);
+				int stateID = Executor.GetStateID(stateName);
 				if (executerStateID == -1)
 				{
 					executerStateID = stateID;
 				}
+
 				executerStateIDs.Add(stateID);
 			}
-			executerAltStateID = Executer.GetStateID(ExecuterAltStateName);
+
+			executerAltStateID = Executor.GetStateID(ExecuterAltStateName);
 		}
 
 		public override bool Interact(MyPlayer player, bool interactWithOverlappingTriggers = true)
@@ -141,30 +122,39 @@ namespace ZeroGravity.LevelDesign
 			{
 				return false;
 			}
-			if (Executer != null && (!Client.IsGameBuild || playerHandsCheck == PlayerHandsCheckType.DontCheck || (playerHandsCheck == PlayerHandsCheckType.HandsMustBeEmpty && player.Inventory.ItemInHands == null) || (playerHandsCheck == PlayerHandsCheckType.StoreItemInHands && player.Inventory.StoreItemInHands()) || (playerHandsCheck == PlayerHandsCheckType.MustHaveItemInHands && player.Inventory.ItemInHands.Type == itemInHandsType)))
+
+			if (Executor != null && (playerHandsCheck == PlayerHandsCheckType.DontCheck ||
+			                         (playerHandsCheck == PlayerHandsCheckType.HandsMustBeEmpty &&
+			                          player.Inventory.ItemInHands == null) ||
+			                         (playerHandsCheck == PlayerHandsCheckType.StoreItemInHands &&
+			                          player.Inventory.StoreItemInHands()) ||
+			                         (playerHandsCheck == PlayerHandsCheckType.MustHaveItemInHands &&
+			                          player.Inventory.ItemInHands.Type == itemInHandsType)))
 			{
-				Executer.ChangeStateID((!executerStateIDs.Contains(Executer.CurrentStateID)) ? executerStateID : executerAltStateID);
-				if (Client.IsGameBuild)
+				Executor.ChangeStateID((!executerStateIDs.Contains(Executor.CurrentStateID))
+					? executerStateID
+					: executerAltStateID);
+				Item itemInHands = player.Inventory.ItemInHands;
+				if (playerHandsCheck == PlayerHandsCheckType.MustHaveItemInHands && itemInHands != null &&
+				    itemInHands.Type == ItemType.AltairDisposableHackingTool)
 				{
-					Item itemInHands = player.Inventory.ItemInHands;
-					if (playerHandsCheck == PlayerHandsCheckType.MustHaveItemInHands && itemInHands != null && itemInHands.Type == ItemType.AltairDisposableHackingTool)
-					{
-						Executer.GetComponentInParent<SceneDoor>().ChangeStats(false);
-						(itemInHands as DisposableHackingTool).Special();
-					}
+					Executor.GetComponentInParent<SceneDoor>().ChangeStats(false);
+					(itemInHands as DisposableHackingTool).Special();
 				}
 			}
+
 			if (interactWithOverlappingTriggers)
 			{
 				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
 			}
+
 			return true;
 		}
 
 		public override void CancelInteract(MyPlayer player)
 		{
 			base.CancelInteract(player);
-			if (!(Executer == null))
+			if (!(Executor == null))
 			{
 			}
 		}
@@ -172,10 +162,11 @@ namespace ZeroGravity.LevelDesign
 		protected override void OnTriggerEnter(Collider coli)
 		{
 			base.OnTriggerEnter(coli);
-			if (!IsProximity || Executer == null)
+			if (!IsProximity || Executor == null)
 			{
 				return;
 			}
+
 			TransitionTriggerHelper component = coli.GetComponent<TransitionTriggerHelper>();
 			if (component != null && component.TransferableObject is MyPlayer)
 			{
@@ -185,7 +176,7 @@ namespace ZeroGravity.LevelDesign
 				}
 				else
 				{
-					Executer.PlayerEnterTrigger(this, component.TransferableObject as MyPlayer, executerStateID);
+					Executor.PlayerEnterTrigger(this, component.TransferableObject as MyPlayer, executerStateID);
 				}
 			}
 		}
@@ -193,12 +184,12 @@ namespace ZeroGravity.LevelDesign
 		protected override void OnTriggerExit(Collider coli)
 		{
 			base.OnTriggerExit(coli);
-			if (IsProximity && !(Executer == null))
+			if (IsProximity && !(Executor == null))
 			{
 				TransitionTriggerHelper component = coli.GetComponent<TransitionTriggerHelper>();
 				if (component != null && component.TransferableObject is MyPlayer)
 				{
-					Executer.PlayerExitTrigger(this, component.TransferableObject as MyPlayer, executerAltStateID);
+					Executor.PlayerExitTrigger(this, component.TransferableObject as MyPlayer, executerAltStateID);
 				}
 			}
 		}

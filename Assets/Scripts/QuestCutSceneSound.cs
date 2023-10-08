@@ -18,7 +18,8 @@ public class QuestCutSceneSound : MonoBehaviour
 		{
 			if (MyPlayer.Instance != null)
 			{
-				ulong[] array = new ulong[1] { AkSoundEngine.GetAkGameObjectID(MyPlayer.Instance.FpsController.MainCamera.gameObject) };
+				ulong[] array = new ulong[1]
+					{ AkSoundEngine.GetAkGameObjectID(MyPlayer.Instance.FpsController.MainCamera.gameObject) };
 				AkSoundEngine.SetListeners(base.gameObject, array, (uint)array.Length);
 			}
 			else
@@ -26,6 +27,7 @@ public class QuestCutSceneSound : MonoBehaviour
 				ulong[] array2 = new ulong[1] { AkSoundEngine.GetAkGameObjectID(Listener.gameObject) };
 				AkSoundEngine.SetListeners(base.gameObject, array2, (uint)array2.Length);
 			}
+
 			AkSoundEngine.PostEvent(eventString, base.gameObject, 5u, OnCutSceneSoundEventEnd, eventString);
 			IsPlaying = true;
 		}
@@ -45,6 +47,7 @@ public class QuestCutSceneSound : MonoBehaviour
 		{
 			OnMarkerEvent.Invoke();
 		}
+
 		if (in_type == AkCallbackType.AK_EndOfEvent)
 		{
 			IsPlaying = false;

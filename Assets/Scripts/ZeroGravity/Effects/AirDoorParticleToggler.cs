@@ -23,6 +23,7 @@ namespace ZeroGravity.Effects
 			{
 				tmpBool = !tmpBool;
 			}
+
 			if (tmpBool)
 			{
 				emiter.Play();
@@ -39,6 +40,7 @@ namespace ZeroGravity.Effects
 			{
 				emiter = GetComponent<ParticleSystem>();
 			}
+
 			ParticleSystem.ShapeModule shape = emiter.shape;
 			shape.scale = new Vector3(scale.x, scale.y, 1f);
 		}

@@ -7,92 +7,60 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneTriggerNavigationPanel : BaseSceneTrigger
 	{
-		[SerializeField]
-		private bool _cancelExecuterAtSameTime;
+		[SerializeField] private bool _cancelExecuterAtSameTime;
 
-		[SerializeField]
-		private bool _isExteriorTrigger;
+		[SerializeField] private bool _isExteriorTrigger;
 
 		private Ship myParentShip;
 
 		public override bool ExclusivePlayerLocking
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public override SceneTriggerType TriggerType
 		{
-			get
-			{
-				return SceneTriggerType.NavigationPanel;
-			}
+			get { return SceneTriggerType.NavigationPanel; }
 		}
 
 		public override PlayerHandsCheckType PlayerHandsCheck
 		{
-			get
-			{
-				return PlayerHandsCheckType.StoreItemInHands;
-			}
+			get { return PlayerHandsCheckType.StoreItemInHands; }
 		}
 
 		public override List<ItemType> PlayerHandsItemType
 		{
-			get
-			{
-				return null;
-			}
+			get { return null; }
 		}
 
 		public override bool IsNearTrigger
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public override bool IsInteractable
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public bool CancelExecuterAtSameTime
 		{
-			get
-			{
-				return _cancelExecuterAtSameTime;
-			}
+			get { return _cancelExecuterAtSameTime; }
 		}
 
 		public bool IsExteriorTrigger
 		{
-			get
-			{
-				return _isExteriorTrigger;
-			}
+			get { return _isExteriorTrigger; }
 		}
 
 		public override bool CameraMovementAllowed
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public Ship MyParentShip
 		{
-			get
-			{
-				return GetComponentInParent<GeometryRoot>().MainObject as Ship;
-			}
+			get { return GetComponentInParent<GeometryRoot>().MainObject as Ship; }
 		}
 
 		public override bool Interact(MyPlayer player, bool interactWithOverlappingTriggers = true)
@@ -101,12 +69,14 @@ namespace ZeroGravity.LevelDesign
 			{
 				return false;
 			}
+
 			if (interactWithOverlappingTriggers)
 			{
 				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
 			}
+
 			player.AttachToPanel(this);
-			Client.Instance.Map.OnInteract(MyParentShip);
+			World.Map.OnInteract(MyParentShip);
 			return true;
 		}
 
@@ -119,7 +89,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			base.CancelInteract(player);
 			player.DetachFromPanel();
-			Client.Instance.Map.OnDetach();
+			World.Map.OnDetach();
 		}
 	}
 }

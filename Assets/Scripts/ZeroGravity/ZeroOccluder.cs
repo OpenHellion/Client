@@ -23,55 +23,35 @@ namespace ZeroGravity
 			public Transform Parent;
 		}
 
-		[SerializeField]
-		private Type occluderType;
+		[SerializeField] private Type occluderType;
 
-		[SerializeField]
-		private float occlusionDistance;
+		[SerializeField] private float occlusionDistance;
 
-		[SerializeField]
-		private List<GameObject> occlusionObjects;
+		[SerializeField] private List<GameObject> occlusionObjects;
 
-		[SerializeField]
-		[HideInInspector]
-		private List<MeshRenderer> renderers = new List<MeshRenderer>();
+		[SerializeField] [HideInInspector] private List<MeshRenderer> renderers = new List<MeshRenderer>();
 
-		[SerializeField]
-		[HideInInspector]
-		private List<Light> lights = new List<Light>();
+		[SerializeField] [HideInInspector] private List<Light> lights = new List<Light>();
 
-		[SerializeField]
-		[HideInInspector]
-		private List<WholeObject> objects = new List<WholeObject>();
+		[SerializeField] [HideInInspector] private List<WholeObject> objects = new List<WholeObject>();
 
-		[SerializeField]
-		[HideInInspector]
-		private bool occlusionObjectsSerialized;
+		[SerializeField] [HideInInspector] private bool occlusionObjectsSerialized;
 
 		private bool areObjectsVisible = true;
 
 		public Type OccluderType
 		{
-			get
-			{
-				return occluderType;
-			}
+			get { return occluderType; }
 		}
 
 		public float OcclusionDistance
 		{
-			get
-			{
-				return occlusionDistance;
-			}
+			get { return occlusionDistance; }
 		}
 
 		public float OcclusionDistanceSquared
 		{
-			get
-			{
-				return occlusionDistance * occlusionDistance;
-			}
+			get { return occlusionDistance * occlusionDistance; }
 		}
 
 		private void Awake()
@@ -91,6 +71,7 @@ namespace ZeroGravity
 			{
 				SerializeGameObject(occlusionObject);
 			}
+
 			occlusionObjectsSerialized = true;
 		}
 
@@ -100,6 +81,7 @@ namespace ZeroGravity
 			{
 				return;
 			}
+
 			bool flag = false;
 			Animator[] componentsInChildren = go.GetComponentsInChildren<Animator>();
 			foreach (Animator animator in componentsInChildren)
@@ -110,10 +92,12 @@ namespace ZeroGravity
 					break;
 				}
 			}
+
 			if (go.GetComponentInChildren<VesselComponent>(true) != null)
 			{
 				flag = true;
 			}
+
 			if (flag)
 			{
 				MeshRenderer[] components = go.GetComponents<MeshRenderer>();
@@ -121,11 +105,13 @@ namespace ZeroGravity
 				{
 					renderers.Add(item);
 				}
+
 				Light[] components2 = go.GetComponents<Light>();
 				foreach (Light item2 in components2)
 				{
 					lights.Add(item2);
 				}
+
 				IEnumerator enumerator = go.transform.GetEnumerator();
 				try
 				{
@@ -134,6 +120,7 @@ namespace ZeroGravity
 						Transform transform = (Transform)enumerator.Current;
 						SerializeGameObject(transform.gameObject);
 					}
+
 					return;
 				}
 				finally
@@ -145,6 +132,7 @@ namespace ZeroGravity
 					}
 				}
 			}
+
 			objects.Add(new WholeObject
 			{
 				Obj = go,
@@ -158,6 +146,7 @@ namespace ZeroGravity
 			{
 				return;
 			}
+
 			areObjectsVisible = show;
 			if (renderers != null && renderers.Count > 0)
 			{
@@ -169,6 +158,7 @@ namespace ZeroGravity
 					}
 				}
 			}
+
 			if (lights != null && lights.Count > 0)
 			{
 				foreach (Light light in lights)
@@ -179,48 +169,39 @@ namespace ZeroGravity
 					}
 				}
 			}
+
 			if (objects == null || objects.Count <= 0)
 			{
 				return;
 			}
-			if (Client.IsGameBuild)
+
+			if (ZeroOcclusion.BlackHole == null)
 			{
-				if (ZeroOcclusion.BlackHole == null)
-				{
-					ZeroOcclusion.BlackHole = new GameObject("BlackHole");
-					ZeroOcclusion.BlackHole.transform.parent = Client.Instance.transform;
-					ZeroOcclusion.BlackHole.SetActive(false);
-				}
-				{
-					foreach (WholeObject @object in objects)
-					{
-						if (@object != null && @object.Obj != null)
-						{
-							Vector3 localPosition = @object.Obj.transform.localPosition;
-							Quaternion localRotation = @object.Obj.transform.localRotation;
-							Vector3 localScale = @object.Obj.transform.localScale;
-							if (!areObjectsVisible)
-							{
-								@object.Obj.transform.SetParent(ZeroOcclusion.BlackHole.transform);
-							}
-							else
-							{
-								@object.Obj.transform.SetParent(@object.Parent);
-							}
-							@object.Obj.transform.localPosition = localPosition;
-							@object.Obj.transform.localRotation = localRotation;
-							@object.Obj.transform.localScale = localScale;
-							@object.Obj.SetActive(areObjectsVisible);
-						}
-					}
-					return;
-				}
+				ZeroOcclusion.BlackHole = new GameObject("BlackHole");
+				ZeroOcclusion.BlackHole.transform.parent = transform.root;
+				ZeroOcclusion.BlackHole.SetActive(false);
 			}
-			foreach (WholeObject object2 in objects)
+
+			foreach (WholeObject @object in objects)
 			{
-				if (object2 != null)
+				if (@object != null && @object.Obj != null)
 				{
-					object2.Obj.SetActive(areObjectsVisible);
+					Vector3 localPosition = @object.Obj.transform.localPosition;
+					Quaternion localRotation = @object.Obj.transform.localRotation;
+					Vector3 localScale = @object.Obj.transform.localScale;
+					if (!areObjectsVisible)
+					{
+						@object.Obj.transform.SetParent(ZeroOcclusion.BlackHole.transform);
+					}
+					else
+					{
+						@object.Obj.transform.SetParent(@object.Parent);
+					}
+
+					@object.Obj.transform.localPosition = localPosition;
+					@object.Obj.transform.localRotation = localRotation;
+					@object.Obj.transform.localScale = localScale;
+					@object.Obj.SetActive(areObjectsVisible);
 				}
 			}
 		}

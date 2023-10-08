@@ -29,8 +29,7 @@ namespace ZeroGravity.UI
 
 		public GameObject Warning;
 
-		[HideInInspector]
-		public ResourceContainer Container;
+		[HideInInspector] public ResourceContainer Container;
 
 		public Transform PartsTransform;
 
@@ -49,6 +48,7 @@ namespace ZeroGravity.UI
 					text.text = value;
 				}
 			}
+
 			Name.text = Generator.Type.ToLocalizedString().ToUpper();
 		}
 

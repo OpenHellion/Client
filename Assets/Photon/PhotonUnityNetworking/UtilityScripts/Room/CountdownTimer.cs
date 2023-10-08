@@ -24,12 +24,12 @@ namespace Photon.Pun.UtilityScripts
     /// <remarks>
     /// In order to start the timer, the MasterClient can call SetStartTime() to set the timestamp for the start.
     /// The property 'StartTime' then contains the server timestamp when the timer has been started.
-    /// 
+    ///
     /// In order to subscribe to the CountdownTimerHasExpired event you can call CountdownTimer.OnCountdownTimerHasExpired
     /// += OnCountdownTimerIsExpired;
     /// from Unity's OnEnable function for example. For unsubscribing simply call CountdownTimer.OnCountdownTimerHasExpired
     /// -= OnCountdownTimerIsExpired;.
-    /// 
+    ///
     /// You can do this from Unity's OnEnable and OnDisable functions.
     /// </remarks>
     public class CountdownTimer : MonoBehaviourPunCallbacks
@@ -41,7 +41,7 @@ namespace Photon.Pun.UtilityScripts
 
         public const string CountdownStartTime = "StartTime";
 
-        [Header("Countdown time in seconds")] 
+        [Header("Countdown time in seconds")]
         public float Countdown = 5.0f;
 
         private bool isTimerRunning;

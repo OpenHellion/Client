@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using ZeroGravity.UI;
 
 namespace ZeroGravity.Objects
 {
 	public class AltCorpRifle : Weapon
 	{
-		[Title("UI")]
-		public Image FireMode;
+		[Title("UI")] public Image FireMode;
 
 		public Text BulletCountText;
 
@@ -19,7 +19,7 @@ namespace ZeroGravity.Objects
 		public override void UpdateUI()
 		{
 			base.UpdateUI();
-			FireMode.sprite = Client.Instance.SpriteManager.GetSprite(CurrentWeaponMod.ModsFireMode);
+			FireMode.sprite = SpriteManager.Instance.GetSprite(CurrentWeaponMod.ModsFireMode);
 			AmmoUIByBulletCount();
 		}
 
@@ -29,12 +29,14 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			if (Quantity > 0f)
 			{
 				if (!BulletCountText.gameObject.activeInHierarchy)
 				{
 					BulletCountText.gameObject.SetActive(true);
 				}
+
 				BulletCountText.text = Quantity.ToString();
 				if (Quantity <= 5f)
 				{

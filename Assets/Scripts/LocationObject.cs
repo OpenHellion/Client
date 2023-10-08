@@ -13,6 +13,7 @@ public class LocationObject : ScriptableObject
 			{
 				return LocationName;
 			}
+
 			return base.name;
 		}
 	}
@@ -24,6 +25,7 @@ public class LocationObject : ScriptableObject
 		{
 			empty = location.Name;
 		}
+
 		return empty;
 	}
 }

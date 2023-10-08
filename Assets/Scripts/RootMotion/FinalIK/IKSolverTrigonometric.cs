@@ -35,8 +35,7 @@ namespace RootMotion.FinalIK
 
 		public Transform target;
 
-		[Range(0f, 1f)]
-		public float IKRotationWeight = 1f;
+		[Range(0f, 1f)] public float IKRotationWeight = 1f;
 
 		public Quaternion IKRotation;
 
@@ -58,7 +57,9 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
-			Vector3 vector = Vector3.Cross(goalPosition - bone1.transform.position, IKPosition - bone1.transform.position);
+
+			Vector3 vector = Vector3.Cross(goalPosition - bone1.transform.position,
+				IKPosition - bone1.transform.position);
 			if (vector != Vector3.zero)
 			{
 				if (weight >= 1f)
@@ -76,7 +77,8 @@ namespace RootMotion.FinalIK
 		{
 			if (base.initiated)
 			{
-				Vector3 vector = Vector3.Cross(bone2.transform.position - bone1.transform.position, bone3.transform.position - bone2.transform.position);
+				Vector3 vector = Vector3.Cross(bone2.transform.position - bone1.transform.position,
+					bone3.transform.position - bone2.transform.position);
 				if (vector != Vector3.zero)
 				{
 					bendNormal = vector;
@@ -115,14 +117,17 @@ namespace RootMotion.FinalIK
 			{
 				return bone1;
 			}
+
 			if (bone2.transform == transform)
 			{
 				return bone2;
 			}
+
 			if (bone3.transform == transform)
 			{
 				return bone3;
 			}
+
 			return null;
 		}
 
@@ -147,22 +152,27 @@ namespace RootMotion.FinalIK
 				message = "Please assign all Bones to the IK solver.";
 				return false;
 			}
-			Transform transform = (Transform)Hierarchy.ContainsDuplicate(new Transform[3] { bone1.transform, bone2.transform, bone3.transform });
+
+			Transform transform = (Transform)Hierarchy.ContainsDuplicate(new Transform[3]
+				{ bone1.transform, bone2.transform, bone3.transform });
 			if (transform != null)
 			{
 				message = transform.name + " is represented multiple times in the Bones.";
 				return false;
 			}
+
 			if (bone1.transform.position == bone2.transform.position)
 			{
 				message = "first bone position is the same as second bone position.";
 				return false;
 			}
+
 			if (bone2.transform.position == bone3.transform.position)
 			{
 				message = "second bone position is the same as third bone position.";
 				return false;
 			}
+
 			return true;
 		}
 
@@ -181,6 +191,7 @@ namespace RootMotion.FinalIK
 			{
 				bendNormal = Vector3.right;
 			}
+
 			OnInitiateVirtual();
 			IKPosition = bone3.transform.position;
 			IKRotation = bone3.transform.rotation;
@@ -194,10 +205,12 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			if (bone2.transform.parent != bone1.transform)
 			{
 				return false;
 			}
+
 			return true;
 		}
 
@@ -217,6 +230,7 @@ namespace RootMotion.FinalIK
 				IKPosition = target.position;
 				IKRotation = target.rotation;
 			}
+
 			OnUpdateVirtual();
 			if (IKPositionWeight > 0f)
 			{
@@ -225,26 +239,33 @@ namespace RootMotion.FinalIK
 					bone1.Initiate(bone2.transform.position, bendNormal);
 					bone2.Initiate(bone3.transform.position, bendNormal);
 				}
+
 				bone1.sqrMag = (bone2.transform.position - bone1.transform.position).sqrMagnitude;
 				bone2.sqrMag = (bone3.transform.position - bone2.transform.position).sqrMagnitude;
 				if (bendNormal == Vector3.zero && !Warning.logged)
 				{
 					LogWarning("IKSolverTrigonometric Bend Normal is Vector3.zero.");
 				}
+
 				weightIKPosition = Vector3.Lerp(bone3.transform.position, IKPosition, IKPositionWeight);
 				Vector3 vector = Vector3.Lerp(bone1.GetBendNormalFromCurrentRotation(), bendNormal, IKPositionWeight);
-				Vector3 vector2 = Vector3.Lerp(bone2.transform.position - bone1.transform.position, GetBendDirection(weightIKPosition, vector), IKPositionWeight);
+				Vector3 vector2 = Vector3.Lerp(bone2.transform.position - bone1.transform.position,
+					GetBendDirection(weightIKPosition, vector), IKPositionWeight);
 				if (vector2 == Vector3.zero)
 				{
 					vector2 = bone2.transform.position - bone1.transform.position;
 				}
+
 				bone1.transform.rotation = bone1.GetRotation(vector2, vector);
-				bone2.transform.rotation = bone2.GetRotation(weightIKPosition - bone2.transform.position, bone2.GetBendNormalFromCurrentRotation());
+				bone2.transform.rotation = bone2.GetRotation(weightIKPosition - bone2.transform.position,
+					bone2.GetBendNormalFromCurrentRotation());
 			}
+
 			if (IKRotationWeight > 0f)
 			{
 				bone3.transform.rotation = Quaternion.Slerp(bone3.transform.rotation, IKRotation, IKRotationWeight);
 			}
+
 			OnPostSolveVirtual();
 		}
 
@@ -267,6 +288,7 @@ namespace RootMotion.FinalIK
 			{
 				return Vector3.zero;
 			}
+
 			float sqrMagnitude = vector.sqrMagnitude;
 			float num = (float)Math.Sqrt(sqrMagnitude);
 			float num2 = (sqrMagnitude + bone1.sqrMag - bone2.sqrMag) / 2f / num;

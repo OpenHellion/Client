@@ -39,23 +39,18 @@ namespace RootMotion.Demos
 			public Vector3 value;
 		}
 
-		[Header("Component References")]
-		public VRAnimatorController animatorController;
+		[Header("Component References")] public VRAnimatorController animatorController;
 
 		[Tooltip("Which weapon is the character holding at this time?")]
 		public WeaponBase currentWeapon;
 
-		[Header("Weights")]
-		[Tooltip("The master weight of aiming.")]
-		[Range(0f, 1f)]
+		[Header("Weights")] [Tooltip("The master weight of aiming.")] [Range(0f, 1f)]
 		public float weight = 1f;
 
-		[Tooltip("The weight of twisting the spine to better hold the weapons")]
-		[Range(0f, 1f)]
+		[Tooltip("The weight of twisting the spine to better hold the weapons")] [Range(0f, 1f)]
 		public float spineTwistWeight = 1f;
 
-		[Header("Hands")]
-		[Tooltip("Which hand holds the weapon?")]
+		[Header("Hands")] [Tooltip("Which hand holds the weapon?")]
 		public Handedness handedness;
 
 		[Tooltip("How far left/right to offset the weapons?")]
@@ -67,8 +62,7 @@ namespace RootMotion.Demos
 		[Tooltip("Various references and settings for right handed weapons.")]
 		public Targets rightHandedTargets;
 
-		[Header("Weapon Positioning")]
-		[Tooltip("The Transform that rotates the weapon.")]
+		[Header("Weapon Positioning")] [Tooltip("The Transform that rotates the weapon.")]
 		public Transform weaponsPivot;
 
 		[Tooltip("Child of weaponsPivot, parent of all weapons.")]
@@ -83,12 +77,10 @@ namespace RootMotion.Demos
 		[Tooltip("The smoothing speed of inheriting motion from the pivotMotionTarget.")]
 		public float pivotMotionSmoothSpeed = 5f;
 
-		[Tooltip("The weight of inheriting motion from the pivotMotionTarget,")]
-		[Range(0f, 1f)]
+		[Tooltip("The weight of inheriting motion from the pivotMotionTarget,")] [Range(0f, 1f)]
 		public float pivotMotionWeight = 0.5f;
 
-		[Tooltip("The limit of up/down rotation for the weapons.")]
-		[Range(0f, 90f)]
+		[Tooltip("The limit of up/down rotation for the weapons.")] [Range(0f, 90f)]
 		public float aimVerticalLimit = 80f;
 
 		[Tooltip("Local Z position of the weapons anchor when the weapon is locked to the camera (while holding RMB).")]
@@ -124,18 +116,12 @@ namespace RootMotion.Demos
 
 		private Transform cam
 		{
-			get
-			{
-				return animatorController.cam;
-			}
+			get { return animatorController.cam; }
 		}
 
 		private Transform characterController
 		{
-			get
-			{
-				return animatorController.characterController;
-			}
+			get { return animatorController.characterController; }
 		}
 
 		private Targets targets
@@ -146,6 +132,7 @@ namespace RootMotion.Demos
 				{
 					return rightHandedTargets;
 				}
+
 				return leftHandedTargets;
 			}
 		}
@@ -156,7 +143,8 @@ namespace RootMotion.Demos
 			poserLeftHand = ik.references.leftHand.GetComponent<Poser>();
 			poserRightHand = ik.references.rightHand.GetComponent<Poser>();
 			IKSolverFullBodyBiped solver = ik.solver;
-			solver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPostUpdate, new IKSolver.UpdateDelegate(AfterFBBIK));
+			solver.OnPostUpdate =
+				(IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPostUpdate, new IKSolver.UpdateDelegate(AfterFBBIK));
 			lastWeight = weight;
 			SetHandedness(handedness);
 			defaultWeaponsAnchorLocalPosition = weaponsAnchor.localPosition;
@@ -175,32 +163,44 @@ namespace RootMotion.Demos
 			{
 				return;
 			}
+
 			lastWeight = weight;
 			float t = animatorController.velocity.magnitude * pivotMotionWeight;
-			weaponsPivot.position = Vector3.Lerp(weaponsPivot.position, Vector3.Lerp(weaponsPivot.parent.TransformPoint(weaponsPivotLocalPosition), pivotMotionTarget.TransformPoint(pivotRelativePosition), t), Time.deltaTime * pivotMotionSmoothSpeed);
+			weaponsPivot.position = Vector3.Lerp(weaponsPivot.position,
+				Vector3.Lerp(weaponsPivot.parent.TransformPoint(weaponsPivotLocalPosition),
+					pivotMotionTarget.TransformPoint(pivotRelativePosition), t),
+				Time.deltaTime * pivotMotionSmoothSpeed);
 			if (Input.GetKeyDown(KeyCode.H))
 			{
 				SetHandedness((handedness == Handedness.Right) ? Handedness.Left : Handedness.Right);
 			}
+
 			defaultWeaponsAnchorLocalPosition.x = ((handedness != 0) ? (0f - sideOffset) : sideOffset);
-			weaponsAnchor.localPosition = Vector3.Lerp(weaponsAnchor.localPosition, defaultWeaponsAnchorLocalPosition, Time.deltaTime * lerpSpeed);
+			weaponsAnchor.localPosition = Vector3.Lerp(weaponsAnchor.localPosition, defaultWeaponsAnchorLocalPosition,
+				Time.deltaTime * lerpSpeed);
 			if (currentWeapon != null && Input.GetMouseButtonDown(0))
 			{
 				currentWeapon.Fire();
-				weaponsAnchor.localPosition += currentWeapon.recoilDirection + UnityEngine.Random.insideUnitSphere * currentWeapon.recoilDirection.magnitude * UnityEngine.Random.value * currentWeapon.recoilRandom;
-				aimVel.x -= currentWeapon.recoilAngleVertical + currentWeapon.recoilAngleVertical * UnityEngine.Random.value * currentWeapon.recoilRandom;
+				weaponsAnchor.localPosition += currentWeapon.recoilDirection + UnityEngine.Random.insideUnitSphere *
+					currentWeapon.recoilDirection.magnitude * UnityEngine.Random.value * currentWeapon.recoilRandom;
+				aimVel.x -= currentWeapon.recoilAngleVertical + currentWeapon.recoilAngleVertical *
+					UnityEngine.Random.value * currentWeapon.recoilRandom;
 				float num = currentWeapon.recoilAngleHorizontal * UnityEngine.Random.value;
 				if (UnityEngine.Random.value > 0.5f)
 				{
 					num = 0f - num;
 				}
+
 				aimVel.y += num + num * UnityEngine.Random.value * currentWeapon.recoilRandom;
 			}
+
 			BoneRotationOffset[] boneRotationOffsets = targets.boneRotationOffsets;
 			foreach (BoneRotationOffset boneRotationOffset in boneRotationOffsets)
 			{
-				boneRotationOffset.transform.localRotation = Quaternion.Euler(boneRotationOffset.value * weight) * boneRotationOffset.transform.localRotation;
+				boneRotationOffset.transform.localRotation = Quaternion.Euler(boneRotationOffset.value * weight) *
+				                                             boneRotationOffset.transform.localRotation;
 			}
+
 			bool mouseButton = Input.GetMouseButton(1);
 			float target = ((!mouseButton) ? 0f : 1f);
 			aimWeight = Mathf.MoveTowards(aimWeight, target, Time.deltaTime * 3f);
@@ -208,14 +208,18 @@ namespace RootMotion.Demos
 			if (mouseButton)
 			{
 				weaponsPivot.position = Vector3.Lerp(weaponsPivot.position, cameraPosition, aimWeight);
-				weaponsAnchor.localPosition = Vector3.Lerp(weaponsAnchor.localPosition, new Vector3(0f, weaponsAnchor.localPosition.y, aimZ), aimWeight);
-				weaponsPivot.rotation = Quaternion.Lerp(weaponsPivot.rotation, Quaternion.LookRotation(cam.forward), Time.deltaTime * lerpSpeed);
+				weaponsAnchor.localPosition = Vector3.Lerp(weaponsAnchor.localPosition,
+					new Vector3(0f, weaponsAnchor.localPosition.y, aimZ), aimWeight);
+				weaponsPivot.rotation = Quaternion.Lerp(weaponsPivot.rotation, Quaternion.LookRotation(cam.forward),
+					Time.deltaTime * lerpSpeed);
 			}
+
 			Vector3 vector = Vector3.Project(weaponsAnchor.position - TargetsCameraPosition(), cam.forward);
 			if (Vector3.Dot(vector, cam.forward) < 0f)
 			{
 				weaponsAnchor.position -= vector;
 			}
+
 			ik.solver.leftHandEffector.position = targets.leftHand.position;
 			ik.solver.rightHandEffector.position = targets.rightHand.position;
 			ik.solver.leftHandEffector.positionWeight = weight;
@@ -240,7 +244,8 @@ namespace RootMotion.Demos
 			forward.y = 0f;
 			Quaternion quaternion = Quaternion.AngleAxis(aimVel.x, Quaternion.LookRotation(forward) * Vector3.right);
 			Quaternion quaternion2 = Quaternion.AngleAxis(aimVel.y, Vector3.up);
-			Vector3 vector = Vector3.RotateTowards(forward, quaternion * weaponsPivot.forward, aimVerticalLimit * ((float)Math.PI / 180f), 1f);
+			Vector3 vector = Vector3.RotateTowards(forward, quaternion * weaponsPivot.forward,
+				aimVerticalLimit * ((float)Math.PI / 180f), 1f);
 			weaponsPivot.rotation = Quaternion.LookRotation(quaternion2 * vector, Vector3.up);
 		}
 
@@ -261,6 +266,7 @@ namespace RootMotion.Demos
 			{
 				vector = -vector;
 			}
+
 			return cam.position + cam.rotation * vector;
 		}
 
@@ -283,7 +289,10 @@ namespace RootMotion.Demos
 				BoneRotationOffset[] boneRotationOffsets = targets.boneRotationOffsets;
 				foreach (BoneRotationOffset boneRotationOffset in boneRotationOffsets)
 				{
-					boneRotationOffset.transform.rotation = Quaternion.Lerp(Quaternion.identity, b, 1f / (float)targets.boneRotationOffsets.Length * spineTwistWeight) * boneRotationOffset.transform.rotation;
+					boneRotationOffset.transform.rotation =
+						Quaternion.Lerp(Quaternion.identity, b,
+							1f / (float)targets.boneRotationOffsets.Length * spineTwistWeight) *
+						boneRotationOffset.transform.rotation;
 				}
 			}
 		}
@@ -292,8 +301,10 @@ namespace RootMotion.Demos
 		{
 			if (!(weight <= 0f))
 			{
-				ik.references.leftHand.rotation = Quaternion.Lerp(ik.references.leftHand.rotation, targets.leftHand.rotation, weight);
-				ik.references.rightHand.rotation = Quaternion.Lerp(ik.references.rightHand.rotation, targets.rightHand.rotation, weight);
+				ik.references.leftHand.rotation =
+					Quaternion.Lerp(ik.references.leftHand.rotation, targets.leftHand.rotation, weight);
+				ik.references.rightHand.rotation = Quaternion.Lerp(ik.references.rightHand.rotation,
+					targets.rightHand.rotation, weight);
 			}
 		}
 
@@ -302,7 +313,9 @@ namespace RootMotion.Demos
 			if (ik != null)
 			{
 				IKSolverFullBodyBiped solver = ik.solver;
-				solver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(solver.OnPostUpdate, new IKSolver.UpdateDelegate(AfterFBBIK));
+				solver.OnPostUpdate =
+					(IKSolver.UpdateDelegate)Delegate.Remove(solver.OnPostUpdate,
+						new IKSolver.UpdateDelegate(AfterFBBIK));
 			}
 		}
 
@@ -312,10 +325,12 @@ namespace RootMotion.Demos
 			{
 				angle += 360f;
 			}
+
 			if (angle > 360f)
 			{
 				angle -= 360f;
 			}
+
 			return Mathf.Clamp(angle, min, max);
 		}
 	}

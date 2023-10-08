@@ -8,10 +8,7 @@ namespace RootMotion
 
 		public static T instance
 		{
-			get
-			{
-				return sInstance;
-			}
+			get { return sInstance; }
 		}
 
 		protected virtual void Awake()
@@ -20,6 +17,7 @@ namespace RootMotion
 			{
 				Debug.LogError(base.name + "error: already initialized", this);
 			}
+
 			sInstance = (T)this;
 		}
 	}

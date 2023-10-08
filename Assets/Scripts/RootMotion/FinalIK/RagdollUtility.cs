@@ -42,6 +42,7 @@ namespace RootMotion.FinalIK
 					c = joint.connectedBody;
 					updateAnchor = c != null;
 				}
+
 				lastPosition = t.position;
 				lastRotation = t.rotation;
 			}
@@ -61,11 +62,13 @@ namespace RootMotion.FinalIK
 				{
 					joint.connectedAnchor = t.InverseTransformPoint(c.position);
 				}
+
 				r.isKinematic = false;
 				if (velocityWeight != 0f)
 				{
 					r.velocity = deltaPosition / deltaTime * velocityWeight;
 				}
+
 				if (angularVelocityWeight != 0f)
 				{
 					float angle = 0f;
@@ -76,6 +79,7 @@ namespace RootMotion.FinalIK
 					axis *= angle * angularVelocityWeight;
 					r.angularVelocity = Vector3.ClampMagnitude(axis, r.maxAngularVelocity);
 				}
+
 				r.WakeUp();
 			}
 		}
@@ -158,10 +162,7 @@ namespace RootMotion.FinalIK
 
 		private bool isRagdoll
 		{
-			get
-			{
-				return !rigidbones[0].r.isKinematic && !animator.enabled;
-			}
+			get { return !rigidbones[0].r.isKinematic && !animator.enabled; }
 		}
 
 		private bool ikUsed
@@ -172,10 +173,12 @@ namespace RootMotion.FinalIK
 				{
 					return false;
 				}
+
 				if (ik.enabled && ik.GetIKSolver().IKPositionWeight > 0f)
 				{
 					return true;
 				}
+
 				IK[] array = allIKComponents;
 				foreach (IK iK in array)
 				{
@@ -184,6 +187,7 @@ namespace RootMotion.FinalIK
 						return true;
 					}
 				}
+
 				return false;
 			}
 		}
@@ -216,8 +220,10 @@ namespace RootMotion.FinalIK
 			if (ik != null)
 			{
 				IKSolver iKSolver = ik.GetIKSolver();
-				iKSolver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(iKSolver.OnPostUpdate, new IKSolver.UpdateDelegate(AfterLastIK));
+				iKSolver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(iKSolver.OnPostUpdate,
+					new IKSolver.UpdateDelegate(AfterLastIK));
 			}
+
 			Rigidbody[] componentsInChildren = GetComponentsInChildren<Rigidbody>();
 			int num = ((componentsInChildren[0].gameObject == base.gameObject) ? 1 : 0);
 			rigidbones = new Rigidbone[(num != 0) ? (componentsInChildren.Length - 1) : componentsInChildren.Length];
@@ -225,6 +231,7 @@ namespace RootMotion.FinalIK
 			{
 				rigidbones[i] = new Rigidbone(componentsInChildren[i + num]);
 			}
+
 			Transform[] componentsInChildren2 = GetComponentsInChildren<Transform>();
 			children = new Child[componentsInChildren2.Length - 1];
 			for (int j = 0; j < children.Length; j++)
@@ -239,6 +246,7 @@ namespace RootMotion.FinalIK
 			{
 				rigidbones[i].r.isKinematic = true;
 			}
+
 			for (int j = 0; j < allIKComponents.Length; j++)
 			{
 				allIKComponents[j].fixTransforms = fixTransforms[j];
@@ -247,6 +255,7 @@ namespace RootMotion.FinalIK
 					allIKComponents[j].enabled = true;
 				}
 			}
+
 			animator.updateMode = animatorUpdateMode;
 			animator.enabled = true;
 			while (ragdollWeight > 0f)
@@ -256,8 +265,10 @@ namespace RootMotion.FinalIK
 				{
 					ragdollWeight = 0f;
 				}
+
 				yield return null;
 			}
+
 			yield return null;
 		}
 
@@ -267,6 +278,7 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			if (!applyIkOnRagdoll)
 			{
 				bool flag = false;
@@ -278,6 +290,7 @@ namespace RootMotion.FinalIK
 						break;
 					}
 				}
+
 				if (flag)
 				{
 					for (int j = 0; j < allIKComponents.Length; j++)
@@ -285,6 +298,7 @@ namespace RootMotion.FinalIK
 						disabledIKComponents[j] = false;
 					}
 				}
+
 				for (int k = 0; k < allIKComponents.Length; k++)
 				{
 					if (allIKComponents[k].enabled)
@@ -293,8 +307,10 @@ namespace RootMotion.FinalIK
 						disabledIKComponents[k] = true;
 					}
 				}
+
 				return;
 			}
+
 			bool flag2 = false;
 			for (int l = 0; l < allIKComponents.Length; l++)
 			{
@@ -304,10 +320,12 @@ namespace RootMotion.FinalIK
 					break;
 				}
 			}
+
 			if (!flag2)
 			{
 				return;
 			}
+
 			for (int m = 0; m < allIKComponents.Length; m++)
 			{
 				if (disabledIKComponents[m])
@@ -315,6 +333,7 @@ namespace RootMotion.FinalIK
 					allIKComponents[m].enabled = true;
 				}
 			}
+
 			for (int n = 0; n < allIKComponents.Length; n++)
 			{
 				disabledIKComponents[n] = false;
@@ -327,15 +346,18 @@ namespace RootMotion.FinalIK
 			{
 				FixTransforms(1f);
 			}
+
 			fixedFrame = true;
 		}
 
 		private void LateUpdate()
 		{
-			if (animator.updateMode != AnimatorUpdateMode.AnimatePhysics || (animator.updateMode == AnimatorUpdateMode.AnimatePhysics && fixedFrame))
+			if (animator.updateMode != AnimatorUpdateMode.AnimatePhysics ||
+			    (animator.updateMode == AnimatorUpdateMode.AnimatePhysics && fixedFrame))
 			{
 				AfterAnimation();
 			}
+
 			fixedFrame = false;
 			if (!ikUsed)
 			{
@@ -369,6 +391,7 @@ namespace RootMotion.FinalIK
 			{
 				RecordVelocities();
 			}
+
 			if (enableRagdollFlag)
 			{
 				RagdollEnabler();
@@ -382,6 +405,7 @@ namespace RootMotion.FinalIK
 			{
 				disabledIKComponents[i] = false;
 			}
+
 			if (!applyIkOnRagdoll)
 			{
 				for (int j = 0; j < allIKComponents.Length; j++)
@@ -393,6 +417,7 @@ namespace RootMotion.FinalIK
 					}
 				}
 			}
+
 			animatorUpdateMode = animator.updateMode;
 			animator.updateMode = AnimatorUpdateMode.AnimatePhysics;
 			animator.enabled = false;
@@ -400,11 +425,13 @@ namespace RootMotion.FinalIK
 			{
 				rigidbones[k].WakeUp(applyVelocity, applyAngularVelocity);
 			}
+
 			for (int l = 0; l < fixTransforms.Length; l++)
 			{
 				fixTransforms[l] = allIKComponents[l].fixTransforms;
 				allIKComponents[l].fixTransforms = false;
 			}
+
 			ragdollWeight = 1f;
 			ragdollWeightV = 0f;
 			enableRagdollFlag = false;
@@ -442,7 +469,8 @@ namespace RootMotion.FinalIK
 			if (ik != null)
 			{
 				IKSolver iKSolver = ik.GetIKSolver();
-				iKSolver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(iKSolver.OnPostUpdate, new IKSolver.UpdateDelegate(AfterLastIK));
+				iKSolver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(iKSolver.OnPostUpdate,
+					new IKSolver.UpdateDelegate(AfterLastIK));
 			}
 		}
 	}

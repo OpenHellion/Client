@@ -49,9 +49,11 @@ namespace RootMotion.Demos
 			Vector3 vector = animator.transform.position - bipedIK.transform.position;
 			lookAtTargetAnimator.position = lookAtTargetBiped.position + vector;
 			bipedIK.SetLookAtPosition(lookAtTargetBiped.position);
-			bipedIK.SetLookAtWeight(lookAtWeight, lookAtBodyWeight, lookAtHeadWeight, lookAtEyesWeight, lookAtClampWeight, lookAtClampWeightHead, lookAtClampWeightEyes);
+			bipedIK.SetLookAtWeight(lookAtWeight, lookAtBodyWeight, lookAtHeadWeight, lookAtEyesWeight,
+				lookAtClampWeight, lookAtClampWeightHead, lookAtClampWeightEyes);
 			animator.SetLookAtPosition(lookAtTargetAnimator.position);
-			animator.SetLookAtWeight(lookAtWeight, lookAtBodyWeight, lookAtHeadWeight, lookAtEyesWeight, lookAtClampWeight);
+			animator.SetLookAtWeight(lookAtWeight, lookAtBodyWeight, lookAtHeadWeight, lookAtEyesWeight,
+				lookAtClampWeight);
 			footTargetAnimator.position = footTargetBiped.position + vector;
 			footTargetAnimator.rotation = footTargetBiped.rotation;
 			bipedIK.SetIKPosition(AvatarIKGoal.LeftFoot, footTargetBiped.position);

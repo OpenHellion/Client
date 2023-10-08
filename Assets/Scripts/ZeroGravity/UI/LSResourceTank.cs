@@ -6,8 +6,7 @@ namespace ZeroGravity.UI
 {
 	public class LSResourceTank : MonoBehaviour
 	{
-		[HideInInspector]
-		public ResourceContainer Container;
+		[HideInInspector] public ResourceContainer Container;
 
 		public Text Name;
 

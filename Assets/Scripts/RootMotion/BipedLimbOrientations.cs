@@ -35,7 +35,10 @@ namespace RootMotion
 		{
 			get
 			{
-				return new BipedLimbOrientations(new LimbOrientation(Vector3.forward, Vector3.forward, Vector3.forward), new LimbOrientation(Vector3.forward, Vector3.forward, Vector3.back), new LimbOrientation(Vector3.forward, Vector3.forward, Vector3.down), new LimbOrientation(Vector3.forward, Vector3.forward, Vector3.down));
+				return new BipedLimbOrientations(new LimbOrientation(Vector3.forward, Vector3.forward, Vector3.forward),
+					new LimbOrientation(Vector3.forward, Vector3.forward, Vector3.back),
+					new LimbOrientation(Vector3.forward, Vector3.forward, Vector3.down),
+					new LimbOrientation(Vector3.forward, Vector3.forward, Vector3.down));
 			}
 		}
 
@@ -43,11 +46,15 @@ namespace RootMotion
 		{
 			get
 			{
-				return new BipedLimbOrientations(new LimbOrientation(Vector3.down, Vector3.down, Vector3.down), new LimbOrientation(Vector3.down, Vector3.down, Vector3.up), new LimbOrientation(Vector3.up, Vector3.up, Vector3.back), new LimbOrientation(Vector3.up, Vector3.up, Vector3.back));
+				return new BipedLimbOrientations(new LimbOrientation(Vector3.down, Vector3.down, Vector3.down),
+					new LimbOrientation(Vector3.down, Vector3.down, Vector3.up),
+					new LimbOrientation(Vector3.up, Vector3.up, Vector3.back),
+					new LimbOrientation(Vector3.up, Vector3.up, Vector3.back));
 			}
 		}
 
-		public BipedLimbOrientations(LimbOrientation leftArm, LimbOrientation rightArm, LimbOrientation leftLeg, LimbOrientation rightLeg)
+		public BipedLimbOrientations(LimbOrientation leftArm, LimbOrientation rightArm, LimbOrientation leftLeg,
+			LimbOrientation rightLeg)
 		{
 			this.leftArm = leftArm;
 			this.rightArm = rightArm;

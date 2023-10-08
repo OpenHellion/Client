@@ -8,24 +8,14 @@ namespace ZeroGravity.ShipComponents
 
 		public override Sprite Icon
 		{
-			get
-			{
-				return null;
-			}
-			set
-			{
-			}
+			get { return null; }
+			set { }
 		}
 
 		public override string Description
 		{
-			get
-			{
-				return "debris";
-			}
-			set
-			{
-			}
+			get { return "debris"; }
+			set { }
 		}
 
 		public override void CreateVisual()

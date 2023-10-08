@@ -7,18 +7,13 @@ namespace RootMotion.Demos
 	{
 		public CharacterThirdPerson characterController;
 
-		[SerializeField]
-		private float turnSensitivity = 0.2f;
+		[SerializeField] private float turnSensitivity = 0.2f;
 
-		[SerializeField]
-		private float turnSpeed = 5f;
+		[SerializeField] private float turnSpeed = 5f;
 
-		[SerializeField]
-		private float runCycleLegOffset = 0.2f;
+		[SerializeField] private float runCycleLegOffset = 0.2f;
 
-		[Range(0.1f, 3f)]
-		[SerializeField]
-		private float animSpeedMultiplier = 1f;
+		[Range(0.1f, 3f)] [SerializeField] private float animSpeedMultiplier = 1f;
 
 		protected Animator animator;
 
@@ -32,7 +27,8 @@ namespace RootMotion.Demos
 		{
 			get
 			{
-				return animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded Directional") || animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded Strafe");
+				return animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded Directional") ||
+				       animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded Strafe");
 			}
 		}
 
@@ -54,10 +50,12 @@ namespace RootMotion.Demos
 			{
 				if (characterController.animState.jump)
 				{
-					float num = Mathf.Repeat(animator.GetCurrentAnimatorStateInfo(0).normalizedTime + runCycleLegOffset, 1f);
+					float num = Mathf.Repeat(animator.GetCurrentAnimatorStateInfo(0).normalizedTime + runCycleLegOffset,
+						1f);
 					float value = (float)((num < 0f) ? 1 : (-1)) * characterController.animState.moveDirection.z;
 					animator.SetFloat("JumpLeg", value);
 				}
+
 				float num2 = 0f - GetAngleFromForward(lastForward);
 				lastForward = base.transform.forward;
 				num2 *= turnSensitivity * 0.01f;
@@ -72,6 +70,7 @@ namespace RootMotion.Demos
 				{
 					animator.SetFloat("Jump", characterController.animState.yVelocity);
 				}
+
 				if (characterController.animState.onGround && characterController.animState.moveDirection.z > 0f)
 				{
 					animator.speed = animSpeedMultiplier;

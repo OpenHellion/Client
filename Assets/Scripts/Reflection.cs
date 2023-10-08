@@ -23,15 +23,18 @@ public class Reflection : MonoBehaviour
 
 	public void OnWillRenderObject()
 	{
-		if (!base.enabled || !GetComponent<Renderer>() || !GetComponent<Renderer>().sharedMaterial || !GetComponent<Renderer>().enabled)
+		if (!base.enabled || !GetComponent<Renderer>() || !GetComponent<Renderer>().sharedMaterial ||
+		    !GetComponent<Renderer>().enabled)
 		{
 			return;
 		}
+
 		Camera current = Camera.current;
 		if (!current || s_InsideRendering)
 		{
 			return;
 		}
+
 		s_InsideRendering = true;
 		Camera reflectionCamera;
 		CreateMirrorObjects(current, out reflectionCamera);
@@ -42,6 +45,7 @@ public class Reflection : MonoBehaviour
 		{
 			QualitySettings.pixelLightCount = 0;
 		}
+
 		UpdateCameraModes(current, reflectionCamera);
 		float w = 0f - Vector3.Dot(up, position) - m_ClipPlaneOffset;
 		Vector4 plane = new Vector4(up.x, up.y, up.z, w);
@@ -72,19 +76,24 @@ public class Reflection : MonoBehaviour
 				material.SetTexture("_ReflectionTex", m_ReflectionTexture);
 			}
 		}
-		Matrix4x4 matrix4x = Matrix4x4.TRS(new Vector3(0.5f, 0.5f, 0.5f), Quaternion.identity, new Vector3(0.5f, 0.5f, 0.5f));
+
+		Matrix4x4 matrix4x = Matrix4x4.TRS(new Vector3(0.5f, 0.5f, 0.5f), Quaternion.identity,
+			new Vector3(0.5f, 0.5f, 0.5f));
 		Vector3 lossyScale = base.transform.lossyScale;
-		Matrix4x4 matrix4x2 = base.transform.localToWorldMatrix * Matrix4x4.Scale(new Vector3(1f / lossyScale.x, 1f / lossyScale.y, 1f / lossyScale.z));
+		Matrix4x4 matrix4x2 = base.transform.localToWorldMatrix *
+		                      Matrix4x4.Scale(new Vector3(1f / lossyScale.x, 1f / lossyScale.y, 1f / lossyScale.z));
 		matrix4x2 = matrix4x * current.projectionMatrix * current.worldToCameraMatrix * matrix4x2;
 		Material[] array2 = sharedMaterials;
 		foreach (Material material2 in array2)
 		{
 			material2.SetMatrix("_ProjMatrix", matrix4x2);
 		}
+
 		if (m_DisablePixelLights)
 		{
 			QualitySettings.pixelLightCount = pixelLightCount;
 		}
+
 		s_InsideRendering = false;
 	}
 
@@ -95,6 +104,7 @@ public class Reflection : MonoBehaviour
 			UnityEngine.Object.DestroyImmediate(m_ReflectionTexture);
 			m_ReflectionTexture = null;
 		}
+
 		IDictionaryEnumerator enumerator = m_ReflectionCameras.GetEnumerator();
 		try
 		{
@@ -111,6 +121,7 @@ public class Reflection : MonoBehaviour
 				disposable.Dispose();
 			}
 		}
+
 		m_ReflectionCameras.Clear();
 	}
 
@@ -120,6 +131,7 @@ public class Reflection : MonoBehaviour
 		{
 			return;
 		}
+
 		dest.clearFlags = src.clearFlags;
 		dest.backgroundColor = src.backgroundColor;
 		if (src.clearFlags == CameraClearFlags.Skybox)
@@ -136,6 +148,7 @@ public class Reflection : MonoBehaviour
 				skybox2.material = skybox.material;
 			}
 		}
+
 		dest.farClipPlane = src.farClipPlane;
 		dest.nearClipPlane = src.nearClipPlane;
 		dest.orthographic = src.orthographic;
@@ -153,16 +166,20 @@ public class Reflection : MonoBehaviour
 			{
 				UnityEngine.Object.DestroyImmediate(m_ReflectionTexture);
 			}
+
 			m_ReflectionTexture = new RenderTexture(m_TextureSize, m_TextureSize, 16);
 			m_ReflectionTexture.name = "__MirrorReflection" + GetInstanceID();
 			m_ReflectionTexture.isPowerOfTwo = true;
 			m_ReflectionTexture.hideFlags = HideFlags.DontSave;
 			m_OldReflectionTextureSize = m_TextureSize;
 		}
+
 		reflectionCamera = m_ReflectionCameras[currentCamera] as Camera;
 		if (!reflectionCamera)
 		{
-			GameObject gameObject = new GameObject("Mirror Refl Camera id" + GetInstanceID() + " for " + currentCamera.GetInstanceID(), typeof(Camera), typeof(Skybox));
+			GameObject gameObject =
+				new GameObject("Mirror Refl Camera id" + GetInstanceID() + " for " + currentCamera.GetInstanceID(),
+					typeof(Camera), typeof(Skybox));
 			reflectionCamera = gameObject.GetComponent<Camera>();
 			reflectionCamera.enabled = false;
 			reflectionCamera.transform.position = base.transform.position;
@@ -179,10 +196,12 @@ public class Reflection : MonoBehaviour
 		{
 			return 1f;
 		}
+
 		if (a < 0f)
 		{
 			return -1f;
 		}
+
 		return 0f;
 	}
 

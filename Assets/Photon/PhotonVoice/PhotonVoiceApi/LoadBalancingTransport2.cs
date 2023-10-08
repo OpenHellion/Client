@@ -119,7 +119,7 @@ namespace Photon.Voice
                 {
                     buffer = new FrameBuffer(content, dataOffset, contentLength - dataOffset, flags, null);
                 }
-                
+
                 this.voiceClient.onFrame(channelId, playerId, voiceId, evNumber, ref buffer, playerId == localPlayerId);
                 buffer.Release();
             }

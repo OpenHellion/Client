@@ -7,8 +7,7 @@ public class AimIKController : MonoBehaviour
 {
 	public AimIK aimIK;
 
-	[SerializeField]
-	private AnimatorHelper animHelper;
+	[SerializeField] private AnimatorHelper animHelper;
 
 	public float weightLerpSpeed;
 
@@ -36,6 +35,7 @@ public class AimIKController : MonoBehaviour
 				aimIK.enabled = enabled;
 				animHelper.SetLayerWeight(AnimatorHelper.AnimatorLayers_TPS.MouseLookVertical, 1f);
 			}
+
 			StartCoroutine(LerpIKWeight(enabled));
 		}
 	}
@@ -46,6 +46,7 @@ public class AimIKController : MonoBehaviour
 		{
 			return GetComponentInParent<OtherPlayer>().Inventory.ItemInHands.useIkForTargeting;
 		}
+
 		return false;
 	}
 
@@ -60,9 +61,11 @@ public class AimIKController : MonoBehaviour
 		{
 			lerpHelper += weightLerpSpeed * Time.deltaTime;
 			aimIK.solver.IKPositionWeight = Mathf.Lerp(lerpFrom, lerpTo, lerpHelper);
-			animHelper.SetLayerWeight(AnimatorHelper.AnimatorLayers_TPS.MouseLookVertical, Mathf.Lerp(animWeightFrom, animWeightTo, lerpHelper));
+			animHelper.SetLayerWeight(AnimatorHelper.AnimatorLayers_TPS.MouseLookVertical,
+				Mathf.Lerp(animWeightFrom, animWeightTo, lerpHelper));
 			yield return null;
 		}
+
 		if (!enabled)
 		{
 			aimIK.enabled = false;

@@ -14,16 +14,13 @@ namespace RootMotion.FinalIK
 
 		public Vector3 polePosition;
 
-		[Range(0f, 1f)]
-		public float poleWeight;
+		[Range(0f, 1f)] public float poleWeight;
 
 		public Transform poleTarget;
 
-		[Range(0f, 1f)]
-		public float clampWeight = 0.1f;
+		[Range(0f, 1f)] public float clampWeight = 0.1f;
 
-		[Range(0f, 2f)]
-		public int clampSmoothing = 2;
+		[Range(0f, 2f)] public int clampSmoothing = 2;
 
 		public IterationDelegate OnPreIteration;
 
@@ -37,34 +34,22 @@ namespace RootMotion.FinalIK
 
 		public Vector3 transformAxis
 		{
-			get
-			{
-				return transform.rotation * axis;
-			}
+			get { return transform.rotation * axis; }
 		}
 
 		public Vector3 transformPoleAxis
 		{
-			get
-			{
-				return transform.rotation * poleAxis;
-			}
+			get { return transform.rotation * poleAxis; }
 		}
 
 		protected override int minBones
 		{
-			get
-			{
-				return 1;
-			}
+			get { return 1; }
 		}
 
 		protected override Vector3 localDirection
 		{
-			get
-			{
-				return bones[0].transform.InverseTransformDirection(bones[bones.Length - 1].transform.forward);
-			}
+			get { return bones[0].transform.InverseTransformDirection(bones[bones.Length - 1].transform.forward); }
 		}
 
 		public float GetAngle()
@@ -79,6 +64,7 @@ namespace RootMotion.FinalIK
 				IKPosition = transform.position + transformAxis * 3f;
 				polePosition = transform.position + transformPoleAxis * 3f;
 			}
+
 			for (int i = 0; i < bones.Length; i++)
 			{
 				if (bones[i].rotationLimit != null)
@@ -86,6 +72,7 @@ namespace RootMotion.FinalIK
 					bones[i].rotationLimit.Disable();
 				}
 			}
+
 			step = 1f / (float)bones.Length;
 			if (Application.isPlaying)
 			{
@@ -101,32 +88,40 @@ namespace RootMotion.FinalIK
 				{
 					LogWarning("IKSolverAim axis is Vector3.zero.");
 				}
+
 				return;
 			}
+
 			if (poleAxis == Vector3.zero && poleWeight > 0f)
 			{
 				if (!Warning.logged)
 				{
 					LogWarning("IKSolverAim poleAxis is Vector3.zero.");
 				}
+
 				return;
 			}
+
 			if (target != null)
 			{
 				IKPosition = target.position;
 			}
+
 			if (poleTarget != null)
 			{
 				polePosition = poleTarget.position;
 			}
+
 			if (XY)
 			{
 				IKPosition.z = bones[0].transform.position.z;
 			}
+
 			if (IKPositionWeight <= 0f)
 			{
 				return;
 			}
+
 			IKPositionWeight = Mathf.Clamp(IKPositionWeight, 0f, 1f);
 			if (transform != lastTransform)
 			{
@@ -135,20 +130,26 @@ namespace RootMotion.FinalIK
 				{
 					transformLimit.enabled = false;
 				}
+
 				lastTransform = transform;
 			}
+
 			if (transformLimit != null)
 			{
 				transformLimit.Apply();
 			}
+
 			if (transform == null)
 			{
 				if (!Warning.logged)
 				{
-					LogWarning("Aim Transform unassigned in Aim IK solver. Please Assign a Transform (lineal descendant to the last bone in the spine) that you want to be aimed at IKPosition");
+					LogWarning(
+						"Aim Transform unassigned in Aim IK solver. Please Assign a Transform (lineal descendant to the last bone in the spine) that you want to be aimed at IKPosition");
 				}
+
 				return;
 			}
+
 			clampWeight = Mathf.Clamp(clampWeight, 0f, 1f);
 			clampedIKPosition = GetClampedIKPosition();
 			Vector3 b = clampedIKPosition - transform.position;
@@ -161,8 +162,10 @@ namespace RootMotion.FinalIK
 				{
 					OnPreIteration(i);
 				}
+
 				Solve();
 			}
+
 			lastLocalDirection = localDirection;
 		}
 
@@ -172,7 +175,9 @@ namespace RootMotion.FinalIK
 			{
 				RotateToTarget(clampedIKPosition, bones[i], step * (float)(i + 1) * IKPositionWeight * bones[i].weight);
 			}
-			RotateToTarget(clampedIKPosition, bones[bones.Length - 1], IKPositionWeight * bones[bones.Length - 1].weight);
+
+			RotateToTarget(clampedIKPosition, bones[bones.Length - 1],
+				IKPositionWeight * bones[bones.Length - 1].weight);
 		}
 
 		private Vector3 GetClampedIKPosition()
@@ -181,10 +186,12 @@ namespace RootMotion.FinalIK
 			{
 				return IKPosition;
 			}
+
 			if (clampWeight >= 1f)
 			{
 				return transform.position + transformAxis * (IKPosition - transform.position).magnitude;
 			}
+
 			float num = Vector3.Angle(transformAxis, IKPosition - transform.position);
 			float num2 = 1f - num / 180f;
 			float num3 = ((!(clampWeight > 0f)) ? 1f : Mathf.Clamp(1f - (clampWeight - num2) / (1f - num2), 0f, 1f));
@@ -194,7 +201,9 @@ namespace RootMotion.FinalIK
 				float f = num4 * (float)Math.PI * 0.5f;
 				num4 = Mathf.Sin(f);
 			}
-			return transform.position + Vector3.Slerp(transformAxis * 10f, IKPosition - transform.position, num4 * num3);
+
+			return transform.position +
+			       Vector3.Slerp(transformAxis * 10f, IKPosition - transform.position, num4 * num3);
 		}
 
 		private void RotateToTarget(Vector3 targetPosition, Bone bone, float weight)
@@ -207,23 +216,27 @@ namespace RootMotion.FinalIK
 					Vector3 vector2 = targetPosition - transform.position;
 					float current = Mathf.Atan2(vector.x, vector.y) * 57.29578f;
 					float num = Mathf.Atan2(vector2.x, vector2.y) * 57.29578f;
-					bone.transform.rotation = Quaternion.AngleAxis(Mathf.DeltaAngle(current, num), Vector3.back) * bone.transform.rotation;
+					bone.transform.rotation = Quaternion.AngleAxis(Mathf.DeltaAngle(current, num), Vector3.back) *
+					                          bone.transform.rotation;
 				}
 			}
 			else
 			{
 				if (weight >= 0f)
 				{
-					Quaternion quaternion = Quaternion.FromToRotation(transformAxis, targetPosition - transform.position);
+					Quaternion quaternion =
+						Quaternion.FromToRotation(transformAxis, targetPosition - transform.position);
 					if (weight >= 1f)
 					{
 						bone.transform.rotation = quaternion * bone.transform.rotation;
 					}
 					else
 					{
-						bone.transform.rotation = Quaternion.Lerp(Quaternion.identity, quaternion, weight) * bone.transform.rotation;
+						bone.transform.rotation = Quaternion.Lerp(Quaternion.identity, quaternion, weight) *
+						                          bone.transform.rotation;
 					}
 				}
+
 				if (poleWeight > 0f)
 				{
 					Vector3 vector3 = polePosition - transform.position;
@@ -231,9 +244,11 @@ namespace RootMotion.FinalIK
 					Vector3 normal = transformAxis;
 					Vector3.OrthoNormalize(ref normal, ref tangent);
 					Quaternion b = Quaternion.FromToRotation(transformPoleAxis, tangent);
-					bone.transform.rotation = Quaternion.Lerp(Quaternion.identity, b, weight * poleWeight) * bone.transform.rotation;
+					bone.transform.rotation = Quaternion.Lerp(Quaternion.identity, b, weight * poleWeight) *
+					                          bone.transform.rotation;
 				}
 			}
+
 			if (useRotationLimits && bone.rotationLimit != null)
 			{
 				bone.rotationLimit.Apply();

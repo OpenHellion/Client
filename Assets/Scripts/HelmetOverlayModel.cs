@@ -61,6 +61,7 @@ public class HelmetOverlayModel : MonoBehaviour
 			{
 				HelmetImage.enabled = false;
 			}
+
 			if (helmetOverlay.HelmetVisor != null)
 			{
 				VisorImage.enabled = true;

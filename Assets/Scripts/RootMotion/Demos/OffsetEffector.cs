@@ -13,8 +13,7 @@ namespace RootMotion.Demos
 
 			public float weightMultiplier = 1f;
 
-			[HideInInspector]
-			public Vector3 localPosition;
+			[HideInInspector] public Vector3 localPosition;
 		}
 
 		public EffectorLink[] effectorLinks;
@@ -25,7 +24,9 @@ namespace RootMotion.Demos
 			EffectorLink[] array = effectorLinks;
 			foreach (EffectorLink effectorLink in array)
 			{
-				effectorLink.localPosition = base.transform.InverseTransformPoint(ik.solver.GetEffector(effectorLink.effectorType).bone.position);
+				effectorLink.localPosition =
+					base.transform.InverseTransformPoint(ik.solver.GetEffector(effectorLink.effectorType).bone
+						.position);
 				if (effectorLink.effectorType == FullBodyBipedEffector.Body)
 				{
 					ik.solver.bodyEffector.effectChildNodes = false;
@@ -39,7 +40,10 @@ namespace RootMotion.Demos
 			foreach (EffectorLink effectorLink in array)
 			{
 				Vector3 vector = base.transform.TransformPoint(effectorLink.localPosition);
-				ik.solver.GetEffector(effectorLink.effectorType).positionOffset += (vector - (ik.solver.GetEffector(effectorLink.effectorType).bone.position + ik.solver.GetEffector(effectorLink.effectorType).positionOffset)) * weight * effectorLink.weightMultiplier;
+				ik.solver.GetEffector(effectorLink.effectorType).positionOffset +=
+					(vector - (ik.solver.GetEffector(effectorLink.effectorType).bone.position +
+					           ik.solver.GetEffector(effectorLink.effectorType).positionOffset)) * weight *
+					effectorLink.weightMultiplier;
 			}
 		}
 	}

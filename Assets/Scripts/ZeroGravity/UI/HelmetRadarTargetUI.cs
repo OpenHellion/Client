@@ -19,7 +19,8 @@ namespace ZeroGravity.UI
 
 		private void GetPositionOfTargetUI()
 		{
-			Vector3 forward = TargetAB.transform.position - MyPlayer.Instance.FpsController.MainCamera.transform.position;
+			Vector3 forward = TargetAB.transform.position -
+			                  MyPlayer.Instance.FpsController.MainCamera.transform.position;
 			float num = forward.magnitude - (float)TargetAB.Radius;
 			float num2 = 1f;
 			Vector3 vector;
@@ -32,9 +33,11 @@ namespace ZeroGravity.UI
 				vector = forward.normalized * (forward.magnitude - (float)TargetAB.Radius);
 				num2 = Mathf.Clamp01(num / drawDistance);
 			}
+
 			base.transform.localScale = new Vector3(num2, num2, num2);
 			base.transform.position = MyPlayer.Instance.FpsController.MainCamera.transform.position + vector;
-			base.transform.rotation = Quaternion.LookRotation(forward, MyPlayer.Instance.FpsController.MainCamera.transform.up);
+			base.transform.rotation =
+				Quaternion.LookRotation(forward, MyPlayer.Instance.FpsController.MainCamera.transform.up);
 		}
 	}
 }

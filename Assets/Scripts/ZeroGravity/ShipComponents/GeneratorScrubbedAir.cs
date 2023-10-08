@@ -8,8 +8,7 @@ namespace ZeroGravity.ShipComponents
 		[Tooltip("Amount of HP used to fully scrub 1m3 of air")]
 		public float ScrubberCartridgeConsumption;
 
-		[SerializeField]
-		private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
+		[SerializeField] private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
 		{
 			new ResourceRequirement
 			{
@@ -19,18 +18,12 @@ namespace ZeroGravity.ShipComponents
 
 		public override GeneratorType Type
 		{
-			get
-			{
-				return GeneratorType.AirScrubber;
-			}
+			get { return GeneratorType.AirScrubber; }
 		}
 
 		public override ResourceRequirement[] ResourceRequirements
 		{
-			get
-			{
-				return _ResourceRequirements;
-			}
+			get { return _ResourceRequirements; }
 		}
 
 		public override SystemAuxData GetAuxData()

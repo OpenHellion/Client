@@ -18,10 +18,7 @@ namespace ZeroGravity.UI
 
 		public CargoPanel MyCargoPanel
 		{
-			get
-			{
-				return GetComponentInParent<CargoPanel>();
-			}
+			get { return GetComponentInParent<CargoPanel>(); }
 		}
 
 		public void OnDrop(PointerEventData eventData)

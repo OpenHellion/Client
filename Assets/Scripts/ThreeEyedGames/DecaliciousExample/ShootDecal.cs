@@ -20,10 +20,12 @@ namespace ThreeEyedGames.DecaliciousExample
 		private void Update()
 		{
 			_timeSinceLastShot += Time.deltaTime;
-			if (TotalAmmo == 0 || !(_timeSinceLastShot > 60f / RoundsPerMin) || (!Input.GetMouseButtonDown(0) && !Input.GetMouseButton(1)))
+			if (TotalAmmo == 0 || !(_timeSinceLastShot > 60f / RoundsPerMin) ||
+			    (!Input.GetMouseButtonDown(0) && !Input.GetMouseButton(1)))
 			{
 				return;
 			}
+
 			TotalAmmo--;
 			_timeSinceLastShot = 0f;
 			RaycastHit hitInfo;
@@ -40,6 +42,7 @@ namespace ThreeEyedGames.DecaliciousExample
 				{
 					component.AddForceAtPosition(Camera.main.transform.forward * 20f, hitInfo.point, ForceMode.Impulse);
 				}
+
 				AudioSource.PlayClipAtPoint(Sound, base.transform.position);
 				StartCoroutine(RemoveDecal(transform.gameObject));
 			}
@@ -54,6 +57,7 @@ namespace ThreeEyedGames.DecaliciousExample
 				d.Fade -= Time.deltaTime * 0.3f;
 				yield return null;
 			}
+
 			d.Fade = 0f;
 		}
 	}

@@ -30,6 +30,7 @@ namespace ZeroGravity.Network
 			{
 				return false;
 			}
+
 			VesselObjectID vesselObjectID = obj as VesselObjectID;
 			return VesselGUID == vesselObjectID.VesselGUID && InSceneID == vesselObjectID.InSceneID;
 		}

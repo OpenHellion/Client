@@ -4,21 +4,14 @@ using ZeroGravity.ShipComponents;
 
 public class SceneAnimatedSystemAccessory : MonoBehaviour, IVesselSystemAccessory
 {
-	[SerializeField]
-	private VesselSystem _BaseVesselSystem;
+	[SerializeField] private VesselSystem _BaseVesselSystem;
 
 	public Animator Animator;
 
 	public VesselSystem BaseVesselSystem
 	{
-		get
-		{
-			return _BaseVesselSystem;
-		}
-		set
-		{
-			_BaseVesselSystem = value;
-		}
+		get { return _BaseVesselSystem; }
+		set { _BaseVesselSystem = value; }
 	}
 
 	private void Start()
@@ -34,6 +27,7 @@ public class SceneAnimatedSystemAccessory : MonoBehaviour, IVesselSystemAccessor
 		{
 			Animator.SetBool("Online", true);
 		}
+
 		if (BaseVesselSystem.Status == SystemStatus.Offline)
 		{
 			Animator.SetBool("Online", false);

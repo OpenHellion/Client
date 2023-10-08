@@ -31,7 +31,8 @@ namespace ThreeEyedGames
 		[Tooltip("Should this decal be drawn early (low number) or late (high number)?")]
 		public int RenderOrder = 100;
 
-		[Tooltip("To which degree should the Decal be drawn? At 1, the Decal will be drawn with full effect. At 0, the Decal will not be drawn. Experiment with values greater than one.")]
+		[Tooltip(
+			"To which degree should the Decal be drawn? At 1, the Decal will be drawn with full effect. At 0, the Decal will not be drawn. Experiment with values greater than one.")]
 		public float Fade = 1f;
 
 		[Tooltip("Set a GameObject here to only draw this Decal on the MeshRenderer of the GO or any of its children.")]
@@ -40,13 +41,15 @@ namespace ThreeEyedGames
 		[Tooltip("Enable to draw the Albedo / Emission pass of the Decal.")]
 		public bool DrawAlbedo = true;
 
-		[Tooltip("Use an interpolated light probe for this decal for indirect light. This breaks instancing for the decal and thus comes with a performance impact, so use with caution.")]
+		[Tooltip(
+			"Use an interpolated light probe for this decal for indirect light. This breaks instancing for the decal and thus comes with a performance impact, so use with caution.")]
 		public bool UseLightProbes = true;
 
 		[Tooltip("Enable to draw the Normal / SpecGloss pass of the Decal.")]
 		public bool DrawNormalAndGloss = true;
 
-		[Tooltip("Enable perfect Normal / SpecGloss blending between decals. Costly and has no effect when decals don't overlap, so use with caution.")]
+		[Tooltip(
+			"Enable perfect Normal / SpecGloss blending between decals. Costly and has no effect when decals don't overlap, so use with caution.")]
 		public bool HighQualityBlending;
 
 		private void Awake()
@@ -56,14 +59,17 @@ namespace ThreeEyedGames
 			{
 				component.sharedMesh = Resources.Load<Mesh>("DecalCube");
 			}
+
 			if (_deferredShader == null)
 			{
 				_deferredShader = Shader.Find("Decalicious/Deferred Decal");
 			}
+
 			if (_unlitShader == null)
 			{
 				_unlitShader = Shader.Find("Decalicious/Unlit Decal");
 			}
+
 			MeshRenderer component2 = GetComponent<MeshRenderer>();
 			component2.shadowCastingMode = ShadowCastingMode.Off;
 			component2.receiveShadows = false;
@@ -78,11 +84,13 @@ namespace ThreeEyedGames
 			{
 				return;
 			}
+
 			DecaliciousRenderer decaliciousRenderer = Camera.current.GetComponent<DecaliciousRenderer>();
 			if (decaliciousRenderer == null)
 			{
 				decaliciousRenderer = Camera.current.gameObject.AddComponent<DecaliciousRenderer>();
 			}
+
 			if (decaliciousRenderer.isActiveAndEnabled && !(Fade <= 0f) && !(Material == null))
 			{
 				if (Material == null)
@@ -109,6 +117,7 @@ namespace ThreeEyedGames
 				{
 					RenderMode = DecalRenderMode.Invalid;
 				}
+
 				Material.enableInstancing = decaliciousRenderer.UseInstancing;
 				decaliciousRenderer.Add(this, LimitTo);
 			}

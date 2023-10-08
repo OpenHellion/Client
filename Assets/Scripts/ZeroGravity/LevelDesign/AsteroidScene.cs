@@ -10,14 +10,11 @@ namespace ZeroGravity.LevelDesign
 		[Tooltip("Unique ID for asteroid. ID will be populated automatially on save")]
 		public long GUID;
 
-		[Tooltip("Scene name used in game")]
-		public string GameName;
+		[Tooltip("Scene name used in game")] public string GameName;
 
-		[Tooltip("Scene mass in tons")]
-		public float Mass;
+		[Tooltip("Scene mass in tons")] public float Mass;
 
-		[Tooltip("Object radar signature")]
-		public float RadarSignature = 250000000f;
+		[Tooltip("Object radar signature")] public float RadarSignature = 250000000f;
 
 		private float _radius;
 
@@ -33,10 +30,7 @@ namespace ZeroGravity.LevelDesign
 
 		private void Awake()
 		{
-			if (Client.IsGameBuild)
-			{
-				gameObject.SetActive(false);
-			}
+			gameObject.SetActive(false);
 		}
 
 		public float GetMass()
@@ -47,6 +41,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				triggerVolume += sceneTriggerRoom.Volume;
 			}
+
 			float objectVolume = 0f;
 			if (ExteriorObject != null)
 			{
@@ -57,19 +52,24 @@ namespace ZeroGravity.LevelDesign
 					ExteriorObject = null;
 				}
 			}
+
 			if (objectVolume <= float.Epsilon || objectVolume < triggerVolume)
 			{
-				SceneColliderShipCollision[] componentsInChildren2 = gameObject.GetComponentsInChildren<SceneColliderShipCollision>();
+				SceneColliderShipCollision[] componentsInChildren2 =
+					gameObject.GetComponentsInChildren<SceneColliderShipCollision>();
 				foreach (SceneColliderShipCollision sceneColliderShipCollision in componentsInChildren2)
 				{
 					objectVolume += SceneHelper.VolumeOfGameObject(sceneColliderShipCollision.gameObject);
 				}
 			}
+
 			float num3 = (objectVolume - triggerVolume) * RelativeDensity;
 			if (num3 <= 0f)
 			{
-				throw new Exception("Error calculating structure mass (ExteriorObject field invalid OR room triggers summary volume too big OR ship colliders invalid)");
+				throw new Exception(
+					"Error calculating structure mass (ExteriorObject field invalid OR room triggers summary volume too big OR ship colliders invalid)");
 			}
+
 			return num3;
 		}
 	}

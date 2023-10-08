@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion;
 using OpenHellion.Net;
 using OpenHellion.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -34,8 +36,7 @@ namespace ZeroGravity.UI
 
 		public Button ShipCrewButton;
 
-		[Space(20f)]
-		public Text PlayerName;
+		[Space(20f)] public Text PlayerName;
 
 		public RawImage PlayerImage;
 
@@ -53,7 +54,7 @@ namespace ZeroGravity.UI
 
 		public GameObject CrewMemberPref;
 
-		private List<CrewMembersUI> m_crewMembersList = new List<CrewMembersUI>();
+		private List<CrewMembersUI> _crewMembersList = new List<CrewMembersUI>();
 
 		public GameObject CrewMemberPanel;
 
@@ -65,9 +66,10 @@ namespace ZeroGravity.UI
 
 		public GameObject InviteList;
 
-		public Dictionary<string, InvitePlayerToPod> AvailablePlayersForInvite = new Dictionary<string, InvitePlayerToPod>();
+		public Dictionary<string, InvitePlayerToPod> AvailablePlayersForInvite =
+			new Dictionary<string, InvitePlayerToPod>();
 
-		private AuthorizedPerson m_selectedCrewman;
+		private AuthorizedPerson _selectedCrewman;
 
 		public GameObject SelfDestructBox;
 
@@ -87,37 +89,18 @@ namespace ZeroGravity.UI
 
 		public Texture DefaultEmblemTexture;
 
+		[FormerlySerializedAs("_worldState")] [SerializeField] private World _world;
+
 		private void Start()
 		{
 			UpdateUI();
-			ClaimButton.onClick.AddListener(delegate
-			{
-				ClaimSecurityTerminal();
-			});
-			ResignButton.onClick.AddListener(delegate
-			{
-				Resign();
-			});
-			ChangeNameButton.onClick.AddListener(delegate
-			{
-				ChangeShipName();
-			});
-			ChangeEmblemButton.onClick.AddListener(delegate
-			{
-				ShowEmblemPanel(status: true);
-			});
-			InviteButton.onClick.AddListener(delegate
-			{
-				GetPlayerList();
-			});
-			ShipCrewButton.onClick.AddListener(delegate
-			{
-				ShowShipCrew(status: true);
-			});
-			SelfDestructButton.onClick.AddListener(delegate
-			{
-				SelfDestructAction();
-			});
+			ClaimButton.onClick.AddListener(delegate { ClaimSecurityTerminal(); });
+			ResignButton.onClick.AddListener(delegate { Resign(); });
+			ChangeNameButton.onClick.AddListener(delegate { ChangeShipName(); });
+			ChangeEmblemButton.onClick.AddListener(delegate { ShowEmblemPanel(status: true); });
+			InviteButton.onClick.AddListener(delegate { GetPlayerList(); });
+			ShipCrewButton.onClick.AddListener(delegate { ShowShipCrew(status: true); });
+			SelfDestructButton.onClick.AddListener(delegate { SelfDestructAction(); });
 		}
 
 		private void OnDestroy()
@@ -138,6 +121,7 @@ namespace ZeroGravity.UI
 				{
 					CancelChangeShipName();
 				}
+
 				if (Keyboard.current.enterKey.wasPressedThisFrame)
 				{
 					ChangeCustomShipName();
@@ -147,7 +131,8 @@ namespace ZeroGravity.UI
 
 		public void SetSecurityStatus()
 		{
-			AuthorizedPerson commandingOfficer = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.CommandingOfficer);
+			AuthorizedPerson commandingOfficer = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) =>
+				m.Rank == AuthorizedPersonRank.CommandingOfficer);
 			FreeTerminal.SetActive(commandingOfficer == null);
 			RegistredTerminal.SetActive(commandingOfficer != null);
 
@@ -163,11 +148,17 @@ namespace ZeroGravity.UI
 				PlayerImage.texture = Player.GetAvatar(commandingOfficer.PlayerId);
 				if (!SecuritySystem.ParentShip.SelfDestructTimer.HasValue)
 				{
-					ResignButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) != AuthorizedPersonRank.None);
-					InviteButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) == AuthorizedPersonRank.CommandingOfficer);
-					ChangeNameButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) == AuthorizedPersonRank.CommandingOfficer);
-					ChangeEmblemButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) == AuthorizedPersonRank.CommandingOfficer && SecuritySystem.ParentShip.Emblems != null);
-					ShipCrewButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) != AuthorizedPersonRank.None);
+					ResignButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) !=
+					                                  AuthorizedPersonRank.None);
+					InviteButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) ==
+					                                  AuthorizedPersonRank.CommandingOfficer);
+					ChangeNameButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) ==
+					                                      AuthorizedPersonRank.CommandingOfficer);
+					ChangeEmblemButton.gameObject.SetActive(
+						SecuritySystem.GetPlayerRank(MyPlayer.Instance) == AuthorizedPersonRank.CommandingOfficer &&
+						SecuritySystem.ParentShip.Emblems != null);
+					ShipCrewButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) !=
+					                                    AuthorizedPersonRank.None);
 				}
 				else
 				{
@@ -178,9 +169,14 @@ namespace ZeroGravity.UI
 					ShipCrewButton.gameObject.SetActive(false);
 				}
 
-				SelfDestructState.text = ((!SecuritySystem.ParentShip.SelfDestructTimer.HasValue) ? Localization.Activate.ToUpper() : Localization.Cancel.ToUpper()) + " " + Localization.SelfDestruct.ToUpper();
+				SelfDestructState.text =
+					((!SecuritySystem.ParentShip.SelfDestructTimer.HasValue)
+						? Localization.Activate.ToUpper()
+						: Localization.Cancel.ToUpper()) + " " + Localization.SelfDestruct.ToUpper();
 			}
-			SelfDestructButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) == AuthorizedPersonRank.CommandingOfficer);
+
+			SelfDestructButton.gameObject.SetActive(SecuritySystem.GetPlayerRank(MyPlayer.Instance) ==
+			                                        AuthorizedPersonRank.CommandingOfficer);
 			RefreshSelfDestructTimer();
 		}
 
@@ -205,10 +201,12 @@ namespace ZeroGravity.UI
 			{
 				CustomShipName.text = SecuritySystem.ParentShip.VesselData.VesselName.ToUpper();
 			}
+
 			if (SecuritySystem.ParentShip.VesselData.VesselRegistration != null)
 			{
 				DefaultShipName.text = SecuritySystem.ParentShip.VesselData.VesselRegistration.ToUpper();
 			}
+
 			UpdateShipNameTags();
 		}
 
@@ -217,18 +215,19 @@ namespace ZeroGravity.UI
 			EnterCustomNamePopUp.SetActive(value: true);
 			CustomShipNameInputField.text = CustomShipName.text;
 			CustomShipNameInputField.Select();
-			Client.Instance.CanvasManager.IsInputFieldIsActive = true;
+			_world.InGameGUI.IsInputFieldIsActive = true;
 		}
 
 		public void CancelChangeShipName()
 		{
-			Client.Instance.CanvasManager.IsInputFieldIsActive = false;
+			_world.InGameGUI.IsInputFieldIsActive = false;
 			EnterCustomNamePopUp.SetActive(value: false);
 		}
 
 		public void ChangeEmblem(string id)
 		{
-			SecuritySystem.ParentShip.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, null, null, id);
+			SecuritySystem.ParentShip.ChangeStats(null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, id);
 			ShowEmblemPanel(status: false);
 		}
 
@@ -244,8 +243,9 @@ namespace ZeroGravity.UI
 			{
 				CustomShipName.text = text;
 			}
+
 			SetShipName();
-			Client.Instance.CanvasManager.IsInputFieldIsActive = false;
+			_world.InGameGUI.IsInputFieldIsActive = false;
 			EnterCustomNamePopUp.SetActive(value: false);
 		}
 
@@ -266,28 +266,28 @@ namespace ZeroGravity.UI
 
 		public void UpdateSecurityList()
 		{
-			foreach (CrewMembersUI crewMembers in m_crewMembersList)
+			foreach (CrewMembersUI crewMembers in _crewMembersList)
 			{
 				Destroy(crewMembers.gameObject);
 			}
-			m_crewMembersList.Clear();
-			AuthorizedPerson ourPerson = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == MyPlayer.Instance.PlayerId);
-			foreach (AuthorizedPerson crewman in SecuritySystem.AuthorizedPlayers.FindAll((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.Crewman))
+
+			_crewMembersList.Clear();
+			AuthorizedPerson ourPerson =
+				SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == MyPlayer.Instance.PlayerId);
+			foreach (AuthorizedPerson crewman in SecuritySystem.AuthorizedPlayers.FindAll((AuthorizedPerson m) =>
+				         m.Rank == AuthorizedPersonRank.Crewman))
 			{
 				GameObject gameObject = Instantiate(CrewMemberPref, CrewMemberPref.transform.parent);
 				gameObject.SetActive(value: true);
 				CrewMembersUI component = gameObject.GetComponent<CrewMembersUI>();
 				component.Player = crewman;
-				m_crewMembersList.Add(component);
+				_crewMembersList.Add(component);
 				component.PlayerNameText.text = crewman.Name;
 				component.Avatar.texture = Player.GetAvatar(crewman.PlayerId);
 				if (ourPerson != null && ourPerson.Rank == AuthorizedPersonRank.CommandingOfficer)
 				{
 					component.GetComponent<Button>().interactable = true;
-					component.GetComponent<Button>().onClick.AddListener(delegate
-					{
-						CrewMemberActions(crewman);
-					});
+					component.GetComponent<Button>().onClick.AddListener(delegate { CrewMemberActions(crewman); });
 				}
 				else
 				{
@@ -302,12 +302,12 @@ namespace ZeroGravity.UI
 			CrewMemberPanel.SetActive(value: true);
 			CrewMemberPanel.GetComponentInChildren<CrewMembersUI>().Avatar.texture = Player.GetAvatar(crewman.PlayerId);
 			CrewMemberPanel.GetComponentInChildren<CrewMembersUI>().PlayerNameText.text = crewman.Name;
-			m_selectedCrewman = crewman;
+			_selectedCrewman = crewman;
 		}
 
 		public void CloseCrewMemberPanel()
 		{
-			m_selectedCrewman = null;
+			_selectedCrewman = null;
 			CrewMemberPanel.Activate(value: false);
 			PromotePlayerBox.Activate(value: false);
 		}
@@ -327,23 +327,24 @@ namespace ZeroGravity.UI
 			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = SecuritySystem.ParentShip.GUID,
-				AddPlayerId = m_selectedCrewman.PlayerId,
+				AddPlayerId = _selectedCrewman.PlayerId,
 				AddPlayerRank = AuthorizedPersonRank.CommandingOfficer,
-				AddPlayerName = m_selectedCrewman.Name
+				AddPlayerName = _selectedCrewman.Name
 			});
 			CloseCrewMemberPanel();
 		}
 
 		public void RemoveCrewMember()
 		{
-			RemovePlayer(m_selectedCrewman);
+			RemovePlayer(_selectedCrewman);
 			CloseCrewMemberPanel();
 		}
 
 		public void ClaimSecurityTerminal()
 		{
 			// Check if nobody owns the terminal, or if we are the owner.
-			AuthorizedPerson commandingOfficer = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.CommandingOfficer);
+			AuthorizedPerson commandingOfficer = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) =>
+				m.Rank == AuthorizedPersonRank.CommandingOfficer);
 			if (commandingOfficer == null || commandingOfficer.PlayerId == MyPlayer.Instance.PlayerId)
 			{
 				NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
@@ -360,8 +361,11 @@ namespace ZeroGravity.UI
 
 		public void Resign()
 		{
-			AuthorizedPerson ourPerson = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == MyPlayer.Instance.PlayerId);
-			if (ourPerson.Rank == AuthorizedPersonRank.CommandingOfficer && SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.Crewman) != null)
+			AuthorizedPerson ourPerson =
+				SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == MyPlayer.Instance.PlayerId);
+			if (ourPerson.Rank == AuthorizedPersonRank.CommandingOfficer &&
+			    SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.Crewman) !=
+			    null)
 			{
 				ResignAlertBox.SetActive(value: true);
 			}
@@ -378,9 +382,11 @@ namespace ZeroGravity.UI
 
 		public void ConfirmCommanderResign()
 		{
-			AuthorizedPerson ourPerson = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == MyPlayer.Instance.PlayerId);
+			AuthorizedPerson ourPerson =
+				SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == MyPlayer.Instance.PlayerId);
 			SecuritySystem.RemovePerson(ourPerson);
-			AuthorizedPerson crewman = SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.Crewman);
+			AuthorizedPerson crewman =
+				SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.Crewman);
 			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = SecuritySystem.ParentShip.GUID,
@@ -402,7 +408,9 @@ namespace ZeroGravity.UI
 				{
 					continue;
 				}
-				if (SecuritySystem.AuthorizedPlayers.FirstOrDefault((AuthorizedPerson m) => m.PlayerId == pl.PlayerId) == null)
+
+				if (SecuritySystem.AuthorizedPlayers.FirstOrDefault((AuthorizedPerson m) =>
+					    m.PlayerId == pl.PlayerId) == null)
 				{
 					GameObject gameObject = Instantiate(PlayerToInvitePref, PlayerToInvitePref.transform.parent);
 					gameObject.SetActive(value: true);
@@ -418,10 +426,8 @@ namespace ZeroGravity.UI
 						component.IsFriend.SetActive(value: true);
 						component.Avatar.gameObject.SetActive(value: false);
 					}
-					component.InvitePlayerButton.onClick.AddListener(delegate
-					{
-						AddToCrew(pl);
-					});
+
+					component.InvitePlayerButton.onClick.AddListener(delegate { AddToCrew(pl); });
 					AvailablePlayersForInvite.Add(pl.PlayerId, component);
 				}
 			}
@@ -466,10 +472,13 @@ namespace ZeroGravity.UI
 				SelfDestructWarning.SetActive(value: true);
 				SelfDestructBox.SetActive(value: false);
 			}
+
 			RefreshSelfDestructTimer();
 			Text selfDestructState = SelfDestructState;
 			float? selfDestructTimer2 = SecuritySystem.ParentShip.SelfDestructTimer;
-			selfDestructState.text = ((!selfDestructTimer2.HasValue) ? Localization.Activate.ToUpper() : Localization.Cancel.ToUpper()) + " " + Localization.SelfDestruct.ToUpper();
+			selfDestructState.text =
+				((!selfDestructTimer2.HasValue) ? Localization.Activate.ToUpper() : Localization.Cancel.ToUpper()) +
+				" " + Localization.SelfDestruct.ToUpper();
 			SetSecurityStatus();
 		}
 
@@ -495,6 +504,7 @@ namespace ZeroGravity.UI
 			{
 				Destroy(item.Value.gameObject);
 			}
+
 			AvailablePlayersForInvite.Clear();
 		}
 
@@ -502,7 +512,7 @@ namespace ZeroGravity.UI
 		{
 			if (toggle)
 			{
-				Client.Instance.CanvasManager.QuickTipHolder.Activate(value: false);
+				_world.InGameGUI.QuickTipHolder.Activate(value: false);
 				UpdateUI();
 				SelfDestructBox.Activate(value: false);
 				InviteList.Activate(value: false);
@@ -512,7 +522,7 @@ namespace ZeroGravity.UI
 				ShowEmblemPanel(status: false);
 				CloseCrewMemberPanel();
 				RefreshSelfDestructTimer();
-				Client.Instance.CanvasManager.IsInputFieldIsActive = false;
+				_world.InGameGUI.IsInputFieldIsActive = false;
 				UpdateEmblems();
 				gameObject.Activate(value: true);
 			}
@@ -535,11 +545,13 @@ namespace ZeroGravity.UI
 
 		public void UpdateEmblems()
 		{
-			EmblemObjectUI[] componentsInChildren = EmblemParent.GetComponentsInChildren<EmblemObjectUI>(includeInactive: true);
+			EmblemObjectUI[] componentsInChildren =
+				EmblemParent.GetComponentsInChildren<EmblemObjectUI>(includeInactive: true);
 			foreach (EmblemObjectUI emblemObjectUI in componentsInChildren)
 			{
 				DestroyImmediate(emblemObjectUI.gameObject);
 			}
+
 			GameObject gameObject = Instantiate(EmblemObject, EmblemParent);
 			gameObject.transform.localScale = Vector3.one;
 			EmblemObjectUI component = gameObject.GetComponent<EmblemObjectUI>();
@@ -547,7 +559,8 @@ namespace ZeroGravity.UI
 			component.EmblemId = string.Empty;
 			component.Texture = null;
 			component.Image.texture = DefaultEmblemTexture;
-			component.IsSelected.SetActive(component.EmblemId == SecuritySystem.ParentShip.Emblems.FirstOrDefault().EmblemId);
+			component.IsSelected.SetActive(component.EmblemId ==
+			                               SecuritySystem.ParentShip.Emblems.FirstOrDefault().EmblemId);
 			foreach (Texture2D value in SceneVesselEmblem.Textures.Values)
 			{
 				GameObject gameObject2 = Instantiate(EmblemObject, EmblemParent);
@@ -557,7 +570,8 @@ namespace ZeroGravity.UI
 				component2.EmblemId = value.name;
 				component2.Texture = value;
 				component2.Image.texture = component2.Texture;
-				component2.IsSelected.SetActive(component2.EmblemId == SecuritySystem.ParentShip.Emblems.FirstOrDefault().EmblemId);
+				component2.IsSelected.SetActive(component2.EmblemId ==
+				                                SecuritySystem.ParentShip.Emblems.FirstOrDefault().EmblemId);
 			}
 		}
 

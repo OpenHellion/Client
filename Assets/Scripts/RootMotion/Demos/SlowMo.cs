@@ -4,17 +4,13 @@ namespace RootMotion.Demos
 {
 	public class SlowMo : MonoBehaviour
 	{
-		[SerializeField]
-		private KeyCode[] keyCodes;
+		[SerializeField] private KeyCode[] keyCodes;
 
-		[SerializeField]
-		private bool mouse0;
+		[SerializeField] private bool mouse0;
 
-		[SerializeField]
-		private bool mouse1;
+		[SerializeField] private bool mouse1;
 
-		[SerializeField]
-		private float slowMoTimeScale = 0.3f;
+		[SerializeField] private float slowMoTimeScale = 0.3f;
 
 		private void Update()
 		{
@@ -27,10 +23,12 @@ namespace RootMotion.Demos
 			{
 				return true;
 			}
+
 			if (mouse1 && Input.GetMouseButton(1))
 			{
 				return true;
 			}
+
 			for (int i = 0; i < keyCodes.Length; i++)
 			{
 				if (Input.GetKey(keyCodes[i]))
@@ -38,6 +36,7 @@ namespace RootMotion.Demos
 					return true;
 				}
 			}
+
 			return false;
 		}
 	}

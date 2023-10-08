@@ -7,8 +7,7 @@ namespace ZeroGravity.ShipComponents
 {
 	public class VesselBaseSystem : SubSystem, IPowerConsumer
 	{
-		[SerializeField]
-		private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
+		[SerializeField] private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
 		{
 			new ResourceRequirement
 			{
@@ -28,7 +27,8 @@ namespace ZeroGravity.ShipComponents
 
 		public override SystemAuxData GetAuxData()
 		{
-			if (ResourceRequirements.Length != 1 || ResourceRequirements.Count((ResourceRequirement m) => m.ResourceType == DistributionSystemType.Power) != 1)
+			if (ResourceRequirements.Length != 1 || ResourceRequirements.Count((ResourceRequirement m) =>
+				    m.ResourceType == DistributionSystemType.Power) != 1)
 			{
 				throw new Exception("Invalid ResourceRequirements");
 			}

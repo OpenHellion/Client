@@ -61,7 +61,8 @@ namespace ZeroGravity.Network
 			OxygenSupply = 5
 		}
 
-		public Dictionary<SoundEvents, SoundEventParams> SoundEventData = new Dictionary<SoundEvents, SoundEventParams>();
+		public Dictionary<SoundEvents, SoundEventParams> SoundEventData =
+			new Dictionary<SoundEvents, SoundEventParams>();
 
 		public void AddCharacterSoundData(SoundEvents eventID, SoundEventParams param)
 		{

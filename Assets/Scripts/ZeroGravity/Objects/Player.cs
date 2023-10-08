@@ -16,22 +16,13 @@ namespace ZeroGravity.Objects
 
 		public virtual bool IsLockedToTrigger
 		{
-			get
-			{
-				return LockedToTrigger != null;
-			}
+			get { return LockedToTrigger != null; }
 		}
 
 		public virtual BaseSceneTrigger LockedToTrigger
 		{
-			get
-			{
-				return _LockedToTrigger;
-			}
-			set
-			{
-				_LockedToTrigger = value;
-			}
+			get { return _LockedToTrigger; }
+			set { _LockedToTrigger = value; }
 		}
 
 		public bool IsUsingItemInHands { get; set; }
@@ -44,6 +35,7 @@ namespace ZeroGravity.Objects
 				{
 					return Inventory.ItemInHands;
 				}
+
 				return null;
 			}
 		}
@@ -56,20 +48,19 @@ namespace ZeroGravity.Objects
 				{
 					return (this as MyPlayer).animHelper;
 				}
+
 				if (this is OtherPlayer)
 				{
 					return (this as OtherPlayer).tpsController.animHelper;
 				}
+
 				return null;
 			}
 		}
 
 		public override SpaceObject Parent
 		{
-			get
-			{
-				return base.Parent;
-			}
+			get { return base.Parent; }
 			set
 			{
 				base.Parent = value;

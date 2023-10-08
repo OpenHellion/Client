@@ -21,7 +21,8 @@ namespace RootMotion.FinalIK
 			[Tooltip("Offset vector for the associated effector when doing recoil.")]
 			public Vector3 offset;
 
-			[Tooltip("When firing before the last recoil has faded, how much of the current recoil offset will be maintained?")]
+			[Tooltip(
+				"When firing before the last recoil has faded, how much of the current recoil offset will be maintained?")]
 			[Range(0f, 1f)]
 			public float additivity = 1f;
 
@@ -43,7 +44,8 @@ namespace RootMotion.FinalIK
 				}
 			}
 
-			public void Apply(IKSolverFullBodyBiped solver, Quaternion rotation, float masterWeight, float length, float timeLeft)
+			public void Apply(IKSolverFullBodyBiped solver, Quaternion rotation, float masterWeight, float length,
+				float timeLeft)
 			{
 				additiveOffset = Vector3.Lerp(Vector3.zero, additiveOffset, timeLeft / length);
 				lastOffset = rotation * (offset * masterWeight) + rotation * additiveOffset;
@@ -86,8 +88,7 @@ namespace RootMotion.FinalIK
 		[Tooltip("Time of blending in another recoil when doing automatic fire.")]
 		public float blendTime;
 
-		[Space(10f)]
-		[Tooltip("FBBIK effector position offsets for the recoil (in aiming direction space).")]
+		[Space(10f)] [Tooltip("FBBIK effector position offsets for the recoil (in aiming direction space).")]
 		public RecoilOffset[] offsets;
 
 		private float magnitudeMlp = 1f;
@@ -116,6 +117,7 @@ namespace RootMotion.FinalIK
 				{
 					return ik.solver.rightHandEffector;
 				}
+
 				return ik.solver.leftHandEffector;
 			}
 		}
@@ -128,24 +130,19 @@ namespace RootMotion.FinalIK
 				{
 					return ik.solver.leftHandEffector;
 				}
+
 				return ik.solver.rightHandEffector;
 			}
 		}
 
 		private Transform primaryHand
 		{
-			get
-			{
-				return primaryHandEffector.bone;
-			}
+			get { return primaryHandEffector.bone; }
 		}
 
 		private Transform secondaryHand
 		{
-			get
-			{
-				return secondaryHandEffector.bone;
-			}
+			get { return secondaryHandEffector.bone; }
 		}
 
 		public void Fire(float magnitude)
@@ -158,6 +155,7 @@ namespace RootMotion.FinalIK
 			{
 				recoilOffset.Start();
 			}
+
 			if (Time.time < endTime)
 			{
 				blendWeight = 0f;
@@ -166,6 +164,7 @@ namespace RootMotion.FinalIK
 			{
 				blendWeight = 1f;
 			}
+
 			Keyframe[] keys = recoilWeight.keys;
 			length = keys[keys.Length - 1].time;
 			endTime = Time.time + length;
@@ -179,8 +178,10 @@ namespace RootMotion.FinalIK
 				{
 					initiated = true;
 					IKSolverFullBodyBiped solver = ik.solver;
-					solver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPostUpdate, new IKSolver.UpdateDelegate(AfterFBBIK));
+					solver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPostUpdate,
+						new IKSolver.UpdateDelegate(AfterFBBIK));
 				}
+
 				blendTime = Mathf.Max(blendTime, 0f);
 				if (blendTime > 0f)
 				{
@@ -190,16 +191,22 @@ namespace RootMotion.FinalIK
 				{
 					blendWeight = 1f;
 				}
+
 				float b = recoilWeight.Evaluate(length - (endTime - Time.time)) * magnitudeMlp;
 				w = Mathf.Lerp(w, b, blendWeight);
-				Quaternion quaternion = ((!(aimIK != null)) ? ik.references.root.rotation : Quaternion.LookRotation(aimIK.solver.IKPosition - aimIK.solver.transform.position, ik.references.root.up));
+				Quaternion quaternion = ((!(aimIK != null))
+					? ik.references.root.rotation
+					: Quaternion.LookRotation(aimIK.solver.IKPosition - aimIK.solver.transform.position,
+						ik.references.root.up));
 				quaternion = randomRotation * quaternion;
 				RecoilOffset[] array = offsets;
 				foreach (RecoilOffset recoilOffset in array)
 				{
 					recoilOffset.Apply(ik.solver, quaternion, w, length, endTime - Time.time);
 				}
-				Quaternion quaternion2 = Quaternion.Lerp(Quaternion.identity, Quaternion.Euler(randomRotation * primaryHand.rotation * handRotationOffset), w);
+
+				Quaternion quaternion2 = Quaternion.Lerp(Quaternion.identity,
+					Quaternion.Euler(randomRotation * primaryHand.rotation * handRotationOffset), w);
 				handRotation = quaternion2 * primaryHand.rotation;
 				if (twoHanded)
 				{
@@ -207,7 +214,8 @@ namespace RootMotion.FinalIK
 					secondaryHandRelativeRotation = Quaternion.Inverse(primaryHand.rotation) * secondaryHand.rotation;
 					Vector3 vector2 = primaryHand.position + primaryHandEffector.positionOffset;
 					Vector3 vector3 = vector2 + handRotation * vector;
-					secondaryHandEffector.positionOffset += vector3 - (secondaryHand.position + secondaryHandEffector.positionOffset);
+					secondaryHandEffector.positionOffset +=
+						vector3 - (secondaryHand.position + secondaryHandEffector.positionOffset);
 				}
 			}
 		}
@@ -230,7 +238,9 @@ namespace RootMotion.FinalIK
 			if (ik != null && initiated)
 			{
 				IKSolverFullBodyBiped solver = ik.solver;
-				solver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(solver.OnPostUpdate, new IKSolver.UpdateDelegate(AfterFBBIK));
+				solver.OnPostUpdate =
+					(IKSolver.UpdateDelegate)Delegate.Remove(solver.OnPostUpdate,
+						new IKSolver.UpdateDelegate(AfterFBBIK));
 			}
 		}
 	}

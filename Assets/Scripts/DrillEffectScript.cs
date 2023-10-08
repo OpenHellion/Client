@@ -8,8 +8,7 @@ public class DrillEffectScript : MonoBehaviour
 
 	public ParticleSystem Dust;
 
-	[HideInInspector]
-	public bool isEffectOn = true;
+	[HideInInspector] public bool isEffectOn = true;
 
 	private void Awake()
 	{
@@ -22,6 +21,7 @@ public class DrillEffectScript : MonoBehaviour
 		{
 			isActive = !isEffectOn;
 		}
+
 		if (isActive.GetValueOrDefault() != isEffectOn || !isActive.HasValue)
 		{
 			if (isActive.Value)
@@ -36,6 +36,7 @@ public class DrillEffectScript : MonoBehaviour
 				Sparks.Stop();
 				Dust.Stop();
 			}
+
 			isEffectOn = isActive.Value;
 		}
 	}

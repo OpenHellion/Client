@@ -21,14 +21,8 @@ namespace ZeroGravity.Math
 
 		public double this[int iRow, int iCol]
 		{
-			get
-			{
-				return mat[iRow, iCol];
-			}
-			set
-			{
-				mat[iRow, iCol] = value;
-			}
+			get { return mat[iRow, iCol]; }
+			set { mat[iRow, iCol] = value; }
 		}
 
 		public Matrix(int iRows, int iCols)
@@ -57,6 +51,7 @@ namespace ZeroGravity.Math
 			{
 				matrix[i, 0] = mat[i, k];
 			}
+
 			return matrix;
 		}
 
@@ -74,6 +69,7 @@ namespace ZeroGravity.Math
 			{
 				throw new MException("The matrix is not square!");
 			}
+
 			L = IdentityMatrix(rows, cols);
 			U = Duplicate();
 			pi = new int[rows];
@@ -81,6 +77,7 @@ namespace ZeroGravity.Math
 			{
 				pi[i] = i;
 			}
+
 			double num = 0.0;
 			int num2 = 0;
 			int num3 = 0;
@@ -95,10 +92,12 @@ namespace ZeroGravity.Math
 						num2 = k;
 					}
 				}
+
 				if (num == 0.0)
 				{
 					throw new MException("The matrix is singular!");
 				}
+
 				num3 = pi[j];
 				pi[j] = pi[num2];
 				pi[num2] = num3;
@@ -108,16 +107,19 @@ namespace ZeroGravity.Math
 					L[j, l] = L[num2, l];
 					L[num2, l] = value;
 				}
+
 				if (j != num2)
 				{
 					detOfP *= -1.0;
 				}
+
 				for (int m = 0; m < cols; m++)
 				{
 					double value = U[j, m];
 					U[j, m] = U[num2, m];
 					U[num2, m] = value;
 				}
+
 				for (int n = j + 1; n < rows; n++)
 				{
 					L[n, j] = U[n, j] / U[j, j];
@@ -135,19 +137,23 @@ namespace ZeroGravity.Math
 			{
 				throw new MException("The matrix is not square!");
 			}
+
 			if (rows != v.rows)
 			{
 				throw new MException("Wrong number of results in solution vector!");
 			}
+
 			if (L == null)
 			{
 				MakeLU();
 			}
+
 			Matrix matrix = new Matrix(rows, 1);
 			for (int i = 0; i < rows; i++)
 			{
 				matrix[i, 0] = v[pi[i], 0];
 			}
+
 			Matrix b = SubsForth(L, matrix);
 			return SubsBack(U, b);
 		}
@@ -158,6 +164,7 @@ namespace ZeroGravity.Math
 			{
 				MakeLU();
 			}
+
 			Matrix matrix = new Matrix(rows, cols);
 			for (int i = 0; i < rows; i++)
 			{
@@ -166,6 +173,7 @@ namespace ZeroGravity.Math
 				Matrix v = SolveWith(matrix2);
 				matrix.SetCol(v, i);
 			}
+
 			return matrix;
 		}
 
@@ -175,11 +183,13 @@ namespace ZeroGravity.Math
 			{
 				MakeLU();
 			}
+
 			double num = detOfP;
 			for (int i = 0; i < rows; i++)
 			{
 				num *= U[i, i];
 			}
+
 			return num;
 		}
 
@@ -189,11 +199,13 @@ namespace ZeroGravity.Math
 			{
 				MakeLU();
 			}
+
 			Matrix matrix = ZeroMatrix(rows, cols);
 			for (int i = 0; i < rows; i++)
 			{
 				matrix[pi[i], i] = 1.0;
 			}
+
 			return matrix;
 		}
 
@@ -207,6 +219,7 @@ namespace ZeroGravity.Math
 					matrix[i, j] = mat[i, j];
 				}
 			}
+
 			return matrix;
 		}
 
@@ -216,6 +229,7 @@ namespace ZeroGravity.Math
 			{
 				A.MakeLU();
 			}
+
 			int num = A.rows;
 			Matrix matrix = new Matrix(num, 1);
 			for (int i = 0; i < num; i++)
@@ -225,8 +239,10 @@ namespace ZeroGravity.Math
 				{
 					matrix[i, 0] -= A[i, j] * matrix[j, 0];
 				}
+
 				matrix[i, 0] /= A[i, i];
 			}
+
 			return matrix;
 		}
 
@@ -236,6 +252,7 @@ namespace ZeroGravity.Math
 			{
 				A.MakeLU();
 			}
+
 			int num = A.rows;
 			Matrix matrix = new Matrix(num, 1);
 			for (int num2 = num - 1; num2 > -1; num2--)
@@ -245,8 +262,10 @@ namespace ZeroGravity.Math
 				{
 					matrix[num2, 0] -= A[num2, num3] * matrix[num3, 0];
 				}
+
 				matrix[num2, 0] /= A[num2, num2];
 			}
+
 			return matrix;
 		}
 
@@ -260,6 +279,7 @@ namespace ZeroGravity.Math
 					matrix[i, j] = 0.0;
 				}
 			}
+
 			return matrix;
 		}
 
@@ -270,6 +290,7 @@ namespace ZeroGravity.Math
 			{
 				matrix[i, i] = 1.0;
 			}
+
 			return matrix;
 		}
 
@@ -284,6 +305,7 @@ namespace ZeroGravity.Math
 					matrix[i, j] = random.Next(-dispersion, dispersion);
 				}
 			}
+
 			return matrix;
 		}
 
@@ -303,6 +325,7 @@ namespace ZeroGravity.Math
 						matrix[i, j] = double.Parse(array2[j]);
 					}
 				}
+
 				return matrix;
 			}
 			catch (FormatException)
@@ -320,8 +343,10 @@ namespace ZeroGravity.Math
 				{
 					text = text + string.Format("{0,5:0.00}", mat[i, j]) + " ";
 				}
+
 				text += "\r\n";
 			}
+
 			return text;
 		}
 
@@ -335,6 +360,7 @@ namespace ZeroGravity.Math
 					matrix[j, i] = m[i, j];
 				}
 			}
+
 			return matrix;
 		}
 
@@ -344,14 +370,17 @@ namespace ZeroGravity.Math
 			{
 				return IdentityMatrix(m.rows, m.cols);
 			}
+
 			if (pow == 1)
 			{
 				return m.Duplicate();
 			}
+
 			if (pow == -1)
 			{
 				return m.Invert();
 			}
+
 			Matrix matrix;
 			if (pow < 0)
 			{
@@ -362,6 +391,7 @@ namespace ZeroGravity.Math
 			{
 				matrix = m.Duplicate();
 			}
+
 			Matrix result = IdentityMatrix(m.rows, m.cols);
 			while (pow != 0)
 			{
@@ -369,9 +399,11 @@ namespace ZeroGravity.Math
 				{
 					result *= matrix;
 				}
+
 				matrix *= matrix;
 				pow >>= 1;
 			}
+
 			return result;
 		}
 
@@ -386,6 +418,7 @@ namespace ZeroGravity.Math
 					{
 						C[i, j] += A[ya + i, xa + j];
 					}
+
 					if (xb + j < B.cols && yb + i < B.rows)
 					{
 						C[i, j] += B[yb + i, xb + j];
@@ -405,6 +438,7 @@ namespace ZeroGravity.Math
 					{
 						C[i, j] += A[ya + i, xa + j];
 					}
+
 					if (xb + j < B.cols && yb + i < B.rows)
 					{
 						C[i, j] -= B[yb + i, xb + j];
@@ -467,6 +501,7 @@ namespace ZeroGravity.Math
 			{
 				throw new MException("Wrong dimension of matrix!");
 			}
+
 			int num = System.Math.Max(System.Math.Max(A.rows, A.cols), System.Math.Max(B.rows, B.cols));
 			Matrix matrix;
 			if (num < 32)
@@ -482,8 +517,10 @@ namespace ZeroGravity.Math
 						}
 					}
 				}
+
 				return matrix;
 			}
+
 			int num2 = 1;
 			int num3 = 0;
 			while (num > num2)
@@ -491,6 +528,7 @@ namespace ZeroGravity.Math
 				num2 *= 2;
 				num3++;
 			}
+
 			int num4 = num2 / 2;
 			Matrix[,] array = new Matrix[num3, 9];
 			for (int l = 0; l < num3 - 4; l++)
@@ -501,6 +539,7 @@ namespace ZeroGravity.Math
 					array[l, m] = new Matrix(num5, num5);
 				}
 			}
+
 			SafeAplusBintoC(A, 0, 0, A, num4, num4, array[0, 0], num4);
 			SafeAplusBintoC(B, 0, 0, B, num4, num4, array[0, 1], num4);
 			StrassenMultiplyRun(array[0, 0], array[0, 1], array[0, 2], 1, array);
@@ -527,9 +566,11 @@ namespace ZeroGravity.Math
 			{
 				for (int num6 = 0; num6 < System.Math.Min(num4, matrix.cols); num6++)
 				{
-					matrix[n, num6] = array[0, 2][n, num6] + array[0, 5][n, num6] - array[0, 6][n, num6] + array[0, 8][n, num6];
+					matrix[n, num6] = array[0, 2][n, num6] + array[0, 5][n, num6] - array[0, 6][n, num6] +
+					                  array[0, 8][n, num6];
 				}
 			}
+
 			for (int num7 = 0; num7 < System.Math.Min(num4, matrix.rows); num7++)
 			{
 				for (int num8 = num4; num8 < System.Math.Min(2 * num4, matrix.cols); num8++)
@@ -537,6 +578,7 @@ namespace ZeroGravity.Math
 					matrix[num7, num8] = array[0, 4][num7, num8 - num4] + array[0, 6][num7, num8 - num4];
 				}
 			}
+
 			for (int num9 = num4; num9 < System.Math.Min(2 * num4, matrix.rows); num9++)
 			{
 				for (int num10 = 0; num10 < System.Math.Min(num4, matrix.cols); num10++)
@@ -544,13 +586,18 @@ namespace ZeroGravity.Math
 					matrix[num9, num10] = array[0, 3][num9 - num4, num10] + array[0, 5][num9 - num4, num10];
 				}
 			}
+
 			for (int num11 = num4; num11 < System.Math.Min(2 * num4, matrix.rows); num11++)
 			{
 				for (int num12 = num4; num12 < System.Math.Min(2 * num4, matrix.cols); num12++)
 				{
-					matrix[num11, num12] = array[0, 2][num11 - num4, num12 - num4] - array[0, 3][num11 - num4, num12 - num4] + array[0, 4][num11 - num4, num12 - num4] + array[0, 7][num11 - num4, num12 - num4];
+					matrix[num11, num12] = array[0, 2][num11 - num4, num12 - num4] -
+					                       array[0, 3][num11 - num4, num12 - num4] +
+					                       array[0, 4][num11 - num4, num12 - num4] +
+					                       array[0, 7][num11 - num4, num12 - num4];
 				}
 			}
+
 			return matrix;
 		}
 
@@ -571,8 +618,10 @@ namespace ZeroGravity.Math
 						}
 					}
 				}
+
 				return;
 			}
+
 			AplusBintoC(A, 0, 0, A, num2, num2, f[l, 0], num2);
 			AplusBintoC(B, 0, 0, B, num2, num2, f[l, 1], num2);
 			StrassenMultiplyRun(f[l, 0], f[l, 1], f[l, 2], l + 1, f);
@@ -601,6 +650,7 @@ namespace ZeroGravity.Math
 					C[m, n] = f[l, 2][m, n] + f[l, 5][m, n] - f[l, 6][m, n] + f[l, 8][m, n];
 				}
 			}
+
 			for (int num3 = 0; num3 < num2; num3++)
 			{
 				for (int num4 = num2; num4 < num; num4++)
@@ -608,6 +658,7 @@ namespace ZeroGravity.Math
 					C[num3, num4] = f[l, 4][num3, num4 - num2] + f[l, 6][num3, num4 - num2];
 				}
 			}
+
 			for (int num5 = num2; num5 < num; num5++)
 			{
 				for (int num6 = 0; num6 < num2; num6++)
@@ -615,11 +666,13 @@ namespace ZeroGravity.Math
 					C[num5, num6] = f[l, 3][num5 - num2, num6] + f[l, 5][num5 - num2, num6];
 				}
 			}
+
 			for (int num7 = num2; num7 < num; num7++)
 			{
 				for (int num8 = num2; num8 < num; num8++)
 				{
-					C[num7, num8] = f[l, 2][num7 - num2, num8 - num2] - f[l, 3][num7 - num2, num8 - num2] + f[l, 4][num7 - num2, num8 - num2] + f[l, 7][num7 - num2, num8 - num2];
+					C[num7, num8] = f[l, 2][num7 - num2, num8 - num2] - f[l, 3][num7 - num2, num8 - num2] +
+					                f[l, 4][num7 - num2, num8 - num2] + f[l, 7][num7 - num2, num8 - num2];
 				}
 			}
 		}
@@ -630,6 +683,7 @@ namespace ZeroGravity.Math
 			{
 				throw new MException("Wrong dimensions of matrix!");
 			}
+
 			Matrix matrix = ZeroMatrix(m1.rows, m2.cols);
 			for (int i = 0; i < matrix.rows; i++)
 			{
@@ -641,6 +695,7 @@ namespace ZeroGravity.Math
 					}
 				}
 			}
+
 			return matrix;
 		}
 
@@ -654,6 +709,7 @@ namespace ZeroGravity.Math
 					matrix[i, j] = m[i, j] * n;
 				}
 			}
+
 			return matrix;
 		}
 
@@ -663,6 +719,7 @@ namespace ZeroGravity.Math
 			{
 				throw new MException("Matrices must have the same dimensions!");
 			}
+
 			Matrix matrix = new Matrix(m1.rows, m1.cols);
 			for (int i = 0; i < matrix.rows; i++)
 			{
@@ -671,6 +728,7 @@ namespace ZeroGravity.Math
 					matrix[i, j] = m1[i, j] + m2[i, j];
 				}
 			}
+
 			return matrix;
 		}
 
@@ -680,6 +738,7 @@ namespace ZeroGravity.Math
 			{
 				matStr = matStr.Replace("  ", " ");
 			}
+
 			matStr = matStr.Replace(" \r\n", "\r\n");
 			matStr = matStr.Replace("\r\n ", "\r\n");
 			matStr = matStr.Replace("\r\n", "|");
@@ -687,6 +746,7 @@ namespace ZeroGravity.Math
 			{
 				matStr = matStr.Substring(0, matStr.Length - 1);
 			}
+
 			matStr = matStr.Replace("|", "\r\n");
 			return matStr.Trim();
 		}

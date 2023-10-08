@@ -4,8 +4,7 @@ namespace RootMotion.Demos
 {
 	public abstract class WeaponBase : MonoBehaviour
 	{
-		[Header("Recoil")]
-		public Vector3 recoilDirection = -Vector3.forward;
+		[Header("Recoil")] public Vector3 recoilDirection = -Vector3.forward;
 
 		public float recoilAngleVertical = 1f;
 

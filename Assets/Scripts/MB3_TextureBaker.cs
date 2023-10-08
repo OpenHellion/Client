@@ -20,47 +20,34 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 
 	public MB2_LogLevel LOG_LEVEL = MB2_LogLevel.info;
 
-	[SerializeField]
-	protected MB2_TextureBakeResults _textureBakeResults;
+	[SerializeField] protected MB2_TextureBakeResults _textureBakeResults;
 
-	[SerializeField]
-	protected int _atlasPadding = 1;
+	[SerializeField] protected int _atlasPadding = 1;
 
-	[SerializeField]
-	protected int _maxAtlasSize = 4096;
+	[SerializeField] protected int _maxAtlasSize = 4096;
 
-	[SerializeField]
-	protected bool _resizePowerOfTwoTextures;
+	[SerializeField] protected bool _resizePowerOfTwoTextures;
 
-	[SerializeField]
-	protected bool _fixOutOfBoundsUVs;
+	[SerializeField] protected bool _fixOutOfBoundsUVs;
 
-	[SerializeField]
-	protected int _maxTilingBakeSize = 1024;
+	[SerializeField] protected int _maxTilingBakeSize = 1024;
 
 	[SerializeField]
 	protected MB2_PackingAlgorithmEnum _packingAlgorithm = MB2_PackingAlgorithmEnum.MeshBakerTexturePacker;
 
-	[SerializeField]
-	protected bool _meshBakerTexturePackerForcePowerOfTwo = true;
+	[SerializeField] protected bool _meshBakerTexturePackerForcePowerOfTwo = true;
 
-	[SerializeField]
-	protected List<ShaderTextureProperty> _customShaderProperties = new List<ShaderTextureProperty>();
+	[SerializeField] protected List<ShaderTextureProperty> _customShaderProperties = new List<ShaderTextureProperty>();
 
-	[SerializeField]
-	protected List<string> _customShaderPropNames_Depricated = new List<string>();
+	[SerializeField] protected List<string> _customShaderPropNames_Depricated = new List<string>();
 
-	[SerializeField]
-	protected bool _doMultiMaterial;
+	[SerializeField] protected bool _doMultiMaterial;
 
-	[SerializeField]
-	protected Material _resultMaterial;
+	[SerializeField] protected Material _resultMaterial;
 
-	[SerializeField]
-	protected bool _considerNonTextureProperties = true;
+	[SerializeField] protected bool _considerNonTextureProperties = true;
 
-	[SerializeField]
-	protected bool _doSuggestTreatment = true;
+	[SerializeField] protected bool _doSuggestTreatment = true;
 
 	public MB_MultiMaterial[] resultMaterials = new MB_MultiMaterial[0];
 
@@ -74,170 +61,86 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 
 	public override MB2_TextureBakeResults textureBakeResults
 	{
-		get
-		{
-			return _textureBakeResults;
-		}
-		set
-		{
-			_textureBakeResults = value;
-		}
+		get { return _textureBakeResults; }
+		set { _textureBakeResults = value; }
 	}
 
 	public virtual int atlasPadding
 	{
-		get
-		{
-			return _atlasPadding;
-		}
-		set
-		{
-			_atlasPadding = value;
-		}
+		get { return _atlasPadding; }
+		set { _atlasPadding = value; }
 	}
 
 	public virtual int maxAtlasSize
 	{
-		get
-		{
-			return _maxAtlasSize;
-		}
-		set
-		{
-			_maxAtlasSize = value;
-		}
+		get { return _maxAtlasSize; }
+		set { _maxAtlasSize = value; }
 	}
 
 	public virtual bool resizePowerOfTwoTextures
 	{
-		get
-		{
-			return _resizePowerOfTwoTextures;
-		}
-		set
-		{
-			_resizePowerOfTwoTextures = value;
-		}
+		get { return _resizePowerOfTwoTextures; }
+		set { _resizePowerOfTwoTextures = value; }
 	}
 
 	public virtual bool fixOutOfBoundsUVs
 	{
-		get
-		{
-			return _fixOutOfBoundsUVs;
-		}
-		set
-		{
-			_fixOutOfBoundsUVs = value;
-		}
+		get { return _fixOutOfBoundsUVs; }
+		set { _fixOutOfBoundsUVs = value; }
 	}
 
 	public virtual int maxTilingBakeSize
 	{
-		get
-		{
-			return _maxTilingBakeSize;
-		}
-		set
-		{
-			_maxTilingBakeSize = value;
-		}
+		get { return _maxTilingBakeSize; }
+		set { _maxTilingBakeSize = value; }
 	}
 
 	public virtual MB2_PackingAlgorithmEnum packingAlgorithm
 	{
-		get
-		{
-			return _packingAlgorithm;
-		}
-		set
-		{
-			_packingAlgorithm = value;
-		}
+		get { return _packingAlgorithm; }
+		set { _packingAlgorithm = value; }
 	}
 
 	public bool meshBakerTexturePackerForcePowerOfTwo
 	{
-		get
-		{
-			return _meshBakerTexturePackerForcePowerOfTwo;
-		}
-		set
-		{
-			_meshBakerTexturePackerForcePowerOfTwo = value;
-		}
+		get { return _meshBakerTexturePackerForcePowerOfTwo; }
+		set { _meshBakerTexturePackerForcePowerOfTwo = value; }
 	}
 
 	public virtual List<ShaderTextureProperty> customShaderProperties
 	{
-		get
-		{
-			return _customShaderProperties;
-		}
-		set
-		{
-			_customShaderProperties = value;
-		}
+		get { return _customShaderProperties; }
+		set { _customShaderProperties = value; }
 	}
 
 	public virtual List<string> customShaderPropNames
 	{
-		get
-		{
-			return _customShaderPropNames_Depricated;
-		}
-		set
-		{
-			_customShaderPropNames_Depricated = value;
-		}
+		get { return _customShaderPropNames_Depricated; }
+		set { _customShaderPropNames_Depricated = value; }
 	}
 
 	public virtual bool doMultiMaterial
 	{
-		get
-		{
-			return _doMultiMaterial;
-		}
-		set
-		{
-			_doMultiMaterial = value;
-		}
+		get { return _doMultiMaterial; }
+		set { _doMultiMaterial = value; }
 	}
 
 	public virtual Material resultMaterial
 	{
-		get
-		{
-			return _resultMaterial;
-		}
-		set
-		{
-			_resultMaterial = value;
-		}
+		get { return _resultMaterial; }
+		set { _resultMaterial = value; }
 	}
 
 	public bool considerNonTextureProperties
 	{
-		get
-		{
-			return _considerNonTextureProperties;
-		}
-		set
-		{
-			_considerNonTextureProperties = value;
-		}
+		get { return _considerNonTextureProperties; }
+		set { _considerNonTextureProperties = value; }
 	}
 
 	public bool doSuggestTreatment
 	{
-		get
-		{
-			return _doSuggestTreatment;
-		}
-		set
-		{
-			_doSuggestTreatment = value;
-		}
+		get { return _doSuggestTreatment; }
+		set { _doSuggestTreatment = value; }
 	}
 
 	public override List<GameObject> GetObjectsToCombine()
@@ -246,6 +149,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 		{
 			objsToMesh = new List<GameObject>();
 		}
+
 		return objsToMesh;
 	}
 
@@ -254,14 +158,19 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 		return CreateAtlases(null);
 	}
 
-	public IEnumerator CreateAtlasesCoroutine(ProgressUpdateDelegate progressInfo, CreateAtlasesCoroutineResult coroutineResult, bool saveAtlasesAsAssets = false, MB2_EditorMethodsInterface editorMethods = null, float maxTimePerFrame = 0.01f)
+	public IEnumerator CreateAtlasesCoroutine(ProgressUpdateDelegate progressInfo,
+		CreateAtlasesCoroutineResult coroutineResult, bool saveAtlasesAsAssets = false,
+		MB2_EditorMethodsInterface editorMethods = null, float maxTimePerFrame = 0.01f)
 	{
 		MBVersionConcrete mbv = new MBVersionConcrete();
-		if (!MB3_TextureCombiner._RunCorutineWithoutPauseIsRunning && (mbv.GetMajorVersion() < 5 || (mbv.GetMajorVersion() == 5 && mbv.GetMinorVersion() < 3)))
+		if (!MB3_TextureCombiner._RunCorutineWithoutPauseIsRunning && (mbv.GetMajorVersion() < 5 ||
+		                                                               (mbv.GetMajorVersion() == 5 &&
+		                                                                mbv.GetMinorVersion() < 3)))
 		{
 			Debug.LogError("Running the texture combiner as a coroutine only works in Unity 5.3 and higher");
 			yield return null;
 		}
+
 		OnCombinedTexturesCoroutineAtlasesAndRects = null;
 		if (maxTimePerFrame <= 0f)
 		{
@@ -269,17 +178,20 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 			coroutineResult.isFinished = true;
 			yield break;
 		}
+
 		MB2_ValidationLevel vl = (Application.isPlaying ? MB2_ValidationLevel.quick : MB2_ValidationLevel.robust);
 		if (!MB3_MeshBakerRoot.DoCombinedValidate(this, MB_ObjsToCombineTypes.dontCare, null, vl))
 		{
 			coroutineResult.isFinished = true;
 			yield break;
 		}
+
 		if (_doMultiMaterial && !_ValidateResultMaterials())
 		{
 			coroutineResult.isFinished = true;
 			yield break;
 		}
+
 		if (!_doMultiMaterial)
 		{
 			if (_resultMaterial == null)
@@ -288,6 +200,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 				coroutineResult.isFinished = true;
 				yield break;
 			}
+
 			Shader shader = _resultMaterial.shader;
 			for (int j = 0; j < objsToMesh.Count; j++)
 			{
@@ -296,11 +209,13 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 				{
 					if (material != null && material.shader != shader)
 					{
-						Debug.LogWarning(string.Concat("Game object ", objsToMesh[j], " does not use shader ", shader, " it may not have the required textures. If not small solid color textures will be generated."));
+						Debug.LogWarning(string.Concat("Game object ", objsToMesh[j], " does not use shader ", shader,
+							" it may not have the required textures. If not small solid color textures will be generated."));
 					}
 				}
 			}
 		}
+
 		for (int l = 0; l < objsToMesh.Count; l++)
 		{
 			Material[] gOMaterials2 = MB_Utility.GetGOMaterials(objsToMesh[l]);
@@ -308,12 +223,14 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 			{
 				if (material2 == null)
 				{
-					Debug.LogError(string.Concat("Game object ", objsToMesh[l], " has a null material. Can't build atlases"));
+					Debug.LogError(string.Concat("Game object ", objsToMesh[l],
+						" has a null material. Can't build atlases"));
 					coroutineResult.isFinished = true;
 					yield break;
 				}
 			}
 		}
+
 		MB3_TextureCombiner combiner = new MB3_TextureCombiner
 		{
 			LOG_LEVEL = LOG_LEVEL,
@@ -333,11 +250,13 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 		{
 			numResults = resultMaterials.Length;
 		}
+
 		OnCombinedTexturesCoroutineAtlasesAndRects = new MB_AtlasesAndRects[numResults];
 		for (int n = 0; n < OnCombinedTexturesCoroutineAtlasesAndRects.Length; n++)
 		{
 			OnCombinedTexturesCoroutineAtlasesAndRects[n] = new MB_AtlasesAndRects();
 		}
+
 		for (int i = 0; i < OnCombinedTexturesCoroutineAtlasesAndRects.Length; i++)
 		{
 			Material resMatToPass2 = null;
@@ -351,9 +270,14 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 			{
 				resMatToPass2 = _resultMaterial;
 			}
-			Debug.Log(string.Format("Creating atlases for result material {0} using shader {1}", resMatToPass2, resMatToPass2.shader));
-			MB3_TextureCombiner.CombineTexturesIntoAtlasesCoroutineResult coroutineResult2 = new MB3_TextureCombiner.CombineTexturesIntoAtlasesCoroutineResult();
-			yield return combiner.CombineTexturesIntoAtlasesCoroutine(progressInfo, OnCombinedTexturesCoroutineAtlasesAndRects[i], resMatToPass2, objsToMesh, sourceMats, editorMethods, coroutineResult2, maxTimePerFrame);
+
+			Debug.Log(string.Format("Creating atlases for result material {0} using shader {1}", resMatToPass2,
+				resMatToPass2.shader));
+			MB3_TextureCombiner.CombineTexturesIntoAtlasesCoroutineResult coroutineResult2 =
+				new MB3_TextureCombiner.CombineTexturesIntoAtlasesCoroutineResult();
+			yield return combiner.CombineTexturesIntoAtlasesCoroutine(progressInfo,
+				OnCombinedTexturesCoroutineAtlasesAndRects[i], resMatToPass2, objsToMesh, sourceMats, editorMethods,
+				coroutineResult2, maxTimePerFrame);
 			coroutineResult.success = coroutineResult2.success;
 			if (!coroutineResult.success)
 			{
@@ -361,6 +285,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 				yield break;
 			}
 		}
+
 		textureBakeResults.combinedMaterialInfo = OnCombinedTexturesCoroutineAtlasesAndRects;
 		textureBakeResults.doMultiMaterial = _doMultiMaterial;
 		textureBakeResults.resultMaterial = _resultMaterial;
@@ -372,28 +297,34 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 		{
 			mb[num].textureBakeResults = textureBakeResults;
 		}
+
 		if (LOG_LEVEL >= MB2_LogLevel.info)
 		{
 			Debug.Log("Created Atlases");
 		}
+
 		coroutineResult.isFinished = true;
 		if (coroutineResult.success && onBuiltAtlasesSuccess != null)
 		{
 			onBuiltAtlasesSuccess();
 		}
+
 		if (!coroutineResult.success && onBuiltAtlasesFail != null)
 		{
 			onBuiltAtlasesFail();
 		}
 	}
 
-	public MB_AtlasesAndRects[] CreateAtlases(ProgressUpdateDelegate progressInfo, bool saveAtlasesAsAssets = false, MB2_EditorMethodsInterface editorMethods = null)
+	public MB_AtlasesAndRects[] CreateAtlases(ProgressUpdateDelegate progressInfo, bool saveAtlasesAsAssets = false,
+		MB2_EditorMethodsInterface editorMethods = null)
 	{
 		MB_AtlasesAndRects[] array = null;
 		try
 		{
 			CreateAtlasesCoroutineResult createAtlasesCoroutineResult = new CreateAtlasesCoroutineResult();
-			MB3_TextureCombiner.RunCorutineWithoutPause(CreateAtlasesCoroutine(progressInfo, createAtlasesCoroutineResult, saveAtlasesAsAssets, editorMethods, 1000f), 0);
+			MB3_TextureCombiner.RunCorutineWithoutPause(
+				CreateAtlasesCoroutine(progressInfo, createAtlasesCoroutineResult, saveAtlasesAsAssets, editorMethods,
+					1000f), 0);
 			if (createAtlasesCoroutineResult.success)
 			{
 				array = textureBakeResults.combinedMaterialInfo;
@@ -413,6 +344,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 					{
 						continue;
 					}
+
 					for (int j = 0; j < mB_AtlasesAndRects.atlases.Length; j++)
 					{
 						if (mB_AtlasesAndRects.atlases[j] != null)
@@ -430,6 +362,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 				}
 			}
 		}
+
 		return array;
 	}
 
@@ -449,6 +382,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 				list3.Add(mat2rect_map[j].atlasRect);
 			}
 		}
+
 		tbr.materialsAndUVRects = list2.ToArray();
 		tbr.materials = list.ToArray();
 		tbr.prefabUVRects = list3.ToArray();
@@ -458,9 +392,11 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 	{
 		if (original == null)
 		{
-			Debug.LogWarning(string.Concat("Original material is null, could not copy properties to ", newMat, ". Setting shader to ", newMat.shader));
+			Debug.LogWarning(string.Concat("Original material is null, could not copy properties to ", newMat,
+				". Setting shader to ", newMat.shader));
 			return;
 		}
+
 		newMat.shader = original.shader;
 		newMat.CopyPropertiesFromMaterial(original);
 		ShaderTextureProperty[] shaderTexPropertyNames = MB3_TextureCombiner.shaderTexPropertyNames;
@@ -483,6 +419,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 		{
 			stringBuilder.Append(string.Concat(item, ","));
 		}
+
 		return stringBuilder.ToString();
 	}
 
@@ -495,6 +432,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 			{
 				continue;
 			}
+
 			Material[] gOMaterials = MB_Utility.GetGOMaterials(objsToMesh[i]);
 			for (int j = 0; j < gOMaterials.Length; j++)
 			{
@@ -504,6 +442,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 				}
 			}
 		}
+
 		HashSet<Material> hashSet2 = new HashSet<Material>();
 		for (int k = 0; k < resultMaterials.Length; k++)
 		{
@@ -513,6 +452,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 				Debug.LogError("Combined Material is null please create and assign a result material.");
 				return false;
 			}
+
 			Shader shader = mB_MultiMaterial.combinedMaterial.shader;
 			for (int l = 0; l < mB_MultiMaterial.sourceMaterials.Count; l++)
 			{
@@ -521,29 +461,40 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 					Debug.LogError("There are null entries in the list of Source Materials");
 					return false;
 				}
+
 				if (shader != mB_MultiMaterial.sourceMaterials[l].shader)
 				{
-					Debug.LogWarning(string.Concat("Source material ", mB_MultiMaterial.sourceMaterials[l], " does not use shader ", shader, " it may not have the required textures. If not empty textures will be generated."));
+					Debug.LogWarning(string.Concat("Source material ", mB_MultiMaterial.sourceMaterials[l],
+						" does not use shader ", shader,
+						" it may not have the required textures. If not empty textures will be generated."));
 				}
+
 				if (hashSet2.Contains(mB_MultiMaterial.sourceMaterials[l]))
 				{
-					Debug.LogError(string.Concat("A Material ", mB_MultiMaterial.sourceMaterials[l], " appears more than once in the list of source materials in the source material to combined mapping. Each source material must be unique."));
+					Debug.LogError(string.Concat("A Material ", mB_MultiMaterial.sourceMaterials[l],
+						" appears more than once in the list of source materials in the source material to combined mapping. Each source material must be unique."));
 					return false;
 				}
+
 				hashSet2.Add(mB_MultiMaterial.sourceMaterials[l]);
 			}
 		}
+
 		if (hashSet.IsProperSubsetOf(hashSet2))
 		{
 			hashSet2.ExceptWith(hashSet);
-			Debug.LogWarning("There are materials in the mapping that are not used on your source objects: " + PrintSet(hashSet2));
+			Debug.LogWarning("There are materials in the mapping that are not used on your source objects: " +
+			                 PrintSet(hashSet2));
 		}
+
 		if (hashSet2.IsProperSubsetOf(hashSet))
 		{
 			hashSet.ExceptWith(hashSet2);
-			Debug.LogError("There are materials on the objects to combine that are not in the mapping: " + PrintSet(hashSet));
+			Debug.LogError("There are materials on the objects to combine that are not in the mapping: " +
+			               PrintSet(hashSet));
 			return false;
 		}
+
 		return true;
 	}
 }

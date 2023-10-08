@@ -52,6 +52,7 @@ namespace RootMotion.FinalIK
 				maps = new Map[0];
 				return;
 			}
+
 			maps = new Map[0];
 			Transform[] componentsInChildren = base.transform.GetComponentsInChildren<Transform>();
 			Transform[] componentsInChildren2 = poseRoot.GetComponentsInChildren<Transform>();
@@ -64,6 +65,7 @@ namespace RootMotion.FinalIK
 					maps[maps.Length - 1] = new Map(componentsInChildren[i], targetNamed);
 				}
 			}
+
 			StoreDefaultState();
 		}
 
@@ -92,12 +94,14 @@ namespace RootMotion.FinalIK
 					return array[i];
 				}
 			}
+
 			return null;
 		}
 
 		private void LateUpdate()
 		{
-			if (!(weight <= 0f) && (!(localPositionWeight <= 0f) || !(localRotationWeight <= 0f)) && !(poseRoot == null))
+			if (!(weight <= 0f) && (!(localPositionWeight <= 0f) || !(localRotationWeight <= 0f)) &&
+			    !(poseRoot == null))
 			{
 				float num = localRotationWeight * weight;
 				float num2 = localPositionWeight * weight;

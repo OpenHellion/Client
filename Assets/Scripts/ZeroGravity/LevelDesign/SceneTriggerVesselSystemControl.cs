@@ -13,6 +13,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return false;
 			}
+
 			ToggleGenerator();
 			return true;
 		}

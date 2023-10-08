@@ -1,3 +1,6 @@
+using System;
+using OpenHellion;
+using OpenHellion.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -28,13 +31,16 @@ namespace ZeroGravity.UI
 
 		public Text LinkedQuestName;
 
+		private static InGameGUI _inGameGUI;
+
+		public static void Init(InGameGUI inGameGUI)
+		{
+			_inGameGUI = inGameGUI;
+		}
+
 		private void Start()
 		{
 			Name.text = Quest.Name;
-		}
-
-		private void Update()
-		{
 		}
 
 		public void OnPointerClick(PointerEventData eventData)
@@ -65,6 +71,7 @@ namespace ZeroGravity.UI
 				Status.text = Localization.InProgress;
 				Status.color = Colors.Yellow;
 			}
+
 			if (Quest.QuestObject.ParentQuest != null)
 			{
 				LinkedQuest.Activate(true);
@@ -75,9 +82,10 @@ namespace ZeroGravity.UI
 				LinkedQuest.Activate(false);
 				LinkedQuestName.text = string.Empty;
 			}
+
 			TrackingButton.SetActive(Quest.Status != QuestStatus.Completed);
 			Completed.SetActive(Quest.Status == QuestStatus.Completed);
-			Tracking.SetActive(Client.Instance.CanvasManager.CanvasUI.CurrentTrackingQuest == Quest);
+			Tracking.SetActive(_inGameGUI.CurrentTrackingQuest == Quest);
 			Selected.SetActive(this == QuestSystem.SelectedQuest);
 		}
 
@@ -87,19 +95,22 @@ namespace ZeroGravity.UI
 			{
 				allQuest.Tracking.SetActive(false);
 			}
-			if (Client.Instance.CanvasManager.CanvasUI.CurrentTrackingQuest == Quest)
+
+			if (_inGameGUI.CurrentTrackingQuest == Quest)
 			{
-				Client.Instance.CanvasManager.CanvasUI.QuestTracker.HideActiveTasks();
-				Client.Instance.CanvasManager.CanvasUI.SetCurrentTrackingQuest(null);
+				_inGameGUI.QuestTracker.HideActiveTasks();
+				_inGameGUI.SetCurrentTrackingQuest(null);
 				return;
 			}
+
 			Tracking.SetActive(true);
-			if (Client.Instance.CanvasManager.CanvasUI.CurrentTrackingQuest != null)
+			if (_inGameGUI.CurrentTrackingQuest != null)
 			{
-				Client.Instance.CanvasManager.CanvasUI.QuestTracker.HideActiveTasks();
+				_inGameGUI.QuestTracker.HideActiveTasks();
 			}
-			Client.Instance.CanvasManager.CanvasUI.SetCurrentTrackingQuest(Quest);
-			Client.Instance.CanvasManager.CanvasUI.QuestTracker.ShowTasks(0f);
+
+			_inGameGUI.SetCurrentTrackingQuest(Quest);
+			_inGameGUI.QuestTracker.ShowTasks(0f);
 		}
 	}
 }

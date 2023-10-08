@@ -14,10 +14,7 @@ namespace ZeroGravity.Data
 
 		public override SystemAuxDataType AuxDataType
 		{
-			get
-			{
-				return SystemAuxDataType.Fabricator;
-			}
+			get { return SystemAuxDataType.Fabricator; }
 		}
 	}
 }

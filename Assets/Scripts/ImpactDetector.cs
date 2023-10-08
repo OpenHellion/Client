@@ -21,7 +21,8 @@ public class ImpactDetector : MonoBehaviour
 	private void OnCollisionEnter(Collision collision)
 	{
 		float magnitude = collision.relativeVelocity.magnitude;
-		if (ImpactSound != null && magnitude > VelocityThrashold && Time.time - lastImpactTime > CooldownTime && (!(refObject is MyPlayer) || !(refObject as MyPlayer).FpsController.IsGrounded))
+		if (ImpactSound != null && magnitude > VelocityThrashold && Time.time - lastImpactTime > CooldownTime &&
+		    (!(refObject is MyPlayer) || !(refObject as MyPlayer).FpsController.IsGrounded))
 		{
 			lastImpactTime = Time.time;
 			PlayImpactSound(magnitude);

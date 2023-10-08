@@ -6,11 +6,9 @@ namespace ZeroGravity.LevelDesign
 {
 	public class DynamicSceneObject : MonoBehaviour
 	{
-		[HideInInspector]
-		public GameObject PrefabObject;
+		[HideInInspector] public GameObject PrefabObject;
 
-		[HideInInspector]
-		public MachineryPartType MachineryPartType;
+		[HideInInspector] public MachineryPartType MachineryPartType;
 
 		public DynaminObjectSpawnSettings[] SpawnSettings;
 
@@ -25,15 +23,12 @@ namespace ZeroGravity.LevelDesign
 
 		public Item Item
 		{
-			get
-			{
-				return GetComponentInChildren<Item>();
-			}
+			get { return GetComponentInChildren<Item>(); }
 		}
 
 		private void Awake()
 		{
-			if (Client.IsGameBuild && Application.isPlaying && Application.isEditor)
+			if (Application.isPlaying && Application.isEditor)
 			{
 				Object.Destroy(base.gameObject);
 			}

@@ -12,21 +12,14 @@ public abstract class MB3_MeshBakerCommon : MB3_MeshBakerRoot
 
 	public string bakeAssetsInPlaceFolderPath;
 
-	[HideInInspector]
-	public GameObject resultPrefab;
+	[HideInInspector] public GameObject resultPrefab;
 
 	public abstract MB3_MeshCombiner meshCombiner { get; }
 
 	public override MB2_TextureBakeResults textureBakeResults
 	{
-		get
-		{
-			return meshCombiner.textureBakeResults;
-		}
-		set
-		{
-			meshCombiner.textureBakeResults = value;
-		}
+		get { return meshCombiner.textureBakeResults; }
+		set { meshCombiner.textureBakeResults = value; }
 	}
 
 	public override List<GameObject> GetObjectsToCombine()
@@ -38,17 +31,21 @@ public abstract class MB3_MeshBakerCommon : MB3_MeshBakerRoot
 			{
 				component = base.gameObject.transform.parent.GetComponent<MB3_TextureBaker>();
 			}
+
 			if (component != null)
 			{
 				return component.GetObjectsToCombine();
 			}
+
 			Debug.LogWarning("Use Objects To Mesh From Texture Baker was checked but no texture baker");
 			return new List<GameObject>();
 		}
+
 		if (objsToMesh == null)
 		{
 			objsToMesh = new List<GameObject>();
 		}
+
 		return objsToMesh;
 	}
 
@@ -100,16 +97,20 @@ public abstract class MB3_MeshBakerCommon : MB3_MeshBakerRoot
 		{
 			return component;
 		}
+
 		if (base.transform.parent != null)
 		{
 			return base.transform.parent.GetComponent<MB3_TextureBaker>();
 		}
+
 		return null;
 	}
 
-	public abstract bool AddDeleteGameObjects(GameObject[] gos, GameObject[] deleteGOs, bool disableRendererInSource = true);
+	public abstract bool AddDeleteGameObjects(GameObject[] gos, GameObject[] deleteGOs,
+		bool disableRendererInSource = true);
 
-	public abstract bool AddDeleteGameObjectsByID(GameObject[] gos, int[] deleteGOinstanceIDs, bool disableRendererInSource = true);
+	public abstract bool AddDeleteGameObjectsByID(GameObject[] gos, int[] deleteGOinstanceIDs,
+		bool disableRendererInSource = true);
 
 	public virtual void Apply(MB3_MeshCombiner.GenerateUV2Delegate uv2GenerationMethod = null)
 	{
@@ -117,10 +118,13 @@ public abstract class MB3_MeshBakerCommon : MB3_MeshBakerRoot
 		meshCombiner.Apply(uv2GenerationMethod);
 	}
 
-	public virtual void Apply(bool triangles, bool vertices, bool normals, bool tangents, bool uvs, bool uv2, bool uv3, bool uv4, bool colors, bool bones = false, bool blendShapesFlag = false, MB3_MeshCombiner.GenerateUV2Delegate uv2GenerationMethod = null)
+	public virtual void Apply(bool triangles, bool vertices, bool normals, bool tangents, bool uvs, bool uv2, bool uv3,
+		bool uv4, bool colors, bool bones = false, bool blendShapesFlag = false,
+		MB3_MeshCombiner.GenerateUV2Delegate uv2GenerationMethod = null)
 	{
 		meshCombiner.name = base.name + "-mesh";
-		meshCombiner.Apply(triangles, vertices, normals, tangents, uvs, uv2, uv3, uv4, colors, bones, blendShapesFlag, uv2GenerationMethod);
+		meshCombiner.Apply(triangles, vertices, normals, tangents, uvs, uv2, uv3, uv4, colors, bones, blendShapesFlag,
+			uv2GenerationMethod);
 	}
 
 	public virtual bool CombinedMeshContains(GameObject go)
@@ -128,10 +132,13 @@ public abstract class MB3_MeshBakerCommon : MB3_MeshBakerRoot
 		return meshCombiner.CombinedMeshContains(go);
 	}
 
-	public virtual void UpdateGameObjects(GameObject[] gos, bool recalcBounds = true, bool updateVertices = true, bool updateNormals = true, bool updateTangents = true, bool updateUV = false, bool updateUV1 = false, bool updateUV2 = false, bool updateColors = false, bool updateSkinningInfo = false)
+	public virtual void UpdateGameObjects(GameObject[] gos, bool recalcBounds = true, bool updateVertices = true,
+		bool updateNormals = true, bool updateTangents = true, bool updateUV = false, bool updateUV1 = false,
+		bool updateUV2 = false, bool updateColors = false, bool updateSkinningInfo = false)
 	{
 		meshCombiner.name = base.name + "-mesh";
-		meshCombiner.UpdateGameObjects(gos, recalcBounds, updateVertices, updateNormals, updateTangents, updateUV, updateUV1, updateUV2, updateColors, updateSkinningInfo);
+		meshCombiner.UpdateGameObjects(gos, recalcBounds, updateVertices, updateNormals, updateTangents, updateUV,
+			updateUV1, updateUV2, updateColors, updateSkinningInfo);
 	}
 
 	public virtual void UpdateSkinnedMeshApproximateBounds()
@@ -165,17 +172,22 @@ public abstract class MB3_MeshBakerCommon : MB3_MeshBakerRoot
 			Debug.LogWarning("Can't UpdateSkinnedMeshApproximateBounds when output type is bakeMeshAssetsInPlace");
 			return false;
 		}
+
 		if (meshCombiner.resultSceneObject == null)
 		{
-			Debug.LogWarning("Result Scene Object does not exist. No point in calling UpdateSkinnedMeshApproximateBounds.");
+			Debug.LogWarning(
+				"Result Scene Object does not exist. No point in calling UpdateSkinnedMeshApproximateBounds.");
 			return false;
 		}
-		SkinnedMeshRenderer componentInChildren = meshCombiner.resultSceneObject.GetComponentInChildren<SkinnedMeshRenderer>();
+
+		SkinnedMeshRenderer componentInChildren =
+			meshCombiner.resultSceneObject.GetComponentInChildren<SkinnedMeshRenderer>();
 		if (componentInChildren == null)
 		{
 			Debug.LogWarning("No SkinnedMeshRenderer on result scene object.");
 			return false;
 		}
+
 		return true;
 	}
 }

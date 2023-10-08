@@ -16,6 +16,7 @@ public class LightEmission
 			{
 				emissionColor = renderer.material.GetColor("_EmissionColor");
 			}
+
 			if (renderer.material.shader.name == "ZeroGravity/Surface/MultiMaterial")
 			{
 				emissionColor = renderer.material.GetColor("_EmColor");
@@ -31,6 +32,7 @@ public class LightEmission
 			{
 				renderer.material.SetColor("_EmissionColor", color);
 			}
+
 			if (renderer.material.shader.name == "ZeroGravity/Surface/MultiMaterial")
 			{
 				renderer.material.SetColor("_EmColor", color);
@@ -46,6 +48,7 @@ public class LightEmission
 			{
 				renderer.material.SetColor("_EmissionColor", emissionColor);
 			}
+
 			if (renderer.material.shader.name == "ZeroGravity/Surface/MultiMaterial")
 			{
 				renderer.material.SetColor("_EmColor", emissionColor);

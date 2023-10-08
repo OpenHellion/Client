@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using OpenHellion;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -13,22 +14,9 @@ namespace ZeroGravity.Objects
 	[DisallowMultipleComponent]
 	public class Canister : Item, ICargo
 	{
-		[CompilerGenerated]
-		private sealed class _003CGetCompartment_003Ec__AnonStorey0
-		{
-			internal short? id;
-
-			internal bool _003C_003Em__0(ICargoCompartment m)
-			{
-				return m.ID == id.Value;
-			}
-		}
-
 		public CargoCompartment CargoCompartment;
 
-		private List<ICargoCompartment> _Compartments;
-
-		public HandDrill handDrill;
+		private List<ICargoCompartment> _compartments;
 
 		public GameObject CanisterEmpty;
 
@@ -36,7 +24,7 @@ namespace ZeroGravity.Objects
 
 		public Image ResourceBarFiller;
 
-		private int currentHandDrillResourceIndex;
+		private int _currentHandDrillResourceIndex;
 
 		public Text ResourceName;
 
@@ -46,80 +34,21 @@ namespace ZeroGravity.Objects
 
 		public bool IsLookingAtPanel;
 
-		private bool shouldInjectResource;
+		private bool _shouldInjectResource;
 
-		[CompilerGenerated]
-		private static Func<CargoResourceData, float> _003C_003Ef__am_0024cache0;
+		public bool HasSpace => MaxQuantity - Quantity > float.Epsilon;
 
-		public bool HasSpace
-		{
-			get
-			{
-				return MaxQuantity - Quantity > float.Epsilon;
-			}
-		}
+		public override float MaxQuantity => CargoCompartment.Capacity;
 
-		public override float MaxQuantity
-		{
-			get
-			{
-				return CargoCompartment.Capacity;
-			}
-		}
+		public override float Quantity => CargoCompartment.Resources?.Sum((CargoResourceData m) => m.Quantity) ?? 0f;
 
-		public override float Quantity
-		{
-			get
-			{
-				float result;
-				if (CargoCompartment.Resources != null)
-				{
-					List<CargoResourceData> resources = CargoCompartment.Resources;
-					if (_003C_003Ef__am_0024cache0 == null)
-					{
-						_003C_003Ef__am_0024cache0 = _003Cget_Quantity_003Em__0;
-					}
-					result = resources.Sum(_003C_003Ef__am_0024cache0);
-				}
-				else
-				{
-					result = 0f;
-				}
-				return result;
-			}
-		}
+		public float ResourcePercentage => Quantity / MaxQuantity;
 
-		public float ResourcePercentage
-		{
-			get
-			{
-				return Quantity / MaxQuantity;
-			}
-		}
+		public new string Name => base.Name;
 
-		public new string Name
-		{
-			get
-			{
-				return base.Name;
-			}
-		}
+		public List<ICargoCompartment> Compartments => _compartments;
 
-		public List<ICargoCompartment> Compartments
-		{
-			get
-			{
-				return _Compartments;
-			}
-		}
-
-		public SpaceObjectVessel ParentVessel
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public SpaceObjectVessel ParentVessel => null;
 
 		public override DynamicObjectAuxData GetAuxData()
 		{
@@ -132,25 +61,29 @@ namespace ZeroGravity.Objects
 		{
 			base.ProcesStatsData(dos);
 			CanisterStats canisterStats = dos as CanisterStats;
-			if (_Compartments == null)
+			if (_compartments == null)
 			{
-				_Compartments = new List<ICargoCompartment> { CargoCompartment };
+				_compartments = new List<ICargoCompartment> { CargoCompartment };
 			}
+
 			CargoCompartment.Capacity = canisterStats.Capacity;
 			CargoCompartment.Resources = canisterStats.Resources;
 			ResourceBarFiller.fillAmount = ResourcePercentage;
-			if (base.AttachPoint != null && MyPlayer.Instance.IsLockedToTrigger && MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
+			if (AttachPoint is not null && MyPlayer.Instance.IsLockedToTrigger &&
+			    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
 			{
-				SceneTriggerCargoPanel sceneTriggerCargoPanel = MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel;
+				SceneTriggerCargoPanel sceneTriggerCargoPanel =
+					MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel;
 				sceneTriggerCargoPanel.CargoPanel.RefreshAttachedItemResources();
 			}
+
 			UpdateResources();
 		}
 
 		protected override void Awake()
 		{
 			base.Awake();
-			_Compartments = new List<ICargoCompartment> { CargoCompartment };
+			_compartments = new List<ICargoCompartment> { CargoCompartment };
 		}
 
 		private new void Start()
@@ -160,6 +93,7 @@ namespace ZeroGravity.Objects
 			{
 				CargoCompartment.Resources = new List<CargoResourceData>();
 			}
+
 			UpdateResources();
 			if (MyPlayer.Instance.IsAlive)
 			{
@@ -167,36 +101,35 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		private void Update()
-		{
-		}
-
 		public ICargoCompartment GetCompartment(short? id = null)
 		{
-			_003CGetCompartment_003Ec__AnonStorey0 _003CGetCompartment_003Ec__AnonStorey = new _003CGetCompartment_003Ec__AnonStorey0();
-			_003CGetCompartment_003Ec__AnonStorey.id = id;
-			if (_003CGetCompartment_003Ec__AnonStorey.id.HasValue)
+			if (id.HasValue)
 			{
-				return _Compartments.Find(_003CGetCompartment_003Ec__AnonStorey._003C_003Em__0);
+				return _compartments.Find((ICargoCompartment m) => m.ID == id.Value);
 			}
-			return _Compartments[0];
+
+			return _compartments[0];
 		}
 
 		private void UpdateResources()
 		{
 			if (Type == ItemType.AltairResourceContainer)
 			{
-				if (CargoCompartment != null && CargoCompartment.Resources != null && CargoCompartment.Resources.Count != 0 && currentHandDrillResourceIndex < CargoCompartment.Resources.Count)
+				if (CargoCompartment is not null && CargoCompartment.Resources != null &&
+				    CargoCompartment.Resources.Count != 0 &&
+				    _currentHandDrillResourceIndex < CargoCompartment.Resources.Count)
 				{
-					CanisterEmpty.Activate(false);
-					StatusHolder.Activate(true);
-					ResourceName.text = CargoCompartment.Resources[currentHandDrillResourceIndex].ResourceType.ToString().CamelCaseToSpaced().ToUpper();
-					ResourceValue.text = CargoCompartment.Resources[currentHandDrillResourceIndex].Quantity.ToString("f0");
+					CanisterEmpty.Activate(value: false);
+					StatusHolder.Activate(value: true);
+					ResourceName.text = CargoCompartment.Resources[_currentHandDrillResourceIndex].ResourceType
+						.ToString().CamelCaseToSpaced().ToUpper();
+					ResourceValue.text = CargoCompartment.Resources[_currentHandDrillResourceIndex].Quantity
+						.ToString("f0");
 					ResourceBarFiller.fillAmount = ResourcePercentage;
 				}
 				else
 				{
-					CanisterEmpty.Activate(true);
+					CanisterEmpty.Activate(value: true);
 					ResourceName.text = Localization.Empty.ToUpper();
 					ResourceBarFiller.fillAmount = 0f;
 					ResourceValue.text = string.Empty;
@@ -204,53 +137,71 @@ namespace ZeroGravity.Objects
 			}
 			else if (Type == ItemType.AltairHandDrillCanister || Type == ItemType.AltairRefinedCanister)
 			{
-				if (CargoCompartment != null && CargoCompartment.Resources != null && currentHandDrillResourceIndex < CargoCompartment.Resources.Count && CargoCompartment.Resources[currentHandDrillResourceIndex].Quantity != 0f)
+				if (CargoCompartment is not null && CargoCompartment.Resources != null &&
+				    _currentHandDrillResourceIndex < CargoCompartment.Resources.Count &&
+				    CargoCompartment.Resources[_currentHandDrillResourceIndex].Quantity != 0f)
 				{
-					CanisterEmpty.Activate(false);
-					StatusHolder.Activate(true);
-					ResourceName.text = CargoCompartment.Resources[currentHandDrillResourceIndex].ResourceType.ToString().CamelCaseToSpaced().ToUpper();
-					ResourceValue.text = CargoCompartment.Resources[currentHandDrillResourceIndex].Quantity.ToString("f0");
-					NoOfElements.text = currentHandDrillResourceIndex + 1 + "/" + CargoCompartment.Resources.Count;
+					CanisterEmpty.Activate(value: false);
+					StatusHolder.Activate(value: true);
+					ResourceName.text = CargoCompartment.Resources[_currentHandDrillResourceIndex].ResourceType
+						.ToString().CamelCaseToSpaced().ToUpper();
+					ResourceValue.text = CargoCompartment.Resources[_currentHandDrillResourceIndex].Quantity
+						.ToString("f0");
+					NoOfElements.text = _currentHandDrillResourceIndex + 1 + "/" + CargoCompartment.Resources.Count;
 				}
 				else
 				{
-					StatusHolder.Activate(false);
-					CanisterEmpty.Activate(true);
+					StatusHolder.Activate(value: false);
+					CanisterEmpty.Activate(value: true);
 					ResourceName.text = string.Empty;
 					ResourceValue.text = string.Empty;
 					NoOfElements.text = string.Empty;
 				}
 			}
-			if (MyPlayer.Instance != null && MyPlayer.Instance.Inventory != null && (base.Slot == MyPlayer.Instance.Inventory.HandsSlot || (DynamicObj.Parent is DynamicObject && (DynamicObj.Parent as DynamicObject).Item.Slot == MyPlayer.Instance.Inventory.HandsSlot)))
+
+			if (MyPlayer.Instance is not null && MyPlayer.Instance.Inventory != null &&
+			    (base.Slot == MyPlayer.Instance.Inventory.HandsSlot || (DynamicObj.Parent is DynamicObject &&
+			                                                            (DynamicObj.Parent as DynamicObject).Item
+			                                                            .Slot ==
+			                                                            MyPlayer.Instance.Inventory.HandsSlot)))
 			{
-				Client.Instance.CanvasManager.CanvasUI.HelmetHud.HandsSlotUpdate();
+				World.InGameGUI.HelmetHud.HandsSlotUpdate();
 			}
 		}
 
 		public override bool PrimaryFunction()
 		{
-			if (Type == ItemType.AltairResourceContainer && GetComponentInParent<MyPlayer>() != null && MyPlayer.Instance.FpsController.CurrentJetpack != null)
+			if (Type == ItemType.AltairResourceContainer && GetComponentInParent<MyPlayer>() is not null &&
+			    MyPlayer.Instance.FpsController.CurrentJetpack is not null)
 			{
 				if (MyPlayer.Instance.animHelper.IsConsumableInUse)
 				{
 					return false;
 				}
-				shouldInjectResource = false;
+
+				_shouldInjectResource = false;
 				foreach (ICargoCompartment compartment in Compartments)
 				{
 					if (compartment.Resources == null)
 					{
 						continue;
 					}
+
 					foreach (CargoResourceData resource in compartment.Resources)
 					{
-						if ((resource.ResourceType == ResourceType.Nitro && resource.Quantity > 0f && MyPlayer.Instance.FpsController.CurrentJetpack.CurrentFuel < MyPlayer.Instance.FpsController.CurrentJetpack.MaxFuel) || (resource.ResourceType == ResourceType.Oxygen && resource.Quantity > 0f && MyPlayer.Instance.FpsController.CurrentJetpack.CurrentOxygen < MyPlayer.Instance.FpsController.CurrentJetpack.MaxOxygen))
+						if ((resource.ResourceType == ResourceType.Nitro && resource.Quantity > 0f &&
+						     MyPlayer.Instance.FpsController.CurrentJetpack.CurrentFuel <
+						     MyPlayer.Instance.FpsController.CurrentJetpack.MaxFuel) ||
+						    (resource.ResourceType == ResourceType.Oxygen && resource.Quantity > 0f &&
+						     MyPlayer.Instance.FpsController.CurrentJetpack.CurrentOxygen <
+						     MyPlayer.Instance.FpsController.CurrentJetpack.MaxOxygen))
 						{
-							shouldInjectResource = true;
+							_shouldInjectResource = true;
 						}
 					}
 				}
-				if (shouldInjectResource)
+
+				if (_shouldInjectResource)
 				{
 					DynamicObject dynamicObj = DynamicObj;
 					CanisterStats statsData = new CanisterStats
@@ -262,13 +213,14 @@ namespace ZeroGravity.Objects
 				}
 				else if (Quantity <= 0f)
 				{
-					Client.Instance.CanvasManager.ShowInteractionCanvasMessage(Localization.CanisterIsEmpty);
+					World.InGameGUI.ShowInteractionCanvasMessage(Localization.CanisterIsEmpty);
 				}
 				else
 				{
-					Client.Instance.CanvasManager.ShowInteractionCanvasMessage(Localization.ResourcesAreAlreadyFull);
+					World.InGameGUI.ShowInteractionCanvasMessage(Localization.ResourcesAreAlreadyFull);
 				}
 			}
+
 			return false;
 		}
 
@@ -279,23 +231,19 @@ namespace ZeroGravity.Objects
 			{
 				foreach (CargoResourceData resource in CargoCompartment.Resources)
 				{
-					string text2 = text;
-					text = text2 + "\n" + resource.ResourceType.ToLocalizedString() + " " + resource.Quantity.ToString("f1");
+					text = text + "\n" + resource.ResourceType.ToLocalizedString() + " " +
+					       resource.Quantity.ToString("f1");
 				}
+
 				return text;
 			}
+
 			return text;
 		}
 
 		public override string QuantityCheck()
 		{
 			return FormatHelper.Percentage(Quantity / MaxQuantity);
-		}
-
-		[CompilerGenerated]
-		private static float _003Cget_Quantity_003Em__0(CargoResourceData m)
-		{
-			return m.Quantity;
 		}
 	}
 }

@@ -6,7 +6,8 @@ using ZeroGravity.ShipComponents;
 namespace ZeroGravity.UI
 {
 	[RequireComponent(typeof(Image))]
-	public class NavigationPanelChangeCustomOrbitDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IEventSystemHandler
+	public class NavigationPanelChangeCustomOrbitDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler,
+		IEventSystemHandler
 	{
 		private RectTransform m_DraggingPlane;
 

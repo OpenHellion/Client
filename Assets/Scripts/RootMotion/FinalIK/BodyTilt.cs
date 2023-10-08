@@ -4,17 +4,13 @@ namespace RootMotion.FinalIK
 {
 	public class BodyTilt : OffsetModifier
 	{
-		[Tooltip("Speed of tilting")]
-		public float tiltSpeed = 6f;
+		[Tooltip("Speed of tilting")] public float tiltSpeed = 6f;
 
-		[Tooltip("Sensitivity of tilting")]
-		public float tiltSensitivity = 0.07f;
+		[Tooltip("Sensitivity of tilting")] public float tiltSensitivity = 0.07f;
 
-		[Tooltip("The OffsetPose components")]
-		public OffsetPose poseLeft;
+		[Tooltip("The OffsetPose components")] public OffsetPose poseLeft;
 
-		[Tooltip("The OffsetPose components")]
-		public OffsetPose poseRight;
+		[Tooltip("The OffsetPose components")] public OffsetPose poseRight;
 
 		private float tiltAngle;
 
@@ -36,6 +32,7 @@ namespace RootMotion.FinalIK
 			{
 				angle = 0f - angle;
 			}
+
 			angle *= tiltSensitivity * 0.01f;
 			angle /= base.deltaTime;
 			angle = Mathf.Clamp(angle, -1f, 1f);
@@ -49,6 +46,7 @@ namespace RootMotion.FinalIK
 			{
 				poseLeft.Apply(ik.solver, num);
 			}
+
 			lastForward = base.transform.forward;
 		}
 	}

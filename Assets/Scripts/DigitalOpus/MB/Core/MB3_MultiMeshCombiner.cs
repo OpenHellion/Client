@@ -54,10 +54,12 @@ namespace DigitalOpus.MB.Core
 						}
 					}
 				}
+
 				if (list.Count == 0)
 				{
 					return true;
 				}
+
 				return false;
 			}
 		}
@@ -68,18 +70,13 @@ namespace DigitalOpus.MB.Core
 
 		public Dictionary<int, CombinedMesh> obj2MeshCombinerMap = new Dictionary<int, CombinedMesh>();
 
-		[SerializeField]
-		public List<CombinedMesh> meshCombiners = new List<CombinedMesh>();
+		[SerializeField] public List<CombinedMesh> meshCombiners = new List<CombinedMesh>();
 
-		[SerializeField]
-		private int _maxVertsInMesh = 65535;
+		[SerializeField] private int _maxVertsInMesh = 65535;
 
 		public override MB2_LogLevel LOG_LEVEL
 		{
-			get
-			{
-				return _LOG_LEVEL;
-			}
+			get { return _LOG_LEVEL; }
 			set
 			{
 				_LOG_LEVEL = value;
@@ -92,10 +89,7 @@ namespace DigitalOpus.MB.Core
 
 		public override MB2_ValidationLevel validationLevel
 		{
-			get
-			{
-				return _validationLevel;
-			}
+			get { return _validationLevel; }
 			set
 			{
 				_validationLevel = value;
@@ -108,10 +102,7 @@ namespace DigitalOpus.MB.Core
 
 		public int maxVertsInMesh
 		{
-			get
-			{
-				return _maxVertsInMesh;
-			}
+			get { return _maxVertsInMesh; }
 			set
 			{
 				if (obj2MeshCombinerMap.Count <= 0)
@@ -144,6 +135,7 @@ namespace DigitalOpus.MB.Core
 			{
 				return value.combinedMesh.GetNumVerticesFor(go);
 			}
+
 			return -1;
 		}
 
@@ -154,6 +146,7 @@ namespace DigitalOpus.MB.Core
 			{
 				return value.combinedMesh.GetNumVerticesFor(gameObjectID);
 			}
+
 			return -1;
 		}
 
@@ -168,6 +161,7 @@ namespace DigitalOpus.MB.Core
 			{
 				list.AddRange(meshCombiners[i].combinedMesh.GetObjectsInCombined());
 			}
+
 			return list;
 		}
 
@@ -177,6 +171,7 @@ namespace DigitalOpus.MB.Core
 			{
 				return meshCombiners[0].combinedMesh.GetLightmapIndex();
 			}
+
 			return -1;
 		}
 
@@ -192,24 +187,32 @@ namespace DigitalOpus.MB.Core
 				Debug.LogError("Material Bake Results is null. Can't combine meshes.");
 				return false;
 			}
-			if ((textureBakeResults.materialsAndUVRects == null || textureBakeResults.materialsAndUVRects.Length == 0) && (textureBakeResults.materials == null || textureBakeResults.materials.Length == 0))
+
+			if ((textureBakeResults.materialsAndUVRects == null ||
+			     textureBakeResults.materialsAndUVRects.Length == 0) && (textureBakeResults.materials == null ||
+			                                                             textureBakeResults.materials.Length == 0))
 			{
-				Debug.LogError("Material Bake Results has no materials in material to sourceUVRect map. Try baking materials. Can't combine meshes.");
+				Debug.LogError(
+					"Material Bake Results has no materials in material to sourceUVRect map. Try baking materials. Can't combine meshes.");
 				return false;
 			}
+
 			if (textureBakeResults.doMultiMaterial)
 			{
 				if (textureBakeResults.resultMaterials == null || textureBakeResults.resultMaterials.Length == 0)
 				{
-					Debug.LogError("Material Bake Results has no result materials. Try baking materials. Can't combine meshes.");
+					Debug.LogError(
+						"Material Bake Results has no result materials. Try baking materials. Can't combine meshes.");
 					return false;
 				}
 			}
 			else if (textureBakeResults.resultMaterial == null)
 			{
-				Debug.LogError("Material Bake Results has no result material. Try baking materials. Can't combine meshes.");
+				Debug.LogError(
+					"Material Bake Results has no result material. Try baking materials. Can't combine meshes.");
 				return false;
 			}
+
 			return true;
 		}
 
@@ -225,13 +228,16 @@ namespace DigitalOpus.MB.Core
 			}
 		}
 
-		public override void Apply(bool triangles, bool vertices, bool normals, bool tangents, bool uvs, bool uv2, bool uv3, bool uv4, bool colors, bool bones = false, bool blendShapesFlag = false, GenerateUV2Delegate uv2GenerationMethod = null)
+		public override void Apply(bool triangles, bool vertices, bool normals, bool tangents, bool uvs, bool uv2,
+			bool uv3, bool uv4, bool colors, bool bones = false, bool blendShapesFlag = false,
+			GenerateUV2Delegate uv2GenerationMethod = null)
 		{
 			for (int i = 0; i < meshCombiners.Count; i++)
 			{
 				if (meshCombiners[i].isDirty)
 				{
-					meshCombiners[i].combinedMesh.Apply(triangles, vertices, normals, tangents, uvs, uv2, uv3, uv4, colors, bones, blendShapesFlag, uv2GenerationMethod);
+					meshCombiners[i].combinedMesh.Apply(triangles, vertices, normals, tangents, uvs, uv2, uv3, uv4,
+						colors, bones, blendShapesFlag, uv2GenerationMethod);
 					meshCombiners[i].isDirty = false;
 				}
 			}
@@ -261,17 +267,21 @@ namespace DigitalOpus.MB.Core
 			}
 		}
 
-		public override void UpdateGameObjects(GameObject[] gos, bool recalcBounds = true, bool updateVertices = true, bool updateNormals = true, bool updateTangents = true, bool updateUV = false, bool updateUV2 = false, bool updateUV3 = false, bool updateUV4 = false, bool updateColors = false, bool updateSkinningInfo = false)
+		public override void UpdateGameObjects(GameObject[] gos, bool recalcBounds = true, bool updateVertices = true,
+			bool updateNormals = true, bool updateTangents = true, bool updateUV = false, bool updateUV2 = false,
+			bool updateUV3 = false, bool updateUV4 = false, bool updateColors = false, bool updateSkinningInfo = false)
 		{
 			if (gos == null)
 			{
 				Debug.LogError("list of game objects cannot be null");
 				return;
 			}
+
 			for (int i = 0; i < meshCombiners.Count; i++)
 			{
 				meshCombiners[i].gosToUpdate.Clear();
 			}
+
 			for (int j = 0; j < gos.Length; j++)
 			{
 				CombinedMesh value = null;
@@ -285,18 +295,21 @@ namespace DigitalOpus.MB.Core
 					Debug.LogWarning(string.Concat("Object ", gos[j], " is not in the combined mesh."));
 				}
 			}
+
 			for (int k = 0; k < meshCombiners.Count; k++)
 			{
 				if (meshCombiners[k].gosToUpdate.Count > 0)
 				{
 					meshCombiners[k].isDirty = true;
 					GameObject[] gos2 = meshCombiners[k].gosToUpdate.ToArray();
-					meshCombiners[k].combinedMesh.UpdateGameObjects(gos2, recalcBounds, updateVertices, updateNormals, updateTangents, updateUV, updateUV2, updateUV3, updateUV4, updateColors, updateSkinningInfo);
+					meshCombiners[k].combinedMesh.UpdateGameObjects(gos2, recalcBounds, updateVertices, updateNormals,
+						updateTangents, updateUV, updateUV2, updateUV3, updateUV4, updateColors, updateSkinningInfo);
 				}
 			}
 		}
 
-		public override bool AddDeleteGameObjects(GameObject[] gos, GameObject[] deleteGOs, bool disableRendererInSource = true)
+		public override bool AddDeleteGameObjects(GameObject[] gos, GameObject[] deleteGOs,
+			bool disableRendererInSource = true)
 		{
 			int[] array = null;
 			if (deleteGOs != null)
@@ -314,10 +327,12 @@ namespace DigitalOpus.MB.Core
 					}
 				}
 			}
+
 			return AddDeleteGameObjectsByID(gos, array, disableRendererInSource);
 		}
 
-		public override bool AddDeleteGameObjectsByID(GameObject[] gos, int[] deleteGOinstanceIDs, bool disableRendererInSource = true)
+		public override bool AddDeleteGameObjectsByID(GameObject[] gos, int[] deleteGOinstanceIDs,
+			bool disableRendererInSource = true)
 		{
 			if (_usingTemporaryTextureBakeResult && gos != null && gos.Length > 0)
 			{
@@ -325,19 +340,26 @@ namespace DigitalOpus.MB.Core
 				_textureBakeResults = null;
 				_usingTemporaryTextureBakeResult = false;
 			}
-			if (_textureBakeResults == null && gos != null && gos.Length > 0 && gos[0] != null && !_CheckIfAllObjsToAddUseSameMaterialsAndCreateTemporaryTextrueBakeResult(gos))
+
+			if (_textureBakeResults == null && gos != null && gos.Length > 0 && gos[0] != null &&
+			    !_CheckIfAllObjsToAddUseSameMaterialsAndCreateTemporaryTextrueBakeResult(gos))
 			{
 				return false;
 			}
+
 			if (!_validate(gos, deleteGOinstanceIDs))
 			{
 				return false;
 			}
+
 			_distributeAmongBakers(gos, deleteGOinstanceIDs);
 			if (LOG_LEVEL >= MB2_LogLevel.debug)
 			{
-				MB2_Log.LogDebug(string.Concat("MB2_MultiMeshCombiner.AddDeleteGameObjects numCombinedMeshes: ", meshCombiners.Count, " added:", gos, " deleted:", deleteGOinstanceIDs, " disableRendererInSource:", disableRendererInSource, " maxVertsPerCombined:", _maxVertsInMesh));
+				MB2_Log.LogDebug(string.Concat("MB2_MultiMeshCombiner.AddDeleteGameObjects numCombinedMeshes: ",
+					meshCombiners.Count, " added:", gos, " deleted:", deleteGOinstanceIDs, " disableRendererInSource:",
+					disableRendererInSource, " maxVertsPerCombined:", _maxVertsInMesh));
 			}
+
 			return _bakeStep1(gos, deleteGOinstanceIDs, disableRendererInSource);
 		}
 
@@ -347,10 +369,12 @@ namespace DigitalOpus.MB.Core
 			{
 				return true;
 			}
+
 			if (_maxVertsInMesh < 3)
 			{
 				Debug.LogError("Invalid value for maxVertsInMesh=" + _maxVertsInMesh);
 			}
+
 			_validateTextureBakeResults();
 			if (gos != null)
 			{
@@ -358,25 +382,31 @@ namespace DigitalOpus.MB.Core
 				{
 					if (gos[i] == null)
 					{
-						Debug.LogError("The " + i + "th object on the list of objects to combine is 'None'. Use Command-Delete on Mac OS X; Delete or Shift-Delete on Windows to remove this one element.");
+						Debug.LogError("The " + i +
+						               "th object on the list of objects to combine is 'None'. Use Command-Delete on Mac OS X; Delete or Shift-Delete on Windows to remove this one element.");
 						return false;
 					}
+
 					if (_validationLevel < MB2_ValidationLevel.robust)
 					{
 						continue;
 					}
+
 					for (int j = i + 1; j < gos.Length; j++)
 					{
 						if (gos[i] == gos[j])
 						{
-							Debug.LogError(string.Concat("GameObject ", gos[i], "appears twice in list of game objects to add"));
+							Debug.LogError(string.Concat("GameObject ", gos[i],
+								"appears twice in list of game objects to add"));
 							return false;
 						}
 					}
+
 					if (!obj2MeshCombinerMap.ContainsKey(gos[i].GetInstanceID()))
 					{
 						continue;
 					}
+
 					bool flag = false;
 					if (deleteGOinstanceIDs != null)
 					{
@@ -388,13 +418,16 @@ namespace DigitalOpus.MB.Core
 							}
 						}
 					}
+
 					if (!flag)
 					{
-						Debug.LogError(string.Concat("GameObject ", gos[i], " is already in the combined mesh ", gos[i].GetInstanceID()));
+						Debug.LogError(string.Concat("GameObject ", gos[i], " is already in the combined mesh ",
+							gos[i].GetInstanceID()));
 						return false;
 					}
 				}
 			}
+
 			if (deleteGOinstanceIDs != null && _validationLevel >= MB2_ValidationLevel.robust)
 			{
 				for (int l = 0; l < deleteGOinstanceIDs.Length; l++)
@@ -403,16 +436,20 @@ namespace DigitalOpus.MB.Core
 					{
 						if (deleteGOinstanceIDs[l] == deleteGOinstanceIDs[m])
 						{
-							Debug.LogError("GameObject " + deleteGOinstanceIDs[l] + "appears twice in list of game objects to delete");
+							Debug.LogError("GameObject " + deleteGOinstanceIDs[l] +
+							               "appears twice in list of game objects to delete");
 							return false;
 						}
 					}
+
 					if (!obj2MeshCombinerMap.ContainsKey(deleteGOinstanceIDs[l]))
 					{
-						Debug.LogWarning("GameObject with instance ID " + deleteGOinstanceIDs[l] + " on the list of objects to delete is not in the combined mesh.");
+						Debug.LogWarning("GameObject with instance ID " + deleteGOinstanceIDs[l] +
+						                 " on the list of objects to delete is not in the combined mesh.");
 					}
 				}
 			}
+
 			return true;
 		}
 
@@ -422,18 +459,22 @@ namespace DigitalOpus.MB.Core
 			{
 				gos = empty;
 			}
+
 			if (deleteGOinstanceIDs == null)
 			{
 				deleteGOinstanceIDs = emptyIDs;
 			}
+
 			if (resultSceneObject == null)
 			{
 				resultSceneObject = new GameObject("CombinedMesh-" + base.name);
 			}
+
 			for (int i = 0; i < meshCombiners.Count; i++)
 			{
 				meshCombiners[i].extraSpace = _maxVertsInMesh - meshCombiners[i].combinedMesh.GetMesh().vertexCount;
 			}
+
 			for (int j = 0; j < deleteGOinstanceIDs.Length; j++)
 			{
 				CombinedMesh value = null;
@@ -441,16 +482,20 @@ namespace DigitalOpus.MB.Core
 				{
 					if (LOG_LEVEL >= MB2_LogLevel.debug)
 					{
-						MB2_Log.LogDebug("MB2_MultiMeshCombiner.Removing " + deleteGOinstanceIDs[j] + " from meshCombiner " + meshCombiners.IndexOf(value));
+						MB2_Log.LogDebug("MB2_MultiMeshCombiner.Removing " + deleteGOinstanceIDs[j] +
+						                 " from meshCombiner " + meshCombiners.IndexOf(value));
 					}
+
 					value.numVertsInListToDelete += value.combinedMesh.GetNumVerticesFor(deleteGOinstanceIDs[j]);
 					value.gosToDelete.Add(deleteGOinstanceIDs[j]);
 				}
 				else
 				{
-					Debug.LogWarning("Object " + deleteGOinstanceIDs[j] + " in the list of objects to delete is not in the combined mesh.");
+					Debug.LogWarning("Object " + deleteGOinstanceIDs[j] +
+					                 " in the list of objects to delete is not in the combined mesh.");
 				}
 			}
+
 			for (int k = 0; k < gos.Length; k++)
 			{
 				GameObject gameObject = gos[k];
@@ -458,16 +503,21 @@ namespace DigitalOpus.MB.Core
 				CombinedMesh combinedMesh = null;
 				for (int l = 0; l < meshCombiners.Count; l++)
 				{
-					if (meshCombiners[l].extraSpace + meshCombiners[l].numVertsInListToDelete - meshCombiners[l].numVertsInListToAdd > vertexCount)
+					if (meshCombiners[l].extraSpace + meshCombiners[l].numVertsInListToDelete -
+					    meshCombiners[l].numVertsInListToAdd > vertexCount)
 					{
 						combinedMesh = meshCombiners[l];
 						if (LOG_LEVEL >= MB2_LogLevel.debug)
 						{
-							MB2_Log.LogDebug(string.Concat("MB2_MultiMeshCombiner.Added ", gos[k], " to combinedMesh ", l), LOG_LEVEL);
+							MB2_Log.LogDebug(
+								string.Concat("MB2_MultiMeshCombiner.Added ", gos[k], " to combinedMesh ", l),
+								LOG_LEVEL);
 						}
+
 						break;
 					}
 				}
+
 				if (combinedMesh == null)
 				{
 					combinedMesh = new CombinedMesh(maxVertsInMesh, _resultSceneObject, _LOG_LEVEL);
@@ -478,6 +528,7 @@ namespace DigitalOpus.MB.Core
 						MB2_Log.LogDebug("MB2_MultiMeshCombiner.Created new combinedMesh");
 					}
 				}
+
 				combinedMesh.gosToAdd.Add(gameObject);
 				combinedMesh.numVertsInListToAdd += vertexCount;
 			}
@@ -494,7 +545,10 @@ namespace DigitalOpus.MB.Core
 					combinedMesh.combinedMesh.BuildSceneMeshObject(gos, true);
 					if (_LOG_LEVEL >= MB2_LogLevel.debug)
 					{
-						MB2_Log.LogDebug("BuildSO combiner {0} goID {1} targetRenID {2} meshID {3}", i, combinedMesh.combinedMesh.targetRenderer.gameObject.GetInstanceID(), combinedMesh.combinedMesh.targetRenderer.GetInstanceID(), combinedMesh.combinedMesh.GetMesh().GetInstanceID());
+						MB2_Log.LogDebug("BuildSO combiner {0} goID {1} targetRenID {2} meshID {3}", i,
+							combinedMesh.combinedMesh.targetRenderer.gameObject.GetInstanceID(),
+							combinedMesh.combinedMesh.targetRenderer.GetInstanceID(),
+							combinedMesh.combinedMesh.GetMesh().GetInstanceID());
 					}
 				}
 				else if (combinedMesh.combinedMesh.targetRenderer.transform.parent != resultSceneObject.transform)
@@ -502,14 +556,22 @@ namespace DigitalOpus.MB.Core
 					Debug.LogError("targetRender objects must be children of resultSceneObject");
 					return false;
 				}
+
 				if (combinedMesh.gosToAdd.Count > 0 || combinedMesh.gosToDelete.Count > 0)
 				{
-					combinedMesh.combinedMesh.AddDeleteGameObjectsByID(combinedMesh.gosToAdd.ToArray(), combinedMesh.gosToDelete.ToArray(), disableRendererInSource);
+					combinedMesh.combinedMesh.AddDeleteGameObjectsByID(combinedMesh.gosToAdd.ToArray(),
+						combinedMesh.gosToDelete.ToArray(), disableRendererInSource);
 					if (_LOG_LEVEL >= MB2_LogLevel.debug)
 					{
-						MB2_Log.LogDebug("Baked combiner {0} obsAdded {1} objsRemoved {2} goID {3} targetRenID {4} meshID {5}", i, combinedMesh.gosToAdd.Count, combinedMesh.gosToDelete.Count, combinedMesh.combinedMesh.targetRenderer.gameObject.GetInstanceID(), combinedMesh.combinedMesh.targetRenderer.GetInstanceID(), combinedMesh.combinedMesh.GetMesh().GetInstanceID());
+						MB2_Log.LogDebug(
+							"Baked combiner {0} obsAdded {1} objsRemoved {2} goID {3} targetRenID {4} meshID {5}", i,
+							combinedMesh.gosToAdd.Count, combinedMesh.gosToDelete.Count,
+							combinedMesh.combinedMesh.targetRenderer.gameObject.GetInstanceID(),
+							combinedMesh.combinedMesh.targetRenderer.GetInstanceID(),
+							combinedMesh.combinedMesh.GetMesh().GetInstanceID());
 					}
 				}
+
 				Renderer renderer = combinedMesh.combinedMesh.targetRenderer;
 				Mesh mesh = combinedMesh.combinedMesh.GetMesh();
 				if (renderer is MeshRenderer)
@@ -523,6 +585,7 @@ namespace DigitalOpus.MB.Core
 					skinnedMeshRenderer.sharedMesh = mesh;
 				}
 			}
+
 			for (int j = 0; j < meshCombiners.Count; j++)
 			{
 				CombinedMesh combinedMesh2 = meshCombiners[j];
@@ -531,6 +594,7 @@ namespace DigitalOpus.MB.Core
 					obj2MeshCombinerMap.Remove(combinedMesh2.gosToDelete[k]);
 				}
 			}
+
 			for (int l = 0; l < meshCombiners.Count; l++)
 			{
 				CombinedMesh combinedMesh3 = meshCombiners[l];
@@ -538,6 +602,7 @@ namespace DigitalOpus.MB.Core
 				{
 					obj2MeshCombinerMap.Add(combinedMesh3.gosToAdd[m].GetInstanceID(), combinedMesh3);
 				}
+
 				if (combinedMesh3.gosToAdd.Count > 0 || combinedMesh3.gosToDelete.Count > 0)
 				{
 					combinedMesh3.gosToDelete.Clear();
@@ -547,27 +612,33 @@ namespace DigitalOpus.MB.Core
 					combinedMesh3.isDirty = true;
 				}
 			}
+
 			if (LOG_LEVEL >= MB2_LogLevel.debug)
 			{
 				string text = "Meshes in combined:";
 				for (int n = 0; n < meshCombiners.Count; n++)
 				{
 					string text2 = text;
-					text = text2 + " mesh" + n + "(" + meshCombiners[n].combinedMesh.GetObjectsInCombined().Count + ")\n";
+					text = text2 + " mesh" + n + "(" + meshCombiners[n].combinedMesh.GetObjectsInCombined().Count +
+					       ")\n";
 				}
+
 				text = text + "children in result: " + resultSceneObject.transform.childCount;
 				MB2_Log.LogDebug(text, LOG_LEVEL);
 			}
+
 			if (meshCombiners.Count > 0)
 			{
 				return true;
 			}
+
 			return false;
 		}
 
 		public override Dictionary<MBBlendShapeKey, MBBlendShapeValue> BuildSourceBlendShapeToCombinedIndexMap()
 		{
-			Dictionary<MBBlendShapeKey, MBBlendShapeValue> dictionary = new Dictionary<MBBlendShapeKey, MBBlendShapeValue>();
+			Dictionary<MBBlendShapeKey, MBBlendShapeValue> dictionary =
+				new Dictionary<MBBlendShapeKey, MBBlendShapeValue>();
 			for (int i = 0; i < meshCombiners.Count; i++)
 			{
 				for (int j = 0; j < meshCombiners[i].combinedMesh.blendShapes.Length; j++)
@@ -576,9 +647,11 @@ namespace DigitalOpus.MB.Core
 					MBBlendShapeValue mBBlendShapeValue = new MBBlendShapeValue();
 					mBBlendShapeValue.combinedMeshGameObject = meshCombiners[i].combinedMesh.targetRenderer.gameObject;
 					mBBlendShapeValue.blendShapeIndex = j;
-					dictionary.Add(new MBBlendShapeKey(mBBlendShape.gameObjectID, mBBlendShape.indexInSource), mBBlendShapeValue);
+					dictionary.Add(new MBBlendShapeKey(mBBlendShape.gameObjectID, mBBlendShape.indexInSource),
+						mBBlendShapeValue);
 				}
 			}
+
 			return dictionary;
 		}
 
@@ -603,8 +676,10 @@ namespace DigitalOpus.MB.Core
 				{
 					MB_Utility.Destroy(meshCombiners[i].combinedMesh.targetRenderer.gameObject);
 				}
+
 				meshCombiners[i].combinedMesh.ClearMesh();
 			}
+
 			obj2MeshCombinerMap.Clear();
 			meshCombiners.Clear();
 		}
@@ -617,8 +692,10 @@ namespace DigitalOpus.MB.Core
 				{
 					editorMethods.Destroy(meshCombiners[i].combinedMesh.targetRenderer.gameObject);
 				}
+
 				meshCombiners[i].combinedMesh.ClearMesh();
 			}
+
 			obj2MeshCombinerMap.Clear();
 			meshCombiners.Clear();
 		}

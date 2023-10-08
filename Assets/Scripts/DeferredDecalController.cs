@@ -9,26 +9,26 @@ using UnityEngine.Rendering;
 [ImageEffectAllowedInSceneView]
 public class DeferredDecalController : MonoBehaviour
 {
-	[SerializeField]
-	[HideInInspector]
-	private Mesh myCubeMesh;
+	[SerializeField] [HideInInspector] private Mesh myCubeMesh;
 
 	private CommandBuffer myCommandBuffer;
 
-	[CompilerGenerated]
-	private static Comparison<Decal> _003C_003Ef__am_0024cache0;
+	[CompilerGenerated] private static Comparison<Decal> _003C_003Ef__am_0024cache0;
 
 	private void Start()
 	{
 		if (myCubeMesh == null)
 		{
-			Debug.LogError("The cube mesh used for rendering the decals must be set in the inspector window for this SCRIPT! Disabling this.");
+			Debug.LogError(
+				"The cube mesh used for rendering the decals must be set in the inspector window for this SCRIPT! Disabling this.");
 			base.enabled = false;
 		}
+
 		if (myCommandBuffer == null)
 		{
 			myCommandBuffer = new CommandBuffer();
 		}
+
 		myCommandBuffer.name = "Deferred Decals";
 		base.gameObject.GetComponent<Camera>().RemoveCommandBuffer(CameraEvent.BeforeLighting, myCommandBuffer);
 		base.gameObject.GetComponent<Camera>().AddCommandBuffer(CameraEvent.BeforeLighting, myCommandBuffer);
@@ -40,6 +40,7 @@ public class DeferredDecalController : MonoBehaviour
 		{
 			myCommandBuffer = new CommandBuffer();
 		}
+
 		myCommandBuffer.name = "Deferred Decals";
 		base.gameObject.GetComponent<Camera>().RemoveCommandBuffer(CameraEvent.BeforeLighting, myCommandBuffer);
 	}
@@ -66,6 +67,7 @@ public class DeferredDecalController : MonoBehaviour
 			OnDisable();
 			return;
 		}
+
 		myCommandBuffer.Clear();
 		int num = Shader.PropertyToID("_NormalsCopy");
 		myCommandBuffer.GetTemporaryRT(num, -1, -1);
@@ -83,6 +85,7 @@ public class DeferredDecalController : MonoBehaviour
 		{
 			_003C_003Ef__am_0024cache0 = _003COnPreRender_003Em__0;
 		}
+
 		list.Sort(_003C_003Ef__am_0024cache0);
 		foreach (Decal item in list)
 		{
@@ -90,12 +93,14 @@ public class DeferredDecalController : MonoBehaviour
 			{
 				Dbg.Error("Decal doesn't have material set", item);
 			}
+
 			myCommandBuffer.DrawMesh(myCubeMesh, item.transform.localToWorldMatrix, item.material, 0, 0);
 			if (item.material.HasProperty("_ApplyRoughness") && item.material.GetFloat("_ApplyRoughness") != 0f)
 			{
 				myCommandBuffer.DrawMesh(myCubeMesh, item.transform.localToWorldMatrix, item.material, 0, 1);
 			}
 		}
+
 		myCommandBuffer.ReleaseTemporaryRT(num);
 	}
 

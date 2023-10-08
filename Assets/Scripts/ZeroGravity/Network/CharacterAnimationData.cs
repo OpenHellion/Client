@@ -44,7 +44,10 @@ namespace ZeroGravity.Network
 		{
 		}
 
-		public CharacterAnimationData(float velocityForward, float velocityRight, float zeroGForward, float zeroGRight, float interactType, int playerStance, int turningDirection, float equipOrDeEquip, float equipItemId, float emotetype, float reloadItemType, float meleeAttackType, float ladderDirection, float playerStanceFloat, float getUpType, float fireMode, float airTime)
+		public CharacterAnimationData(float velocityForward, float velocityRight, float zeroGForward, float zeroGRight,
+			float interactType, int playerStance, int turningDirection, float equipOrDeEquip, float equipItemId,
+			float emotetype, float reloadItemType, float meleeAttackType, float ladderDirection,
+			float playerStanceFloat, float getUpType, float fireMode, float airTime)
 		{
 			VelocityForward = (byte)MathHelper.ProportionalValue(velocityForward, -1f, 1f, 0f, 255f);
 			VelocityRight = (byte)MathHelper.ProportionalValue(velocityRight, -1f, 1f, 0f, 255f);

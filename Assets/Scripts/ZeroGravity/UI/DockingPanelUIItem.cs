@@ -20,10 +20,7 @@ namespace ZeroGravity.UI
 
 		public bool IsSelected
 		{
-			get
-			{
-				return isSelected;
-			}
+			get { return isSelected; }
 			set
 			{
 				isSelected = value;
@@ -41,10 +38,7 @@ namespace ZeroGravity.UI
 
 		public string Distance
 		{
-			get
-			{
-				return distance;
-			}
+			get { return distance; }
 			set
 			{
 				distance = value;

@@ -9,8 +9,7 @@ namespace ZeroGravity.Data
 	{
 		public DistributionSystemType ResourceType;
 
-		[FormerlySerializedAs("Requirement")]
-		public float Nominal;
+		[FormerlySerializedAs("Requirement")] public float Nominal;
 
 		public float Standby;
 	}

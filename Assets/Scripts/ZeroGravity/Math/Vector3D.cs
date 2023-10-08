@@ -16,90 +16,57 @@ namespace ZeroGravity.Math
 
 		public static Vector3D Back
 		{
-			get
-			{
-				return new Vector3D(0.0, 0.0, -1.0);
-			}
+			get { return new Vector3D(0.0, 0.0, -1.0); }
 		}
 
 		public static Vector3D Down
 		{
-			get
-			{
-				return new Vector3D(0.0, -1.0, 0.0);
-			}
+			get { return new Vector3D(0.0, -1.0, 0.0); }
 		}
 
 		public static Vector3D Forward
 		{
-			get
-			{
-				return new Vector3D(0.0, 0.0, 1.0);
-			}
+			get { return new Vector3D(0.0, 0.0, 1.0); }
 		}
 
 		public static Vector3D Left
 		{
-			get
-			{
-				return new Vector3D(-1.0, 0.0, 0.0);
-			}
+			get { return new Vector3D(-1.0, 0.0, 0.0); }
 		}
 
 		public static Vector3D One
 		{
-			get
-			{
-				return new Vector3D(1.0, 1.0, 1.0);
-			}
+			get { return new Vector3D(1.0, 1.0, 1.0); }
 		}
 
 		public static Vector3D Right
 		{
-			get
-			{
-				return new Vector3D(1.0, 0.0, 0.0);
-			}
+			get { return new Vector3D(1.0, 0.0, 0.0); }
 		}
 
 		public static Vector3D Up
 		{
-			get
-			{
-				return new Vector3D(0.0, 1.0, 0.0);
-			}
+			get { return new Vector3D(0.0, 1.0, 0.0); }
 		}
 
 		public static Vector3D Zero
 		{
-			get
-			{
-				return new Vector3D(0.0, 0.0, 0.0);
-			}
+			get { return new Vector3D(0.0, 0.0, 0.0); }
 		}
 
 		public double Magnitude
 		{
-			get
-			{
-				return System.Math.Sqrt(X * X + Y * Y + Z * Z);
-			}
+			get { return System.Math.Sqrt(X * X + Y * Y + Z * Z); }
 		}
 
 		public double SqrMagnitude
 		{
-			get
-			{
-				return X * X + Y * Y + Z * Z;
-			}
+			get { return X * X + Y * Y + Z * Z; }
 		}
 
 		public Vector3D Normalized
 		{
-			get
-			{
-				return Normalize(this);
-			}
+			get { return Normalize(this); }
 		}
 
 		public double this[int index]
@@ -108,31 +75,31 @@ namespace ZeroGravity.Math
 			{
 				switch (index)
 				{
-				case 0:
-					return X;
-				case 1:
-					return Y;
-				case 2:
-					return Z;
-				default:
-					throw new IndexOutOfRangeException("Invalid Vector3 index!");
+					case 0:
+						return X;
+					case 1:
+						return Y;
+					case 2:
+						return Z;
+					default:
+						throw new IndexOutOfRangeException("Invalid Vector3 index!");
 				}
 			}
 			set
 			{
 				switch (index)
 				{
-				case 0:
-					X = value;
-					break;
-				case 1:
-					Y = value;
-					break;
-				case 2:
-					Z = value;
-					break;
-				default:
-					throw new IndexOutOfRangeException("Invalid Vector3 index!");
+					case 0:
+						X = value;
+						break;
+					case 1:
+						Y = value;
+						break;
+					case 2:
+						Z = value;
+						break;
+					default:
+						throw new IndexOutOfRangeException("Invalid Vector3 index!");
 				}
 			}
 		}
@@ -160,7 +127,8 @@ namespace ZeroGravity.Math
 
 		public static double Angle(Vector3D from, Vector3D to)
 		{
-			return System.Math.Acos(MathHelper.Clamp(Dot(from.Normalized, to.Normalized), -1.0, 1.0)) * (180.0 / System.Math.PI);
+			return System.Math.Acos(MathHelper.Clamp(Dot(from.Normalized, to.Normalized), -1.0, 1.0)) *
+			       (180.0 / System.Math.PI);
 		}
 
 		public static Vector3D ClampMagnitude(Vector3D vector, double maxLength)
@@ -169,12 +137,14 @@ namespace ZeroGravity.Math
 			{
 				return vector.Normalized * maxLength;
 			}
+
 			return vector;
 		}
 
 		public static Vector3D Cross(Vector3D lhs, Vector3D rhs)
 		{
-			return new Vector3D(lhs.Y * rhs.Z - lhs.Z * rhs.Y, lhs.Z * rhs.X - lhs.X * rhs.Z, lhs.X * rhs.Y - lhs.Y * rhs.X);
+			return new Vector3D(lhs.Y * rhs.Z - lhs.Z * rhs.Y, lhs.Z * rhs.X - lhs.X * rhs.Z,
+				lhs.X * rhs.Y - lhs.Y * rhs.X);
 		}
 
 		public static double Distance(Vector3D a, Vector3D b)
@@ -211,12 +181,14 @@ namespace ZeroGravity.Math
 
 		public static Vector3D Max(Vector3D lhs, Vector3D rhs)
 		{
-			return new Vector3D(System.Math.Max(lhs.X, rhs.X), System.Math.Max(lhs.Y, rhs.Y), System.Math.Max(lhs.Z, rhs.Z));
+			return new Vector3D(System.Math.Max(lhs.X, rhs.X), System.Math.Max(lhs.Y, rhs.Y),
+				System.Math.Max(lhs.Z, rhs.Z));
 		}
 
 		public static Vector3D Min(Vector3D lhs, Vector3D rhs)
 		{
-			return new Vector3D(System.Math.Min(lhs.X, rhs.X), System.Math.Min(lhs.Y, rhs.Y), System.Math.Min(lhs.Z, rhs.Z));
+			return new Vector3D(System.Math.Min(lhs.X, rhs.X), System.Math.Min(lhs.Y, rhs.Y),
+				System.Math.Min(lhs.Z, rhs.Z));
 		}
 
 		public static Vector3D MoveTowards(Vector3D current, Vector3D target, double maxDistanceDelta)
@@ -227,6 +199,7 @@ namespace ZeroGravity.Math
 			{
 				return target;
 			}
+
 			return current + vector3D / magnitude * maxDistanceDelta;
 		}
 
@@ -237,6 +210,7 @@ namespace ZeroGravity.Math
 			{
 				return value / magnitude;
 			}
+
 			return Zero;
 		}
 
@@ -257,6 +231,7 @@ namespace ZeroGravity.Math
 			{
 				return Zero;
 			}
+
 			return onNormal * Dot(vector, onNormal) / num;
 		}
 
@@ -270,7 +245,8 @@ namespace ZeroGravity.Math
 			return -2.0 * Dot(inNormal, inDirection) * inNormal + inDirection;
 		}
 
-		public static Vector3D RotateTowards(Vector3D current, Vector3D target, double maxRadiansDelta, double maxMagnitudeDelta)
+		public static Vector3D RotateTowards(Vector3D current, Vector3D target, double maxRadiansDelta,
+			double maxMagnitudeDelta)
 		{
 			Vector3D value;
 			INTERNAL_CALL_RotateTowards(ref current, ref target, maxRadiansDelta, maxMagnitudeDelta, out value);
@@ -296,12 +272,14 @@ namespace ZeroGravity.Math
 			return value;
 		}
 
-		public static Vector3D SmoothDamp(Vector3D current, Vector3D target, ref Vector3D currentVelocity, double smoothTime, double deltaTime)
+		public static Vector3D SmoothDamp(Vector3D current, Vector3D target, ref Vector3D currentVelocity,
+			double smoothTime, double deltaTime)
 		{
 			return SmoothDamp(current, target, ref currentVelocity, smoothTime, double.PositiveInfinity, deltaTime);
 		}
 
-		public static Vector3D SmoothDamp(Vector3D current, Vector3D target, ref Vector3D currentVelocity, double smoothTime, double maxSpeed, double deltaTime)
+		public static Vector3D SmoothDamp(Vector3D current, Vector3D target, ref Vector3D currentVelocity,
+			double smoothTime, double maxSpeed, double deltaTime)
 		{
 			smoothTime = System.Math.Max(0.0001, smoothTime);
 			double num = 2.0 / smoothTime;
@@ -320,6 +298,7 @@ namespace ZeroGravity.Math
 				vector3D3 = vector3D;
 				currentVelocity = (vector3D3 - vector3D) / deltaTime;
 			}
+
 			return vector3D3;
 		}
 
@@ -329,6 +308,7 @@ namespace ZeroGravity.Math
 			{
 				return false;
 			}
+
 			Vector3D vector3D = (Vector3D)other;
 			return X.Equals(vector3D.X) && Y.Equals(vector3D.Y) && Z.Equals(vector3D.Z);
 		}
@@ -432,7 +412,8 @@ namespace ZeroGravity.Math
 			c.Normalize();
 		}
 
-		private static void INTERNAL_CALL_RotateTowards(ref Vector3D current, ref Vector3D target, double maxRadiansDelta, double maxMagnitudeDelta, out Vector3D value)
+		private static void INTERNAL_CALL_RotateTowards(ref Vector3D current, ref Vector3D target,
+			double maxRadiansDelta, double maxMagnitudeDelta, out Vector3D value)
 		{
 			value = Zero;
 			throw new Exception("INTERNAL_CALL_RotateTowards IS NOT IMPLEMENTED");

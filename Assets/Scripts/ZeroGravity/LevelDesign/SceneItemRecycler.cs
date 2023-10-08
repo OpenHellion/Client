@@ -35,15 +35,11 @@ namespace ZeroGravity.LevelDesign
 
 		private bool _Idle;
 
-		[SerializeField]
-		private VesselSystem _BaseVesselSystem;
+		[SerializeField] private VesselSystem _BaseVesselSystem;
 
 		public bool Idle
 		{
-			get
-			{
-				return _Idle;
-			}
+			get { return _Idle; }
 			set
 			{
 				_Idle = value;
@@ -53,14 +49,8 @@ namespace ZeroGravity.LevelDesign
 
 		public VesselSystem BaseVesselSystem
 		{
-			get
-			{
-				return _BaseVesselSystem;
-			}
-			set
-			{
-				_BaseVesselSystem = value;
-			}
+			get { return _BaseVesselSystem; }
+			set { _BaseVesselSystem = value; }
 		}
 
 		public override BaseAttachPointData GetData()
@@ -77,6 +67,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				BaseVesselSystem = ParentVessel.VesselBaseSystem;
 			}
+
 			if (BaseVesselSystem != null)
 			{
 				BaseVesselSystem.Accessories.Add(this);
@@ -84,12 +75,14 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public override bool CanAttachItemType(ItemType itemType, GenericItemSubType? generic = null, MachineryPartType? part = null, int? partTier = null)
+		public override bool CanAttachItemType(ItemType itemType, GenericItemSubType? generic = null,
+			MachineryPartType? part = null, int? partTier = null)
 		{
 			if (attachableTypesList.Count == 0)
 			{
 				return true;
 			}
+
 			return base.CanAttachItemType(itemType, generic, part, partTier);
 		}
 
@@ -109,10 +102,12 @@ namespace ZeroGravity.LevelDesign
 				{
 					RecycleSound.Play();
 				}
+
 				if (RecycleParticles != null)
 				{
 					RecycleParticles.Play();
 				}
+
 				if (RecycleLight != null)
 				{
 					RecycleLight.SetTrigger("Recycle");
@@ -122,7 +117,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void Recycle()
 		{
-			if (Executer == null || (Executer != null && Executer.IsMyPlayerTriggered))
+			if (Executor == null || (Executor != null && Executor.IsMyPlayerTriggered))
 			{
 				recycle = true;
 				if (BaseVesselSystem.Status == SystemStatus.Online)
@@ -140,12 +135,14 @@ namespace ZeroGravity.LevelDesign
 				{
 					StartCoroutine(DoRecycle());
 				}
+
 				if (AutoRecycle)
 				{
 					if (Item != null)
 					{
 						Shred(Item);
 					}
+
 					Collider.enabled = true;
 				}
 			}
@@ -153,6 +150,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				Collider.enabled = false;
 			}
+
 			UpdateStates();
 			RecyclerUI.UpdateUI();
 		}
@@ -176,6 +174,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				RecycleSound.Play();
 			}
+
 			RecyclerUI.ShowResults(item);
 			NetworkController.Instance.SendToGameServer(new RecycleItemMessage
 			{
@@ -196,6 +195,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				Shred(Item);
 			}
+
 			if (RecyclerUI != null && !AutoRecycle)
 			{
 				RecyclerUI.UpdateUI();
@@ -217,16 +217,19 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
+
 			if (BaseVesselSystem.Status == SystemStatus.Online && Idle)
 			{
 				if (IdleSound != null && !IdleSound.IsPlaying)
 				{
 					IdleSound.Play();
 				}
+
 				if (HurtTrigger != null)
 				{
 					HurtTrigger.gameObject.SetActive(true);
 				}
+
 				if (IdleAnimation != null)
 				{
 					IdleAnimation.enabled = true;
@@ -238,10 +241,12 @@ namespace ZeroGravity.LevelDesign
 				{
 					IdleSound.Play(1);
 				}
+
 				if (HurtTrigger != null)
 				{
 					HurtTrigger.gameObject.SetActive(false);
 				}
+
 				if (IdleAnimation != null)
 				{
 					IdleAnimation.enabled = false;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using OpenHellion;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -15,15 +15,15 @@ namespace ZeroGravity.Objects
 	{
 		public enum FeasibilityErrorType
 		{
-			None = 0,
-			Acceleration_Low = 1,
-			Acceleration_High = 2,
-			FTL_ManeuverIndex = 3,
-			FTL_CellFuel = 4,
-			FTL_Capacity = 5,
-			FTL_Online = 6,
-			Course_Impossible = 7,
-			ToManyDockedVessels = 8
+			None,
+			AccelerationLow,
+			AccelerationHigh,
+			FtlManeuverIndex,
+			FtlCellFuel,
+			FtlCapacity,
+			FtlOnline,
+			CourseImpossible,
+			ToManyDockedVessels
 		}
 
 		public OrbitParameters MyShipOrbit;
@@ -46,17 +46,13 @@ namespace ZeroGravity.Objects
 
 		public Transform EndPosition;
 
-		private long nextCourseGUID = 100L;
+		private long _nextCourseGuid = 100L;
 
 		public long GUID;
 
-		public string Name;
-
-		public static long NextGUID = 1L;
-
 		public bool Initialized;
 
-		private bool courseLocked;
+		private bool _courseLocked;
 
 		public bool IsDragging;
 
@@ -64,17 +60,17 @@ namespace ZeroGravity.Objects
 
 		public double EndTime = 240.0;
 
-		private double startTimeSincePeriapsis;
+		private double _startTimeSincePeriapsis;
 
-		private double endTimeSincePeriapsis;
+		private double _endTimeSincePeriapsis;
 
-		private double TimeToStart;
+		private double _timeToStart;
 
-		private double TimeToTarget;
+		private double _timeToTarget;
 
-		private bool isPossible;
+		private bool _isPossible;
 
-		private bool isFeasible;
+		private bool _isFeasible;
 
 		public bool ManeuverError;
 
@@ -90,69 +86,32 @@ namespace ZeroGravity.Objects
 
 		public Transform DraggingParameter;
 
-		private Vector3 periapsisPosition;
+		private Vector3 _periapsisPosition;
 
-		private double oldRayAngle;
+		private double _oldRayAngle;
 
-		private double oldTime;
+		private double _oldTime;
 
-		[CompilerGenerated]
-		private static Func<SceneDockingPort, bool> _003C_003Ef__am_0024cache0;
+		private Map Map => _world.Map;
 
-		public Map Map
-		{
-			get
-			{
-				return Client.Instance.Map;
-			}
-		}
+		private double ObjectScale => Map.Scale / 149597870700.0;
 
-		public double ObjectScale
-		{
-			get
-			{
-				return Map.Scale / 149597870700.0;
-			}
-		}
+		private Ship MyShip => Map.MyShip.MainObject as Ship;
 
-		private Ship myShip
-		{
-			get
-			{
-				return Map.MyShip.MainObject as Ship;
-			}
-		}
-
-		public bool Locked
-		{
-			get
-			{
-				return courseLocked;
-			}
-		}
-
-		public float ManeuverETA
-		{
-			get
-			{
-				UpdateManeuver();
-				return Transfer.EndEta;
-			}
-		}
-
-		public bool IsPossibleAndFeasible
-		{
-			get
-			{
-				return isPossible && isFeasible;
-			}
-		}
+		private bool IsPossibleAndFeasible => _isPossible && _isFeasible;
 
 		public FeasibilityErrorType FeasibilityError { get; private set; }
 
+		private static World _world;
+
 		public ManeuverCourse()
 		{
-			GUID = nextCourseGUID++;
+			GUID = _nextCourseGuid++;
+		}
+
+		private void Awake()
+		{
+			_world ??= GameObject.Find("/World").GetComponent<World>();
 		}
 
 		private void Update()
@@ -162,50 +121,61 @@ namespace ZeroGravity.Objects
 
 		public void Initialize()
 		{
-			StartOrbit.InitFromPeriapisAndApoapsis(MyShipOrbit.Parent, MyShipOrbit.PeriapsisDistance, MyShipOrbit.ApoapsisDistance, MyShipOrbit.Inclination, MyShipOrbit.ArgumentOfPeriapsis, MyShipOrbit.LongitudeOfAscendingNode, MyShipOrbit.TrueAnomalyAtZeroTime() * (180.0 / System.Math.PI), 0.0);
-			StartOrbit.ResetOrbit(Client.Instance.SolarSystem.CurrentTime);
-			startTimeSincePeriapsis = StartOrbit.TimeSincePeriapsis;
-			endTimeSincePeriapsis = EndOrbit.TimeSincePeriapsis;
+			StartOrbit.InitFromPeriapisAndApoapsis(MyShipOrbit.Parent, MyShipOrbit.PeriapsisDistance,
+				MyShipOrbit.ApoapsisDistance, MyShipOrbit.Inclination, MyShipOrbit.ArgumentOfPeriapsis,
+				MyShipOrbit.LongitudeOfAscendingNode, MyShipOrbit.TrueAnomalyAtZeroTime() * (180.0 / Mathf.PI), 0.0);
+			StartOrbit.ResetOrbit(_world.SolarSystem.CurrentTime);
+			_startTimeSincePeriapsis = StartOrbit.TimeSincePeriapsis;
+			_endTimeSincePeriapsis = EndOrbit.TimeSincePeriapsis;
 			StartTime = 60.0;
 			EndTime = 300.0;
 		}
 
 		private void UpdateManeuver()
 		{
-			StartOrbit.ResetOrbit(Client.Instance.SolarSystem.CurrentTime);
-			Transfer.StartOrbitAngle = (float)(StartOrbit.TrueAnomalyAtZeroTimePlusTime(startTimeSincePeriapsis + StartTime) * (180.0 / System.Math.PI));
-			Transfer.EndOrbitAngle = (float)(EndOrbit.TrueAnomalyAtZeroTimePlusTime(endTimeSincePeriapsis + EndTime) * (180.0 / System.Math.PI));
-			TimeToStart = startTimeSincePeriapsis + StartTime - StartOrbit.TimeSincePeriapsis;
-			TimeToTarget = endTimeSincePeriapsis + EndTime - EndOrbit.TimeSincePeriapsis;
-			Transfer.StartSolarSystemTime = Client.Instance.SolarSystem.CurrentTime + TimeToStart;
-			Transfer.EndSolarSystemTime = Client.Instance.SolarSystem.CurrentTime + TimeToTarget;
-			Vector3 position = ((StartOrbit.PositionAtTrueAnomaly((double)Transfer.StartOrbitAngle * (System.Math.PI / 180.0), true) + (StartOrbit.Parent.Position - Map.Focus)) * ObjectScale).ToVector3();
-			Vector3 position2 = ((EndOrbit.PositionAtTrueAnomaly((double)Transfer.EndOrbitAngle * (System.Math.PI / 180.0), true) + (EndOrbit.Parent.Position - Map.Focus)) * ObjectScale).ToVector3();
+			StartOrbit.ResetOrbit(_world.SolarSystem.CurrentTime);
+			Transfer.StartOrbitAngle =
+				(float)(StartOrbit.TrueAnomalyAtZeroTimePlusTime(_startTimeSincePeriapsis + StartTime) *
+				        (180.0 / Mathf.PI));
+			Transfer.EndOrbitAngle = (float)(EndOrbit.TrueAnomalyAtZeroTimePlusTime(_endTimeSincePeriapsis + EndTime) *
+			                                 (180.0 / Mathf.PI));
+			_timeToStart = _startTimeSincePeriapsis + StartTime - StartOrbit.TimeSincePeriapsis;
+			_timeToTarget = _endTimeSincePeriapsis + EndTime - EndOrbit.TimeSincePeriapsis;
+			Transfer.StartSolarSystemTime = _world.SolarSystem.CurrentTime + _timeToStart;
+			Transfer.EndSolarSystemTime = _world.SolarSystem.CurrentTime + _timeToTarget;
+			Vector3 position =
+				((StartOrbit.PositionAtTrueAnomaly((double)Transfer.StartOrbitAngle * (Mathf.PI / 180.0),
+					getRelativePosition: true) + (StartOrbit.Parent.Position - Map.Focus)) * ObjectScale).ToVector3();
+			Vector3 position2 =
+				((EndOrbit.PositionAtTrueAnomaly((double)Transfer.EndOrbitAngle * (Mathf.PI / 180.0),
+					getRelativePosition: true) + (EndOrbit.Parent.Position - Map.Focus)) * ObjectScale).ToVector3();
 			ManeuverLine.SetPosition(0, position);
 			ManeuverLine.SetPosition(1, position2);
 			StartPosition.position = position;
 			EndPosition.position = position2;
 			FuelAmountRequired = 0f;
-			isPossible = true;
-			isFeasible = true;
+			_isPossible = true;
+			_isFeasible = true;
 			FeasibilityError = FeasibilityErrorType.None;
 			ManeuverError = false;
 			WarpCellError = false;
 			PowerError = false;
 			DockingStructureError = false;
 			float num = (float)(EndTime - StartTime);
-			TimeToStart = startTimeSincePeriapsis + StartTime - StartOrbit.TimeSincePeriapsis;
-			TimeToTarget = TimeToStart + (double)num;
-			if (TimeToStart < 0.0)
+			_timeToStart = _startTimeSincePeriapsis + StartTime - StartOrbit.TimeSincePeriapsis;
+			_timeToTarget = _timeToStart + num;
+			if (_timeToStart < 0.0)
 			{
-				TimeToStart += StartOrbit.OrbitalPeriod;
+				_timeToStart += StartOrbit.OrbitalPeriod;
 			}
-			if (TimeToTarget < 0.0)
+
+			if (_timeToTarget < 0.0)
 			{
-				TimeToTarget += EndOrbit.OrbitalPeriod;
+				_timeToTarget += EndOrbit.OrbitalPeriod;
 			}
-			Transfer.StartEta = (float)TimeToStart;
-			Transfer.EndEta = (float)TimeToTarget;
+
+			Transfer.StartEta = (float)_timeToStart;
+			Transfer.EndEta = (float)_timeToTarget;
 			Transfer.TravelTime = num;
 			Transfer.Type = ManeuverType.Warp;
 			if (num <= 0f)
@@ -213,13 +183,15 @@ namespace ZeroGravity.Objects
 				InvalidateTransfer();
 				return;
 			}
+
 			bool getRelativePosition = StartOrbit.Parent == EndOrbit.Parent;
-			Vector3D vector3D = StartOrbit.PositionAfterTime(TimeToStart, getRelativePosition);
-			Vector3D vector3D2 = EndOrbit.PositionAfterTime(TimeToTarget, getRelativePosition);
+			Vector3D vector3D = StartOrbit.PositionAfterTime(_timeToStart, getRelativePosition);
+			Vector3D vector3D2 = EndOrbit.PositionAfterTime(_timeToTarget, getRelativePosition);
 			ManeuverDistance = Vector3D.Distance(vector3D, vector3D2);
-			if (myShip.GetCompoundMass() > (double)(myShip.Mass + myShip.FTLEngine.TowingCapacity) || (Transfer.WarpIndex == 0 && myShip.MainVessel.AllDockedVessels.Count > 0))
+			if (MyShip.GetCompoundMass() > (double)(MyShip.Mass + MyShip.FTLEngine.TowingCapacity) ||
+			    (Transfer.WarpIndex == 0 && MyShip.MainVessel.AllDockedVessels.Count > 0))
 			{
-				isFeasible = false;
+				_isFeasible = false;
 				FeasibilityError = FeasibilityErrorType.ToManyDockedVessels;
 				DockingStructureError = true;
 			}
@@ -227,17 +199,14 @@ namespace ZeroGravity.Objects
 			{
 				DockingStructureError = false;
 			}
-			if (myShip.SceneID == GameScenes.SceneID.AltCorp_Shuttle_SARA)
+
+			if (MyShip.SceneID == GameScenes.SceneID.AltCorp_Shuttle_SARA)
 			{
-				Dictionary<int, SceneDockingPort>.ValueCollection values = myShip.DockingPorts.Values;
-				if (_003C_003Ef__am_0024cache0 == null)
-				{
-					_003C_003Ef__am_0024cache0 = _003CUpdateManeuver_003Em__0;
-				}
-				SceneDockingPort sceneDockingPort = values.FirstOrDefault(_003C_003Ef__am_0024cache0);
+				SceneDockingPort sceneDockingPort =
+					MyShip.DockingPorts.Values.FirstOrDefault((SceneDockingPort m) => m.DockingPortOrder == 1);
 				if (sceneDockingPort != null && sceneDockingPort.DockedToPort != null)
 				{
-					isFeasible = false;
+					_isFeasible = false;
 					FeasibilityError = FeasibilityErrorType.ToManyDockedVessels;
 					DockingStructureError = true;
 				}
@@ -246,72 +215,83 @@ namespace ZeroGravity.Objects
 					DockingStructureError = false;
 				}
 			}
-			float num2 = (float)(myShip.GetCompoundMass() / (double)myShip.Mass);
-			if (myShip.FTLEngine.WarpsData.Length <= Transfer.WarpIndex)
+
+			float num2 = (float)(MyShip.GetCompoundMass() / (double)MyShip.Mass);
+			if (MyShip.FTLEngine.WarpsData.Length <= Transfer.WarpIndex)
 			{
-				isFeasible = false;
-				FeasibilityError = FeasibilityErrorType.FTL_ManeuverIndex;
+				_isFeasible = false;
+				FeasibilityError = FeasibilityErrorType.FtlManeuverIndex;
 				WarpCellError = true;
 			}
 			else
 			{
 				WarpCellError = false;
 			}
-			WarpData warpData = myShip.FTLEngine.WarpsData[Transfer.WarpIndex];
+
+			WarpData warpData = MyShip.FTLEngine.WarpsData[Transfer.WarpIndex];
 			FuelAmountRequired = warpData.ActivationCellConsumption + num * warpData.CellConsumption * num2;
 			int num3 = 0;
-			foreach (KeyValuePair<int, float?> item in myShip.FTLEngine.WarpCellsFuel)
+			foreach (KeyValuePair<int, float?> item in MyShip.FTLEngine.WarpCellsFuel)
 			{
 				if (item.Value.HasValue)
 				{
 					num3++;
 				}
 			}
+
 			float num4 = 0f;
 			foreach (int warpCell in Transfer.WarpCells)
 			{
-				num4 += ((!myShip.FTLEngine.WarpCellsFuel.ContainsKey(warpCell) || !myShip.FTLEngine.WarpCellsFuel[warpCell].HasValue) ? 0f : myShip.FTLEngine.WarpCellsFuel[warpCell].Value);
+				num4 += ((!MyShip.FTLEngine.WarpCellsFuel.ContainsKey(warpCell) ||
+				          !MyShip.FTLEngine.WarpCellsFuel[warpCell].HasValue)
+					? 0f
+					: MyShip.FTLEngine.WarpCellsFuel[warpCell].Value);
 			}
+
 			if (num4 < FuelAmountRequired)
 			{
-				isFeasible = false;
-				FeasibilityError = FeasibilityErrorType.FTL_CellFuel;
+				_isFeasible = false;
+				FeasibilityError = FeasibilityErrorType.FtlCellFuel;
 				WarpCellError = true;
 			}
 			else
 			{
 				WarpCellError = false;
 			}
-			if (warpData.PowerConsumption > myShip.Capacitor.Capacity)
+
+			if (warpData.PowerConsumption > MyShip.Capacitor.Capacity)
 			{
-				isFeasible = false;
-				FeasibilityError = FeasibilityErrorType.FTL_Capacity;
+				_isFeasible = false;
+				FeasibilityError = FeasibilityErrorType.FtlCapacity;
 				PowerError = true;
 			}
 			else
 			{
 				PowerError = false;
 			}
+
 			double num5 = 4.0 * (vector3D - vector3D2).Magnitude / (double)(num * num);
 			if (num5 > (double)warpData.MaxAcceleration)
 			{
-				isFeasible = false;
-				FeasibilityError = FeasibilityErrorType.Acceleration_Low;
+				_isFeasible = false;
+				FeasibilityError = FeasibilityErrorType.AccelerationLow;
 				ManeuverError = true;
 			}
 			else if (num5 < (double)warpData.MinAcceleration)
 			{
-				isFeasible = false;
-				FeasibilityError = FeasibilityErrorType.Acceleration_High;
+				_isFeasible = false;
+				FeasibilityError = FeasibilityErrorType.AccelerationHigh;
 				ManeuverError = true;
 			}
 			else
 			{
 				ManeuverError = false;
 			}
-			if (!isFeasible)
+
+			if (!_isFeasible)
 			{
 			}
+
 			if (IsPossibleAndFeasible)
 			{
 				ManeuverLine.startColor = WarpFeasibleColor;
@@ -326,10 +306,10 @@ namespace ZeroGravity.Objects
 
 		private void InvalidateTransfer()
 		{
-			isPossible = false;
+			_isPossible = false;
 			ManeuverLine.startColor = WarpNotFeasibleColor;
 			ManeuverLine.endColor = WarpNotFeasibleColor;
-			FeasibilityError = FeasibilityErrorType.Course_Impossible;
+			FeasibilityError = FeasibilityErrorType.CourseImpossible;
 		}
 
 		public void AddStartTime(float time)
@@ -358,38 +338,51 @@ namespace ZeroGravity.Objects
 			{
 				StartOrbit.GetOrbitPlaneData(out rotation, out centerPosition);
 				zero2 = ((StartOrbit.Parent.Position - Map.Focus) * ObjectScale).ToVector3();
-				periapsisPosition = ((StartOrbit.PositionAtTrueAnomaly(0.0, false) - Map.Focus) * ObjectScale).ToVector3();
+				_periapsisPosition =
+					((StartOrbit.PositionAtTrueAnomaly(0.0, getRelativePosition: false) - Map.Focus) * ObjectScale)
+					.ToVector3();
 				zero = MathHelper.RayPlaneIntersect(ray, zero2, rotation.ToQuaternion() * Vector3.up);
-				oldRayAngle = MathHelper.AngleSigned((zero2 - zero).normalized, (zero2 - periapsisPosition).normalized, rotation.ToQuaternion() * Vector3.up);
-				if (oldRayAngle < 0.0)
+				_oldRayAngle = MathHelper.AngleSigned((zero2 - zero).normalized,
+					(zero2 - _periapsisPosition).normalized, rotation.ToQuaternion() * Vector3.up);
+				if (_oldRayAngle < 0.0)
 				{
-					oldRayAngle += 360.0;
+					_oldRayAngle += 360.0;
 				}
-				if (oldRayAngle > 360.0)
+
+				if (_oldRayAngle > 360.0)
 				{
-					oldRayAngle -= 360.0;
+					_oldRayAngle -= 360.0;
 				}
-				oldRayAngle = StartOrbit.CalculatesMeanAnomalyFromTrueAnomaly(oldRayAngle * (System.Math.PI / 180.0)) * (180.0 / System.Math.PI);
-				oldTime = oldRayAngle * StartOrbit.OrbitalPeriod / 360.0 - startTimeSincePeriapsis;
+
+				_oldRayAngle = StartOrbit.CalculatesMeanAnomalyFromTrueAnomaly(_oldRayAngle * (Mathf.PI / 180.0)) *
+				               (180.0 / Mathf.PI);
+				_oldTime = _oldRayAngle * StartOrbit.OrbitalPeriod / 360.0 - _startTimeSincePeriapsis;
 			}
 			else if (dragObject == EndPosition.gameObject)
 			{
 				EndOrbit.GetOrbitPlaneData(out rotation, out centerPosition);
 				zero2 = ((EndOrbit.Parent.Position - Map.Focus) * ObjectScale).ToVector3();
-				periapsisPosition = ((EndOrbit.PositionAtTrueAnomaly(0.0, false) - Map.Focus) * ObjectScale).ToVector3();
+				_periapsisPosition =
+					((EndOrbit.PositionAtTrueAnomaly(0.0, getRelativePosition: false) - Map.Focus) * ObjectScale)
+					.ToVector3();
 				zero = MathHelper.RayPlaneIntersect(ray, zero2, rotation.ToQuaternion() * Vector3.up);
-				oldRayAngle = MathHelper.AngleSigned((zero2 - zero).normalized, (zero2 - periapsisPosition).normalized, rotation.ToQuaternion() * Vector3.up);
-				if (oldRayAngle < 0.0)
+				_oldRayAngle = MathHelper.AngleSigned((zero2 - zero).normalized,
+					(zero2 - _periapsisPosition).normalized, rotation.ToQuaternion() * Vector3.up);
+				if (_oldRayAngle < 0.0)
 				{
-					oldRayAngle += 360.0;
+					_oldRayAngle += 360.0;
 				}
-				if (oldRayAngle > 360.0)
+
+				if (_oldRayAngle > 360.0)
 				{
-					oldRayAngle -= 360.0;
+					_oldRayAngle -= 360.0;
 				}
-				oldRayAngle = EndOrbit.CalculatesMeanAnomalyFromTrueAnomaly(oldRayAngle * (System.Math.PI / 180.0)) * (180.0 / System.Math.PI);
-				oldTime = oldRayAngle * EndOrbit.OrbitalPeriod / 360.0 - endTimeSincePeriapsis;
+
+				_oldRayAngle = EndOrbit.CalculatesMeanAnomalyFromTrueAnomaly(_oldRayAngle * (Mathf.PI / 180.0)) *
+				               (180.0 / Mathf.PI);
+				_oldTime = _oldRayAngle * EndOrbit.OrbitalPeriod / 360.0 - _endTimeSincePeriapsis;
 			}
+
 			IsDragging = true;
 		}
 
@@ -403,44 +396,50 @@ namespace ZeroGravity.Objects
 			{
 				StartOrbit.GetOrbitPlaneData(out rotation, out centerPosition);
 				zero2 = ((StartOrbit.Parent.Position - Map.Focus) * ObjectScale).ToVector3();
-				periapsisPosition = ((StartOrbit.PositionAtTrueAnomaly(0.0, false) - Map.Focus) * ObjectScale).ToVector3();
+				_periapsisPosition =
+					((StartOrbit.PositionAtTrueAnomaly(0.0, getRelativePosition: false) - Map.Focus) * ObjectScale)
+					.ToVector3();
 				zero = MathHelper.RayPlaneIntersect(ray, zero2, rotation.ToQuaternion() * Vector3.up);
-				double num = MathHelper.AngleSigned((zero2 - zero).normalized, (zero2 - periapsisPosition).normalized, rotation.ToQuaternion() * Vector3.up);
+				double num = MathHelper.AngleSigned((zero2 - zero).normalized, (zero2 - _periapsisPosition).normalized,
+					rotation.ToQuaternion() * Vector3.up);
 				if (num < 0.0)
 				{
 					num += 360.0;
 				}
+
 				if (num > 360.0)
 				{
 					num -= 360.0;
 				}
-				num = StartOrbit.CalculatesMeanAnomalyFromTrueAnomaly(num * (System.Math.PI / 180.0)) * (180.0 / System.Math.PI) - oldRayAngle;
-				StartTime = num * StartOrbit.OrbitalPeriod / 360.0 + oldTime;
+
+				num = StartOrbit.CalculatesMeanAnomalyFromTrueAnomaly(num * (Mathf.PI / 180.0)) * (180.0 / Mathf.PI) -
+				      _oldRayAngle;
+				StartTime = num * StartOrbit.OrbitalPeriod / 360.0 + _oldTime;
 			}
 			else if (DraggingParameter.gameObject == EndPosition.gameObject)
 			{
 				EndOrbit.GetOrbitPlaneData(out rotation, out centerPosition);
 				zero2 = ((EndOrbit.Parent.Position - Map.Focus) * ObjectScale).ToVector3();
-				periapsisPosition = ((EndOrbit.PositionAtTrueAnomaly(0.0, false) - Map.Focus) * ObjectScale).ToVector3();
+				_periapsisPosition =
+					((EndOrbit.PositionAtTrueAnomaly(0.0, getRelativePosition: false) - Map.Focus) * ObjectScale)
+					.ToVector3();
 				zero = MathHelper.RayPlaneIntersect(ray, zero2, rotation.ToQuaternion() * Vector3.up);
-				double num2 = MathHelper.AngleSigned((zero2 - zero).normalized, (zero2 - periapsisPosition).normalized, rotation.ToQuaternion() * Vector3.up);
+				double num2 = MathHelper.AngleSigned((zero2 - zero).normalized, (zero2 - _periapsisPosition).normalized,
+					rotation.ToQuaternion() * Vector3.up);
 				if (num2 < 0.0)
 				{
 					num2 += 360.0;
 				}
+
 				if (num2 > 360.0)
 				{
 					num2 -= 360.0;
 				}
-				num2 = EndOrbit.CalculatesMeanAnomalyFromTrueAnomaly(num2 * (System.Math.PI / 180.0)) * (180.0 / System.Math.PI) - oldRayAngle;
-				EndTime = num2 * EndOrbit.OrbitalPeriod / 360.0 + oldTime;
-			}
-		}
 
-		[CompilerGenerated]
-		private static bool _003CUpdateManeuver_003Em__0(SceneDockingPort m)
-		{
-			return m.DockingPortOrder == 1;
+				num2 = EndOrbit.CalculatesMeanAnomalyFromTrueAnomaly(num2 * (Mathf.PI / 180.0)) * (180.0 / Mathf.PI) -
+				       _oldRayAngle;
+				EndTime = num2 * EndOrbit.OrbitalPeriod / 360.0 + _oldTime;
+			}
 		}
 	}
 }

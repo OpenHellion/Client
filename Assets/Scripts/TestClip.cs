@@ -5,8 +5,7 @@ public class TestClip : MonoBehaviour
 {
 	public Decalicious Decalicious;
 
-	[Range(0f, 1f)]
-	public float Clip;
+	[Range(0f, 1f)] public float Clip;
 
 	private void Awake()
 	{

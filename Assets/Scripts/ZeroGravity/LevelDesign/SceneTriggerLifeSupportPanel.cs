@@ -8,91 +8,35 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneTriggerLifeSupportPanel : BaseSceneTrigger
 	{
-		[SerializeField]
-		private bool _cancelExecuterAtSameTime;
+		[SerializeField] private bool _cancelExecuterAtSameTime;
 
-		[SerializeField]
-		private bool _isExteriorTrigger;
+		[SerializeField] private bool _isExteriorTrigger;
 
 		private LifeSupportPanel myLifeSupport;
 
-		public override bool ExclusivePlayerLocking
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool ExclusivePlayerLocking => true;
 
-		public override SceneTriggerType TriggerType
-		{
-			get
-			{
-				return SceneTriggerType.LifeSupportPanel;
-			}
-		}
+		public override SceneTriggerType TriggerType => SceneTriggerType.LifeSupportPanel;
 
-		public override PlayerHandsCheckType PlayerHandsCheck
-		{
-			get
-			{
-				return PlayerHandsCheckType.StoreItemInHands;
-			}
-		}
+		public override PlayerHandsCheckType PlayerHandsCheck => PlayerHandsCheckType.StoreItemInHands;
 
-		public override List<ItemType> PlayerHandsItemType
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public override List<ItemType> PlayerHandsItemType => null;
 
-		public override bool IsNearTrigger
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool IsNearTrigger => true;
 
-		public override bool IsInteractable
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool IsInteractable => true;
 
-		public bool CancelExecuterAtSameTime
-		{
-			get
-			{
-				return _cancelExecuterAtSameTime;
-			}
-		}
+		public bool CancelExecuterAtSameTime => _cancelExecuterAtSameTime;
 
-		public bool IsExteriorTrigger
-		{
-			get
-			{
-				return _isExteriorTrigger;
-			}
-		}
+		public bool IsExteriorTrigger => _isExteriorTrigger;
 
-		public override bool CameraMovementAllowed
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool CameraMovementAllowed => false;
 
 		public LifeSupportPanel MyLifeSupport
 		{
 			get
 			{
-				myLifeSupport = Client.Instance.InGamePanels.LifeSupport;
+				myLifeSupport = World.InWorldPanels.LifeSupport;
 				return myLifeSupport;
 			}
 		}
@@ -103,10 +47,12 @@ namespace ZeroGravity.LevelDesign
 			{
 				return false;
 			}
+
 			if (interactWithOverlappingTriggers)
 			{
 				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
 			}
+
 			player.AttachToPanel(this);
 			MyLifeSupport.OnInteract();
 			return true;

@@ -36,14 +36,11 @@ namespace ZeroGravity.LevelDesign
 
 		public OnStateEnterExitDelegate OnStateAfterExit;
 
-		[SerializeField]
-		private ActionEffects activeEffects;
+		[SerializeField] private ActionEffects activeEffects;
 
-		[SerializeField]
-		private ActionEffects inactiveEffects;
+		[SerializeField] private ActionEffects inactiveEffects;
 
-		[SerializeField]
-		private Animator anim;
+		[SerializeField] private Animator anim;
 
 		private AnimationState currentState = AnimationState.InactiveIdle;
 
@@ -51,7 +48,8 @@ namespace ZeroGravity.LevelDesign
 		{
 			get
 			{
-				return currentState == AnimationState.Active || currentState == AnimationState.Inactive || currentState == AnimationState.Fail;
+				return currentState == AnimationState.Active || currentState == AnimationState.Inactive ||
+				       currentState == AnimationState.Fail;
 			}
 		}
 
@@ -59,24 +57,19 @@ namespace ZeroGravity.LevelDesign
 		{
 			get
 			{
-				return currentState == AnimationState.ActiveIdle || currentState == AnimationState.InactiveIdle || currentState == AnimationState.None;
+				return currentState == AnimationState.ActiveIdle || currentState == AnimationState.InactiveIdle ||
+				       currentState == AnimationState.None;
 			}
 		}
 
 		public bool IsActive
 		{
-			get
-			{
-				return currentState == AnimationState.Active || currentState == AnimationState.ActiveIdle;
-			}
+			get { return currentState == AnimationState.Active || currentState == AnimationState.ActiveIdle; }
 		}
 
 		public bool IsInactive
 		{
-			get
-			{
-				return currentState == AnimationState.Inactive || currentState == AnimationState.InactiveIdle;
-			}
+			get { return currentState == AnimationState.Inactive || currentState == AnimationState.InactiveIdle; }
 		}
 
 		private void Awake()
@@ -85,36 +78,44 @@ namespace ZeroGravity.LevelDesign
 			{
 				anim = GetComponent<Animator>();
 			}
+
 			AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController();
 			animatorOverrideController.runtimeAnimatorController = anim.runtimeAnimatorController;
 			if (animatorOverrideController.runtimeAnimatorController == null)
 			{
 				Dbg.Error("Cannot override controller", base.name);
 			}
+
 			if (activeEffects.ExecutingAnimation != null)
 			{
 				animatorOverrideController["Active"] = activeEffects.ExecutingAnimation;
 			}
+
 			if (activeEffects.IdleAnimation != null)
 			{
 				animatorOverrideController["ActiveIdle"] = activeEffects.IdleAnimation;
 			}
+
 			if (activeEffects.FailAnimation != null)
 			{
 				animatorOverrideController["ActiveFail"] = activeEffects.FailAnimation;
 			}
+
 			if (inactiveEffects.ExecutingAnimation != null)
 			{
 				animatorOverrideController["Inactive"] = inactiveEffects.ExecutingAnimation;
 			}
+
 			if (inactiveEffects.IdleAnimation != null)
 			{
 				animatorOverrideController["InactiveIdle"] = inactiveEffects.IdleAnimation;
 			}
+
 			if (inactiveEffects.FailAnimation != null)
 			{
 				animatorOverrideController["InactiveFail"] = inactiveEffects.FailAnimation;
 			}
+
 			anim.runtimeAnimatorController = animatorOverrideController;
 		}
 
@@ -126,6 +127,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					anim.Play((!newState) ? "InactiveIdle" : "ActiveIdle");
 				}
+
 				anim.SetFloat("isActive", Convert.ToSingle(newState));
 			}
 			catch (Exception ex)
@@ -161,6 +163,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return activeEffects.FailAnimation != null;
 			}
+
 			return inactiveEffects.FailAnimation != null;
 		}
 
@@ -171,6 +174,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				OnStateBeforeEnter(this, state);
 			}
+
 			if (OnStateEnter != null)
 			{
 				OnStateEnter(this, state);
@@ -183,6 +187,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				OnStateExit(this, state);
 			}
+
 			if (OnStateAfterExit != null)
 			{
 				OnStateAfterExit(this, state);
@@ -195,6 +200,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return activeEffects.ExecutingAnimation.length;
 			}
+
 			return 0f;
 		}
 
@@ -204,6 +210,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return inactiveEffects.ExecutingAnimation.length;
 			}
+
 			return 0f;
 		}
 	}

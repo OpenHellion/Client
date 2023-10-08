@@ -15,18 +15,26 @@ namespace ZeroGravity.UI
 		{
 			get
 			{
-				if ((Item != null && !Item.CanPlayerPickUp(MyPlayer.Instance)) || (InventoryUI.DraggingItem != null && InventoryUI.DraggingItem is Outfit && InventoryUI.DraggingItem.Slot.Parent is Corpse) || (InventoryUI.DraggingItem != null && !(InventoryUI.DraggingItem.Slot is BaseSceneAttachPoint) && AttachPoint.Item != null))
+				if ((Item != null && !Item.CanPlayerPickUp(MyPlayer.Instance)) ||
+				    (InventoryUI.DraggingItem != null && InventoryUI.DraggingItem is Outfit &&
+				     InventoryUI.DraggingItem.Slot.Parent is Corpse) || (InventoryUI.DraggingItem != null &&
+				                                                         !(InventoryUI.DraggingItem.Slot is
+					                                                         BaseSceneAttachPoint) &&
+				                                                         AttachPoint.Item != null))
 				{
 					return true;
 				}
+
 				if (InventoryUI.IsDragging && InventoryUI.DraggingItem != null)
 				{
 					if (AttachPoint.CanFitItem(InventoryUI.DraggingItem) || IsLootSlot)
 					{
 						return false;
 					}
+
 					return true;
 				}
+
 				return false;
 			}
 		}
@@ -39,6 +47,7 @@ namespace ZeroGravity.UI
 				{
 					return AttachPoint.Item;
 				}
+
 				return null;
 			}
 		}
@@ -55,7 +64,7 @@ namespace ZeroGravity.UI
 				}
 				else if (AttachPoint.GetIcon() == null)
 				{
-					Icon.sprite = Client.Instance.SpriteManager.GetSprite(AttachPoint.StandardTip);
+					Icon.sprite = SpriteManager.Instance.GetSprite(AttachPoint.StandardTip);
 					Icon.color = Colors.SlotGray;
 				}
 				else
@@ -73,6 +82,7 @@ namespace ZeroGravity.UI
 					InventoryUI.UpdateSelectedItemInfo(Item);
 				}
 			}
+
 			UpdateHealth();
 			RefreshQuantity();
 			CheckItemSlots();
@@ -86,10 +96,12 @@ namespace ZeroGravity.UI
 				{
 					InventoryUI.DraggingItem.RequestAttach(AttachPoint);
 				}
+
 				if (Item == InventoryUI.SelectedItem)
 				{
 					InventoryUI.DeselectItem();
 				}
+
 				InventoryUI.RefreshSlots();
 			}
 		}

@@ -18,6 +18,7 @@ public class Projectile : MonoBehaviour
 		{
 			Object.Destroy(base.gameObject);
 		}
+
 		RaycastHit hitInfo;
 		if (!Physics.Raycast(base.transform.position, targetDirection, out hitInfo, speed * Time.deltaTime))
 		{

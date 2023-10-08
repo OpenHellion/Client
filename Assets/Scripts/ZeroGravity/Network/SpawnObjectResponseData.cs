@@ -15,13 +15,8 @@ namespace ZeroGravity.Network
 
 		public virtual SpaceObjectType Type
 		{
-			get
-			{
-				return SpaceObjectType.None;
-			}
-			set
-			{
-			}
+			get { return SpaceObjectType.None; }
+			set { }
 		}
 	}
 }

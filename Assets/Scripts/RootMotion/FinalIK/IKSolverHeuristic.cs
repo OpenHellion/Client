@@ -24,42 +24,32 @@ namespace RootMotion.FinalIK
 
 		protected virtual int minBones
 		{
-			get
-			{
-				return 2;
-			}
+			get { return 2; }
 		}
 
 		protected virtual bool boneLengthCanBeZero
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		protected virtual bool allowCommonParent
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		protected virtual Vector3 localDirection
 		{
 			get
 			{
-				return bones[0].transform.InverseTransformDirection(bones[bones.Length - 1].transform.position - bones[0].transform.position);
+				return bones[0].transform
+					.InverseTransformDirection(bones[bones.Length - 1].transform.position -
+					                           bones[0].transform.position);
 			}
 		}
 
 		protected float positionOffset
 		{
-			get
-			{
-				return Vector3.SqrMagnitude(localDirection - lastLocalDirection);
-			}
+			get { return Vector3.SqrMagnitude(localDirection - lastLocalDirection); }
 		}
 
 		public bool SetChain(Transform[] hierarchy, Transform root)
@@ -68,14 +58,17 @@ namespace RootMotion.FinalIK
 			{
 				bones = new Bone[hierarchy.Length];
 			}
+
 			for (int i = 0; i < hierarchy.Length; i++)
 			{
 				if (bones[i] == null)
 				{
 					bones[i] = new Bone();
 				}
+
 				bones[i].transform = hierarchy[i];
 			}
+
 			Initiate(root);
 			return base.initiated;
 		}
@@ -87,6 +80,7 @@ namespace RootMotion.FinalIK
 			{
 				array[i] = bones[i].transform;
 			}
+
 			array[array.Length - 1] = bone;
 			SetChain(array, root);
 		}
@@ -117,11 +111,13 @@ namespace RootMotion.FinalIK
 				message = "IK chain has no Bones.";
 				return false;
 			}
+
 			if (bones.Length < minBones)
 			{
 				message = "IK chain has less than " + minBones + " Bones.";
 				return false;
 			}
+
 			Bone[] array = bones;
 			foreach (Bone bone in array)
 			{
@@ -131,17 +127,21 @@ namespace RootMotion.FinalIK
 					return false;
 				}
 			}
+
 			Transform transform = IKSolver.ContainsDuplicateBone(bones);
 			if (transform != null)
 			{
 				message = transform.name + " is represented multiple times in the Bones.";
 				return false;
 			}
+
 			if (!allowCommonParent && !IKSolver.HierarchyIsValid(bones))
 			{
-				message = "Invalid bone hierarchy detected. IK requires for it's bones to be parented to each other in descending order.";
+				message =
+					"Invalid bone hierarchy detected. IK requires for it's bones to be parented to each other in descending order.";
 				return false;
 			}
+
 			if (!boneLengthCanBeZero)
 			{
 				for (int j = 0; j < bones.Length - 1; j++)
@@ -154,6 +154,7 @@ namespace RootMotion.FinalIK
 					}
 				}
 			}
+
 			return true;
 		}
 
@@ -171,6 +172,7 @@ namespace RootMotion.FinalIK
 					return bones[i];
 				}
 			}
+
 			return null;
 		}
 
@@ -192,19 +194,23 @@ namespace RootMotion.FinalIK
 					bones[i].length = (bones[i].transform.position - bones[i + 1].transform.position).magnitude;
 					chainLength += bones[i].length;
 					Vector3 position = bones[i + 1].transform.position;
-					bones[i].axis = Quaternion.Inverse(bones[i].transform.rotation) * (position - bones[i].transform.position);
+					bones[i].axis = Quaternion.Inverse(bones[i].transform.rotation) *
+					                (position - bones[i].transform.position);
 					if (bones[i].rotationLimit != null)
 					{
 						if (XY && !(bones[i].rotationLimit is RotationLimitHinge))
 						{
-							Warning.Log("Only Hinge Rotation Limits should be used on 2D IK solvers.", bones[i].transform);
+							Warning.Log("Only Hinge Rotation Limits should be used on 2D IK solvers.",
+								bones[i].transform);
 						}
+
 						bones[i].rotationLimit.Disable();
 					}
 				}
 				else
 				{
-					bones[i].axis = Quaternion.Inverse(bones[i].transform.rotation) * (bones[bones.Length - 1].transform.position - bones[0].transform.position);
+					bones[i].axis = Quaternion.Inverse(bones[i].transform.rotation) *
+					                (bones[bones.Length - 1].transform.position - bones[0].transform.position);
 				}
 			}
 		}
@@ -215,12 +221,15 @@ namespace RootMotion.FinalIK
 			{
 				return Vector3.zero;
 			}
+
 			Vector3 normalized = (IKPosition - bones[0].transform.position).normalized;
 			Vector3 rhs = new Vector3(normalized.y, normalized.z, normalized.x);
-			if (useRotationLimits && bones[bones.Length - 2].rotationLimit != null && bones[bones.Length - 2].rotationLimit is RotationLimitHinge)
+			if (useRotationLimits && bones[bones.Length - 2].rotationLimit != null &&
+			    bones[bones.Length - 2].rotationLimit is RotationLimitHinge)
 			{
 				rhs = bones[bones.Length - 2].transform.rotation * bones[bones.Length - 2].rotationLimit.axis;
 			}
+
 			return Vector3.Cross(normalized, rhs) * bones[bones.Length - 2].length * 0.5f;
 		}
 
@@ -230,6 +239,7 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			Vector3 vector = bones[bones.Length - 1].transform.position - bones[0].transform.position;
 			Vector3 vector2 = IKPosition - bones[0].transform.position;
 			float magnitude = vector.magnitude;
@@ -238,27 +248,33 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			if (magnitude < chainLength - bones[bones.Length - 2].length * 0.1f)
 			{
 				return false;
 			}
+
 			if (magnitude == 0f)
 			{
 				return false;
 			}
+
 			if (magnitude2 == 0f)
 			{
 				return false;
 			}
+
 			if (magnitude2 > magnitude)
 			{
 				return false;
 			}
+
 			float num = Vector3.Dot(vector / magnitude, vector2 / magnitude2);
 			if (num < 0.999f)
 			{
 				return false;
 			}
+
 			return true;
 		}
 	}

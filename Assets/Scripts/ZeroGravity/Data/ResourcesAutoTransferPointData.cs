@@ -4,10 +4,7 @@ namespace ZeroGravity.Data
 	{
 		public override AttachPointType AttachPointType
 		{
-			get
-			{
-				return AttachPointType.ResourcesAutoTransferPoint;
-			}
+			get { return AttachPointType.ResourcesAutoTransferPoint; }
 		}
 	}
 }

@@ -53,8 +53,15 @@ public class HelmetRadarItem : MonoBehaviour
 				Indicator_Up.SetActive(false);
 				Indicator_Down.SetActive(false);
 			}
-			base.transform.localPosition = new Vector3(Mathf.Clamp(MathHelper.ProportionalValue(basedOnCurrent, -180f, 180f, -242f, 242f), -242f, 242f), Mathf.Clamp(Mathf.Abs(MathHelper.ProportionalValue(basedOnCurrent, -180f, 180f, -16.73f, 16.73f)) * -1f, -16.73f, 16.73f), base.transform.localPosition.z);
-			base.transform.localRotation = Quaternion.Euler(new Vector3(base.transform.localRotation.x, base.transform.localRotation.y, -1f * Mathf.Clamp(MathHelper.ProportionalValue(basedOnCurrent, -180f, 180f, -6.842f, 6.842f), -6.842f, 6.842f)));
+
+			base.transform.localPosition = new Vector3(
+				Mathf.Clamp(MathHelper.ProportionalValue(basedOnCurrent, -180f, 180f, -242f, 242f), -242f, 242f),
+				Mathf.Clamp(Mathf.Abs(MathHelper.ProportionalValue(basedOnCurrent, -180f, 180f, -16.73f, 16.73f)) * -1f,
+					-16.73f, 16.73f), base.transform.localPosition.z);
+			base.transform.localRotation = Quaternion.Euler(new Vector3(base.transform.localRotation.x,
+				base.transform.localRotation.y,
+				-1f * Mathf.Clamp(MathHelper.ProportionalValue(basedOnCurrent, -180f, 180f, -6.842f, 6.842f), -6.842f,
+					6.842f)));
 		}
 		else
 		{

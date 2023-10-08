@@ -38,6 +38,7 @@ namespace RootMotion.Demos
 			{
 				return Mathf.Clamp(hit.point.y - base.transform.position.y, min, max) * Vector3.up;
 			}
+
 			return Vector3.zero;
 		}
 	}

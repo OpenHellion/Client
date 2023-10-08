@@ -13,6 +13,7 @@ public class StanceIKBehaviour : StateMachineBehaviour
 			component.ToggleIK(false, true);
 			inTransition = false;
 		}
+
 		if (stateInfo.IsTag("None") && !animator.GetBool("InStance"))
 		{
 			animator.SetInteger("BaseDisabled", 0);
@@ -28,6 +29,7 @@ public class StanceIKBehaviour : StateMachineBehaviour
 			{
 				component.ToggleIK((!stateInfo.IsTag("Passive")) ? true : false);
 			}
+
 			inTransition = false;
 		}
 	}
@@ -35,7 +37,9 @@ public class StanceIKBehaviour : StateMachineBehaviour
 	public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
 	{
 		AimIKController component = animator.GetComponent<AimIKController>();
-		if (animator.GetNextAnimatorStateInfo(layerIndex).IsTag("Passive") || (animator.GetNextAnimatorStateInfo(layerIndex).IsTag("Active") && animator.GetNextAnimatorStateInfo(layerIndex).IsTag("Special")))
+		if (animator.GetNextAnimatorStateInfo(layerIndex).IsTag("Passive") ||
+		    (animator.GetNextAnimatorStateInfo(layerIndex).IsTag("Active") &&
+		     animator.GetNextAnimatorStateInfo(layerIndex).IsTag("Special")))
 		{
 			component.ToggleIK(false);
 		}

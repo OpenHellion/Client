@@ -18,42 +18,33 @@ public class AreaLight : MonoBehaviour
 
 	public Vector3 m_Size = new Vector3(1f, 1f, 2f);
 
-	[Range(0f, 179f)]
-	public float m_Angle;
+	[Range(0f, 179f)] public float m_Angle;
 
-	[MinValue(0f)]
-	public float m_Intensity = 0.8f;
+	[MinValue(0f)] public float m_Intensity = 0.8f;
 
 	public Color m_Color = Color.white;
 
-	[Title("Shadows")]
-	public bool m_Shadows;
+	[Title("Shadows")] public bool m_Shadows;
 
 	public LayerMask m_ShadowCullingMask = -1;
 
 	public TextureSize m_ShadowmapRes = TextureSize.x2048;
 
-	[MinValue(0f)]
-	public float m_ReceiverSearchDistance = 24f;
+	[MinValue(0f)] public float m_ReceiverSearchDistance = 24f;
 
-	[MinValue(0f)]
-	public float m_ReceiverDistanceScale = 5f;
+	[MinValue(0f)] public float m_ReceiverDistanceScale = 5f;
 
-	[MinValue(0f)]
-	public float m_LightNearSize = 4f;
+	[MinValue(0f)] public float m_LightNearSize = 4f;
 
-	[MinValue(0f)]
-	public float m_LightFarSize = 22f;
+	[MinValue(0f)] public float m_LightFarSize = 22f;
 
-	[Range(0f, 0.1f)]
-	public float m_ShadowBias = 0.001f;
+	[Range(0f, 0.1f)] public float m_ShadowBias = 0.001f;
 
 	private MeshRenderer m_SourceRenderer;
 
 	private Mesh m_SourceMesh;
 
-	[HideInInspector]
-	public Mesh m_Quad;
+	[HideInInspector] public Mesh m_Quad;
 
 	private Vector2 m_CurrentQuadSize = Vector2.zero;
 
@@ -67,11 +58,9 @@ public class AreaLight : MonoBehaviour
 
 	private static Vector3[] vertices = new Vector3[4];
 
-	[HideInInspector]
-	public Mesh m_Cube;
+	[HideInInspector] public Mesh m_Cube;
 
-	[HideInInspector]
-	public Shader m_ProxyShader;
+	[HideInInspector] public Shader m_ProxyShader;
 
 	private Material m_ProxyMaterial;
 
@@ -97,11 +86,9 @@ public class AreaLight : MonoBehaviour
 
 	private Transform m_ShadowmapCameraTransform;
 
-	[HideInInspector]
-	public Shader m_ShadowmapShader;
+	[HideInInspector] public Shader m_ShadowmapShader;
 
-	[HideInInspector]
-	public Shader m_BlurShadowmapShader;
+	[HideInInspector] public Shader m_BlurShadowmapShader;
 
 	private Material m_BlurShadowmapMaterial;
 
@@ -133,10 +120,12 @@ public class AreaLight : MonoBehaviour
 		{
 			return true;
 		}
+
 		if (m_Quad == null || !InitDirect())
 		{
 			return false;
 		}
+
 		m_SourceRenderer = GetComponent<MeshRenderer>();
 		m_SourceRenderer.enabled = true;
 		m_SourceMesh = UnityEngine.Object.Instantiate(m_Quad);
@@ -148,6 +137,7 @@ public class AreaLight : MonoBehaviour
 		{
 			transform.localScale = Vector3.one;
 		}
+
 		SetUpLUTs();
 		m_Initialized = true;
 		return true;
@@ -169,6 +159,7 @@ public class AreaLight : MonoBehaviour
 			Cleanup();
 			return;
 		}
+
 		Dictionary<Camera, CommandBuffer>.Enumerator enumerator = m_Cameras.GetEnumerator();
 		while (enumerator.MoveNext())
 		{
@@ -185,10 +176,12 @@ public class AreaLight : MonoBehaviour
 		{
 			UnityEngine.Object.DestroyImmediate(m_ProxyMaterial);
 		}
+
 		if (m_SourceMesh != null)
 		{
 			UnityEngine.Object.DestroyImmediate(m_SourceMesh);
 		}
+
 		Cleanup();
 	}
 
@@ -197,7 +190,8 @@ public class AreaLight : MonoBehaviour
 		m_Size.x = Mathf.Max(m_Size.x, 0f);
 		m_Size.y = Mathf.Max(m_Size.y, 0f);
 		m_Size.z = Mathf.Max(m_Size.z, 0f);
-		Vector2 vector = ((!m_RenderSource || !base.enabled) ? (Vector2.one * 0.0001f) : new Vector2(m_Size.x, m_Size.y));
+		Vector2 vector =
+			((!m_RenderSource || !base.enabled) ? (Vector2.one * 0.0001f) : new Vector2(m_Size.x, m_Size.y));
 		if (vector != m_CurrentQuadSize)
 		{
 			float num = vector.x * 0.5f;
@@ -210,6 +204,7 @@ public class AreaLight : MonoBehaviour
 			m_SourceMesh.vertices = vertices;
 			m_CurrentQuadSize = vector;
 		}
+
 		if (m_Size != m_CurrentSize || m_Angle != m_CurrentAngle)
 		{
 			m_SourceMesh.bounds = GetFrustumBounds();
@@ -228,11 +223,13 @@ public class AreaLight : MonoBehaviour
 			{
 				return;
 			}
+
 			UpdateSourceMesh();
 			if (!Application.isPlaying)
 			{
 				return;
 			}
+
 			Dictionary<Camera, CommandBuffer>.Enumerator enumerator = m_Cameras.GetEnumerator();
 			while (enumerator.MoveNext())
 			{
@@ -248,7 +245,8 @@ public class AreaLight : MonoBehaviour
 	{
 		if (Init())
 		{
-			Color color = new Color(Mathf.GammaToLinearSpace(m_Color.r), Mathf.GammaToLinearSpace(m_Color.g), Mathf.GammaToLinearSpace(m_Color.b), 1f);
+			Color color = new Color(Mathf.GammaToLinearSpace(m_Color.r), Mathf.GammaToLinearSpace(m_Color.g),
+				Mathf.GammaToLinearSpace(m_Color.b), 1f);
 			m_props.SetVector("_EmissionColor", color * m_Intensity);
 			m_SourceRenderer.SetPropertyBlock(m_props);
 			SetUpCommandBuffer();
@@ -261,6 +259,7 @@ public class AreaLight : MonoBehaviour
 		{
 			return 0f;
 		}
+
 		return m_Size.y * 0.5f / Mathf.Tan(m_Angle * 0.5f * ((float)Math.PI / 180f));
 	}
 
@@ -276,7 +275,8 @@ public class AreaLight : MonoBehaviour
 		Matrix4x4 matrix4x;
 		if (m_Angle == 0f)
 		{
-			matrix4x = Matrix4x4.Ortho(-0.5f * m_Size.x, 0.5f * m_Size.x, -0.5f * m_Size.y, 0.5f * m_Size.y, 0f, 0f - m_Size.z);
+			matrix4x = Matrix4x4.Ortho(-0.5f * m_Size.x, 0.5f * m_Size.x, -0.5f * m_Size.y, 0.5f * m_Size.y, 0f,
+				0f - m_Size.z);
 		}
 		else
 		{
@@ -290,8 +290,10 @@ public class AreaLight : MonoBehaviour
 				matrix4x = Matrix4x4.Perspective(m_Angle, m_Size.x / m_Size.y, nearToCenter, nearToCenter + m_Size.z);
 				matrix4x *= Matrix4x4.Scale(new Vector3(1f, 1f, -1f));
 			}
+
 			matrix4x *= GetOffsetMatrix(nearToCenter);
 		}
+
 		return matrix4x * base.transform.worldToLocalMatrix;
 	}
 
@@ -338,6 +340,7 @@ public class AreaLight : MonoBehaviour
 			Vector3 vector = -transform.forward;
 			return new Vector4(vector.x, vector.y, vector.z, 0f);
 		}
+
 		Vector3 vector2 = transform.position - GetNearToCenter() * transform.forward;
 		return new Vector4(vector2.x, vector2.y, vector2.z, 1f);
 	}
@@ -348,6 +351,7 @@ public class AreaLight : MonoBehaviour
 		{
 			return new Bounds(Vector3.zero, m_Size);
 		}
+
 		float num = Mathf.Tan(m_Angle * 0.5f * ((float)Math.PI / 180f));
 		float num2 = m_Size.y * 0.5f / num;
 		float z = m_Size.z;
@@ -365,6 +369,7 @@ public class AreaLight : MonoBehaviour
 			Gizmos.DrawWireCube(new Vector3(0f, 0f, 0.5f * m_Size.z), m_Size);
 			return;
 		}
+
 		float nearToCenter = GetNearToCenter();
 		Gizmos.matrix = base.transform.localToWorldMatrix * GetOffsetMatrix(0f - nearToCenter);
 		Gizmos.DrawFrustum(Vector3.zero, m_Angle, nearToCenter + m_Size.z, nearToCenter, m_Size.x / m_Size.y);
@@ -380,6 +385,7 @@ public class AreaLight : MonoBehaviour
 		{
 			return false;
 		}
+
 		m_ProxyMaterial = new Material(m_ProxyShader);
 		m_ProxyMaterial.hideFlags = HideFlags.HideAndDontSave;
 		return true;
@@ -391,14 +397,17 @@ public class AreaLight : MonoBehaviour
 		{
 			s_TransformInvTexture_Diffuse = AreaLightLUT.LoadLUT(AreaLightLUT.LUTType.TransformInv_DisneyDiffuse);
 		}
+
 		if (s_TransformInvTexture_Specular == null)
 		{
 			s_TransformInvTexture_Specular = AreaLightLUT.LoadLUT(AreaLightLUT.LUTType.TransformInv_GGX);
 		}
+
 		if (s_AmpDiffAmpSpecFresnel == null)
 		{
 			s_AmpDiffAmpSpecFresnel = AreaLightLUT.LoadLUT(AreaLightLUT.LUTType.AmpDiffAmpSpecFresnel);
 		}
+
 		m_ProxyMaterial.SetTexture("_TransformInv_Diffuse", s_TransformInvTexture_Diffuse);
 		m_ProxyMaterial.SetTexture("_TransformInv_Specular", s_TransformInvTexture_Specular);
 		m_ProxyMaterial.SetTexture("_AmpDiffAmpSpecFresnel", s_AmpDiffAmpSpecFresnel);
@@ -415,6 +424,7 @@ public class AreaLight : MonoBehaviour
 				current.Key.RemoveCommandBuffer(kCameraEvent, current.Value);
 			}
 		}
+
 		m_Cameras.Clear();
 	}
 
@@ -424,6 +434,7 @@ public class AreaLight : MonoBehaviour
 		{
 			return null;
 		}
+
 		CommandBuffer commandBuffer = null;
 		if (!m_Cameras.ContainsKey(cam))
 		{
@@ -438,6 +449,7 @@ public class AreaLight : MonoBehaviour
 			commandBuffer = m_Cameras[cam];
 			commandBuffer.Clear();
 		}
+
 		return commandBuffer;
 	}
 
@@ -456,15 +468,20 @@ public class AreaLight : MonoBehaviour
 			Matrix4x4 value = default(Matrix4x4);
 			for (int i = 0; i < 4; i++)
 			{
-				value.SetRow(i, transform.TransformPoint(new Vector3(m_Size.x * offsets[i, 0], m_Size.y * offsets[i, 1], z) * 0.5f));
+				value.SetRow(i,
+					transform.TransformPoint(new Vector3(m_Size.x * offsets[i, 0], m_Size.y * offsets[i, 1], z) *
+					                         0.5f));
 			}
+
 			orCreateCommandBuffer.SetGlobalMatrix("_LightVerts", value);
 			if (m_Shadows)
 			{
 				SetUpShadowmapForSampling(orCreateCommandBuffer);
 			}
+
 			Matrix4x4 matrix4x = Matrix4x4.TRS(new Vector3(0f, 0f, 10f), Quaternion.identity, Vector3.one * 20f);
-			orCreateCommandBuffer.DrawMesh(m_Cube, transform.localToWorldMatrix * matrix4x, m_ProxyMaterial, 0, (!m_Shadows) ? 1 : 0);
+			orCreateCommandBuffer.DrawMesh(m_Cube, transform.localToWorldMatrix * matrix4x, m_ProxyMaterial, 0,
+				(!m_Shadows) ? 1 : 0);
 		}
 	}
 
@@ -495,7 +512,9 @@ public class AreaLight : MonoBehaviour
 		{
 			return m_Color * m_Intensity;
 		}
-		return new Color(Mathf.GammaToLinearSpace(m_Color.r * m_Intensity), Mathf.GammaToLinearSpace(m_Color.g * m_Intensity), Mathf.GammaToLinearSpace(m_Color.b * m_Intensity), 1f);
+
+		return new Color(Mathf.GammaToLinearSpace(m_Color.r * m_Intensity),
+			Mathf.GammaToLinearSpace(m_Color.g * m_Intensity), Mathf.GammaToLinearSpace(m_Color.b * m_Intensity), 1f);
 	}
 
 	private void UpdateShadowmap(int res)
@@ -504,6 +523,7 @@ public class AreaLight : MonoBehaviour
 		{
 			return;
 		}
+
 		if (m_ShadowmapCamera == null)
 		{
 			if (m_ShadowmapShader == null)
@@ -511,6 +531,7 @@ public class AreaLight : MonoBehaviour
 				Debug.LogError("AreaLight's shadowmap shader not assigned.", this);
 				return;
 			}
+
 			GameObject gameObject = new GameObject("Shadowmap Camera");
 			gameObject.AddComponent(typeof(Camera));
 			m_ShadowmapCamera = gameObject.GetComponent<Camera>();
@@ -523,6 +544,7 @@ public class AreaLight : MonoBehaviour
 			m_ShadowmapCameraTransform.parent = base.transform;
 			m_ShadowmapCameraTransform.localRotation = Quaternion.identity;
 		}
+
 		if (m_Angle == 0f)
 		{
 			m_ShadowmapCamera.orthographic = true;
@@ -542,6 +564,7 @@ public class AreaLight : MonoBehaviour
 			m_ShadowmapCamera.fieldOfView = m_Angle;
 			m_ShadowmapCamera.aspect = m_Size.x / m_Size.y;
 		}
+
 		ReleaseTemporary(ref m_Shadowmap);
 		m_Shadowmap = RenderTexture.GetTemporary(res, res, 24, RenderTextureFormat.Shadowmap);
 		m_Shadowmap.name = "AreaLight Shadowmap";
@@ -570,6 +593,7 @@ public class AreaLight : MonoBehaviour
 		{
 			return;
 		}
+
 		InitFogLight();
 		int num = (int)m_ShadowmapRes;
 		int num2 = (int)m_FogLight.m_ShadowmapRes;
@@ -581,6 +605,7 @@ public class AreaLight : MonoBehaviour
 		{
 			num = 2 * num;
 		}
+
 		UpdateShadowmap(num);
 		RenderTexture active = RenderTexture.active;
 		ReleaseTemporary(ref m_BlurredShadowmap);
@@ -590,6 +615,7 @@ public class AreaLight : MonoBehaviour
 		{
 			temp = new RenderTexture[num3];
 		}
+
 		RenderTextureFormat format = RenderTextureFormat.RGHalf;
 		int i = 0;
 		int num4 = num / 2;
@@ -599,7 +625,8 @@ public class AreaLight : MonoBehaviour
 			temp[i].name = "AreaLight Shadow Downsample";
 			temp[i].filterMode = FilterMode.Bilinear;
 			temp[i].wrapMode = TextureWrapMode.Clamp;
-			m_BlurShadowmapMaterial.SetVector("_TexelSize", new Vector4(0.5f / (float)num4, 0.5f / (float)num4, 0f, 0f));
+			m_BlurShadowmapMaterial.SetVector("_TexelSize",
+				new Vector4(0.5f / (float)num4, 0.5f / (float)num4, 0f, 0f));
 			if (i == 0)
 			{
 				m_BlurShadowmapMaterial.SetTexture("_Shadowmap", m_Shadowmap);
@@ -614,12 +641,15 @@ public class AreaLight : MonoBehaviour
 				m_BlurShadowmapMaterial.SetTexture("_MainTex", temp[i - 1]);
 				Blur(temp[i - 1], temp[i], 1);
 			}
+
 			num4 /= 2;
 		}
+
 		for (int j = 0; j < num3 - 1; j++)
 		{
 			RenderTexture.ReleaseTemporary(temp[j]);
 		}
+
 		m_BlurredShadowmap = temp[num3 - 1];
 		if (m_FogLight.m_BlurIterations > 0)
 		{
@@ -627,7 +657,8 @@ public class AreaLight : MonoBehaviour
 			temporary.name = "AreaLight Shadow Blur";
 			temporary.filterMode = FilterMode.Bilinear;
 			temporary.wrapMode = TextureWrapMode.Clamp;
-			m_BlurShadowmapMaterial.SetVector("_MainTex_TexelSize", new Vector4(1f / (float)num2, 1f / (float)num2, 0f, 0f));
+			m_BlurShadowmapMaterial.SetVector("_MainTex_TexelSize",
+				new Vector4(1f / (float)num2, 1f / (float)num2, 0f, 0f));
 			float num5 = m_FogLight.m_BlurSize;
 			for (int k = 0; k < m_FogLight.m_BlurIterations; k++)
 			{
@@ -636,8 +667,10 @@ public class AreaLight : MonoBehaviour
 				Blur(temporary, m_BlurredShadowmap, 3);
 				num5 *= 1.2f;
 			}
+
 			RenderTexture.ReleaseTemporary(temporary);
 		}
+
 		RenderTexture.active = active;
 		m_BlurredShadowmapRenderTime = Time.renderedFrameCount;
 	}
@@ -689,6 +722,7 @@ public class AreaLight : MonoBehaviour
 				Debug.LogError("Missing shader");
 				return;
 			}
+
 			material = new Material(shader);
 			material.hideFlags = HideFlags.HideAndDontSave;
 		}

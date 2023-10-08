@@ -18,7 +18,8 @@ namespace ZeroGravity.Data
 		public override bool Equals(object obj)
 		{
 			ItemCompoundType itemCompoundType = obj as ItemCompoundType;
-			return Type == itemCompoundType.Type && SubType == itemCompoundType.SubType && PartType == itemCompoundType.PartType && Tier == itemCompoundType.Tier;
+			return Type == itemCompoundType.Type && SubType == itemCompoundType.SubType &&
+			       PartType == itemCompoundType.PartType && Tier == itemCompoundType.Tier;
 		}
 
 		public override int GetHashCode()

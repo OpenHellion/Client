@@ -23,22 +23,27 @@ namespace RootMotion.FinalIK
 		[Tooltip("InteractionObject weight curve multipliers for this effector target.")]
 		public Multiplier[] multipliers;
 
-		[Tooltip("The interaction speed multiplier for this effector. This can be used to make interactions faster/slower for specific effectors.")]
+		[Tooltip(
+			"The interaction speed multiplier for this effector. This can be used to make interactions faster/slower for specific effectors.")]
 		public float interactionSpeedMlp = 1f;
 
-		[Tooltip("The pivot to twist/swing this interaction target about. For symmetric objects that can be interacted with from a certain angular range.")]
+		[Tooltip(
+			"The pivot to twist/swing this interaction target about. For symmetric objects that can be interacted with from a certain angular range.")]
 		public Transform pivot;
 
 		[Tooltip("The axis of twisting the interaction target (blue line).")]
 		public Vector3 twistAxis = Vector3.up;
 
-		[Tooltip("The weight of twisting the interaction target towards the effector bone in the start of the interaction.")]
+		[Tooltip(
+			"The weight of twisting the interaction target towards the effector bone in the start of the interaction.")]
 		public float twistWeight = 1f;
 
-		[Tooltip("The weight of swinging the interaction target towards the effector bone in the start of the interaction. Swing is defined as a 3-DOF rotation around any axis, while twist is only around the twist axis.")]
+		[Tooltip(
+			"The weight of swinging the interaction target towards the effector bone in the start of the interaction. Swing is defined as a 3-DOF rotation around any axis, while twist is only around the twist axis.")]
 		public float swingWeight;
 
-		[Tooltip("If true, will twist/swing around the pivot only once at the start of the interaction. If false, will continue rotating throuout the whole interaction.")]
+		[Tooltip(
+			"If true, will twist/swing around the pivot only once at the start of the interaction. If false, will continue rotating throuout the whole interaction.")]
 		public bool rotateOnce = true;
 
 		private Quaternion defaultLocalRotation;
@@ -60,13 +65,15 @@ namespace RootMotion.FinalIK
 		[ContextMenu("TUTORIAL VIDEO (PART 3: ANIMATION)")]
 		private void OpenTutorial3()
 		{
-			Application.OpenURL("https://www.youtube.com/watch?v=sQfB2RcT1T4&index=14&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6");
+			Application.OpenURL(
+				"https://www.youtube.com/watch?v=sQfB2RcT1T4&index=14&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6");
 		}
 
 		[ContextMenu("TUTORIAL VIDEO (PART 4: TRIGGERS)")]
 		private void OpenTutorial4()
 		{
-			Application.OpenURL("https://www.youtube.com/watch?v=-TDZpNjt2mk&index=15&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6");
+			Application.OpenURL(
+				"https://www.youtube.com/watch?v=-TDZpNjt2mk&index=15&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6");
 		}
 
 		[ContextMenu("Support Group")]
@@ -78,7 +85,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Asset Store Thread")]
 		private void ASThread()
 		{
-			Application.OpenURL("http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
+			Application.OpenURL(
+				"http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
 		}
 
 		public float GetValue(InteractionObject.WeightCurve.Type curveType)
@@ -90,6 +98,7 @@ namespace RootMotion.FinalIK
 					return multipliers[i].multiplier;
 				}
 			}
+
 			return 1f;
 		}
 
@@ -110,6 +119,7 @@ namespace RootMotion.FinalIK
 					defaultLocalRotation = pivot.localRotation;
 					lastPivot = pivot;
 				}
+
 				pivot.localRotation = defaultLocalRotation;
 				if (twistWeight > 0f)
 				{
@@ -123,9 +133,11 @@ namespace RootMotion.FinalIK
 					Quaternion b = QuaTools.FromToAroundAxis(tangent, tangent2, vector);
 					pivot.rotation = Quaternion.Lerp(Quaternion.identity, b, twistWeight) * pivot.rotation;
 				}
+
 				if (swingWeight > 0f)
 				{
-					Quaternion b2 = Quaternion.FromToRotation(base.transform.position - pivot.position, position - pivot.position);
+					Quaternion b2 = Quaternion.FromToRotation(base.transform.position - pivot.position,
+						position - pivot.position);
 					pivot.rotation = Quaternion.Lerp(Quaternion.identity, b2, swingWeight) * pivot.rotation;
 				}
 			}
@@ -140,7 +152,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Scrpt Reference")]
 		private void OpenScriptReference()
 		{
-			Application.OpenURL("http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_interaction_target.html");
+			Application.OpenURL(
+				"http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_interaction_target.html");
 		}
 	}
 }

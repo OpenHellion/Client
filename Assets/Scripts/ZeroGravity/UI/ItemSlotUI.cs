@@ -13,14 +13,19 @@ namespace ZeroGravity.UI
 		{
 			get
 			{
-				if ((InventoryUI.DraggingItem != null && InventoryUI.DraggingItem is Outfit && InventoryUI.DraggingItem.Slot.Parent is Corpse) || (InventoryUI.DraggingItem != null && InventoryUI.DraggingItem.Slot is BaseSceneAttachPoint && Slot.Item != null))
+				if ((InventoryUI.DraggingItem != null && InventoryUI.DraggingItem is Outfit &&
+				     InventoryUI.DraggingItem.Slot.Parent is Corpse) || (InventoryUI.DraggingItem != null &&
+				                                                         InventoryUI.DraggingItem.Slot is
+					                                                         BaseSceneAttachPoint && Slot.Item != null))
 				{
 					return true;
 				}
+
 				if (InventoryUI.IsDragging && InventoryUI.DraggingItem != null)
 				{
 					return !Slot.CanFitItem(InventoryUI.DraggingItem);
 				}
+
 				return false;
 			}
 		}
@@ -33,6 +38,7 @@ namespace ZeroGravity.UI
 				{
 					return Slot.Item;
 				}
+
 				return null;
 			}
 		}
@@ -62,6 +68,7 @@ namespace ZeroGravity.UI
 					InventoryUI.UpdateSelectedItemInfo(Item);
 				}
 			}
+
 			UpdateHealth();
 			RefreshQuantity();
 		}
@@ -74,10 +81,12 @@ namespace ZeroGravity.UI
 				{
 					InventoryUI.DraggingItem.RequestAttach(Slot);
 				}
+
 				if (Item == InventoryUI.SelectedItem)
 				{
 					InventoryUI.DeselectItem();
 				}
+
 				InventoryUI.RefreshSlots();
 			}
 		}

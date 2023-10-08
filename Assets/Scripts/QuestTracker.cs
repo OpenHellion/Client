@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using ZeroGravity;
 using ZeroGravity.Data;
@@ -16,7 +18,7 @@ public class QuestTracker : MonoBehaviour
 
 	public Transform Content;
 
-	public Quest CurrentQuest;
+	private Quest _currentQuest;
 
 	public Animator Animator;
 
@@ -26,17 +28,20 @@ public class QuestTracker : MonoBehaviour
 
 	public Text AltTriggerName;
 
+	[FormerlySerializedAs("_worldState")] [SerializeField] private World _world;
+
 	public void AddTasks()
 	{
 		foreach (TaskUI value in Tasks.Values)
 		{
 			if (value != null)
 			{
-				Object.Destroy(value.gameObject);
+				Destroy(value.gameObject);
 			}
 		}
+
 		Tasks.Clear();
-		foreach (QuestTrigger questTrigger in CurrentQuest.QuestTriggers)
+		foreach (QuestTrigger questTrigger in _currentQuest.QuestTriggers)
 		{
 			if (questTrigger.Type != QuestTriggerType.Activate)
 			{
@@ -49,7 +54,8 @@ public class QuestTracker : MonoBehaviour
 				Tasks.Add(questTrigger, taskUI);
 			}
 		}
-		QuestName.text = Localization.GetLocalizedField(CurrentQuest.Name, useDefault: true).ToUpper();
+
+		QuestName.text = Localization.GetLocalizedField(_currentQuest.Name, useDefault: true).ToUpper();
 	}
 
 	public void RefreshTasks()
@@ -74,24 +80,26 @@ public class QuestTracker : MonoBehaviour
 				flag = false;
 			}
 		}
+
 		if (!flag)
 		{
 			return;
 		}
-		Quest quest = null;
+
 		HideActiveTasks();
-		if (CurrentQuest.QuestObject.QuestToTrackWhenCompleted != null)
+		if (_currentQuest.QuestObject.QuestToTrackWhenCompleted != null)
 		{
-			quest = Client.Instance.Quests.FirstOrDefault((Quest m) => m.ID == CurrentQuest.QuestObject.QuestToTrackWhenCompleted.ID);
-			Client.Instance.CanvasManager.CanvasUI.SetCurrentTrackingQuest(quest);
+			Quest quest = _world.Quests.FirstOrDefault((Quest m) =>
+				m.ID == _currentQuest.QuestObject.QuestToTrackWhenCompleted.ID);
+			_world.InGameGUI.SetCurrentTrackingQuest(quest);
 		}
 	}
 
 	public void ShowTasks()
 	{
-		if (CurrentQuest.Status != QuestStatus.Completed)
+		if (_currentQuest.Status != QuestStatus.Completed)
 		{
-			base.gameObject.SetActive(value: true);
+			gameObject.SetActive(value: true);
 			Animator.SetBool("Close", value: false);
 			AddTasks();
 		}
@@ -99,8 +107,8 @@ public class QuestTracker : MonoBehaviour
 
 	public void ShowTasks(float delay)
 	{
-		CurrentQuest = Client.Instance.CanvasManager.CanvasUI.CurrentTrackingQuest;
-		Invoke("ShowTasks", delay);
+		_currentQuest = _world.InGameGUI.CurrentTrackingQuest;
+		Invoke(nameof(ShowTasks), delay);
 	}
 
 	public void HideActiveTasks()
@@ -109,6 +117,7 @@ public class QuestTracker : MonoBehaviour
 		{
 			value.Animator.SetTrigger("Close");
 		}
+
 		Animator.SetBool("Close", value: true);
 	}
 

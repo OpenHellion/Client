@@ -10,27 +10,19 @@ namespace ZeroGravity.Objects
 	{
 		public GenericItemSubType SubType;
 
-		[SerializeField]
-		private GameObject FoldedItem;
+		[SerializeField] private GameObject FoldedItem;
 
-		[SerializeField]
-		private List<Collider> FoldedColliders;
+		[SerializeField] private List<Collider> FoldedColliders;
 
-		[Space(35f)]
-		[SerializeField]
-		private GameObject UnfoldedItem;
+		[Space(35f)] [SerializeField] private GameObject UnfoldedItem;
 
-		[SerializeField]
-		private List<Collider> UnfoldedColliders;
+		[SerializeField] private List<Collider> UnfoldedColliders;
 
 		public string Look;
 
 		public string ItemName
 		{
-			get
-			{
-				return SubType.ToLocalizedString();
-			}
+			get { return SubType.ToLocalizedString(); }
 		}
 
 		public string ItemDescription
@@ -42,16 +34,14 @@ namespace ZeroGravity.Objects
 				{
 					return value;
 				}
+
 				return string.Empty;
 			}
 		}
 
 		public float ProporcionalHealth
 		{
-			get
-			{
-				return base.Health / base.MaxHealth;
-			}
+			get { return base.Health / base.MaxHealth; }
 		}
 
 		public override DynamicObjectAuxData GetAuxData()
@@ -76,6 +66,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			string path = "Materials/GenericItem/" + SubType.ToString() + "/" + Look;
 			Material material = Resources.Load<Material>(path);
 			if (material != null && UnfoldedItem != null)
@@ -103,6 +94,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			bool flag = isAttached || base.AttachPoint == null || !(base.AttachPoint is ActiveSceneAttachPoint);
 			FoldedItem.SetActive(flag);
 			UnfoldedItem.SetActive(!flag);
@@ -110,6 +102,7 @@ namespace ZeroGravity.Objects
 			{
 				foldedCollider.enabled = !isOnPlayer && flag;
 			}
+
 			foreach (Collider unfoldedCollider in UnfoldedColliders)
 			{
 				unfoldedCollider.enabled = !isOnPlayer && !flag;

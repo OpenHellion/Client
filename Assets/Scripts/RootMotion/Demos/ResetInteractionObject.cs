@@ -36,12 +36,14 @@ namespace RootMotion.Demos
 			{
 				yield return null;
 			}
+
 			Poser poser = base.transform.parent.GetComponent<Poser>();
 			if (poser != null)
 			{
 				poser.poseRoot = null;
 				poser.weight = 0f;
 			}
+
 			base.transform.parent = defaultParent;
 			base.transform.position = defaultPosition;
 			base.transform.rotation = defaultRotation;

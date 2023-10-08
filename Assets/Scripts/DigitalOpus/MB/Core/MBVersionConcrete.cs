@@ -52,6 +52,7 @@ namespace DigitalOpus.MB.Core
 			{
 				return !m.isReadable;
 			}
+
 			return false;
 		}
 
@@ -61,6 +62,7 @@ namespace DigitalOpus.MB.Core
 			{
 				MB2_Log.LogDebug("UV1 does not exist in Unity 5+");
 			}
+
 			Vector2[] array = m.uv;
 			if (array.Length == 0)
 			{
@@ -68,16 +70,19 @@ namespace DigitalOpus.MB.Core
 				{
 					MB2_Log.LogDebug(string.Concat("Mesh ", m, " has no uv1s. Generating"));
 				}
+
 				if (LOG_LEVEL >= MB2_LogLevel.warn)
 				{
 					Debug.LogWarning(string.Concat("Mesh ", m, " didn't have uv1s. Generating uv1s."));
 				}
+
 				array = new Vector2[m.vertexCount];
 				for (int i = 0; i < array.Length; i++)
 				{
 					array[i] = _HALF_UV;
 				}
 			}
+
 			return array;
 		}
 
@@ -90,12 +95,14 @@ namespace DigitalOpus.MB.Core
 				{
 					MB2_Log.LogDebug(string.Concat("Mesh ", m, " has no uv", (!get3) ? "4" : "3", ". Generating"));
 				}
+
 				array = new Vector2[m.vertexCount];
 				for (int i = 0; i < array.Length; i++)
 				{
 					array[i] = _HALF_UV;
 				}
 			}
+
 			return array;
 		}
 
@@ -125,10 +132,12 @@ namespace DigitalOpus.MB.Core
 			{
 				return ((SkinnedMeshRenderer)r).bones;
 			}
+
 			if (r is MeshRenderer)
 			{
 				return new Transform[1] { r.transform };
 			}
+
 			Debug.LogError("Could not getBones. Object does not have a renderer");
 			return null;
 		}

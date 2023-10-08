@@ -34,7 +34,8 @@ namespace ZeroGravity.Math
 
 		public static Vector3 Clamp(Vector3 value, Vector3 min, Vector3 max)
 		{
-			return new Vector3(Clamp(value.x, min.x, max.x), Clamp(value.y, min.y, max.y), Clamp(value.z, min.z, max.z));
+			return new Vector3(Clamp(value.x, min.x, max.x), Clamp(value.y, min.y, max.y),
+				Clamp(value.z, min.z, max.z));
 		}
 
 		public static float Lerp(float value1, float value2, float amount)
@@ -51,12 +52,17 @@ namespace ZeroGravity.Math
 		{
 			if (fromVelocity != toVelocity)
 			{
-				fromVelocity = ((!(fromVelocity < toVelocity)) ? System.Math.Max(fromVelocity + (toVelocity - fromVelocity) * Clamp(lerpAmount, 0f, 1f), toVelocity) : System.Math.Min(fromVelocity + (toVelocity - fromVelocity) * Clamp(lerpAmount, 0f, 1f), toVelocity));
+				fromVelocity = ((!(fromVelocity < toVelocity))
+					? System.Math.Max(fromVelocity + (toVelocity - fromVelocity) * Clamp(lerpAmount, 0f, 1f),
+						toVelocity)
+					: System.Math.Min(fromVelocity + (toVelocity - fromVelocity) * Clamp(lerpAmount, 0f, 1f),
+						toVelocity));
 				if (System.Math.Abs(toVelocity - fromVelocity) < epsilon)
 				{
 					fromVelocity = toVelocity;
 				}
 			}
+
 			return fromVelocity;
 		}
 
@@ -71,6 +77,7 @@ namespace ZeroGravity.Math
 			{
 				return -1;
 			}
+
 			return 1;
 		}
 
@@ -82,26 +89,33 @@ namespace ZeroGravity.Math
 			{
 				return value1;
 			}
+
 			if (amount == 1.0)
 			{
 				return value2;
 			}
-			return (2.0 * value1 - 2.0 * value2 + tangent2 + tangent1) * num + (3.0 * value2 - 3.0 * value1 - 2.0 * tangent1 - tangent2) * num2 + tangent1 * amount + value1;
+
+			return (2.0 * value1 - 2.0 * value2 + tangent2 + tangent1) * num +
+			       (3.0 * value2 - 3.0 * value1 - 2.0 * tangent1 - tangent2) * num2 + tangent1 * amount + value1;
 		}
 
-		public static float ProportionalValue(float basedOnCurrent, float basedOnMin, float basedOnMax, float resultMin, float resoultMax)
+		public static float ProportionalValue(float basedOnCurrent, float basedOnMin, float basedOnMax, float resultMin,
+			float resoultMax)
 		{
 			return resultMin + (resoultMax - resultMin) * ((basedOnCurrent - basedOnMin) / (basedOnMax - basedOnMin));
 		}
 
-		public static Vector3D ProportionalValue(Vector3D basedOnCurrent, Vector3D basedOnMin, Vector3D basedOnMax, Vector3D resultMin, Vector3D resoultMax)
+		public static Vector3D ProportionalValue(Vector3D basedOnCurrent, Vector3D basedOnMin, Vector3D basedOnMax,
+			Vector3D resultMin, Vector3D resoultMax)
 		{
-			return resultMin + (resoultMax - resultMin) * ((basedOnCurrent - basedOnMin).Magnitude / (basedOnMax - basedOnMin).Magnitude);
+			return resultMin + (resoultMax - resultMin) *
+				((basedOnCurrent - basedOnMin).Magnitude / (basedOnMax - basedOnMin).Magnitude);
 		}
 
 		public static bool SameSign(Vector3 first, Vector3 second)
 		{
-			float num = Sign(first.x) * Sign(second.x) + Sign(first.y) * Sign(second.y) + Sign(first.z) * Sign(second.z);
+			float num = Sign(first.x) * Sign(second.x) + Sign(first.y) * Sign(second.y) +
+			            Sign(first.z) * Sign(second.z);
 			return num == 3f;
 		}
 
@@ -127,6 +141,7 @@ namespace ZeroGravity.Math
 				flag = true;
 				num = 0f - num;
 			}
+
 			float num2;
 			float num3;
 			if (num > 0.999999f)
@@ -142,7 +157,9 @@ namespace ZeroGravity.Math
 				num2 = Mathf.Sin((1f - amount) * num4) * num5;
 				num3 = ((!flag) ? (Mathf.Sin(amount * num4) * num5) : ((0f - Mathf.Sin(amount * num4)) * num5));
 			}
-			return new Quaternion(num2 * from.x + num3 * to.x, num2 * from.y + num3 * to.y, num2 * from.z + num3 * to.z, num2 * from.w + num3 * to.w);
+
+			return new Quaternion(num2 * from.x + num3 * to.x, num2 * from.y + num3 * to.y, num2 * from.z + num3 * to.z,
+				num2 * from.w + num3 * to.w);
 		}
 
 		public static float AngleSigned(Vector3 vec1, Vector3 vec2, Vector3 planeNormal)

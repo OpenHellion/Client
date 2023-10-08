@@ -11,22 +11,14 @@ namespace ZeroGravity.LevelDesign
 	{
 		public List<GameObjectChancePair> ListToPickFrom = new List<GameObjectChancePair>();
 
-		[SerializeField]
-		private int _inSceneID;
+		[SerializeField] private int _inSceneID;
 
-		[CompilerGenerated]
-		private static Func<GameObjectChancePair, float> _003C_003Ef__am_0024cache0;
+		[CompilerGenerated] private static Func<GameObjectChancePair, float> _003C_003Ef__am_0024cache0;
 
 		public int InSceneID
 		{
-			get
-			{
-				return _inSceneID;
-			}
-			set
-			{
-				_inSceneID = value;
-			}
+			get { return _inSceneID; }
+			set { _inSceneID = value; }
 		}
 
 		private void Awake()
@@ -36,6 +28,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				_003C_003Ef__am_0024cache0 = _003CAwake_003Em__0;
 			}
+
 			listToPickFrom.OrderBy(_003C_003Ef__am_0024cache0);
 		}
 
@@ -48,6 +41,7 @@ namespace ZeroGravity.LevelDesign
 					return i;
 				}
 			}
+
 			return -1;
 		}
 

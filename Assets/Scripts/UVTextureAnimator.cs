@@ -50,10 +50,12 @@ internal class UVTextureAnimator : MonoBehaviour
 		{
 			throw new Exception("UvTextureAnimator can't get renderer");
 		}
+
 		if (!currentRenderer.enabled)
 		{
 			currentRenderer.enabled = true;
 		}
+
 		allCount = 0;
 		deltaFps = 1f / Fps;
 		count = Rows * Columns;
@@ -81,6 +83,7 @@ internal class UVTextureAnimator : MonoBehaviour
 			{
 				StartCoroutine(UpdateCorutine());
 			}
+
 			isCorutineStarted = true;
 		}
 	}
@@ -117,8 +120,10 @@ internal class UVTextureAnimator : MonoBehaviour
 			{
 				break;
 			}
+
 			yield return new WaitForSeconds(deltaFps);
 		}
+
 		isCorutineStarted = false;
 		currentRenderer.enabled = false;
 	}
@@ -131,7 +136,9 @@ internal class UVTextureAnimator : MonoBehaviour
 		{
 			index = 0;
 		}
-		Vector2 value = new Vector2((float)index / (float)Columns - (float)(index / Columns), 1f - (float)(index / Columns) / (float)Rows);
+
+		Vector2 value = new Vector2((float)index / (float)Columns - (float)(index / Columns),
+			1f - (float)(index / Columns) / (float)Rows);
 		if (currentRenderer != null)
 		{
 			instanceMaterial.SetTextureOffset("_MainTex", value);

@@ -11,8 +11,7 @@ namespace RootMotion.FinalIK
 		{
 			public Transform transform;
 
-			[Range(0f, 1f)]
-			public float weight = 1f;
+			[Range(0f, 1f)] public float weight = 1f;
 
 			public Vector3 solverPosition;
 
@@ -34,6 +33,7 @@ namespace RootMotion.FinalIK
 				{
 					transform.localPosition = defaultLocalPosition;
 				}
+
 				if (transform.localRotation != defaultLocalRotation)
 				{
 					transform.localRotation = defaultLocalRotation;
@@ -60,10 +60,12 @@ namespace RootMotion.FinalIK
 					{
 						return null;
 					}
+
 					if (_rotationLimit == null)
 					{
 						_rotationLimit = transform.GetComponent<RotationLimit>();
 					}
+
 					isLimited = _rotationLimit != null;
 					return _rotationLimit;
 				}
@@ -93,14 +95,16 @@ namespace RootMotion.FinalIK
 			{
 				if (!(weight <= 0f))
 				{
-					Quaternion quaternion = Quaternion.FromToRotation(transform.rotation * axis, swingTarget - transform.position);
+					Quaternion quaternion =
+						Quaternion.FromToRotation(transform.rotation * axis, swingTarget - transform.position);
 					if (weight >= 1f)
 					{
 						transform.rotation = quaternion * transform.rotation;
 					}
 					else
 					{
-						transform.rotation = Quaternion.Lerp(Quaternion.identity, quaternion, weight) * transform.rotation;
+						transform.rotation = Quaternion.Lerp(Quaternion.identity, quaternion, weight) *
+						                     transform.rotation;
 					}
 				}
 			}
@@ -113,7 +117,9 @@ namespace RootMotion.FinalIK
 					Vector3 vector2 = swingTarget - transform.position;
 					float current = Mathf.Atan2(vector.x, vector.y) * 57.29578f;
 					float target = Mathf.Atan2(vector2.x, vector2.y) * 57.29578f;
-					transform.rotation = Quaternion.AngleAxis(Mathf.DeltaAngle(current, target) * weight, Vector3.back) * transform.rotation;
+					transform.rotation =
+						Quaternion.AngleAxis(Mathf.DeltaAngle(current, target) * weight, Vector3.back) *
+						transform.rotation;
 				}
 			}
 
@@ -123,11 +129,13 @@ namespace RootMotion.FinalIK
 				{
 					return Quaternion.identity;
 				}
+
 				Quaternion quaternion = Quaternion.FromToRotation(solverRotation * axis, swingTarget - solverPosition);
 				if (weight >= 1f)
 				{
 					return quaternion;
 				}
+
 				return Quaternion.Lerp(Quaternion.identity, quaternion, weight);
 			}
 
@@ -168,11 +176,9 @@ namespace RootMotion.FinalIK
 
 		public delegate void IterationDelegate(int i);
 
-		[HideInInspector]
-		public Vector3 IKPosition;
+		[HideInInspector] public Vector3 IKPosition;
 
-		[Range(0f, 1f)]
-		public float IKPositionWeight = 1f;
+		[Range(0f, 1f)] public float IKPositionWeight = 1f;
 
 		public UpdateDelegate OnPreInitiate;
 
@@ -184,8 +190,7 @@ namespace RootMotion.FinalIK
 
 		protected bool firstInitiation = true;
 
-		[SerializeField]
-		protected Transform root;
+		[SerializeField] protected Transform root;
 
 		public bool initiated { get; private set; }
 
@@ -203,10 +208,12 @@ namespace RootMotion.FinalIK
 			{
 				OnPreInitiate();
 			}
+
 			if (root == null)
 			{
 				Debug.LogError("Initiating IKSolver with null root Transform.");
 			}
+
 			this.root = root;
 			initiated = false;
 			string message = string.Empty;
@@ -215,6 +222,7 @@ namespace RootMotion.FinalIK
 				Warning.Log(message, root);
 				return;
 			}
+
 			OnInitiate();
 			StoreDefaultLocalState();
 			initiated = true;
@@ -231,10 +239,12 @@ namespace RootMotion.FinalIK
 			{
 				OnPreUpdate();
 			}
+
 			if (firstInitiation)
 			{
 				Initiate(root);
 			}
+
 			if (initiated)
 			{
 				OnUpdate();
@@ -299,6 +309,7 @@ namespace RootMotion.FinalIK
 					}
 				}
 			}
+
 			return null;
 		}
 
@@ -311,6 +322,7 @@ namespace RootMotion.FinalIK
 					return false;
 				}
 			}
+
 			return true;
 		}
 	}

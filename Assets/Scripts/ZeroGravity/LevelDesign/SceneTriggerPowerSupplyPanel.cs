@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
@@ -8,95 +7,32 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneTriggerPowerSupplyPanel : BaseSceneTrigger
 	{
-		[SerializeField]
-		private bool _cancelExecuterAtSameTime;
+		private PowerSupply _myPowerSupply;
 
-		[SerializeField]
-		private bool _isExteriorTrigger;
+		public override bool ExclusivePlayerLocking => true;
 
-		private PowerSupply myPowerSupply;
+		public override SceneTriggerType TriggerType => SceneTriggerType.PowerSupplyPanel;
 
-		public override bool ExclusivePlayerLocking
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override PlayerHandsCheckType PlayerHandsCheck => PlayerHandsCheckType.StoreItemInHands;
 
-		public override SceneTriggerType TriggerType
-		{
-			get
-			{
-				return SceneTriggerType.PowerSupplyPanel;
-			}
-		}
+		public override List<ItemType> PlayerHandsItemType => null;
 
-		public override PlayerHandsCheckType PlayerHandsCheck
-		{
-			get
-			{
-				return PlayerHandsCheckType.StoreItemInHands;
-			}
-		}
+		public override bool IsNearTrigger => true;
 
-		public override List<ItemType> PlayerHandsItemType
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public override bool IsInteractable => true;
 
-		public override bool IsNearTrigger
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool IsInteractable
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public bool CancelExecuterAtSameTime
-		{
-			get
-			{
-				return _cancelExecuterAtSameTime;
-			}
-		}
-
-		public bool IsExteriorTrigger
-		{
-			get
-			{
-				return _isExteriorTrigger;
-			}
-		}
-
-		public override bool CameraMovementAllowed
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool CameraMovementAllowed => false;
 
 		public PowerSupply MyPowerSupply
 		{
 			get
 			{
-				if (myPowerSupply == null)
+				if (_myPowerSupply == null)
 				{
-					myPowerSupply = Client.Instance.InGamePanels.PowerSupply;
+					_myPowerSupply = World.InWorldPanels.PowerSupply;
 				}
-				return myPowerSupply;
+
+				return _myPowerSupply;
 			}
 		}
 
@@ -106,10 +42,12 @@ namespace ZeroGravity.LevelDesign
 			{
 				return false;
 			}
+
 			if (interactWithOverlappingTriggers)
 			{
 				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
 			}
+
 			player.AttachToPanel(this);
 			MyPowerSupply.OnInteract();
 			return true;

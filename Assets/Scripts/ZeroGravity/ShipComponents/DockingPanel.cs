@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion;
 using OpenHellion.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,23 +11,24 @@ using ZeroGravity.LevelDesign;
 using ZeroGravity.Math;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
+using Object = UnityEngine.Object;
 
 namespace ZeroGravity.ShipComponents
 {
 	public class DockingPanel : MonoBehaviour
 	{
-		public class DockingPortUI
+		private class DockingPortUI
 		{
 			public SceneDockingPort Port;
 
 			public DockingPanelUIItem UI;
 		}
 
-		private UpdateTimer Timer = new UpdateTimer(0.35f);
+		private readonly UpdateTimer _timer = new UpdateTimer(0.35f);
 
 		public float ThrustModifier = 0.2f;
 
-		private Ship ParentShip;
+		private Ship _parentShip;
 
 		public List<Ship> AvailableTargetShips = new List<Ship>();
 
@@ -35,21 +38,21 @@ namespace ZeroGravity.ShipComponents
 
 		public DockingPanelUIItem ListItemPrefab;
 
-		public List<DockingPortUI> MyDockingPortsUI = new List<DockingPortUI>();
+		private readonly List<DockingPortUI> _myDockingPortsUI = new List<DockingPortUI>();
 
-		private List<DockingPortUI> MyVisibleDockingPortsUI = new List<DockingPortUI>();
+		private readonly List<DockingPortUI> _myVisibleDockingPortsUI = new List<DockingPortUI>();
 
-		private List<SceneDockingPort> DockingPorts = new List<SceneDockingPort>();
+		private List<SceneDockingPort> _dockingPorts = new List<SceneDockingPort>();
 
-		private int myCurrentPort;
+		private int _myCurrentPort;
 
 		public SceneDockingPort TargetDockingPort;
 
-		public List<DockingPortUI> TargetedModulePorts = new List<DockingPortUI>();
+		private readonly List<DockingPortUI> _targetedModulePorts = new List<DockingPortUI>();
 
-		private int currentTargetedModulePortIndex;
+		private int _currentTargetedModulePortIndex;
 
-		private bool changeTargetedModulePort;
+		private bool _changeTargetedModulePort;
 
 		public GameObject HasTargetPanel;
 
@@ -69,26 +72,19 @@ namespace ZeroGravity.ShipComponents
 
 		public Text RCSFuelStatus;
 
-		private bool TestStabilization;
+		private bool _testStabilization;
 
-		private int dockingPortTriggerLayer;
+		private Transform _mainCameraParent;
 
-		private Transform MainCameraParent;
+		private Vector3 _mainCameraPosition;
 
-		private Vector3 MainCameraPosition;
+		private Quaternion _mainCameraRotation;
 
-		private Quaternion MainCameraRotation;
+		private Vector3 _mainCameraScale;
 
-		private Vector3 MainCameraScale;
-
-		private float radarScanningRange = 3000f;
-
-		[SerializeField]
-		private Material DockingEffectMat;
+		private const float RadarScanningRange = 3000f;
 
 		public DockingPanelRadarTarget RadarTarget;
-
-		public Transform PanelCentarRect;
 
 		public float timer = 2f;
 
@@ -96,46 +92,33 @@ namespace ZeroGravity.ShipComponents
 
 		public bool timerPositive = true;
 
-		private GameObject currentRootBlinker;
+		private GameObject _currentRootBlinker;
 
-		[SerializeField]
-		private Text OnSpeedValText;
+		[SerializeField] private Text OnSpeedValText;
 
-		[SerializeField]
-		private Text OffSpeedText;
+		[SerializeField] private Text OffSpeedValText;
 
-		[SerializeField]
-		private Text OffSpeedValText;
-
-		[SerializeField]
-		private Image RollAngleIndicator;
+		[SerializeField] private Image RollAngleIndicator;
 
 		public Image RotationIndicator;
 
-		[SerializeField]
-		private Image lateralXE;
+		[SerializeField] private Image lateralXE;
 
-		[SerializeField]
-		private Image lateralXW;
+		[SerializeField] private Image lateralXW;
 
-		[SerializeField]
-		private Image lateralYN;
+		[SerializeField] private Image lateralYN;
 
-		[SerializeField]
-		private Image lateralYS;
+		[SerializeField] private Image lateralYS;
 
-		[SerializeField]
-		private Text ValForX;
+		[SerializeField] private Text ValForX;
 
-		[SerializeField]
-		private Text ValForY;
+		[SerializeField] private Text ValForY;
 
 		public Text ControlsForChangingPort;
 
 		public GameObject DockingTips;
 
-		[Title("Target module")]
-		public GameObject NoTargetModule;
+		[Title("Target module")] public GameObject NoTargetModule;
 
 		public GameObject AvailablePortsHolder;
 
@@ -143,108 +126,124 @@ namespace ZeroGravity.ShipComponents
 
 		public Text TargetModuleName;
 
-		public SceneDockingPort DockingPort => (DockingPorts.Count - 1 >= myCurrentPort) ? DockingPorts[myCurrentPort] : null;
+		private static World _world;
 
-		public bool IsDockingEnabled => ParentShip != null && !ParentShip.DockingControlsDisabled && MyDockingPortsUI.Count > 0;
+		public SceneDockingPort DockingPort =>
+			(_dockingPorts.Count - 1 >= _myCurrentPort) ? _dockingPorts[_myCurrentPort] : null;
+
+		public bool IsDockingEnabled =>
+			_parentShip != null && !_parentShip.DockingControlsDisabled && _myDockingPortsUI.Count > 0;
 
 		private void Awake()
 		{
-			dockingPortTriggerLayer = 1 << LayerMask.NameToLayer("Triggers");
+			_world ??= GameObject.Find("/World").GetComponent<World>();
 		}
 
 		private void Start()
 		{
-			RCSPanel.SetActive(ParentShip.RCS != null);
-			ControlsForChangingPort.text = string.Format(Localization.ControlChangeDockingPort, GetControlName(InputManager.ConfigAction.Equip)).ToUpper();
+			RCSPanel.SetActive(_parentShip.RCS != null);
+			ControlsForChangingPort.text = string.Format(Localization.ControlChangeDockingPort,
+				GetControlName(InputManager.ConfigAction.Equip)).ToUpper();
 		}
 
 		private void Update()
 		{
-			if (!Client.IsGameBuild || (MyPlayer.Instance.ShipControlMode != ShipControlMode.Docking && !(MyPlayer.Instance.LockedToTrigger is SceneTriggerDockingPanel)))
+			if ((MyPlayer.Instance.ShipControlMode != ShipControlMode.Docking &&
+			     !(MyPlayer.Instance.LockedToTrigger is SceneTriggerDockingPanel)))
 			{
 				return;
 			}
-			if (Timer.Update())
+
+			if (_timer.Update())
 			{
 				ReloadRadarElements();
 			}
-			if (!Client.Instance.CanvasManager.ConsoleIsUp)
+
+			if (InputManager.GetButtonDown(InputManager.ConfigAction.Equip))
 			{
-				if (InputManager.GetButtonDown(InputManager.ConfigAction.Equip))
-				{
-					TargetDockingPort = null;
-					changeTargetedModulePort = true;
-					SwitchPort();
-					ReloadRadarElements();
-					UpdateTargetedModule();
-				}
-				if (Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero() && TargetedModulePorts.Count > 0)
-				{
-					TargetedModulePorts[currentTargetedModulePortIndex].UI.IsSelected = false;
-					TargetedModulePorts[currentTargetedModulePortIndex].UI.Distance = string.Empty;
-					float axis = Mouse.current.scroll.y.ReadValue();
-					if (axis > 0f)
-					{
-						if (currentTargetedModulePortIndex - 1 >= 0)
-						{
-							currentTargetedModulePortIndex--;
-						}
-						else
-						{
-							currentTargetedModulePortIndex = TargetedModulePorts.Count - 1;
-						}
-					}
-					else if (axis < 0f)
-					{
-						if (TargetedModulePorts.Count - 1 >= currentTargetedModulePortIndex + 1)
-						{
-							currentTargetedModulePortIndex++;
-						}
-						else
-						{
-							currentTargetedModulePortIndex = 0;
-						}
-					}
-					ChangeTargetedPort();
-				}
-				bool buttonDown = InputManager.GetButtonDown(InputManager.ConfigAction.TargetUp);
-				bool buttonDown2 = InputManager.GetButtonDown(InputManager.ConfigAction.TargetDown);
-				if (TargetedModulePorts.Count > 0 && (buttonDown || buttonDown2))
-				{
-					TargetedModulePorts[currentTargetedModulePortIndex].UI.IsSelected = false;
-					TargetedModulePorts[currentTargetedModulePortIndex].UI.Distance = string.Empty;
-					if (buttonDown2)
-					{
-						if (TargetedModulePorts.Count - 1 >= currentTargetedModulePortIndex + 1)
-						{
-							currentTargetedModulePortIndex++;
-						}
-						else
-						{
-							currentTargetedModulePortIndex = 0;
-						}
-					}
-					else if (buttonDown)
-					{
-						if (currentTargetedModulePortIndex - 1 >= 0)
-						{
-							currentTargetedModulePortIndex--;
-						}
-						else
-						{
-							currentTargetedModulePortIndex = TargetedModulePorts.Count - 1;
-						}
-					}
-					ChangeTargetedPort();
-				}
+				TargetDockingPort = null;
+				_changeTargetedModulePort = true;
+				SwitchPort();
+				ReloadRadarElements();
+				UpdateTargetedModule();
 			}
+
+			if (Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero() && _targetedModulePorts.Count > 0)
+			{
+				_targetedModulePorts[_currentTargetedModulePortIndex].UI.IsSelected = false;
+				_targetedModulePorts[_currentTargetedModulePortIndex].UI.Distance = string.Empty;
+				float axis = Mouse.current.scroll.y.ReadValue();
+				if (axis > 0f)
+				{
+					if (_currentTargetedModulePortIndex - 1 >= 0)
+					{
+						_currentTargetedModulePortIndex--;
+					}
+					else
+					{
+						_currentTargetedModulePortIndex = _targetedModulePorts.Count - 1;
+					}
+				}
+				else if (axis < 0f)
+				{
+					if (_targetedModulePorts.Count - 1 >= _currentTargetedModulePortIndex + 1)
+					{
+						_currentTargetedModulePortIndex++;
+					}
+					else
+					{
+						_currentTargetedModulePortIndex = 0;
+					}
+				}
+
+				ChangeTargetedPort();
+			}
+
+			bool buttonDown = InputManager.GetButtonDown(InputManager.ConfigAction.TargetUp);
+			bool buttonDown2 = InputManager.GetButtonDown(InputManager.ConfigAction.TargetDown);
+			if (_targetedModulePorts.Count > 0 && (buttonDown || buttonDown2))
+			{
+				_targetedModulePorts[_currentTargetedModulePortIndex].UI.IsSelected = false;
+				_targetedModulePorts[_currentTargetedModulePortIndex].UI.Distance = string.Empty;
+				if (buttonDown2)
+				{
+					if (_targetedModulePorts.Count - 1 >= _currentTargetedModulePortIndex + 1)
+					{
+						_currentTargetedModulePortIndex++;
+					}
+					else
+					{
+						_currentTargetedModulePortIndex = 0;
+					}
+				}
+				else if (buttonDown)
+				{
+					if (_currentTargetedModulePortIndex - 1 >= 0)
+					{
+						_currentTargetedModulePortIndex--;
+					}
+					else
+					{
+						_currentTargetedModulePortIndex = _targetedModulePorts.Count - 1;
+					}
+				}
+
+				ChangeTargetedPort();
+			}
+
 			SceneDockingPort dockingPort = DockingPort;
 			if (TargetDockingPort != null && dockingPort != null)
 			{
 				Vector3 vector = (TargetDockingPort.ParentShip.Position - dockingPort.ParentShip.Position).ToVector3();
-				Vector3 vector2 = Quaternion.LookRotation(dockingPort.ParentShip.Forward, dockingPort.ParentShip.Up).Inverse() * (dockingPort.ParentShip.Velocity - TargetDockingPort.ParentShip.Velocity).ToVector3();
-				Vector3 vector3 = Vector3.Project((dockingPort.ParentShip.Velocity - TargetDockingPort.ParentShip.Velocity).ToVector3(), dockingPort.CameraPosition.forward);
-				Vector3 vector4 = dockingPort.CameraPosition.rotation.Inverse() * Vector3.ProjectOnPlane(vector2, dockingPort.CameraPosition.forward);
+				Vector3 vector2 =
+					Quaternion.LookRotation(dockingPort.ParentShip.Forward, dockingPort.ParentShip.Up).Inverse() *
+					(dockingPort.ParentShip.Velocity - TargetDockingPort.ParentShip.Velocity).ToVector3();
+				Vector3 vector3 =
+					Vector3.Project(
+						(dockingPort.ParentShip.Velocity - TargetDockingPort.ParentShip.Velocity).ToVector3(),
+						dockingPort.CameraPosition.forward);
+				Vector3 vector4 = dockingPort.CameraPosition.rotation.Inverse() *
+				                  Vector3.ProjectOnPlane(vector2, dockingPort.CameraPosition.forward);
 				ValForX.text = FormatHelper.DistanceFormat(vector4.x) + "/s";
 				ValForY.text = FormatHelper.DistanceFormat(vector4.y) + "/s";
 				Vector3 vector5 = vector4;
@@ -258,6 +257,7 @@ namespace ZeroGravity.ShipComponents
 					lateralXE.fillAmount = 0f;
 					lateralXW.fillAmount = Mathf.Clamp(Mathf.Abs(vector5.x) / 3f, 0f, 1f);
 				}
+
 				if (vector5.y < 0f)
 				{
 					lateralYN.fillAmount = 0f;
@@ -268,8 +268,10 @@ namespace ZeroGravity.ShipComponents
 					lateralYS.fillAmount = 0f;
 					lateralYN.fillAmount = Mathf.Clamp(Mathf.Abs(vector5.y) / 3f, 0f, 1f);
 				}
+
 				Vector3 relativePosition = GetRelativePosition(TargetDockingPort.CameraPosition.position);
-				float f = vector3.magnitude * (float)MathHelper.Sign(Vector3.Dot(vector.normalized, vector3.normalized));
+				float f = vector3.magnitude *
+				          (float)MathHelper.Sign(Vector3.Dot(vector.normalized, vector3.normalized));
 				OnSpeedValText.text = f.ToString("f1");
 				OffSpeedValText.text = vector4.magnitude.ToString("f1");
 				DirectionalGraph.transform.localScale = new Vector3(Mathf.Clamp(Mathf.Abs(f) / 5f, 0.01f, 1f), 1f, 1f);
@@ -285,7 +287,10 @@ namespace ZeroGravity.ShipComponents
 				{
 					DirectionalGraph.GetComponent<Image>().color = Colors.Red;
 				}
-				Quaternion quaternion = dockingPort.SceneDockingTriggerTrans.rotation * Quaternion.LookRotation(-TargetDockingPort.SceneDockingTriggerTrans.forward, TargetDockingPort.SceneDockingTriggerTrans.up).Inverse();
+
+				Quaternion quaternion = dockingPort.SceneDockingTriggerTrans.rotation * Quaternion
+					.LookRotation(-TargetDockingPort.SceneDockingTriggerTrans.forward,
+						TargetDockingPort.SceneDockingTriggerTrans.up).Inverse();
 				float num = quaternion.eulerAngles.x;
 				float num2 = quaternion.eulerAngles.y;
 				float num3 = quaternion.eulerAngles.z;
@@ -293,23 +298,34 @@ namespace ZeroGravity.ShipComponents
 				{
 					num2 -= 360f;
 				}
+
 				if (num > 180f)
 				{
 					num -= 360f;
 				}
+
 				if (num3 > 180f)
 				{
 					num3 -= 360f;
 				}
-				float num4 = vector3.magnitude * (float)MathHelper.Sign(Vector3.Dot(vector.normalized, vector3.normalized));
-				Vector3 vector6 = TargetDockingPort.SceneDockingTriggerTrans.position - dockingPort.SceneDockingTriggerTrans.position;
-				float num5 = Vector3.SignedAngle(TargetDockingPort.SceneDockingTriggerTrans.up, Vector3.ProjectOnPlane(dockingPort.SceneDockingTriggerTrans.up, TargetDockingPort.SceneDockingTriggerTrans.forward), TargetDockingPort.SceneDockingTriggerTrans.forward);
-				float num6 = MathHelper.AngleSigned(dockingPort.SceneDockingTriggerTrans.forward, -TargetDockingPort.SceneDockingTriggerTrans.forward, dockingPort.SceneDockingTriggerTrans.up);
-				float num7 = Vector3.Distance(dockingPort.SceneDockingTriggerTrans.position, TargetDockingPort.SceneDockingTriggerTrans.position);
+
+				float num4 = vector3.magnitude *
+				             (float)MathHelper.Sign(Vector3.Dot(vector.normalized, vector3.normalized));
+				Vector3 vector6 = TargetDockingPort.SceneDockingTriggerTrans.position -
+				                  dockingPort.SceneDockingTriggerTrans.position;
+				float num5 = Vector3.SignedAngle(TargetDockingPort.SceneDockingTriggerTrans.up,
+					Vector3.ProjectOnPlane(dockingPort.SceneDockingTriggerTrans.up,
+						TargetDockingPort.SceneDockingTriggerTrans.forward),
+					TargetDockingPort.SceneDockingTriggerTrans.forward);
+				float num6 = MathHelper.AngleSigned(dockingPort.SceneDockingTriggerTrans.forward,
+					-TargetDockingPort.SceneDockingTriggerTrans.forward, dockingPort.SceneDockingTriggerTrans.up);
+				float num7 = Vector3.Distance(dockingPort.SceneDockingTriggerTrans.position,
+					TargetDockingPort.SceneDockingTriggerTrans.position);
 				if (!RotationIndicator.gameObject.activeInHierarchy)
 				{
 					RotationIndicator.gameObject.SetActive(value: true);
 				}
+
 				RollAngleIndicator.fillClockwise = num5 < 0f;
 				RollAngleIndicator.fillAmount = Mathf.Abs(num5) / 360f;
 				if (Mathf.Abs(num5) >= 5f)
@@ -322,6 +338,7 @@ namespace ZeroGravity.ShipComponents
 					RotationIndicator.color = Colors.Green;
 					RollAngleIndicator.color = Colors.Green;
 				}
+
 				DistanceValText.text = FormatHelper.DistanceFormat(num7);
 				DistanceGraph.transform.localScale = new Vector3(Mathf.Clamp(Mathf.Abs(num7) / 50f, 0.01f, 1f), 1f, 1f);
 				if (Mathf.Abs(num7) <= 5f)
@@ -336,9 +353,13 @@ namespace ZeroGravity.ShipComponents
 				{
 					DistanceGraph.GetComponent<Image>().color = Colors.Red;
 				}
+
 				if (Mathf.Abs(num) < 10f && Mathf.Abs(num2) < 10f && Mathf.Abs(num3) < 10f && num7 < 2f && num4 < 3f)
 				{
-					if (dockingPort.ParentShip.Engine != null && TargetDockingPort.ParentShip.Engine == null && !TargetDockingPort.ParentShip.IsDocked && TargetDockingPort.ParentShip.AllDockedVessels.Count == 0 && !dockingPort.ParentShip.IsDocked && dockingPort.ParentShip.AllDockedVessels.Count == 0)
+					if (dockingPort.ParentShip.Engine != null && TargetDockingPort.ParentShip.Engine == null &&
+					    !TargetDockingPort.ParentShip.IsDocked &&
+					    TargetDockingPort.ParentShip.AllDockedVessels.Count == 0 && !dockingPort.ParentShip.IsDocked &&
+					    dockingPort.ParentShip.AllDockedVessels.Count == 0)
 					{
 						TargetDockingPort.ToggleDockTo(dockingPort, toggle: true);
 					}
@@ -346,11 +367,17 @@ namespace ZeroGravity.ShipComponents
 					{
 						dockingPort.ToggleDockTo(TargetDockingPort, toggle: true);
 					}
+
 					TargetDockingPort = null;
 				}
-				if (MyPlayer.Instance.IsAdmin && (Keyboard.current.numpad9Key.isPressed || Keyboard.current.numpad8Key.isPressed))
+
+				if (MyPlayer.Instance.IsAdmin &&
+				    (Keyboard.current.numpad9Key.isPressed || Keyboard.current.numpad8Key.isPressed))
 				{
-					if (dockingPort.ParentShip.Engine != null && TargetDockingPort.ParentShip.Engine == null && !TargetDockingPort.ParentShip.IsDocked && TargetDockingPort.ParentShip.AllDockedVessels.Count == 0 && !dockingPort.ParentShip.IsDocked && dockingPort.ParentShip.AllDockedVessels.Count == 0)
+					if (dockingPort.ParentShip.Engine != null && TargetDockingPort.ParentShip.Engine == null &&
+					    !TargetDockingPort.ParentShip.IsDocked &&
+					    TargetDockingPort.ParentShip.AllDockedVessels.Count == 0 && !dockingPort.ParentShip.IsDocked &&
+					    dockingPort.ParentShip.AllDockedVessels.Count == 0)
 					{
 						TargetDockingPort.ToggleDockTo(dockingPort, toggle: true);
 					}
@@ -362,8 +389,10 @@ namespace ZeroGravity.ShipComponents
 					{
 						TargetDockingPort.ToggleDockTo(dockingPort, toggle: true);
 					}
+
 					TargetDockingPort = null;
 				}
+
 				RadarTarget.gameObject.Activate(value: true);
 				RadarTarget.ParentTrans = null;
 				RadarTarget.ParentTrans = dockingPort.CameraPosition;
@@ -382,10 +411,12 @@ namespace ZeroGravity.ShipComponents
 				lateralYN.fillAmount = 0f;
 				lateralYS.fillAmount = 0f;
 			}
+
 			if (timerCounter > timer || timerCounter < 0f)
 			{
 				timerPositive = !timerPositive;
 			}
+
 			if (timerPositive)
 			{
 				timerCounter += Time.deltaTime;
@@ -398,27 +429,30 @@ namespace ZeroGravity.ShipComponents
 
 		private void ChangeTargetedPort()
 		{
-			TargetedModulePorts[currentTargetedModulePortIndex].UI.IsSelected = true;
-			TargetedModulePorts[currentTargetedModulePortIndex].UI.Distance = Localization.Selected.ToUpper();
-			if (currentRootBlinker != null)
+			_targetedModulePorts[_currentTargetedModulePortIndex].UI.IsSelected = true;
+			_targetedModulePorts[_currentTargetedModulePortIndex].UI.Distance = Localization.Selected.ToUpper();
+			if (_currentRootBlinker != null)
 			{
-				currentRootBlinker.SetActive(value: false);
+				_currentRootBlinker.SetActive(value: false);
 			}
-			currentRootBlinker = TargetedModulePorts[currentTargetedModulePortIndex].Port.DockingVisualROOT;
-			if (currentRootBlinker != null)
+
+			_currentRootBlinker = _targetedModulePorts[_currentTargetedModulePortIndex].Port.DockingVisualROOT;
+			if (_currentRootBlinker != null)
 			{
-				currentRootBlinker.SetActive(value: true);
+				_currentRootBlinker.SetActive(value: true);
 			}
-			TargetDockingPort = TargetedModulePorts[currentTargetedModulePortIndex].Port;
-			if (TargetedModulePorts.Count > 8)
+
+			TargetDockingPort = _targetedModulePorts[_currentTargetedModulePortIndex].Port;
+			if (_targetedModulePorts.Count > 8)
 			{
-				float y = 34.5f * (float)currentTargetedModulePortIndex - 34.5f;
+				float y = 34.5f * (float)_currentTargetedModulePortIndex - 34.5f;
 				TargetedModulePortsTranform.anchoredPosition = new Vector2(0f, y);
 			}
-			else if (TargetedModulePorts.Count == 0)
+			else if (_targetedModulePorts.Count == 0)
 			{
 				TargetedModulePortsTranform.anchoredPosition = new Vector2(0f, 0f);
 			}
+
 			UpdateTargetedModule();
 		}
 
@@ -427,7 +461,7 @@ namespace ZeroGravity.ShipComponents
 			if (TargetDockingPort != null)
 			{
 				NoTargetModule.Activate(value: false);
-				TargetModuleIcon.sprite = Client.Instance.SpriteManager.GetSprite(TargetDockingPort.ParentShip);
+				TargetModuleIcon.sprite = SpriteManager.Instance.GetSprite(TargetDockingPort.ParentShip);
 				TargetModuleName.text = TargetDockingPort.ParentShip.MainVessel.CustomName;
 				AvailablePortsHolder.Activate(value: true);
 			}
@@ -440,28 +474,32 @@ namespace ZeroGravity.ShipComponents
 
 		private Vector3 GetRelativePosition(Vector3 pos)
 		{
-			return (pos - MyPlayer.Instance.transform.position).normalized * (base.transform.position - MyPlayer.Instance.transform.position).magnitude + MyPlayer.Instance.transform.position;
+			return (pos - MyPlayer.Instance.transform.position).normalized *
+			       (base.transform.position - MyPlayer.Instance.transform.position).magnitude +
+			       MyPlayer.Instance.transform.position;
 		}
 
 		public void OnInteract(Ship ship)
 		{
-			ParentShip = ship;
-			MainCameraPosition = MyPlayer.Instance.FpsController.MainCamera.transform.localPosition;
-			MainCameraRotation = MyPlayer.Instance.FpsController.MainCamera.transform.localRotation;
-			MainCameraScale = MyPlayer.Instance.FpsController.MainCamera.transform.localScale;
-			MainCameraParent = MyPlayer.Instance.FpsController.MainCamera.transform.parent;
+			_parentShip = ship;
+			_mainCameraPosition = MyPlayer.Instance.FpsController.MainCamera.transform.localPosition;
+			_mainCameraRotation = MyPlayer.Instance.FpsController.MainCamera.transform.localRotation;
+			_mainCameraScale = MyPlayer.Instance.FpsController.MainCamera.transform.localScale;
+			_mainCameraParent = MyPlayer.Instance.FpsController.MainCamera.transform.parent;
 			TargetDockingPort = null;
 			AvailableTargetShips.Clear();
-			foreach (DockingPortUI targetedModulePort in TargetedModulePorts)
+			foreach (DockingPortUI targetedModulePort in _targetedModulePorts)
 			{
 				Object.Destroy(targetedModulePort.UI.gameObject);
 			}
-			TargetedModulePorts.Clear();
+
+			_targetedModulePorts.Clear();
 			RefreshDockingPorts();
-			if (myCurrentPort > DockingPorts.Count - 1)
+			if (_myCurrentPort > _dockingPorts.Count - 1)
 			{
-				myCurrentPort = 0;
+				_myCurrentPort = 0;
 			}
+
 			SceneDockingPort dockingPort = DockingPort;
 			if (dockingPort != null)
 			{
@@ -470,104 +508,118 @@ namespace ZeroGravity.ShipComponents
 				MyPlayer.Instance.FpsController.MainCamera.transform.rotation = dockingPort.CameraPosition.rotation;
 				MyPlayer.Instance.FpsController.MainCamera.transform.localScale = dockingPort.CameraPosition.localScale;
 			}
-			changeTargetedModulePort = true;
+
+			_changeTargetedModulePort = true;
 			MakeMyDockingPorts();
 			ReloadRadarElements();
-			DockingTips.Activate(Client.Instance.CanvasManager.ShowTips);
+			DockingTips.Activate(Settings.Instance.SettingsData.GameSettings.ShowTips);
 			MakeTargetModulePorts();
-			base.gameObject.SetActive(value: true);
+			gameObject.SetActive(value: true);
 		}
 
 		private void RefreshDockingPorts()
 		{
-			DockingPorts.Clear();
-			if (MyPlayer.Instance.Parent is SpaceObjectVessel && (MyPlayer.Instance.Parent as SpaceObjectVessel).SceneID == GameScenes.SceneID.AltCorp_Shuttle_CECA && MyPlayer.Instance.ShipControlMode == ShipControlMode.Docking)
+			_dockingPorts.Clear();
+			if (MyPlayer.Instance.Parent is SpaceObjectVessel &&
+			    (MyPlayer.Instance.Parent as SpaceObjectVessel).SceneID == GameScenes.SceneID.AltCorp_Shuttle_CECA &&
+			    MyPlayer.Instance.ShipControlMode == ShipControlMode.Docking)
 			{
-				foreach (SceneDockingPort value in ParentShip.MainVessel.DockingPorts.Values)
+				foreach (SceneDockingPort value in _parentShip.MainVessel.DockingPorts.Values)
 				{
 					if (!value.LocalyDisabled && value.DockedToPort == null)
 					{
-						DockingPorts.Add(value);
+						_dockingPorts.Add(value);
 					}
 				}
-				foreach (SpaceObjectVessel allDockedVessel in ParentShip.MainVessel.AllDockedVessels)
+
+				foreach (SpaceObjectVessel allDockedVessel in _parentShip.MainVessel.AllDockedVessels)
 				{
 					foreach (SceneDockingPort value2 in allDockedVessel.DockingPorts.Values)
 					{
 						if (!value2.LocalyDisabled && value2.DockedToPort == null)
 						{
-							DockingPorts.Add(value2);
+							_dockingPorts.Add(value2);
 						}
 					}
 				}
 			}
 			else
 			{
-				SceneDockingPort[] componentsInChildren = ParentShip.GeometryRoot.GetComponentsInChildren<SceneDockingPort>(includeInactive: true);
+				SceneDockingPort[] componentsInChildren =
+					_parentShip.GeometryRoot.GetComponentsInChildren<SceneDockingPort>(includeInactive: true);
 				foreach (SceneDockingPort sceneDockingPort in componentsInChildren)
 				{
 					if (!sceneDockingPort.LocalyDisabled)
 					{
-						DockingPorts.Add(sceneDockingPort);
+						_dockingPorts.Add(sceneDockingPort);
 					}
 				}
 			}
-			DockingPorts = (from m in DockingPorts
+
+			_dockingPorts = (from m in _dockingPorts
 				where !m.Locked
-				orderby m.ParentShip != ParentShip, m.ParentShip.GUID, m.Name
+				orderby m.ParentShip != _parentShip, m.ParentShip.GUID, m.Name
 				select m).ToList();
 		}
 
 		public void OnDetach()
 		{
-			MyPlayer.Instance.FpsController.MainCamera.transform.parent = MainCameraParent;
-			MyPlayer.Instance.FpsController.MainCamera.transform.localPosition = MainCameraPosition;
-			MyPlayer.Instance.FpsController.MainCamera.transform.localRotation = MainCameraRotation;
-			MyPlayer.Instance.FpsController.MainCamera.transform.localScale = MainCameraScale;
-			if (currentRootBlinker != null)
+			MyPlayer.Instance.FpsController.MainCamera.transform.parent = _mainCameraParent;
+			MyPlayer.Instance.FpsController.MainCamera.transform.localPosition = _mainCameraPosition;
+			MyPlayer.Instance.FpsController.MainCamera.transform.localRotation = _mainCameraRotation;
+			MyPlayer.Instance.FpsController.MainCamera.transform.localScale = _mainCameraScale;
+			if (_currentRootBlinker != null)
 			{
-				currentRootBlinker.SetActive(value: false);
+				_currentRootBlinker.SetActive(value: false);
 			}
+
 			RadarTarget.gameObject.SetActive(value: false);
-			SceneDockingPort[] componentsInChildren = ParentShip.GeometryRoot.GetComponentsInChildren<SceneDockingPort>(includeInactive: true);
+			SceneDockingPort[] componentsInChildren =
+				_parentShip.GeometryRoot.GetComponentsInChildren<SceneDockingPort>(includeInactive: true);
 			foreach (SceneDockingPort dockingPort in componentsInChildren)
 			{
-				Client.Instance.CubemapRenderer.RemoveDockingPort(dockingPort);
+				_world.CubemapRenderer.RemoveDockingPort(dockingPort);
 			}
-			base.gameObject.SetActive(value: false);
+
+			gameObject.SetActive(value: false);
 		}
 
 		private void SwitchPort()
 		{
-			if (MyDockingPortsUI.Count > 1)
+			if (_myDockingPortsUI.Count > 1)
 			{
-				MyDockingPortsUI[myCurrentPort].UI.IsSelected = false;
-				MyDockingPortsUI[myCurrentPort].UI.DistanceText.text = string.Empty;
+				_myDockingPortsUI[_myCurrentPort].UI.IsSelected = false;
+				_myDockingPortsUI[_myCurrentPort].UI.DistanceText.text = string.Empty;
 				do
 				{
-					if (MyDockingPortsUI.Count - 1 >= myCurrentPort + 1)
+					if (_myDockingPortsUI.Count - 1 >= _myCurrentPort + 1)
 					{
-						myCurrentPort++;
+						_myCurrentPort++;
 					}
 					else
 					{
-						myCurrentPort = 0;
+						_myCurrentPort = 0;
 					}
-				}
-				while (DockingPorts[myCurrentPort].IgnoreThisDockingPort);
-				MyDockingPortsUI[myCurrentPort].UI.IsSelected = true;
-				MyDockingPortsUI[myCurrentPort].UI.DistanceText.text = Localization.Selected.ToUpper();
-				MyPlayer.Instance.FpsController.MainCamera.transform.parent = MyDockingPortsUI[myCurrentPort].Port.CameraPosition.parent;
-				MyPlayer.Instance.FpsController.MainCamera.transform.position = MyDockingPortsUI[myCurrentPort].Port.CameraPosition.position;
-				MyPlayer.Instance.FpsController.MainCamera.transform.rotation = MyDockingPortsUI[myCurrentPort].Port.CameraPosition.rotation;
-				MyPlayer.Instance.FpsController.MainCamera.transform.localScale = MyDockingPortsUI[myCurrentPort].Port.CameraPosition.localScale;
+				} while (_dockingPorts[_myCurrentPort].IgnoreThisDockingPort);
+
+				_myDockingPortsUI[_myCurrentPort].UI.IsSelected = true;
+				_myDockingPortsUI[_myCurrentPort].UI.DistanceText.text = Localization.Selected.ToUpper();
+				MyPlayer.Instance.FpsController.MainCamera.transform.parent =
+					_myDockingPortsUI[_myCurrentPort].Port.CameraPosition.parent;
+				MyPlayer.Instance.FpsController.MainCamera.transform.position =
+					_myDockingPortsUI[_myCurrentPort].Port.CameraPosition.position;
+				MyPlayer.Instance.FpsController.MainCamera.transform.rotation =
+					_myDockingPortsUI[_myCurrentPort].Port.CameraPosition.rotation;
+				MyPlayer.Instance.FpsController.MainCamera.transform.localScale =
+					_myDockingPortsUI[_myCurrentPort].Port.CameraPosition.localScale;
 			}
-			if (MyVisibleDockingPortsUI.Count > 8)
+
+			if (_myVisibleDockingPortsUI.Count > 8)
 			{
-				float y = 34.5f * (float)MyVisibleDockingPortsUI.IndexOf(MyDockingPortsUI[myCurrentPort]) - 34.5f;
+				float y = 34.5f * (float)_myVisibleDockingPortsUI.IndexOf(_myDockingPortsUI[_myCurrentPort]) - 34.5f;
 				AvailableDockingPortsTransform.anchoredPosition = new Vector2(0f, y);
 			}
-			else if (MyVisibleDockingPortsUI.Count == 0)
+			else if (_myVisibleDockingPortsUI.Count == 0)
 			{
 				AvailableDockingPortsTransform.anchoredPosition = new Vector2(0f, 0f);
 			}
@@ -576,11 +628,12 @@ namespace ZeroGravity.ShipComponents
 		private void ReloadRadarElements()
 		{
 			List<Ship> list = new List<Ship>(AvailableTargetShips);
-			foreach (ArtificialBody ab in Client.Instance.SolarSystem.ArtificialBodies.Where((ArtificialBody m) => m is SpaceObjectVessel && (m as SpaceObjectVessel).MainVessel != ParentShip.MainVessel))
+			foreach (ArtificialBody ab in _world.SolarSystem.ArtificialBodies.Where((ArtificialBody m) =>
+				         m is SpaceObjectVessel && (m as SpaceObjectVessel).MainVessel != _parentShip.MainVessel))
 			{
-				float num = (float)(ParentShip.Position - ab.Position).Magnitude;
+				float num = (float)(_parentShip.Position - ab.Position).Magnitude;
 				Ship ship = AvailableTargetShips.Find((Ship m) => m == ab as Ship);
-				if (ab is Ship && num < radarScanningRange)
+				if (ab is Ship && num < RadarScanningRange)
 				{
 					if (ship == null)
 					{
@@ -592,25 +645,31 @@ namespace ZeroGravity.ShipComponents
 					}
 				}
 			}
+
 			if (list.Count > 0)
 			{
 				foreach (Ship item in list)
 				{
 					AvailableTargetShips.Remove(item);
 				}
-				changeTargetedModulePort = true;
+
+				_changeTargetedModulePort = true;
 			}
-			if (changeTargetedModulePort)
+
+			if (_changeTargetedModulePort)
 			{
 				TargetDockingPort = null;
 				MakeTargetModulePorts();
-				changeTargetedModulePort = false;
+				_changeTargetedModulePort = false;
 			}
-			if (ParentShip != null && ParentShip.RCS != null)
+
+			if (_parentShip != null && _parentShip.RCS != null)
 			{
-				float num2 = ParentShip.RCS.ResourceContainers[0].Quantity / ParentShip.RCS.ResourceContainers[0].Capacity;
+				float num2 = _parentShip.RCS.ResourceContainers[0].Quantity /
+				             _parentShip.RCS.ResourceContainers[0].Capacity;
 				RcsFuelSlider.fillAmount = num2;
-				RcsFuelText.text = ParentShip.RCS.ResourceContainers[0].Quantity.ToString("f0") + " / " + ParentShip.RCS.ResourceContainers[0].Capacity.ToString("f0");
+				RcsFuelText.text = _parentShip.RCS.ResourceContainers[0].Quantity.ToString("f0") + " / " +
+				                   _parentShip.RCS.ResourceContainers[0].Capacity.ToString("f0");
 				if (num2 <= 0.2f)
 				{
 					FillerRcs.color = Colors.Red;
@@ -630,37 +689,41 @@ namespace ZeroGravity.ShipComponents
 					RCSFuelStatus.gameObject.SetActive(value: false);
 				}
 			}
+
 			UpdateTargetPortsUI();
 		}
 
 		private void MakeMyDockingPorts()
 		{
-			foreach (DockingPortUI item in MyDockingPortsUI)
+			foreach (DockingPortUI item in _myDockingPortsUI)
 			{
 				item.UI.gameObject.SetActive(value: false);
 				Object.Destroy(item.UI.gameObject);
 			}
-			MyDockingPortsUI.Clear();
-			MyVisibleDockingPortsUI.Clear();
-			foreach (SceneDockingPort dockingPort in DockingPorts)
+
+			_myDockingPortsUI.Clear();
+			_myVisibleDockingPortsUI.Clear();
+			foreach (SceneDockingPort dockingPort in _dockingPorts)
 			{
 				DockingPortUI dockingPortUI = new DockingPortUI();
 				dockingPortUI.Port = dockingPort;
 				dockingPortUI.UI = MakeDockingPortUI(dockingPort);
-				MyDockingPortsUI.Add(dockingPortUI);
+				_myDockingPortsUI.Add(dockingPortUI);
 				if (!dockingPort.IgnoreThisDockingPort)
 				{
-					MyVisibleDockingPortsUI.Add(dockingPortUI);
+					_myVisibleDockingPortsUI.Add(dockingPortUI);
 				}
 			}
-			if (myCurrentPort > DockingPorts.Count - 1)
+
+			if (_myCurrentPort > _dockingPorts.Count - 1)
 			{
-				myCurrentPort = 0;
+				_myCurrentPort = 0;
 			}
-			if (MyDockingPortsUI.Count > 0)
+
+			if (_myDockingPortsUI.Count > 0)
 			{
-				MyDockingPortsUI[myCurrentPort].UI.IsSelected = true;
-				MyDockingPortsUI[myCurrentPort].UI.Distance = Localization.Selected.ToUpper();
+				_myDockingPortsUI[_myCurrentPort].UI.IsSelected = true;
+				_myDockingPortsUI[_myCurrentPort].UI.Distance = Localization.Selected.ToUpper();
 			}
 		}
 
@@ -671,55 +734,63 @@ namespace ZeroGravity.ShipComponents
 			dockingPanelUIItem.transform.localScale = Vector3.one;
 			dockingPanelUIItem.gameObject.SetActive(!port.IgnoreThisDockingPort);
 			dockingPanelUIItem.IsSelected = false;
-			dockingPanelUIItem.NameText.text = ((!(port.ParentShip == ParentShip)) ? (GameScenes.GetShortVesselClassName(port.ParentShip.SceneID) + "-") : string.Empty) + port.Name;
+			dockingPanelUIItem.NameText.text = ((!(port.ParentShip == _parentShip))
+				? (GameScenes.GetShortVesselClassName(port.ParentShip.SceneID) + "-")
+				: string.Empty) + port.Name;
 			dockingPanelUIItem.DistanceText.text = string.Empty;
 			return dockingPanelUIItem;
 		}
 
 		private void MakeTargetModulePorts()
 		{
-			if (currentRootBlinker != null)
+			if (_currentRootBlinker != null)
 			{
-				currentRootBlinker.SetActive(value: false);
+				_currentRootBlinker.SetActive(value: false);
 			}
-			foreach (DockingPortUI targetedModulePort in TargetedModulePorts)
+
+			foreach (DockingPortUI targetedModulePort in _targetedModulePorts)
 			{
 				Object.Destroy(targetedModulePort.UI.gameObject);
 			}
-			TargetedModulePorts.Clear();
+
+			_targetedModulePorts.Clear();
 			if (AvailableTargetShips.Count > 0)
 			{
 				foreach (Ship availableTargetShip in AvailableTargetShips)
 				{
-					foreach (SceneDockingPort item in availableTargetShip.DockingPorts.Values.Where((SceneDockingPort m) => !m.Locked))
+					foreach (SceneDockingPort item in availableTargetShip.DockingPorts.Values.Where(
+						         (SceneDockingPort m) => !m.Locked))
 					{
-						if (item.DockedToPort == null && SceneHelper.CompareTags(item.DockType, DockingPort.DockType) && item.ParentShip.IsPlayerAuthorizedOrNoSecurity(MyPlayer.Instance))
+						if (item.DockedToPort == null && SceneHelper.CompareTags(item.DockType, DockingPort.DockType) &&
+						    item.ParentShip.IsPlayerAuthorizedOrNoSecurity(MyPlayer.Instance))
 						{
 							DockingPortUI dockingPortUI = new DockingPortUI();
 							dockingPortUI.Port = item;
 							dockingPortUI.UI = MakeTargetModulePort(item);
-							TargetedModulePorts.Add(dockingPortUI);
+							_targetedModulePorts.Add(dockingPortUI);
 						}
 					}
 				}
 			}
-			currentTargetedModulePortIndex = 0;
+
+			_currentTargetedModulePortIndex = 0;
 			UpdateTargetPortsUI();
 		}
 
 		private void UpdateTargetPortsUI()
 		{
-			if (TargetedModulePorts.Count > 0)
+			if (_targetedModulePorts.Count > 0)
 			{
 				NoTargetModule.Activate(value: false);
-				TargetedModulePorts[currentTargetedModulePortIndex].UI.IsSelected = true;
-				TargetedModulePorts[currentTargetedModulePortIndex].UI.Distance = Localization.Selected.ToUpper();
-				currentRootBlinker = TargetedModulePorts[currentTargetedModulePortIndex].Port.DockingVisualROOT;
-				if (currentRootBlinker != null)
+				_targetedModulePorts[_currentTargetedModulePortIndex].UI.IsSelected = true;
+				_targetedModulePorts[_currentTargetedModulePortIndex].UI.Distance = Localization.Selected.ToUpper();
+				_currentRootBlinker = _targetedModulePorts[_currentTargetedModulePortIndex].Port.DockingVisualROOT;
+				if (_currentRootBlinker != null)
 				{
-					currentRootBlinker.SetActive(value: true);
+					_currentRootBlinker.SetActive(value: true);
 				}
-				TargetDockingPort = TargetedModulePorts[currentTargetedModulePortIndex].Port;
+
+				TargetDockingPort = _targetedModulePorts[_currentTargetedModulePortIndex].Port;
 				HasTargetPanel.Activate(value: true);
 				UpdateTargetedModule();
 			}
@@ -736,7 +807,9 @@ namespace ZeroGravity.ShipComponents
 			dockingPanelUIItem.transform.localScale = Vector3.one;
 			dockingPanelUIItem.gameObject.SetActive(value: true);
 			dockingPanelUIItem.IsSelected = false;
-			dockingPanelUIItem.NameText.text = ((!(port.ParentShip == ParentShip)) ? (GameScenes.GetShortVesselClassName(port.ParentShip.SceneID) + "-") : string.Empty) + port.Name;
+			dockingPanelUIItem.NameText.text = ((!(port.ParentShip == _parentShip))
+				? (GameScenes.GetShortVesselClassName(port.ParentShip.SceneID) + "-")
+				: string.Empty) + port.Name;
 			dockingPanelUIItem.DistanceText.text = string.Empty;
 			return dockingPanelUIItem;
 		}
@@ -751,7 +824,7 @@ namespace ZeroGravity.ShipComponents
 			RefreshDockingPorts();
 			MakeMyDockingPorts();
 			TargetDockingPort = null;
-			changeTargetedModulePort = true;
+			_changeTargetedModulePort = true;
 			SwitchPort();
 			ReloadRadarElements();
 			UpdateTargetedModule();
@@ -759,12 +832,12 @@ namespace ZeroGravity.ShipComponents
 
 		private void OnEnable()
 		{
-			Client.Instance.CanvasManager.CanvasUI.HelmetHud.gameObject.Activate(value: false);
+			_world.InGameGUI.HelmetHud.gameObject.Activate(value: false);
 		}
 
 		private void OnDisable()
 		{
-			Client.Instance.CanvasManager.CanvasUI.HelmetHud.gameObject.Activate(value: true);
+			_world.InGameGUI.HelmetHud.gameObject.Activate(value: true);
 		}
 	}
 }

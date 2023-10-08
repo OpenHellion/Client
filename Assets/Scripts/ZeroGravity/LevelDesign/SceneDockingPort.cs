@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using OpenHellion;
 using UnityEngine;
+using UnityEngine.Serialization;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 
@@ -9,20 +11,16 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneDockingPort : MonoBehaviour, ISceneObject
 	{
-		public const bool DockLeverState = false;
-
-		public const bool UndockLeverState = true;
-
 		public Transform CameraPosition;
 
 		public string Name;
 
 		public string DockType = string.Empty;
 
-		[Tooltip("Wether this port control from the docking panel is disabled or not.")]
+		[Tooltip("Whether this port control from the docking panel is disabled or not.")]
 		public bool LocalyDisabled;
 
-		public SceneTriggerExecuter Executer;
+		[FormerlySerializedAs("Executer")] public SceneTriggerExecutor Executor;
 
 		public string DockState;
 
@@ -34,29 +32,17 @@ namespace ZeroGravity.LevelDesign
 
 		private bool _isDocked;
 
-		[SerializeField]
-		private int _inSceneID;
-
-		private bool dockingStatus;
+		[SerializeField] private int _inSceneID;
 
 		public SceneDockingPort DockedToPort;
 
-		[HideInInspector]
-		public Ship ParentShip;
+		[HideInInspector] public Ship ParentShip;
 
 		public bool IsSlave;
 
 		public bool Locked;
 
-		[Space(5f)]
-		public List<SceneTriggerExecuter> mergeExecuters;
-
-		public float mergeExecutersDistance = 1f;
-
-		[Space(5f)]
-		public List<SceneDoor> Doors;
-
-		public float DoorPairingDistance = 0.5f;
+		[Space(5f)] public List<SceneDoor> Doors;
 
 		public List<SceneDockingPortController> portControllers = new List<SceneDockingPortController>();
 
@@ -66,23 +52,22 @@ namespace ZeroGravity.LevelDesign
 
 		public bool LeverPulse;
 
-		public const string AirlockTag = "airlock";
+		private static World _world;
 
 		public int InSceneID
 		{
-			get
-			{
-				return _inSceneID;
-			}
-			set
-			{
-				_inSceneID = value;
-			}
+			get => _inSceneID;
+			set => _inSceneID = value;
+		}
+
+		private void Awake()
+		{
+			_world ??= GameObject.Find("/World").GetComponent<World>();
 		}
 
 		private void Start()
 		{
-			if (Client.IsGameBuild && ParentShip == null)
+			if (ParentShip == null)
 			{
 				ParentShip = GetComponentInParent<GeometryRoot>().MainObject as Ship;
 			}
@@ -90,22 +75,24 @@ namespace ZeroGravity.LevelDesign
 
 		public void ToggleDock(bool? isDocked = null, bool isInstant = false)
 		{
-			_isDocked = ((!isDocked.HasValue) ? (!_isDocked) : isDocked.Value);
-			if (Executer != null)
+			_isDocked = !isDocked.HasValue ? (!_isDocked) : isDocked.Value;
+			if (Executor != null)
 			{
 				if (isInstant)
 				{
-					Executer.ChangeStateImmediate((!_isDocked) ? UndockState : DockState);
+					Executor.ChangeStateImmediate((!_isDocked) ? UndockState : DockState);
 				}
 				else
 				{
-					Executer.ChangeState((!_isDocked) ? UndockState : DockState);
+					Executor.ChangeState((!_isDocked) ? UndockState : DockState);
 				}
 			}
+
 			if (!_isDocked || portControllers.Count <= 0)
 			{
 				return;
 			}
+
 			foreach (SceneDockingPortController portController in portControllers)
 			{
 				portController.ToggleLock(isLocked: false, isInstant);
@@ -119,36 +106,44 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
+
 			if (details.DockingStatus)
 			{
 				IsSlave = true;
-				Ship ship = Client.Instance.GetVessel(details.DockedToID.VesselGUID) as Ship;
+				Ship ship = _world.GetVessel(details.DockedToID.VesselGUID) as Ship;
 				if (ship == null)
 				{
 					if (!isInitialize)
 					{
-						Dbg.Error("Docking Port: There is no parent ship. ChildShip", ParentShip.GUID, "Parent Ship", details.DockedToID.VesselGUID);
+						Dbg.Error("Docking Port: There is no parent ship. ChildShip", ParentShip.GUID, "Parent Ship",
+							details.DockedToID.VesselGUID);
 					}
+
 					return;
 				}
+
 				DockedToPort = ship.GetStructureObject<SceneDockingPort>(details.DockedToID.InSceneID);
 				if (DockedToPort == null)
 				{
 					if (!isInitialize)
 					{
-						Dbg.Error("Docking Port: There is no docking port in ship. Child Ship", ParentShip.GUID, "Parent Ship", details.DockedToID.VesselGUID, "Parent Loaded", ship.SceneObjectsLoaded, "Docked To Port ID", details.DockedToID.InSceneID);
+						Dbg.Error("Docking Port: There is no docking port in ship. Child Ship", ParentShip.GUID,
+							"Parent Ship", details.DockedToID.VesselGUID, "Parent Loaded", ship.SceneObjectsLoaded,
+							"Docked To Port ID", details.DockedToID.InSceneID);
 					}
+
 					return;
 				}
+
 				DockedToPort.Locked = Locked;
-				dockingStatus = details.DockingStatus;
 				DockedToPort.DockedToPort = this;
-				DockedToPort.dockingStatus = details.DockingStatus;
 				ParentShip.OnDockCompleted = OnDockCompleted;
 				ParentShip.DockToShip(this, ship, DockedToPort, details, isInitialize);
-				if (!isInitialize && MyPlayer.Instance.Parent == ParentShip && MyPlayer.Instance.LockedToTrigger != null && MyPlayer.Instance.LockedToTrigger.TriggerType == SceneTriggerType.DockingPanel)
+				if (!isInitialize && MyPlayer.Instance.Parent == ParentShip &&
+				    MyPlayer.Instance.LockedToTrigger != null && MyPlayer.Instance.LockedToTrigger.TriggerType ==
+				    SceneTriggerType.DockingPanel)
 				{
-					Client.Instance.InGamePanels.Docking.UpdateDockingPorts();
+					_world.InWorldPanels.Docking.UpdateDockingPorts();
 				}
 			}
 			else
@@ -156,8 +151,6 @@ namespace ZeroGravity.LevelDesign
 				IsSlave = false;
 				if (DockedToPort != null)
 				{
-					dockingStatus = details.DockingStatus;
-					DockedToPort.dockingStatus = details.DockingStatus;
 					ParentShip.OnUndockStarted = OnUndockStarted;
 					ParentShip.UndockFromShip(this, DockedToPort.ParentShip, DockedToPort, details);
 				}
@@ -184,7 +177,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void UndockPort()
 		{
-			if (Client.IsGameBuild && DockedToPort != null)
+			if (DockedToPort != null)
 			{
 				if (IsSlave)
 				{
@@ -216,8 +209,8 @@ namespace ZeroGravity.LevelDesign
 			yield return new WaitForSeconds(time);
 			foreach (SceneDockingPortController controller in controllers)
 			{
-				SceneTriggerExecuter getExecuter = controller.GetExecuter;
-				getExecuter.ChangeState("up");
+				SceneTriggerExecutor getExecutor = controller.GetExecutor;
+				getExecutor.ChangeState("up");
 				controller.IsLocked = false;
 				controller.OnLeverStateChange();
 			}
@@ -229,10 +222,12 @@ namespace ZeroGravity.LevelDesign
 			{
 				StartCoroutine(ReturnLever(2f, portControllers));
 			}
+
 			if (!IsDockTogglePossibleWith(sdc, toggle) && checkTogglePossibility)
 			{
 				return false;
 			}
+
 			Ship parentShip = sdc.ParentShip;
 			SceneDockingPortDetails sceneDockingPortDetails = new SceneDockingPortDetails
 			{
@@ -257,6 +252,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
+
 			if (DockType.TagCount() >= 4)
 			{
 				if (IsSlave)
@@ -279,10 +275,15 @@ namespace ZeroGravity.LevelDesign
 					DockedToPort.ToggleDockTo(this, toggle: false, checkTogglePossibility: false);
 				}
 			}
-			else if (DockedToPort == null || (portControllers.Count > 0 && portControllers.Find((SceneDockingPortController m) => !m.IsLocked) != null) || (DockedToPort.portControllers.Count > 0 && DockedToPort.portControllers.Find((SceneDockingPortController m) => !m.IsLocked) != null))
+			else if (DockedToPort == null ||
+			         (portControllers.Count > 0 &&
+			          portControllers.Find((SceneDockingPortController m) => !m.IsLocked) != null) ||
+			         (DockedToPort.portControllers.Count > 0 &&
+			          DockedToPort.portControllers.Find((SceneDockingPortController m) => !m.IsLocked) != null))
 			{
 				return;
 			}
+
 			if (IsSlave)
 			{
 				ToggleDockTo(DockedToPort, toggle: false);
@@ -297,15 +298,19 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (!isDocking)
 			{
-				if (portControllers.Count > 0 && portControllers.Find((SceneDockingPortController m) => !m.IsLocked) != null)
+				if (portControllers.Count > 0 &&
+				    portControllers.Find((SceneDockingPortController m) => !m.IsLocked) != null)
 				{
 					return false;
 				}
-				if (sdp.portControllers.Count > 0 && sdp.portControllers.Find((SceneDockingPortController m) => !m.IsLocked) != null)
+
+				if (sdp.portControllers.Count > 0 &&
+				    sdp.portControllers.Find((SceneDockingPortController m) => !m.IsLocked) != null)
 				{
 					return false;
 				}
 			}
+
 			return true;
 		}
 
@@ -315,8 +320,10 @@ namespace ZeroGravity.LevelDesign
 			if (SceneDockingTriggerTrans != null)
 			{
 				Gizmos.matrix = SceneDockingTriggerTrans.localToWorldMatrix;
-				Gizmos.DrawCube(SceneDockingTriggerTrans.GetComponent<BoxCollider>().center, SceneDockingTriggerTrans.GetComponent<BoxCollider>().size);
+				Gizmos.DrawCube(SceneDockingTriggerTrans.GetComponent<BoxCollider>().center,
+					SceneDockingTriggerTrans.GetComponent<BoxCollider>().size);
 			}
+
 			Gizmos.matrix = base.transform.localToWorldMatrix;
 			Gizmos.DrawLine(Vector3.zero, Vector3.forward);
 			Gizmos.DrawLine(Vector3.forward, new Vector3(-0.2f, 0f, 0.8f));
@@ -336,9 +343,11 @@ namespace ZeroGravity.LevelDesign
 
 		private void OnDestroy()
 		{
-			if ((bool)GetComponentInChildren<Camera>() && MyPlayer.Instance.LockedToTrigger is SceneTriggerShipControl2 && MyPlayer.Instance.ShipControlMode == ShipControlMode.Docking)
+			if ((bool)GetComponentInChildren<Camera>() &&
+			    MyPlayer.Instance.LockedToTrigger is SceneTriggerShipControl &&
+			    MyPlayer.Instance.ShipControlMode == ShipControlMode.Docking)
 			{
-				(MyPlayer.Instance.LockedToTrigger as SceneTriggerShipControl2).CancelInteract(MyPlayer.Instance);
+				(MyPlayer.Instance.LockedToTrigger as SceneTriggerShipControl).CancelInteract(MyPlayer.Instance);
 			}
 		}
 	}

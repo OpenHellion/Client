@@ -1,9 +1,17 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using ZeroGravity;
+using OpenHellion;
 
-public class SfxUI : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler, IEventSystemHandler
+public class SfxUI : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler
 {
+	private static World _world;
+
+	private void Awake()
+	{
+		_world ??= GameObject.Find("/World").GetComponent<World>();
+	}
+
 	public enum ButtonType
 	{
 		Default = 0,
@@ -17,15 +25,15 @@ public class SfxUI : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, 
 	{
 		if (Type == ButtonType.Cancel)
 		{
-			Client.Instance.CanvasManager.SoundEffect.Play(1);
+			_world.InGameGUI.SoundEffect.Play(1);
 		}
 		else if (Type == ButtonType.SpawnPoint)
 		{
-			Client.Instance.CanvasManager.SoundEffect.Play(1);
+			_world.InGameGUI.SoundEffect.Play(1);
 		}
 		else
 		{
-			Client.Instance.CanvasManager.SoundEffect.Play(1);
+			_world.InGameGUI.SoundEffect.Play(1);
 		}
 	}
 
@@ -33,20 +41,20 @@ public class SfxUI : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, 
 	{
 		if (Type == ButtonType.Cancel)
 		{
-			Client.Instance.CanvasManager.SoundEffect.Play(1);
+			_world.InGameGUI.SoundEffect.Play(1);
 		}
 		else if (Type == ButtonType.SpawnPoint)
 		{
-			Client.Instance.CanvasManager.SoundEffect.Play(0);
+			_world.InGameGUI.SoundEffect.Play(0);
 		}
 		else
 		{
-			Client.Instance.CanvasManager.SoundEffect.Play(0);
+			_world.InGameGUI.SoundEffect.Play(0);
 		}
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		Cursor.SetCursor(Client.Instance.DefaultCursor, Vector2.zero, CursorMode.Auto);
+		Cursor.SetCursor(_world.DefaultCursor, Vector2.zero, CursorMode.Auto);
 	}
 }

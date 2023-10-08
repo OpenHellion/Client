@@ -9,11 +9,9 @@ public class HelmetRadarIndicator : MonoBehaviour
 		Right = 2
 	}
 
-	[SerializeField]
-	private GameObject Arrow_Left;
+	[SerializeField] private GameObject Arrow_Left;
 
-	[SerializeField]
-	private GameObject Arrow_Right;
+	[SerializeField] private GameObject Arrow_Right;
 
 	public bool visibleIndicator;
 
@@ -33,11 +31,13 @@ public class HelmetRadarIndicator : MonoBehaviour
 			base.gameObject.SetActive(active);
 			return;
 		}
+
 		if (!active)
 		{
 			Arrow_Left.SetActive(active);
 			Arrow_Right.SetActive(active);
 		}
+
 		base.gameObject.SetActive(active);
 	}
 }

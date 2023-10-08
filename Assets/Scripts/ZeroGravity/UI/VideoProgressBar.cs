@@ -34,9 +34,11 @@ namespace ZeroGravity.UI
 		public void TrySkip(PointerEventData eventData)
 		{
 			Vector2 localPoint;
-			if (RectTransformUtility.ScreenPointToLocalPointInRectangle(Progress.rectTransform, eventData.position, UICamera, out localPoint))
+			if (RectTransformUtility.ScreenPointToLocalPointInRectangle(Progress.rectTransform, eventData.position,
+				    UICamera, out localPoint))
 			{
-				float pct = Mathf.InverseLerp(Progress.rectTransform.rect.xMin, Progress.rectTransform.rect.xMax, localPoint.x);
+				float pct = Mathf.InverseLerp(Progress.rectTransform.rect.xMin, Progress.rectTransform.rect.xMax,
+					localPoint.x);
 				SkipToPercent(pct);
 			}
 		}

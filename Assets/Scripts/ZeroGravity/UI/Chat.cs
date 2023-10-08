@@ -1,10 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using OpenHellion;
 using OpenHellion.IO;
 using OpenHellion.Net;
+using OpenHellion.Social;
+using OpenHellion.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
@@ -47,31 +51,43 @@ namespace ZeroGravity.UI
 
 		private ChatState _chatState;
 
+		[FormerlySerializedAs("_worldState")] [SerializeField] private World _world;
+
+		[SerializeField] private NakamaClient _nakamaClient;
+
 		private void Start()
 		{
-			Client.Instance.Nakama.OnChatMessageReceived += ReceiveMessage;
+			_nakamaClient.OnChatMessageReceived += ReceiveMessage;
 		}
 
 		private void Update()
 		{
-			if (!Client.Instance.CanvasManager.DisableChat)
+			if (!Settings.Instance.SettingsData.GameSettings.DisableChat)
 			{
-				if (InputManager.GetButtonDown(InputManager.ConfigAction.Chat) && !ChatInputBox.activeInHierarchy && !Client.Instance.CanvasManager.Console.gameObject.activeInHierarchy && !Client.Instance.CanvasManager.IsInputFieldIsActive && !Client.Instance.CanvasManager.OverlayCanvasIsOn && !InputManager.GetButton(InputManager.ConfigAction.Drop))
+				if (InputManager.GetButtonDown(InputManager.ConfigAction.Chat) && !ChatInputBox.activeInHierarchy &&
+				    !_world.InGameGUI.Console.gameObject.activeInHierarchy &&
+				    !_world.InGameGUI.IsInputFieldIsActive && !_world.InGameGUI.OverlayCanvasIsOn &&
+				    !InputManager.GetButton(InputManager.ConfigAction.Drop))
 				{
 					ShowChat(true);
 				}
-				if (Client.Instance.IsChatOpened && Keyboard.current.enterKey.wasPressedThisFrame)
+
+				if (_world.IsChatOpened && Keyboard.current.enterKey.wasPressedThisFrame)
 				{
 					ShowChat(false);
 				}
-				if (Client.Instance.IsChatOpened && Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero() && (ScrollBarVertical.value >= 0f || ScrollBarVertical.value <= 1f))
+
+				if (_world.IsChatOpened && Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero() &&
+				    (ScrollBarVertical.value >= 0f || ScrollBarVertical.value <= 1f))
 				{
 					ScrollBarVertical.value += Mouse.current.scroll.y.ReadValue() * 0.2f;
 				}
-				if (Client.Instance.IsChatOpened && Keyboard.current.escapeKey.wasPressedThisFrame)
+
+				if (_world.IsChatOpened && Keyboard.current.escapeKey.wasPressedThisFrame)
 				{
 					CloseChat();
 				}
+
 				if (Mouse.current.leftButton.wasPressedThisFrame)
 				{
 					ChatInput.Select();
@@ -85,16 +101,19 @@ namespace ZeroGravity.UI
 
 		private void OnDestroy()
 		{
-			Client.Instance.Nakama.OnChatMessageReceived -= ReceiveMessage;
+			_nakamaClient.OnChatMessageReceived -= ReceiveMessage;
 		}
 
 		public void CreateSystemMessage(SystemMessagesTypes type, object[] param)
 		{
 			if (type == SystemMessagesTypes.RestartServerTime)
 			{
-				Client.Instance.CanvasManager.CanvasUI.Notification(string.Format(Localization.SystemChat[(int)type], param[0], param[1]), CanvasUI.NotificationType.Alert);
+				_world.InGameGUI.Notification(
+					string.Format(Localization.SystemChat[(int)type], param[0], param[1]),
+					InGameGUI.NotificationType.Alert);
 				return;
 			}
+
 			GameObject chatItem = Instantiate(ChatItemPref, base.transform.position, base.transform.rotation);
 			chatItem.transform.SetParent(ContentTrans);
 			chatItem.SetActive(true);
@@ -102,25 +121,27 @@ namespace ZeroGravity.UI
 			string messageText;
 			switch (type)
 			{
-			case SystemMessagesTypes.Custom:
-				messageText = param[0].ToString();
-				break;
-			case SystemMessagesTypes.DoomedOutpostSpawned:
-				messageText = string.Format(Localization.SystemChat[(int)type], param[0], param[1], param[2]);
-				break;
-			case SystemMessagesTypes.ShipTimerAllreadyStarted:
-			case SystemMessagesTypes.ShipInRange:
-				messageText = Localization.SystemChat[(int)type];
-				break;
-			case SystemMessagesTypes.ShipWillArriveIn:
-				messageText = string.Format(Localization.SystemChat[(int)type], param[0]);
-				break;
-			default:
-				messageText = Localization.SystemChat[0];
-				break;
+				case SystemMessagesTypes.Custom:
+					messageText = param[0].ToString();
+					break;
+				case SystemMessagesTypes.DoomedOutpostSpawned:
+					messageText = string.Format(Localization.SystemChat[(int)type], param[0], param[1], param[2]);
+					break;
+				case SystemMessagesTypes.ShipTimerAllreadyStarted:
+				case SystemMessagesTypes.ShipInRange:
+					messageText = Localization.SystemChat[(int)type];
+					break;
+				case SystemMessagesTypes.ShipWillArriveIn:
+					messageText = string.Format(Localization.SystemChat[(int)type], param[0]);
+					break;
+				default:
+					messageText = Localization.SystemChat[0];
+					break;
 			}
+
 			float messageLength = messageText.Length;
-			float messageHeight = messageLength <= 75f ? 30f : !(messageLength > 75f) || !(messageLength <= 150f) ? 90f : 60f;
+			float messageHeight = messageLength <= 75f ? 30f :
+				!(messageLength > 75f) || !(messageLength <= 150f) ? 90f : 60f;
 			chatItem.GetComponent<LayoutElement>().minHeight = messageHeight;
 			chatItem.transform.Find("UsernameText").GetComponent<Text>().text = Localization.System.ToUpper();
 			Text component = chatItem.transform.Find("BodyText").GetComponent<Text>();
@@ -133,7 +154,8 @@ namespace ZeroGravity.UI
 				Messages[0].RemoveThisMessage();
 				Messages.RemoveAt(0);
 			}
-			Client.Instance.CanvasManager.CanvasUI.Notification(messageText, CanvasUI.NotificationType.Alert);
+
+			_world.InGameGUI.Notification(messageText, InGameGUI.NotificationType.Alert);
 		}
 
 		private void ReceiveMessage(string username, string messageText)
@@ -148,7 +170,8 @@ namespace ZeroGravity.UI
 			chatItem.transform.SetParent(ContentTrans);
 			chatItem.SetActive(true);
 			chatItem.transform.localScale = new Vector3(1f, 1f, 1f);
-			float messageHeight = messageText.Length <= 75f ? 30f : !(messageText.Length > 75f) || !(messageText.Length <= 150f) ? 90f : 60f;
+			float messageHeight = messageText.Length <= 75f ? 30f :
+				!(messageText.Length > 75f) || !(messageText.Length <= 150f) ? 90f : 60f;
 			chatItem.GetComponent<LayoutElement>().minHeight = messageHeight;
 			chatItem.transform.Find("UsernameText").GetComponent<Text>().text = username;
 
@@ -187,11 +210,13 @@ namespace ZeroGravity.UI
 				InputManager.ResetInputAxis();
 				yield return new WaitForSeconds(0.2f);
 			}
+
 			if (show)
 			{
 				MyPlayer.Instance.FpsController.ToggleMovement(false);
 			}
-			else if (MyPlayer.Instance.LockedToTrigger is null && !MyPlayer.Instance.InLockState && !MyPlayer.Instance.InInteractState && !MyPlayer.Instance.InLerpingState)
+			else if (MyPlayer.Instance.LockedToTrigger is null && !MyPlayer.Instance.InLockState &&
+			         !MyPlayer.Instance.InInteractState && !MyPlayer.Instance.InLerpingState)
 			{
 				MyPlayer.Instance.FpsController.ToggleMovement(true);
 			}
@@ -200,12 +225,13 @@ namespace ZeroGravity.UI
 		// Shows or hides the chat box.
 		private void ShowChat(bool show)
 		{
-			if (Client.Instance.CanvasManager.DisableChat)
+			if (Settings.Instance.SettingsData.GameSettings.DisableChat)
 			{
 				return;
 			}
-			Client.Instance.CanvasManager.IsInputFieldIsActive = show;
-			Client.Instance.IsChatOpened = show;
+
+			_world.InGameGUI.IsInputFieldIsActive = show;
+			_world.IsChatOpened = show;
 			StartCoroutine(ResetInputAndShowChat(show));
 			ScrollBarHandle.SetActive(show);
 			ChatInputBox.SetActive(show);
@@ -227,8 +253,10 @@ namespace ZeroGravity.UI
 				{
 					truncatedString = truncatedString.Substring(0, 250);
 				}
+
 				SendChatMessage(truncatedString);
 			}
+
 			ChatInput.text = string.Empty;
 		}
 
@@ -243,7 +271,7 @@ namespace ZeroGravity.UI
 			}
 			else if (ChatInput.text.Equals("/g", StringComparison.OrdinalIgnoreCase))
 			{
-				if (await Client.Instance.Nakama.JoinChatRoom(ChatState.Global))
+				if (await _nakamaClient.JoinChatRoom(ChatState.Global))
 				{
 					_chatState = ChatState.Global;
 					ChatInput.text = string.Empty;
@@ -256,7 +284,7 @@ namespace ZeroGravity.UI
 			}
 			else if (ChatInput.text.Equals("/p", StringComparison.OrdinalIgnoreCase))
 			{
-				if (await Client.Instance.Nakama.JoinChatRoom(ChatState.Party))
+				if (await _nakamaClient.JoinChatRoom(ChatState.Party))
 				{
 					_chatState = ChatState.Party;
 					ChatInput.text = string.Empty;
@@ -268,7 +296,7 @@ namespace ZeroGravity.UI
 				}
 			}
 
-			// TODO: ad the rest of the states.
+			// TODO: add the rest of the states.
 		}
 
 		public void CloseChat()
@@ -292,7 +320,7 @@ namespace ZeroGravity.UI
 		{
 			ChatInput.Select();
 			ChatInput.ActivateInputField();
-			Client.Instance.CanvasManager.IsInputFieldIsActive = true;
+			_world.InGameGUI.IsInputFieldIsActive = true;
 		}
 	}
 }

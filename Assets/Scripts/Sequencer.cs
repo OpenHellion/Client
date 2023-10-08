@@ -73,6 +73,7 @@ public class Sequencer : MonoBehaviour
 			{
 				go.GetComponent<Animator>().SetTrigger(animationParameter);
 			}
+
 			yield return new WaitForSeconds(delayTime);
 		}
 	}
@@ -85,6 +86,7 @@ public class Sequencer : MonoBehaviour
 			{
 				go.GetComponent<Animator>().SetBool(animationParameter, animationBoolValue);
 			}
+
 			yield return new WaitForSeconds(delayTime);
 		}
 	}

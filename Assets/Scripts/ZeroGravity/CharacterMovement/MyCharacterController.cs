@@ -31,30 +31,6 @@ namespace ZeroGravity.CharacterMovement
 			public float AccelerationStep;
 
 			public float DeaccelerationStep;
-
-			public float AccelerationTime
-			{
-				get
-				{
-					return 1f / AccelerationStep;
-				}
-				set
-				{
-					AccelerationStep = 1f / value;
-				}
-			}
-
-			public float DeaccelerationTime
-			{
-				get
-				{
-					return 1f / DeaccelerationStep;
-				}
-				set
-				{
-					DeaccelerationStep = 1f / value;
-				}
-			}
 		}
 
 		private enum MovementState
@@ -78,87 +54,57 @@ namespace ZeroGravity.CharacterMovement
 
 		public delegate void TranslateDelegate();
 
-		[SerializeField]
-		private CapsuleCollider collider1G;
+		[SerializeField] private CapsuleCollider collider1G;
 
-		[SerializeField]
-		private SphereCollider collider0G;
+		[SerializeField] private SphereCollider collider0G;
 
-		[SerializeField]
-		private Transform characterRoot;
+		[SerializeField] private Transform characterRoot;
 
-		[SerializeField]
-		public Rigidbody rigidBody;
+		[SerializeField] public Rigidbody rigidBody;
 
-		[SerializeField]
-		private MyPlayer myPlayer;
+		[SerializeField] private MyPlayer myPlayer;
 
-		[SerializeField]
-		public AnimatorHelper animatorHelper;
+		[SerializeField] public AnimatorHelper animatorHelper;
 
-		[SerializeField]
-		private CameraController cameraController;
+		[SerializeField] private CameraController cameraController;
 
-		[SerializeField]
-		private Camera mainCamera;
+		[SerializeField] private Camera mainCamera;
 
-		[SerializeField]
-		private Camera farCamera;
+		[SerializeField] private Camera farCamera;
 
-		[SerializeField]
-		private Camera nearCamera;
+		[SerializeField] private Camera nearCamera;
 
 		public Transform HeadCameraParent;
 
 		public ParticleSystem StarDustParticle;
 
-		public Transform StarDustCustomSpace;
+		[SerializeField] private MovementSpeed normalSpeeds;
 
-		[SerializeField]
-		private MovementSpeed normalSpeeds;
+		[SerializeField] private MovementSpeed runSpeeds;
 
-		[SerializeField]
-		private MovementSpeed runSpeeds;
+		[SerializeField] private MovementSpeed crouchSpeeds;
 
-		[SerializeField]
-		private MovementSpeed crouchSpeeds;
+		[SerializeField] private MovementSpeed airSpeeds;
 
-		[SerializeField]
-		private MovementSpeed airSpeeds;
+		[SerializeField] private MovementSpeed zeroGNormalSpeeds;
 
-		[SerializeField]
-		private MovementSpeed zeroGNormalSpeeds;
-
-		[SerializeField]
-		private MovementSpeed zeroGFloatingSpeeds;
-
-		[SerializeField]
-		private MovementSpeed zeroGJetpackSpeeds;
-
-		[SerializeField]
-		private MovementSpeed zeroGGlideSpeeds;
+		[SerializeField] private MovementSpeed zeroGJetpackSpeeds;
 
 		private MovementSpeed currSpeeds;
 
-		[SerializeField]
-		private float animatorForwardMaxVelocity;
+		[SerializeField] private float animatorForwardMaxVelocity;
 
-		[SerializeField]
-		private float animatorBackwardMaxVelocity;
+		[SerializeField] private float animatorBackwardMaxVelocity;
 
-		[SerializeField]
-		private float animatorRightMaxVelocity;
+		[SerializeField] private float animatorRightMaxVelocity;
 
-		[SerializeField]
-		public Rigidbody ragdollChestRigidbody;
+		[SerializeField] public Rigidbody ragdollChestRigidbody;
 
-		[SerializeField]
-		private Transform centerOfMass;
+		[SerializeField] private Transform centerOfMass;
 
 		public Rigidbody CenterOfMassRigidbody;
 
-		[SerializeField]
-		private float maxSlopeAngle;
+		[SerializeField] private float maxSlopeAngle;
 
 		private float currSlopeAngle;
 
@@ -168,15 +114,13 @@ namespace ZeroGravity.CharacterMovement
 
 		private bool isMovementEnabled = true;
 
-		[SerializeField]
-		private bool isGrounded;
+		[SerializeField] private bool isGrounded;
 
 		private float groundCheckDistance = 0.01f;
 
 		private bool isOnLadder;
 
-		[SerializeField]
-		private float ladderVelocity = 1.5f;
+		[SerializeField] private float ladderVelocity = 1.5f;
 
 		public Jetpack CurrentJetpack;
 
@@ -185,8 +129,6 @@ namespace ZeroGravity.CharacterMovement
 		private bool gravityChangedRagdoll;
 
 		private float gravitChangeStartTime;
-
-		private Quaternion gravityChangeStartRotation = Quaternion.identity;
 
 		private Quaternion gravityChangeEndingRotation = Quaternion.identity;
 
@@ -206,26 +148,19 @@ namespace ZeroGravity.CharacterMovement
 
 		private float crouchLerpHelper = 1f;
 
-		[SerializeField]
-		private float crouchLerpSpeed = 1.5f;
+		[SerializeField] private float crouchLerpSpeed = 1.5f;
 
-		[SerializeField]
-		private float zgAtmosphereAngularDrag = 1.5f;
+		[SerializeField] private float zgAtmosphereAngularDrag = 1.5f;
 
-		[SerializeField]
-		private float zgAtmosphereDrag = 0.1f;
+		[SerializeField] private float zgAtmosphereDrag = 0.1f;
 
-		[SerializeField]
-		private float zgJetpackAngularDrag = 3f;
+		[SerializeField] private float zgJetpackAngularDrag = 3f;
 
-		[SerializeField]
-		private float zgGrabDrag = 2.2f;
+		[SerializeField] private float zgGrabDrag = 2.2f;
 
-		[SerializeField]
-		private float zgGrabAngularDrag = 1.5f;
+		[SerializeField] private float zgGrabAngularDrag = 1.5f;
 
-		[SerializeField]
-		private float jumpHeightMax = 0.8f;
+		[SerializeField] private float jumpHeightMax = 0.8f;
 
 		private Vector3 currMovementDirection;
 
@@ -279,8 +214,7 @@ namespace ZeroGravity.CharacterMovement
 
 		private int collisionLayerMask;
 
-		[SerializeField]
-		private float playerImpactVelocityTreshold;
+		[SerializeField] private float playerImpactVelocityTreshold;
 
 		public float DefaultMaxAngularVelocity = 20f;
 
@@ -298,25 +232,21 @@ namespace ZeroGravity.CharacterMovement
 
 		public Vector3 StickToVesselTangentialVelocity;
 
-		public Vector3 startLockedPos;
-
 		public float legDistance = 1.15f;
 
-		private float sprintTime;
+		private RaycastHit _groundRayHit = default(RaycastHit);
 
-		private RaycastHit groundRayHit = default(RaycastHit);
+		private bool _doJump;
 
-		private bool doJump;
+		private float _airTime;
 
-		private float airTime;
+		private float _slopeJumpTimer;
 
-		private float slopeJumpTimer;
+		private bool _playingStabilizeSound;
 
-		private bool playingStabilizeSound;
+		private float _lockLerp;
 
-		private float lockLerp;
-
-		private float lockSpeed = 0.5f;
+		private const float LockSpeed = 0.5f;
 
 		public Transform attachPointSaved;
 
@@ -326,16 +256,14 @@ namespace ZeroGravity.CharacterMovement
 
 		public float HeadBobStrength
 		{
-			get
-			{
-				return headBobStrength;
-			}
+			get { return headBobStrength; }
 			set
 			{
 				headBobStrength = value;
 				AnimatorHelper obj = animatorHelper;
 				float? num = headBobStrength;
-				obj.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, num);
+				obj.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, num);
 			}
 		}
 
@@ -353,16 +281,23 @@ namespace ZeroGravity.CharacterMovement
 		{
 			get
 			{
-				float num = (Quaternion.FromToRotation(cameraController.MouseLookXTransform.forward, cameraController.FreeLookXTransform.forward).Inverse() * cameraController.transform.rotation).eulerAngles.x;
-				float num2 = MathHelper.AngleSigned(Vector3.ProjectOnPlane(cameraController.FreeLookXTransform.forward, cameraController.MouseLookXTransform.up).normalized, cameraController.MouseLookXTransform.forward, cameraController.MouseLookXTransform.up);
+				float num = (Quaternion.FromToRotation(cameraController.MouseLookXTransform.forward,
+						cameraController.FreeLookXTransform.forward).Inverse() * cameraController.transform.rotation)
+					.eulerAngles.x;
+				float num2 = MathHelper.AngleSigned(
+					Vector3.ProjectOnPlane(cameraController.FreeLookXTransform.forward,
+						cameraController.MouseLookXTransform.up).normalized,
+					cameraController.MouseLookXTransform.forward, cameraController.MouseLookXTransform.up);
 				if (num > 180f)
 				{
 					num -= 360f;
 				}
+
 				if (num2 > 180f)
 				{
 					num2 -= 360f;
 				}
+
 				return new Vector2((0f - num) / 90f, num2 / 90f);
 			}
 		}
@@ -376,6 +311,7 @@ namespace ZeroGravity.CharacterMovement
 				{
 					num -= 360f;
 				}
+
 				return 0f - num;
 			}
 		}
@@ -389,14 +325,6 @@ namespace ZeroGravity.CharacterMovement
 		public bool IsZeroG => isZeroG;
 
 		public bool IsFreeLook => cameraController.IsFreeLook;
-
-		public float AnimationForward => (!isZeroG) ? currForwardAnimationVal : 0f;
-
-		public float AnimationRight => (!isZeroG) ? currRightAnimationVal : 0f;
-
-		public float AnimationZeroGForward => (!isZeroG) ? 0f : currForwardAnimationVal;
-
-		public float AnimationZeroGRight => (!isZeroG) ? 0f : currRightAnimationVal;
 
 		public bool MeleeTriggered { get; set; }
 
@@ -420,10 +348,7 @@ namespace ZeroGravity.CharacterMovement
 
 		public bool IsJetpackOn
 		{
-			get
-			{
-				return CurrentJetpack != null && CurrentJetpack.IsActive;
-			}
+			get => CurrentJetpack != null && CurrentJetpack.IsActive;
 			set
 			{
 				if (CurrentJetpack != null)
@@ -433,34 +358,20 @@ namespace ZeroGravity.CharacterMovement
 			}
 		}
 
-		public float JetpackMaxFuel => (!(CurrentJetpack != null)) ? 0f : CurrentJetpack.MaxFuel;
-
 		public float JetpackFuel => (!(CurrentJetpack != null)) ? 0f : CurrentJetpack.CurrentFuel;
 
 		public bool CanGrabWall => canGrabWall;
 
 		public bool CanLockToPoint
 		{
-			get
-			{
-				return canLockToPoint;
-			}
-			set
-			{
-				canLockToPoint = value;
-			}
+			get { return canLockToPoint; }
+			set { canLockToPoint = value; }
 		}
 
 		public bool IsLockedToPoint
 		{
-			get
-			{
-				return isLockedToPoint;
-			}
-			set
-			{
-				isLockedToPoint = value;
-			}
+			get { return isLockedToPoint; }
+			set { isLockedToPoint = value; }
 		}
 
 		public MovementSpeed CurrentSpeeds => currSpeeds;
@@ -471,13 +382,12 @@ namespace ZeroGravity.CharacterMovement
 
 		public bool IsMovementEnabled => isMovementEnabled;
 
-		public float AirTime => airTime;
-
-		public float StanceSpeedMultiplier => stanceSpeedMultiplier;
+		public float AirTime => _airTime;
 
 		private void Awake()
 		{
-			collisionLayerMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("PlayerCollision"));
+			collisionLayerMask = (1 << LayerMask.NameToLayer("Default")) |
+			                     (1 << LayerMask.NameToLayer("PlayerCollision"));
 			currSpeeds = normalSpeeds;
 			lastMovementState = MovementState.Normal;
 			normalColliderHeight = collider1G.height;
@@ -491,22 +401,27 @@ namespace ZeroGravity.CharacterMovement
 			{
 				LockPlayerToPoint(locked: true);
 			}
+
 			if (grabSlowEnabled)
 			{
 				CheckVelocityForLock();
 			}
+
 			if (!isZeroG)
 			{
 				update1GInput();
 			}
+
 			if (isZeroG)
 			{
 				CheckLegDistanceFromFloor();
 			}
+
 			if (lerpCameraBack)
 			{
 				LerpCameraToLocalZero();
 			}
+
 			if (myPlayer.Parent is Pivot && rigidBody.drag.IsNotEpsilonZero() && NearbyVessel != null)
 			{
 				Pivot pivot = myPlayer.Parent as Pivot;
@@ -516,10 +431,11 @@ namespace ZeroGravity.CharacterMovement
 
 		private void FixedUpdate()
 		{
-			if (Client.IsGameBuild && !myPlayer.PlayerReady)
+			if (!myPlayer.PlayerReady)
 			{
 				return;
 			}
+
 			if (isZeroG)
 			{
 				update0GMovement();
@@ -528,32 +444,42 @@ namespace ZeroGravity.CharacterMovement
 			{
 				if (!isGrounded && !HasTumbled)
 				{
-					float num = Vector3.Dot(Vector3.Project(rigidBody.velocity, myPlayer.GravityDirection), myPlayer.GravityDirection);
+					float num = Vector3.Dot(Vector3.Project(rigidBody.velocity, myPlayer.GravityDirection),
+						myPlayer.GravityDirection);
 					if (num > 7f)
 					{
 						Tumble(rigidBody.velocity);
 					}
 				}
+
 				update1GMovement();
 			}
+
 			if (InputManager.GetButton(InputManager.ConfigAction.Sprint))
 			{
-				canGrabWall = Physics.OverlapSphere(centerOfMass.position, 0.8f, collisionLayerMask, QueryTriggerInteraction.Ignore).Length > 0;
+				canGrabWall = Physics.OverlapSphere(centerOfMass.position, 0.8f, collisionLayerMask,
+					QueryTriggerInteraction.Ignore).Length > 0;
 			}
 		}
 
 		private void CheckLegDistanceFromFloor()
 		{
-			bool? touchingFloor = Physics.Raycast(base.transform.position, -base.transform.up, legDistance, collisionLayerMask);
-			animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, touchingFloor);
+			bool? touchingFloor = Physics.Raycast(base.transform.position, -base.transform.up, legDistance,
+				collisionLayerMask);
+			animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, touchingFloor);
 		}
 
 		private void CalculateCrouch()
 		{
-			if (!IsCrouch && collider1G.height < normalColliderHeight && Physics.SphereCast(characterRoot.position, collider1G.radius - 0.02f, characterRoot.up, out var _, normalColliderHeight - collider1G.radius, collisionLayerMask))
+			if (!IsCrouch && collider1G.height < normalColliderHeight && Physics.SphereCast(characterRoot.position,
+				    collider1G.radius - 0.02f, characterRoot.up, out var _, normalColliderHeight - collider1G.radius,
+				    collisionLayerMask))
 			{
 				lastMovementState = MovementState.Crouch;
 			}
+
 			float num = crouchLerpHelper;
 			if (IsCrouch && num > 0f)
 			{
@@ -561,7 +487,8 @@ namespace ZeroGravity.CharacterMovement
 			}
 			else if (!IsCrouch && num < 1f)
 			{
-				Physics.SphereCast(characterRoot.position, collider1G.radius - 0.02f, characterRoot.up, out var hitInfo2, normalColliderHeight - collider1G.radius, collisionLayerMask);
+				Physics.SphereCast(characterRoot.position, collider1G.radius - 0.02f, characterRoot.up,
+					out var hitInfo2, normalColliderHeight - collider1G.radius, collisionLayerMask);
 				if (hitInfo2.transform == null)
 				{
 					num = Mathf.Min(num + Time.deltaTime * crouchLerpSpeed, 1f);
@@ -575,16 +502,23 @@ namespace ZeroGravity.CharacterMovement
 					}
 				}
 			}
+
 			if (crouchLerpHelper != num)
 			{
 				crouchLerpHelper = num;
 				collider1G.height = Mathf.Lerp(crouchColliderHeight, normalColliderHeight, crouchLerpHelper);
-				collider1G.center = new Vector3(0f, Mathf.Lerp(crouchColliderCenter, normalColliderCenter, crouchLerpHelper), 0f);
-				currSpeeds.AccelerationStep = Mathf.Lerp(crouchSpeeds.AccelerationStep, normalSpeeds.AccelerationStep, crouchLerpHelper);
-				currSpeeds.DeaccelerationStep = Mathf.Lerp(crouchSpeeds.DeaccelerationStep, normalSpeeds.DeaccelerationStep, crouchLerpHelper);
-				currSpeeds.ForwardVelocity = Mathf.Lerp(crouchSpeeds.ForwardVelocity, normalSpeeds.ForwardVelocity, crouchLerpHelper);
-				currSpeeds.BackwardVelocity = Mathf.Lerp(crouchSpeeds.BackwardVelocity, normalSpeeds.BackwardVelocity, crouchLerpHelper);
-				currSpeeds.RightVelocity = Mathf.Lerp(crouchSpeeds.RightVelocity, normalSpeeds.RightVelocity, crouchLerpHelper);
+				collider1G.center = new Vector3(0f,
+					Mathf.Lerp(crouchColliderCenter, normalColliderCenter, crouchLerpHelper), 0f);
+				currSpeeds.AccelerationStep = Mathf.Lerp(crouchSpeeds.AccelerationStep, normalSpeeds.AccelerationStep,
+					crouchLerpHelper);
+				currSpeeds.DeaccelerationStep = Mathf.Lerp(crouchSpeeds.DeaccelerationStep,
+					normalSpeeds.DeaccelerationStep, crouchLerpHelper);
+				currSpeeds.ForwardVelocity = Mathf.Lerp(crouchSpeeds.ForwardVelocity, normalSpeeds.ForwardVelocity,
+					crouchLerpHelper);
+				currSpeeds.BackwardVelocity = Mathf.Lerp(crouchSpeeds.BackwardVelocity, normalSpeeds.BackwardVelocity,
+					crouchLerpHelper);
+				currSpeeds.RightVelocity =
+					Mathf.Lerp(crouchSpeeds.RightVelocity, normalSpeeds.RightVelocity, crouchLerpHelper);
 				if (crouchLerpHelper < 0.7f && myPlayer.MeshRenderersEnabled)
 				{
 					myPlayer.ToggleMeshRendereres(enableMesh: false);
@@ -594,10 +528,12 @@ namespace ZeroGravity.CharacterMovement
 					myPlayer.ToggleMeshRendereres(enableMesh: true);
 				}
 			}
+
 			animatorHelper.SetParameter(IsCrouch);
 		}
 
-		private static void RecalculateAxisValue(ref float currAxisVal, ref float currVelocity, ref float positiveVelocityMax, ref float negativeVelocityMax)
+		private static void RecalculateAxisValue(ref float currAxisVal, ref float currVelocity,
+			ref float positiveVelocityMax, ref float negativeVelocityMax)
 		{
 			if (currAxisVal > 0.0001f)
 			{
@@ -609,18 +545,21 @@ namespace ZeroGravity.CharacterMovement
 			}
 		}
 
-		private static void SetAxisValue(ref float currAxisVal, float inputAxisVal, ref float accelerationStep, ref float deaccelerationStep)
+		private static void SetAxisValue(ref float currAxisVal, float inputAxisVal, ref float accelerationStep,
+			ref float deaccelerationStep)
 		{
 			if (currAxisVal > 1f)
 			{
 				currAxisVal -= deaccelerationStep * Time.fixedDeltaTime;
 				return;
 			}
+
 			if (currAxisVal < -1f)
 			{
 				currAxisVal += deaccelerationStep * Time.fixedDeltaTime;
 				return;
 			}
+
 			if (inputAxisVal > 0.0001f)
 			{
 				if (currAxisVal > -0.0001f)
@@ -655,6 +594,7 @@ namespace ZeroGravity.CharacterMovement
 			{
 				currAxisVal = 0f;
 			}
+
 			currAxisVal = Mathf.Clamp(currAxisVal, -1f, 1f);
 		}
 
@@ -664,21 +604,26 @@ namespace ZeroGravity.CharacterMovement
 			{
 				if (lastMovementState != MovementState.Run)
 				{
-					RecalculateAxisValue(ref movementAxis.Forward, ref currForwardVelocity, ref runSpeeds.ForwardVelocity, ref runSpeeds.BackwardVelocity);
-					RecalculateAxisValue(ref movementAxis.Right, ref currRightVelocity, ref runSpeeds.RightVelocity, ref runSpeeds.RightVelocity);
+					RecalculateAxisValue(ref movementAxis.Forward, ref currForwardVelocity,
+						ref runSpeeds.ForwardVelocity, ref runSpeeds.BackwardVelocity);
+					RecalculateAxisValue(ref movementAxis.Right, ref currRightVelocity, ref runSpeeds.RightVelocity,
+						ref runSpeeds.RightVelocity);
 				}
+
 				currSpeeds = runSpeeds;
 				lastMovementState = MovementState.Run;
-				sprintTime += Time.deltaTime;
 				myPlayer.HealthSounds.Switch("WalkRun", "Run");
 			}
 			else if (InputManager.GetButton(InputManager.ConfigAction.Crouch))
 			{
 				if (lastMovementState != MovementState.Crouch)
 				{
-					RecalculateAxisValue(ref movementAxis.Forward, ref currForwardVelocity, ref crouchSpeeds.ForwardVelocity, ref crouchSpeeds.BackwardVelocity);
-					RecalculateAxisValue(ref movementAxis.Right, ref currRightVelocity, ref crouchSpeeds.RightVelocity, ref crouchSpeeds.RightVelocity);
+					RecalculateAxisValue(ref movementAxis.Forward, ref currForwardVelocity,
+						ref crouchSpeeds.ForwardVelocity, ref crouchSpeeds.BackwardVelocity);
+					RecalculateAxisValue(ref movementAxis.Right, ref currRightVelocity, ref crouchSpeeds.RightVelocity,
+						ref crouchSpeeds.RightVelocity);
 				}
+
 				currSpeeds = crouchSpeeds;
 				lastMovementState = MovementState.Crouch;
 				myPlayer.HealthSounds.Switch("WalkRun", "Walk");
@@ -687,14 +632,17 @@ namespace ZeroGravity.CharacterMovement
 			{
 				if (lastMovementState != MovementState.Normal)
 				{
-					RecalculateAxisValue(ref movementAxis.Forward, ref currForwardVelocity, ref normalSpeeds.ForwardVelocity, ref normalSpeeds.BackwardVelocity);
-					RecalculateAxisValue(ref movementAxis.Right, ref currRightVelocity, ref normalSpeeds.RightVelocity, ref normalSpeeds.RightVelocity);
+					RecalculateAxisValue(ref movementAxis.Forward, ref currForwardVelocity,
+						ref normalSpeeds.ForwardVelocity, ref normalSpeeds.BackwardVelocity);
+					RecalculateAxisValue(ref movementAxis.Right, ref currRightVelocity, ref normalSpeeds.RightVelocity,
+						ref normalSpeeds.RightVelocity);
 				}
+
 				currSpeeds = normalSpeeds;
 				lastMovementState = MovementState.Normal;
-				sprintTime = 0f;
 				myPlayer.HealthSounds.Switch("WalkRun", "Walk");
 			}
+
 			movementAxis.Forward = InputManager.GetAxisRaw(InputManager.ConfigAction.Forward);
 			movementAxis.Right = InputManager.GetAxisRaw(InputManager.ConfigAction.Right);
 			movementAxis.Forward *= stanceSpeedMultiplier;
@@ -705,6 +653,7 @@ namespace ZeroGravity.CharacterMovement
 				currSpeeds.RightVelocity -= currSpeeds.RightVelocity * Mathf.Abs(movementAxis.Forward) * 0.25f;
 				currSpeeds.BackwardVelocity -= currSpeeds.BackwardVelocity * Mathf.Abs(movementAxis.Right) * 0.25f;
 			}
+
 			currMovementDirection = movementAxis.Forward * base.transform.forward;
 			currMovementDirection += movementAxis.Right * base.transform.right;
 			currMovementDirection.Normalize();
@@ -716,16 +665,20 @@ namespace ZeroGravity.CharacterMovement
 			{
 				return;
 			}
+
 			if (gravityChanged)
 			{
 				if (gravityChangedRagdoll)
 				{
-					isGrounded = Physics.Raycast(ragdollChestRigidbody.position, myPlayer.GravityDirection, out groundRayHit, 0.4f, collisionLayerMask, QueryTriggerInteraction.Ignore);
+					isGrounded = Physics.Raycast(ragdollChestRigidbody.position, myPlayer.GravityDirection,
+						out _groundRayHit, 0.4f, collisionLayerMask, QueryTriggerInteraction.Ignore);
 				}
 				else
 				{
-					isGrounded = Physics.Raycast(base.transform.position, myPlayer.GravityDirection, out groundRayHit, 1.8f, collisionLayerMask, QueryTriggerInteraction.Ignore);
+					isGrounded = Physics.Raycast(base.transform.position, myPlayer.GravityDirection, out _groundRayHit,
+						1.8f, collisionLayerMask, QueryTriggerInteraction.Ignore);
 				}
+
 				if (CurrentJetpack != null)
 				{
 					CurrentJetpack.StartNozzles(Vector4.zero, myJetpack: true);
@@ -733,23 +686,31 @@ namespace ZeroGravity.CharacterMovement
 			}
 			else
 			{
-				isGrounded = Physics.SphereCast(characterRoot.position + characterRoot.up * (collider1G.height / 2f), collider1G.radius - 0.01f, myPlayer.GravityDirection, out groundRayHit, collider1G.height / 2f - (collider1G.radius - 0.01f) + groundCheckDistance + 0.02f, collisionLayerMask);
+				isGrounded = Physics.SphereCast(characterRoot.position + characterRoot.up * (collider1G.height / 2f),
+					collider1G.radius - 0.01f, myPlayer.GravityDirection, out _groundRayHit,
+					collider1G.height / 2f - (collider1G.radius - 0.01f) + groundCheckDistance + 0.02f,
+					collisionLayerMask);
 			}
+
 			if (!isGrounded)
 			{
-				airTime += Time.deltaTime;
+				_airTime += Time.deltaTime;
 			}
 			else if (isGrounded)
 			{
-				airTime = 0f;
+				_airTime = 0f;
 			}
+
 			AnimatorHelper obj = animatorHelper;
 			bool? flag = isGrounded;
-			float? num = airTime;
-			obj.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, flag, null, null, null, null, null, null, null, null, num);
-			if (isMovementEnabled && crouchLerpHelper.IsEpsilonEqual(1f, 0.001f) && isGrounded && InputManager.GetButtonDown(InputManager.ConfigAction.Jump))
+			float? num = _airTime;
+			obj.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, flag, null, null, null, null, null, null, null,
+				null, num);
+			if (isMovementEnabled && crouchLerpHelper.IsEpsilonEqual(1f, 0.001f) && isGrounded &&
+			    InputManager.GetButtonDown(InputManager.ConfigAction.Jump))
 			{
-				doJump = true;
+				_doJump = true;
 			}
 		}
 
@@ -759,12 +720,17 @@ namespace ZeroGravity.CharacterMovement
 			if (isOnLadder)
 			{
 				float axisRaw = InputManager.GetAxisRaw(InputManager.ConfigAction.Forward);
-				base.transform.Translate(base.transform.up * (axisRaw * ladderVelocity * Time.fixedDeltaTime), Space.World);
+				base.transform.Translate(base.transform.up * (axisRaw * ladderVelocity * Time.fixedDeltaTime),
+					Space.World);
 				AnimatorHelper animHelper = myPlayer.animHelper;
 				float? ladderDirection = axisRaw;
-				animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, ladderDirection);
+				animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, ladderDirection);
 				return;
 			}
+
 			if (gravityChanged)
 			{
 				if (!gravityChangedRagdoll)
@@ -774,6 +740,7 @@ namespace ZeroGravity.CharacterMovement
 					{
 						gravityChangeLerpHelper = 1f;
 					}
+
 					base.transform.rotation = gravityChangeEndingRotation;
 					if (collider1G.height < 1.8f)
 					{
@@ -791,12 +758,15 @@ namespace ZeroGravity.CharacterMovement
 							gravityChangeLerpHelper += Time.fixedDeltaTime * 2f;
 						}
 					}
-					if (!ragdollChestRigidbody.velocity.sqrMagnitude.IsNotEpsilonZero(0.001f) || gravityChangeLerpHelper.IsNotEpsilonZero(0.001f))
+
+					if (!ragdollChestRigidbody.velocity.sqrMagnitude.IsNotEpsilonZero(0.001f) ||
+					    gravityChangeLerpHelper.IsNotEpsilonZero(0.001f))
 					{
 						gravityChangeLerpHelper += Time.fixedDeltaTime * 2f;
 					}
 				}
 			}
+
 			if (gravityChanged)
 			{
 				if (!gravityChangedRagdoll && isGrounded && gravityChangeLerpHelper >= 1f)
@@ -808,6 +778,7 @@ namespace ZeroGravity.CharacterMovement
 					cameraController.ResetLookAt();
 					return;
 				}
+
 				if (gravityChangedRagdoll && gravityChangeLerpHelper >= 1f)
 				{
 					myPlayer.ToggleRagdoll(false);
@@ -817,34 +788,44 @@ namespace ZeroGravity.CharacterMovement
 					return;
 				}
 			}
+
 			if (isGrounded)
 			{
 				if (gravityChanged || !isMovementEnabled)
 				{
 					return;
 				}
-				currSlopeNormal = groundRayHit.normal;
+
+				currSlopeNormal = _groundRayHit.normal;
 				currSlopeAngle = Vector3.Angle(currSlopeNormal, base.transform.up);
 				if (currSlopeAngle > 5f)
 				{
 					bool flag = false;
-					RaycastHit[] array = Physics.SphereCastAll(characterRoot.position + characterRoot.up * (collider1G.height / 2f), collider1G.radius - 0.01f, myPlayer.GravityDirection, collider1G.height / 2f - (collider1G.radius - 0.01f) + groundCheckDistance + 0.02f, collisionLayerMask);
+					RaycastHit[] array = Physics.SphereCastAll(
+						characterRoot.position + characterRoot.up * (collider1G.height / 2f), collider1G.radius - 0.01f,
+						myPlayer.GravityDirection,
+						collider1G.height / 2f - (collider1G.radius - 0.01f) + groundCheckDistance + 0.02f,
+						collisionLayerMask);
 					if (array != null && array.Length > 0)
 					{
 						for (int i = 0; i < array.Length; i++)
 						{
-							if (array[i].collider.GetComponent<DynamicObject>() == null && array[i].collider.GetComponent<MyPlayer>() == null && array[i].collider.GetComponent<RagdollCollider>() == null)
+							if (array[i].collider.GetComponent<DynamicObject>() == null &&
+							    array[i].collider.GetComponent<MyPlayer>() == null &&
+							    array[i].collider.GetComponent<RagdollCollider>() == null)
 							{
 								flag = false;
-								groundRayHit = array[i];
+								_groundRayHit = array[i];
 								break;
 							}
+
 							if (array[i].collider.GetComponent<RagdollCollider>() != null)
 							{
 								flag = true;
 							}
 						}
 					}
+
 					if (flag)
 					{
 						currSlopeNormal = base.transform.up;
@@ -852,78 +833,103 @@ namespace ZeroGravity.CharacterMovement
 					}
 					else
 					{
-						currSlopeNormal = groundRayHit.normal;
+						currSlopeNormal = _groundRayHit.normal;
 						currSlopeAngle = Vector3.Angle(currSlopeNormal, base.transform.up);
 					}
 				}
+
 				bool? isMoving = rigidBody.velocity.magnitude > float.Epsilon;
 				animatorHelper.SetParameter(null, isMoving);
 				if (InputManager.GetButton(InputManager.ConfigAction.Crouch))
 				{
 					lastMovementState = MovementState.Crouch;
 				}
+
 				CalculateCrouch();
 				if (currSlopeAngle < maxSlopeAngle)
 				{
-					if (slopeJumpTimer != 0f)
+					if (_slopeJumpTimer != 0f)
 					{
-						slopeJumpTimer = 0f;
+						_slopeJumpTimer = 0f;
 					}
-					if (doJump && !IsCrouch)
+
+					if (_doJump && !IsCrouch)
 					{
 						float num = Mathf.Sqrt(2f * jumpHeightMax * myPlayer.Gravity.magnitude);
 						rigidBody.AddForce(base.transform.up * num, ForceMode.VelocityChange);
 						lastMovementState = MovementState.Jump;
 						animatorHelper.SetParameterTrigger(AnimatorHelper.Triggers.Jump);
-						doJump = false;
+						_doJump = false;
 						isGrounded = false;
 					}
 					else
 					{
 						Calculate1GMovementData();
 					}
+
 					if (currSlopeAngle > 1f)
 					{
 						currMovementDirection = Vector3.ProjectOnPlane(currMovementDirection, currSlopeNormal);
 					}
-					currForwardVelocity = movementAxis.Forward * ((!(movementAxis.Forward > 0f)) ? currSpeeds.BackwardVelocity : currSpeeds.ForwardVelocity);
+
+					currForwardVelocity = movementAxis.Forward * ((!(movementAxis.Forward > 0f))
+						? currSpeeds.BackwardVelocity
+						: currSpeeds.ForwardVelocity);
 					currRightVelocity = movementAxis.Right * currSpeeds.RightVelocity;
 					if (isGrounded)
 					{
-						if (Mathf.Abs(currForwardVelocity) > float.Epsilon || Mathf.Abs(currRightVelocity) > float.Epsilon)
+						if (Mathf.Abs(currForwardVelocity) > float.Epsilon ||
+						    Mathf.Abs(currRightVelocity) > float.Epsilon)
 						{
-							rigidBody.AddForce(currMovementDirection * Mathf.Sqrt(currForwardVelocity * currForwardVelocity + currRightVelocity * currRightVelocity) - rigidBody.velocity, ForceMode.VelocityChange);
+							rigidBody.AddForce(
+								currMovementDirection * Mathf.Sqrt(currForwardVelocity * currForwardVelocity +
+								                                   currRightVelocity * currRightVelocity) -
+								rigidBody.velocity, ForceMode.VelocityChange);
 						}
 						else
 						{
-							rigidBody.AddForce(currMovementDirection * (currForwardVelocity + currRightVelocity) - rigidBody.velocity, ForceMode.VelocityChange);
+							rigidBody.AddForce(
+								currMovementDirection * (currForwardVelocity + currRightVelocity) - rigidBody.velocity,
+								ForceMode.VelocityChange);
 						}
 					}
-					currForwardAnimationVal = ((!(Mathf.Abs(movementAxis.Forward) <= float.Epsilon)) ? Mathf.Clamp(Vector3.Project(myPlayer.MyVelocity, base.transform.forward).magnitude / runSpeeds.ForwardVelocity * (float)MathHelper.Sign(movementAxis.Forward), -1f, 1f) : 0f);
-					currRightAnimationVal = ((!(Mathf.Abs(movementAxis.Right) <= float.Epsilon)) ? Mathf.Clamp(Vector3.Project(myPlayer.MyVelocity, base.transform.right).magnitude / runSpeeds.RightVelocity * (float)MathHelper.Sign(movementAxis.Right), -1f, 1f) : 0f);
+
+					currForwardAnimationVal = ((!(Mathf.Abs(movementAxis.Forward) <= float.Epsilon))
+						? Mathf.Clamp(
+							Vector3.Project(myPlayer.MyVelocity, base.transform.forward).magnitude /
+							runSpeeds.ForwardVelocity * (float)MathHelper.Sign(movementAxis.Forward), -1f, 1f)
+						: 0f);
+					currRightAnimationVal = ((!(Mathf.Abs(movementAxis.Right) <= float.Epsilon))
+						? Mathf.Clamp(
+							Vector3.Project(myPlayer.MyVelocity, base.transform.right).magnitude /
+							runSpeeds.RightVelocity * (float)MathHelper.Sign(movementAxis.Right), -1f, 1f)
+						: 0f);
 					float? ladderDirection = currForwardAnimationVal;
 					float? velocityRight = currRightAnimationVal;
-					animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, velocityRight, ladderDirection);
+					animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null,
+						velocityRight, ladderDirection);
 				}
 				else
 				{
-					slopeJumpTimer += Time.deltaTime;
+					_slopeJumpTimer += Time.deltaTime;
 					movementAxis.Forward = 0f;
 					movementAxis.Right = 0f;
 					currForwardAnimationVal = 0f;
 					currRightAnimationVal = 0f;
 					float? ladderDirection = currForwardAnimationVal;
 					float? velocityRight = currRightAnimationVal;
-					animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, velocityRight, ladderDirection);
-					if (slopeJumpTimer > 1f && isGrounded && InputManager.GetButtonDown(InputManager.ConfigAction.Jump))
+					animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null,
+						velocityRight, ladderDirection);
+					if (_slopeJumpTimer > 1f && isGrounded &&
+					    InputManager.GetButtonDown(InputManager.ConfigAction.Jump))
 					{
 						float num2 = Mathf.Sqrt(2f * jumpHeightMax * myPlayer.Gravity.magnitude);
 						rigidBody.AddForce(base.transform.up * num2, ForceMode.VelocityChange);
 						lastMovementState = MovementState.Jump;
 						animatorHelper.SetParameterTrigger(AnimatorHelper.Triggers.Jump);
-						doJump = false;
+						_doJump = false;
 						isGrounded = false;
-						slopeJumpTimer = 0f;
+						_slopeJumpTimer = 0f;
 					}
 				}
 			}
@@ -931,19 +937,29 @@ namespace ZeroGravity.CharacterMovement
 			{
 				float axisRaw2 = InputManager.GetAxisRaw(InputManager.ConfigAction.Forward);
 				float axisRaw3 = InputManager.GetAxisRaw(InputManager.ConfigAction.Right);
-				if (axisRaw2 != 0f && Vector3.Project(rigidBody.velocity, base.transform.forward).sqrMagnitude < ((!(movementAxis.Forward > 0f)) ? (airSpeeds.BackwardVelocity * airSpeeds.BackwardVelocity) : (airSpeeds.ForwardVelocity * airSpeeds.ForwardVelocity)))
+				if (axisRaw2 != 0f && Vector3.Project(rigidBody.velocity, base.transform.forward).sqrMagnitude <
+				    ((!(movementAxis.Forward > 0f))
+					    ? (airSpeeds.BackwardVelocity * airSpeeds.BackwardVelocity)
+					    : (airSpeeds.ForwardVelocity * airSpeeds.ForwardVelocity)))
 				{
-					Vector3 force = base.transform.forward * ((!(axisRaw2 > 0f)) ? (0f - airSpeeds.BackwardVelocity) : airSpeeds.ForwardVelocity);
+					Vector3 force = base.transform.forward *
+					                ((!(axisRaw2 > 0f))
+						                ? (0f - airSpeeds.BackwardVelocity)
+						                : airSpeeds.ForwardVelocity);
 					rigidBody.AddForce(force, ForceMode.VelocityChange);
 				}
-				if (axisRaw3 != 0f && Vector3.Project(rigidBody.velocity, base.transform.right).sqrMagnitude < airSpeeds.RightVelocity * airSpeeds.RightVelocity)
+
+				if (axisRaw3 != 0f && Vector3.Project(rigidBody.velocity, base.transform.right).sqrMagnitude <
+				    airSpeeds.RightVelocity * airSpeeds.RightVelocity)
 				{
 					Vector3 force2 = base.transform.right * airSpeeds.RightVelocity * 0.005f;
 					rigidBody.AddForce(force2, ForceMode.VelocityChange);
 				}
+
 				movementAxis.Forward = Mathf.Lerp(movementAxis.Forward, 0f, 0.3f * Time.fixedDeltaTime);
 				movementAxis.Right = Mathf.Lerp(movementAxis.Right, 0f, 0.3f * Time.fixedDeltaTime);
 			}
+
 			if (!isGrounded || currSlopeAngle >= maxSlopeAngle)
 			{
 				if (!isMovementEnabled && myPlayer.IsLockedToTrigger)
@@ -1005,22 +1021,27 @@ namespace ZeroGravity.CharacterMovement
 			// Sound and VFX.
 			if (CurrentJetpack != null && CurrentJetpack.IsActive && JetpackFuel > float.Epsilon)
 			{
-				CurrentJetpack.StartNozzles(new Vector4(movementAxis.Right, movementAxis.Up, movementAxis.Forward, movementAxis.LeanRight), myJetpack: true);
+				CurrentJetpack.StartNozzles(
+					new Vector4(movementAxis.Right, movementAxis.Up, movementAxis.Forward, movementAxis.LeanRight),
+					myJetpack: true);
 			}
 
 			Check0GCurrentSpeed();
 
 			// Calculate final velocity if numbers are not epsilon zero.
-			if (!movementAxis.Forward.IsNotEpsilonZero() || !movementAxis.Right.IsNotEpsilonZero() || !movementAxis.Up.IsNotEpsilonZero())
+			if (!movementAxis.Forward.IsNotEpsilonZero() || !movementAxis.Right.IsNotEpsilonZero() ||
+			    !movementAxis.Up.IsNotEpsilonZero())
 			{
 				float a = Mathf.Abs(movementAxis.Forward) * currSpeeds.ForwardVelocity;
 				float b = Mathf.Abs(movementAxis.Right) * currSpeeds.RightVelocity;
 				float c = Mathf.Abs(movementAxis.Up) * currSpeeds.RightVelocity;
-				float num2 = MathHelper.AverageMaxValue(a, b, c, currSpeeds.ForwardVelocity, currSpeeds.RightVelocity, currSpeeds.RightVelocity);
+				float num2 = MathHelper.AverageMaxValue(a, b, c, currSpeeds.ForwardVelocity, currSpeeds.RightVelocity,
+					currSpeeds.RightVelocity);
 				currSpeeds.ForwardVelocity = num2;
 				currSpeeds.RightVelocity = num2;
 				currSpeeds.BackwardVelocity = num2;
 			}
+
 			myPlayer.HealthSounds.Switch("WalkRun", "Walk");
 		}
 
@@ -1030,19 +1051,30 @@ namespace ZeroGravity.CharacterMovement
 			Vector3 vector2 = Vector3.Project(myPlayer.MyVelocity, base.transform.right);
 			float f = Vector3.Dot(vector2.normalized, base.transform.right);
 			float num3 = Vector3.Dot(vector.normalized, base.transform.forward);
-			float num = Mathf.Min(MathHelper.ProportionalValue(vector.magnitude, 0f, (!(num3 > 1f)) ? animatorBackwardMaxVelocity : animatorForwardMaxVelocity, 0f, 1f), 1f) * Mathf.Sign(num3);
-			float num2 = Mathf.Min(MathHelper.ProportionalValue(vector2.magnitude, 0f, animatorRightMaxVelocity, 0f, 1f), 1f) * Mathf.Sign(f);
+			float num = Mathf.Min(
+				            MathHelper.ProportionalValue(vector.magnitude, 0f,
+					            (!(num3 > 1f)) ? animatorBackwardMaxVelocity : animatorForwardMaxVelocity, 0f, 1f),
+				            1f) *
+			            Mathf.Sign(num3);
+			float num2 =
+				Mathf.Min(MathHelper.ProportionalValue(vector2.magnitude, 0f, animatorRightMaxVelocity, 0f, 1f), 1f) *
+				Mathf.Sign(f);
 			if (!Mathf.Approximately(currForwardAnimationVal, num))
 			{
-				currForwardAnimationVal = Mathf.Lerp(currForwardAnimationVal, num, Time.fixedDeltaTime * animatorForwardMaxVelocity);
+				currForwardAnimationVal = Mathf.Lerp(currForwardAnimationVal, num,
+					Time.fixedDeltaTime * animatorForwardMaxVelocity);
 			}
+
 			if (!Mathf.Approximately(currRightAnimationVal, num2))
 			{
-				currRightAnimationVal = Mathf.Lerp(currRightAnimationVal, num2, Time.fixedDeltaTime * animatorRightMaxVelocity);
+				currRightAnimationVal = Mathf.Lerp(currRightAnimationVal, num2,
+					Time.fixedDeltaTime * animatorRightMaxVelocity);
 			}
+
 			float? velocityForward = currForwardAnimationVal;
 			float? velocityRight = currRightAnimationVal;
-			animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, velocityRight, velocityForward);
+			animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, velocityRight,
+				velocityForward);
 			float forward = movementAxis.Forward;
 			float right = movementAxis.Right;
 			AnimatorHelper animHelper = myPlayer.animHelper;
@@ -1050,16 +1082,21 @@ namespace ZeroGravity.CharacterMovement
 			animHelper.SetParameter(null, null, null, isMovingZeroG);
 			if (!Mathf.Approximately(currForwardFloatingAnimationVal, forward))
 			{
-				currForwardFloatingAnimationVal = Mathf.Lerp(currForwardFloatingAnimationVal, forward, Time.fixedDeltaTime * animatorForwardMaxVelocity);
+				currForwardFloatingAnimationVal = Mathf.Lerp(currForwardFloatingAnimationVal, forward,
+					Time.fixedDeltaTime * animatorForwardMaxVelocity);
 			}
+
 			if (!Mathf.Approximately(currRightFloatingAnimationVal, right))
 			{
-				currRightFloatingAnimationVal = Mathf.Lerp(currRightFloatingAnimationVal, right, Time.fixedDeltaTime * animatorRightMaxVelocity);
+				currRightFloatingAnimationVal = Mathf.Lerp(currRightFloatingAnimationVal, right,
+					Time.fixedDeltaTime * animatorRightMaxVelocity);
 			}
+
 			AnimatorHelper animHelper2 = myPlayer.animHelper;
 			velocityForward = currForwardFloatingAnimationVal;
 			velocityRight = currRightFloatingAnimationVal;
-			animHelper2.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, velocityForward, velocityRight);
+			animHelper2.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				velocityForward, velocityRight);
 		}
 
 		private void update0GMovement()
@@ -1067,10 +1104,14 @@ namespace ZeroGravity.CharacterMovement
 			if (isOnLadder)
 			{
 				float axisRaw = InputManager.GetAxisRaw(InputManager.ConfigAction.Forward);
-				base.transform.Translate(base.transform.up * (axisRaw * ladderVelocity * Time.fixedDeltaTime), Space.World);
+				base.transform.Translate(base.transform.up * (axisRaw * ladderVelocity * Time.fixedDeltaTime),
+					Space.World);
 				AnimatorHelper animHelper = myPlayer.animHelper;
 				float? ladderDirection = axisRaw;
-				animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, ladderDirection);
+				animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, ladderDirection);
 			}
 			else if (gravityChanged && gravityChangedRagdoll)
 			{
@@ -1088,10 +1129,15 @@ namespace ZeroGravity.CharacterMovement
 				{
 					return;
 				}
+
 				Calculate0GMovementData();
 				cameraController.SetLeanRightAxis(0f - movementAxis.LeanRight);
-				bool hasToStabilise = InputManager.GetButton(InputManager.ConfigAction.Sprint) || (myPlayer.IsUsingItemInHands && myPlayer.Inventory.CheckIfItemInHandsIsType<HandDrill>());
-				if (hasToStabilise && canGrabWall && NearbyVessel != null && (NearbyVessel.Velocity - (myPlayer.Parent.Velocity + rigidBody.velocity.ToVector3D())).SqrMagnitude < 100.0)
+				bool hasToStabilise = InputManager.GetButton(InputManager.ConfigAction.Sprint) ||
+				                      (myPlayer.IsUsingItemInHands &&
+				                       myPlayer.Inventory.CheckIfItemInHandsIsType<HandDrill>());
+				if (hasToStabilise && canGrabWall && NearbyVessel != null &&
+				    (NearbyVessel.Velocity - (myPlayer.Parent.Velocity + rigidBody.velocity.ToVector3D()))
+				    .SqrMagnitude < 100.0)
 				{
 					if (myPlayer.CurrentRoomTrigger == null)
 					{
@@ -1100,9 +1146,11 @@ namespace ZeroGravity.CharacterMovement
 							StickToVessel = NearbyVessel;
 							StickToVesselRotation = NearbyVessel.transform.rotation;
 						}
+
 						if (StickToVessel != null)
 						{
-							rigidBody.velocity = Vector3.Lerp(rigidBody.velocity, (StickToVessel.Velocity - myPlayer.Parent.Velocity).ToVector3(), 0.1f);
+							rigidBody.velocity = Vector3.Lerp(rigidBody.velocity,
+								(StickToVessel.Velocity - myPlayer.Parent.Velocity).ToVector3(), 0.1f);
 						}
 					}
 					else
@@ -1112,7 +1160,8 @@ namespace ZeroGravity.CharacterMovement
 						rigidBody.velocity *= 0.9f;
 					}
 				}
-				else if (myPlayer.IsInsideSpaceObject && myPlayer.CurrentRoomTrigger != null && myPlayer.CurrentRoomTrigger.AirPressure > 0.5f)
+				else if (myPlayer.IsInsideSpaceObject && myPlayer.CurrentRoomTrigger != null &&
+				         myPlayer.CurrentRoomTrigger.AirPressure > 0.5f)
 				{
 					StickToVessel = null;
 					StickToVesselTangentialVelocity = Vector3.zero;
@@ -1125,6 +1174,7 @@ namespace ZeroGravity.CharacterMovement
 					{
 						rigidBody.velocity = StickToVesselTangentialVelocity;
 					}
+
 					StickToVessel = null;
 					StickToVesselTangentialVelocity = Vector3.zero;
 					StickToVesselRotation = Quaternion.identity;
@@ -1140,7 +1190,8 @@ namespace ZeroGravity.CharacterMovement
 				{
 					rigidBody.angularDrag = zgGrabAngularDrag;
 				}
-				else if (myPlayer.IsInsideSpaceObject && myPlayer.CurrentRoomTrigger != null && myPlayer.CurrentRoomTrigger.AirPressure > 0.5f)
+				else if (myPlayer.IsInsideSpaceObject && myPlayer.CurrentRoomTrigger != null &&
+				         myPlayer.CurrentRoomTrigger.AirPressure > 0.5f)
 				{
 					rigidBody.angularDrag = zgAtmosphereAngularDrag;
 				}
@@ -1149,13 +1200,16 @@ namespace ZeroGravity.CharacterMovement
 					rigidBody.angularDrag = 0f;
 				}
 
-				if (movementAxis.Right.IsNotEpsilonZero() || movementAxis.Forward.IsNotEpsilonZero() || movementAxis.Up.IsNotEpsilonZero())
+				if (movementAxis.Right.IsNotEpsilonZero() || movementAxis.Forward.IsNotEpsilonZero() ||
+				    movementAxis.Up.IsNotEpsilonZero())
 				{
-					Vector3 vector = cameraController.transform.forward * movementAxis.Forward * currSpeeds.ForwardVelocity
-					+ cameraController.transform.right * movementAxis.Right * currSpeeds.RightVelocity
-					+ cameraController.transform.up * movementAxis.Up * currSpeeds.RightVelocity;
+					Vector3 vector = cameraController.transform.forward * movementAxis.Forward *
+					                 currSpeeds.ForwardVelocity
+					                 + cameraController.transform.right * movementAxis.Right * currSpeeds.RightVelocity
+					                 + cameraController.transform.up * movementAxis.Up * currSpeeds.RightVelocity;
 
-					if (!IsJetpackOn && rigidBody.velocity.sqrMagnitude >= currSpeeds.ForwardVelocity * currSpeeds.ForwardVelocity)
+					if (!IsJetpackOn && rigidBody.velocity.sqrMagnitude >=
+					    currSpeeds.ForwardVelocity * currSpeeds.ForwardVelocity)
 					{
 						Vector3 vector2 = Vector3.Project(vector, rigidBody.velocity);
 						if (MathHelper.SameSign(rigidBody.velocity.normalized, vector2.normalized))
@@ -1163,6 +1217,7 @@ namespace ZeroGravity.CharacterMovement
 							vector -= vector2;
 						}
 					}
+
 					if (IsJetpackOn || myPlayer.IsInsideSpaceObject || canGrabWall)
 					{
 						rigidBody.AddForce(vector, ForceMode.Impulse);
@@ -1178,7 +1233,8 @@ namespace ZeroGravity.CharacterMovement
 		{
 			float num = (Time.time - lerpCameraBackStartTime) * lerpCameraBackStep;
 			mainCamera.transform.localPosition = Vector3.Lerp(lerpCameraBackStartPos, Vector3.zero, num);
-			mainCamera.transform.localRotation = Quaternion.Lerp(lerpCameraBackStartRot, lerpCameraBackZeroRotation, num);
+			mainCamera.transform.localRotation =
+				Quaternion.Lerp(lerpCameraBackStartRot, lerpCameraBackZeroRotation, num);
 			if (num >= 1f)
 			{
 				lerpCameraBack = false;
@@ -1194,16 +1250,19 @@ namespace ZeroGravity.CharacterMovement
 				{
 					attachPointSaved = attachPoint;
 				}
+
 				myPlayer.transform.parent = attachPointSaved;
-				if (lockLerp < 1f)
+				if (_lockLerp < 1f)
 				{
-					lockLerp += lockSpeed * Time.deltaTime;
+					_lockLerp += LockSpeed * Time.deltaTime;
 				}
-				base.transform.position = Vector3.Lerp(base.transform.position, attachPointSaved.position, Mathf.Clamp01(lockLerp));
+
+				base.transform.position = Vector3.Lerp(base.transform.position, attachPointSaved.position,
+					Mathf.Clamp01(_lockLerp));
 			}
 			else
 			{
-				lockLerp = 0f;
+				_lockLerp = 0f;
 			}
 		}
 
@@ -1225,6 +1284,7 @@ namespace ZeroGravity.CharacterMovement
 			{
 				return;
 			}
+
 			if (IsOnLadder && LockedToLadder != null)
 			{
 				if (!isZeroG && myPlayer.Gravity.IsEpsilonEqual(Vector3.zero))
@@ -1255,12 +1315,15 @@ namespace ZeroGravity.CharacterMovement
 						CurrentJetpack.StartNozzles(Vector4.zero, myJetpack: true);
 						RefreshMaxAngularVelocity();
 					}
+
 					animatorHelper.SetParameter(null, false, false, false);
 				}
+
 				LockedToLadder.LadderAttach(myPlayer, checkGravity: false);
 				myPlayer.OldGravity = myPlayer.Gravity;
 				return;
 			}
+
 			if (!isZeroG && myPlayer.Gravity.IsEpsilonEqual(Vector3.zero))
 			{
 				isZeroG = true;
@@ -1282,10 +1345,12 @@ namespace ZeroGravity.CharacterMovement
 					animatorHelper.SetParameterTrigger(AnimatorHelper.Triggers.InstantStandUp);
 					ReparentCenterOfMass(isInChest: true);
 				}
+
 				if (!IsAttached)
 				{
 					cameraController.LerpCameraControllerBack(1f);
 				}
+
 				animatorHelper.SetParameter(null, false, true, false);
 				if (CurrentJetpack != null && CurrentJetpack.OldJetpackActiveState)
 				{
@@ -1293,6 +1358,7 @@ namespace ZeroGravity.CharacterMovement
 					CurrentJetpack.OldJetpackActiveState = false;
 					RefreshMaxAngularVelocity();
 				}
+
 				ToggleJetPack(true);
 			}
 			else if (isZeroG && !myPlayer.Gravity.IsEpsilonEqual(Vector3.zero))
@@ -1311,8 +1377,10 @@ namespace ZeroGravity.CharacterMovement
 					CurrentJetpack.StartNozzles(Vector4.zero, myJetpack: true);
 					RefreshMaxAngularVelocity();
 				}
+
 				animatorHelper.SetParameter(null, false, false, false);
 			}
+
 			if (!isZeroG && !myPlayer.OldGravity.IsEpsilonEqual(newGravity) && !myPlayer.InIteractLayer)
 			{
 				gravityChanged = true;
@@ -1320,12 +1388,12 @@ namespace ZeroGravity.CharacterMovement
 				gravityChangeLerpHelper = 0f;
 				gravityChangeRagdollTimer = 0f;
 				cameraController.ToggleCameraMovement(false);
-				gravityChangeStartRotation = base.transform.rotation;
 				Vector3 vector = Vector3.ProjectOnPlane(base.transform.forward, -myPlayer.GravityDirection).normalized;
 				if (!vector.IsNotEpsilonZero())
 				{
 					vector = Vector3.forward;
 				}
+
 				gravityChangeEndingRotation = Quaternion.LookRotation(vector, -myPlayer.GravityDirection);
 				if (Vector3.Angle(base.transform.up, -myPlayer.GravityDirection) > 40f || CheckGravityRagdollDistance())
 				{
@@ -1335,7 +1403,8 @@ namespace ZeroGravity.CharacterMovement
 				}
 				else if (myPlayer.OldGravity.IsEpsilonEqual(Vector3.zero))
 				{
-					if (Physics.SphereCast(base.transform.position, collider1G.radius - 0.05f, myPlayer.GravityDirection, out var _, 1.34f - collider1G.radius, collisionLayerMask))
+					if (Physics.SphereCast(base.transform.position, collider1G.radius - 0.05f,
+						    myPlayer.GravityDirection, out var _, 1.34f - collider1G.radius, collisionLayerMask))
 					{
 						gravityChanged = false;
 						base.transform.rotation = gravityChangeEndingRotation;
@@ -1355,28 +1424,35 @@ namespace ZeroGravity.CharacterMovement
 					}
 				}
 			}
+
 			myPlayer.OldGravity = myPlayer.Gravity;
 		}
 
 		private bool CheckGravityRagdollDistance()
 		{
-			RaycastHit[] array = (from h in Physics.RaycastAll(base.transform.position, myPlayer.GravityDirection, 4f, collisionLayerMask)
-				orderby h.distance
-				select h).ToArray();
+			RaycastHit[] array =
+				(from h in Physics.RaycastAll(base.transform.position, myPlayer.GravityDirection, 4f,
+						collisionLayerMask)
+					orderby h.distance
+					select h).ToArray();
 			if (array != null && array.Length > 0)
 			{
 				for (int i = 0; i < array.Length; i++)
 				{
-					if (array[i].collider.GetComponent<DynamicObject>() == null && array[i].collider.GetComponent<MyPlayer>() == null && array[i].collider.GetComponent<RagdollCollider>() == null)
+					if (array[i].collider.GetComponent<DynamicObject>() == null &&
+					    array[i].collider.GetComponent<MyPlayer>() == null &&
+					    array[i].collider.GetComponent<RagdollCollider>() == null)
 					{
 						if (array[i].distance < 3.34f)
 						{
 							return false;
 						}
+
 						break;
 					}
 				}
 			}
+
 			return true;
 		}
 
@@ -1400,6 +1476,7 @@ namespace ZeroGravity.CharacterMovement
 			{
 				currSpeeds = zeroGNormalSpeeds;
 			}
+
 			lastMovementState = MovementState.Normal;
 			rigidBody.velocity = Vector3.zero;
 			rigidBody.angularVelocity = Vector3.zero;
@@ -1467,6 +1544,7 @@ namespace ZeroGravity.CharacterMovement
 			{
 				cameraController.IsAttached = !cameraController.IsAttached;
 			}
+
 			if (cameraController.IsAttached)
 			{
 				cameraController.ToggleFreeLook(isActive: false);
@@ -1487,6 +1565,7 @@ namespace ZeroGravity.CharacterMovement
 			{
 				isOnLadder = !isOnLadder;
 			}
+
 			LockedToLadder = ((!isOnLadder) ? null : ladder);
 		}
 
@@ -1498,6 +1577,7 @@ namespace ZeroGravity.CharacterMovement
 				{
 					isOn = false;
 				}
+
 				if (isOn.HasValue)
 				{
 					IsJetpackOn = isOn.Value;
@@ -1506,6 +1586,7 @@ namespace ZeroGravity.CharacterMovement
 				{
 					IsJetpackOn = !IsJetpackOn;
 				}
+
 				if (CurrentJetpack != null && !IsJetpackOn && CurrentJetpack != null)
 				{
 					RefreshMaxAngularVelocity();
@@ -1586,6 +1667,7 @@ namespace ZeroGravity.CharacterMovement
 				yield return new WaitForEndOfFrame();
 				time -= Time.deltaTime;
 			}
+
 			yield return null;
 		}
 
@@ -1609,6 +1691,7 @@ namespace ZeroGravity.CharacterMovement
 				centerOfMass.transform.parent = null;
 				return;
 			}
+
 			centerOfMass.transform.parent = ragdollChestRigidbody.transform;
 			centerOfMass.localScale = Vector3.one;
 			centerOfMass.transform.localPosition = new Vector3(-0.133f, 0.014f, 0.001f);
@@ -1626,6 +1709,7 @@ namespace ZeroGravity.CharacterMovement
 			{
 				lerpCameraBackZeroRotation = Quaternion.identity;
 			}
+
 			lerpCameraBackStartPos = mainCamera.transform.localPosition;
 			lerpCameraBackStartRot = mainCamera.transform.localRotation;
 			lerpCameraBackStartTime = Time.time;
@@ -1642,28 +1726,31 @@ namespace ZeroGravity.CharacterMovement
 			Vector3 startingLookAt = mainCamera.transform.position + mainCamera.transform.forward;
 			translateLerpHelper = 0f;
 			myPlayer.InLerpingState = true;
-			if (Client.Instance.CanvasManager.IsPlayerOverviewOpen)
-			{
-				Client.Instance.CanvasManager.PlayerOverview.Toggle(val: false);
-			}
 			if (myPlayer.CurrentActiveItem != null)
 			{
 				myPlayer.Inventory.AddToInventoryOrDrop(myPlayer.CurrentActiveItem, myPlayer.Inventory.HandsSlot);
 			}
+
 			while (translateLerpHelper < 1f)
 			{
 				if (position != null)
 				{
-					base.transform.position = Vector3.Lerp(startingPosition, position.position, Mathf.SmoothStep(0f, 1f, translateLerpHelper));
-					base.transform.rotation = Quaternion.Lerp(startingRotation, position.rotation, Mathf.SmoothStep(0f, 1f, translateLerpHelper));
+					transform.position = Vector3.Lerp(startingPosition, position.position,
+						Mathf.SmoothStep(0f, 1f, translateLerpHelper));
+					transform.rotation = Quaternion.Lerp(startingRotation, position.rotation,
+						Mathf.SmoothStep(0f, 1f, translateLerpHelper));
 				}
+
 				if (lookAt != null)
 				{
-					cameraController.LookAtPoint(Vector3.Lerp(startingLookAt, lookAt.position, Mathf.SmoothStep(0f, 1f, translateLerpHelper)));
+					cameraController.LookAtPoint(Vector3.Lerp(startingLookAt, lookAt.position,
+						Mathf.SmoothStep(0f, 1f, translateLerpHelper)));
 				}
+
 				translateLerpHelper += Time.deltaTime;
 				yield return new WaitForEndOfFrame();
 			}
+
 			myPlayer.InLerpingState = false;
 			base.transform.position = position.position;
 			base.transform.rotation = position.rotation;
@@ -1672,6 +1759,7 @@ namespace ZeroGravity.CharacterMovement
 			{
 				cameraController.LookAtPoint(lookAt.position);
 			}
+
 			actionToCall();
 		}
 
@@ -1690,8 +1778,10 @@ namespace ZeroGravity.CharacterMovement
 				{
 					num = playerImpactVelocityTreshold + 1f;
 				}
+
 				myPlayer.ImpactVelocity = num;
 			}
+
 			myPlayer.ToggleRagdoll(true);
 			ragdollChestRigidbody.velocity = myPlayer.GravityDirection * 0.1f;
 		}
@@ -1703,7 +1793,9 @@ namespace ZeroGravity.CharacterMovement
 
 		public int CheckGetUpRoom()
 		{
-			if (Physics.SphereCast(characterRoot.position, collider1G.radius - 0.02f, -myPlayer.GravityDirection * 1.34f, out var _, normalColliderHeight - collider1G.radius, collisionLayerMask))
+			if (Physics.SphereCast(characterRoot.position, collider1G.radius - 0.02f,
+				    -myPlayer.GravityDirection * 1.34f, out var _, normalColliderHeight - collider1G.radius,
+				    collisionLayerMask))
 			{
 				crouchLerpHelper = 0f;
 				collider1G.height = crouchColliderHeight;
@@ -1713,6 +1805,7 @@ namespace ZeroGravity.CharacterMovement
 				myPlayer.ToggleMeshRendereres(enableMesh: false);
 				return 0;
 			}
+
 			return 1;
 		}
 

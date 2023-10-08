@@ -44,13 +44,11 @@ namespace ZeroGravity.Objects
 
 		private Vector3 prevPosition;
 
-		[HideInInspector]
-		public Item Item;
+		[HideInInspector] public Item Item;
 
 		private List<Collider> collidersWithTriggerChanged = new List<Collider>();
 
-		[SerializeField]
-		private bool drawDebugPath;
+		[SerializeField] private bool drawDebugPath;
 
 		public override SpaceObjectType Type => SpaceObjectType.DynamicObject;
 
@@ -60,10 +58,7 @@ namespace ZeroGravity.Objects
 
 		public new Vector3 Velocity
 		{
-			get
-			{
-				return rigidBody.velocity;
-			}
+			get { return rigidBody.velocity; }
 			set
 			{
 				if (Master)
@@ -75,10 +70,7 @@ namespace ZeroGravity.Objects
 
 		public new Vector3 AngularVelocity
 		{
-			get
-			{
-				return rigidBody.angularVelocity;
-			}
+			get { return rigidBody.angularVelocity; }
 			set
 			{
 				if (Master)
@@ -90,14 +82,12 @@ namespace ZeroGravity.Objects
 
 		public bool IsKinematic => rigidBody.isKinematic;
 
-		public bool IsAttached => Item != null && (Item.InvSlot != null || Item.AttachPoint != null || Parent is DynamicObject);
+		public bool IsAttached =>
+			Item != null && (Item.InvSlot != null || Item.AttachPoint != null || Parent is DynamicObject);
 
 		public override SpaceObject Parent
 		{
-			get
-			{
-				return base.Parent;
-			}
+			get { return base.Parent; }
 			set
 			{
 				base.Parent = value;
@@ -114,19 +104,21 @@ namespace ZeroGravity.Objects
 			{
 				TransitionTrigger = GetComponent<TransitionTriggerHelper>();
 			}
+
 			if (TransitionTrigger == null)
 			{
-				Dbg.Error("Transition trigger not set for dynamic object", base.name, base.gameObject.scene, (!(GetComponentInParent<GeometryRoot>() != null)) ? null : GetComponentInParent<GeometryRoot>().gameObject);
+				Dbg.Error("Transition trigger not set for dynamic object", base.name, base.gameObject.scene,
+					(!(GetComponentInParent<GeometryRoot>() != null))
+						? null
+						: GetComponentInParent<GeometryRoot>().gameObject);
 			}
+
 			base.gameObject.SetLayerRecursively(LayerMask.NameToLayer("DynamicObject"), "FirstPerson", "Triggers");
 			rigidBody = GetComponent<Rigidbody>();
 			rigidBody.useGravity = false;
 			rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 			Item = GetComponent<Item>();
-			if (Client.IsGameBuild)
-			{
-				EventSystem.AddListener(typeof(DynamicObjectStatsMessage), DynamicObjectStatsMessageListener);
-			}
+			EventSystem.AddListener(typeof(DynamicObjectStatsMessage), DynamicObjectStatsMessageListener);
 		}
 
 		private void Start()
@@ -135,7 +127,7 @@ namespace ZeroGravity.Objects
 
 		public void SendStatsMessage(DynamicObjectAttachData attachData = null, DynamicObjectStats statsData = null)
 		{
-			if ((attachData != null || statsData != null) && Client.IsGameBuild)
+			if (attachData != null || statsData != null)
 			{
 				DynamicObjectStatsMessage dynamicObjectStatsMessage = new DynamicObjectStatsMessage();
 				dynamicObjectStatsMessage.Info = new DynamicObjectInfo();
@@ -144,10 +136,12 @@ namespace ZeroGravity.Objects
 				{
 					dynamicObjectStatsMessage.AttachData = attachData;
 				}
+
 				if (statsData != null)
 				{
 					dynamicObjectStatsMessage.Info.Stats = statsData;
 				}
+
 				NetworkController.Instance.SendToGameServer(dynamicObjectStatsMessage);
 			}
 		}
@@ -178,6 +172,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			if (dosm.DestroyDynamicObject)
 			{
 				if (Parent is Pivot && Parent.Type == SpaceObjectType.DynamicObjectPivot)
@@ -188,34 +183,43 @@ namespace ZeroGravity.Objects
 				{
 					UnityEngine.Object.Destroy(base.gameObject);
 				}
+
 				return;
 			}
+
 			if (dosm.Info.Stats != null && Item != null)
 			{
 				Item.ProcesStatsData(dosm.Info.Stats);
 			}
+
 			if (dosm.AttachData == null)
 			{
 				return;
 			}
-			if ((Item != null && Item.AreAttachDataSame(dosm.AttachData)) || (Item == null && AreAttachDataSame(dosm.AttachData)))
+
+			if ((Item != null && Item.AreAttachDataSame(dosm.AttachData)) ||
+			    (Item == null && AreAttachDataSame(dosm.AttachData)))
 			{
 				return;
 			}
+
 			SpaceObject prevParent = Parent;
 			if (dosm.AttachData.ParentType == SpaceObjectType.DynamicObjectPivot)
 			{
 				ArtificialBody parent = GetParent<ArtificialBody>();
 				if (parent == null)
 				{
-					Dbg.Error("Dynamic object exited vessel but we don't know from where.", base.GUID, Parent, dosm.AttachData.ParentType, dosm.AttachData.ParentGUID);
+					Dbg.Error("Dynamic object exited vessel but we don't know from where.", base.GUID, Parent,
+						dosm.AttachData.ParentType, dosm.AttachData.ParentGUID);
 					return;
 				}
-				Pivot pivot = Client.Instance.SolarSystem.GetArtificialBody(base.GUID) as Pivot;
+
+				Pivot pivot = World.SolarSystem.GetArtificialBody(base.GUID) as Pivot;
 				if (pivot == null)
 				{
 					pivot = Pivot.Create(SpaceObjectType.DynamicObjectPivot, base.GUID, parent, isMainObject: false);
 				}
+
 				bool myPlayerIsParent = Parent is MyPlayer;
 				if (Item != null)
 				{
@@ -229,6 +233,7 @@ namespace ZeroGravity.Objects
 					ToggleActive(isActive: true);
 					ToggleEnabled(isEnabled: true, toggleColliders: true);
 				}
+
 				Task task = new Task(delegate
 				{
 					if (!myPlayerIsParent || !Master)
@@ -237,25 +242,32 @@ namespace ZeroGravity.Objects
 						{
 							base.transform.localPosition = dosm.AttachData.LocalPosition.ToVector3();
 						}
+
 						if (dosm.AttachData.LocalRotation != null)
 						{
 							base.transform.localRotation = dosm.AttachData.LocalRotation.ToQuaternion();
 						}
 					}
+
 					if (Master)
 					{
 						if (dosm.AttachData.Velocity != null)
 						{
 							rigidBody.velocity = dosm.AttachData.Velocity.ToVector3();
 						}
+
 						if (dosm.AttachData.Torque != null)
 						{
 							AddTorque(dosm.AttachData.Torque.ToVector3(), ForceMode.Impulse);
 						}
+
 						if (dosm.AttachData.ThrowForce != null)
 						{
 							Vector3 vector = dosm.AttachData.ThrowForce.ToVector3();
-							if ((MyPlayer.Instance.CurrentRoomTrigger == null || !MyPlayer.Instance.CurrentRoomTrigger.UseGravity || MyPlayer.Instance.CurrentRoomTrigger.GravityForce == Vector3.zero) && prevParent == MyPlayer.Instance)
+							if ((MyPlayer.Instance.CurrentRoomTrigger == null ||
+							     !MyPlayer.Instance.CurrentRoomTrigger.UseGravity ||
+							     MyPlayer.Instance.CurrentRoomTrigger.GravityForce == Vector3.zero) &&
+							    prevParent == MyPlayer.Instance)
 							{
 								float num = MyPlayer.Instance.rigidBody.mass + Mass;
 								AddForce(vector * (MyPlayer.Instance.rigidBody.mass / num), ForceMode.VelocityChange);
@@ -277,21 +289,26 @@ namespace ZeroGravity.Objects
 					task.RunSynchronously();
 				}
 			}
-			else if (Parent is Pivot && (dosm.AttachData.ParentType == SpaceObjectType.Ship || dosm.AttachData.ParentType == SpaceObjectType.Station || dosm.AttachData.ParentType == SpaceObjectType.Asteroid))
+			else if (Parent is Pivot && (dosm.AttachData.ParentType == SpaceObjectType.Ship ||
+			                             dosm.AttachData.ParentType == SpaceObjectType.Station ||
+			                             dosm.AttachData.ParentType == SpaceObjectType.Asteroid))
 			{
 				if (!(Parent is Pivot))
 				{
-					Dbg.Error("Entered vessel but we don't know from where.", base.GUID, Parent, dosm.AttachData.ParentType, dosm.AttachData.ParentGUID);
+					Dbg.Error("Entered vessel but we don't know from where.", base.GUID, Parent,
+						dosm.AttachData.ParentType, dosm.AttachData.ParentGUID);
 					return;
 				}
-				Client.Instance.SolarSystem.RemoveArtificialBody(Parent as Pivot);
+
+				World.SolarSystem.RemoveArtificialBody(Parent as Pivot);
 				UnityEngine.Object.Destroy(Parent.gameObject);
-				Parent = Client.Instance.GetVessel(dosm.AttachData.ParentGUID);
+				Parent = World.GetVessel(dosm.AttachData.ParentGUID);
 				if (Item != null)
 				{
 					Item.AttachToObject(Parent, sendAttachMessage: false);
 					return;
 				}
+
 				base.transform.parent = Parent.TransferableObjectsRoot.transform;
 				ResetRoomTriggers();
 				ToggleActive(isActive: true);
@@ -309,19 +326,14 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
-			if (!Client.IsGameBuild)
-			{
-				if (!IsAttached && base.Gravity.IsEpsilonEqual(Vector3.zero))
-				{
-					rigidBody.AddForce(base.Gravity, ForceMode.Acceleration);
-				}
-				return;
-			}
-			if (Master && sendMovementTime + SendMovementInterval <= Time.realtimeSinceStartup && !rigidBody.isKinematic)
+
+			if (Master && sendMovementTime + SendMovementInterval <= Time.realtimeSinceStartup &&
+			    !rigidBody.isKinematic)
 			{
 				sendMovementTime = Time.realtimeSinceStartup;
 				SendMovementMessage();
 			}
+
 			if (base.IsInsideSpaceObject && base.Gravity.IsNotEpsilonZero() && !IsKinematic)
 			{
 				rigidBody.velocity += base.Gravity * Time.fixedDeltaTime;
@@ -349,7 +361,8 @@ namespace ZeroGravity.Objects
 			if (!IsAttached && IsKinematic)
 			{
 				ToggleKinematic(value: false);
-				SpaceObjectTransferable componentInParent = coli.gameObject.GetComponentInParent<SpaceObjectTransferable>();
+				SpaceObjectTransferable componentInParent =
+					coli.gameObject.GetComponentInParent<SpaceObjectTransferable>();
 				if (componentInParent is MyPlayer)
 				{
 					Master = true;
@@ -359,6 +372,7 @@ namespace ZeroGravity.Objects
 				{
 					Master = true;
 				}
+
 				AddForce(coli.relativeVelocity, ForceMode.VelocityChange);
 			}
 		}
@@ -374,14 +388,17 @@ namespace ZeroGravity.Objects
 			{
 				value = true;
 			}
+
 			if (!value)
 			{
 				if (takeoverTrigger != null)
 				{
 					UnityEngine.Object.Destroy(takeoverTrigger);
 				}
+
 				velocityCheckTimer = 0f;
 			}
+
 			rigidBody.isKinematic = value;
 		}
 
@@ -395,16 +412,19 @@ namespace ZeroGravity.Objects
 				{
 					OnPlatform.RemoveFromPlatform(this);
 				}
+
 				if (Item != null && Item.CustomCollidereToggle(isEnabled))
 				{
 					return;
 				}
+
 				Collider[] componentsInChildren = GetComponentsInChildren<Collider>();
 				foreach (Collider collider in componentsInChildren)
 				{
 					collider.enabled = isEnabled;
 				}
 			}
+
 			if (collisionDetector != null)
 			{
 				collisionDetector.SetActive(isEnabled && !IsAttached);
@@ -424,6 +444,7 @@ namespace ZeroGravity.Objects
 						{
 							collidersWithTriggerChanged.Add(collider);
 						}
+
 						collider.isTrigger = true;
 					}
 				}
@@ -434,10 +455,12 @@ namespace ZeroGravity.Objects
 				{
 					return;
 				}
+
 				foreach (Collider item in collidersWithTriggerChanged)
 				{
 					item.isTrigger = false;
 				}
+
 				collidersWithTriggerChanged.Clear();
 			}
 		}
@@ -460,6 +483,7 @@ namespace ZeroGravity.Objects
 				{
 					ToggleKinematic(value: false);
 				}
+
 				rigidBody.AddForce(force, forceMode);
 			}
 		}
@@ -472,6 +496,7 @@ namespace ZeroGravity.Objects
 				{
 					ToggleKinematic(value: false);
 				}
+
 				rigidBody.AddTorque(torque);
 			}
 		}
@@ -487,16 +512,21 @@ namespace ZeroGravity.Objects
 		public static DynamicObject SpawnDynamicObject(SpawnObjectResponseData data)
 		{
 			SpawnDynamicObjectResponseData spawnDynamicObjectResponseData = data as SpawnDynamicObjectResponseData;
-			return SpawnDynamicObject(spawnDynamicObjectResponseData.Details, Client.Instance.GetObject(spawnDynamicObjectResponseData.Details.AttachData.ParentGUID, spawnDynamicObjectResponseData.Details.AttachData.ParentType));
+			return SpawnDynamicObject(spawnDynamicObjectResponseData.Details,
+				World.GetObject(spawnDynamicObjectResponseData.Details.AttachData.ParentGUID,
+					spawnDynamicObjectResponseData.Details.AttachData.ParentType));
 		}
 
 		public static DynamicObject SpawnDynamicObject(DynamicObjectDetails details, SpaceObject parent)
 		{
-			DynamicObjectData dynamicObjectData = ((!StaticData.DynamicObjectsDataList.ContainsKey(details.ItemID)) ? null : StaticData.DynamicObjectsDataList[details.ItemID]);
+			DynamicObjectData dynamicObjectData = ((!StaticData.DynamicObjectsDataList.ContainsKey(details.ItemID))
+				? null
+				: StaticData.DynamicObjectsDataList[details.ItemID]);
 			if (dynamicObjectData != null)
 			{
 				return SpawnDynamicObject(details, dynamicObjectData, parent);
 			}
+
 			return null;
 		}
 
@@ -522,6 +552,7 @@ namespace ZeroGravity.Objects
 					bounds.Encapsulate(meshRenderer.bounds);
 				}
 			}
+
 			bounds.center -= dobj.transform.position;
 			dobj.transform.rotation = rotation;
 			sphereCollider.center = bounds.center;
@@ -532,14 +563,16 @@ namespace ZeroGravity.Objects
 			dobj.collisionDetector = gameObject;
 		}
 
-		public static DynamicObject SpawnDynamicObject(DynamicObjectDetails details, DynamicObjectData data, SpaceObject parent)
+		public static DynamicObject SpawnDynamicObject(DynamicObjectDetails details, DynamicObjectData data,
+			SpaceObject parent)
 		{
-			DynamicObject dynamicObject = Client.Instance.GetDynamicObject(details.GUID);
+			DynamicObject dynamicObject = World.GetDynamicObject(details.GUID);
 			try
 			{
 				if (dynamicObject == null)
 				{
-					GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load(data.PrefabPath), new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject;
+					GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load(data.PrefabPath),
+						new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject;
 					gameObject.SetActive(value: false);
 					dynamicObject = gameObject.GetComponent<DynamicObject>();
 					dynamicObject.tag = "Untagged";
@@ -547,17 +580,20 @@ namespace ZeroGravity.Objects
 					dynamicObject.name = "DynamicObject_" + details.GUID;
 					gameObject.SetActive(value: true);
 				}
+
 				if (dynamicObject.Item != null)
 				{
 					if (details.AttachData != null)
 					{
 						dynamicObject.Item.ProcessAttachData(details.AttachData);
 					}
+
 					if (details.StatsData != null)
 					{
 						dynamicObject.Item.ProcesStatsData(details.StatsData);
 					}
 				}
+
 				dynamicObject.Parent = parent;
 				if (!dynamicObject.IsAttached)
 				{
@@ -566,7 +602,8 @@ namespace ZeroGravity.Objects
 					dynamicObject.rigidBody.velocity = details.Velocity.ToVector3();
 					dynamicObject.rigidBody.angularVelocity = details.AngularVelocity.ToVector3();
 				}
-				Client.Instance.AddDynamicObject(dynamicObject.GUID, dynamicObject);
+
+				World.AddDynamicObject(dynamicObject.GUID, dynamicObject);
 				if (details.ChildObjects != null)
 				{
 					if (details.ChildObjects.Count > 0)
@@ -575,10 +612,13 @@ namespace ZeroGravity.Objects
 						{
 							SpawnDynamicObject(childObject, dynamicObject);
 						}
+
 						return dynamicObject;
 					}
+
 					return dynamicObject;
 				}
+
 				return dynamicObject;
 			}
 			catch (Exception ex)
@@ -592,15 +632,14 @@ namespace ZeroGravity.Objects
 		protected override void OnDestroy()
 		{
 			base.OnDestroy();
-			if (Client.IsGameBuild)
+			EventSystem.RemoveListener(typeof(DynamicObjectStatsMessage), DynamicObjectStatsMessageListener);
+			World.RemoveDynamicObject(base.GUID);
+			if (MyPlayer.Instance.Inventory != null &&
+			    (((object)Item != null) ? Item.Slot : null) == MyPlayer.Instance.Inventory.HandsSlot)
 			{
-				EventSystem.RemoveListener(typeof(DynamicObjectStatsMessage), DynamicObjectStatsMessageListener);
-				Client.Instance.RemoveDynamicObject(base.GUID);
-				if (MyPlayer.Instance.Inventory != null && (((object)Item != null) ? Item.Slot : null) == MyPlayer.Instance.Inventory.HandsSlot)
-				{
-					Client.Instance.CanvasManager.CanvasUI.HelmetHud.HandsSlotUpdate();
-				}
+				World.InGameGUI.HelmetHud.HandsSlotUpdate();
 			}
+
 			CheckNearbyObjects();
 		}
 
@@ -610,9 +649,10 @@ namespace ZeroGravity.Objects
 			{
 				if (Parent is Pivot && Parent != vessel)
 				{
-					Client.Instance.SolarSystem.RemoveArtificialBody(Parent as Pivot);
+					World.SolarSystem.RemoveArtificialBody(Parent as Pivot);
 					UnityEngine.Object.Destroy(Parent.gameObject);
 				}
+
 				Parent = vessel;
 				base.transform.parent = vessel.TransferableObjectsRoot.transform;
 			}
@@ -623,13 +663,17 @@ namespace ZeroGravity.Objects
 			if (!IsAttached || forceExit)
 			{
 				ArtificialBody artificialBody = null;
-				artificialBody = ((!(Parent is SpaceObjectVessel)) ? GetParent<ArtificialBody>() : (Parent as SpaceObjectVessel).MainVessel);
+				artificialBody = ((!(Parent is SpaceObjectVessel))
+					? GetParent<ArtificialBody>()
+					: (Parent as SpaceObjectVessel).MainVessel);
 				if (artificialBody == null)
 				{
 					Dbg.Error("Cannot exit vessel, cannot find parents artificial body", base.name, base.GUID);
 					return;
 				}
-				Parent = Pivot.Create(SpaceObjectType.DynamicObjectPivot, base.GUID, artificialBody, isMainObject: false);
+
+				Parent = Pivot.Create(SpaceObjectType.DynamicObjectPivot, base.GUID, artificialBody,
+					isMainObject: false);
 				SetParentTransferableObjectsRoot();
 				SendStatsMessage(new DynamicObjectAttachData
 				{
@@ -649,6 +693,7 @@ namespace ZeroGravity.Objects
 			{
 				Dbg.Error("Attached object changed parent", Parent.GUID, Parent.Type, vessel.GUID, vessel.Type);
 			}
+
 			Parent = vessel;
 			base.transform.parent = vessel.TransferableObjectsRoot.transform;
 			SendStatsMessage(new DynamicObjectAttachData
@@ -664,8 +709,11 @@ namespace ZeroGravity.Objects
 		{
 			if (oldGravity != Vector3.zero && base.Gravity.IsEpsilonEqual(Vector3.zero))
 			{
-				AddForce(new Vector3(UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f)), ForceMode.Impulse);
-				AddTorque(new Vector3(UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f)));
+				AddForce(
+					new Vector3(UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f),
+						UnityEngine.Random.Range(0.001f, 0.05f)), ForceMode.Impulse);
+				AddTorque(new Vector3(UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f),
+					UnityEngine.Random.Range(0.001f, 0.05f)));
 			}
 		}
 
@@ -676,11 +724,6 @@ namespace ZeroGravity.Objects
 
 		private void Update()
 		{
-			if (!Client.IsGameBuild && Item != null)
-			{
-				Item.UpdateHealthIndicator(Item.TestHealthPercentage, 1f);
-				Item.ApplyTierColor();
-			}
 			float num = Time.realtimeSinceStartup - movementReceivedTime;
 			if (!IsKinematic)
 			{
@@ -700,13 +743,16 @@ namespace ZeroGravity.Objects
 			}
 			else if (movementReceivedTime > 0f && num < 1f)
 			{
-				base.transform.localPosition = Vector3.Lerp(base.transform.localPosition, movementTargetLocalPosition, Mathf.Pow(num, 0.5f));
-				base.transform.localRotation = Quaternion.Slerp(base.transform.localRotation, movementTargetLocalRotation, Mathf.Pow(num, 0.5f));
+				base.transform.localPosition = Vector3.Lerp(base.transform.localPosition, movementTargetLocalPosition,
+					Mathf.Pow(num, 0.5f));
+				base.transform.localRotation = Quaternion.Slerp(base.transform.localRotation,
+					movementTargetLocalRotation, Mathf.Pow(num, 0.5f));
 			}
 			else if (num > 1f && num - Time.deltaTime <= 1f)
 			{
 				ForceActivate();
 			}
+
 			takeoverTimer += Time.deltaTime;
 		}
 
@@ -724,16 +770,20 @@ namespace ZeroGravity.Objects
 			{
 				alreadyTraversed = new HashSet<DynamicObject>();
 			}
+
 			if (!alreadyTraversed.Add(this))
 			{
 				return;
 			}
+
 			Renderer componentInChildren = GetComponentInChildren<Renderer>();
 			if (componentInChildren == null)
 			{
 				return;
 			}
-			Collider[] array = Physics.OverlapSphere(base.transform.position, componentInChildren.bounds.size.magnitude);
+
+			Collider[] array =
+				Physics.OverlapSphere(base.transform.position, componentInChildren.bounds.size.magnitude);
 			foreach (Collider collider in array)
 			{
 				DynamicObject componentInParent = collider.GetComponentInParent<DynamicObject>();
@@ -745,7 +795,9 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public void SendAttachMessage(SpaceObject newParent, IItemSlot slot, Vector3? localPosition = null, Quaternion? localRotation = null, Vector3? impulse = null, Vector3? angularImpulse = null, Vector3? velocity = null)
+		public void SendAttachMessage(SpaceObject newParent, IItemSlot slot, Vector3? localPosition = null,
+			Quaternion? localRotation = null, Vector3? impulse = null, Vector3? angularImpulse = null,
+			Vector3? velocity = null)
 		{
 			bool flag = slot != null || newParent is DynamicObject;
 			SendStatsMessage(new DynamicObjectAttachData
@@ -755,10 +807,12 @@ namespace ZeroGravity.Objects
 				ParentType = newParent.Type,
 				ItemSlotID = (short)((slot is ItemSlot) ? (slot as ItemSlot).ID : 0),
 				InventorySlotID = (short)((!(slot is InventorySlot)) ? (-1111) : (slot as InventorySlot).SlotID),
-				APDetails = ((!(slot is BaseSceneAttachPoint)) ? null : new AttachPointDetails
-				{
-					InSceneID = (slot as BaseSceneAttachPoint).InSceneID
-				}),
+				APDetails = ((!(slot is BaseSceneAttachPoint))
+					? null
+					: new AttachPointDetails
+					{
+						InSceneID = (slot as BaseSceneAttachPoint).InSceneID
+					}),
 				LocalPosition = ((flag || !localPosition.HasValue) ? null : localPosition.Value.ToArray()),
 				LocalRotation = ((flag || !localRotation.HasValue) ? null : localRotation.Value.ToArray()),
 				Velocity = ((!velocity.HasValue) ? null : velocity.Value.ToArray()),

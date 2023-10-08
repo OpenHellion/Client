@@ -37,7 +37,8 @@ namespace OpenHellion
 			{
 				if (_stopwatch == null)
 				{
-					throw new InvalidOperationException("The HiResTime class has not been started. Call the Start() method first.");
+					throw new InvalidOperationException(
+						"The HiResTime class has not been started. Call the Start() method first.");
 				}
 
 				return (ulong)_stopwatch.ElapsedMilliseconds;

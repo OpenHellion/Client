@@ -43,13 +43,15 @@ namespace ZeroGravity.Objects
 				{
 					return RadarVisibilityType.AlwaysVisible;
 				}
+
 				return (!IsDistressSignalActive) ? _RadarVisibilityType : RadarVisibilityType.Distress;
 			}
 			set
 			{
 				_RadarVisibilityType = value;
 				MapObject value2;
-				if (this is IMapMainObject && Client.Instance.Map.AllMapObjects.TryGetValue(this as IMapMainObject, out value2))
+				if (this is IMapMainObject &&
+				    World.Map.AllMapObjects.TryGetValue(this as IMapMainObject, out value2))
 				{
 					value2.UpdateVisibility();
 				}
@@ -70,49 +72,53 @@ namespace ZeroGravity.Objects
 			ArtificialBody artificialBody = null;
 			switch (type)
 			{
-			case SpaceObjectType.Ship:
-				artificialBody = gameObject.AddComponent<Ship>();
-				break;
-			case SpaceObjectType.Asteroid:
-				artificialBody = gameObject.AddComponent<Asteroid>();
-				break;
-			case SpaceObjectType.PlayerPivot:
-			case SpaceObjectType.DynamicObjectPivot:
-			case SpaceObjectType.CorpsePivot:
-				artificialBody = gameObject.AddComponent<Pivot>();
-				break;
-			case SpaceObjectType.Station:
-				artificialBody = gameObject.AddComponent<Station>();
-				break;
+				case SpaceObjectType.Ship:
+					artificialBody = gameObject.AddComponent<Ship>();
+					break;
+				case SpaceObjectType.Asteroid:
+					artificialBody = gameObject.AddComponent<Asteroid>();
+					break;
+				case SpaceObjectType.PlayerPivot:
+				case SpaceObjectType.DynamicObjectPivot:
+				case SpaceObjectType.CorpsePivot:
+					artificialBody = gameObject.AddComponent<Pivot>();
+					break;
+				case SpaceObjectType.Station:
+					artificialBody = gameObject.AddComponent<Station>();
+					break;
 			}
+
 			if (type == SpaceObjectType.Ship || type == SpaceObjectType.Asteroid)
 			{
 				artificialBody.gameObject.SetActive(false);
 			}
+
 			artificialBody.GUID = guid;
 			artificialBody.Orbit = new OrbitParameters();
 			artificialBody.Orbit.SetArtificialBody(artificialBody);
 			artificialBody.Radius = 30.0;
 			if (trans.Orbit != null)
 			{
-				artificialBody.Orbit.ParseNetworkData(trans.Orbit);
+				artificialBody.Orbit.ParseNetworkData(World, trans.Orbit);
 			}
 			else if (trans.Realtime != null)
 			{
-				artificialBody.Orbit.ParseNetworkData(trans.Realtime);
+				artificialBody.Orbit.ParseNetworkData(World, trans.Realtime);
 			}
 			else if (trans.StabilizeToTargetGUID.HasValue && trans.StabilizeToTargetGUID.Value > 0)
 			{
-				ArtificialBody artificialBody2 = Client.Instance.SolarSystem.GetArtificialBody(trans.StabilizeToTargetGUID.Value);
+				ArtificialBody artificialBody2 =
+					World.SolarSystem.GetArtificialBody(trans.StabilizeToTargetGUID.Value);
 				if (artificialBody2 != null)
 				{
-					artificialBody.Orbit.CopyDataFrom(artificialBody2.Orbit, Client.Instance.SolarSystem.CurrentTime, true);
+					artificialBody.Orbit.CopyDataFrom(artificialBody2.Orbit, World.SolarSystem.CurrentTime, true);
 				}
 			}
 			else
 			{
 				Dbg.Error("How this happend !!! Artificial bodies should always have orbit or realtime data.");
 			}
+
 			artificialBody.Forward = ((trans.Forward == null) ? Vector3.forward : trans.Forward.ToVector3());
 			artificialBody.Up = ((trans.Up == null) ? Vector3.up : trans.Up.ToVector3());
 			artificialBody.TransferableObjectsRoot = new GameObject("TransferableObjectsRoot");
@@ -134,26 +140,32 @@ namespace ZeroGravity.Objects
 				artificialBody.TransferableObjectsRoot.transform.parent = artificialBody.GeometryPlaceholder.transform;
 				artificialBody.TransferableObjectsRoot.transform.Reset();
 			}
+
 			if (isMainObject)
 			{
 				artificialBody.transform.parent = null;
-				artificialBody.SetTargetPositionAndRotation(Vector3.zero, artificialBody.Forward, artificialBody.Up, true);
+				artificialBody.SetTargetPositionAndRotation(Vector3.zero, artificialBody.Forward, artificialBody.Up,
+					true);
 				artificialBody.transform.Reset();
 			}
 			else
 			{
-				artificialBody.transform.parent = Client.Instance.ShipExteriorRoot.transform;
-				artificialBody.SetTargetPositionAndRotation((artificialBody.Position - MyPlayer.Instance.Parent.Position).ToVector3(), artificialBody.Forward, artificialBody.Up, true);
+				artificialBody.transform.parent = World.ShipExteriorRoot.transform;
+				artificialBody.SetTargetPositionAndRotation(
+					(artificialBody.Position - MyPlayer.Instance.Parent.Position).ToVector3(), artificialBody.Forward,
+					artificialBody.Up, true);
 				if ((artificialBody.Position - MyPlayer.Instance.Parent.Position).SqrMagnitude < 100000000.0)
 				{
 					artificialBody.LoadGeometry();
 				}
-				else if (type == SpaceObjectType.Asteroid || type == SpaceObjectType.Ship || type == SpaceObjectType.Station)
+				else if (type == SpaceObjectType.Asteroid || type == SpaceObjectType.Ship ||
+				         type == SpaceObjectType.Station)
 				{
 					artificialBody.RequestSpawn();
 				}
 			}
-			Client.Instance.SolarSystem.AddArtificialBody(artificialBody);
+
+			World.SolarSystem.AddArtificialBody(artificialBody);
 			return artificialBody;
 		}
 
@@ -170,6 +182,7 @@ namespace ZeroGravity.Objects
 				{
 					ZeroOcclusion.DestroyOcclusionObjectsFor(this as SpaceObjectVessel);
 				}
+
 				foreach (Transform child in GeometryRoot.transform.GetChildren())
 				{
 					if (child != null)
@@ -177,13 +190,16 @@ namespace ZeroGravity.Objects
 						Object.Destroy(child.gameObject);
 					}
 				}
+
 				GeometryRoot.transform.parent = GeometryPlaceholder.transform;
 				GeometryRoot.transform.Reset();
 			}
+
 			if (ArtificalRigidbody != null)
 			{
 				Object.Destroy(ArtificalRigidbody);
 			}
+
 			ArtificalRigidbody = null;
 			base.IsDummyObject = true;
 		}
@@ -194,6 +210,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			if (resetTime)
 			{
 				Orbit.ResetOrbit(time);
@@ -202,10 +219,12 @@ namespace ZeroGravity.Objects
 			{
 				Orbit.UpdateOrbit(time);
 			}
+
 			if (StabilizedChildren == null || StabilizedChildren.Count <= 0)
 			{
 				return;
 			}
+
 			foreach (ArtificialBody stabilizedChild in StabilizedChildren)
 			{
 				stabilizedChild.UpdateStabilizedPosition();
@@ -227,14 +246,18 @@ namespace ZeroGravity.Objects
 			{
 				return Ship.Create(trans.GUID, null, trans, false);
 			}
-			if (trans.Type == SpaceObjectType.PlayerPivot || trans.Type == SpaceObjectType.DynamicObjectPivot || trans.Type == SpaceObjectType.CorpsePivot)
+
+			if (trans.Type == SpaceObjectType.PlayerPivot || trans.Type == SpaceObjectType.DynamicObjectPivot ||
+			    trans.Type == SpaceObjectType.CorpsePivot)
 			{
 				return Pivot.Create(trans.Type, trans, false);
 			}
+
 			if (trans.Type == SpaceObjectType.Asteroid)
 			{
 				return Asteroid.Create(trans, null, false);
 			}
+
 			Dbg.Error("Unknown artificial body type", trans.Type, trans.GUID);
 			return null;
 		}
@@ -243,9 +266,9 @@ namespace ZeroGravity.Objects
 		{
 			if (!(StabilizeToTargetObj == null))
 			{
-				Orbit.CopyDataFrom(StabilizeToTargetObj.Orbit, Client.Instance.SolarSystem.CurrentTime, true);
+				Orbit.CopyDataFrom(StabilizeToTargetObj.Orbit, World.SolarSystem.CurrentTime, true);
 				Orbit.RelativePosition += StabilizationOffset;
-				Orbit.InitFromCurrentStateVectors(Client.Instance.SolarSystem.CurrentTime);
+				Orbit.InitFromCurrentStateVectors(World.SolarSystem.CurrentTime);
 			}
 		}
 
@@ -259,11 +282,13 @@ namespace ZeroGravity.Objects
 			{
 				StabilizeToTargetObj.StabilizedChildren.Remove(this);
 			}
+
 			StabilizeToTargetObj = null;
 			if (guid > 0)
 			{
-				StabilizeToTargetObj = Client.Instance.SolarSystem.GetArtificialBody(guid);
+				StabilizeToTargetObj = World.SolarSystem.GetArtificialBody(guid);
 			}
+
 			if (StabilizeToTargetObj != null)
 			{
 				StabilizationOffset = stabilizationOffset;
@@ -280,6 +305,11 @@ namespace ZeroGravity.Objects
 				StabilizeToTargetObj = null;
 				OnStabilizationChanged(false);
 			}
+		}
+
+		public void SendDistressCall(bool isActive)
+		{
+			World.SendDistressCall(this, isActive);
 		}
 	}
 }

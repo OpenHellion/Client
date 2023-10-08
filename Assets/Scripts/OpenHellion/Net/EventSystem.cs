@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using ZeroGravity.Network;
-using ZeroGravity;
 
 namespace OpenHellion.Net
 {
@@ -28,20 +27,18 @@ namespace OpenHellion.Net
 
 		public enum InternalEventType
 		{
-			ShowMessageBox = 1,
-			SetActiveLoginLoadingCanvas = 2,
 			OpenMainScreen = 3,
 			OcExteriorStatus = 4,
 			EquipAnimationEnd = 5,
 			ReconnectAuto = 6,
-			RemoveLoadingCanvas = 7,
 			ConnectionFailed = 8,
-			CloseAllLoadingScreens = 9
 		}
 
-		private readonly ConcurrentDictionary<Type, NetworkDataDelegate> _listeners = new ConcurrentDictionary<Type, NetworkDataDelegate>();
+		private readonly ConcurrentDictionary<Type, NetworkDataDelegate> _listeners =
+			new ConcurrentDictionary<Type, NetworkDataDelegate>();
 
-		private readonly ConcurrentDictionary<InternalEventType, InternalDataDelegate> _internalDataGroups = new ConcurrentDictionary<InternalEventType, InternalDataDelegate>();
+		private readonly ConcurrentDictionary<InternalEventType, InternalDataDelegate> _internalDataGroups =
+			new ConcurrentDictionary<InternalEventType, InternalDataDelegate>();
 
 		private readonly ConcurrentQueue<InternalEventData> _internalBuffer = new ConcurrentQueue<InternalEventData>();
 
@@ -51,6 +48,7 @@ namespace OpenHellion.Net
 		private static readonly Dictionary<Type, int> _packetCounter = new Dictionary<Type, int>();
 
 		private static bool _dbgPacketCount = false;
+
 		public static bool DebugPacketCount
 		{
 			get => _dbgPacketCount;
@@ -66,6 +64,7 @@ namespace OpenHellion.Net
 
 
 		private static EventSystem _instance;
+
 		internal static EventSystem Instance
 		{
 			get
@@ -128,9 +127,9 @@ namespace OpenHellion.Net
 		{
 			if (_listeners.ContainsKey(data.GetType()) && _listeners[data.GetType()] != null)
 			{
-				if (Client.Instance.ExperimentalBuild) Dbg.Log("Executing event of type: " + data.GetType());
+				Dbg.Log("Executing event of type: " + data.GetType());
 
-				if (Thread.CurrentThread.ManagedThreadId == Client.MainThreadID)
+				if (Thread.CurrentThread.ManagedThreadId == World.MainThreadID)
 				{
 					_listeners[data.GetType()](data);
 				}
@@ -148,12 +147,11 @@ namespace OpenHellion.Net
 		/// <summary>
 		/// 	Execute corresponding code for request.
 		/// </summary>
-		// TODO: Make this non-static internal.
 		public static void Invoke(InternalEventData data)
 		{
 			if (Instance._internalDataGroups.ContainsKey(data.Type) && Instance._internalDataGroups[data.Type] != null)
 			{
-				if (!Client.IsGameBuild || Thread.CurrentThread.ManagedThreadId == Client.MainThreadID)
+				if (Thread.CurrentThread.ManagedThreadId == World.MainThreadID)
 				{
 					Instance._internalDataGroups[data.Type](data);
 				}
@@ -180,6 +178,7 @@ namespace OpenHellion.Net
 				{
 					continue;
 				}
+
 				if (_listeners.TryGetValue(result.GetType(), out NetworkDataDelegate value) && value != null)
 				{
 					value(result);
@@ -212,7 +211,8 @@ namespace OpenHellion.Net
 
 			while (_internalBuffer.Count > 0)
 			{
-				if (_internalBuffer.TryDequeue(out InternalEventData result) && _internalDataGroups.TryGetValue(result.Type, out InternalDataDelegate value) && value != null)
+				if (_internalBuffer.TryDequeue(out InternalEventData result) &&
+				    _internalDataGroups.TryGetValue(result.Type, out InternalDataDelegate value) && value != null)
 				{
 					value(result);
 				}

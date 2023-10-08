@@ -10,6 +10,7 @@ namespace RootMotion.FinalIK
 			{
 				InitiateSolver();
 			}
+
 			if (GetIKSolver().initiated)
 			{
 				GetIKSolver().Update();

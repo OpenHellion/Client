@@ -7,8 +7,7 @@ namespace ZeroGravity.UI
 {
 	public class LSGeneratorUI : MonoBehaviour
 	{
-		[HideInInspector]
-		public Generator Generator;
+		[HideInInspector] public Generator Generator;
 
 		public Text Name;
 
@@ -54,6 +53,7 @@ namespace ZeroGravity.UI
 					text.text = value;
 				}
 			}
+
 			UpdateContainers();
 		}
 
@@ -69,14 +69,19 @@ namespace ZeroGravity.UI
 			{
 				if (resourceContainer.DistributionSystemType == DistributionSystemType.Oxygen)
 				{
-					OxygenChangeRate.text = Generator.GetResourceRequirement(resourceContainer.DistributionSystemType, true).ToString("0.0");
+					OxygenChangeRate.text = Generator
+						.GetResourceRequirement(resourceContainer.DistributionSystemType, true).ToString("0.0");
 					OxygenValue.text = FormatHelper.CurrentMax(resourceContainer.Quantity, resourceContainer.Capacity);
 					OxygenFiller.fillAmount = resourceContainer.Quantity / resourceContainer.Capacity;
 				}
-				if (resourceContainer.DistributionSystemType == DistributionSystemType.Nitrogen && Generator.Type == GeneratorType.Air)
+
+				if (resourceContainer.DistributionSystemType == DistributionSystemType.Nitrogen &&
+				    Generator.Type == GeneratorType.Air)
 				{
-					NitrogenChangeRate.text = Generator.GetResourceRequirement(resourceContainer.DistributionSystemType, true).ToString("0.0");
-					NitrogenValue.text = FormatHelper.CurrentMax(resourceContainer.Quantity, resourceContainer.Capacity);
+					NitrogenChangeRate.text = Generator
+						.GetResourceRequirement(resourceContainer.DistributionSystemType, true).ToString("0.0");
+					NitrogenValue.text =
+						FormatHelper.CurrentMax(resourceContainer.Quantity, resourceContainer.Capacity);
 					NitrogenFiller.fillAmount = resourceContainer.Quantity / resourceContainer.Capacity;
 				}
 			}

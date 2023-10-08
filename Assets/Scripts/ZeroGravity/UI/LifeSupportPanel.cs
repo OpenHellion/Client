@@ -12,8 +12,7 @@ namespace ZeroGravity.UI
 {
 	public class LifeSupportPanel : AbstractPanelUI
 	{
-		[Title("LIFE SUPPORT UI")]
-		public GameObject MainScreen;
+		[Title("LIFE SUPPORT UI")] public GameObject MainScreen;
 
 		public GameObject InfoScreen;
 
@@ -25,7 +24,8 @@ namespace ZeroGravity.UI
 
 		public VesselObjectScript SelectedVessel;
 
-		private static Dictionary<SpaceObjectVessel, VesselObjectScript> LSVessels = new Dictionary<SpaceObjectVessel, VesselObjectScript>();
+		private static Dictionary<SpaceObjectVessel, VesselObjectScript> LSVessels =
+			new Dictionary<SpaceObjectVessel, VesselObjectScript>();
 
 		public GameObject SelectedVesselHeader;
 
@@ -107,11 +107,13 @@ namespace ZeroGravity.UI
 			LSGenerators.Clear();
 			LSRooms.Clear();
 			SelectedVessel = null;
-			VesselObjectScript[] componentsInChildren = vesselListTransform.GetComponentsInChildren<VesselObjectScript>(includeInactive: true);
+			VesselObjectScript[] componentsInChildren =
+				vesselListTransform.GetComponentsInChildren<VesselObjectScript>(includeInactive: true);
 			foreach (VesselObjectScript vesselObjectScript in componentsInChildren)
 			{
 				DestroyImmediate(vesselObjectScript.gameObject);
 			}
+
 			Initialize();
 			CreateVesselsAndGenerators();
 			if (LSVessels.ContainsKey(ParentVessel))
@@ -126,6 +128,7 @@ namespace ZeroGravity.UI
 			{
 				SelectVessel(null);
 			}
+
 			CreateConnectedVessels();
 			UpdateAirTank();
 			foreach (KeyValuePair<SceneTriggerRoom, LSRoomsUI> lSRoom in LSRooms)
@@ -136,16 +139,20 @@ namespace ZeroGravity.UI
 
 		private void CreateVesselsAndGenerators()
 		{
-			LSResourceTank[] componentsInChildren = VesselObjectsTransform.GetComponentsInChildren<LSResourceTank>(includeInactive: true);
+			LSResourceTank[] componentsInChildren =
+				VesselObjectsTransform.GetComponentsInChildren<LSResourceTank>(includeInactive: true);
 			foreach (LSResourceTank lSResourceTank in componentsInChildren)
 			{
 				DestroyImmediate(lSResourceTank.gameObject);
 			}
-			LSGeneratorUI[] componentsInChildren2 = GeneratorsTransform.GetComponentsInChildren<LSGeneratorUI>(includeInactive: true);
+
+			LSGeneratorUI[] componentsInChildren2 =
+				GeneratorsTransform.GetComponentsInChildren<LSGeneratorUI>(includeInactive: true);
 			foreach (LSGeneratorUI lSGeneratorUI in componentsInChildren2)
 			{
 				DestroyImmediate(lSGeneratorUI.gameObject);
 			}
+
 			foreach (SpaceObjectVessel allVessel in AllVessels)
 			{
 				ILifeProvider[] componentsInChildren3 = allVessel.GeometryRoot.GetComponentsInChildren<ILifeProvider>();
@@ -160,6 +167,7 @@ namespace ZeroGravity.UI
 					LSVessels[component.Vessel] = component;
 				}
 			}
+
 			foreach (Generator lifeGenerator in LifeGenerators)
 			{
 				if (lifeGenerator.Type == GeneratorType.Air)
@@ -195,6 +203,7 @@ namespace ZeroGravity.UI
 				AirTankDanger.SetActive(value: false);
 				return;
 			}
+
 			TankNotConnected.SetActive(value: false);
 			float num = 0f;
 			float num2 = 0f;
@@ -203,6 +212,7 @@ namespace ZeroGravity.UI
 				num += airTank.Capacity;
 				num2 += airTank.Quantity;
 			}
+
 			CurrentAirTank = num2;
 			MaxAirTank = num;
 			AirTankFiller.fillAmount = num2 / num;
@@ -210,27 +220,34 @@ namespace ZeroGravity.UI
 			AirTankDanger.SetActive(CurrentAirTank == 0f || CurrentAirTank == MaxAirTank);
 			if (CurrentAirTank == 0f)
 			{
-				TankStatus.text = Localization.AirTank.ToUpper() + " " + Localization.Empty.ToUpper() + " - <color=#AE1515>" + Localization.UnableToPressurize.ToUpper() + "</color>";
+				TankStatus.text = Localization.AirTank.ToUpper() + " " + Localization.Empty.ToUpper() +
+				                  " - <color=#AE1515>" + Localization.UnableToPressurize.ToUpper() + "</color>";
 			}
 			else if (CurrentAirTank == MaxAirTank)
 			{
-				TankStatus.text = Localization.AirTank.ToUpper() + " " + Localization.Full.ToUpper() + " - <color=#AE1515>" + Localization.UnableToDepressurize.ToUpper() + "</color>";
+				TankStatus.text = Localization.AirTank.ToUpper() + " " + Localization.Full.ToUpper() +
+				                  " - <color=#AE1515>" + Localization.UnableToDepressurize.ToUpper() + "</color>";
 			}
 			else
 			{
 				TankStatus.text = Localization.AirTank.ToUpper();
 			}
-			SelectedVesselAirTankValue.text = FormatHelper.CurrentMax(SelectedVessel.AirContainer.Quantity, SelectedVessel.AirContainer.Capacity);
-			SelectedVesselAirTankFiller.fillAmount = SelectedVessel.AirContainer.Quantity / SelectedVessel.AirContainer.Capacity;
+
+			SelectedVesselAirTankValue.text = FormatHelper.CurrentMax(SelectedVessel.AirContainer.Quantity,
+				SelectedVessel.AirContainer.Capacity);
+			SelectedVesselAirTankFiller.fillAmount =
+				SelectedVessel.AirContainer.Quantity / SelectedVessel.AirContainer.Capacity;
 		}
 
 		public void CreateConnectedVessels()
 		{
-			ConnectedVessel[] componentsInChildren = ConnectedListTransform.GetComponentsInChildren<ConnectedVessel>(includeInactive: true);
+			ConnectedVessel[] componentsInChildren =
+				ConnectedListTransform.GetComponentsInChildren<ConnectedVessel>(includeInactive: true);
 			foreach (ConnectedVessel connectedVessel in componentsInChildren)
 			{
 				DestroyImmediate(connectedVessel.gameObject);
 			}
+
 			foreach (SpaceObjectVessel allVessel in AllVessels)
 			{
 				GameObject gameObject = Instantiate(ConnectedVesselObject, ConnectedListTransform);
@@ -245,7 +262,8 @@ namespace ZeroGravity.UI
 
 		private void CreateRoom(ConnectedVessel ConsumerVessel)
 		{
-			SceneTriggerRoom[] componentsInChildren = ConsumerVessel.Vessel.GeometryRoot.GetComponentsInChildren<SceneTriggerRoom>();
+			SceneTriggerRoom[] componentsInChildren =
+				ConsumerVessel.Vessel.GeometryRoot.GetComponentsInChildren<SceneTriggerRoom>();
 			float val = componentsInChildren.Sum((SceneTriggerRoom m) => m.Volume);
 			SceneTriggerRoom[] array = componentsInChildren;
 			foreach (SceneTriggerRoom sceneTriggerRoom in array)
@@ -263,6 +281,7 @@ namespace ZeroGravity.UI
 					component.RefreshUI();
 				}
 			}
+
 			ConsumerVessel.Volume.text = FormatHelper.FormatValue(val);
 		}
 
@@ -282,8 +301,10 @@ namespace ZeroGravity.UI
 				{
 					return;
 				}
+
 				value.LS_UpdateAirTank();
 			}
+
 			GetPowerStatus();
 		}
 
@@ -296,6 +317,7 @@ namespace ZeroGravity.UI
 				SelectedVesselHeader.SetActive(value: false);
 				return;
 			}
+
 			foreach (VesselObjectScript value in LSVessels.Values)
 			{
 				if (vessel == value.Vessel)
@@ -308,20 +330,24 @@ namespace ZeroGravity.UI
 					value.Selected.SetActive(value: false);
 				}
 			}
+
 			foreach (KeyValuePair<Generator, LSGeneratorUI> lSGenerator in LSGenerators)
 			{
 				lSGenerator.Value.gameObject.SetActive(lSGenerator.Key.ParentVessel == vessel);
 			}
+
 			if (SelectedVessel != null)
 			{
 				NotConnected.SetActive(value: false);
 				SelectedVesselTank.SetActive(value: true);
 				SelectedVesselHeader.SetActive(value: true);
 				SelectedVesselName.text = SelectedVessel.Vessel.CustomName;
-				SelectedVesselIcon.sprite = Client.Instance.SpriteManager.GetSprite(SelectedVessel.Vessel);
+				SelectedVesselIcon.sprite = SpriteManager.Instance.GetSprite(SelectedVessel.Vessel);
 				AuthorizationFail.SetActive(!SelectedVessel.IsAuthorized);
-				SelectedVesselAirTankValue.text = FormatHelper.CurrentMax(SelectedVessel.AirContainer.Quantity, SelectedVessel.AirContainer.Capacity);
-				SelectedVesselAirTankFiller.fillAmount = SelectedVessel.AirContainer.Quantity / SelectedVessel.AirContainer.Capacity;
+				SelectedVesselAirTankValue.text = FormatHelper.CurrentMax(SelectedVessel.AirContainer.Quantity,
+					SelectedVessel.AirContainer.Capacity);
+				SelectedVesselAirTankFiller.fillAmount =
+					SelectedVessel.AirContainer.Quantity / SelectedVessel.AirContainer.Capacity;
 			}
 			else
 			{
@@ -330,6 +356,7 @@ namespace ZeroGravity.UI
 				SelectedVesselHeader.SetActive(value: false);
 				AuthorizationFail.SetActive(value: false);
 			}
+
 			UpdateVesselObjects(vessel);
 		}
 
@@ -350,7 +377,10 @@ namespace ZeroGravity.UI
 			{
 				LG.DisablePattern.SetActive(LG.Generator.Status != SystemStatus.Online);
 			}
-			LG.ToggleText.text = ((!LG.Generator.IsSwitchedOn()) ? Localization.Powerup.ToUpper() : Localization.ShutDown.ToUpper());
+
+			LG.ToggleText.text = ((!LG.Generator.IsSwitchedOn())
+				? Localization.Powerup.ToUpper()
+				: Localization.ShutDown.ToUpper());
 			LG.Consumption.text = FormatHelper.FormatValue(LG.Generator.GetPowerConsumption(true));
 			LG.Output.text = LG.Generator.MaxOutput.ToString();
 			LG.UpdateContainers();
@@ -370,6 +400,7 @@ namespace ZeroGravity.UI
 				generator.PowerPartsUI.Add(component);
 				component.PartSlot = partSlot;
 			}
+
 			foreach (PartSlotUI item in generator.PowerPartsUI)
 			{
 				item.UpdateUI();
@@ -392,7 +423,8 @@ namespace ZeroGravity.UI
 
 		public void UpdateConnectedVesselsHealth()
 		{
-			ConnectedVessel[] componentsInChildren = ConnectedListTransform.GetComponentsInChildren<ConnectedVessel>(includeInactive: true);
+			ConnectedVessel[] componentsInChildren =
+				ConnectedListTransform.GetComponentsInChildren<ConnectedVessel>(includeInactive: true);
 			foreach (ConnectedVessel connectedVessel in componentsInChildren)
 			{
 				connectedVessel.HealthAndArmorUpdate();

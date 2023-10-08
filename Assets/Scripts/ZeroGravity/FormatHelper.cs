@@ -15,10 +15,12 @@ namespace ZeroGravity
 			{
 				return (val / 1000f).ToString("0.##", NumberFormatInfo.InvariantInfo) + "k";
 			}
+
 			if (round)
 			{
 				return Mathf.Round(val).ToString("f0");
 			}
+
 			return val.ToString("0.#", NumberFormatInfo.InvariantInfo);
 		}
 
@@ -35,6 +37,7 @@ namespace ZeroGravity
 			{
 				return "<color=#EA4141>" + ((!(text == "0") || !(val > float.Epsilon)) ? text : "<1") + " %</color>";
 			}
+
 			return text + " %";
 		}
 
@@ -45,6 +48,7 @@ namespace ZeroGravity
 			{
 				return FormatValue(cur) + " / " + FormatValue(max);
 			}
+
 			return FormatValue(cur) + " / " + FormatValue(max);
 		}
 
@@ -79,8 +83,10 @@ namespace ZeroGravity
 			}
 			else if (val >= 86400.0)
 			{
-				result = string.Format("{0}d {1:D2}h {2:D2}m {3:D2}s", timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
+				result = string.Format("{0}d {1:D2}h {2:D2}m {3:D2}s", timeSpan.Days, timeSpan.Hours, timeSpan.Minutes,
+					timeSpan.Seconds);
 			}
+
 			return result;
 		}
 
@@ -90,15 +96,18 @@ namespace ZeroGravity
 			{
 				return string.Empty;
 			}
+
 			if (part.PartType == MachineryPartType.NaniteCore || part.PartType == MachineryPartType.MillitaryNaniteCore)
 			{
 				return "\n" + Localization.Armor + ": " + part.AuxValue;
 			}
+
 			string empty = string.Empty;
 			if (part.TierMultiplier > 1f)
 			{
 				return " " + Percentage(part.TierMultiplier - 1f);
 			}
+
 			return empty + " " + Percentage(1f - part.TierMultiplier);
 		}
 
@@ -109,6 +118,7 @@ namespace ZeroGravity
 			{
 				return val.ToString("0.0", NumberFormatInfo.InvariantInfo) + " m";
 			}
+
 			return (val / 1000f).ToString("0.0", NumberFormatInfo.InvariantInfo) + " km";
 		}
 
@@ -119,6 +129,7 @@ namespace ZeroGravity
 			{
 				return val.ToString("0.0", NumberFormatInfo.InvariantInfo) + " m";
 			}
+
 			return (val / 1000.0).ToString("##,0", NumberFormatInfo.InvariantInfo) + " km";
 		}
 	}

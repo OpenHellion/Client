@@ -28,8 +28,7 @@ public class HealthPostEffect : MonoBehaviour
 
 	public Texture VeinsMask;
 
-	[Range(0f, 1f)]
-	public float VeinsAppear;
+	[Range(0f, 1f)] public float VeinsAppear;
 
 	public float LerpedVeins;
 
@@ -49,16 +48,13 @@ public class HealthPostEffect : MonoBehaviour
 
 	public float VeinDamageMultiplier = 0.1f;
 
-	[Range(0f, 100f)]
-	public float Health = 100f;
+	[Range(0f, 100f)] public float Health = 100f;
 
 	public float LerpedHealth = 1f;
 
-	[SerializeField]
-	private Material material;
+	[SerializeField] private Material material;
 
-	[Range(0f, 100f)]
-	public int BlurIterations;
+	[Range(0f, 100f)] public int BlurIterations;
 
 	public float BlurAmount;
 
@@ -70,10 +66,7 @@ public class HealthPostEffect : MonoBehaviour
 
 	public Material m_Material
 	{
-		get
-		{
-			return material;
-		}
+		get { return material; }
 	}
 
 	private void OnEnable()
@@ -91,7 +84,8 @@ public class HealthPostEffect : MonoBehaviour
 		}
 		else
 		{
-			Debug.LogWarning(base.gameObject.name + ": Shader is not assigned. Disabling image effect.", base.gameObject);
+			Debug.LogWarning(base.gameObject.name + ": Shader is not assigned. Disabling image effect.",
+				base.gameObject);
 			base.enabled = false;
 		}
 	}
@@ -136,6 +130,7 @@ public class HealthPostEffect : MonoBehaviour
 			{
 				HitFront = 0f;
 			}
+
 			if (HitBack > 0f)
 			{
 				HitBack -= Time.deltaTime * FadeSpeed;
@@ -144,6 +139,7 @@ public class HealthPostEffect : MonoBehaviour
 			{
 				HitBack = 0f;
 			}
+
 			if (HitLeft > 0f)
 			{
 				HitLeft -= Time.deltaTime * FadeSpeed;
@@ -152,6 +148,7 @@ public class HealthPostEffect : MonoBehaviour
 			{
 				HitLeft = 0f;
 			}
+
 			if (HitRight > 0f)
 			{
 				HitRight -= Time.deltaTime * FadeSpeed;
@@ -161,10 +158,12 @@ public class HealthPostEffect : MonoBehaviour
 				HitRight = 0f;
 			}
 		}
+
 		if ((double)Mathf.Abs(LerpedVeins - VeinsAppear) > 0.01)
 		{
 			LerpedVeins = Mathf.Lerp(LerpedVeins, VeinsAppear, Time.deltaTime * 2f);
 		}
+
 		if (VeinsAppear != 0f)
 		{
 			if (VeinsAppear > 0f)
@@ -176,14 +175,17 @@ public class HealthPostEffect : MonoBehaviour
 				VeinsAppear = 0f;
 			}
 		}
+
 		if (Mathf.Abs(Health - LerpedHealth) > 0.01f)
 		{
 			LerpedHealth = Mathf.Lerp(LerpedHealth, Health, Time.deltaTime * 2f);
 		}
+
 		if ((double)Mathf.Abs(BlurAmount - Suffocation) > 0.01)
 		{
 			BlurAmount = Mathf.Lerp(BlurAmount, Suffocation, Time.deltaTime * 2f);
 		}
+
 		if (Suffocation != 0f && Suffocation > 0f)
 		{
 			Suffocation -= Time.deltaTime * SuffocationFadeSpeed;
@@ -196,14 +198,17 @@ public class HealthPostEffect : MonoBehaviour
 		{
 			HitFront += Damage * DamageMultiplier;
 		}
+
 		if (Side == side.Back && HitBack < 2f)
 		{
 			HitBack += Damage * DamageMultiplier;
 		}
+
 		if (Side == side.Left && HitLeft < 2f)
 		{
 			HitLeft += Damage * DamageMultiplier;
 		}
+
 		if (Side == side.Right && HitRight < 2f)
 		{
 			HitRight += Damage * DamageMultiplier;
@@ -232,6 +237,7 @@ public class HealthPostEffect : MonoBehaviour
 		{
 			yield return null;
 		}
+
 		isInCorutine = true;
 		float speed = (float)Math.PI;
 		for (float val = 0f; val <= (float)Math.PI; val += speed * Time.deltaTime)
@@ -239,6 +245,7 @@ public class HealthPostEffect : MonoBehaviour
 			material.SetFloat("_Hurt", Mathf.Abs(Mathf.Sin(val)));
 			yield return new WaitForEndOfFrame();
 		}
+
 		isInCorutine = false;
 		yield return null;
 	}

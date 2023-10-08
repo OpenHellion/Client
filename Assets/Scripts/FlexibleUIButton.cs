@@ -42,25 +42,25 @@ public class FlexibleUIButton : FlexibleUI
 		image.type = Image.Type.Sliced;
 		switch (buttonType)
 		{
-		case ButtonType.Default:
-			hover.color = skinData.defaultColor;
-			break;
-		case ButtonType.Confirm:
-			hover.color = skinData.confirmColor;
-			text = base.transform.Find("Text").GetComponent<Text>();
-			text.text = Localization.Confirm.ToUpper();
-			break;
-		case ButtonType.Decline:
-			hover.color = skinData.declineColor;
-			text = base.transform.Find("Text").GetComponent<Text>();
-			text.text = Localization.Cancel.ToUpper();
-			break;
-		case ButtonType.Action:
-			hover.color = skinData.actionColor;
-			text = GetComponentInChildren<Text>();
-			text.resizeTextMaxSize = 26;
-			image.color = new Color(1f, 1f, 1f, 0.1f);
-			break;
+			case ButtonType.Default:
+				hover.color = skinData.defaultColor;
+				break;
+			case ButtonType.Confirm:
+				hover.color = skinData.confirmColor;
+				text = base.transform.Find("Text").GetComponent<Text>();
+				text.text = Localization.Confirm.ToUpper();
+				break;
+			case ButtonType.Decline:
+				hover.color = skinData.declineColor;
+				text = base.transform.Find("Text").GetComponent<Text>();
+				text.text = Localization.Cancel.ToUpper();
+				break;
+			case ButtonType.Action:
+				hover.color = skinData.actionColor;
+				text = GetComponentInChildren<Text>();
+				text.resizeTextMaxSize = 26;
+				image.color = new Color(1f, 1f, 1f, 0.1f);
+				break;
 		}
 	}
 }

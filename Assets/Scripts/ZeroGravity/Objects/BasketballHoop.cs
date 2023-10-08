@@ -14,6 +14,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			if (DynamicObj.Parent is SpaceObjectVessel)
 			{
 				if (base.AttachPoint != null)
@@ -44,6 +45,7 @@ namespace ZeroGravity.Objects
 				{
 					sceneNameTag.SetNameTagText(string.Empty);
 				}
+
 				scoreTexts = null;
 			}
 		}

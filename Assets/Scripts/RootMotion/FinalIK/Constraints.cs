@@ -12,15 +12,13 @@ namespace RootMotion.FinalIK
 
 		public Vector3 position;
 
-		[Range(0f, 1f)]
-		public float positionWeight;
+		[Range(0f, 1f)] public float positionWeight;
 
 		public Vector3 rotationOffset;
 
 		public Vector3 rotation;
 
-		[Range(0f, 1f)]
-		public float rotationWeight;
+		[Range(0f, 1f)] public float rotationWeight;
 
 		public bool IsValid()
 		{
@@ -43,10 +41,12 @@ namespace RootMotion.FinalIK
 				{
 					transform.position = Vector3.Lerp(transform.position, position, positionWeight);
 				}
+
 				transform.rotation = Quaternion.Euler(rotationOffset) * transform.rotation;
 				if (rotationWeight > 0f)
 				{
-					transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(rotation), rotationWeight);
+					transform.rotation =
+						Quaternion.Slerp(transform.rotation, Quaternion.Euler(rotation), rotationWeight);
 				}
 			}
 		}

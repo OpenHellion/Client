@@ -18,10 +18,7 @@ namespace RootMotion.Demos
 
 		public virtual bool animationGrounded
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public virtual Vector3 GetPivotPoint()
@@ -41,6 +38,7 @@ namespace RootMotion.Demos
 			{
 				Debug.LogWarning("Animation controllers should be parented to character controllers!", base.transform);
 			}
+
 			lastPosition = base.transform.position;
 			localPosition = base.transform.parent.InverseTransformPoint(base.transform.position);
 			lastRotation = base.transform.rotation;
@@ -51,9 +49,12 @@ namespace RootMotion.Demos
 		{
 			if (smoothFollow)
 			{
-				base.transform.position = Vector3.Lerp(lastPosition, base.transform.parent.TransformPoint(localPosition), Time.deltaTime * smoothFollowSpeed);
-				base.transform.rotation = Quaternion.Lerp(lastRotation, base.transform.parent.rotation * localRotation, Time.deltaTime * smoothFollowSpeed);
+				base.transform.position = Vector3.Lerp(lastPosition,
+					base.transform.parent.TransformPoint(localPosition), Time.deltaTime * smoothFollowSpeed);
+				base.transform.rotation = Quaternion.Lerp(lastRotation, base.transform.parent.rotation * localRotation,
+					Time.deltaTime * smoothFollowSpeed);
 			}
+
 			lastPosition = base.transform.position;
 			lastRotation = base.transform.rotation;
 		}

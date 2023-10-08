@@ -6,25 +6,18 @@ namespace RootMotion.Demos
 	[RequireComponent(typeof(CapsuleCollider))]
 	public abstract class CharacterBase : MonoBehaviour
 	{
-		[Header("Base Parameters")]
-		[Range(1f, 4f)]
-		[SerializeField]
+		[Header("Base Parameters")] [Range(1f, 4f)] [SerializeField]
 		protected float gravityMultiplier = 2f;
 
-		[SerializeField]
-		protected float airborneThreshold = 0.6f;
+		[SerializeField] protected float airborneThreshold = 0.6f;
 
-		[SerializeField]
-		private float slopeStartAngle = 50f;
+		[SerializeField] private float slopeStartAngle = 50f;
 
-		[SerializeField]
-		private float slopeEndAngle = 85f;
+		[SerializeField] private float slopeEndAngle = 85f;
 
-		[SerializeField]
-		private float spherecastRadius = 0.1f;
+		[SerializeField] private float spherecastRadius = 0.1f;
 
-		[SerializeField]
-		private LayerMask groundLayers;
+		[SerializeField] private LayerMask groundLayers;
 
 		private PhysicMaterial zeroFrictionMaterial;
 

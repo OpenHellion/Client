@@ -8,7 +8,8 @@ using ZeroGravity.Objects;
 
 namespace ZeroGravity.UI
 {
-	public abstract class AbstractSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IEventSystemHandler
+	public abstract class AbstractSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler,
+		IDragHandler, IEndDragHandler, IPointerClickHandler, IEventSystemHandler
 	{
 		public InventoryUI InventoryUI;
 
@@ -46,10 +47,6 @@ namespace ZeroGravity.UI
 
 		public abstract Item Item { get; }
 
-		private void Start()
-		{
-		}
-
 		private void Update()
 		{
 			if (!Disabled.activeInHierarchy && InventoryUI.IsDragging && IsDisabled)
@@ -62,12 +59,14 @@ namespace ZeroGravity.UI
 				{
 					Disabled.GetComponent<Image>().color = Colors.DisabledSlot;
 				}
+
 				Disabled.SetActive(true);
 			}
 			else if (Disabled.activeInHierarchy && !IsDisabled)
 			{
 				Disabled.SetActive(false);
 			}
+
 			if (InventoryUI.IsDragging && !IsDisabled)
 			{
 				Available.Activate(true);
@@ -76,6 +75,7 @@ namespace ZeroGravity.UI
 			{
 				Available.Activate(false);
 			}
+
 			if (Selected.activeInHierarchy)
 			{
 				lootTimer += Time.deltaTime;
@@ -84,6 +84,7 @@ namespace ZeroGravity.UI
 			{
 				lootTimer = 0f;
 			}
+
 			if (Hovered.activeInHierarchy && InventoryUI.HoveredSlot == this)
 			{
 				hoverTimer += Time.deltaTime;
@@ -106,6 +107,7 @@ namespace ZeroGravity.UI
 			{
 				ToggleItemSlots(true);
 			}
+
 			if (!(Item == null) && !IsDisabled)
 			{
 				Hovered.SetActive(true);
@@ -132,7 +134,8 @@ namespace ZeroGravity.UI
 				InventoryUI.IsDragging = true;
 				RectTransform component = InventoryUI.DraggingObject.GetComponent<RectTransform>();
 				Vector2 localPoint = Vector2.zero;
-				RectTransformUtility.ScreenPointToLocalPointInRectangle(InventoryUI.GetComponent<RectTransform>(), Mouse.current.position.ReadValue(), Client.Instance.CanvasManager.Canvas.worldCamera, out localPoint);
+				RectTransformUtility.ScreenPointToLocalPointInRectangle(InventoryUI.GetComponent<RectTransform>(),
+					Mouse.current.position.ReadValue(), Camera.main, out localPoint);
 				component.transform.localPosition = localPoint;
 				InventoryUI.DraggingObject.SetActive(true);
 			}
@@ -146,6 +149,7 @@ namespace ZeroGravity.UI
 				{
 					InventoryUI.DeselectItem();
 				}
+
 				InventoryUI.IsDragging = false;
 				InventoryUI.DraggingItem = null;
 				InventoryUI.DraggingObject.SetActive(false);
@@ -158,6 +162,7 @@ namespace ZeroGravity.UI
 			{
 				return;
 			}
+
 			if (InventoryUI.SelectedItem == Item)
 			{
 				if (lootTimer < lootTreshold)
@@ -168,7 +173,8 @@ namespace ZeroGravity.UI
 					}
 					else if (Item.Slot == InventoryUI.Inventory.HandsSlot)
 					{
-						InventorySlot inventorySlot = InventoryUI.Inventory.GetAllSlots().Values.FirstOrDefault(_003COnPointerClick_003Em__0);
+						InventorySlot inventorySlot = InventoryUI.Inventory.GetAllSlots().Values
+							.FirstOrDefault(_003COnPointerClick_003Em__0);
 						if (inventorySlot != null)
 						{
 							Item.RequestAttach(inventorySlot);
@@ -182,9 +188,11 @@ namespace ZeroGravity.UI
 							InventoryUI.DeselectItem();
 							return;
 						}
+
 						Item.RequestAttach(InventoryUI.Inventory.HandsSlot);
 					}
 				}
+
 				Selected.SetActive(false);
 				InventoryUI.DeselectItem();
 			}
@@ -241,10 +249,12 @@ namespace ZeroGravity.UI
 			{
 				Object.Destroy(smallSlotUI.gameObject);
 			}
+
 			if (Item == null)
 			{
 				return;
 			}
+
 			if (!Item.IsSlotContainer && Item.Slots.Count > 0)
 			{
 				foreach (ItemSlot value in Item.Slots.Values)
@@ -252,6 +262,7 @@ namespace ZeroGravity.UI
 					CreateSmallSlot(value, ItemSlotHolder);
 				}
 			}
+
 			if (Item.Slot == InventoryUI.Inventory.HandsSlot)
 			{
 				InventoryCharacterPreview.instance.RefreshPreviewCharacter(InventoryUI.Inventory);
@@ -280,6 +291,7 @@ namespace ZeroGravity.UI
 			{
 				return false;
 			}
+
 			if (!Item.IsSlotContainer && Item.Slots.Count > 0)
 			{
 				foreach (ItemSlot value in Item.Slots.Values)
@@ -290,13 +302,16 @@ namespace ZeroGravity.UI
 					}
 				}
 			}
+
 			return false;
 		}
 
 		[CompilerGenerated]
 		private bool _003COnPointerClick_003Em__0(InventorySlot m)
 		{
-			return m.CanFitItem(Item) && m.SlotGroup != InventorySlot.Group.Primary && m.SlotGroup != InventorySlot.Group.Secondary && m.SlotGroup != InventorySlot.Group.Helmet && m.SlotGroup != InventorySlot.Group.Jetpack && m.Item == null;
+			return m.CanFitItem(Item) && m.SlotGroup != InventorySlot.Group.Primary &&
+			       m.SlotGroup != InventorySlot.Group.Secondary && m.SlotGroup != InventorySlot.Group.Helmet &&
+			       m.SlotGroup != InventorySlot.Group.Jetpack && m.Item == null;
 		}
 	}
 }

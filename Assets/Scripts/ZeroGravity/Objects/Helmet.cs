@@ -19,8 +19,7 @@ namespace ZeroGravity.Objects
 
 		public Stats HelmetStats;
 
-		[SerializeField]
-		private SceneTriggerAnimation triggerAnim;
+		[SerializeField] private SceneTriggerAnimation triggerAnim;
 
 		public bool IsVisorActive;
 
@@ -50,10 +49,7 @@ namespace ZeroGravity.Objects
 
 		public Jetpack Jetpack
 		{
-			get
-			{
-				return jetpack;
-			}
+			get { return jetpack; }
 			set
 			{
 				jetpack = value;
@@ -61,6 +57,7 @@ namespace ZeroGravity.Objects
 				{
 					HudUI.UpdateUI();
 				}
+
 				if (jetpack != null)
 				{
 					jetpack.UpdateUI();
@@ -72,66 +69,47 @@ namespace ZeroGravity.Objects
 
 		public Battery Battery
 		{
-			get
-			{
-				return (!(BatterySlot != null)) ? null : (BatterySlot.Item as Battery);
-			}
+			get { return (!(BatterySlot != null)) ? null : (BatterySlot.Item as Battery); }
 		}
 
 		public float BatteryPower
 		{
-			get
-			{
-				return (!(Battery != null)) ? 0f : Mathf.Clamp01(Battery.CurrentPower / Battery.MaxPower);
-			}
+			get { return (!(Battery != null)) ? 0f : Mathf.Clamp01(Battery.CurrentPower / Battery.MaxPower); }
 		}
 
 		public float Fuel
 		{
-			get
-			{
-				return (!(Jetpack != null)) ? 0f : Jetpack.PropFuel;
-			}
+			get { return (!(Jetpack != null)) ? 0f : Jetpack.PropFuel; }
 		}
 
 		public float Oxygen
 		{
-			get
-			{
-				return (!(Jetpack != null)) ? 0f : Jetpack.PropOxygen;
-			}
+			get { return (!(Jetpack != null)) ? 0f : Jetpack.PropOxygen; }
 		}
 
 		public float Pressure
 		{
 			get
 			{
-				return (!(Jetpack != null) || !(MyPlayer.Instance.CurrentRoomTrigger != null)) ? 0f : MyPlayer.Instance.CurrentRoomTrigger.AirPressure;
+				return (!(Jetpack != null) || !(MyPlayer.Instance.CurrentRoomTrigger != null))
+					? 0f
+					: MyPlayer.Instance.CurrentRoomTrigger.AirPressure;
 			}
 		}
 
 		public HelmetHudUI HudUI
 		{
-			get
-			{
-				return Client.Instance.CanvasManager.CanvasUI.HelmetHud;
-			}
+			get { return World.InGameGUI.HelmetHud; }
 		}
 
 		public override bool IsInvetoryEquipable
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public override EquipType EquipTo
 		{
-			get
-			{
-				return EquipType.EquipInventory;
-			}
+			get { return EquipType.EquipInventory; }
 		}
 
 		private new void Start()
@@ -141,6 +119,7 @@ namespace ZeroGravity.Objects
 			{
 				triggerAnim.ChangeState(IsVisorActive);
 			}
+
 			if (Light != null)
 			{
 				LightAnimator = Light.GetComponent<Animator>();
@@ -157,7 +136,9 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
-			bool flag = MyPlayer.Instance.LockedToTrigger is SceneTriggerDockingPanel || MyPlayer.Instance.ShipControlMode == ShipControlMode.Docking;
+
+			bool flag = MyPlayer.Instance.LockedToTrigger is SceneTriggerDockingPanel ||
+			            MyPlayer.Instance.ShipControlMode == ShipControlMode.Docking;
 			if (Light.GetComponent<Light>() != null)
 			{
 				if (Light.GetComponent<Light>().enabled && flag)
@@ -179,9 +160,12 @@ namespace ZeroGravity.Objects
 				RequestAttach(inventorySlot);
 				return;
 			}
+
 			string empty = string.Empty;
-			empty = ((!(MyPlayer.Instance.Inventory.Outfit == null)) ? Localization.AlreadyEquipped.ToUpper() : Localization.EquipSuitFirst.ToUpper());
-			Client.Instance.CanvasManager.ShowInteractionCanvasMessage(empty);
+			empty = ((!(MyPlayer.Instance.Inventory.Outfit == null))
+				? Localization.AlreadyEquipped.ToUpper()
+				: Localization.EquipSuitFirst.ToUpper());
+			World.InGameGUI.ShowInteractionCanvasMessage(empty);
 		}
 
 		public override void ChangeEquip(EquipType type, Player pl)
@@ -190,6 +174,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			HelmetSounds.UseFPSSounds = false;
 			LightSounds.UseFPSSounds = false;
 			if (pl is MyPlayer)
@@ -205,6 +190,7 @@ namespace ZeroGravity.Objects
 						Jetpack = myPlayer.FpsController.CurrentJetpack;
 						Jetpack.Helmet = this;
 					}
+
 					base.transform.parent = myPlayer.HelmetPlacementTransform;
 					base.transform.localPosition = Vector3.zero;
 					base.transform.localRotation = Quaternion.identity;
@@ -214,6 +200,7 @@ namespace ZeroGravity.Objects
 					{
 						HudUI.gameObject.SetActive(true);
 					}
+
 					MyPlayer.Instance.CheckEquipmentAchievement();
 				}
 				else if (myPlayer.CurrentHelmet == this)
@@ -224,6 +211,7 @@ namespace ZeroGravity.Objects
 						Jetpack.Helmet = null;
 						Jetpack = null;
 					}
+
 					myPlayer.FpsController.HelmetGlassEffect.Raise();
 
 					if (HudUI.CurrentHelmet == this)
@@ -244,10 +232,12 @@ namespace ZeroGravity.Objects
 
 		public void ToggleVisor(bool? isActive = null, bool send = true, bool initialize = false)
 		{
-			if ((IsVisorToggable && (triggerAnim == null || !triggerAnim.IsEventFinished)) || (isActive.HasValue && isActive.Value == IsVisorActive && !initialize))
+			if ((IsVisorToggable && (triggerAnim == null || !triggerAnim.IsEventFinished)) ||
+			    (isActive.HasValue && isActive.Value == IsVisorActive && !initialize))
 			{
 				return;
 			}
+
 			if (send)
 			{
 				DynamicObject dynamicObj = DynamicObj;
@@ -263,6 +253,7 @@ namespace ZeroGravity.Objects
 				{
 					return;
 				}
+
 				IsVisorActive = isActive.Value;
 
 				if (DynamicObj.Parent is MyPlayer)
@@ -272,6 +263,7 @@ namespace ZeroGravity.Objects
 					{
 					}
 				}
+
 				if (IsVisorToggable)
 				{
 					if (DynamicObj.Parent is MyPlayer)
@@ -299,6 +291,7 @@ namespace ZeroGravity.Objects
 						}
 					}
 				}
+
 				if (HudUI.CurrentHelmet == this)
 				{
 					HudUI.UpdateUI();
@@ -318,15 +311,18 @@ namespace ZeroGravity.Objects
 				dynamicObj.SendStatsMessage(null, statsData);
 				return;
 			}
+
 			if (Light != null)
 			{
 				if (LightSounds != null && LightOn != isActive.Value)
 				{
 					LightSounds.Play();
 				}
+
 				LightOn = isActive.Value;
 				LightAnimator.SetBool("OnOff", LightOn);
 			}
+
 			if (lightMat != null)
 			{
 				lightMat.material.SetColor("_EmissionColor", (!isActive.Value) ? Color.black : (Color.white * 8f));
@@ -341,6 +337,7 @@ namespace ZeroGravity.Objects
 			{
 				ToggleVisor(helmetStats.isVisorActive.Value, false);
 			}
+
 			if (helmetStats.isLightActive.HasValue)
 			{
 				ToggleLight(helmetStats.isLightActive.Value, false);
@@ -355,20 +352,25 @@ namespace ZeroGravity.Objects
 				{
 					return true;
 				}
+
 				StartItemAnimation(ItemAnimationType.Unequip, nextSlot, nextSlot == null);
-				Client.Instance.CanvasManager.PlayerOverview.Toggle(false);
+				World.InGameGUI.PlayerOverview.Toggle(false);
 				return true;
 			}
+
 			if (nextSlot != null && nextSlot.SlotType == InventorySlot.Type.Equip && nextSlot.CanFitItem(this))
 			{
-				if (inv.ItemInHands != null && inv.ItemInHands != this && !inv.AddToInventoryOrDrop(inv.ItemInHands, inv.HandsSlot))
+				if (inv.ItemInHands != null && inv.ItemInHands != this &&
+				    !inv.AddToInventoryOrDrop(inv.ItemInHands, inv.HandsSlot))
 				{
 					return true;
 				}
+
 				StartItemAnimation(ItemAnimationType.Equip, nextSlot, false);
-				Client.Instance.CanvasManager.PlayerOverview.Toggle(false);
+				World.InGameGUI.PlayerOverview.Toggle(false);
 				return true;
 			}
+
 			return false;
 		}
 

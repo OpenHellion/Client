@@ -19,6 +19,7 @@ public class MB3_TestRenderTextureTestHarness : MonoBehaviour
 		{
 			array[i] = color;
 		}
+
 		texture2D.SetPixels32(array);
 		texture2D.Apply();
 		return texture2D;
@@ -67,7 +68,8 @@ public class MB3_TestRenderTextureTestHarness : MonoBehaviour
 		list.Add(item);
 		GameObject gameObject = null;
 		gameObject = new GameObject("MBrenderAtlasesGO");
-		MB3_AtlasPackerRenderTexture mB3_AtlasPackerRenderTexture = gameObject.AddComponent<MB3_AtlasPackerRenderTexture>();
+		MB3_AtlasPackerRenderTexture mB3_AtlasPackerRenderTexture =
+			gameObject.AddComponent<MB3_AtlasPackerRenderTexture>();
 		gameObject.AddComponent<Camera>();
 		for (int i = 0; i < num; i++)
 		{
@@ -82,7 +84,8 @@ public class MB3_TestRenderTextureTestHarness : MonoBehaviour
 			mB3_AtlasPackerRenderTexture.indexOfTexSetToRender = i;
 			mB3_AtlasPackerRenderTexture.isNormalMap = array[i].isNormalMap;
 			texture2D = mB3_AtlasPackerRenderTexture.OnRenderAtlas(null);
-			Debug.Log("Created atlas " + array[i].name + " w=" + texture2D.width + " h=" + texture2D.height + " id=" + texture2D.GetInstanceID());
+			Debug.Log("Created atlas " + array[i].name + " w=" + texture2D.width + " h=" + texture2D.height + " id=" +
+			          texture2D.GetInstanceID());
 			Debug.Log(string.Concat("Color ", texture2D.GetPixel(5, 5), " ", Color.red));
 			byte[] bytes = texture2D.EncodeToPNG();
 			File.WriteAllBytes(Application.dataPath + "/_Experiment/red.png", bytes);

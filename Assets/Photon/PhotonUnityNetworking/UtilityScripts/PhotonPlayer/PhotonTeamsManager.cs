@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="PhotonTeamsManager.cs" company="Exit Games GmbH">
-//   Part of: Photon Unity Utilities, 
+//   Part of: Photon Unity Utilities,
 // </copyright>
 // <summary>
 // Implements teams in a room/game with help of player properties.
@@ -8,7 +8,7 @@
 // <remarks>
 // Teams are defined by name and code. Change this to get more / different teams.
 // There are no rules when / if you can join a team. You could add this in JoinTeam or something.
-// </remarks>                                                                                           
+// </remarks>
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -59,7 +59,7 @@ namespace Photon.Pun.UtilityScripts
 
         private Dictionary<byte, PhotonTeam> teamsByCode;
         private Dictionary<string, PhotonTeam> teamsByName;
-        
+
         /// <summary>The main list of teams with their player-lists. Automatically kept up to date.</summary>
         private Dictionary<byte, HashSet<Player>> playersPerTeam;
 
@@ -161,11 +161,11 @@ namespace Photon.Pun.UtilityScripts
                             break;
                         }
                     }
-                } 
+                }
                 else if (temp is byte)
                 {
                     byte teamCode = (byte) temp;
-                    // check if player switched teams, remove from previous team 
+                    // check if player switched teams, remove from previous team
                     foreach (byte code in playersPerTeam.Keys)
                     {
                         if (code == teamCode)
@@ -194,7 +194,7 @@ namespace Photon.Pun.UtilityScripts
                 }
                 else
                 {
-                    Debug.LogErrorFormat("Unexpected: custom property key {0} should have of type byte, instead we got {1} of type {2}. Player: {3}", 
+                    Debug.LogErrorFormat("Unexpected: custom property key {0} should have of type byte, instead we got {1} of type {2}. Player: {3}",
                         TeamPlayerProp, temp, temp.GetType(), targetPlayer);
                 }
             }
@@ -227,7 +227,7 @@ namespace Photon.Pun.UtilityScripts
                 // player rejoined w/ same team
                 return;
             }
-            // check if player rejoined w/ different team, remove from previous team 
+            // check if player rejoined w/ different team, remove from previous team
             foreach (var key in teamsByCode.Keys)
             {
                 if (playersPerTeam[key].Remove(newPlayer))

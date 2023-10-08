@@ -16,6 +16,7 @@ namespace ZeroGravity
 				{
 					LoadData();
 				}
+
 				return _DynamicObjectsDataList;
 			}
 		}

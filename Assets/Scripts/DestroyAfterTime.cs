@@ -10,6 +10,7 @@ public class DestroyAfterTime : MonoBehaviour
 		{
 			Object.Destroy(base.gameObject);
 		}
+
 		timeToDestroy -= Time.deltaTime;
 	}
 }

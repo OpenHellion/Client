@@ -5,20 +5,18 @@ namespace RootMotion.Demos
 {
 	public class UserControlInteractions : UserControlThirdPerson
 	{
-		[SerializeField]
-		private CharacterThirdPerson character;
+		[SerializeField] private CharacterThirdPerson character;
 
-		[SerializeField]
-		private InteractionSystem interactionSystem;
+		[SerializeField] private InteractionSystem interactionSystem;
 
-		[SerializeField]
-		private bool disableInputInInteraction = true;
+		[SerializeField] private bool disableInputInInteraction = true;
 
 		public float enableInputAtProgress = 0.8f;
 
 		protected override void Update()
 		{
-			if (disableInputInInteraction && interactionSystem != null && (interactionSystem.inInteraction || interactionSystem.IsPaused()))
+			if (disableInputInInteraction && interactionSystem != null &&
+			    (interactionSystem.inInteraction || interactionSystem.IsPaused()))
 			{
 				float minActiveProgress = interactionSystem.GetMinActiveProgress();
 				if (minActiveProgress > 0f && minActiveProgress < enableInputAtProgress)
@@ -28,6 +26,7 @@ namespace RootMotion.Demos
 					return;
 				}
 			}
+
 			base.Update();
 		}
 
@@ -37,6 +36,7 @@ namespace RootMotion.Demos
 			{
 				return;
 			}
+
 			if (interactionSystem.IsPaused() && interactionSystem.IsInSync())
 			{
 				GUILayout.Label("Press E to resume interaction");
@@ -44,8 +44,10 @@ namespace RootMotion.Demos
 				{
 					interactionSystem.ResumeAll();
 				}
+
 				return;
 			}
+
 			int closestTriggerIndex = interactionSystem.GetClosestTriggerIndex();
 			if (closestTriggerIndex != -1 && interactionSystem.TriggerEffectorsReady(closestTriggerIndex))
 			{

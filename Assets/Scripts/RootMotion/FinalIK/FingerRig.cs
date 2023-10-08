@@ -5,8 +5,7 @@ namespace RootMotion.FinalIK
 {
 	public class FingerRig : SolverManager
 	{
-		[Tooltip("The master weight for all fingers.")]
-		[Range(0f, 1f)]
+		[Tooltip("The master weight for all fingers.")] [Range(0f, 1f)]
 		public float weight = 1f;
 
 		public Finger[] fingers = new Finger[0];
@@ -23,6 +22,7 @@ namespace RootMotion.FinalIK
 					return false;
 				}
 			}
+
 			return true;
 		}
 
@@ -48,6 +48,7 @@ namespace RootMotion.FinalIK
 						finger.bone3 = array[2];
 						finger.tip = array[3];
 					}
+
 					finger.weight = 1f;
 					Array.Resize(ref fingers, fingers.Length + 1);
 					fingers[fingers.Length - 1] = finger;
@@ -80,11 +81,13 @@ namespace RootMotion.FinalIK
 				Warning.Log("RemoveFinger index out of bounds.", base.transform);
 				return;
 			}
+
 			if (fingers.Length == 1)
 			{
 				fingers = new Finger[0];
 				return;
 			}
+
 			Finger[] array = new Finger[fingers.Length - 1];
 			int num = 0;
 			for (int i = 0; i < fingers.Length; i++)
@@ -95,6 +98,7 @@ namespace RootMotion.FinalIK
 					num++;
 				}
 			}
+
 			fingers = array;
 		}
 

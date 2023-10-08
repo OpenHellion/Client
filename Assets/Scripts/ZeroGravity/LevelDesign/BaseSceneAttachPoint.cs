@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
@@ -23,41 +24,30 @@ namespace ZeroGravity.LevelDesign
 			public Transform AttachPoint;
 		}
 
-		[SerializeField]
-		private int _inSceneID;
+		[SerializeField] private int _inSceneID;
 
-		[SerializeField]
-		protected List<AttachPointTransformData> attachableTypesList;
+		[SerializeField] protected List<AttachPointTransformData> attachableTypesList;
 
-		[SerializeField]
-		private bool _isNearTrigger = true;
+		[SerializeField] private bool _isNearTrigger = true;
 
-		[HideInInspector]
-		public SpaceObjectVessel ParentVessel;
+		[HideInInspector] public SpaceObjectVessel ParentVessel;
 
 		public Collider Collider;
 
-		public SceneTriggerExecuter Executer;
+		[FormerlySerializedAs("Executer")] public SceneTriggerExecutor Executor;
 
 		public string OnAttachExecute;
 
 		public string OnDetachExecute;
 
-		[NonSerialized]
-		public AttachPointSlotUI UI;
+		[NonSerialized] public AttachPointSlotUI UI;
 
-		private Item _Item;
+		private Item _item;
 
 		public int InSceneID
 		{
-			get
-			{
-				return _inSceneID;
-			}
-			set
-			{
-				_inSceneID = value;
-			}
+			get => _inSceneID;
+			set => _inSceneID = value;
 		}
 
 		public override bool ExclusivePlayerLocking => false;
@@ -76,10 +66,12 @@ namespace ZeroGravity.LevelDesign
 				{
 					return Localization.SlotFor + ": " + GetItemName(attachableTypesList[0]);
 				}
+
 				if (attachableTypesList.Count > 3)
 				{
 					return Localization.SlotFor + ": " + Localization.MultipleItems;
 				}
+
 				if (attachableTypesList.Count > 1)
 				{
 					string text = string.Empty;
@@ -87,8 +79,10 @@ namespace ZeroGravity.LevelDesign
 					{
 						text = text + ((!(text == string.Empty)) ? ", " : string.Empty) + GetItemName(attachableTypes);
 					}
+
 					return Localization.SlotFor + ": " + text;
 				}
+
 				return null;
 			}
 		}
@@ -101,19 +95,17 @@ namespace ZeroGravity.LevelDesign
 
 		public virtual Item Item
 		{
-			get
-			{
-				return _Item;
-			}
+			get { return _item; }
 			protected set
 			{
-				if (_Item != value)
+				if (_item != value)
 				{
-					_Item = value;
+					_item = value;
 					if (Collider != null)
 					{
 						Collider.enabled = value == null;
 					}
+
 					if (UI != null)
 					{
 						UI.UpdateSlot();
@@ -130,10 +122,12 @@ namespace ZeroGravity.LevelDesign
 			{
 				return data.GenericItemType.ToLocalizedString();
 			}
+
 			if (data.ItemType == ItemType.MachineryPart)
 			{
 				return data.MachineryPartType.ToLocalizedString();
 			}
+
 			return data.ItemType.ToLocalizedString();
 		}
 
@@ -142,8 +136,13 @@ namespace ZeroGravity.LevelDesign
 			Sprite result = null;
 			if (attachableTypesList.Count == 1)
 			{
-				result = (attachableTypesList[0].ItemType == ItemType.GenericItem) ? Client.Instance.SpriteManager.GetSprite(attachableTypesList[0].GenericItemType) : ((attachableTypesList[0].ItemType != ItemType.MachineryPart) ? Client.Instance.SpriteManager.GetSprite(attachableTypesList[0].ItemType) : Client.Instance.SpriteManager.GetSprite(attachableTypesList[0].MachineryPartType));
+				result = (attachableTypesList[0].ItemType == ItemType.GenericItem)
+					? SpriteManager.Instance.GetSprite(attachableTypesList[0].GenericItemType)
+					: ((attachableTypesList[0].ItemType != ItemType.MachineryPart)
+						? SpriteManager.Instance.GetSprite(attachableTypesList[0].ItemType)
+						: SpriteManager.Instance.GetSprite(attachableTypesList[0].MachineryPartType));
 			}
+
 			return result;
 		}
 
@@ -172,6 +171,7 @@ namespace ZeroGravity.LevelDesign
 					}
 				}
 			}
+
 			data.InSceneID = InSceneID;
 			data.ItemTypes = list.Distinct().ToList();
 			data.GenericSubTypes = list2.Distinct().ToList();
@@ -189,7 +189,7 @@ namespace ZeroGravity.LevelDesign
 		protected override void Start()
 		{
 			base.Start();
-			if (ParentVessel == null && Client.IsGameBuild)
+			if (ParentVessel == null)
 			{
 				ParentVessel = GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
 			}
@@ -201,13 +201,24 @@ namespace ZeroGravity.LevelDesign
 			{
 				SceneMachineryPartSlot sceneMachineryPartSlot = this as SceneMachineryPartSlot;
 				MachineryPart part = it as MachineryPart;
-				if (part != null && (part.Tier == 0 || sceneMachineryPartSlot.MaxTier == 0 || (part.Tier >= sceneMachineryPartSlot.MinTier && part.Tier <= sceneMachineryPartSlot.MaxTier)))
+				if (part != null && (part.Tier == 0 || sceneMachineryPartSlot.MaxTier == 0 ||
+				                     (part.Tier >= sceneMachineryPartSlot.MinTier &&
+				                      part.Tier <= sceneMachineryPartSlot.MaxTier)))
 				{
-					return attachableTypesList.Find((AttachPointTransformData m) => m.ItemType == part.Type && m.MachineryPartType == part.PartType);
+					return attachableTypesList.Find((AttachPointTransformData m) =>
+						m.ItemType == part.Type && m.MachineryPartType == part.PartType);
 				}
+
 				return null;
 			}
-			return attachableTypesList.Find((AttachPointTransformData m) => m.ItemType == it.Type && (!(it is GenericItem) || m.GenericItemType == (it as GenericItem).SubType) && (!(it is MachineryPart) || m.MachineryPartType == (it as MachineryPart).PartType));
+
+			return attachableTypesList.Find((AttachPointTransformData m) => m.ItemType == it.Type &&
+			                                                                (!(it is GenericItem) ||
+			                                                                 m.GenericItemType ==
+			                                                                 (it as GenericItem).SubType) &&
+			                                                                (!(it is MachineryPart) ||
+			                                                                 m.MachineryPartType ==
+			                                                                 (it as MachineryPart).PartType));
 		}
 
 		public bool CanFitItem(Item it)
@@ -216,6 +227,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return true;
 			}
+
 			return GetAttachPointData(it) != null;
 		}
 
@@ -225,6 +237,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return false;
 			}
+
 			if (Item == null && myPlayer.animHelper.CanDrop)
 			{
 				Item item = myPlayer.Inventory.HandsSlot.Item;
@@ -237,26 +250,28 @@ namespace ZeroGravity.LevelDesign
 			{
 				OnDetach();
 			}
+
 			if (interactWithOverlappingTriggers)
 			{
 				SceneTriggerHelper.InteractWithOverlappingTriggers(gameObject, this, myPlayer);
 			}
+
 			return true;
 		}
 
 		protected virtual void OnAttach()
 		{
-			if (Executer != null && !OnAttachExecute.IsNullOrEmpty())
+			if (Executor != null && !OnAttachExecute.IsNullOrEmpty())
 			{
-				Executer.ChangeState(OnAttachExecute);
+				Executor.ChangeState(OnAttachExecute);
 			}
 		}
 
 		protected virtual void OnDetach()
 		{
-			if (Executer != null && !OnDetachExecute.IsNullOrEmpty())
+			if (Executor != null && !OnDetachExecute.IsNullOrEmpty())
 			{
-				Executer.ChangeState(OnDetachExecute);
+				Executor.ChangeState(OnDetachExecute);
 			}
 		}
 
@@ -266,11 +281,13 @@ namespace ZeroGravity.LevelDesign
 			{
 				return transform;
 			}
+
 			AttachPointTransformData attachPointData = GetAttachPointData(itm);
 			if (attachPointData != null && attachPointData.AttachPoint != null)
 			{
 				return attachPointData.AttachPoint;
 			}
+
 			return transform;
 		}
 
@@ -307,9 +324,12 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public virtual bool CanAttachItemType(ItemType itemType, GenericItemSubType? generic = null, MachineryPartType? part = null, int? partTier = null)
+		public virtual bool CanAttachItemType(ItemType itemType, GenericItemSubType? generic = null,
+			MachineryPartType? part = null, int? partTier = null)
 		{
-			return attachableTypesList.FirstOrDefault((AttachPointTransformData m) => m.ItemType == itemType && (!generic.HasValue || m.GenericItemType == generic.Value) && (!part.HasValue || (m.MachineryPartType == part.GetValueOrDefault() && part.HasValue))) != null;
+			return attachableTypesList.FirstOrDefault((AttachPointTransformData m) =>
+				m.ItemType == itemType && (!generic.HasValue || m.GenericItemType == generic.Value) &&
+				(!part.HasValue || (m.MachineryPartType == part.GetValueOrDefault() && part.HasValue))) != null;
 		}
 
 		private void OnDrawGizmos()

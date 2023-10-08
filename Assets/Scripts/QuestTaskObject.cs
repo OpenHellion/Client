@@ -23,17 +23,13 @@ public class QuestTaskObject : ScriptableObject
 
 	public GameScenes.SceneID SceneID = GameScenes.SceneID.None;
 
-	[HideInInspector]
-	public uint QuestID;
+	[HideInInspector] public uint QuestID;
 
-	[HideInInspector]
-	public uint QuestTriggerID;
+	[HideInInspector] public uint QuestTriggerID;
 
-	[HideInInspector]
-	public Quest Quest;
+	[HideInInspector] public Quest Quest;
 
-	[HideInInspector]
-	public QuestTrigger QuestTrigger;
+	[HideInInspector] public QuestTrigger QuestTrigger;
 
 	public bool LastTask;
 
@@ -45,6 +41,7 @@ public class QuestTaskObject : ScriptableObject
 			{
 				return NameTag;
 			}
+
 			return NameOnIndicator;
 		}
 	}

@@ -5,12 +5,9 @@ public class RepairPointParticleEffect : MonoBehaviour
 {
 	public ParticleEffectIntensity Effect;
 
-	[Range(0f, 1f)]
-	public float HealthThreshold = 0.01f;
+	[Range(0f, 1f)] public float HealthThreshold = 0.01f;
 
-	[Range(0f, 1f)]
-	[ContextMenuItem("Test Intensity", "Test")]
-	[ContextMenuItem("Test Gravity", "TestGravity")]
+	[Range(0f, 1f)] [ContextMenuItem("Test Intensity", "Test")] [ContextMenuItem("Test Gravity", "TestGravity")]
 	public float Intensity = 1f;
 
 	public bool PlayOnce;
@@ -50,32 +47,42 @@ public class RepairPointParticleEffect : MonoBehaviour
 			Stop();
 			return;
 		}
+
 		Play();
 		if (SoundEffect != null)
 		{
 			SoundEffect.SetRTPCValue(SoundManager.Instance.RepairPointIntensity, intensity);
 		}
+
 		ParticleSystem.MainModule main = Effect.Particle.main;
 		ParticleSystem.EmissionModule emission = Effect.Particle.emission;
 		foreach (ParticleIntensityParameter intensityParameter in Effect.IntensityParameters)
 		{
 			if (intensityParameter.Parameter == ParticleIntensityParameter.ParameterType.Speed)
 			{
-				main.startSpeedMultiplier = Mathf.Lerp(intensityParameter.MinValue, intensityParameter.MaxValue, intensity);
+				main.startSpeedMultiplier =
+					Mathf.Lerp(intensityParameter.MinValue, intensityParameter.MaxValue, intensity);
 			}
+
 			if (intensityParameter.Parameter == ParticleIntensityParameter.ParameterType.Size)
 			{
-				main.startSizeMultiplier = Mathf.Lerp(intensityParameter.MinValue, intensityParameter.MaxValue, intensity);
+				main.startSizeMultiplier =
+					Mathf.Lerp(intensityParameter.MinValue, intensityParameter.MaxValue, intensity);
 			}
+
 			if (intensityParameter.Parameter == ParticleIntensityParameter.ParameterType.Emission)
 			{
-				emission.rateOverTimeMultiplier = Mathf.Lerp(intensityParameter.MinValue, intensityParameter.MaxValue, intensity);
+				emission.rateOverTimeMultiplier =
+					Mathf.Lerp(intensityParameter.MinValue, intensityParameter.MaxValue, intensity);
 			}
+
 			if (intensityParameter.Parameter == ParticleIntensityParameter.ParameterType.Life)
 			{
-				main.startLifetimeMultiplier = Mathf.Lerp(intensityParameter.MinValue, intensityParameter.MaxValue, intensity);
+				main.startLifetimeMultiplier =
+					Mathf.Lerp(intensityParameter.MinValue, intensityParameter.MaxValue, intensity);
 			}
 		}
+
 		foreach (ParticleEffectIntensity childParticle in ChildParticles)
 		{
 			ParticleSystem.MainModule main2 = childParticle.Particle.main;
@@ -84,19 +91,26 @@ public class RepairPointParticleEffect : MonoBehaviour
 			{
 				if (intensityParameter2.Parameter == ParticleIntensityParameter.ParameterType.Speed)
 				{
-					main2.startSpeedMultiplier = Mathf.Lerp(intensityParameter2.MinValue, intensityParameter2.MaxValue, intensity);
+					main2.startSpeedMultiplier = Mathf.Lerp(intensityParameter2.MinValue, intensityParameter2.MaxValue,
+						intensity);
 				}
+
 				if (intensityParameter2.Parameter == ParticleIntensityParameter.ParameterType.Size)
 				{
-					main2.startSizeMultiplier = Mathf.Lerp(intensityParameter2.MinValue, intensityParameter2.MaxValue, intensity);
+					main2.startSizeMultiplier = Mathf.Lerp(intensityParameter2.MinValue, intensityParameter2.MaxValue,
+						intensity);
 				}
+
 				if (intensityParameter2.Parameter == ParticleIntensityParameter.ParameterType.Emission)
 				{
-					emission2.rateOverTimeMultiplier = Mathf.Lerp(intensityParameter2.MinValue, intensityParameter2.MaxValue, intensity);
+					emission2.rateOverTimeMultiplier = Mathf.Lerp(intensityParameter2.MinValue,
+						intensityParameter2.MaxValue, intensity);
 				}
+
 				if (intensityParameter2.Parameter == ParticleIntensityParameter.ParameterType.Life)
 				{
-					main2.startLifetimeMultiplier = Mathf.Lerp(intensityParameter2.MinValue, intensityParameter2.MaxValue, intensity);
+					main2.startLifetimeMultiplier = Mathf.Lerp(intensityParameter2.MinValue,
+						intensityParameter2.MaxValue, intensity);
 				}
 			}
 		}
@@ -113,6 +127,7 @@ public class RepairPointParticleEffect : MonoBehaviour
 		{
 			main.gravityModifier = 0f;
 		}
+
 		foreach (ParticleEffectIntensity childParticle in ChildParticles)
 		{
 			ParticleSystem.MainModule main2 = childParticle.Particle.main;

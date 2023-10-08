@@ -13,11 +13,14 @@ namespace DigitalOpus.MB.Core
 				Debug.LogError(string.Format("The SeamMesh cannot be null"));
 				return;
 			}
+
 			if (seamMesh.vertexCount == 0)
 			{
-				Debug.LogError("The seam mesh has no vertices. Check that the Asset Importer for the seam mesh does not have 'Optimize Mesh' checked.");
+				Debug.LogError(
+					"The seam mesh has no vertices. Check that the Asset Importer for the seam mesh does not have 'Optimize Mesh' checked.");
 				return;
 			}
+
 			Vector3[] vertices = seamMesh.vertices;
 			BoneWeight[] boneWeights = seamMesh.boneWeights;
 			Vector3[] normals = seamMesh.normals;
@@ -25,9 +28,11 @@ namespace DigitalOpus.MB.Core
 			Vector2[] uv = seamMesh.uv;
 			if (uv.Length != vertices.Length)
 			{
-				Debug.LogError("The seam mesh needs uvs to identify which vertices are part of the seam. Vertices with UV > .5 are part of the seam. Vertices with UV < .5 are not part of the seam.");
+				Debug.LogError(
+					"The seam mesh needs uvs to identify which vertices are part of the seam. Vertices with UV > .5 are part of the seam. Vertices with UV < .5 are not part of the seam.");
 				return;
 			}
+
 			for (int i = 0; i < uv.Length; i++)
 			{
 				if (uv[i].x > 0.5f && uv[i].y > 0.5f)
@@ -35,12 +40,16 @@ namespace DigitalOpus.MB.Core
 					list.Add(i);
 				}
 			}
-			Debug.Log(string.Format("The seam mesh has {0} vertices of which {1} are seam vertices.", seamMesh.vertices.Length, list.Count));
+
+			Debug.Log(string.Format("The seam mesh has {0} vertices of which {1} are seam vertices.",
+				seamMesh.vertices.Length, list.Count));
 			if (list.Count == 0)
 			{
-				Debug.LogError("None of the vertices in the Seam Mesh were marked as seam vertices. To mark a vertex as a seam vertex the UV must be greater than (.5,.5). Vertices with UV less than (.5,.5) are excluded.");
+				Debug.LogError(
+					"None of the vertices in the Seam Mesh were marked as seam vertices. To mark a vertex as a seam vertex the UV must be greater than (.5,.5). Vertices with UV less than (.5,.5) are excluded.");
 				return;
 			}
+
 			bool flag = false;
 			for (int j = 0; j < targetMeshes.Length; j++)
 			{
@@ -49,15 +58,18 @@ namespace DigitalOpus.MB.Core
 					Debug.LogError(string.Format("Mesh {0} was null", j));
 					flag = true;
 				}
+
 				if (radius < 0f)
 				{
 					Debug.LogError("radius must be zero or positive.");
 				}
 			}
+
 			if (flag)
 			{
 				return;
 			}
+
 			for (int k = 0; k < targetMeshes.Length; k++)
 			{
 				Mesh mesh = targetMeshes[k];
@@ -80,6 +92,7 @@ namespace DigitalOpus.MB.Core
 							{
 								normals2[l] = normals[num2];
 							}
+
 							if (tangents2.Length == vertices2.Length && tangents.Length == vertices.Length)
 							{
 								tangents2[l] = tangents[num2];
@@ -87,6 +100,7 @@ namespace DigitalOpus.MB.Core
 						}
 					}
 				}
+
 				if (num > 0)
 				{
 					targetMeshes[k].vertices = vertices2;
@@ -94,7 +108,10 @@ namespace DigitalOpus.MB.Core
 					targetMeshes[k].normals = normals2;
 					targetMeshes[k].tangents = tangents2;
 				}
-				Debug.Log(string.Format("Copied boneweights for {1} vertices in mesh {0} that matched positions in the seam mesh.", targetMeshes[k].name, num));
+
+				Debug.Log(string.Format(
+					"Copied boneweights for {1} vertices in mesh {0} that matched positions in the seam mesh.",
+					targetMeshes[k].name, num));
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion;
 using OpenHellion.Social.RichPresence;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
@@ -32,6 +33,7 @@ namespace ZeroGravity.Objects
 				{
 					return Localization.GetLocalizedField(QuestObject.Name, useDefault: true);
 				}
+
 				Dbg.Error("Quest has missing QuestObject (Quest ID: " + ID);
 				return string.Empty;
 			}
@@ -45,6 +47,7 @@ namespace ZeroGravity.Objects
 				{
 					return Localization.GetLocalizedField(QuestObject.Description, useDefault: true);
 				}
+
 				Dbg.Error("Quest has missing QuestObject (Quest ID: " + ID);
 				return string.Empty;
 			}
@@ -52,12 +55,12 @@ namespace ZeroGravity.Objects
 
 		public bool IsFinished => Status == QuestStatus.Completed || Status == QuestStatus.Failed;
 
-		public Quest(QuestData data)
+		public Quest(QuestData data, QuestCollectionObject questCollection)
 		{
 			Quest quest = this;
 			ID = data.ID;
-			QuestObject = Client.Instance.QuestCollection.Quests.FirstOrDefault((QuestObject m) => m.ID == data.ID);
-			QuestTriggers = data.QuestTriggers.Select((QuestTriggerData m) => new QuestTrigger(quest, m)).ToList();
+			QuestObject = questCollection.Quests.FirstOrDefault((QuestObject m) => m.ID == data.ID);
+			QuestTriggers = data.QuestTriggers.Select((QuestTriggerData m) => new QuestTrigger(questCollection, quest, m)).ToList();
 			ActivationDependencyTpe = data.ActivationDependencyTpe;
 			CompletionDependencyTpe = data.CompletionDependencyTpe;
 			DependencyQuests = data.DependencyQuests;
@@ -68,7 +71,8 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public void SetDetails(QuestDetails details, bool showNotifications = true, bool playCutScenes = true)
+		public void SetDetails(QuestDetails details, World world, bool showNotifications = true,
+			bool playCutScenes = true)
 		{
 			Status = details.Status;
 			QuestTrigger questTrigger = null;
@@ -81,13 +85,16 @@ namespace ZeroGravity.Objects
 					{
 						questTrigger = questTrigger2;
 					}
+
 					questTrigger2.SetDetails(qtd, showNotifications);
 				}
 			}
+
 			if (questTrigger != null)
 			{
-				Client.Instance.CanvasManager.CanvasUI.QuestTriggerUpdate(questTrigger, playCutScenes);
+				world.InGameGUI.QuestTriggerUpdate(questTrigger, playCutScenes);
 			}
+
 			if (Status == QuestStatus.Completed && QuestObject != null && QuestObject.Achivement != 0)
 			{
 				RichPresenceManager.SetAchievement(QuestObject.Achivement);

@@ -3,9 +3,9 @@
 // Photon Voice - Copyright (C) 2018 Exit Games GmbH
 // </copyright>
 // <summary>
-// Component that should be attached to a networked PUN prefab that has 
-// PhotonView. It will bind remote Recorder with local Speaker of the same 
-// networked prefab. This component makes automatic voice stream routing easy 
+// Component that should be attached to a networked PUN prefab that has
+// PhotonView. It will bind remote Recorder with local Speaker of the same
+// networked prefab. This component makes automatic voice stream routing easy
 // for players' characters/avatars.
 // </summary>
 // <author>developer@photonengine.com</author>
@@ -18,8 +18,8 @@ namespace Photon.Voice.PUN
     using Unity;
 
     /// <summary>
-    /// Component that should be attached to a networked PUN prefab that has <see cref="PhotonView"/>. 
-    /// It will bind remote <see cref="Recorder"/> with local <see cref="Speaker"/> of the same networked prefab. 
+    /// Component that should be attached to a networked PUN prefab that has <see cref="PhotonView"/>.
+    /// It will bind remote <see cref="Recorder"/> with local <see cref="Speaker"/> of the same networked prefab.
     /// This component makes automatic voice stream routing easy for players' characters/avatars.
     /// </summary>
     [AddComponentMenu("Photon Voice/Photon Voice View")]
@@ -38,7 +38,7 @@ namespace Photon.Voice.PUN
         private Speaker speakerInUse;
 
         private bool onEnableCalledOnce;
-        
+
         #endregion
 
         #region Public Fields
@@ -139,7 +139,7 @@ namespace Photon.Voice.PUN
         {
             get { return !ReferenceEquals(null, this.photonView) && this.photonView && this.photonView.ViewID > 0; }
         }
-        
+
         internal bool RequiresSpeaker
         {
             get { return this.SetupDebugSpeaker || this.IsPhotonViewReady && !this.photonView.IsMine; }
@@ -177,7 +177,7 @@ namespace Photon.Voice.PUN
         {
             this.Init();
         }
-        
+
         private void CheckLateLinking()
         {
             if (PhotonVoiceNetwork.Instance.Client.InRoom)
@@ -192,7 +192,7 @@ namespace Photon.Voice.PUN
                     {
                         this.Logger.LogDebug("Speaker already linked");
                     }
-                } 
+                }
                 else if (this.Logger.IsDebugEnabled)
                 {
                     this.Logger.LogDebug("PhotonVoiceView does not have a Speaker and may not need late linking check");
@@ -442,8 +442,8 @@ namespace Photon.Voice.PUN
                 {
                     this.Logger.LogWarning("Recorder not setup for PhotonVoiceView: playback may not work properly.");
                 }
-            } 
-            else 
+            }
+            else
             {
                 if (!this.RecorderInUse.IsRecording && !this.RecorderInUse.AutoStart)
                 {
@@ -528,7 +528,7 @@ namespace Photon.Voice.PUN
             {
                 this.Logger.LogDebug("Tried to initialize PhotonVoiceView but PhotonView does not have a valid allocated ViewID yet.");
             }
-        }        
+        }
 
         #endregion
     }

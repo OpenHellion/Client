@@ -10,8 +10,7 @@ namespace RootMotion.FinalIK
 		[Serializable]
 		public class SpineEffector
 		{
-			[Tooltip("The type of the effector.")]
-			public FullBodyBipedEffector effectorType;
+			[Tooltip("The type of the effector.")] public FullBodyBipedEffector effectorType;
 
 			[Tooltip("The weight of horizontal bend offset towards the slope.")]
 			public float horizontalWeight = 1f;
@@ -40,7 +39,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("TUTORIAL VIDEO")]
 		private void OpenTutorial()
 		{
-			Application.OpenURL("https://www.youtube.com/watch?v=9MiZiaJorws&index=6&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6");
+			Application.OpenURL(
+				"https://www.youtube.com/watch?v=9MiZiaJorws&index=6&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6");
 		}
 
 		[ContextMenu("User Manual")]
@@ -52,7 +52,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Scrpt Reference")]
 		protected override void OpenScriptReference()
 		{
-			Application.OpenURL("http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_grounder_f_b_b_i_k.html");
+			Application.OpenURL(
+				"http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_grounder_f_b_b_i_k.html");
 		}
 
 		public override void Reset()
@@ -67,10 +68,12 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			if (!ik.solver.initiated)
 			{
 				return false;
 			}
+
 			return true;
 		}
 
@@ -102,7 +105,9 @@ namespace RootMotion.FinalIK
 			feet[0] = ik.solver.leftFootEffector.bone;
 			feet[1] = ik.solver.rightFootEffector.bone;
 			IKSolverFullBodyBiped iKSolverFullBodyBiped = ik.solver;
-			iKSolverFullBodyBiped.OnPreUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(iKSolverFullBodyBiped.OnPreUpdate, new IKSolver.UpdateDelegate(OnSolverUpdate));
+			iKSolverFullBodyBiped.OnPreUpdate =
+				(IKSolver.UpdateDelegate)Delegate.Combine(iKSolverFullBodyBiped.OnPreUpdate,
+					new IKSolver.UpdateDelegate(OnSolverUpdate));
 			solver.Initiate(ik.references.root, feet);
 			initiated = true;
 		}
@@ -113,15 +118,18 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			firstSolve = false;
 			if (!base.enabled || weight <= 0f)
 			{
 				return;
 			}
+
 			if (OnPreGrounder != null)
 			{
 				OnPreGrounder();
 			}
+
 			solver.Update();
 			ik.references.pelvis.position += solver.pelvis.IKOffset * weight;
 			SetLegIK(ik.solver.leftFootEffector, solver.legs[0]);
@@ -134,9 +142,11 @@ namespace RootMotion.FinalIK
 				Vector3 vector2 = ik.references.root.up * spineOffset.magnitude;
 				for (int i = 0; i < spine.Length; i++)
 				{
-					ik.solver.GetEffector(spine[i].effectorType).positionOffset += spineOffset * spine[i].horizontalWeight + vector2 * spine[i].verticalWeight;
+					ik.solver.GetEffector(spine[i].effectorType).positionOffset +=
+						spineOffset * spine[i].horizontalWeight + vector2 * spine[i].verticalWeight;
 				}
 			}
+
 			if (OnPostGrounder != null)
 			{
 				OnPostGrounder();
@@ -146,7 +156,8 @@ namespace RootMotion.FinalIK
 		private void SetLegIK(IKEffector effector, Grounding.Leg leg)
 		{
 			effector.positionOffset += (leg.IKPosition - effector.bone.position) * weight;
-			effector.bone.rotation = Quaternion.Slerp(Quaternion.identity, leg.rotationOffset, weight) * effector.bone.rotation;
+			effector.bone.rotation = Quaternion.Slerp(Quaternion.identity, leg.rotationOffset, weight) *
+			                         effector.bone.rotation;
 		}
 
 		private void OnDrawGizmosSelected()
@@ -155,10 +166,12 @@ namespace RootMotion.FinalIK
 			{
 				ik = GetComponent<FullBodyBipedIK>();
 			}
+
 			if (ik == null)
 			{
 				ik = GetComponentInParent<FullBodyBipedIK>();
 			}
+
 			if (ik == null)
 			{
 				ik = GetComponentInChildren<FullBodyBipedIK>();
@@ -170,7 +183,9 @@ namespace RootMotion.FinalIK
 			if (initiated && ik != null)
 			{
 				IKSolverFullBodyBiped iKSolverFullBodyBiped = ik.solver;
-				iKSolverFullBodyBiped.OnPreUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(iKSolverFullBodyBiped.OnPreUpdate, new IKSolver.UpdateDelegate(OnSolverUpdate));
+				iKSolverFullBodyBiped.OnPreUpdate =
+					(IKSolver.UpdateDelegate)Delegate.Remove(iKSolverFullBodyBiped.OnPreUpdate,
+						new IKSolver.UpdateDelegate(OnSolverUpdate));
 			}
 		}
 	}

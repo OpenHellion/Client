@@ -19,7 +19,7 @@ namespace ZeroGravity.Network
 
 		public List<DoorDetails> Doors;
 
-		public List<SceneTriggerExecuterDetails> SceneTriggerExecuters;
+		public List<SceneTriggerExecutorDetails> SceneTriggerExecuters;
 
 		public List<AttachPointDetails> AttachPoints;
 

@@ -1,9 +1,8 @@
-using System;
 using System.IO;
+using OpenHellion.Data;
 using OpenHellion.IO;
 using UnityEngine;
 using UnityEngine.UI;
-using ZeroGravity.Data;
 
 namespace ZeroGravity.UI
 {
@@ -25,17 +24,11 @@ namespace ZeroGravity.UI
 		{
 			mouseSensitivitySlider.minValue = 0.1f;
 			mouseSensitivitySlider.maxValue = 10f;
-			mouseSensitivitySlider.value = InputManager.SavedSensitivity;
+			mouseSensitivitySlider.value = ControlsData.MouseSensitivity;
 			mouseSensitivityLevel.text = mouseSensitivitySlider.value.ToString("0.0");
 			mouseSensitivitySlider.onValueChanged.AddListener(MouseSensitivity);
-			InvertMouseToggle.onValueChanged.AddListener(delegate
-			{
-				InvertMouseSetter();
-			});
-			InvertMouseWhileDrivingToggle.onValueChanged.AddListener(delegate
-			{
-				InvertMouseWhileDrivingSetter();
-			});
+			InvertMouseToggle.onValueChanged.AddListener(delegate { InvertMouseSetter(); });
+			InvertMouseWhileDrivingToggle.onValueChanged.AddListener(delegate { InvertMouseWhileDrivingSetter(); });
 		}
 
 		public void MouseSensitivity(float val)
@@ -43,45 +36,35 @@ namespace ZeroGravity.UI
 			mouseSensitivityLevel.text = val.ToString("0.0");
 			ControlsData.MouseSensitivity = val;
 			mouseSensitivitySlider.value = val;
-
-			InputManager.SavedSensitivity = val;
 		}
 
 		public void InvertMouseSetter()
 		{
-			Client.Instance.InvertedMouse = InvertMouseToggle.isOn;
-			ControlsData.InvertMouse = Client.Instance.InvertedMouse;
+			ControlsData.InvertMouse = InvertMouseToggle.isOn;
 		}
 
 		public void InvertMouseWhileDrivingSetter()
 		{
-			Client.Instance.InvertMouseWhileDriving = InvertMouseWhileDrivingToggle.isOn;
-			ControlsData.InverMouseWhileDriving = Client.Instance.InvertMouseWhileDriving;
+			ControlsData.InvertMouseWhileDriving = InvertMouseWhileDrivingToggle.isOn;
 		}
 
 		public void SetDefault()
 		{
 			ControlsData.MouseSensitivity = 1f;
 			MouseSensitivity(ControlsData.MouseSensitivity);
-			ControlsSettingsData controlsData = ControlsData;
-			bool flag = false;
-			InvertMouseToggle.isOn = flag;
-			controlsData.InvertMouse = flag;
-			ControlsSettingsData controlsData2 = ControlsData;
-			flag = false;
-			InvertMouseWhileDrivingToggle.isOn = flag;
-			controlsData2.InverMouseWhileDriving = flag;
+			InvertMouseToggle.isOn = false;
+			ControlsData.InvertMouse = false;
+			InvertMouseWhileDrivingToggle.isOn = false;
+			ControlsData.InvertMouseWhileDriving = false;
 			InputManager.LoadDefaultConfig();
 		}
 
 		public void SaveControlsSettings()
 		{
-			ControlsData.MouseSensitivity = InputManager.SavedSensitivity;
-			ControlsData.InvertMouse = Client.Instance.InvertedMouse;
-			ControlsData.InverMouseWhileDriving = Client.Instance.InvertMouseWhileDriving;
 			if (!ControlsRebind.CheckIfEmpty())
 			{
-				File.WriteAllText(Path.Combine(Application.persistentDataPath, "Controls.json"), InputManager.Instance.InputActions.FindActionMap(InputManager.ActionMapName).ToJson());
+				File.WriteAllText(Path.Combine(Application.persistentDataPath, "Controls.json"),
+					InputManager.Instance.InputActions.FindActionMap(InputManager.ActionMapName).ToJson());
 			}
 		}
 
@@ -92,16 +75,16 @@ namespace ZeroGravity.UI
 				SetDefault();
 				return;
 			}
+
 			ControlsData = controlsSettings;
 			MouseSensitivity(ControlsData.MouseSensitivity);
 			InvertMouseToggle.isOn = ControlsData.InvertMouse;
-			InvertMouseWhileDrivingToggle.isOn = ControlsData.InverMouseWhileDriving;
-			Client.Instance.InvertedMouse = ControlsData.InvertMouse;
-			Client.Instance.InvertMouseWhileDriving = ControlsData.InverMouseWhileDriving;
+			InvertMouseWhileDrivingToggle.isOn = ControlsData.InvertMouseWhileDriving;
 
 			if (File.Exists(Path.Combine(Application.persistentDataPath, "Controls.json")))
 			{
-				InputManager.LoadSavedConfig(File.ReadAllText(Path.Combine(Application.persistentDataPath, "Controls.json")));
+				InputManager.LoadSavedConfig(File.ReadAllText(Path.Combine(Application.persistentDataPath,
+					"Controls.json")));
 			}
 		}
 	}

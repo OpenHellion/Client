@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using OpenHellion;
 using OpenHellion.Net;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,7 +14,7 @@ namespace ZeroGravity.LevelDesign
 	{
 		public enum AuthorizationType
 		{
-			none = 0,
+			None = 0,
 			Authorized = 1,
 			AuthorizedOrNoSecurity = 2,
 			AuthorizedOrFreeSecurity = 3
@@ -45,37 +46,15 @@ namespace ZeroGravity.LevelDesign
 
 		public abstract List<ItemType> PlayerHandsItemType { get; }
 
-		public Ship ParentShip
-		{
-			get
-			{
-				return GetComponentInParent<GeometryRoot>().MainObject as Ship;
-			}
-		}
+		public Ship ParentShip => GetComponentInParent<GeometryRoot>().MainObject as Ship;
 
-		public bool IsAuthorizedOrNoSecurity
-		{
-			get
-			{
-				return ParentShip.IsPlayerAuthorizedOrNoSecurity(MyPlayer.Instance);
-			}
-		}
+		protected bool IsAuthorizedOrNoSecurity => ParentShip.IsPlayerAuthorizedOrNoSecurity(MyPlayer.Instance);
 
-		public bool IsAuthorizedOrFreeSecurity
-		{
-			get
-			{
-				return ParentShip.IsPlayerAuthorizedOrFreeSecurity(MyPlayer.Instance);
-			}
-		}
+		protected bool IsAuthorizedOrFreeSecurity => ParentShip.IsPlayerAuthorizedOrFreeSecurity(MyPlayer.Instance);
 
-		public bool IsAuthorized
-		{
-			get
-			{
-				return ParentShip.IsPlayerAuthorized(MyPlayer.Instance);
-			}
-		}
+		protected bool IsAuthorized => ParentShip.IsPlayerAuthorized(MyPlayer.Instance);
+
+		protected static World World;
 
 		public virtual bool CheckAuthorization()
 		{
@@ -83,14 +62,17 @@ namespace ZeroGravity.LevelDesign
 			{
 				return IsAuthorized;
 			}
+
 			if (CheckAuthorizationType == AuthorizationType.AuthorizedOrNoSecurity)
 			{
 				return IsAuthorizedOrNoSecurity;
 			}
+
 			if (CheckAuthorizationType == AuthorizationType.AuthorizedOrFreeSecurity)
 			{
 				return IsAuthorizedOrFreeSecurity;
 			}
+
 			return true;
 		}
 
@@ -98,7 +80,6 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (!CheckAuthorization())
 			{
-				Client.Instance.CanvasManager.CanvasUI.Alert(Localization.UnauthorizedAccess.ToUpper());
 				NetworkController.Instance.SendToGameServer(new LockToTriggerMessage
 				{
 					TriggerID = null
@@ -107,18 +88,26 @@ namespace ZeroGravity.LevelDesign
 				{
 					AuthorizationFailEvent.Invoke();
 				}
+
 				return false;
 			}
-			SceneQuestTrigger.OnTrigger(base.gameObject, SceneQuestTriggerEvent.Interact);
+
+			SceneQuestTrigger.OnTrigger(gameObject, SceneQuestTriggerEvent.Interact);
 			if (AuthorizationPassEvent != null)
 			{
 				AuthorizationPassEvent.Invoke();
 			}
+
 			return true;
 		}
 
 		public virtual void CancelInteract(MyPlayer player)
 		{
+		}
+
+		private void Awake()
+		{
+			World ??= GameObject.Find("/World").GetComponent<World>();
 		}
 
 		protected virtual void Start()
@@ -137,7 +126,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (coli == MyPlayer.Instance.FpsController.GetCollider())
 			{
-				SceneQuestTrigger.OnTrigger(base.gameObject, SceneQuestTriggerEvent.EnterTrigger);
+				SceneQuestTrigger.OnTrigger(gameObject, SceneQuestTriggerEvent.EnterTrigger);
 			}
 		}
 
@@ -145,7 +134,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (coli == MyPlayer.Instance.FpsController.GetCollider())
 			{
-				SceneQuestTrigger.OnTrigger(base.gameObject, SceneQuestTriggerEvent.ExitTrigger);
+				SceneQuestTrigger.OnTrigger(gameObject, SceneQuestTriggerEvent.ExitTrigger);
 			}
 		}
 	}

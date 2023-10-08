@@ -16,6 +16,7 @@ namespace RootMotion
 				{
 					logger(message);
 				}
+
 				logged = true;
 			}
 		}

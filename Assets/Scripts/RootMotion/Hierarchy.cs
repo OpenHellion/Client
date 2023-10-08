@@ -14,6 +14,7 @@ namespace RootMotion
 					return false;
 				}
 			}
+
 			return true;
 		}
 
@@ -29,6 +30,7 @@ namespace RootMotion
 					}
 				}
 			}
+
 			return null;
 		}
 
@@ -38,18 +40,22 @@ namespace RootMotion
 			{
 				return true;
 			}
+
 			if (ancestor == null)
 			{
 				return true;
 			}
+
 			if (transform.parent == null)
 			{
 				return false;
 			}
+
 			if (transform.parent == ancestor)
 			{
 				return true;
 			}
+
 			return IsAncestor(transform.parent, ancestor);
 		}
 
@@ -59,6 +65,7 @@ namespace RootMotion
 			{
 				return true;
 			}
+
 			Transform[] componentsInChildren = transform.GetComponentsInChildren<Transform>();
 			Transform[] array = componentsInChildren;
 			foreach (Transform transform2 in array)
@@ -68,6 +75,7 @@ namespace RootMotion
 					return true;
 				}
 			}
+
 			return false;
 		}
 
@@ -80,6 +88,7 @@ namespace RootMotion
 					Array.Resize(ref array, array.Length + 1);
 					array[array.Length - 1] = transform.parent;
 				}
+
 				AddAncestors(transform.parent, blocker, ref array);
 			}
 		}
@@ -90,14 +99,17 @@ namespace RootMotion
 			{
 				return null;
 			}
+
 			if (transform.parent != null)
 			{
 				if (transform.parent.childCount >= minChildCount)
 				{
 					return transform.parent;
 				}
+
 				return GetAncestor(transform.parent, minChildCount);
 			}
+
 			return null;
 		}
 
@@ -107,22 +119,27 @@ namespace RootMotion
 			{
 				return null;
 			}
+
 			if (t2 == null)
 			{
 				return null;
 			}
+
 			if (t1.parent == null)
 			{
 				return null;
 			}
+
 			if (t2.parent == null)
 			{
 				return null;
 			}
+
 			if (IsAncestor(t2, t1.parent))
 			{
 				return t1.parent;
 			}
+
 			return GetFirstCommonAncestor(t1.parent, t2);
 		}
 
@@ -133,22 +150,26 @@ namespace RootMotion
 				Debug.LogWarning("Transforms is null.");
 				return null;
 			}
+
 			if (transforms.Length == 0)
 			{
 				Debug.LogWarning("Transforms.Length is 0.");
 				return null;
 			}
+
 			for (int i = 0; i < transforms.Length; i++)
 			{
 				if (transforms[i] == null)
 				{
 					return null;
 				}
+
 				if (IsCommonAncestor(transforms[i], transforms))
 				{
 					return transforms[i];
 				}
 			}
+
 			return GetFirstCommonAncestorRecursive(transforms[0], transforms);
 		}
 
@@ -159,24 +180,29 @@ namespace RootMotion
 				Debug.LogWarning("Transform is null.");
 				return null;
 			}
+
 			if (transforms == null)
 			{
 				Debug.LogWarning("Transforms is null.");
 				return null;
 			}
+
 			if (transforms.Length == 0)
 			{
 				Debug.LogWarning("Transforms.Length is 0.");
 				return null;
 			}
+
 			if (IsCommonAncestor(transform, transforms))
 			{
 				return transform;
 			}
+
 			if (transform.parent == null)
 			{
 				return null;
 			}
+
 			return GetFirstCommonAncestorRecursive(transform.parent, transforms);
 		}
 
@@ -187,6 +213,7 @@ namespace RootMotion
 				Debug.LogWarning("Transform is null.");
 				return false;
 			}
+
 			for (int i = 0; i < transforms.Length; i++)
 			{
 				if (transforms[i] == null)
@@ -194,11 +221,13 @@ namespace RootMotion
 					Debug.Log("Transforms[" + i + "] is null.");
 					return false;
 				}
+
 				if (!IsAncestor(transforms[i], transform) && transforms[i] != transform)
 				{
 					return false;
 				}
 			}
+
 			return true;
 		}
 	}

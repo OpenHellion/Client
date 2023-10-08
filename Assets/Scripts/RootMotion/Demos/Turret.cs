@@ -21,6 +21,7 @@ namespace RootMotion.Demos
 					rotationLimit = transform.GetComponent<RotationLimit>();
 					rotationLimit.Disable();
 				}
+
 				rotationLimit.Apply();
 			}
 		}

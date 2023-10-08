@@ -5,7 +5,8 @@ namespace ZeroGravity.UI
 {
 	public class ChatMessage : MonoBehaviour
 	{
-		[FormerlySerializedAs("thresholdTime")] public float ThresholdTime;
+		[FormerlySerializedAs("thresholdTime")]
+		public float ThresholdTime;
 
 		private float _startTime;
 

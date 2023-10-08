@@ -27,10 +27,12 @@ namespace DigitalOpus.MB.Core
 			public bool isSame(object obj)
 			{
 				MB_Triangle mB_Triangle = (MB_Triangle)obj;
-				if (vs[0] == mB_Triangle.vs[0] && vs[1] == mB_Triangle.vs[1] && vs[2] == mB_Triangle.vs[2] && submeshIdx != mB_Triangle.submeshIdx)
+				if (vs[0] == mB_Triangle.vs[0] && vs[1] == mB_Triangle.vs[1] && vs[2] == mB_Triangle.vs[2] &&
+				    submeshIdx != mB_Triangle.submeshIdx)
 				{
 					return true;
 				}
+
 				return false;
 			}
 
@@ -40,14 +42,17 @@ namespace DigitalOpus.MB.Core
 				{
 					return true;
 				}
+
 				if ((vs[1] == obj.vs[0] || vs[1] == obj.vs[1] || vs[1] == obj.vs[2]) && submeshIdx != obj.submeshIdx)
 				{
 					return true;
 				}
+
 				if ((vs[2] == obj.vs[0] || vs[2] == obj.vs[1] || vs[2] == obj.vs[2]) && submeshIdx != obj.submeshIdx)
 				{
 					return true;
 				}
+
 				return false;
 			}
 
@@ -81,11 +86,13 @@ namespace DigitalOpus.MB.Core
 						break;
 					}
 				}
+
 				if (!flag)
 				{
 					return false;
 				}
 			}
+
 			return true;
 		}
 
@@ -95,6 +102,7 @@ namespace DigitalOpus.MB.Core
 			{
 				return null;
 			}
+
 			Material[] array = null;
 			Mesh mesh = null;
 			MeshRenderer component = go.GetComponent<MeshRenderer>();
@@ -106,31 +114,39 @@ namespace DigitalOpus.MB.Core
 				{
 					throw new Exception(string.Concat("Object ", go, " has a MeshRenderer but no MeshFilter."));
 				}
+
 				mesh = component2.sharedMesh;
 			}
+
 			SkinnedMeshRenderer component3 = go.GetComponent<SkinnedMeshRenderer>();
 			if (component3 != null)
 			{
 				array = component3.sharedMaterials;
 				mesh = component3.sharedMesh;
 			}
+
 			if (array == null)
 			{
-				Debug.LogError("Object " + go.name + " does not have a MeshRenderer or a SkinnedMeshRenderer component");
+				Debug.LogError("Object " + go.name +
+				               " does not have a MeshRenderer or a SkinnedMeshRenderer component");
 				return null;
 			}
+
 			if (mesh == null)
 			{
 				Debug.LogError("Object " + go.name + " has a MeshRenderer or SkinnedMeshRenderer but no mesh.");
 				return null;
 			}
+
 			if (mesh.subMeshCount < array.Length)
 			{
-				Debug.LogWarning(string.Concat("Object ", go, " has only ", mesh.subMeshCount, " submeshes and has ", array.Length, " materials. Extra materials do nothing."));
+				Debug.LogWarning(string.Concat("Object ", go, " has only ", mesh.subMeshCount, " submeshes and has ",
+					array.Length, " materials. Extra materials do nothing."));
 				Material[] array2 = new Material[mesh.subMeshCount];
 				Array.Copy(array, array2, array2.Length);
 				array = array2;
 			}
+
 			return array;
 		}
 
@@ -140,16 +156,19 @@ namespace DigitalOpus.MB.Core
 			{
 				return null;
 			}
+
 			MeshFilter component = go.GetComponent<MeshFilter>();
 			if (component != null)
 			{
 				return component.sharedMesh;
 			}
+
 			SkinnedMeshRenderer component2 = go.GetComponent<SkinnedMeshRenderer>();
 			if (component2 != null)
 			{
 				return component2.sharedMesh;
 			}
+
 			Debug.LogError("Object " + go.name + " does not have a MeshFilter or a SkinnedMeshRenderer component");
 			return null;
 		}
@@ -160,16 +179,19 @@ namespace DigitalOpus.MB.Core
 			{
 				return null;
 			}
+
 			MeshRenderer component = go.GetComponent<MeshRenderer>();
 			if (component != null)
 			{
 				return component;
 			}
+
 			SkinnedMeshRenderer component2 = go.GetComponent<SkinnedMeshRenderer>();
 			if (component2 != null)
 			{
 				return component2;
 			}
+
 			return null;
 		}
 
@@ -179,12 +201,14 @@ namespace DigitalOpus.MB.Core
 			{
 				return;
 			}
+
 			MeshRenderer component = go.GetComponent<MeshRenderer>();
 			if (component != null)
 			{
 				component.enabled = false;
 				return;
 			}
+
 			SkinnedMeshRenderer component2 = go.GetComponent<SkinnedMeshRenderer>();
 			if (component2 != null)
 			{
@@ -207,11 +231,13 @@ namespace DigitalOpus.MB.Core
 				putResultHere.hasOutOfBoundsUVs = false;
 				return putResultHere.hasOutOfBoundsUVs;
 			}
+
 			Vector2[] uv = m.uv;
 			return hasOutOfBoundsUVs(uv, m, ref putResultHere, submeshIndex);
 		}
 
-		public static bool hasOutOfBoundsUVs(Vector2[] uvs, Mesh m, ref MeshAnalysisResult putResultHere, int submeshIndex = -1)
+		public static bool hasOutOfBoundsUVs(Vector2[] uvs, Mesh m, ref MeshAnalysisResult putResultHere,
+			int submeshIndex = -1)
 		{
 			if (uvs.Length == 0)
 			{
@@ -219,12 +245,14 @@ namespace DigitalOpus.MB.Core
 				putResultHere.uvRect = default(Rect);
 				return putResultHere.hasOutOfBoundsUVs;
 			}
+
 			if (submeshIndex >= m.subMeshCount)
 			{
 				putResultHere.hasOutOfBoundsUVs = false;
 				putResultHere.uvRect = default(Rect);
 				return putResultHere.hasOutOfBoundsUVs;
 			}
+
 			float num;
 			float x;
 			float num2;
@@ -238,6 +266,7 @@ namespace DigitalOpus.MB.Core
 					putResultHere.uvRect = default(Rect);
 					return putResultHere.hasOutOfBoundsUVs;
 				}
+
 				num = (x = uvs[triangles[0]].x);
 				num2 = (y = uvs[triangles[0]].y);
 				foreach (int num3 in triangles)
@@ -246,14 +275,17 @@ namespace DigitalOpus.MB.Core
 					{
 						num = uvs[num3].x;
 					}
+
 					if (uvs[num3].x > x)
 					{
 						x = uvs[num3].x;
 					}
+
 					if (uvs[num3].y < num2)
 					{
 						num2 = uvs[num3].y;
 					}
+
 					if (uvs[num3].y > y)
 					{
 						y = uvs[num3].y;
@@ -270,20 +302,24 @@ namespace DigitalOpus.MB.Core
 					{
 						num = uvs[j].x;
 					}
+
 					if (uvs[j].x > x)
 					{
 						x = uvs[j].x;
 					}
+
 					if (uvs[j].y < num2)
 					{
 						num2 = uvs[j].y;
 					}
+
 					if (uvs[j].y > y)
 					{
 						y = uvs[j].y;
 					}
 				}
 			}
+
 			Rect uvRect = default(Rect);
 			uvRect.x = num;
 			uvRect.y = num2;
@@ -297,6 +333,7 @@ namespace DigitalOpus.MB.Core
 			{
 				putResultHere.hasOutOfBoundsUVs = false;
 			}
+
 			putResultHere.uvRect = uvRect;
 			return putResultHere.hasOutOfBoundsUVs;
 		}
@@ -308,6 +345,7 @@ namespace DigitalOpus.MB.Core
 			{
 				pixels[i] = c;
 			}
+
 			t.SetPixels(pixels);
 			t.Apply();
 		}
@@ -315,7 +353,8 @@ namespace DigitalOpus.MB.Core
 		public static Texture2D resampleTexture(Texture2D source, int newWidth, int newHeight)
 		{
 			TextureFormat format = source.format;
-			if (format == TextureFormat.ARGB32 || format == TextureFormat.RGBA32 || format == TextureFormat.BGRA32 || format == TextureFormat.RGB24 || format == TextureFormat.Alpha8 || format == TextureFormat.DXT1)
+			if (format == TextureFormat.ARGB32 || format == TextureFormat.RGBA32 || format == TextureFormat.BGRA32 ||
+			    format == TextureFormat.RGB24 || format == TextureFormat.Alpha8 || format == TextureFormat.DXT1)
 			{
 				Texture2D texture2D = new Texture2D(newWidth, newHeight, TextureFormat.ARGB32, true);
 				float num = newWidth;
@@ -329,9 +368,11 @@ namespace DigitalOpus.MB.Core
 						texture2D.SetPixel(i, j, source.GetPixelBilinear(x, y));
 					}
 				}
+
 				texture2D.Apply();
 				return texture2D;
 			}
+
 			Debug.LogError("Can only resize textures in formats ARGB32, RGBA32, BGRA32, RGB24, Alpha8 or DXT");
 			return null;
 		}
@@ -348,6 +389,7 @@ namespace DigitalOpus.MB.Core
 					}
 				}
 			}
+
 			return true;
 		}
 
@@ -360,6 +402,7 @@ namespace DigitalOpus.MB.Core
 			{
 				array[i] = m.GetTriangles(i);
 			}
+
 			bool flag = false;
 			bool flag2 = false;
 			for (int j = 0; j < m.subMeshCount; j++)
@@ -379,6 +422,7 @@ namespace DigitalOpus.MB.Core
 								flag2 = true;
 								break;
 							}
+
 							if (mB_Triangle.sharesVerts(mB_Triangle2))
 							{
 								flag = true;
@@ -388,18 +432,21 @@ namespace DigitalOpus.MB.Core
 					}
 				}
 			}
+
 			if (flag2)
 			{
 				mar.hasOverlappingSubmeshVerts = true;
 				mar.hasOverlappingSubmeshTris = true;
 				return 2;
 			}
+
 			if (flag)
 			{
 				mar.hasOverlappingSubmeshVerts = true;
 				mar.hasOverlappingSubmeshTris = false;
 				return 1;
 			}
+
 			mar.hasOverlappingSubmeshTris = false;
 			mar.hasOverlappingSubmeshVerts = false;
 			return 0;
@@ -413,6 +460,7 @@ namespace DigitalOpus.MB.Core
 				b = new Bounds(Vector3.zero, Vector3.zero);
 				return false;
 			}
+
 			Renderer renderer = GetRenderer(go);
 			if (renderer == null)
 			{
@@ -420,16 +468,19 @@ namespace DigitalOpus.MB.Core
 				b = new Bounds(Vector3.zero, Vector3.zero);
 				return false;
 			}
+
 			if (renderer is MeshRenderer)
 			{
 				b = renderer.bounds;
 				return true;
 			}
+
 			if (renderer is SkinnedMeshRenderer)
 			{
 				b = renderer.bounds;
 				return true;
 			}
+
 			Debug.LogError("GetBounds must be called on an object with a MeshRender or a SkinnedMeshRenderer.");
 			b = new Bounds(Vector3.zero, Vector3.zero);
 			return false;

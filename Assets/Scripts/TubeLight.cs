@@ -15,14 +15,11 @@ public class TubeLight : MonoBehaviour
 
 	public float m_Length;
 
-	[HideInInspector]
-	public Mesh m_Sphere;
+	[HideInInspector] public Mesh m_Sphere;
 
-	[HideInInspector]
-	public Mesh m_Capsule;
+	[HideInInspector] public Mesh m_Capsule;
 
-	[HideInInspector]
-	public Shader m_ProxyShader;
+	[HideInInspector] public Shader m_ProxyShader;
 
 	private Material m_ProxyMaterial;
 
@@ -38,8 +35,7 @@ public class TubeLight : MonoBehaviour
 
 	public const int maxPlanes = 2;
 
-	[HideInInspector]
-	public TubeLightShadowPlane[] m_ShadowPlanes = new TubeLightShadowPlane[2];
+	[HideInInspector] public TubeLightShadowPlane[] m_ShadowPlanes = new TubeLightShadowPlane[2];
 
 	private bool m_Initialized;
 
@@ -55,10 +51,7 @@ public class TubeLight : MonoBehaviour
 
 	private bool renderSource
 	{
-		get
-		{
-			return m_RenderSource && m_Radius >= 0.001f;
-		}
+		get { return m_RenderSource && m_Radius >= 0.001f; }
 	}
 
 	private void Start()
@@ -75,10 +68,12 @@ public class TubeLight : MonoBehaviour
 		{
 			return true;
 		}
+
 		if (m_ProxyShader == null || m_Sphere == null || m_Capsule == null)
 		{
 			return false;
 		}
+
 		m_ProxyMaterial = new Material(m_ProxyShader);
 		m_ProxyMaterial.hideFlags = HideFlags.HideAndDontSave;
 		m_SourceMesh = Object.Instantiate(m_Capsule);
@@ -98,6 +93,7 @@ public class TubeLight : MonoBehaviour
 		{
 			m_props = new MaterialPropertyBlock();
 		}
+
 		if (Init())
 		{
 			UpdateMeshesAndBounds();
@@ -111,6 +107,7 @@ public class TubeLight : MonoBehaviour
 			Cleanup();
 			return;
 		}
+
 		Dictionary<Camera, CommandBuffer>.Enumerator enumerator = m_Cameras.GetEnumerator();
 		while (enumerator.MoveNext())
 		{
@@ -127,10 +124,12 @@ public class TubeLight : MonoBehaviour
 		{
 			Object.DestroyImmediate(m_ProxyMaterial);
 		}
+
 		if (m_SourceMesh != null)
 		{
 			Object.DestroyImmediate(m_SourceMesh);
 		}
+
 		Cleanup();
 	}
 
@@ -145,6 +144,7 @@ public class TubeLight : MonoBehaviour
 				current.Key.RemoveCommandBuffer(kCameraEvent, current.Value);
 			}
 		}
+
 		m_Cameras.Clear();
 	}
 
@@ -170,8 +170,10 @@ public class TubeLight : MonoBehaviour
 					vertices[i] = Vector3.one * 0.0001f;
 				}
 			}
+
 			m_SourceMesh.vertices = vertices;
 		}
+
 		m_SourceTransform.localScale = vector;
 		float num = m_Range + m_Radius;
 		num += 0.5f * m_Length;
@@ -186,11 +188,13 @@ public class TubeLight : MonoBehaviour
 		{
 			return;
 		}
+
 		UpdateMeshesAndBounds();
 		if (!Application.isPlaying)
 		{
 			return;
 		}
+
 		Dictionary<Camera, CommandBuffer>.Enumerator enumerator = m_Cameras.GetEnumerator();
 		while (enumerator.MoveNext())
 		{
@@ -207,7 +211,9 @@ public class TubeLight : MonoBehaviour
 		{
 			return m_Color * m_Intensity;
 		}
-		return new Color(Mathf.GammaToLinearSpace(m_Color.r * m_Intensity), Mathf.GammaToLinearSpace(m_Color.g * m_Intensity), Mathf.GammaToLinearSpace(m_Color.b * m_Intensity), 1f);
+
+		return new Color(Mathf.GammaToLinearSpace(m_Color.r * m_Intensity),
+			Mathf.GammaToLinearSpace(m_Color.g * m_Intensity), Mathf.GammaToLinearSpace(m_Color.b * m_Intensity), 1f);
 	}
 
 	private void OnWillRenderObject()
@@ -237,6 +243,7 @@ public class TubeLight : MonoBehaviour
 			commandBuffer = m_Cameras[current];
 			commandBuffer.Clear();
 		}
+
 		Transform transform = base.transform;
 		Vector3 up = transform.up;
 		Vector3 vector = transform.position - 0.5f * up * m_Length;
@@ -261,12 +268,16 @@ public class TubeLight : MonoBehaviour
 		{
 			p = new TubeLightShadowPlane.Params[2];
 		}
+
 		for (int i = 0; i < 2; i++)
 		{
 			TubeLightShadowPlane tubeLightShadowPlane = m_ShadowPlanes[i];
-			p[i].plane = ((!(tubeLightShadowPlane == null)) ? tubeLightShadowPlane.GetShadowPlaneVector() : new Vector4(0f, 0f, 0f, 1f));
+			p[i].plane = ((!(tubeLightShadowPlane == null))
+				? tubeLightShadowPlane.GetShadowPlaneVector()
+				: new Vector4(0f, 0f, 0f, 1f));
 			p[i].feather = ((!(tubeLightShadowPlane == null)) ? tubeLightShadowPlane.feather : 1f);
 		}
+
 		return p;
 	}
 
@@ -279,18 +290,18 @@ public class TubeLight : MonoBehaviour
 			TubeLightShadowPlane.Params @params = shadowPlaneParams[i];
 			switch (i)
 			{
-			case 0:
-				buf.SetGlobalVector("_ShadowPlane0", @params.plane);
-				buf.SetGlobalFloat("_ShadowPlaneFeather0", @params.feather);
-				break;
-			case 1:
-				buf.SetGlobalVector("_ShadowPlane1", @params.plane);
-				buf.SetGlobalFloat("_ShadowPlaneFeather1", @params.feather);
-				break;
-			default:
-				buf.SetGlobalVector("_ShadowPlane" + i, @params.plane);
-				buf.SetGlobalFloat("_ShadowPlaneFeather" + i, @params.feather);
-				break;
+				case 0:
+					buf.SetGlobalVector("_ShadowPlane0", @params.plane);
+					buf.SetGlobalFloat("_ShadowPlaneFeather0", @params.feather);
+					break;
+				case 1:
+					buf.SetGlobalVector("_ShadowPlane1", @params.plane);
+					buf.SetGlobalFloat("_ShadowPlaneFeather1", @params.feather);
+					break;
+				default:
+					buf.SetGlobalVector("_ShadowPlane" + i, @params.plane);
+					buf.SetGlobalFloat("_ShadowPlaneFeather" + i, @params.feather);
+					break;
 			}
 		}
 	}

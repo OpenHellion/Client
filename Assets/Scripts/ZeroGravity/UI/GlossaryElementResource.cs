@@ -10,18 +10,12 @@ namespace ZeroGravity.UI
 
 		public override GlossaryCategory Category
 		{
-			get
-			{
-				return GlossaryCategory.Resources;
-			}
+			get { return GlossaryCategory.Resources; }
 		}
 
 		public override Sprite Icon
 		{
-			get
-			{
-				return Client.Instance.SpriteManager.GetSprite(ResourceType);
-			}
+			get { return SpriteManager.Instance.GetSprite(ResourceType); }
 		}
 	}
 }

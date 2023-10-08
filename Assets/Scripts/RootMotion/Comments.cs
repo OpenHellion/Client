@@ -4,7 +4,6 @@ namespace RootMotion
 {
 	public class Comments : MonoBehaviour
 	{
-		[Multiline]
-		public string text;
+		[Multiline] public string text;
 	}
 }

@@ -15,6 +15,7 @@ public class SceneTagObject : ScriptableObject
 				text += ";";
 			}
 		}
+
 		return text;
 	}
 }

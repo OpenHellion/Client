@@ -47,7 +47,8 @@ namespace ZeroGravity.LevelDesign
 
 		protected override void Awake()
 		{
-			AttachPointTransformData attachPointTransformData = attachableTypesList?.Find((AttachPointTransformData m) => ItemTypeRange.IsMachineryPart(m.ItemType));
+			AttachPointTransformData attachPointTransformData =
+				attachableTypesList?.Find((AttachPointTransformData m) => ItemTypeRange.IsMachineryPart(m.ItemType));
 			base.Awake();
 		}
 
@@ -78,20 +79,22 @@ namespace ZeroGravity.LevelDesign
 		protected override void OnAttach()
 		{
 			base.OnAttach();
-			if (Executer == null)
+			if (Executor == null)
 			{
 				SetActive(state: true);
 			}
+
 			ParentVesselComponent.MachineryPartAttached(this);
 		}
 
 		protected override void OnDetach()
 		{
 			base.OnDetach();
-			if (Executer == null)
+			if (Executor == null)
 			{
 				SetActive(state: false);
 			}
+
 			ParentVesselComponent.MachineryPartDetached(this);
 		}
 
@@ -102,21 +105,26 @@ namespace ZeroGravity.LevelDesign
 			{
 				return Localization.MachineryPartsDescriptions[machineryPartType];
 			}
+
 			if (!PartDescription.IsNullOrEmpty())
 			{
 				return PartDescription;
 			}
+
 			return string.Empty;
 		}
 
 		public MachineryPartType GetMachineryPartType()
 		{
-			return attachableTypesList.Select((AttachPointTransformData m) => m.MachineryPartType).FirstOrDefault((MachineryPartType m) => m != MachineryPartType.None);
+			return attachableTypesList.Select((AttachPointTransformData m) => m.MachineryPartType)
+				.FirstOrDefault((MachineryPartType m) => m != MachineryPartType.None);
 		}
 
-		public override bool CanAttachItemType(ItemType itemType, GenericItemSubType? generic = null, MachineryPartType? part = null, int? partTier = null)
+		public override bool CanAttachItemType(ItemType itemType, GenericItemSubType? generic = null,
+			MachineryPartType? part = null, int? partTier = null)
 		{
-			return base.CanAttachItemType(itemType, generic, part, partTier) && (!partTier.HasValue || (partTier.Value >= MinTier && partTier.Value <= MaxTier));
+			return base.CanAttachItemType(itemType, generic, part, partTier) &&
+			       (!partTier.HasValue || (partTier.Value >= MinTier && partTier.Value <= MaxTier));
 		}
 	}
 }

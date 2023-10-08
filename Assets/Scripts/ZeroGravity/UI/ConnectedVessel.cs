@@ -12,8 +12,7 @@ namespace ZeroGravity.UI
 {
 	public class ConnectedVessel : MonoBehaviour
 	{
-		[NonSerialized]
-		public SpaceObjectVessel Vessel;
+		[NonSerialized] public SpaceObjectVessel Vessel;
 
 		public Text VesselName;
 
@@ -21,17 +20,13 @@ namespace ZeroGravity.UI
 
 		public GameObject Authorized;
 
-		[NonSerialized]
-		public PowerSupply PowerPanel;
+		[NonSerialized] public PowerSupply PowerPanel;
 
-		[NonSerialized]
-		public VesselComponent Vc;
+		[NonSerialized] public VesselComponent Vc;
 
-		[NonSerialized]
-		public VesselBaseSystem Base;
+		[NonSerialized] public VesselBaseSystem Base;
 
-		[Title("POWER SUPPLY")]
-		public Text BaseConsumption;
+		[Title("POWER SUPPLY")] public Text BaseConsumption;
 
 		public Text Consumption;
 
@@ -39,11 +34,9 @@ namespace ZeroGravity.UI
 
 		public GameObject IsOnline;
 
-		[NonSerialized]
-		public LifeSupportPanel LifePanel;
+		[NonSerialized] public LifeSupportPanel LifePanel;
 
-		[Title("LIFE SUPPORT")]
-		public Text Volume;
+		[Title("LIFE SUPPORT")] public Text Volume;
 
 		public Text ArmorValue;
 
@@ -57,8 +50,7 @@ namespace ZeroGravity.UI
 
 		public Text NaniteValue;
 
-		[NonSerialized]
-		public CargoPanel CargoPanel;
+		[NonSerialized] public CargoPanel CargoPanel;
 
 		public bool IsAuthorized => Vessel.IsPlayerAuthorizedOrNoSecurity(MyPlayer.Instance);
 
@@ -73,10 +65,12 @@ namespace ZeroGravity.UI
 					text.text = value;
 				}
 			}
+
 			VesselName.text = Vessel.CustomName;
-			Icon.sprite = Client.Instance.SpriteManager.GetSprite(Vessel);
+			Icon.sprite = SpriteManager.Instance.GetSprite(Vessel);
 			Authorized.SetActive(!IsAuthorized);
-			ArmorSlots = Vessel.VesselBaseSystem.MachineryPartSlots.Where((SceneMachineryPartSlot m) => m.Scope == MachineryPartSlotScope.Armor).ToList();
+			ArmorSlots = Vessel.VesselBaseSystem.MachineryPartSlots
+				.Where((SceneMachineryPartSlot m) => m.Scope == MachineryPartSlotScope.Armor).ToList();
 			if (LifePanel != null)
 			{
 				HealthAndArmorUpdate();
@@ -103,7 +97,8 @@ namespace ZeroGravity.UI
 
 		public void ToggleConsumers()
 		{
-			PowerSupplyPowerConsumer[] componentsInChildren = GetComponentsInChildren<PowerSupplyPowerConsumer>(includeInactive: true);
+			PowerSupplyPowerConsumer[] componentsInChildren =
+				GetComponentsInChildren<PowerSupplyPowerConsumer>(includeInactive: true);
 			foreach (PowerSupplyPowerConsumer powerSupplyPowerConsumer in componentsInChildren)
 			{
 				powerSupplyPowerConsumer.gameObject.SetActive(!powerSupplyPowerConsumer.gameObject.activeInHierarchy);
@@ -128,6 +123,7 @@ namespace ZeroGravity.UI
 					}
 				}
 			}
+
 			NaniteFiller.fillAmount = num2 / num;
 			NaniteValue.text = FormatHelper.FormatValue(num2);
 		}

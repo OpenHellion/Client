@@ -26,12 +26,14 @@ namespace DigitalOpus.MB.Core
 
 		public static DRect CombineTransforms(ref DRect r1, ref DRect r2)
 		{
-			return new DRect(r1.x * r2.width + r2.x, r1.y * r2.height + r2.y, r1.width * r2.width, r1.height * r2.height);
+			return new DRect(r1.x * r2.width + r2.x, r1.y * r2.height + r2.y, r1.width * r2.width,
+				r1.height * r2.height);
 		}
 
 		public static Rect CombineTransforms(ref Rect r1, ref Rect r2)
 		{
-			return new Rect(r1.x * r2.width + r2.x, r1.y * r2.height + r2.y, r1.width * r2.width, r1.height * r2.height);
+			return new Rect(r1.x * r2.width + r2.x, r1.y * r2.height + r2.y, r1.width * r2.width,
+				r1.height * r2.height);
 		}
 
 		public static void Canonicalize(ref DRect r, double minX, double minY)
@@ -41,6 +43,7 @@ namespace DigitalOpus.MB.Core
 			{
 				r.x += Mathf.CeilToInt((float)minX);
 			}
+
 			r.y -= Mathf.FloorToInt((float)r.y);
 			if (r.y < minY)
 			{
@@ -55,6 +58,7 @@ namespace DigitalOpus.MB.Core
 			{
 				r.x += Mathf.CeilToInt(minX);
 			}
+
 			r.y -= Mathf.FloorToInt(r.y);
 			if (r.y < minY)
 			{
@@ -90,34 +94,42 @@ namespace DigitalOpus.MB.Core
 			{
 				num6 = x2;
 			}
+
 			if (x < num6)
 			{
 				num6 = x;
 			}
+
 			if (y2 < num8)
 			{
 				num8 = y2;
 			}
+
 			if (y < num8)
 			{
 				num8 = y;
 			}
+
 			if (num3 > num5)
 			{
 				num5 = num3;
 			}
+
 			if (num > num5)
 			{
 				num5 = num;
 			}
+
 			if (num4 > num7)
 			{
 				num7 = num4;
 			}
+
 			if (num2 > num7)
 			{
 				num7 = num2;
 			}
+
 			return new DRect(num6, num8, num5 - num6, num7 - num8);
 		}
 
@@ -131,7 +143,8 @@ namespace DigitalOpus.MB.Core
 			double num4 = bigRect.y - 0.009999999776482582;
 			double num5 = bigRect.x + bigRect.width + 0.019999999552965164;
 			double num6 = bigRect.y + bigRect.height + 0.019999999552965164;
-			return num3 <= x && x <= num5 && num3 <= num && num <= num5 && num4 <= y && y <= num6 && num4 <= num2 && num2 <= num6;
+			return num3 <= x && x <= num5 && num3 <= num && num <= num5 && num4 <= y && y <= num6 && num4 <= num2 &&
+			       num2 <= num6;
 		}
 
 		public static bool RectContains(ref Rect bigRect, ref Rect smallToTestIfFits)
@@ -144,7 +157,8 @@ namespace DigitalOpus.MB.Core
 			float num4 = bigRect.y - 0.01f;
 			float num5 = bigRect.x + bigRect.width + 0.02f;
 			float num6 = bigRect.y + bigRect.height + 0.02f;
-			return num3 <= x && x <= num5 && num3 <= num && num <= num5 && num4 <= y && y <= num6 && num4 <= num2 && num2 <= num6;
+			return num3 <= x && x <= num5 && num3 <= num && num <= num5 && num4 <= y && y <= num6 && num4 <= num2 &&
+			       num2 <= num6;
 		}
 
 		internal static Vector2 TransformPoint(ref DRect r, Vector2 p)

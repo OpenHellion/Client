@@ -24,7 +24,8 @@ namespace RootMotion.Demos
 				if (ik != null)
 				{
 					IKSolverFullBodyBiped solver = ik.solver;
-					solver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPostUpdate, new IKSolver.UpdateDelegate(OnPostFBBIK));
+					solver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPostUpdate,
+						new IKSolver.UpdateDelegate(OnPostFBBIK));
 				}
 			}
 		}
@@ -50,7 +51,9 @@ namespace RootMotion.Demos
 			if (ik != null)
 			{
 				IKSolverFullBodyBiped solver = ik.solver;
-				solver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(solver.OnPostUpdate, new IKSolver.UpdateDelegate(OnPostFBBIK));
+				solver.OnPostUpdate =
+					(IKSolver.UpdateDelegate)Delegate.Remove(solver.OnPostUpdate,
+						new IKSolver.UpdateDelegate(OnPostFBBIK));
 			}
 		}
 	}

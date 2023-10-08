@@ -43,7 +43,9 @@ public class MB3_AtlasPackerRenderTexture : MonoBehaviour
 	{
 		fastRenderer = new MB_TextureCombinerRenderTexture();
 		_doRenderAtlas = true;
-		Texture2D result = fastRenderer.DoRenderAtlas(base.gameObject, width, height, padding, rects, textureSets, indexOfTexSetToRender, texPropertyName, resultMaterialTextureBlender, isNormalMap, fixOutOfBoundsUVs, considerNonTextureProperties, combiner, LOG_LEVEL);
+		Texture2D result = fastRenderer.DoRenderAtlas(base.gameObject, width, height, padding, rects, textureSets,
+			indexOfTexSetToRender, texPropertyName, resultMaterialTextureBlender, isNormalMap, fixOutOfBoundsUVs,
+			considerNonTextureProperties, combiner, LOG_LEVEL);
 		_doRenderAtlas = false;
 		return result;
 	}

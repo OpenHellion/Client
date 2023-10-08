@@ -1,3 +1,5 @@
+using System;
+using OpenHellion;
 using OpenHellion.Net;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,30 +11,34 @@ namespace ZeroGravity.UI
 {
 	public class NameTagUI : MonoBehaviour
 	{
-		private SpaceObjectVessel currentParentVessel;
+		private SpaceObjectVessel _currentParentVessel;
 
-		private int currentSceneId;
+		private int _currentSceneId;
 
 		public GameObject MainCanvas;
 
 		public InputField CustomInputField;
 
-		private bool isLockedToTrigger;
+		private bool _isLockedToTrigger;
 
-		private SceneNameTag thisNameTag;
+		private SceneNameTag _nameTag;
 
-		private void Start()
+		private World _world;
+
+		private void Awake()
 		{
+			_world ??= GameObject.Find("/World").GetComponent<World>();
 		}
 
 		private void Update()
 		{
-			if (isLockedToTrigger)
+			if (_isLockedToTrigger)
 			{
 				if (Keyboard.current.tabKey.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
 				{
-					ToggleNameCanvas(thisNameTag, false, currentParentVessel, currentSceneId);
+					ToggleNameCanvas(_nameTag, false, _currentParentVessel, _currentSceneId);
 				}
+
 				if (Keyboard.current.enterKey.wasPressedThisFrame)
 				{
 					ConfirmInput();
@@ -40,23 +46,23 @@ namespace ZeroGravity.UI
 			}
 		}
 
-		public void ToggleNameCanvas(SceneNameTag snt, bool toggle, SpaceObjectVessel parentVessel, int _InSceneID)
+		public void ToggleNameCanvas(SceneNameTag snt, bool toggle, SpaceObjectVessel parentVessel, int inSceneID)
 		{
-			thisNameTag = snt;
-			currentParentVessel = parentVessel;
-			currentSceneId = _InSceneID;
+			_nameTag = snt;
+			_currentParentVessel = parentVessel;
+			_currentSceneId = inSceneID;
 			ToggleCanvas(toggle);
 			if (toggle)
 			{
 				CustomInputField.text = snt.NameTagText;
 				CustomInputField.Select();
 				CustomInputField.ActivateInputField();
-				Client.Instance.InGamePanels.Interact();
+				_world.InWorldPanels.Interact();
 			}
 			else
 			{
 				snt.NameTagText = CustomInputField.text;
-				Client.Instance.InGamePanels.Detach();
+				_world.InWorldPanels.Detach();
 			}
 		}
 
@@ -65,27 +71,26 @@ namespace ZeroGravity.UI
 			NameTagMessage nameTagMessage = new NameTagMessage();
 			nameTagMessage.ID = new VesselObjectID
 			{
-				VesselGUID = currentParentVessel.GUID,
-				InSceneID = currentSceneId
+				VesselGUID = _currentParentVessel.GUID,
+				InSceneID = _currentSceneId
 			};
 			nameTagMessage.NameTagText = CustomInputField.text;
 			NetworkController.Instance.SendToGameServer(nameTagMessage);
-			ToggleNameCanvas(thisNameTag, false, currentParentVessel, currentSceneId);
+			ToggleNameCanvas(_nameTag, false, _currentParentVessel, _currentSceneId);
 		}
 
 		public void CancelButton()
 		{
-			ToggleNameCanvas(thisNameTag, false, currentParentVessel, currentSceneId);
+			ToggleNameCanvas(_nameTag, false, _currentParentVessel, _currentSceneId);
 		}
 
 		public void ToggleCanvas(bool toggle)
 		{
-			Client.Instance.CanvasManager.IsInputFieldIsActive = toggle;
-			isLockedToTrigger = toggle;
+			_world.InGameGUI.IsInputFieldIsActive = toggle;
+			_isLockedToTrigger = toggle;
 			MainCanvas.SetActive(toggle);
-			Client.Instance.ToggleCursor(toggle);
-			//Client.Instance.InputModule.ToggleCustomCursorPosition(!toggle);
-			Client.Instance.CanvasManager.OverlayCanvasIsOn = toggle;
+			Globals.ToggleCursor(toggle);
+			_world.InGameGUI.OverlayCanvasIsOn = toggle;
 			MyPlayer.Instance.FpsController.ResetVelocity();
 			MyPlayer.Instance.FpsController.ToggleAttached(toggle);
 			MyPlayer.Instance.FpsController.ToggleMovement(!toggle);
@@ -94,11 +99,11 @@ namespace ZeroGravity.UI
 			{
 				CustomInputField.ActivateInputField();
 				CustomInputField.Select();
-				Client.Instance.InGamePanels.Interact();
+				_world.InWorldPanels.Interact();
 			}
 			else
 			{
-				Client.Instance.InGamePanels.Detach();
+				_world.InWorldPanels.Detach();
 			}
 		}
 	}

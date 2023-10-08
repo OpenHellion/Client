@@ -15,19 +15,15 @@ namespace ZeroGravity.UI
 
 		public ControlItem ControlItem;
 
-		[SerializeField]
-		private Sprite m_normalState;
+		[SerializeField] private Sprite m_normalState;
 
-		[SerializeField]
-		private Sprite m_scanningState;
+		[SerializeField] private Sprite m_scanningState;
 
 		public Text m_keyDescription;
 
-		[SerializeField]
-		private string m_axisConfigName;
+		[SerializeField] private string m_axisConfigName;
 
-		[SerializeField]
-		private bool m_isPositiveKey;
+		[SerializeField] private bool m_isPositiveKey;
 
 		public InputAction m_axisConfig;
 
@@ -140,19 +136,20 @@ namespace ZeroGravity.UI
 			{
 				switch (key)
 				{
-				case KeyCode.RightCommand:
-				case KeyCode.LeftCommand:
-					result = false;
-					break;
-				case KeyCode.LeftWindows:
-				case KeyCode.RightWindows:
-					result = false;
-					break;
-				case KeyCode.Escape:
-					result = false;
-					break;
+					case KeyCode.RightCommand:
+					case KeyCode.LeftCommand:
+						result = false;
+						break;
+					case KeyCode.LeftWindows:
+					case KeyCode.RightWindows:
+						result = false;
+						break;
+					case KeyCode.Escape:
+						result = false;
+						break;
 				}
 			}
+
 			return result;
 		}
 

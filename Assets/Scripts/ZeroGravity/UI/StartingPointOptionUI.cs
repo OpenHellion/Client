@@ -1,4 +1,5 @@
-using System.Linq;
+using OpenHellion;
+using OpenHellion.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,7 @@ namespace ZeroGravity.UI
 	{
 		public StartingPointOptionData Data;
 
-		public CanvasManager.StartingPointOption Type;
+		public MainMenuGUI.StartingPointOption Type;
 
 		public Image Background;
 
@@ -20,11 +21,7 @@ namespace ZeroGravity.UI
 
 		private void Start()
 		{
-			if (Data == null)
-			{
-				Data = Client.Instance.CanvasManager.StartingPointData.FirstOrDefault((StartingPointOptionData m) => m.Type == Type);
-			}
-			base.transform.Reset();
+			transform.Reset();
 			Heading.text = Data.Title;
 			Background.sprite = Data.Background;
 			if (!GetComponent<Button>().interactable)

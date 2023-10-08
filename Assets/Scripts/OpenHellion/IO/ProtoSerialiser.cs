@@ -45,9 +45,11 @@ namespace OpenHellion.IO
 
 		private static readonly double _statisticsLogUpdateTime = 1.0;
 
-		private static readonly Dictionary<Type, StatisticsHelper> _sentStatistics = new Dictionary<Type, StatisticsHelper>();
+		private static readonly Dictionary<Type, StatisticsHelper> _sentStatistics =
+			new Dictionary<Type, StatisticsHelper>();
 
-		private static readonly Dictionary<Type, StatisticsHelper> _receivedStatistics = new Dictionary<Type, StatisticsHelper>();
+		private static readonly Dictionary<Type, StatisticsHelper> _receivedStatistics =
+			new Dictionary<Type, StatisticsHelper>();
 
 		/// <summary>
 		/// 	For deserialisation of data not sent through network.
@@ -64,6 +66,7 @@ namespace OpenHellion.IO
 			{
 				Dbg.Error("Failed to deserialize communication data", ex.Message, ex.StackTrace);
 			}
+
 			if (_statisticsLogUpdateTime > 0.0)
 			{
 				try
@@ -76,6 +79,7 @@ namespace OpenHellion.IO
 					return networkData;
 				}
 			}
+
 			return networkData;
 		}
 
@@ -93,9 +97,9 @@ namespace OpenHellion.IO
 				{
 					throw new ZeroDataException("Received zero data message.");
 				}
+
 				dataReadSize += size;
-			}
-			while (dataReadSize < bufferSize.Length);
+			} while (dataReadSize < bufferSize.Length);
 
 			uint bufferLength = BitConverter.ToUInt32(bufferSize, 0);
 
@@ -109,9 +113,9 @@ namespace OpenHellion.IO
 				{
 					throw new ZeroDataException("Received zero data message.");
 				}
+
 				dataReadSize += size;
-			}
-			while (dataReadSize < buffer.Length);
+			} while (dataReadSize < buffer.Length);
 
 			// Make the stream into NetworkData.
 			MemoryStream ms = new MemoryStream(buffer, 0, buffer.Length);
@@ -156,7 +160,8 @@ namespace OpenHellion.IO
 			return outMs.ToArray();
 		}
 
-		private static void ProcessStatistics(NetworkData data, MemoryStream ms, Dictionary<Type, StatisticsHelper> stat)
+		private static void ProcessStatistics(NetworkData data, MemoryStream ms,
+			Dictionary<Type, StatisticsHelper> stat)
 		{
 			Type type = data.GetType();
 			if (stat.TryGetValue(type, out var value))
@@ -169,23 +174,32 @@ namespace OpenHellion.IO
 			{
 				stat[type] = new StatisticsHelper(ms.Length);
 			}
+
 			if (!(DateTime.UtcNow.Subtract(_lastStatisticUpdateTime).TotalSeconds >= _statisticsLogUpdateTime))
 			{
 				return;
 			}
+
 			TimeSpan timeSpan = DateTime.UtcNow.Subtract(_statisticUpdateResetTime);
-			string text = (stat != _sentStatistics) ? ("Received packets statistics (" + timeSpan.ToString("h':'mm':'ss") + "): \n") : ("Sent packets statistics (" + timeSpan.ToString("h':'mm':'ss") + "): \n");
+			string text = (stat != _sentStatistics)
+				? ("Received packets statistics (" + timeSpan.ToString("h':'mm':'ss") + "): \n")
+				: ("Sent packets statistics (" + timeSpan.ToString("h':'mm':'ss") + "): \n");
 			long num = 0L;
 			string text2;
-			foreach (KeyValuePair<Type, StatisticsHelper> item in stat.OrderBy((KeyValuePair<Type, StatisticsHelper> m) => m.Value.ByteSum).Reverse())
+			foreach (KeyValuePair<Type, StatisticsHelper> item in stat
+				         .OrderBy((KeyValuePair<Type, StatisticsHelper> m) => m.Value.ByteSum).Reverse())
 			{
 				text2 = text;
-				text = text2 + item.Key.Name + ": " + item.Value.PacketNumber + " (" + ((float)item.Value.ByteSum / 1000f).ToString("##,0") + " kB), \n";
+				text = text2 + item.Key.Name + ": " + item.Value.PacketNumber + " (" +
+				       ((float)item.Value.ByteSum / 1000f).ToString("##,0") + " kB), \n";
 				item.Value.BytesSinceLastCheck = 0L;
 				num += item.Value.ByteSum;
 			}
+
 			text2 = text;
-			text = text2 + "-----------------------------------------\nTotal: " + ((float)num / 1000f).ToString("##,0") + " kB (avg: " + ((double)num / timeSpan.TotalSeconds / 1000.0).ToString("##,0") + " kB/s)";
+			text = text2 + "-----------------------------------------\nTotal: " +
+			       ((float)num / 1000f).ToString("##,0") + " kB (avg: " +
+			       ((double)num / timeSpan.TotalSeconds / 1000.0).ToString("##,0") + " kB/s)";
 			if (MyPlayer.Instance != null)
 			{
 				if (stat == _sentStatistics)
@@ -197,6 +211,7 @@ namespace OpenHellion.IO
 					MyPlayer.Instance.ReceivedPacketStatistics = text;
 				}
 			}
+
 			_lastStatisticUpdateTime = DateTime.UtcNow;
 		}
 

@@ -30,8 +30,7 @@ namespace RootMotion.FinalIK
 			[Tooltip("The acceleration, smaller values means lazyer following")]
 			public float acceleration = 3f;
 
-			[Tooltip("Matching target velocity")]
-			[Range(0f, 1f)]
+			[Tooltip("Matching target velocity")] [Range(0f, 1f)]
 			public float matchVelocity;
 
 			[Tooltip("gravity applied to the Body")]
@@ -66,7 +65,9 @@ namespace RootMotion.FinalIK
 						Reset();
 						firstUpdate = false;
 					}
-					direction = Vector3.Lerp(direction, (transform.position - lazyPoint) / deltaTime * 0.01f, deltaTime * acceleration);
+
+					direction = Vector3.Lerp(direction, (transform.position - lazyPoint) / deltaTime * 0.01f,
+						deltaTime * acceleration);
 					lazyPoint += direction * deltaTime * speed;
 					delta = transform.position - lastPosition;
 					lazyPoint += delta * matchVelocity;
@@ -74,18 +75,18 @@ namespace RootMotion.FinalIK
 					EffectorLink[] array = effectorLinks;
 					foreach (EffectorLink effectorLink in array)
 					{
-						solver.GetEffector(effectorLink.effector).positionOffset += (lazyPoint - transform.position) * effectorLink.weight * weight;
+						solver.GetEffector(effectorLink.effector).positionOffset +=
+							(lazyPoint - transform.position) * effectorLink.weight * weight;
 					}
+
 					lastPosition = transform.position;
 				}
 			}
 		}
 
-		[Tooltip("The array of Bodies")]
-		public Body[] bodies;
+		[Tooltip("The array of Bodies")] public Body[] bodies;
 
-		[Tooltip("The array of OffsetLimits")]
-		public OffsetLimits[] limits;
+		[Tooltip("The array of OffsetLimits")] public OffsetLimits[] limits;
 
 		public void ResetBodies()
 		{
@@ -103,6 +104,7 @@ namespace RootMotion.FinalIK
 			{
 				body.Update(ik.solver, weight, base.deltaTime);
 			}
+
 			ApplyLimits(limits);
 		}
 	}

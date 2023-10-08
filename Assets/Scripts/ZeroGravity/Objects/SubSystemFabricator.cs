@@ -21,11 +21,9 @@ namespace ZeroGravity.Objects
 			public Dictionary<ResourceType, float> Resources;
 		}
 
-		[SerializeField]
-		private string _Name = "Fabricator";
+		[SerializeField] private string _Name = "Fabricator";
 
-		[SerializeField]
-		private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
+		[SerializeField] private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
 		{
 			new ResourceRequirement
 			{
@@ -39,13 +37,11 @@ namespace ZeroGravity.Objects
 
 		public List<SceneAttachPoint> AttachPoints;
 
-		[NonSerialized]
-		public List<ItemCompoundType> ItemsInQueue;
+		[NonSerialized] public List<ItemCompoundType> ItemsInQueue;
 
 		public float CurrentTimeLeft;
 
-		[NonSerialized]
-		public float TotalTimeLeft;
+		[NonSerialized] public float TotalTimeLeft;
 
 		public CargoCompartment CargoResources;
 
@@ -78,6 +74,7 @@ namespace ZeroGravity.Objects
 			{
 				return _Compartments.Find((ICargoCompartment m) => m.ID == id.Value);
 			}
+
 			return _Compartments[0];
 		}
 
@@ -89,7 +86,8 @@ namespace ZeroGravity.Objects
 			subSystemFabricatorAuxData.AttachPoints = (from m in AttachPoints
 				where m != null
 				select m.InSceneID).ToList();
-			subSystemFabricatorAuxData.CargoCompartments = new List<CargoCompartmentData> { (!(CargoResources == null)) ? CargoResources.GetData() : null };
+			subSystemFabricatorAuxData.CargoCompartments = new List<CargoCompartmentData>
+				{ (!(CargoResources == null)) ? CargoResources.GetData() : null };
 			return subSystemFabricatorAuxData;
 		}
 
@@ -106,6 +104,7 @@ namespace ZeroGravity.Objects
 				FabricatorAnimator.SetBool("Work", value: false);
 				FabricatorAnimator.SetBool("Initialized", initialized);
 			}
+
 			initialized = true;
 		}
 
@@ -120,6 +119,7 @@ namespace ZeroGravity.Objects
 			{
 				_Compartments = new List<ICargoCompartment> { CargoResources };
 			}
+
 			foreach (CargoCompartmentDetails ccd in fabricatorAuxDetails.CargoCompartments)
 			{
 				ICargoCompartment cargoCompartment = _Compartments.Find((ICargoCompartment m) => m.ID == ccd.ID);
@@ -154,17 +154,21 @@ namespace ZeroGravity.Objects
 			});
 		}
 
-		public bool HasEnoughResources(ItemType itemType, GenericItemSubType subType, MachineryPartType partType, int tier)
+		public bool HasEnoughResources(ItemType itemType, GenericItemSubType subType, MachineryPartType partType,
+			int tier)
 		{
-			Dictionary<ResourceType, float> craftingResources = Item.GetCraftingResources(itemType, subType, partType, tier);
+			Dictionary<ResourceType, float> craftingResources =
+				Item.GetCraftingResources(itemType, subType, partType, tier);
 			foreach (KeyValuePair<ResourceType, float> kv in craftingResources)
 			{
-				CargoResourceData cargoResourceData = GetCompartment().Resources.FirstOrDefault((CargoResourceData m) => m.ResourceType == kv.Key);
+				CargoResourceData cargoResourceData = GetCompartment().Resources
+					.FirstOrDefault((CargoResourceData m) => m.ResourceType == kv.Key);
 				if (cargoResourceData == null || cargoResourceData.Quantity < kv.Value)
 				{
 					return false;
 				}
 			}
+
 			return true;
 		}
 
@@ -184,19 +188,24 @@ namespace ZeroGravity.Objects
 				{
 					partType = (value.DefaultAuxData as MachineryPartData).PartType;
 				}
-				if (AllowedItemTypes.Count > 0 && AllowedItemTypes.FirstOrDefault((ItemCompoundType m) => m.Type == type && m.SubType == subType && m.PartType == partType) == null)
+
+				if (AllowedItemTypes.Count > 0 && AllowedItemTypes.FirstOrDefault((ItemCompoundType m) =>
+					    m.Type == type && m.SubType == subType && m.PartType == partType) == null)
 				{
 					continue;
 				}
+
 				int index = 1;
 				List<int> list2 = value.DefaultAuxData.TierMultipliers.Select((float m) => index++).ToList();
 				if (list2.Count == 0)
 				{
 					list2.Add(1);
 				}
+
 				foreach (int item in list2)
 				{
-					Dictionary<ResourceType, float> craftingResources = Item.GetCraftingResources(type, subType, partType, item);
+					Dictionary<ResourceType, float> craftingResources =
+						Item.GetCraftingResources(type, subType, partType, item);
 					ItemCompoundType itemCompoundType = new ItemCompoundType();
 					itemCompoundType.Type = type;
 					itemCompoundType.SubType = subType;
@@ -215,6 +224,7 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
+
 			return (from m in list
 				orderby m.CompoundType.Type != ItemType.MachineryPart, m.CompoundType.Type == ItemType.GenericItem
 				select m).ToList();

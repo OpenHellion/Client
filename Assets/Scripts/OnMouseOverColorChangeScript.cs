@@ -2,7 +2,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class OnMouseOverColorChangeScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IEventSystemHandler
+public class OnMouseOverColorChangeScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
+	IEventSystemHandler
 {
 	public Color DefaultColor;
 

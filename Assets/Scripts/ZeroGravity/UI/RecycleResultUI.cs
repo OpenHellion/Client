@@ -6,8 +6,7 @@ namespace ZeroGravity.UI
 {
 	public class RecycleResultUI : MonoBehaviour
 	{
-		[HideInInspector]
-		public ResourceType Resource;
+		[HideInInspector] public ResourceType Resource;
 
 		public Text Name;
 
@@ -18,7 +17,7 @@ namespace ZeroGravity.UI
 		private void Start()
 		{
 			Name.text = Resource.ToLocalizedString();
-			Icon.sprite = Client.Instance.SpriteManager.GetSprite(Resource);
+			Icon.sprite = SpriteManager.Instance.GetSprite(Resource);
 		}
 	}
 }

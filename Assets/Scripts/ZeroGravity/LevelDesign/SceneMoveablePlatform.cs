@@ -60,6 +60,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
+
 			foreach (SpaceObjectTransferable item in objectOnPlatform)
 			{
 				item.OnPlatform = null;
@@ -78,6 +79,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
+
 			if (objectOnPlatform.Count > 0)
 			{
 				Vector3 vector = base.transform.position - oldPosition;
@@ -93,6 +95,7 @@ namespace ZeroGravity.LevelDesign
 					}
 				}
 			}
+
 			oldPosition = base.transform.position;
 		}
 	}

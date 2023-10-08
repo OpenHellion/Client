@@ -74,10 +74,12 @@ namespace RootMotion
 				{
 					return 0f - zoomSensitivity;
 				}
+
 				if (axis < 0f)
 				{
 					return zoomSensitivity;
 				}
+
 				return 0f;
 			}
 		}
@@ -123,11 +125,14 @@ namespace RootMotion
 			{
 				Cursor.lockState = (lockCursor ? CursorLockMode.Locked : CursorLockMode.None);
 				Cursor.visible = ((!lockCursor) ? true : false);
-				if (rotateAlways || (rotateOnLeftButton && Input.GetMouseButton(0)) || (rotateOnRightButton && Input.GetMouseButton(1)) || (rotateOnMiddleButton && Input.GetMouseButton(2)))
+				if (rotateAlways || (rotateOnLeftButton && Input.GetMouseButton(0)) ||
+				    (rotateOnRightButton && Input.GetMouseButton(1)) ||
+				    (rotateOnMiddleButton && Input.GetMouseButton(2)))
 				{
 					x += Input.GetAxis("Mouse X") * rotationSensitivity;
 					y = ClampAngle(y - Input.GetAxis("Mouse Y") * rotationSensitivity, yMinLimit, yMaxLimit);
 				}
+
 				distanceTarget = Mathf.Clamp(distanceTarget + zoomAdd, minDistance, maxDistance);
 			}
 		}
@@ -151,6 +156,7 @@ namespace RootMotion
 				{
 					smoothPosition = Vector3.Lerp(smoothPosition, target.position, deltaTime * followSpeed);
 				}
+
 				position = smoothPosition + rotation * (offset - Vector3.forward * distance);
 				base.transform.position = position;
 				base.transform.rotation = rotation;
@@ -163,10 +169,12 @@ namespace RootMotion
 			{
 				angle += 360f;
 			}
+
 			if (angle > 360f)
 			{
 				angle -= 360f;
 			}
+
 			return Mathf.Clamp(angle, min, max);
 		}
 	}

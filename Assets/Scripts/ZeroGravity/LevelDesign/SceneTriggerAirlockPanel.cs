@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using OpenHellion;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Objects;
@@ -8,78 +9,52 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneTriggerAirlockPanel : SceneTriggerPanels
 	{
-		[SerializeField]
-		private bool _cancelExecuterAtSameTime;
+		[SerializeField] private bool _cancelExecuterAtSameTime;
 
-		[SerializeField]
-		private bool _isExteriorTrigger;
+		[SerializeField] private bool _isExteriorTrigger;
 
 		private AirLockControls myAirLockControls;
 
-		private AirlockUI airlockUI;
+		private static World _world;
 
 		public override SceneTriggerType TriggerType
 		{
-			get
-			{
-				return SceneTriggerType.AirlockPanel;
-			}
+			get { return SceneTriggerType.AirlockPanel; }
 		}
 
 		public override PlayerHandsCheckType PlayerHandsCheck
 		{
-			get
-			{
-				return PlayerHandsCheckType.StoreItemInHands;
-			}
+			get { return PlayerHandsCheckType.StoreItemInHands; }
 		}
 
 		public override List<ItemType> PlayerHandsItemType
 		{
-			get
-			{
-				return null;
-			}
+			get { return null; }
 		}
 
 		public override bool IsNearTrigger
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public override bool IsInteractable
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public bool CancelExecuterAtSameTime
 		{
-			get
-			{
-				return _cancelExecuterAtSameTime;
-			}
+			get { return _cancelExecuterAtSameTime; }
 		}
 
 		public bool IsExteriorTrigger
 		{
-			get
-			{
-				return _isExteriorTrigger;
-			}
+			get { return _isExteriorTrigger; }
 		}
 
 		public override bool CameraMovementAllowed
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public AirLockControls MyAirLockControls
@@ -90,22 +65,18 @@ namespace ZeroGravity.LevelDesign
 				{
 					myAirLockControls = GetComponent<AirLockControls>();
 				}
+
 				return myAirLockControls;
 			}
 		}
 
-		public AirlockUI AirlockUI
-		{
-			get
-			{
-				airlockUI = Client.Instance.InGamePanels.Airlock;
-				return airlockUI;
-			}
-		}
+		public AirlockUI AirlockUI => _world.InWorldPanels.Airlock;
 
 		private void Awake()
 		{
-			if (CheckAuthorizationType == AuthorizationType.none)
+			_world ??= GameObject.Find("/World").GetComponent<World>();
+
+			if (CheckAuthorizationType == AuthorizationType.None)
 			{
 				CheckAuthorizationType = AuthorizationType.AuthorizedOrNoSecurity;
 			}
@@ -117,6 +88,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return false;
 			}
+
 			player.AttachToPanel(this);
 			AirlockUI.MyAirlock = MyAirLockControls;
 			AirlockUI.OnInteract();

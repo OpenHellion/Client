@@ -15,7 +15,8 @@ namespace ZeroGravity.UI
 
 		public GameObject InviteList;
 
-		public Dictionary<string, InvitePlayerToPod> AvailablePlayersForInvite = new Dictionary<string, InvitePlayerToPod>();
+		public Dictionary<string, InvitePlayerToPod> AvailablePlayersForInvite =
+			new Dictionary<string, InvitePlayerToPod>();
 
 		public GameObject ActionHolder;
 
@@ -43,14 +44,8 @@ namespace ZeroGravity.UI
 
 		private void Start()
 		{
-			RegisterPodButton.onClick.AddListener(delegate
-			{
-				ToggleLock(val: true);
-			});
-			UnregisterPodButton.onClick.AddListener(delegate
-			{
-				ToggleLock(val: false);
-			});
+			RegisterPodButton.onClick.AddListener(delegate { ToggleLock(val: true); });
+			UnregisterPodButton.onClick.AddListener(delegate { ToggleLock(val: false); });
 			CancelInviteButton.onClick.AddListener(CancelInvite);
 			AuthorizePodButton.onClick.AddListener(AssignOnCryo);
 			InviteToPodButton.onClick.AddListener(OpenPlayerList);
@@ -69,7 +64,6 @@ namespace ZeroGravity.UI
 		{
 			if (toggle)
 			{
-				Client.Instance.CanvasManager.QuickTipHolder.Activate(value: false);
 				UpdateUI();
 				InviteList.Activate(value: false);
 				AlertBox.Activate(value: false);
@@ -90,9 +84,11 @@ namespace ZeroGravity.UI
 				if (AvailablePlayersForInvite.ContainsKey(availablePlayer.PlayerId))
 				{
 					AvailablePlayersForInvite[availablePlayer.PlayerId].InGameName.text = availablePlayer.Name;
-					AvailablePlayersForInvite[availablePlayer.PlayerId].InvitePlayerButton.interactable = !availablePlayer.AlreadyHasInvite;
+					AvailablePlayersForInvite[availablePlayer.PlayerId].InvitePlayerButton.interactable =
+						!availablePlayer.AlreadyHasInvite;
 					continue;
 				}
+
 				GameObject gameObject = Instantiate(PlayerToInvitePref, PlayerToInvitePref.transform.parent);
 				gameObject.SetActive(value: true);
 				InvitePlayerToPod component = gameObject.GetComponent<InvitePlayerToPod>();
@@ -108,11 +104,9 @@ namespace ZeroGravity.UI
 					component.IsFriend.SetActive(value: true);
 					component.Avatar.gameObject.SetActive(value: false);
 				}
+
 				SceneSpawnPoint.PlayerInviteData plForDeleg = availablePlayer;
-				component.InvitePlayerButton.onClick.AddListener(delegate
-				{
-					InvitePlayer(plForDeleg);
-				});
+				component.InvitePlayerButton.onClick.AddListener(delegate { InvitePlayer(plForDeleg); });
 				AvailablePlayersForInvite.Add(availablePlayer.PlayerId, component);
 			}
 		}
@@ -244,6 +238,7 @@ namespace ZeroGravity.UI
 			{
 				Destroy(value.gameObject);
 			}
+
 			AvailablePlayersForInvite.Clear();
 			SpawnPoint.GetPlayersForInvite(getNakamaFriends: true, getPlayerFromServer: true, OnInvitePlayersLoaded);
 		}

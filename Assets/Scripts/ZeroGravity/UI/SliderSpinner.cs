@@ -49,6 +49,7 @@ namespace ZeroGravity.UI
 				{
 					num -= Increment;
 				}
+
 				if (num >= minValue && num <= maxValue)
 				{
 					slider.value = num;
@@ -63,6 +64,7 @@ namespace ZeroGravity.UI
 				applyChanges = false;
 				slider.value = value;
 			}
+
 			if (OnChange != null)
 			{
 				OnChange(value);
@@ -76,6 +78,7 @@ namespace ZeroGravity.UI
 				applyChanges = true;
 				return;
 			}
+
 			float num = 0f;
 			num += inputValue;
 			if (num < minValue)
@@ -86,6 +89,7 @@ namespace ZeroGravity.UI
 			{
 				num = maxValue;
 			}
+
 			UpdateField(num);
 		}
 

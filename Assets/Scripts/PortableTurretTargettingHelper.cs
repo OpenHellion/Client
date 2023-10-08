@@ -3,8 +3,7 @@ using ZeroGravity.Objects;
 
 public class PortableTurretTargettingHelper : MonoBehaviour
 {
-	[SerializeField]
-	private PortableTurret turret;
+	[SerializeField] private PortableTurret turret;
 
 	private void OnTriggerEnter(Collider coli)
 	{

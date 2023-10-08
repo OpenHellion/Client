@@ -12,8 +12,8 @@ public class MeleeAttackBehaviour : StateMachineBehaviour
 		do
 		{
 			num = Random.Range(0, 2);
-		}
-		while (num == previous);
+		} while (num == previous);
+
 		return num;
 	}
 
@@ -29,10 +29,12 @@ public class MeleeAttackBehaviour : StateMachineBehaviour
 		{
 			repeatCounter++;
 		}
+
 		if (repeatCounter == 2)
 		{
 			num = DoRandom(previous);
 		}
+
 		animator.SetFloat("MeleeAttackType", num);
 	}
 }

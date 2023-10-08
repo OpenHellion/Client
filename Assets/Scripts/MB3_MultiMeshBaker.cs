@@ -3,15 +3,11 @@ using UnityEngine;
 
 public class MB3_MultiMeshBaker : MB3_MeshBakerCommon
 {
-	[SerializeField]
-	protected MB3_MultiMeshCombiner _meshCombiner = new MB3_MultiMeshCombiner();
+	[SerializeField] protected MB3_MultiMeshCombiner _meshCombiner = new MB3_MultiMeshCombiner();
 
 	public override MB3_MeshCombiner meshCombiner
 	{
-		get
-		{
-			return _meshCombiner;
-		}
+		get { return _meshCombiner; }
 	}
 
 	public override bool AddDeleteGameObjects(GameObject[] gos, GameObject[] deleteGOs, bool disableRendererInSource)
@@ -20,6 +16,7 @@ public class MB3_MultiMeshBaker : MB3_MeshBakerCommon
 		{
 			_meshCombiner.resultSceneObject = new GameObject("CombinedMesh-" + base.name);
 		}
+
 		meshCombiner.name = base.name + "-mesh";
 		return _meshCombiner.AddDeleteGameObjects(gos, deleteGOs, disableRendererInSource);
 	}
@@ -30,6 +27,7 @@ public class MB3_MultiMeshBaker : MB3_MeshBakerCommon
 		{
 			_meshCombiner.resultSceneObject = new GameObject("CombinedMesh-" + base.name);
 		}
+
 		meshCombiner.name = base.name + "-mesh";
 		return _meshCombiner.AddDeleteGameObjectsByID(gos, deleteGOs, disableRendererInSource);
 	}

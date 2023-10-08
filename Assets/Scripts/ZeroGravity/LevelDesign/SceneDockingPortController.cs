@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.Serialization;
 using ZeroGravity.Data;
 using ZeroGravity.Objects;
 
@@ -8,40 +9,30 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneDockingPortController : BaseSceneTrigger
 	{
-		[SerializeField]
-		private SceneDockingPort parentPort;
+		[SerializeField] private SceneDockingPort parentPort;
 
 		private bool isLocked;
 
-		[SerializeField]
-		private SceneTriggerExecuter executer;
+		[FormerlySerializedAs("executer")] [SerializeField]
+		private SceneTriggerExecutor _executor;
 
-		[SerializeField]
-		private string lockExecuterState;
+		[SerializeField] private string lockExecuterState;
 
-		[SerializeField]
-		private string unlockExecuterState;
+		[SerializeField] private string unlockExecuterState;
 
-		[SerializeField]
-		private bool _IsNearTrigger = true;
+		[SerializeField] private bool _IsNearTrigger = true;
 
 		public MeshRenderer LeverLight;
 
 		[HideInInspector]
-		public SceneTriggerExecuter GetExecuter
+		public SceneTriggerExecutor GetExecutor
 		{
-			get
-			{
-				return executer;
-			}
+			get { return _executor; }
 		}
 
 		public bool IsLocked
 		{
-			get
-			{
-				return parentPort.Locked || isLocked;
-			}
+			get { return parentPort.Locked || isLocked; }
 			set
 			{
 				isLocked = value;
@@ -51,66 +42,42 @@ namespace ZeroGravity.LevelDesign
 
 		public override bool ExclusivePlayerLocking
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public override SceneTriggerType TriggerType
 		{
-			get
-			{
-				return SceneTriggerType.DockingPortController;
-			}
+			get { return SceneTriggerType.DockingPortController; }
 		}
 
 		public override PlayerHandsCheckType PlayerHandsCheck
 		{
-			get
-			{
-				return PlayerHandsCheckType.DontCheck;
-			}
+			get { return PlayerHandsCheckType.DontCheck; }
 		}
 
 		public override List<ItemType> PlayerHandsItemType
 		{
-			get
-			{
-				return null;
-			}
+			get { return null; }
 		}
 
 		public override bool IsNearTrigger
 		{
-			get
-			{
-				return _IsNearTrigger;
-			}
+			get { return _IsNearTrigger; }
 		}
 
 		public override bool IsInteractable
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		private bool connected
 		{
-			get
-			{
-				return parentPort.DockedToPort != null;
-			}
+			get { return parentPort.DockedToPort != null; }
 		}
 
 		public override bool CameraMovementAllowed
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public void OnLeverStateChange()
@@ -135,6 +102,7 @@ namespace ZeroGravity.LevelDesign
 						break;
 					}
 				}
+
 				parentPort.DockedToPort.StartCoroutine("PulseColourOnMaterial");
 			}
 			else
@@ -146,17 +114,18 @@ namespace ZeroGravity.LevelDesign
 		public void ToggleLock(bool isLocked, bool isInstant)
 		{
 			IsLocked = isLocked;
-			if (executer != null)
+			if (_executor != null)
 			{
 				if (isInstant)
 				{
-					executer.ChangeStateImmediate((!IsLocked) ? unlockExecuterState : lockExecuterState);
+					_executor.ChangeStateImmediate((!IsLocked) ? unlockExecuterState : lockExecuterState);
 				}
 				else
 				{
-					executer.ChangeState((!IsLocked) ? unlockExecuterState : lockExecuterState);
+					_executor.ChangeState((!IsLocked) ? unlockExecuterState : lockExecuterState);
 				}
 			}
+
 			if (isLocked && parentPort != null)
 			{
 				parentPort.TryToUndock();
@@ -169,6 +138,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				parentPort = GetComponentInParent<SceneDockingPort>();
 			}
+
 			if (parentPort == null)
 			{
 				Dbg.Error("Scene docking port controller has no parent docking port", base.name);
@@ -177,12 +147,14 @@ namespace ZeroGravity.LevelDesign
 			{
 				parentPort.AddPortController(this);
 			}
-			if (executer != null)
+
+			if (_executor != null)
 			{
-				LeverLight = executer.gameObject.GetComponent<MeshRenderer>();
+				LeverLight = _executor.gameObject.GetComponent<MeshRenderer>();
 			}
+
 			StandardTip = Localization.StandardInteractionTip.Undock;
-			if (CheckAuthorizationType == AuthorizationType.none)
+			if (CheckAuthorizationType == AuthorizationType.None)
 			{
 				CheckAuthorizationType = AuthorizationType.AuthorizedOrNoSecurity;
 			}
@@ -194,11 +166,13 @@ namespace ZeroGravity.LevelDesign
 			{
 				return false;
 			}
+
 			ToggleLock(!IsLocked, false);
 			if (interactWithOverlappingTriggers)
 			{
 				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
 			}
+
 			return true;
 		}
 	}

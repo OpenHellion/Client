@@ -10,13 +10,8 @@ namespace ZeroGravity.Network
 
 		public override SpaceObjectType Type
 		{
-			get
-			{
-				return SpaceObjectType.DynamicObject;
-			}
-			set
-			{
-			}
+			get { return SpaceObjectType.DynamicObject; }
+			set { }
 		}
 	}
 }

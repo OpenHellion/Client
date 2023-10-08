@@ -7,10 +7,7 @@ namespace ZeroGravity.ShipComponents
 	{
 		public DistributionLineType Type
 		{
-			get
-			{
-				return DistributionLineType.Air;
-			}
+			get { return DistributionLineType.Air; }
 		}
 
 		public bool IsConnected { get; private set; }

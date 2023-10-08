@@ -69,6 +69,7 @@ namespace ZeroGravity
 				{
 					m_soundEffect = VideoClips[clip].Sound;
 				}
+
 				VideoPlayer.loopPointReached += EndReached;
 				VideoPlayer.started += Started;
 				VideoPlayer.clip = VideoClips[clip].Video;

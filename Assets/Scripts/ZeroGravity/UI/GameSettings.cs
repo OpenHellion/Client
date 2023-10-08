@@ -1,3 +1,6 @@
+using System;
+using OpenHellion;
+using OpenHellion.Data;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -22,14 +25,12 @@ namespace ZeroGravity.UI
 
 		public Dropdown LanguageDropdown;
 
+		public Action<bool> OnCrosshairToggle;
+
 		public GameSettingsData GameSettingsData = new GameSettingsData();
 
 		private void Start()
 		{
-			headBobSlider.maxValue = 1f;
-			headBobSlider.wholeNumbers = false;
-			headBobSlider.value = Client.Instance.HeadbobStrength;
-			headBobSlider.onValueChanged.AddListener(HeadBobSlider);
 			headBobLevel.text = headBobSlider.value.ToString("0.00");
 			if (Properties.GetProperty("custom_localization_file", string.Empty) != string.Empty)
 			{
@@ -38,8 +39,14 @@ namespace ZeroGravity.UI
 					text = "Custom"
 				});
 			}
-			LanguageDropdown.value = ((GameSettingsData.LanguageIndex < LanguageDropdown.options.Count) ? GameSettingsData.LanguageIndex : 0);
+
+			LanguageDropdown.value = GameSettingsData.LanguageIndex < LanguageDropdown.options.Count
+				? GameSettingsData.LanguageIndex
+				: 0;
 			LanguageDropdown.RefreshShownValue();
+			headBobSlider.maxValue = 1f;
+			headBobSlider.wholeNumbers = false;
+			headBobSlider.onValueChanged.AddListener(HeadBobSlider);
 			DisableChatToggle.onValueChanged.AddListener(OnDisableChatChange);
 			HideTipsToggle.onValueChanged.AddListener(OnHideTipsChange);
 			ShowCrosshairToggle.onValueChanged.AddListener(OnShowCrosshairChange);
@@ -54,52 +61,38 @@ namespace ZeroGravity.UI
 				SetDefault();
 				return;
 			}
+
 			GameSettingsData = gameSettings;
-			HeadBobSlider(GameSettingsData.HeadBobStrenth);
-			Client.Instance.HeadbobStrength = GameSettingsData.HeadBobStrenth;
-			Client.Instance.CanvasManager.ShowTutorial = GameSettingsData.ShowTutorial;
+			HeadBobSlider(GameSettingsData.HeadBobStrength);
 			DisableChatToggle.isOn = GameSettingsData.DisableChat;
-			Client.Instance.CanvasManager.DisableChat = GameSettingsData.DisableChat;
 			HideTipsToggle.isOn = !GameSettingsData.ShowTips;
-			Client.Instance.CanvasManager.ShowTips = GameSettingsData.ShowTips;
 			ShowCrosshairToggle.isOn = GameSettingsData.ShowCrosshair;
-			Client.Instance.CanvasManager.ShowCrosshair = GameSettingsData.ShowCrosshair;
 			AutoStabilization.isOn = GameSettingsData.AutoStabilization;
-			Client.Instance.CanvasManager.AutoStabilization = GameSettingsData.AutoStabilization;
 			LanguageDropdown.value = GameSettingsData.LanguageIndex;
-			Client.Instance.CurrentLanguageIndex = GameSettingsData.LanguageIndex;
 		}
 
 		public void SaveGameSettigns()
 		{
-			GameSettingsData.HeadBobStrenth = headBobSlider.value;
-			Client.Instance.HeadbobStrength = headBobSlider.value;
+			GameSettingsData.HeadBobStrength = headBobSlider.value;
 			GameSettingsData.ShowTutorial = true;
-			Client.Instance.CanvasManager.ShowTutorial = false;
 			GameSettingsData.DisableChat = DisableChatToggle.isOn;
-			Client.Instance.CanvasManager.DisableChat = DisableChatToggle.isOn;
 			GameSettingsData.ShowTips = !HideTipsToggle.isOn;
-			Client.Instance.CanvasManager.ShowTips = !HideTipsToggle.isOn;
 			GameSettingsData.AutoStabilization = AutoStabilization.isOn;
-			Client.Instance.CanvasManager.AutoStabilization = AutoStabilization.isOn;
 			GameSettingsData.ShowCrosshair = ShowCrosshairToggle.isOn;
-			Client.Instance.CanvasManager.ShowCrosshair = ShowCrosshairToggle.isOn;
 			GameSettingsData.LanguageIndex = LanguageDropdown.value;
-			Client.Instance.CurrentLanguageIndex = LanguageDropdown.value;
 		}
 
 		public void HeadBobSlider(float val)
 		{
 			headBobLevel.text = val.ToString("0.00");
-			Client.Instance.HeadbobStrength = val;
-			GameSettingsData.HeadBobStrenth = val;
+			GameSettingsData.HeadBobStrength = val;
 			headBobSlider.value = val;
 		}
 
 		public void SetDefault()
 		{
-			GameSettingsData.HeadBobStrenth = 0f;
-			HeadBobSlider(GameSettingsData.HeadBobStrenth);
+			GameSettingsData.HeadBobStrength = 0f;
+			HeadBobSlider(GameSettingsData.HeadBobStrength);
 			GameSettingsData.ShowCrosshair = true;
 			ShowCrosshairToggle.isOn = GameSettingsData.ShowCrosshair;
 			GameSettingsData.ShowTutorial = true;
@@ -115,33 +108,33 @@ namespace ZeroGravity.UI
 
 		public void OnHideTutorialChange()
 		{
-			GameSettingsData.ShowTutorial = (Client.Instance.CanvasManager.ShowTutorial = !HideTutorialToggle.isOn);
+			GameSettingsData.ShowTutorial = !HideTutorialToggle.isOn;
 		}
 
 		public void OnDisableChatChange(bool value)
 		{
-			GameSettingsData.DisableChat = (Client.Instance.CanvasManager.DisableChat = DisableChatToggle.isOn);
+			GameSettingsData.DisableChat = DisableChatToggle.isOn;
 		}
 
 		public void OnHideTipsChange(bool value)
 		{
-			GameSettingsData.ShowTips = (Client.Instance.CanvasManager.ShowTips = !HideTipsToggle.isOn);
+			GameSettingsData.ShowTips = !HideTipsToggle.isOn;
 		}
 
 		public void OnAutoStabilizationChange(bool value)
 		{
-			GameSettingsData.AutoStabilization = (Client.Instance.CanvasManager.AutoStabilization = AutoStabilization.isOn);
+			GameSettingsData.AutoStabilization = AutoStabilization.isOn;
 		}
 
 		public void OnShowCrosshairChange(bool value)
 		{
-			GameSettingsData.ShowCrosshair = (Client.Instance.CanvasManager.ShowCrosshair = ShowCrosshairToggle.isOn);
-			Client.Instance.CanvasManager.CanvasUI.CheckDotCroshair();
+			GameSettingsData.ShowCrosshair = ShowCrosshairToggle.isOn;
+			OnCrosshairToggle(value);
 		}
 
 		public void OnLanguageChange(int value)
 		{
-			GameSettingsData.LanguageIndex = (Client.Instance.CurrentLanguageIndex = LanguageDropdown.value);
+			GameSettingsData.LanguageIndex = LanguageDropdown.value;
 			Settings.Instance.RestartOnSave = true;
 		}
 

@@ -5,11 +5,9 @@ using UnityEngine.UI;
 [ExecuteInEditMode]
 public class TextTypeEffect : MonoBehaviour
 {
-	[Multiline]
-	public string Text = string.Empty;
+	[Multiline] public string Text = string.Empty;
 
-	[Range(0f, 1f)]
-	public float Substring;
+	[Range(0f, 1f)] public float Substring;
 
 	public float WriteSpeed = 1f;
 
@@ -43,6 +41,7 @@ public class TextTypeEffect : MonoBehaviour
 			TextMarkerReached++;
 			CheckForPause();
 		}
+
 		TextField.text = text.Replace('|', ' ');
 		Substring += Time.deltaTime * WriteSpeed;
 	}
@@ -121,16 +120,19 @@ public class TextTypeEffect : MonoBehaviour
 		{
 			return;
 		}
+
 		if (Substring >= (float)Text.Length)
 		{
 			Substring = Text.Length;
 			finished = true;
 		}
+
 		SetText();
 		if (!finished || Pause)
 		{
 			return;
 		}
+
 		if (LastPause != 0)
 		{
 			OnTypeFinished.Invoke();
@@ -139,6 +141,7 @@ public class TextTypeEffect : MonoBehaviour
 			LastPause = 0;
 			return;
 		}
+
 		buffer -= Time.deltaTime;
 		if (buffer < 0f)
 		{

@@ -21,6 +21,7 @@ public class IKToggleBehaviour : StateMachineBehaviour
 				animator.GetComponent<AnimatorHelper>().aimIKController.ToggleIK(false);
 				wasIK = true;
 			}
+
 			inTransition = false;
 		}
 	}

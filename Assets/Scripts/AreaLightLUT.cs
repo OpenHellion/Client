@@ -20588,14 +20588,14 @@ public class AreaLightLUT
 	{
 		switch (type)
 		{
-		case LUTType.TransformInv_DisneyDiffuse:
-			return LoadLUT(s_LUTTransformInv_DisneyDiffuse);
-		case LUTType.TransformInv_GGX:
-			return LoadLUT(s_LUTTransformInv_GGX);
-		case LUTType.AmpDiffAmpSpecFresnel:
-			return LoadLUT(s_LUTAmplitude_DisneyDiffuse, s_LUTAmplitude_GGX, s_LUTFresnel_GGX);
-		default:
-			return null;
+			case LUTType.TransformInv_DisneyDiffuse:
+				return LoadLUT(s_LUTTransformInv_DisneyDiffuse);
+			case LUTType.TransformInv_GGX:
+				return LoadLUT(s_LUTTransformInv_GGX);
+			case LUTType.AmpDiffAmpSpecFresnel:
+				return LoadLUT(s_LUTAmplitude_DisneyDiffuse, s_LUTAmplitude_GGX, s_LUTFresnel_GGX);
+			default:
+				return null;
 		}
 	}
 
@@ -20614,8 +20614,10 @@ public class AreaLightLUT
 		Color[] array = new Color[4096];
 		for (int i = 0; i < 4096; i++)
 		{
-			array[i] = new Color((float)LUTTransformInv[i, 0], (float)LUTTransformInv[i, 2], (float)LUTTransformInv[i, 4], (float)LUTTransformInv[i, 6]);
+			array[i] = new Color((float)LUTTransformInv[i, 0], (float)LUTTransformInv[i, 2],
+				(float)LUTTransformInv[i, 4], (float)LUTTransformInv[i, 6]);
 		}
+
 		return CreateLUT(TextureFormat.RGBAHalf, array);
 	}
 
@@ -20626,6 +20628,7 @@ public class AreaLightLUT
 		{
 			array[i] = new Color(LUTScalar0[i], LUTScalar1[i], LUTScalar2[i], 0f);
 		}
+
 		return CreateLUT(TextureFormat.RGBAHalf, array);
 	}
 }

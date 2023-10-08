@@ -12,14 +12,17 @@ namespace RootMotion.Demos
 			{
 				Activate(0);
 			}
+
 			if (GUILayout.Button("Quadruped"))
 			{
 				Activate(1);
 			}
+
 			if (GUILayout.Button("Mech"))
 			{
 				Activate(2);
 			}
+
 			if (GUILayout.Button("Bot"))
 			{
 				Activate(3);

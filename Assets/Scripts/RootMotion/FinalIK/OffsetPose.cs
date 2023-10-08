@@ -22,7 +22,10 @@ namespace RootMotion.FinalIK
 				Vector3 vector = solver.GetRoot().position + rotation * pin;
 				Vector3 vector2 = vector - solver.GetEffector(effector).bone.position;
 				Vector3 vector3 = pinWeight * Mathf.Abs(weight);
-				solver.GetEffector(effector).positionOffset = new Vector3(Mathf.Lerp(solver.GetEffector(effector).positionOffset.x, vector2.x, vector3.x), Mathf.Lerp(solver.GetEffector(effector).positionOffset.y, vector2.y, vector3.y), Mathf.Lerp(solver.GetEffector(effector).positionOffset.z, vector2.z, vector3.z));
+				solver.GetEffector(effector).positionOffset = new Vector3(
+					Mathf.Lerp(solver.GetEffector(effector).positionOffset.x, vector2.x, vector3.x),
+					Mathf.Lerp(solver.GetEffector(effector).positionOffset.y, vector2.y, vector3.y),
+					Mathf.Lerp(solver.GetEffector(effector).positionOffset.z, vector2.z, vector3.z));
 			}
 		}
 

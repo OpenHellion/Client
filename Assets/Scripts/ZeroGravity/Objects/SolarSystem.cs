@@ -7,18 +7,20 @@ using Unity.Jobs;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Math;
+using ZeroGravity.ShipComponents;
 
 namespace ZeroGravity.Objects
 {
 	public class SolarSystem : MonoBehaviour
 	{
-		public struct UpdateABPositionParallelJob : IJobParallelFor
+		private struct UpdateAbPositionParallelJob : IJobParallelFor
 		{
 			public double TimeDelta;
+			public SolarSystem SolarSystem;
 
 			public void Execute(int i)
 			{
-				Client.Instance.SolarSystem.ArtificialBodies[i].UpdateOrbitPosition(TimeDelta);
+				SolarSystem.ArtificialBodies[i].UpdateOrbitPosition(TimeDelta);
 			}
 		}
 
@@ -36,61 +38,62 @@ namespace ZeroGravity.Objects
 
 		public const double PlanetsScale = 1000000.0;
 
-		private double currentTime;
+		private const double PlanetsToShowDistance = 10000000000.0;
 
-		public bool AutoUpdate = true;
+		private const double PlanetsToDestroyDistance = 11000000000.0;
 
-		private Transform sunRoot;
+		private double _currentTime;
 
-		private Transform planetsRoot;
+		private double _timeCorrection;
 
-		private double planetsToShowDistance = 10000000000.0;
+		private Transform _sunRoot;
 
-		private double planetsToDestroyDistance = 11000000000.0;
+		private Transform _planetsRoot;
 
-		private List<CelestialBody> celesitalBodies = new List<CelestialBody>();
+		[SerializeField] private Map _map;
 
-		[NonSerialized]
-		public List<ArtificialBody> ArtificialBodies = new List<ArtificialBody>();
+		private readonly List<CelestialBody> _celesitalBodies = new List<CelestialBody>();
 
-		private double timeCorrection;
+		[NonSerialized] public readonly List<ArtificialBody> ArtificialBodies = new List<ArtificialBody>();
 
-		public double CurrentTime => currentTime;
+		public double CurrentTime => _currentTime;
 
 		public float LastArtificialBodyListChangeTime { get; private set; }
 
 		public void AddCelestialBody(CelestialBody body)
 		{
-			if (body.GUID == 1 && Client.IsGameBuild)
+			if (body.GUID == 1)
 			{
-				body.CreateSunSpaceGameObject(sunRoot);
+				body.CreateSunSpaceGameObject(_sunRoot);
 			}
-			celesitalBodies.Add(body);
+
+			_celesitalBodies.Add(body);
 		}
 
 		public void RemoveCelestialBody(CelestialBody body)
 		{
-			celesitalBodies.Remove(body);
+			_celesitalBodies.Remove(body);
 		}
 
 		public CelestialBody FindCelestialBody(long guid)
 		{
-			return celesitalBodies.Find((CelestialBody m) => m.GUID == guid);
+			return _celesitalBodies.Find((CelestialBody m) => m.GUID == guid);
 		}
 
 		public CelestialBody FindCelestialBodyParent(Vector3D position)
 		{
-			CelestialBody result = celesitalBodies[0];
-			double num = celesitalBodies[0].Position.DistanceSquared(position);
-			for (int i = 1; i < celesitalBodies.Count; i++)
+			CelestialBody result = _celesitalBodies[0];
+			double num = _celesitalBodies[0].Position.DistanceSquared(position);
+			for (int i = 1; i < _celesitalBodies.Count; i++)
 			{
-				double num2 = celesitalBodies[i].Position.DistanceSquared(position);
-				if (num2 < celesitalBodies[i].Orbit.GravityInfluenceRadiusSquared && num2 < num)
+				double num2 = _celesitalBodies[i].Position.DistanceSquared(position);
+				if (num2 < _celesitalBodies[i].Orbit.GravityInfluenceRadiusSquared && num2 < num)
 				{
-					result = celesitalBodies[i];
+					result = _celesitalBodies[i];
 					num = num2;
 				}
 			}
+
 			return result;
 		}
 
@@ -136,22 +139,23 @@ namespace ZeroGravity.Objects
 
 		public List<CelestialBody> GetCelestialBodies()
 		{
-			return celesitalBodies;
+			return _celesitalBodies;
 		}
 
 		public CelestialBody GetSunCelestialBody()
 		{
-			return celesitalBodies[0];
+			return _celesitalBodies[0];
 		}
 
 		public void CalculatePositionsAfterTime(double time)
 		{
-			currentTime = time;
-			timeCorrection = HiResTime.Milliseconds / 1000.0 - time;
-			foreach (CelestialBody celesitalBody in celesitalBodies)
+			_currentTime = time;
+			_timeCorrection = HiResTime.Milliseconds / 1000.0 - time;
+			foreach (CelestialBody celesitalBody in _celesitalBodies)
 			{
-				celesitalBody.UpdatePosition(time, resetTime: true);
+				celesitalBody.UpdatePosition(this, time, resetTime: true);
 			}
+
 			foreach (ArtificialBody artificialBody in ArtificialBodies)
 			{
 				artificialBody.UpdateOrbitPosition(time, resetTime: true);
@@ -161,65 +165,75 @@ namespace ZeroGravity.Objects
 		// Updates time and positions of celestial bodies after every tick is done.
 		public void UpdatePositions(double timeDelta)
 		{
-			double updatedCurrentTime = HiResTime.Milliseconds / 1000.0 - timeCorrection;
-			timeDelta = updatedCurrentTime - currentTime;
-			currentTime = updatedCurrentTime;
-			foreach (CelestialBody celesitalBody in celesitalBodies)
+			double updatedCurrentTime = HiResTime.Milliseconds / 1000.0 - _timeCorrection;
+			timeDelta = updatedCurrentTime - _currentTime;
+			_currentTime = updatedCurrentTime;
+			foreach (CelestialBody celesitalBody in _celesitalBodies)
 			{
 				celesitalBody.UpdatePlanetSpacePosition((float)timeDelta);
-				celesitalBody.UpdatePosition(timeDelta);
+				celesitalBody.UpdatePosition(this, timeDelta);
 			}
-			UpdateABPositionParallelJob jobData = default(UpdateABPositionParallelJob);
+
+			UpdateAbPositionParallelJob jobData = default(UpdateAbPositionParallelJob);
 			jobData.TimeDelta = timeDelta;
+			jobData.SolarSystem = this;
 			jobData.Schedule(ArtificialBodies.Count, 10).Complete();
 		}
 
 		public void Set(Transform sunRoot, Transform planetsRoot, double time)
 		{
-			this.sunRoot = sunRoot;
-			this.planetsRoot = planetsRoot;
-			currentTime = time;
-			timeCorrection = HiResTime.Milliseconds / 1000.0 - time;
+			_sunRoot = sunRoot;
+			_planetsRoot = planetsRoot;
+			_currentTime = time;
+			_timeCorrection = HiResTime.Milliseconds / 1000.0 - time;
 		}
 
 		public void CenterPlanets()
 		{
-			ArtificialBody artificialBody = ((!(MyPlayer.Instance.Parent is SpaceObjectVessel)) ? MyPlayer.Instance.Parent : (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel) as ArtificialBody;
-			if (artificialBody == null)
+			ArtificialBody artificialBody =
+				(MyPlayer.Instance.Parent is not SpaceObjectVessel
+					? MyPlayer.Instance.Parent
+					: (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel) as ArtificialBody;
+			if (artificialBody is null)
 			{
 				return;
 			}
-			float num = Time.realtimeSinceStartup - Client.Instance.LastMovementMessageTime;
+
 			Vector3D position = artificialBody.Position;
-			if (celesitalBodies.Count > 0)
+			if (_celesitalBodies.Count > 0)
 			{
-				foreach (CelestialBody celesitalBody in celesitalBodies)
+				foreach (CelestialBody celesitalBody in _celesitalBodies)
 				{
 					double num2 = Vector3D.Distance(celesitalBody.Position, position) - celesitalBody.Orbit.Radius;
-					if (num2 <= planetsToShowDistance)
+					if (num2 <= PlanetsToShowDistance)
 					{
 						if (celesitalBody.PlanetsSpaceGameObject == null)
 						{
-							celesitalBody.CreatePlanetsSpaceGameObject(planetsRoot);
-							celesitalBody.SetPlanetSpacePosition(((celesitalBody.Position - position) / 1000000.0).ToVector3(), forceChange: true);
+							celesitalBody.CreatePlanetsSpaceGameObject(_planetsRoot);
+							celesitalBody.SetPlanetSpacePosition(
+								((celesitalBody.Position - position) / 1000000.0).ToVector3(), forceChange: true);
 						}
 						else
 						{
-							celesitalBody.SetPlanetSpacePosition(((celesitalBody.Position - position) / 1000000.0).ToVector3(), forceChange: false);
+							celesitalBody.SetPlanetSpacePosition(
+								((celesitalBody.Position - position) / 1000000.0).ToVector3(), forceChange: false);
 						}
 					}
-					else if (celesitalBody.PlanetsSpaceGameObject != null && num2 > planetsToDestroyDistance)
+					else if (celesitalBody.PlanetsSpaceGameObject != null && num2 > PlanetsToDestroyDistance)
 					{
 						celesitalBody.DestroyPlanetsSpaceGameObject();
 					}
 				}
 			}
+
 			foreach (ArtificialBody artificialBody2 in ArtificialBodies)
 			{
-				if (!(artificialBody2 != null) || artificialBody2.IsMainObject || (artificialBody2 is SpaceObjectVessel && !(artificialBody2 as SpaceObjectVessel).IsMainVessel))
+				if (!(artificialBody2 != null) || artificialBody2.IsMainObject ||
+				    (artificialBody2 is SpaceObjectVessel && !(artificialBody2 as SpaceObjectVessel).IsMainVessel))
 				{
 					continue;
 				}
+
 				Vector3D value = artificialBody2.Position - position;
 				double sqrMagnitude = value.SqrMagnitude;
 				if (sqrMagnitude < 2250000.0 && !artificialBody2.IsSubscribedTo && artificialBody2.SceneObjectsLoaded)
@@ -242,28 +256,37 @@ namespace ZeroGravity.Objects
 				{
 					artificialBody2.DestroyGeometry();
 				}
+
 				if (sqrMagnitude < 225000000.0)
 				{
 					if (!artificialBody2.gameObject.activeInHierarchy)
 					{
 						artificialBody2.gameObject.SetActive(value: true);
 					}
+
 					Vector3 vector = value.ToVector3();
 					if ((vector - artificialBody2.transform.localPosition).sqrMagnitude < 10000f)
 					{
-						if (Client.VESSEL_TRANSLATION_LERP_UNCLAMPED)
+						if (World.VESSEL_TRANSLATION_LERP_UNCLAMPED)
 						{
-							artificialBody2.transform.localPosition = Vector3.Lerp(Vector3.LerpUnclamped(vector, artificialBody2.transform.localPosition, Time.deltaTime), Vector3.LerpUnclamped(artificialBody2.transform.localPosition, vector, Time.deltaTime), Client.VESSEL_TRANSLATION_LERP_VALUE);
+							artificialBody2.transform.localPosition = Vector3.Lerp(
+								Vector3.LerpUnclamped(vector, artificialBody2.transform.localPosition, Time.deltaTime),
+								Vector3.LerpUnclamped(artificialBody2.transform.localPosition, vector, Time.deltaTime),
+								World.VESSEL_TRANSLATION_LERP_VALUE);
 						}
 						else
 						{
-							artificialBody2.transform.localPosition = Vector3.Lerp(Vector3.Lerp(vector, artificialBody2.transform.localPosition, Time.deltaTime), Vector3.Lerp(artificialBody2.transform.localPosition, vector, Time.deltaTime), Client.VESSEL_TRANSLATION_LERP_VALUE);
+							artificialBody2.transform.localPosition = Vector3.Lerp(
+								Vector3.Lerp(vector, artificialBody2.transform.localPosition, Time.deltaTime),
+								Vector3.Lerp(artificialBody2.transform.localPosition, vector, Time.deltaTime),
+								World.VESSEL_TRANSLATION_LERP_VALUE);
 						}
 					}
 					else
 					{
 						artificialBody2.transform.localPosition = vector;
 					}
+
 					if (artificialBody2 is Ship && (artificialBody2 as Ship).WarpEndEffectTask != null)
 					{
 						(artificialBody2 as Ship).WarpEndEffectTask.RunSynchronously();
@@ -275,9 +298,11 @@ namespace ZeroGravity.Objects
 					{
 						artificialBody2.gameObject.SetActive(value: false);
 					}
+
 					artificialBody2.IsInVisibilityRange = false;
 				}
 			}
+
 			if (artificialBody.ManeuverExited)
 			{
 				artificialBody.ManeuverExited = false;
@@ -291,28 +316,30 @@ namespace ZeroGravity.Objects
 			{
 				CelestialBody celestialBody = new CelestialBody(data.GUID);
 
-				celestialBody.Set((data.ParentGUID != -1) ? FindCelestialBody(data.ParentGUID) : null,
-				data.Name,
-				data.Mass,
-				data.Radius * Client.CELESTIAL_BODY_RADIUS_MULTIPLIER,
-				data.RotationPeriod,
-				data.Eccentricity,
-				data.SemiMajorAxis,
-				data.Inclination,
-				data.ArgumentOfPeriapsis,
-				data.LongitudeOfAscendingNode,
-				data.PlanetsPrefabPath,
-				CurrentTime);
+				celestialBody.Set(data.ParentGUID != -1 ? FindCelestialBody(data.ParentGUID) : null,
+					data.Name,
+					data.Mass,
+					data.Radius * World.CELESTIAL_BODY_RADIUS_MULTIPLIER,
+					data.RotationPeriod,
+					data.Eccentricity,
+					data.SemiMajorAxis,
+					data.Inclination,
+					data.ArgumentOfPeriapsis,
+					data.LongitudeOfAscendingNode,
+					data.PlanetsPrefabPath,
+					CurrentTime);
 
 				if (!string.IsNullOrEmpty(data.NavigationPrefabPath))
 				{
-					Client.Instance.Map.InitializeMapObject(celestialBody, data);
+					_map.InitializeMapObject(celestialBody, data);
 				}
+
 				celestialBody.AsteroidGasBurstDmgMultiplier = data.AsteroidGasBurstDmgMultiplier;
 				celestialBody.ScanningSensitivityModifierValues = data.ScanningSensitivityModifierValues;
 				celestialBody.RadarSignatureModifierValues = data.RadarSignatureModifierValues;
 				AddCelestialBody(celestialBody);
 			}
+
 			CalculatePositionsAfterTime(CurrentTime);
 		}
 	}

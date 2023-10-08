@@ -9,8 +9,6 @@ namespace ZeroGravity.ShipComponents
 
 		public Transform ChildObjects;
 
-		public bool ShowChildren = true;
-
 		public GameObject CelestialVisual;
 
 		public GameObject IconVisual;
@@ -21,13 +19,8 @@ namespace ZeroGravity.ShipComponents
 
 		public override Sprite Icon
 		{
-			get
-			{
-				return CelestialIcon;
-			}
-			set
-			{
-			}
+			get { return CelestialIcon; }
+			set { }
 		}
 
 		public override string Description
@@ -40,25 +33,28 @@ namespace ZeroGravity.ShipComponents
 				if (Name == "Hellion")
 				{
 					text = empty;
-					empty = text + "\n<color=#74A1CA>" + Localization.GravityInfluenceRadius + ":</color> " + (Orbit.GravityInfluenceRadius / 1000.0).ToString("0");
+					empty = text + "\n<color=#74A1CA>" + Localization.GravityInfluenceRadius + ":</color> " +
+					        (Orbit.GravityInfluenceRadius / 1000.0).ToString("0");
 				}
 				else
 				{
 					text = empty;
-					empty = text + "\n<color=#74A1CA>" + Localization.GravityInfluenceRadius + ":</color> " + (Orbit.GravityInfluenceRadius / 1000.0).ToString("0") + " km";
+					empty = text + "\n<color=#74A1CA>" + Localization.GravityInfluenceRadius + ":</color> " +
+					        (Orbit.GravityInfluenceRadius / 1000.0).ToString("0") + " km";
 				}
+
 				text = empty;
-				empty = text + "\n<color=#74A1CA>" + Localization.Radius + ":</color> " + (Orbit.CelestialBody.Radius / 1000.0).ToString("0") + " km";
+				empty = text + "\n<color=#74A1CA>" + Localization.Radius + ":</color> " +
+				        (Orbit.CelestialBody.Radius / 1000.0).ToString("0") + " km";
 				empty = empty + "\n" + Localization.DefauldMapCelestialDescription;
 				if (localizedField != null)
 				{
 					return localizedField + empty;
 				}
+
 				return empty;
 			}
-			set
-			{
-			}
+			set { }
 		}
 
 		public override void UpdateObject()
@@ -68,7 +64,8 @@ namespace ZeroGravity.ShipComponents
 			Visual.localScale = Vector3.one * (float)((double)Radius * base.ObjectScale) * 2f;
 			if (!double.IsInfinity(Orbit.GravityInfluenceRadius))
 			{
-				SphereOfInfluence.localScale = Vector3.one * (float)(Orbit.GravityInfluenceRadius * base.ObjectScale) * 2f;
+				SphereOfInfluence.localScale =
+					Vector3.one * (float)(Orbit.GravityInfluenceRadius * base.ObjectScale) * 2f;
 			}
 		}
 
@@ -85,6 +82,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				SphereOfInfluence.gameObject.GetComponent<MeshRenderer>().material.SetFloat("_Fade", orbitAlpha);
 			}
+
 			if (Orbit.CelestialBody.GUID != 1 && Orbit.Parent.CelestialBody.GUID != 1)
 			{
 				if (orbitAlpha < 0.999f)
@@ -105,7 +103,8 @@ namespace ZeroGravity.ShipComponents
 			if (MainObject != null)
 			{
 				CelestialBody celestialBody = MainObject as CelestialBody;
-				GameObject gameObject = Object.Instantiate(Resources.Load(cbd.NavigationPrefabPath) as GameObject);
+				GameObject gameObject =
+					Object.Instantiate(Resources.Load(CelestialBodyData.NavigationPrefabPath) as GameObject);
 				gameObject.SetLayerRecursively("Map");
 				gameObject.transform.SetParent(Visual);
 				gameObject.transform.localScale = Vector3.one;

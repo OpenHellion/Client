@@ -17,7 +17,8 @@
 
 namespace OpenHellion.Net.Message
 {
-	public enum ResponseResult : byte {
+	public enum ResponseResult : byte
+	{
 		Success = 0,
 		Error = 1,
 		ClientVersionError = 5,

@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using OpenHellion.IO;
 using UnityEngine;
+using OpenHellion.UI;
 using ZeroGravity;
 using ZeroGravity.Network;
 
@@ -27,23 +28,26 @@ namespace OpenHellion.Net
 	/// <summary>
 	/// 	Handles connecting to a game server.
 	/// </summary>
-	internal sealed class GSConnection
+	internal sealed class GsConnection
 	{
 		private string _serverId;
 
 		private Telepathy.Client _client;
 
+		private string _userId;
+
 		/// <summary>
 		/// 	Establish a connection to a specified game server.<br />
 		/// 	When connection is established, a login request is sent.
 		/// </summary>
-		internal void Connect(string ip, int port, string serverId)
+		internal void Connect(string ip, int port, string serverId, string userId)
 		{
 			Telepathy.Log.Info = Dbg.Info;
 			Telepathy.Log.Warning = Dbg.Warning;
 			Telepathy.Log.Error = Dbg.Error;
 
 			_serverId = serverId;
+			_userId = userId;
 
 			_client = new(100000)
 			{
@@ -110,15 +114,15 @@ namespace OpenHellion.Net
 		{
 			LogInRequest logInRequest = new LogInRequest
 			{
-				PlayerId = Client.Instance.UserId,
+				PlayerId = _userId,
 				CharacterData = NetworkController.CharacterData,
 				ServerID = _serverId,
-				ClientHash = Client.CombinedHash
+				ClientHash = Globals.CombinedHash
 			};
 
 			Send(logInRequest);
 
-			Dbg.Log("Established connection to server.");
+			Dbg.Log("Established connection with server.");
 		}
 
 
@@ -137,26 +141,18 @@ namespace OpenHellion.Net
 			}
 			catch (Exception ex)
 			{
-				if (!Client.Instance.LogInResponseReceived)
-				{
-					EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.ShowMessageBox, Localization.ConnectionError, Localization.TryAgainLater));
-					Dbg.Error(ex.Message, ex.StackTrace);
-					Disconnect();
-				}
-				else if (Client.Instance.LogoutRequestSent)
-				{
-					Dbg.Log("Tried to listen to data, but logout was requested.");
-				}
+				GlobalGUI.ShowErrorMessage(Localization.ConnectionError, Localization.TryAgainLater, null);
+				Dbg.Error(ex.Message, ex.StackTrace);
 			}
 		}
 
 		// Executed when we disconnect from a server.
 		private void OnDisconnected()
 		{
-			if (Client.Instance.LogoutRequestSent)
+			/*if (_world.LogoutRequestSent)
 			{
 				EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.OpenMainScreen));
-			}
+			}*/
 
 			Dbg.Log("Client disconnected from server.");
 		}

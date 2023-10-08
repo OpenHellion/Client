@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using ZeroGravity.UI;
 
 namespace ZeroGravity.Objects
 {
@@ -9,18 +10,13 @@ namespace ZeroGravity.Objects
 
 		private bool _IsSingleFire;
 
-		[Title("UI")]
-		[SerializeField]
-		private Text AmmoCount;
+		[Title("UI")] [SerializeField] private Text AmmoCount;
 
 		public Image FireMode;
 
 		public int BulletCount
 		{
-			get
-			{
-				return _BulletCount;
-			}
+			get { return _BulletCount; }
 			set
 			{
 				_BulletCount = value;
@@ -30,14 +26,11 @@ namespace ZeroGravity.Objects
 
 		public bool IsSingleFire
 		{
-			get
-			{
-				return _IsSingleFire;
-			}
+			get { return _IsSingleFire; }
 			set
 			{
 				_IsSingleFire = value;
-				FireMode.sprite = Client.Instance.SpriteManager.GetSprite(CurrentWeaponMod.ModsFireMode);
+				FireMode.sprite = SpriteManager.Instance.GetSprite(CurrentWeaponMod.ModsFireMode);
 			}
 		}
 

@@ -19,10 +19,7 @@ namespace ZeroGravity.Objects
 		private new void Awake()
 		{
 			base.Awake();
-			if (Client.IsGameBuild)
-			{
-				animHelper = MyPlayer.Instance.animHelper;
-			}
+			animHelper = MyPlayer.Instance.animHelper;
 		}
 
 		public override bool PrimaryFunction()

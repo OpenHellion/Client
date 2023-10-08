@@ -10,10 +10,7 @@ namespace ZeroGravity.Data
 
 		public override SystemAuxDataType AuxDataType
 		{
-			get
-			{
-				return SystemAuxDataType.Engine;
-			}
+			get { return SystemAuxDataType.Engine; }
 		}
 	}
 }

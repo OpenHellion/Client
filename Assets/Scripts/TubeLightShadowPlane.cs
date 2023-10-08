@@ -9,15 +9,11 @@ public class TubeLightShadowPlane : MonoBehaviour
 		public float feather;
 	}
 
-	[MinValue(0f)]
-	public float m_Feather = 1f;
+	[MinValue(0f)] public float m_Feather = 1f;
 
 	public float feather
 	{
-		get
-		{
-			return m_Feather * 0.1f;
-		}
+		get { return m_Feather * 0.1f; }
 	}
 
 	public Vector4 GetShadowPlaneVector()

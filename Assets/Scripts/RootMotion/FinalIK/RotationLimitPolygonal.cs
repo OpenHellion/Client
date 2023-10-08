@@ -20,42 +20,27 @@ namespace RootMotion.FinalIK
 
 			public Vector3 o
 			{
-				get
-				{
-					return tetrahedron[0];
-				}
+				get { return tetrahedron[0]; }
 			}
 
 			public Vector3 a
 			{
-				get
-				{
-					return tetrahedron[1];
-				}
+				get { return tetrahedron[1]; }
 			}
 
 			public Vector3 b
 			{
-				get
-				{
-					return tetrahedron[2];
-				}
+				get { return tetrahedron[2]; }
 			}
 
 			public Vector3 c
 			{
-				get
-				{
-					return tetrahedron[3];
-				}
+				get { return tetrahedron[3]; }
 			}
 
 			public bool isValid
 			{
-				get
-				{
-					return volume > 0f;
-				}
+				get { return volume > 0f; }
 			}
 
 			public ReachCone(Vector3 _o, Vector3 _a, Vector3 _b, Vector3 _c)
@@ -93,23 +78,15 @@ namespace RootMotion.FinalIK
 			}
 		}
 
-		[Range(0f, 180f)]
-		public float twistLimit = 180f;
+		[Range(0f, 180f)] public float twistLimit = 180f;
 
-		[Range(0f, 3f)]
-		public int smoothIterations;
+		[Range(0f, 3f)] public int smoothIterations;
 
-		[SerializeField]
-		[HideInInspector]
-		public LimitPoint[] points;
+		[SerializeField] [HideInInspector] public LimitPoint[] points;
 
-		[SerializeField]
-		[HideInInspector]
-		public Vector3[] P;
+		[SerializeField] [HideInInspector] public Vector3[] P;
 
-		[SerializeField]
-		[HideInInspector]
-		public ReachCone[] reachCones = new ReachCone[0];
+		[SerializeField] [HideInInspector] public ReachCone[] reachCones = new ReachCone[0];
 
 		[ContextMenu("User Manual")]
 		private void OpenUserManual()
@@ -120,7 +97,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Scrpt Reference")]
 		private void OpenScriptReference()
 		{
-			Application.OpenURL("http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_rotation_limit_polygonal.html");
+			Application.OpenURL(
+				"http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_rotation_limit_polygonal.html");
 		}
 
 		[ContextMenu("Support Group")]
@@ -132,7 +110,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Asset Store Thread")]
 		private void ASThread()
 		{
-			Application.OpenURL("http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
+			Application.OpenURL(
+				"http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
 		}
 
 		public void SetLimitPoints(LimitPoint[] points)
@@ -142,6 +121,7 @@ namespace RootMotion.FinalIK
 				LogWarning("The polygon must have at least 3 Limit Points.");
 				return;
 			}
+
 			this.points = points;
 			BuildReachCones();
 		}
@@ -152,6 +132,7 @@ namespace RootMotion.FinalIK
 			{
 				Start();
 			}
+
 			Quaternion rotation2 = LimitSwing(rotation);
 			return RotationLimit.LimitTwist(rotation2, axis, base.secondaryAxis, twistLimit);
 		}
@@ -162,6 +143,7 @@ namespace RootMotion.FinalIK
 			{
 				ResetToDefault();
 			}
+
 			for (int i = 0; i < reachCones.Length; i++)
 			{
 				if (!reachCones[i].isValid)
@@ -170,14 +152,17 @@ namespace RootMotion.FinalIK
 					{
 						int num = 0;
 						num = ((i < reachCones.Length - 1) ? (i + 1) : 0);
-						LogWarning("Reach Cone {point " + i + ", point " + num + ", Origin} has negative volume. Make sure Axis vector is in the reachable area and the polygon is convex.");
+						LogWarning("Reach Cone {point " + i + ", point " + num +
+						           ", Origin} has negative volume. Make sure Axis vector is in the reachable area and the polygon is convex.");
 					}
 					else
 					{
-						LogWarning("One of the Reach Cones in the polygon has negative volume. Make sure Axis vector is in the reachable area and the polygon is convex.");
+						LogWarning(
+							"One of the Reach Cones in the polygon has negative volume. Make sure Axis vector is in the reachable area and the polygon is convex.");
 					}
 				}
 			}
+
 			axis = axis.normalized;
 		}
 
@@ -188,6 +173,7 @@ namespace RootMotion.FinalIK
 			{
 				points[i] = new LimitPoint();
 			}
+
 			Quaternion quaternion = Quaternion.AngleAxis(45f, Vector3.right);
 			Quaternion quaternion2 = Quaternion.AngleAxis(45f, Vector3.up);
 			points[0].point = quaternion * quaternion2 * axis;
@@ -205,15 +191,18 @@ namespace RootMotion.FinalIK
 			{
 				P[i] = points[i].point.normalized;
 			}
+
 			for (int j = 0; j < smoothIterations; j++)
 			{
 				P = SmoothPoints();
 			}
+
 			reachCones = new ReachCone[P.Length];
 			for (int k = 0; k < reachCones.Length - 1; k++)
 			{
 				reachCones[k] = new ReachCone(Vector3.zero, axis.normalized, P[k], P[k + 1]);
 			}
+
 			reachCones[P.Length - 1] = new ReachCone(Vector3.zero, axis.normalized, P[P.Length - 1], P[0]);
 			for (int l = 0; l < reachCones.Length; l++)
 			{
@@ -229,6 +218,7 @@ namespace RootMotion.FinalIK
 			{
 				array[i] = PointToTangentPlane(P[i / 2], 1f);
 			}
+
 			for (int j = 1; j < array.Length; j += 2)
 			{
 				Vector3 vector = Vector3.zero;
@@ -249,14 +239,18 @@ namespace RootMotion.FinalIK
 					vector = array[j - 2];
 					vector2 = array[0];
 				}
+
 				zero = ((j >= array.Length - 1) ? array[0] : array[j + 1]);
 				int num = array.Length / points.Length;
-				array[j] = 0.5f * (array[j - 1] + zero) + scalar * points[j / num].tangentWeight * (zero - vector) + scalar * points[j / num].tangentWeight * (array[j - 1] - vector2);
+				array[j] = 0.5f * (array[j - 1] + zero) + scalar * points[j / num].tangentWeight * (zero - vector) +
+				           scalar * points[j / num].tangentWeight * (array[j - 1] - vector2);
 			}
+
 			for (int k = 0; k < array.Length; k++)
 			{
 				array[k] = TangentPointToSphere(array[k], 1f);
 			}
+
 			return array;
 		}
 
@@ -266,18 +260,19 @@ namespace RootMotion.FinalIK
 			{
 				return 0.1667f;
 			}
+
 			switch (k)
 			{
-			case 4:
-				return 0.1036f;
-			case 5:
-				return 0.085f;
-			case 6:
-				return 0.0773f;
-			case 7:
-				return 0.07f;
-			default:
-				return 0.0625f;
+				case 4:
+					return 0.1036f;
+				case 5:
+					return 0.085f;
+				case 6:
+					return 0.0773f;
+				case 7:
+					return 0.07f;
+				default:
+					return 0.0625f;
 			}
 		}
 
@@ -301,6 +296,7 @@ namespace RootMotion.FinalIK
 			{
 				return rotation;
 			}
+
 			Vector3 vector = rotation * axis;
 			int reachCone = GetReachCone(vector);
 			if (reachCone == -1)
@@ -309,13 +305,16 @@ namespace RootMotion.FinalIK
 				{
 					LogWarning("RotationLimitPolygonal reach cones are invalid.");
 				}
+
 				return rotation;
 			}
+
 			float num = Vector3.Dot(reachCones[reachCone].B, vector);
 			if (num > 0f)
 			{
 				return rotation;
 			}
+
 			Vector3 rhs = Vector3.Cross(axis, vector);
 			vector = Vector3.Cross(-reachCones[reachCone].B, rhs);
 			Quaternion quaternion = Quaternion.FromToRotation(rotation * axis, vector);
@@ -329,12 +328,15 @@ namespace RootMotion.FinalIK
 			for (int i = 0; i < reachCones.Length; i++)
 			{
 				num = num2;
-				num2 = ((i >= reachCones.Length - 1) ? Vector3.Dot(reachCones[0].S, L) : Vector3.Dot(reachCones[i + 1].S, L));
+				num2 = ((i >= reachCones.Length - 1)
+					? Vector3.Dot(reachCones[0].S, L)
+					: Vector3.Dot(reachCones[i + 1].S, L));
 				if (num >= 0f && num2 < 0f)
 				{
 					return i;
 				}
 			}
+
 			return -1;
 		}
 	}

@@ -16,7 +16,8 @@ namespace ZeroGravity.Data
 
 			internal IEnumerable<int> _003C_003Em__0(int x)
 			{
-				return Enumerable.Range((source as Array).GetLowerBound(x), (source as Array).GetUpperBound(x) - (source as Array).GetLowerBound(x) + 1);
+				return Enumerable.Range((source as Array).GetLowerBound(x),
+					(source as Array).GetUpperBound(x) - (source as Array).GetLowerBound(x) + 1);
 			}
 		}
 
@@ -38,17 +39,20 @@ namespace ZeroGravity.Data
 
 		public static T DeepCopy<T>(T source, int depth = 10)
 		{
-			_003CDeepCopy_003Ec__AnonStorey0<T> _003CDeepCopy_003Ec__AnonStorey = new _003CDeepCopy_003Ec__AnonStorey0<T>();
+			_003CDeepCopy_003Ec__AnonStorey0<T> _003CDeepCopy_003Ec__AnonStorey =
+				new _003CDeepCopy_003Ec__AnonStorey0<T>();
 			_003CDeepCopy_003Ec__AnonStorey.source = source;
 			if (_003CDeepCopy_003Ec__AnonStorey.source == null || depth < 0)
 			{
 				return _003CDeepCopy_003Ec__AnonStorey.source;
 			}
+
 			Type type = _003CDeepCopy_003Ec__AnonStorey.source.GetType();
 			if (type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(decimal))
 			{
 				return _003CDeepCopy_003Ec__AnonStorey.source;
 			}
+
 			T val;
 			if (_003CDeepCopy_003Ec__AnonStorey.source is Array)
 			{
@@ -57,17 +61,24 @@ namespace ZeroGravity.Data
 				{
 					array[i] = (_003CDeepCopy_003Ec__AnonStorey.source as Array).GetLength(i);
 				}
+
 				val = (T)Activator.CreateInstance(type, array);
-				IEnumerable<IEnumerable<int>> sequences = Enumerable.Range(0, (_003CDeepCopy_003Ec__AnonStorey.source as Array).Rank).Select(_003CDeepCopy_003Ec__AnonStorey._003C_003Em__0);
+				IEnumerable<IEnumerable<int>> sequences = Enumerable
+					.Range(0, (_003CDeepCopy_003Ec__AnonStorey.source as Array).Rank)
+					.Select(_003CDeepCopy_003Ec__AnonStorey._003C_003Em__0);
 				{
 					foreach (IEnumerable<int> item in sequences.CartesianProduct())
 					{
 						int[] indices = item.ToArray();
-						(val as Array).SetValue(DeepCopy((_003CDeepCopy_003Ec__AnonStorey.source as Array).GetValue(indices), depth - 1), indices);
+						(val as Array).SetValue(
+							DeepCopy((_003CDeepCopy_003Ec__AnonStorey.source as Array).GetValue(indices), depth - 1),
+							indices);
 					}
+
 					return val;
 				}
 			}
+
 			val = (T)Activator.CreateInstance(type);
 			if (_003CDeepCopy_003Ec__AnonStorey.source is IDictionary)
 			{
@@ -77,8 +88,10 @@ namespace ZeroGravity.Data
 					while (enumerator2.MoveNext())
 					{
 						object current2 = enumerator2.Current;
-						(val as IDictionary)[current2] = DeepCopy((_003CDeepCopy_003Ec__AnonStorey.source as IDictionary)[current2], depth - 1);
+						(val as IDictionary)[current2] =
+							DeepCopy((_003CDeepCopy_003Ec__AnonStorey.source as IDictionary)[current2], depth - 1);
 					}
+
 					return val;
 				}
 				finally
@@ -90,7 +103,9 @@ namespace ZeroGravity.Data
 					}
 				}
 			}
-			if (type.IsGenericType && _003CDeepCopy_003Ec__AnonStorey.source is IEnumerable && type.GetGenericArguments().Length == 1)
+
+			if (type.IsGenericType && _003CDeepCopy_003Ec__AnonStorey.source is IEnumerable &&
+			    type.GetGenericArguments().Length == 1)
 			{
 				MethodInfo method = type.GetMethod("Add");
 				IEnumerator enumerator3 = (_003CDeepCopy_003Ec__AnonStorey.source as IEnumerable).GetEnumerator();
@@ -101,6 +116,7 @@ namespace ZeroGravity.Data
 						object current3 = enumerator3.Current;
 						method.Invoke(val, new object[1] { DeepCopy(current3, depth - 1) });
 					}
+
 					return val;
 				}
 				finally
@@ -112,6 +128,7 @@ namespace ZeroGravity.Data
 					}
 				}
 			}
+
 			FieldInfo[] fields = type.GetFields();
 			FieldInfo[] array2 = fields;
 			foreach (FieldInfo fieldInfo in array2)
@@ -119,6 +136,7 @@ namespace ZeroGravity.Data
 				object value = fieldInfo.GetValue(_003CDeepCopy_003Ec__AnonStorey.source);
 				fieldInfo.SetValue(val, DeepCopy(value, depth - 1));
 			}
+
 			PropertyInfo[] properties = type.GetProperties();
 			PropertyInfo[] array3 = properties;
 			foreach (PropertyInfo propertyInfo in array3)
@@ -129,6 +147,7 @@ namespace ZeroGravity.Data
 					propertyInfo.SetValue(val, DeepCopy(value2, depth - 1), null);
 				}
 			}
+
 			return val;
 		}
 
@@ -139,11 +158,14 @@ namespace ZeroGravity.Data
 		}
 
 		[CompilerGenerated]
-		private static IEnumerable<IEnumerable<T>> _003CCartesianProduct_00601_003Em__0<T>(IEnumerable<IEnumerable<T>> accumulator, IEnumerable<T> sequence)
+		private static IEnumerable<IEnumerable<T>> _003CCartesianProduct_00601_003Em__0<T>(
+			IEnumerable<IEnumerable<T>> accumulator, IEnumerable<T> sequence)
 		{
-			_003CCartesianProduct_003Ec__AnonStorey1<T> _003CCartesianProduct_003Ec__AnonStorey = new _003CCartesianProduct_003Ec__AnonStorey1<T>();
+			_003CCartesianProduct_003Ec__AnonStorey1<T> _003CCartesianProduct_003Ec__AnonStorey =
+				new _003CCartesianProduct_003Ec__AnonStorey1<T>();
 			_003CCartesianProduct_003Ec__AnonStorey.sequence = sequence;
-			return accumulator.SelectMany(_003CCartesianProduct_003Ec__AnonStorey._003C_003Em__0, _003CCartesianProduct_00601_003Em__1);
+			return accumulator.SelectMany(_003CCartesianProduct_003Ec__AnonStorey._003C_003Em__0,
+				_003CCartesianProduct_00601_003Em__1);
 		}
 
 		[CompilerGenerated]

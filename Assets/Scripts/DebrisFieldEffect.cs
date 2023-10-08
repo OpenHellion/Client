@@ -12,13 +12,9 @@ public class DebrisFieldEffect : MonoBehaviour
 
 	public SoundEffect DebrisSound;
 
-	[Range(0f, 1f)]
-	[SerializeField]
-	private float density = 1f;
+	[Range(0f, 1f)] [SerializeField] private float density = 1f;
 
-	[Range(0f, 1f)]
-	[SerializeField]
-	private float velocity = 1f;
+	[Range(0f, 1f)] [SerializeField] private float velocity = 1f;
 
 	public float MinDensity = 1f;
 
@@ -57,10 +53,12 @@ public class DebrisFieldEffect : MonoBehaviour
 			velocity = 0f;
 			DebrisSound.Play(1);
 		}
+
 		if (direction.magnitude != 0f)
 		{
 			base.transform.rotation = Quaternion.FromToRotation(Vector3.forward, direction);
 		}
+
 		density = Mathf.Lerp(density, dens, 0.05f);
 		velocity = Mathf.Lerp(velocity, vel, 0.05f);
 		ParticleSystem.MainModule main = Effect.main;

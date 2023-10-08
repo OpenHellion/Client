@@ -19,7 +19,9 @@ namespace RootMotion.FinalIK
 		{
 			ik = GetComponent<FullBodyBipedIK>();
 			IKSolverFullBodyBiped solver = ik.solver;
-			solver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPostUpdate, new IKSolver.UpdateDelegate(RotateShoulders));
+			solver.OnPostUpdate =
+				(IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPostUpdate,
+					new IKSolver.UpdateDelegate(RotateShoulders));
 		}
 
 		private void RotateShoulders()
@@ -31,6 +33,7 @@ namespace RootMotion.FinalIK
 					skip = false;
 					return;
 				}
+
 				RotateShoulder(FullBodyBipedChain.LeftArm, weight, offset);
 				RotateShoulder(FullBodyBipedChain.RightArm, weight, offset);
 				skip = true;
@@ -40,13 +43,16 @@ namespace RootMotion.FinalIK
 
 		private void RotateShoulder(FullBodyBipedChain chain, float weight, float offset)
 		{
-			Quaternion b = Quaternion.FromToRotation(GetParentBoneMap(chain).swingDirection, ik.solver.GetEndEffector(chain).position - GetParentBoneMap(chain).transform.position);
+			Quaternion b = Quaternion.FromToRotation(GetParentBoneMap(chain).swingDirection,
+				ik.solver.GetEndEffector(chain).position - GetParentBoneMap(chain).transform.position);
 			Vector3 vector = ik.solver.GetEndEffector(chain).position - ik.solver.GetLimbMapping(chain).bone1.position;
 			float num = ik.solver.GetChain(chain).nodes[0].length + ik.solver.GetChain(chain).nodes[1].length;
 			float num2 = vector.magnitude / num - 1f + offset;
 			num2 = Mathf.Clamp(num2 * weight, 0f, 1f);
-			Quaternion quaternion = Quaternion.Lerp(Quaternion.identity, b, num2 * ik.solver.GetEndEffector(chain).positionWeight * ik.solver.IKPositionWeight);
-			ik.solver.GetLimbMapping(chain).parentBone.rotation = quaternion * ik.solver.GetLimbMapping(chain).parentBone.rotation;
+			Quaternion quaternion = Quaternion.Lerp(Quaternion.identity, b,
+				num2 * ik.solver.GetEndEffector(chain).positionWeight * ik.solver.IKPositionWeight);
+			ik.solver.GetLimbMapping(chain).parentBone.rotation =
+				quaternion * ik.solver.GetLimbMapping(chain).parentBone.rotation;
 		}
 
 		private IKMapping.BoneMap GetParentBoneMap(FullBodyBipedChain chain)
@@ -59,7 +65,8 @@ namespace RootMotion.FinalIK
 			if (ik != null)
 			{
 				IKSolverFullBodyBiped solver = ik.solver;
-				solver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(solver.OnPostUpdate, new IKSolver.UpdateDelegate(RotateShoulders));
+				solver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(solver.OnPostUpdate,
+					new IKSolver.UpdateDelegate(RotateShoulders));
 			}
 		}
 	}

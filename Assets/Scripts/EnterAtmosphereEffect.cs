@@ -18,8 +18,7 @@ public class EnterAtmosphereEffect : MonoBehaviour
 
 	public float MaxDistance = 100000f;
 
-	[Range(0f, 1f)]
-	public float Intensity;
+	[Range(0f, 1f)] public float Intensity;
 
 	public bool Burning;
 
@@ -33,7 +32,8 @@ public class EnterAtmosphereEffect : MonoBehaviour
 		}
 		else
 		{
-			Debug.LogWarning(base.gameObject.name + ": Shader is not assigned. Disabling image effect.", base.gameObject);
+			Debug.LogWarning(base.gameObject.name + ": Shader is not assigned. Disabling image effect.",
+				base.gameObject);
 			base.enabled = false;
 		}
 	}
@@ -69,7 +69,8 @@ public class EnterAtmosphereEffect : MonoBehaviour
 			{
 				ArtificialBody artificialBody = MyPlayer.Instance.Parent as ArtificialBody;
 				CelestialBody parentCelesitalBody = artificialBody.ParentCelesitalBody;
-				float num = (float)((artificialBody.Position - parentCelesitalBody.Position).Magnitude - parentCelesitalBody.Radius);
+				float num = (float)((artificialBody.Position - parentCelesitalBody.Position).Magnitude -
+				                    parentCelesitalBody.Radius);
 				Intensity = 1f - Mathf.Clamp01((num - MinDistance) / (MaxDistance - MinDistance));
 			}
 			catch
@@ -94,6 +95,7 @@ public class EnterAtmosphereEffect : MonoBehaviour
 			Burning = true;
 			yield return new WaitForEndOfFrame();
 		}
+
 		Burning = false;
 		Intensity = 0f;
 	}

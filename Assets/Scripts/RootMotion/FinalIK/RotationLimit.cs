@@ -6,8 +6,7 @@ namespace RootMotion.FinalIK
 	{
 		public Vector3 axis = Vector3.forward;
 
-		[HideInInspector]
-		public Quaternion defaultLocalRotation;
+		[HideInInspector] public Quaternion defaultLocalRotation;
 
 		private bool initiated;
 
@@ -15,18 +14,12 @@ namespace RootMotion.FinalIK
 
 		public Vector3 secondaryAxis
 		{
-			get
-			{
-				return new Vector3(axis.y, axis.z, axis.x);
-			}
+			get { return new Vector3(axis.y, axis.z, axis.x); }
 		}
 
 		public Vector3 crossAxis
 		{
-			get
-			{
-				return Vector3.Cross(axis, secondaryAxis);
-			}
+			get { return Vector3.Cross(axis, secondaryAxis); }
 		}
 
 		public void SetDefaultLocalRotation()
@@ -40,6 +33,7 @@ namespace RootMotion.FinalIK
 			{
 				Awake();
 			}
+
 			Quaternion quaternion = Quaternion.Inverse(defaultLocalRotation) * localRotation;
 			Quaternion quaternion2 = LimitRotation(quaternion);
 			changed = quaternion2 != quaternion;
@@ -47,6 +41,7 @@ namespace RootMotion.FinalIK
 			{
 				return localRotation;
 			}
+
 			return defaultLocalRotation * quaternion2;
 		}
 
@@ -64,6 +59,7 @@ namespace RootMotion.FinalIK
 				base.enabled = false;
 				return;
 			}
+
 			Awake();
 			base.enabled = false;
 		}
@@ -77,6 +73,7 @@ namespace RootMotion.FinalIK
 			{
 				Debug.LogError("Axis is Vector3.zero.");
 			}
+
 			initiated = true;
 		}
 
@@ -102,6 +99,7 @@ namespace RootMotion.FinalIK
 			{
 				return rotation;
 			}
+
 			Vector3 normal = rotation * axis;
 			Vector3 tangent = orthoAxis;
 			Vector3.OrthoNormalize(ref normal, ref tangent);
@@ -112,6 +110,7 @@ namespace RootMotion.FinalIK
 			{
 				return quaternion;
 			}
+
 			return Quaternion.RotateTowards(quaternion, rotation, twistLimit);
 		}
 

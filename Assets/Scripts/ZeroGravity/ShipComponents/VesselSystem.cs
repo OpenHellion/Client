@@ -27,21 +27,17 @@ namespace ZeroGravity.ShipComponents
 
 		public float RadarSignature;
 
-		[SerializeField]
-		private SystemStatus _Status = SystemStatus.Offline;
+		[SerializeField] private SystemStatus _Status = SystemStatus.Offline;
 
 		public SystemSecondaryStatus SecondaryStatus;
 
-		[Space(5f)]
-		public ResourceContainer[] ResourceContainers = new ResourceContainer[0];
+		[Space(5f)] public ResourceContainer[] ResourceContainers = new ResourceContainer[0];
 
 		public bool ExclusiveResourceContainers = true;
 
-		[NonSerialized]
-		public HashSet<IVesselSystemAccessory> Accessories = new HashSet<IVesselSystemAccessory>();
+		[NonSerialized] public HashSet<IVesselSystemAccessory> Accessories = new HashSet<IVesselSystemAccessory>();
 
-		[NonSerialized]
-		public bool AutoRestart;
+		[NonSerialized] public bool AutoRestart;
 
 		public float InputFactor;
 
@@ -49,45 +45,48 @@ namespace ZeroGravity.ShipComponents
 
 		public virtual SystemStatus Status
 		{
-			get
-			{
-				return _Status;
-			}
+			get { return _Status; }
 			set
 			{
 				if (_Status == value)
 				{
 					return;
 				}
+
 				switch (value)
 				{
-				case SystemStatus.Online:
-					SceneQuestTrigger.OnTrigger(base.gameObject, SceneQuestTriggerEvent.SystemSwitchOn);
-					if (OnOnlineEvent != null)
-					{
-						OnOnlineEvent.Invoke();
-					}
-					break;
-				case SystemStatus.Offline:
-					SceneQuestTrigger.OnTrigger(base.gameObject, SceneQuestTriggerEvent.SystemSwitchOff);
-					if (OnOfflineEvent != null)
-					{
-						OnOfflineEvent.Invoke();
-					}
-					break;
-				case SystemStatus.Powerup:
-					if (OnPowerUpEvent != null)
-					{
-						OnPowerUpEvent.Invoke();
-					}
-					break;
-				case SystemStatus.Cooldown:
-					if (OnCooldownEvent != null)
-					{
-						OnCooldownEvent.Invoke();
-					}
-					break;
+					case SystemStatus.Online:
+						SceneQuestTrigger.OnTrigger(base.gameObject, SceneQuestTriggerEvent.SystemSwitchOn);
+						if (OnOnlineEvent != null)
+						{
+							OnOnlineEvent.Invoke();
+						}
+
+						break;
+					case SystemStatus.Offline:
+						SceneQuestTrigger.OnTrigger(base.gameObject, SceneQuestTriggerEvent.SystemSwitchOff);
+						if (OnOfflineEvent != null)
+						{
+							OnOfflineEvent.Invoke();
+						}
+
+						break;
+					case SystemStatus.Powerup:
+						if (OnPowerUpEvent != null)
+						{
+							OnPowerUpEvent.Invoke();
+						}
+
+						break;
+					case SystemStatus.Cooldown:
+						if (OnCooldownEvent != null)
+						{
+							OnCooldownEvent.Invoke();
+						}
+
+						break;
 				}
+
 				_Status = value;
 				foreach (IVesselSystemAccessory accessory in Accessories)
 				{
@@ -104,7 +103,8 @@ namespace ZeroGravity.ShipComponents
 
 		public bool IsSwitchedOn()
 		{
-			return Status == SystemStatus.Online || Status == SystemStatus.Powerup || (Status == SystemStatus.Offline && AutoRestart);
+			return Status == SystemStatus.Online || Status == SystemStatus.Powerup ||
+			       (Status == SystemStatus.Offline && AutoRestart);
 		}
 
 		public string GetStatus(out Color color)
@@ -121,6 +121,7 @@ namespace ZeroGravity.ShipComponents
 				empty = Status.ToLocalizedString().ToUpper();
 				color = Colors.Status[Status];
 			}
+
 			return empty;
 		}
 

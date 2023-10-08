@@ -15,18 +15,12 @@ namespace ZeroGravity.LevelDesign
 
 		public bool IsInUse
 		{
-			get
-			{
-				return isInUse;
-			}
+			get { return isInUse; }
 		}
 
 		public override string InteractionTip
 		{
-			get
-			{
-				return Localization.PowerRechargeStation;
-			}
+			get { return Localization.PowerRechargeStation; }
 		}
 
 		public override BaseAttachPointData GetData()
@@ -49,6 +43,7 @@ namespace ZeroGravity.LevelDesign
 					}
 				};
 			}
+
 			chargeIcon.SetActive(isInUse);
 			RechargeStationText.text = Localization.RechargeStation.ToUpper();
 			base.Awake();

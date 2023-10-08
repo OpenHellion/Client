@@ -18,15 +18,13 @@ namespace RootMotion.FinalIK
 
 		public Quaternion rotationOffset;
 
-		[Range(0f, 1f)]
-		public float weight;
+		[Range(0f, 1f)] public float weight;
 
 		public Vector3 defaultLocalDirection;
 
 		public Vector3 defaultChildDirection;
 
-		[NonSerialized]
-		public float clampF = 0.505f;
+		[NonSerialized] public float clampF = 0.505f;
 
 		private int chainIndex1;
 
@@ -59,32 +57,43 @@ namespace RootMotion.FinalIK
 				{
 					logger("Bend Constraint contains a null reference.");
 				}
+
 				return false;
 			}
+
 			if (solver.GetPoint(bone1) == null)
 			{
 				if (logger != null)
 				{
-					logger("Bend Constraint is referencing to a bone '" + bone1.name + "' that does not excist in the Node Chain.");
+					logger("Bend Constraint is referencing to a bone '" + bone1.name +
+					       "' that does not excist in the Node Chain.");
 				}
+
 				return false;
 			}
+
 			if (solver.GetPoint(bone2) == null)
 			{
 				if (logger != null)
 				{
-					logger("Bend Constraint is referencing to a bone '" + bone2.name + "' that does not excist in the Node Chain.");
+					logger("Bend Constraint is referencing to a bone '" + bone2.name +
+					       "' that does not excist in the Node Chain.");
 				}
+
 				return false;
 			}
+
 			if (solver.GetPoint(bone3) == null)
 			{
 				if (logger != null)
 				{
-					logger("Bend Constraint is referencing to a bone '" + bone3.name + "' that does not excist in the Node Chain.");
+					logger("Bend Constraint is referencing to a bone '" + bone3.name +
+					       "' that does not excist in the Node Chain.");
 				}
+
 				return false;
 			}
+
 			return true;
 		}
 
@@ -113,14 +122,17 @@ namespace RootMotion.FinalIK
 			{
 				Debug.LogError("Attempting to set limb orientation to Vector3.zero axis");
 			}
+
 			if (lower == Vector3.zero)
 			{
 				Debug.LogError("Attempting to set limb orientation to Vector3.zero axis");
 			}
+
 			if (last == Vector3.zero)
 			{
 				Debug.LogError("Attempting to set limb orientation to Vector3.zero axis");
 			}
+
 			defaultLocalDirection = upper.normalized;
 			defaultChildDirection = last.normalized;
 		}
@@ -132,21 +144,25 @@ namespace RootMotion.FinalIK
 				Vector3 vector = bone1.rotation * -defaultLocalDirection;
 				Vector3 fromDirection = bone3.position - bone2.position;
 				bool changed = false;
-				Vector3 toDirection = V3Tools.ClampDirection(fromDirection, vector, clampF * solverWeight, 0, out changed);
+				Vector3 toDirection =
+					V3Tools.ClampDirection(fromDirection, vector, clampF * solverWeight, 0, out changed);
 				Quaternion rotation = bone3.rotation;
 				if (changed)
 				{
 					Quaternion quaternion = Quaternion.FromToRotation(fromDirection, toDirection);
 					bone2.rotation = quaternion * bone2.rotation;
 				}
+
 				if (positionWeight > 0f)
 				{
 					Vector3 normal = bone2.position - bone1.position;
 					Vector3 tangent = bone3.position - bone2.position;
 					Vector3.OrthoNormalize(ref normal, ref tangent);
 					Quaternion quaternion2 = Quaternion.FromToRotation(tangent, vector);
-					bone2.rotation = Quaternion.Lerp(bone2.rotation, quaternion2 * bone2.rotation, positionWeight * solverWeight);
+					bone2.rotation = Quaternion.Lerp(bone2.rotation, quaternion2 * bone2.rotation,
+						positionWeight * solverWeight);
 				}
+
 				if (changed || positionWeight > 0f)
 				{
 					bone3.rotation = rotation;
@@ -160,6 +176,7 @@ namespace RootMotion.FinalIK
 			{
 				return Vector3.zero;
 			}
+
 			float num = weight * solver.IKPositionWeight;
 			if (bendGoal != null)
 			{
@@ -169,40 +186,49 @@ namespace RootMotion.FinalIK
 					direction = vector;
 				}
 			}
+
 			if (num >= 1f)
 			{
 				return direction.normalized;
 			}
-			Vector3 vector2 = solver.GetNode(chainIndex3, nodeIndex3).solverPosition - solver.GetNode(chainIndex1, nodeIndex1).solverPosition;
+
+			Vector3 vector2 = solver.GetNode(chainIndex3, nodeIndex3).solverPosition -
+			                  solver.GetNode(chainIndex1, nodeIndex1).solverPosition;
 			Quaternion quaternion = Quaternion.FromToRotation(bone3.position - bone1.position, vector2);
 			Vector3 vector3 = quaternion * (bone2.position - bone1.position);
 			if (solver.GetNode(chainIndex3, nodeIndex3).effectorRotationWeight > 0f)
 			{
-				Vector3 b = -Vector3.Cross(vector2, solver.GetNode(chainIndex3, nodeIndex3).solverRotation * defaultChildDirection);
+				Vector3 b = -Vector3.Cross(vector2,
+					solver.GetNode(chainIndex3, nodeIndex3).solverRotation * defaultChildDirection);
 				vector3 = Vector3.Lerp(vector3, b, solver.GetNode(chainIndex3, nodeIndex3).effectorRotationWeight);
 			}
+
 			if (rotationOffset != Quaternion.identity)
 			{
 				Quaternion quaternion2 = Quaternion.FromToRotation(rotationOffset * vector2, vector2);
 				vector3 = quaternion2 * rotationOffset * vector3;
 			}
+
 			if (num <= 0f)
 			{
 				return vector3;
 			}
+
 			return Vector3.Lerp(vector3, direction.normalized, num);
 		}
 
 		private Vector3 OrthoToLimb(IKSolverFullBody solver, Vector3 tangent)
 		{
-			Vector3 normal = solver.GetNode(chainIndex3, nodeIndex3).solverPosition - solver.GetNode(chainIndex1, nodeIndex1).solverPosition;
+			Vector3 normal = solver.GetNode(chainIndex3, nodeIndex3).solverPosition -
+			                 solver.GetNode(chainIndex1, nodeIndex1).solverPosition;
 			Vector3.OrthoNormalize(ref normal, ref tangent);
 			return tangent;
 		}
 
 		private Vector3 OrthoToBone1(IKSolverFullBody solver, Vector3 tangent)
 		{
-			Vector3 normal = solver.GetNode(chainIndex2, nodeIndex2).solverPosition - solver.GetNode(chainIndex1, nodeIndex1).solverPosition;
+			Vector3 normal = solver.GetNode(chainIndex2, nodeIndex2).solverPosition -
+			                 solver.GetNode(chainIndex1, nodeIndex1).solverPosition;
 			Vector3.OrthoNormalize(ref normal, ref tangent);
 			return tangent;
 		}

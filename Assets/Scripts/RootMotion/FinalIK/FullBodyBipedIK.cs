@@ -19,7 +19,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Scrpt Reference")]
 		protected override void OpenScriptReference()
 		{
-			Application.OpenURL("http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_full_body_biped_i_k.html");
+			Application.OpenURL(
+				"http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_full_body_biped_i_k.html");
 		}
 
 		[ContextMenu("TUTORIAL VIDEO (SETUP)")]
@@ -43,7 +44,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Asset Store Thread")]
 		private void ASThread()
 		{
-			Application.OpenURL("http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
+			Application.OpenURL(
+				"http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
 		}
 
 		public void SetReferences(BipedReferences references, Transform rootNode)
@@ -63,16 +65,19 @@ namespace RootMotion.FinalIK
 			{
 				return true;
 			}
+
 			if (references.spine.Length == 0)
 			{
 				errorMessage = "References has no spine bones assigned, can not initiate the solver.";
 				return true;
 			}
+
 			if (solver.rootNode == null)
 			{
 				errorMessage = "Root Node bone is null, can not initiate the solver.";
 				return true;
 			}
+
 			if (solver.rootNode != references.pelvis)
 			{
 				bool flag = false;
@@ -84,12 +89,15 @@ namespace RootMotion.FinalIK
 						break;
 					}
 				}
+
 				if (!flag)
 				{
-					errorMessage = "The Root Node has to be one of the bones in the Spine or the Pelvis, can not initiate the solver.";
+					errorMessage =
+						"The Root Node has to be one of the bones in the Spine or the Pelvis, can not initiate the solver.";
 					return true;
 				}
 			}
+
 			return false;
 		}
 
@@ -99,20 +107,27 @@ namespace RootMotion.FinalIK
 			{
 				return true;
 			}
+
 			Vector3 vector = references.rightUpperArm.position - references.leftUpperArm.position;
-			float num = Vector3.Dot(rhs: (solver.rootNode.position - references.leftUpperArm.position).normalized, lhs: vector.normalized);
+			float num = Vector3.Dot(rhs: (solver.rootNode.position - references.leftUpperArm.position).normalized,
+				lhs: vector.normalized);
 			if (num > 0.95f)
 			{
-				warningMessage = "The root node, the left upper arm and the right upper arm bones should ideally form a triangle that is as close to equilateral as possible. Currently the root node bone seems to be very close to the line between the left upper arm and the right upper arm bones. This might cause unwanted behaviour like the spine turning upside down when pulled by a hand effector.Please set the root node bone to be one of the lower bones in the spine.";
+				warningMessage =
+					"The root node, the left upper arm and the right upper arm bones should ideally form a triangle that is as close to equilateral as possible. Currently the root node bone seems to be very close to the line between the left upper arm and the right upper arm bones. This might cause unwanted behaviour like the spine turning upside down when pulled by a hand effector.Please set the root node bone to be one of the lower bones in the spine.";
 				return true;
 			}
+
 			Vector3 vector2 = references.rightThigh.position - references.leftThigh.position;
-			num = Vector3.Dot(rhs: (solver.rootNode.position - references.leftThigh.position).normalized, lhs: vector2.normalized);
+			num = Vector3.Dot(rhs: (solver.rootNode.position - references.leftThigh.position).normalized,
+				lhs: vector2.normalized);
 			if (num > 0.95f)
 			{
-				warningMessage = "The root node, the left thigh and the right thigh bones should ideally form a triangle that is as close to equilateral as possible. Currently the root node bone seems to be very close to the line between the left thigh and the right thigh bones. This might cause unwanted behaviour like the hip turning upside down when pulled by an effector.Please set the root node bone to be one of the higher bones in the spine.";
+				warningMessage =
+					"The root node, the left thigh and the right thigh bones should ideally form a triangle that is as close to equilateral as possible. Currently the root node bone seems to be very close to the line between the left thigh and the right thigh bones. This might cause unwanted behaviour like the hip turning upside down when pulled by an effector.Please set the root node bone to be one of the higher bones in the spine.";
 				return true;
 			}
+
 			return false;
 		}
 
@@ -126,7 +141,8 @@ namespace RootMotion.FinalIK
 		private void AutoDetectReferences()
 		{
 			references = new BipedReferences();
-			BipedReferences.AutoDetectReferences(ref references, base.transform, new BipedReferences.AutoDetectParams(true, false));
+			BipedReferences.AutoDetectReferences(ref references, base.transform,
+				new BipedReferences.AutoDetectParams(true, false));
 			solver.rootNode = IKSolverFullBodyBiped.DetectRootNodeBone(references);
 			solver.SetToReferences(references, solver.rootNode);
 		}

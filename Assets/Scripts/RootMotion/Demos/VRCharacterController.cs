@@ -9,8 +9,7 @@ namespace RootMotion.Demos
 
 		public float rotationSpeed = 2f;
 
-		[Range(0f, 180f)]
-		public float rotationRatchet = 45f;
+		[Range(0f, 180f)] public float rotationRatchet = 45f;
 
 		public KeyCode ratchetRight = KeyCode.E;
 
@@ -34,7 +33,8 @@ namespace RootMotion.Demos
 			Vector3 vector = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 			Vector3 forward = forwardDirection.forward;
 			forward.y = 0f;
-			characterController.SimpleMove(Quaternion.LookRotation(forward) * Vector3.ClampMagnitude(vector, 1f) * moveSpeed);
+			characterController.SimpleMove(Quaternion.LookRotation(forward) * Vector3.ClampMagnitude(vector, 1f) *
+			                               moveSpeed);
 			if (Input.GetKeyDown(ratchetRight))
 			{
 				base.transform.rotation = Quaternion.Euler(0f, rotationRatchet, 0f) * base.transform.rotation;
@@ -43,7 +43,9 @@ namespace RootMotion.Demos
 			{
 				base.transform.rotation = Quaternion.Euler(0f, 0f - rotationRatchet, 0f) * base.transform.rotation;
 			}
-			base.transform.rotation = Quaternion.Euler(0f, Input.GetAxis("Mouse X") * rotationSpeed, 0f) * base.transform.rotation;
+
+			base.transform.rotation = Quaternion.Euler(0f, Input.GetAxis("Mouse X") * rotationSpeed, 0f) *
+			                          base.transform.rotation;
 		}
 	}
 }

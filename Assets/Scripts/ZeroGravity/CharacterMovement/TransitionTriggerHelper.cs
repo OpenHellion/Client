@@ -9,25 +9,20 @@ namespace ZeroGravity.CharacterMovement
 {
 	public class TransitionTriggerHelper : MonoBehaviour
 	{
-		[SerializeField]
-		private SpaceObjectTransferable transferableObj;
+		[SerializeField] private SpaceObjectTransferable transferableObj;
 
-		[SerializeField]
-		private List<Transform> extraCheckPoints = new List<Transform>();
+		[SerializeField] private List<Transform> extraCheckPoints = new List<Transform>();
 
-		[HideInInspector]
-		public bool Enabled = true;
+		[HideInInspector] public bool Enabled = true;
 
 		private SphereCollider sphereCollider;
 
-		private Dictionary<SceneTriggerRoom, HashSet<Collider>> roomTriggersDict = new Dictionary<SceneTriggerRoom, HashSet<Collider>>();
+		private Dictionary<SceneTriggerRoom, HashSet<Collider>> roomTriggersDict =
+			new Dictionary<SceneTriggerRoom, HashSet<Collider>>();
 
 		public SpaceObjectTransferable TransferableObject
 		{
-			get
-			{
-				return transferableObj;
-			}
+			get { return transferableObj; }
 		}
 
 		private SceneTriggerRoom GetRoomTrigger(Collider coli)
@@ -41,6 +36,7 @@ namespace ZeroGravity.CharacterMovement
 					sceneTriggerRoom = component.BaseRoom;
 				}
 			}
+
 			return sceneTriggerRoom;
 		}
 
@@ -67,26 +63,31 @@ namespace ZeroGravity.CharacterMovement
 			{
 				return;
 			}
+
 			bool flag = transferableObj.CurrentRoomTrigger == null || roomTriggersDict.Count == 0;
 			SceneTriggerRoom roomTrigger = GetRoomTrigger(coli);
 			if (TransferableObject is DynamicObject && roomTrigger == MyPlayer.Instance.MyRoomTrigger)
 			{
 				return;
 			}
+
 			if (roomTrigger != null)
 			{
 				if (roomTriggersDict.Count == 0)
 				{
-					if (flag && Client.IsGameBuild)
+					if (flag)
 					{
 						transferableObj.EnterVesselRoomTrigger = roomTrigger;
 						transferableObj.EnterVessel(roomTrigger.ParentVessel);
 					}
+
 					SceneTriggerRoom currentRoomTrigger = transferableObj.CurrentRoomTrigger;
 					transferableObj.CurrentRoomTrigger = roomTrigger;
 					transferableObj.RoomChanged(currentRoomTrigger);
 				}
-				else if (transferableObj.CurrentRoomTrigger != null && transferableObj.CurrentRoomTrigger.ParentVessel is Asteroid && roomTrigger.ParentVessel is Ship)
+				else if (transferableObj.CurrentRoomTrigger != null &&
+				         transferableObj.CurrentRoomTrigger.ParentVessel is Asteroid &&
+				         roomTrigger.ParentVessel is Ship)
 				{
 					transferableObj.EnterVesselRoomTrigger = roomTrigger;
 					transferableObj.EnterVessel(roomTrigger.ParentVessel);
@@ -98,10 +99,12 @@ namespace ZeroGravity.CharacterMovement
 				{
 					transferableObj.EnterVesselRoomTrigger = null;
 				}
+
 				if (!roomTriggersDict.ContainsKey(roomTrigger))
 				{
 					roomTriggersDict.Add(roomTrigger, new HashSet<Collider>());
 				}
+
 				roomTriggersDict[roomTrigger].Add(coli);
 			}
 			else if (transferableObj is MyPlayer && coli.GetComponentInParent<SceneTriggerLadder>() != null)
@@ -122,6 +125,7 @@ namespace ZeroGravity.CharacterMovement
 			{
 				return;
 			}
+
 			SceneTriggerRoom roomTrigger = GetRoomTrigger(coli);
 			if (roomTrigger != null && roomTriggersDict.ContainsKey(roomTrigger))
 			{
@@ -130,6 +134,7 @@ namespace ZeroGravity.CharacterMovement
 				{
 					return;
 				}
+
 				roomTriggersDict.Remove(roomTrigger);
 				SceneTriggerRoom sceneTriggerRoom = null;
 				foreach (SceneTriggerRoom key in roomTriggersDict.Keys)
@@ -138,28 +143,34 @@ namespace ZeroGravity.CharacterMovement
 					{
 						sceneTriggerRoom = key;
 					}
+
 					if (sceneTriggerRoom.ParentVessel is Ship)
 					{
 						break;
 					}
+
 					if (sceneTriggerRoom != key && !(key.ParentVessel is Asteroid))
 					{
 						sceneTriggerRoom = key;
 					}
 				}
+
 				if (sceneTriggerRoom != null)
 				{
 					SceneTriggerRoom currentRoomTrigger = transferableObj.CurrentRoomTrigger;
 					if (transferableObj.Parent != sceneTriggerRoom.ParentVessel)
 					{
-						if (transferableObj.Parent is SpaceObjectVessel && transferableObj.Parent != sceneTriggerRoom.ParentVessel)
+						if (transferableObj.Parent is SpaceObjectVessel &&
+						    transferableObj.Parent != sceneTriggerRoom.ParentVessel)
 						{
 							SpaceObjectVessel spaceObjectVessel = transferableObj.Parent as SpaceObjectVessel;
 							if (spaceObjectVessel.IsDocked)
 							{
 								spaceObjectVessel = spaceObjectVessel.DockedToMainVessel;
 							}
-							if (spaceObjectVessel == sceneTriggerRoom.ParentVessel || spaceObjectVessel.AllDockedVessels.Contains(sceneTriggerRoom.ParentVessel))
+
+							if (spaceObjectVessel == sceneTriggerRoom.ParentVessel ||
+							    spaceObjectVessel.AllDockedVessels.Contains(sceneTriggerRoom.ParentVessel))
 							{
 								transferableObj.DockedVesselParentChanged(sceneTriggerRoom.ParentVessel);
 							}
@@ -173,6 +184,7 @@ namespace ZeroGravity.CharacterMovement
 							Dbg.Error("How did this happen, player exited room trigger and its parent is not vessel");
 						}
 					}
+
 					transferableObj.CurrentRoomTrigger = sceneTriggerRoom;
 					transferableObj.RoomChanged(currentRoomTrigger);
 				}
@@ -185,6 +197,7 @@ namespace ZeroGravity.CharacterMovement
 						transferableObj.RoomChanged(currentRoomTrigger2);
 						transferableObj.ExitVessel(false);
 					}
+
 					checkMyPlayerCanGrabWall();
 				}
 			}
@@ -194,6 +207,7 @@ namespace ZeroGravity.CharacterMovement
 				{
 					return;
 				}
+
 				SceneTriggerLadder componentInParent = coli.GetComponentInParent<SceneTriggerLadder>();
 				if (componentInParent != null)
 				{
@@ -202,6 +216,7 @@ namespace ZeroGravity.CharacterMovement
 					{
 						componentInParent.LadderDetach(MyPlayer.Instance);
 					}
+
 					myPlayer.InLadderTrigger = false;
 					myPlayer.LadderTrigger = null;
 				}
@@ -232,7 +247,8 @@ namespace ZeroGravity.CharacterMovement
 
 		public void checkMyPlayerCanGrabWall()
 		{
-			MyPlayer.Instance.FpsController.ToggleInPlayerCollider(Physics.OverlapSphere(base.transform.position, 0.5f, LayerMask.NameToLayer("Default") | LayerMask.NameToLayer("Player")).Length > 1);
+			MyPlayer.Instance.FpsController.ToggleInPlayerCollider(Physics.OverlapSphere(base.transform.position, 0.5f,
+				LayerMask.NameToLayer("Default") | LayerMask.NameToLayer("Player")).Length > 1);
 		}
 
 		private void AuxCheckRoomTriggers()
@@ -241,6 +257,7 @@ namespace ZeroGravity.CharacterMovement
 			{
 				return;
 			}
+
 			Collider[] source = Physics.OverlapSphere(base.transform.position, sphereCollider.radius);
 			Collider collider = source.FirstOrDefault(_003CAuxCheckRoomTriggers_003Em__0);
 			if (collider == null)

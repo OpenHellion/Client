@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using ZeroGravity;
 using ZeroGravity.Objects;
 
 public class SoundEffect : AkGameObj
@@ -47,6 +46,7 @@ public class SoundEffect : AkGameObj
 					return true;
 				}
 			}
+
 			return result;
 		}
 	}
@@ -57,6 +57,7 @@ public class SoundEffect : AkGameObj
 		{
 			return;
 		}
+
 		if (UseParticleEvents && ParticleSystem == null)
 		{
 			ParticleSystem = GetComponent<ParticleSystem>();
@@ -69,11 +70,13 @@ public class SoundEffect : AkGameObj
 				}
 			}
 		}
+
 		SetEnvironment(DefaultEnvironment);
 		if (ListenerType != Listener.Default)
 		{
 			SetListeners();
 		}
+
 		PlayOnAwake();
 	}
 
@@ -91,11 +94,13 @@ public class SoundEffect : AkGameObj
 				}
 			}
 		}
+
 		SetEnvironment(DefaultEnvironment);
 		if (ListenerType != Listener.Default)
 		{
 			SetListeners();
 		}
+
 		PlayOnAwake();
 	}
 
@@ -107,6 +112,7 @@ public class SoundEffect : AkGameObj
 			{
 				Play(0);
 			}
+
 			if (!ParticleSystem.isPlaying)
 			{
 				AkSoundEngine.StopAll(base.gameObject);
@@ -134,6 +140,7 @@ public class SoundEffect : AkGameObj
 			{
 				return;
 			}
+
 			ulong[] array = new ulong[Listeners.Count];
 			for (int i = 0; i < Listeners.Count; i++)
 			{
@@ -146,6 +153,7 @@ public class SoundEffect : AkGameObj
 					array[i] = 0uL;
 				}
 			}
+
 			foreach (SoundEvent soundEvent in SoundEvents)
 			{
 				if (soundEvent.Source != null)
@@ -153,6 +161,7 @@ public class SoundEffect : AkGameObj
 					AkSoundEngine.SetListeners(soundEvent.Source.gameObject, array, (uint)array.Length);
 				}
 			}
+
 			AkSoundEngine.SetListeners(base.gameObject, array, (uint)array.Length);
 		}
 		else if (ListenerType == Listener.MyPlayer)
@@ -161,7 +170,9 @@ public class SoundEffect : AkGameObj
 			{
 				return;
 			}
-			ulong[] array2 = new ulong[1] { AkSoundEngine.GetAkGameObjectID(MyPlayer.Instance.FpsController.MainCamera.gameObject) };
+
+			ulong[] array2 = new ulong[1]
+				{ AkSoundEngine.GetAkGameObjectID(MyPlayer.Instance.FpsController.MainCamera.gameObject) };
 			foreach (SoundEvent soundEvent2 in SoundEvents)
 			{
 				if (soundEvent2.Source != null)
@@ -169,6 +180,7 @@ public class SoundEffect : AkGameObj
 					AkSoundEngine.SetListeners(soundEvent2.Source.gameObject, array2, (uint)array2.Length);
 				}
 			}
+
 			AkSoundEngine.SetListeners(base.gameObject, array2, (uint)array2.Length);
 		}
 		else
@@ -177,22 +189,9 @@ public class SoundEffect : AkGameObj
 			{
 				return;
 			}
-			Client instance = Client.Instance;
-			object obj;
-			if ((object)instance == null)
-			{
-				obj = null;
-			}
-			else
-			{
-				CanvasManager canvasManager = instance.CanvasManager;
-				obj = (((object)canvasManager != null) ? canvasManager.Canvas : null);
-			}
-			if (!((Object)obj != null))
-			{
-				return;
-			}
-			ulong[] array3 = new ulong[1] { AkSoundEngine.GetAkGameObjectID(Client.Instance.CanvasManager.Canvas.worldCamera.gameObject) };
+
+			Debug.Assert(Camera.main != null);
+			ulong[] array3 = new ulong[1] { AkSoundEngine.GetAkGameObjectID(Camera.main.gameObject) };
 			foreach (SoundEvent soundEvent3 in SoundEvents)
 			{
 				if (soundEvent3.Source != null)
@@ -200,7 +199,8 @@ public class SoundEffect : AkGameObj
 					AkSoundEngine.SetListeners(soundEvent3.Source.gameObject, array3, (uint)array3.Length);
 				}
 			}
-			AkSoundEngine.SetListeners(base.gameObject, array3, (uint)array3.Length);
+
+			AkSoundEngine.SetListeners(gameObject, array3, (uint)array3.Length);
 		}
 	}
 
@@ -214,31 +214,38 @@ public class SoundEffect : AkGameObj
 				if (soundEvent.Source != null)
 				{
 					akAuxSendArray.Add(soundEvent.Source.gameObject, AkSoundEngine.GetIDFromString(env), 1f);
-					AkSoundEngine.SetGameObjectAuxSendValues(soundEvent.Source.gameObject, akAuxSendArray, (uint)akAuxSendArray.Count());
+					AkSoundEngine.SetGameObjectAuxSendValues(soundEvent.Source.gameObject, akAuxSendArray,
+						(uint)akAuxSendArray.Count());
 				}
 				else
 				{
 					akAuxSendArray.Add(base.gameObject, AkSoundEngine.GetIDFromString(env), 1f);
-					AkSoundEngine.SetGameObjectAuxSendValues(base.gameObject, akAuxSendArray, (uint)akAuxSendArray.Count());
+					AkSoundEngine.SetGameObjectAuxSendValues(base.gameObject, akAuxSendArray,
+						(uint)akAuxSendArray.Count());
 				}
 			}
+
 			{
 				foreach (SoundEvent fpsSoundEvent in FpsSoundEvents)
 				{
 					if (fpsSoundEvent.Source != null)
 					{
 						akAuxSendArray.Add(fpsSoundEvent.Source.gameObject, AkSoundEngine.GetIDFromString(env), 1f);
-						AkSoundEngine.SetGameObjectAuxSendValues(fpsSoundEvent.Source.gameObject, akAuxSendArray, (uint)akAuxSendArray.Count());
+						AkSoundEngine.SetGameObjectAuxSendValues(fpsSoundEvent.Source.gameObject, akAuxSendArray,
+							(uint)akAuxSendArray.Count());
 					}
 					else
 					{
 						akAuxSendArray.Add(base.gameObject, AkSoundEngine.GetIDFromString(env), 1f);
-						AkSoundEngine.SetGameObjectAuxSendValues(base.gameObject, akAuxSendArray, (uint)akAuxSendArray.Count());
+						AkSoundEngine.SetGameObjectAuxSendValues(base.gameObject, akAuxSendArray,
+							(uint)akAuxSendArray.Count());
 					}
 				}
+
 				return;
 			}
 		}
+
 		foreach (SoundEvent soundEvent2 in SoundEvents)
 		{
 			if (soundEvent2.Source != null)
@@ -250,6 +257,7 @@ public class SoundEffect : AkGameObj
 				AkSoundEngine.SetGameObjectAuxSendValues(base.gameObject, akAuxSendArray, 0u);
 			}
 		}
+
 		foreach (SoundEvent fpsSoundEvent2 in FpsSoundEvents)
 		{
 			if (fpsSoundEvent2.Source != null)
@@ -301,12 +309,14 @@ public class SoundEffect : AkGameObj
 	{
 		if (!UseFPSSounds)
 		{
-			if (SoundEvents.Count > 0 && index < SoundEvents.Count && index >= 0 && (!SoundEvents[index].IsPlaying || !dontPlayIfPlaying))
+			if (SoundEvents.Count > 0 && index < SoundEvents.Count && index >= 0 &&
+			    (!SoundEvents[index].IsPlaying || !dontPlayIfPlaying))
 			{
 				Play(SoundEvents[index]);
 			}
 		}
-		else if (FpsSoundEvents.Count > 0 && index < FpsSoundEvents.Count && index >= 0 && (!FpsSoundEvents[index].IsPlaying || !dontPlayIfPlaying))
+		else if (FpsSoundEvents.Count > 0 && index < FpsSoundEvents.Count && index >= 0 &&
+		         (!FpsSoundEvents[index].IsPlaying || !dontPlayIfPlaying))
 		{
 			Play(FpsSoundEvents[index]);
 		}
@@ -328,6 +338,7 @@ public class SoundEffect : AkGameObj
 		{
 			return;
 		}
+
 		ArtificialBody componentInParent = GetComponentInParent<ArtificialBody>();
 		if (componentInParent != null)
 		{
@@ -341,19 +352,26 @@ public class SoundEffect : AkGameObj
 			else if (componentInParent is SpaceObjectVessel)
 			{
 				SpaceObjectVessel mainVessel = (componentInParent as SpaceObjectVessel).MainVessel;
-				if ((MyPlayer.Instance.Parent is SpaceObjectVessel && (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel != mainVessel) || (MyPlayer.Instance.Parent is Pivot && MyPlayer.Instance.FpsController.StickToVessel != null && MyPlayer.Instance.FpsController.StickToVessel.MainVessel != mainVessel))
+				if ((MyPlayer.Instance.Parent is SpaceObjectVessel &&
+				     (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel != mainVessel) ||
+				    (MyPlayer.Instance.Parent is Pivot && MyPlayer.Instance.FpsController.StickToVessel != null &&
+				     MyPlayer.Instance.FpsController.StickToVessel.MainVessel != mainVessel))
 				{
 					return;
 				}
 			}
 		}
+
 		if (soundEvent.Source != null)
 		{
-			AkSoundEngine.PostEvent(AkSoundEngine.GetIDFromString(soundEvent.EventString), soundEvent.Source.gameObject);
+			AkSoundEngine.PostEvent(AkSoundEngine.GetIDFromString(soundEvent.EventString),
+				soundEvent.Source.gameObject);
 			return;
 		}
+
 		soundEvent.IsPlaying = true;
-		AkSoundEngine.PostEvent(AkSoundEngine.GetIDFromString(soundEvent.EventString), base.gameObject, 1u, OnSoundEventEnd, soundEvent);
+		AkSoundEngine.PostEvent(AkSoundEngine.GetIDFromString(soundEvent.EventString), base.gameObject, 1u,
+			OnSoundEventEnd, soundEvent);
 	}
 
 	private void OnSoundEventEnd(object in_cookie, AkCallbackType in_type, object in_info)
@@ -367,18 +385,21 @@ public class SoundEffect : AkGameObj
 		{
 			if (soundEvent.Source != null)
 			{
-				AkSoundEngine.SetRTPCValue(AkSoundEngine.GetIDFromString(parameter), value, soundEvent.Source.gameObject);
+				AkSoundEngine.SetRTPCValue(AkSoundEngine.GetIDFromString(parameter), value,
+					soundEvent.Source.gameObject);
 			}
 			else
 			{
 				AkSoundEngine.SetRTPCValue(AkSoundEngine.GetIDFromString(parameter), value, base.gameObject);
 			}
 		}
+
 		foreach (SoundEvent fpsSoundEvent in FpsSoundEvents)
 		{
 			if (fpsSoundEvent.Source != null)
 			{
-				AkSoundEngine.SetRTPCValue(AkSoundEngine.GetIDFromString(parameter), value, fpsSoundEvent.Source.gameObject);
+				AkSoundEngine.SetRTPCValue(AkSoundEngine.GetIDFromString(parameter), value,
+					fpsSoundEvent.Source.gameObject);
 			}
 			else
 			{
@@ -400,6 +421,7 @@ public class SoundEffect : AkGameObj
 				AkSoundEngine.SetSwitch("Ambience", ambience, base.gameObject);
 			}
 		}
+
 		foreach (SoundEvent fpsSoundEvent in FpsSoundEvents)
 		{
 			if (fpsSoundEvent.Source != null)
@@ -419,22 +441,27 @@ public class SoundEffect : AkGameObj
 		{
 			if (soundEvent.Source != null)
 			{
-				AkSoundEngine.SetSwitch(AkSoundEngine.GetIDFromString(group), AkSoundEngine.GetIDFromString(swtch), soundEvent.Source.gameObject);
+				AkSoundEngine.SetSwitch(AkSoundEngine.GetIDFromString(group), AkSoundEngine.GetIDFromString(swtch),
+					soundEvent.Source.gameObject);
 			}
 			else
 			{
-				AkSoundEngine.SetSwitch(AkSoundEngine.GetIDFromString(group), AkSoundEngine.GetIDFromString(swtch), base.gameObject);
+				AkSoundEngine.SetSwitch(AkSoundEngine.GetIDFromString(group), AkSoundEngine.GetIDFromString(swtch),
+					base.gameObject);
 			}
 		}
+
 		foreach (SoundEvent fpsSoundEvent in FpsSoundEvents)
 		{
 			if (fpsSoundEvent.Source != null)
 			{
-				AkSoundEngine.SetSwitch(AkSoundEngine.GetIDFromString(group), AkSoundEngine.GetIDFromString(swtch), fpsSoundEvent.Source.gameObject);
+				AkSoundEngine.SetSwitch(AkSoundEngine.GetIDFromString(group), AkSoundEngine.GetIDFromString(swtch),
+					fpsSoundEvent.Source.gameObject);
 			}
 			else
 			{
-				AkSoundEngine.SetSwitch(AkSoundEngine.GetIDFromString(group), AkSoundEngine.GetIDFromString(swtch), base.gameObject);
+				AkSoundEngine.SetSwitch(AkSoundEngine.GetIDFromString(group), AkSoundEngine.GetIDFromString(swtch),
+					base.gameObject);
 			}
 		}
 	}

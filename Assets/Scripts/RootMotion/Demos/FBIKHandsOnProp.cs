@@ -13,7 +13,8 @@ namespace RootMotion.Demos
 		private void Awake()
 		{
 			IKSolverFullBodyBiped solver = ik.solver;
-			solver.OnPreRead = (IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPreRead, new IKSolver.UpdateDelegate(OnPreRead));
+			solver.OnPreRead =
+				(IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPreRead, new IKSolver.UpdateDelegate(OnPreRead));
 		}
 
 		private void OnPreRead()
@@ -34,7 +35,8 @@ namespace RootMotion.Demos
 			Vector3 vector2 = Quaternion.Inverse(mainHand.bone.rotation) * vector;
 			Vector3 vector3 = mainHand.bone.position + vector * 0.5f;
 			Quaternion quaternion = Quaternion.Inverse(mainHand.bone.rotation) * otherHand.bone.rotation;
-			Vector3 toDirection = otherHand.bone.position + otherHand.positionOffset - (mainHand.bone.position + mainHand.positionOffset);
+			Vector3 toDirection = otherHand.bone.position + otherHand.positionOffset -
+			                      (mainHand.bone.position + mainHand.positionOffset);
 			Vector3 vector4 = mainHand.bone.position + mainHand.positionOffset + vector * 0.5f;
 			mainHand.position = mainHand.bone.position + mainHand.positionOffset + (vector4 - vector3);
 			mainHand.positionWeight = 1f;
@@ -52,7 +54,8 @@ namespace RootMotion.Demos
 			if (ik != null)
 			{
 				IKSolverFullBodyBiped solver = ik.solver;
-				solver.OnPreRead = (IKSolver.UpdateDelegate)Delegate.Remove(solver.OnPreRead, new IKSolver.UpdateDelegate(OnPreRead));
+				solver.OnPreRead =
+					(IKSolver.UpdateDelegate)Delegate.Remove(solver.OnPreRead, new IKSolver.UpdateDelegate(OnPreRead));
 			}
 		}
 	}

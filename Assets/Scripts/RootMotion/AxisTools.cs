@@ -8,12 +8,12 @@ namespace RootMotion
 		{
 			switch (axis)
 			{
-			case Axis.X:
-				return Vector3.right;
-			case Axis.Y:
-				return Vector3.up;
-			default:
-				return Vector3.forward;
+				case Axis.X:
+					return Vector3.right;
+				case Axis.Y:
+					return Vector3.up;
+				default:
+					return Vector3.forward;
 			}
 		}
 
@@ -27,10 +27,12 @@ namespace RootMotion
 			{
 				result = Axis.Y;
 			}
+
 			if (num3 > num && num3 > num2)
 			{
 				result = Axis.Z;
 			}
+
 			return result;
 		}
 
@@ -41,10 +43,12 @@ namespace RootMotion
 			{
 				return Axis.X;
 			}
+
 			if (axisVectorToPoint == Vector3.up)
 			{
 				return Axis.Y;
 			}
+
 			return Axis.Z;
 		}
 
@@ -55,10 +59,12 @@ namespace RootMotion
 			{
 				return Axis.X;
 			}
+
 			if (axisVectorToDirection == Vector3.up)
 			{
 				return Axis.Y;
 			}
+
 			return Axis.Z;
 		}
 
@@ -77,11 +83,13 @@ namespace RootMotion
 			{
 				result = Vector3.up;
 			}
+
 			float num3 = Mathf.Abs(Vector3.Dot(Vector3.Normalize(t.forward), direction));
 			if (num3 > num && num3 > num2)
 			{
 				result = Vector3.forward;
 			}
+
 			return result;
 		}
 	}

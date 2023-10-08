@@ -6,7 +6,8 @@ namespace RootMotion.FinalIK
 	[Serializable]
 	public class InteractionLookAt
 	{
-		[Tooltip("(Optional) reference to the LookAtIK component that will be used to make the character look at the objects that it is interacting with.")]
+		[Tooltip(
+			"(Optional) reference to the LookAtIK component that will be used to make the character look at the objects that it is interacting with.")]
 		public LookAtIK ik;
 
 		[Tooltip("Interpolation speed of the LookAtIK target.")]
@@ -15,8 +16,7 @@ namespace RootMotion.FinalIK
 		[Tooltip("Interpolation speed of the LookAtIK weight.")]
 		public float weightSpeed = 1f;
 
-		[HideInInspector]
-		public bool isPaused;
+		[HideInInspector] public bool isPaused;
 
 		private Transform lookAtTarget;
 
@@ -34,6 +34,7 @@ namespace RootMotion.FinalIK
 				{
 					ik.solver.IKPosition = ik.solver.GetRoot().position + ik.solver.GetRoot().forward * 3f;
 				}
+
 				lookAtTarget = target;
 				stopLookTime = time;
 			}
@@ -45,24 +46,29 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			if (ik.enabled)
 			{
 				ik.enabled = false;
 			}
+
 			if (!(lookAtTarget == null))
 			{
 				if (isPaused)
 				{
 					stopLookTime += Time.deltaTime;
 				}
+
 				float num = ((!(Time.time < stopLookTime)) ? (0f - weightSpeed) : weightSpeed);
 				weight = Mathf.Clamp(weight + num * Time.deltaTime, 0f, 1f);
 				ik.solver.IKPositionWeight = Interp.Float(weight, InterpolationMode.InOutQuintic);
-				ik.solver.IKPosition = Vector3.Lerp(ik.solver.IKPosition, lookAtTarget.position, lerpSpeed * Time.deltaTime);
+				ik.solver.IKPosition =
+					Vector3.Lerp(ik.solver.IKPosition, lookAtTarget.position, lerpSpeed * Time.deltaTime);
 				if (weight <= 0f)
 				{
 					lookAtTarget = null;
 				}
+
 				firstFBBIKSolve = true;
 			}
 		}

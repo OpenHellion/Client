@@ -5,7 +5,8 @@ using ZeroGravity.Data;
 
 namespace ZeroGravity.UI
 {
-	public class CargoCraftingDrop : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler, IEventSystemHandler
+	public class CargoCraftingDrop : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler,
+		IEventSystemHandler
 	{
 		private List<ResourceType> RefinableResources = new List<ResourceType>
 		{
@@ -17,10 +18,7 @@ namespace ZeroGravity.UI
 
 		public CargoPanel MyCargoPanel
 		{
-			get
-			{
-				return GetComponentInParent<CargoPanel>();
-			}
+			get { return GetComponentInParent<CargoPanel>(); }
 		}
 
 		public void OnDrop(PointerEventData data)

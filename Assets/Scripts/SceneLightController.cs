@@ -15,61 +15,48 @@ public class SceneLightController : MonoBehaviour
 
 	private new Light light;
 
-	[Space(20f)]
-	public LightState State;
+	[Space(20f)] public LightState State;
 
 	public bool OnOff = true;
 
 	private bool previousOnOff = true;
 
-	[ContextMenuItem("On", "test")]
-	[ContextMenuItem("Off", "test2")]
+	[ContextMenuItem("On", "test")] [ContextMenuItem("Off", "test2")]
 	public float LightChangeDuration = 1f;
 
 	public CurveHelper CurveHelper;
 
-	[Space(20f)]
-	[Tooltip("Should the ligth component be disabled when this state is active")]
+	[Space(20f)] [Tooltip("Should the ligth component be disabled when this state is active")]
 	public bool OnDisable;
 
-	[Range(0f, 10f)]
-	public float OnIntensity;
+	[Range(0f, 10f)] public float OnIntensity;
 
 	public Color OnColor;
 
-	[Range(0f, 10f)]
-	public float OnVolumetricIntensity;
+	[Range(0f, 10f)] public float OnVolumetricIntensity;
 
-	[Space(20f)]
-	[Tooltip("Should the ligth component be disabled when this state is active")]
+	[Space(20f)] [Tooltip("Should the ligth component be disabled when this state is active")]
 	public bool OffDisable;
 
-	[Range(0f, 10f)]
-	public float OffIntensity;
+	[Range(0f, 10f)] public float OffIntensity;
 
 	public Color OffColor;
 
-	[Range(0f, 10f)]
-	public float OffVolumetricIntensity;
+	[Range(0f, 10f)] public float OffVolumetricIntensity;
 
-	[Space(20f)]
-	[Tooltip("Should the ligth component be disabled when this state is active")]
+	[Space(20f)] [Tooltip("Should the ligth component be disabled when this state is active")]
 	public bool ToxicDisable;
 
-	[Range(0f, 10f)]
-	public float ToxicIntensity;
+	[Range(0f, 10f)] public float ToxicIntensity;
 
 	public Color ToxicColor;
 
-	[Range(0f, 10f)]
-	public float ToxicVolumetricIntensity;
+	[Range(0f, 10f)] public float ToxicVolumetricIntensity;
 
-	[Space(20f)]
-	[Tooltip("Should the ligth component be disabled when this state is active")]
+	[Space(20f)] [Tooltip("Should the ligth component be disabled when this state is active")]
 	public bool PressureDisable;
 
-	[Range(0f, 10f)]
-	public float PressureIntensity;
+	[Range(0f, 10f)] public float PressureIntensity;
 
 	public Color PressureColor;
 
@@ -96,6 +83,7 @@ public class SceneLightController : MonoBehaviour
 		{
 			light = GetComponent<Light>();
 		}
+
 		if (Application.isPlaying)
 		{
 			foreach (LightEmission lightEmission in LightEmissions)
@@ -106,7 +94,9 @@ public class SceneLightController : MonoBehaviour
 				}
 			}
 		}
-		light.cullingMask = ~((1 << LayerMask.NameToLayer("Sun")) | (1 << LayerMask.NameToLayer("Planets")) | (1 << LayerMask.NameToLayer("Map")) | (1 << LayerMask.NameToLayer("InventoryCharacter")));
+
+		light.cullingMask = ~((1 << LayerMask.NameToLayer("Sun")) | (1 << LayerMask.NameToLayer("Planets")) |
+		                      (1 << LayerMask.NameToLayer("Map")) | (1 << LayerMask.NameToLayer("InventoryCharacter")));
 		if (Application.isPlaying)
 		{
 			foreach (MeshRenderer emissionRenderer in EmissionRenderers)
@@ -119,6 +109,7 @@ public class SceneLightController : MonoBehaviour
 				}
 			}
 		}
+
 		CurveHelper = Resources.Load("ScriptableObjects/Helpers/LightCurves") as CurveHelper;
 	}
 
@@ -171,18 +162,22 @@ public class SceneLightController : MonoBehaviour
 			endIntensity = OffIntensity;
 			endColor2 = OffColor;
 		}
+
 		int curveIndex = 0;
 		if (CurveHelper != null)
 		{
 			curveIndex = Random.Range(0, CurveHelper.Curves.Count);
 		}
+
 		float time = LightChangeDuration;
 		while (time > 0f)
 		{
 			if (CurveHelper != null)
 			{
-				light.intensity = Mathf.Lerp(startIntensity, endIntensity, CurveHelper.Curves[curveIndex].Evaluate(1f - time / LightChangeDuration));
-				light.color = Color.Lerp(startColor, endColor2, CurveHelper.Curves[curveIndex].Evaluate(1f - time / LightChangeDuration));
+				light.intensity = Mathf.Lerp(startIntensity, endIntensity,
+					CurveHelper.Curves[curveIndex].Evaluate(1f - time / LightChangeDuration));
+				light.color = Color.Lerp(startColor, endColor2,
+					CurveHelper.Curves[curveIndex].Evaluate(1f - time / LightChangeDuration));
 				previousOnOff = OnOff;
 			}
 			else
@@ -190,9 +185,11 @@ public class SceneLightController : MonoBehaviour
 				light.intensity = Mathf.Lerp(startIntensity, endIntensity, 1f - time / LightChangeDuration);
 				light.color = Color.Lerp(startColor, endColor2, 1f - time / LightChangeDuration);
 			}
+
 			time -= Time.deltaTime;
 			yield return new WaitForEndOfFrame();
 		}
+
 		light.intensity = endIntensity;
 		foreach (MeshRenderer emissionRenderer in EmissionRenderers)
 		{

@@ -6,8 +6,7 @@ namespace RootMotion.FinalIK
 	[Serializable]
 	public class IKSolverFullBody : IKSolver
 	{
-		[Range(0f, 10f)]
-		public int iterations = 4;
+		[Range(0f, 10f)] public int iterations = 4;
 
 		public FBIKChain[] chain = new FBIKChain[0];
 
@@ -44,6 +43,7 @@ namespace RootMotion.FinalIK
 					return effectors[i];
 				}
 			}
+
 			return null;
 		}
 
@@ -54,6 +54,7 @@ namespace RootMotion.FinalIK
 			{
 				return null;
 			}
+
 			return chain[chainIndex];
 		}
 
@@ -69,6 +70,7 @@ namespace RootMotion.FinalIK
 					}
 				}
 			}
+
 			return -1;
 		}
 
@@ -97,6 +99,7 @@ namespace RootMotion.FinalIK
 			{
 				num += chain[i].nodes.Length;
 			}
+
 			Point[] array = new Point[num];
 			int num2 = 0;
 			for (int j = 0; j < chain.Length; j++)
@@ -106,6 +109,7 @@ namespace RootMotion.FinalIK
 					array[num2] = chain[j].nodes[k];
 				}
 			}
+
 			return array;
 		}
 
@@ -121,6 +125,7 @@ namespace RootMotion.FinalIK
 					}
 				}
 			}
+
 			return null;
 		}
 
@@ -131,11 +136,13 @@ namespace RootMotion.FinalIK
 				message = "FBIK chain is null, can't initiate solver.";
 				return false;
 			}
+
 			if (chain.Length == 0)
 			{
 				message = "FBIK chain length is 0, can't initiate solver.";
 				return false;
 			}
+
 			for (int i = 0; i < chain.Length; i++)
 			{
 				if (!chain[i].IsValid(ref message))
@@ -143,6 +150,7 @@ namespace RootMotion.FinalIK
 					return false;
 				}
 			}
+
 			IKEffector[] array = effectors;
 			foreach (IKEffector iKEffector in array)
 			{
@@ -151,10 +159,12 @@ namespace RootMotion.FinalIK
 					return false;
 				}
 			}
+
 			if (!spineMapping.IsValid(this, ref message))
 			{
 				return false;
 			}
+
 			IKMappingLimb[] array2 = limbMappings;
 			foreach (IKMappingLimb iKMappingLimb in array2)
 			{
@@ -163,6 +173,7 @@ namespace RootMotion.FinalIK
 					return false;
 				}
 			}
+
 			IKMappingBone[] array3 = boneMappings;
 			foreach (IKMappingBone iKMappingBone in array3)
 			{
@@ -171,6 +182,7 @@ namespace RootMotion.FinalIK
 					return false;
 				}
 			}
+
 			return true;
 		}
 
@@ -181,10 +193,12 @@ namespace RootMotion.FinalIK
 			{
 				limbMappings[i].StoreDefaultLocalState();
 			}
+
 			for (int j = 0; j < boneMappings.Length; j++)
 			{
 				boneMappings[j].StoreDefaultLocalState();
 			}
+
 			if (OnStoreDefaultLocalState != null)
 			{
 				OnStoreDefaultLocalState();
@@ -200,10 +214,12 @@ namespace RootMotion.FinalIK
 				{
 					limbMappings[i].FixTransforms();
 				}
+
 				for (int j = 0; j < boneMappings.Length; j++)
 				{
 					boneMappings[j].FixTransforms();
 				}
+
 				if (OnFixTransforms != null)
 				{
 					OnFixTransforms();
@@ -217,17 +233,20 @@ namespace RootMotion.FinalIK
 			{
 				chain[i].Initiate(this);
 			}
+
 			IKEffector[] array = effectors;
 			foreach (IKEffector iKEffector in array)
 			{
 				iKEffector.Initiate(this);
 			}
+
 			spineMapping.Initiate(this);
 			IKMappingBone[] array2 = boneMappings;
 			foreach (IKMappingBone iKMappingBone in array2)
 			{
 				iKMappingBone.Initiate(this);
 			}
+
 			IKMappingLimb[] array3 = limbMappings;
 			foreach (IKMappingLimb iKMappingLimb in array3)
 			{
@@ -251,16 +270,19 @@ namespace RootMotion.FinalIK
 				{
 					OnPreRead();
 				}
+
 				ReadPose();
 				if (OnPreSolve != null)
 				{
 					OnPreSolve();
 				}
+
 				Solve();
 				if (OnPostSolve != null)
 				{
 					OnPostSolve();
 				}
+
 				WritePose();
 				for (int j = 0; j < effectors.Length; j++)
 				{
@@ -275,21 +297,26 @@ namespace RootMotion.FinalIK
 			{
 				if (chain[i].bendConstraint.initiated)
 				{
-					chain[i].bendConstraint.LimitBend(IKPositionWeight, GetEffector(chain[i].nodes[2].transform).positionWeight);
+					chain[i].bendConstraint.LimitBend(IKPositionWeight,
+						GetEffector(chain[i].nodes[2].transform).positionWeight);
 				}
 			}
+
 			for (int j = 0; j < effectors.Length; j++)
 			{
 				effectors[j].ResetOffset(this);
 			}
+
 			for (int k = 0; k < effectors.Length; k++)
 			{
 				effectors[k].OnPreSolve(this);
 			}
+
 			for (int l = 0; l < chain.Length; l++)
 			{
 				chain[l].ReadPose(this, iterations > 0);
 			}
+
 			if (iterations > 0)
 			{
 				spineMapping.ReadPose();
@@ -298,6 +325,7 @@ namespace RootMotion.FinalIK
 					boneMappings[m].ReadPose();
 				}
 			}
+
 			for (int n = 0; n < limbMappings.Length; n++)
 			{
 				limbMappings[n].ReadPose();
@@ -314,6 +342,7 @@ namespace RootMotion.FinalIK
 					{
 						OnPreIteration(i);
 					}
+
 					for (int j = 0; j < effectors.Length; j++)
 					{
 						if (effectors[j].isEndEffector)
@@ -321,6 +350,7 @@ namespace RootMotion.FinalIK
 							effectors[j].Update(this);
 						}
 					}
+
 					chain[0].Push(this);
 					chain[0].Reach(this);
 					for (int k = 0; k < effectors.Length; k++)
@@ -330,6 +360,7 @@ namespace RootMotion.FinalIK
 							effectors[k].Update(this);
 						}
 					}
+
 					chain[0].SolveTrigonometric(this);
 					chain[0].Stage1(this);
 					for (int l = 0; l < effectors.Length; l++)
@@ -339,6 +370,7 @@ namespace RootMotion.FinalIK
 							effectors[l].Update(this);
 						}
 					}
+
 					chain[0].Stage2(this, chain[0].nodes[0].solverPosition);
 					if (OnPostIteration != null)
 					{
@@ -346,10 +378,12 @@ namespace RootMotion.FinalIK
 					}
 				}
 			}
+
 			if (OnPreBend != null)
 			{
 				OnPreBend();
 			}
+
 			for (int m = 0; m < effectors.Length; m++)
 			{
 				if (effectors[m].isEndEffector)
@@ -357,6 +391,7 @@ namespace RootMotion.FinalIK
 					effectors[m].Update(this);
 				}
 			}
+
 			ApplyBendConstraints();
 		}
 
@@ -371,6 +406,7 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			if (iterations > 0)
 			{
 				spineMapping.WritePose(this);
@@ -379,6 +415,7 @@ namespace RootMotion.FinalIK
 					boneMappings[i].WritePose(IKPositionWeight);
 				}
 			}
+
 			for (int j = 0; j < limbMappings.Length; j++)
 			{
 				limbMappings[j].WritePose(this, iterations > 0);

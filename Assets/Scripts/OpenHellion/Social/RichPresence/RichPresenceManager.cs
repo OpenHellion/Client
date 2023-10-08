@@ -30,6 +30,7 @@ namespace OpenHellion.Social.RichPresence
 	internal class RichPresenceManager : MonoBehaviour
 	{
 		private static RichPresenceManager _instance;
+
 		private static RichPresenceManager Instance
 		{
 			get
@@ -52,6 +53,7 @@ namespace OpenHellion.Social.RichPresence
 				Destroy(gameObject, 0f);
 				Dbg.Error("Tried to create new ProviderManager, but there already exists another manager.");
 			}
+
 			_instance = this;
 
 			DontDestroyOnLoad(gameObject);

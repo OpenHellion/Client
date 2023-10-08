@@ -6,8 +6,7 @@ namespace RootMotion.FinalIK
 	{
 		public delegate void GrounderDelegate();
 
-		[Tooltip("The master weight. Use this to fade in/out the grounding effect.")]
-		[Range(0f, 1f)]
+		[Tooltip("The master weight. Use this to fade in/out the grounding effect.")] [Range(0f, 1f)]
 		public float weight = 1f;
 
 		[Tooltip("The Grounding solver. Not to confuse with IK solvers.")]
@@ -28,6 +27,7 @@ namespace RootMotion.FinalIK
 			{
 				zero += GetLegSpineBendVector(solver.legs[i]);
 			}
+
 			return zero;
 		}
 
@@ -51,6 +51,7 @@ namespace RootMotion.FinalIK
 			{
 				return new Vector3(tangent.x, 0f, tangent.z);
 			}
+
 			Vector3 normal = solver.root.up;
 			Vector3.OrthoNormalize(ref normal, ref tangent);
 			return tangent;

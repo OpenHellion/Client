@@ -16,10 +16,7 @@ namespace ZeroGravity
 
 		public static string FileName
 		{
-			get
-			{
-				return fileName;
-			}
+			get { return fileName; }
 			set
 			{
 				fileName = value;
@@ -61,6 +58,7 @@ namespace ZeroGravity
 				propertiesChangedTime = lastWriteTime;
 				LoadProperties();
 			}
+
 			TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
 			try
 			{
@@ -90,6 +88,7 @@ namespace ZeroGravity
 			{
 				File.Create(filePath);
 			}
+
 			int num = 0;
 			Dictionary<string, string> dictionary = new Dictionary<string, string>();
 			try
@@ -103,6 +102,7 @@ namespace ZeroGravity
 						dictionary.Add("#" + num++, text);
 						continue;
 					}
+
 					try
 					{
 						string[] array2 = text.Split("=".ToCharArray(), 2);
@@ -120,10 +120,12 @@ namespace ZeroGravity
 					{
 					}
 				}
+
 				if (!flag)
 				{
 					dictionary.Add(propertyName, propertyValue.ToString());
 				}
+
 				StringBuilder stringBuilder = new StringBuilder();
 				foreach (KeyValuePair<string, string> item in dictionary)
 				{
@@ -136,6 +138,7 @@ namespace ZeroGravity
 						stringBuilder.AppendLine(item.Key + "=" + item.Value);
 					}
 				}
+
 				using (StreamWriter streamWriter = new StreamWriter(filePath))
 				{
 					streamWriter.WriteLine(stringBuilder.ToString());

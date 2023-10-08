@@ -8,7 +8,8 @@ using ZeroGravity.Objects;
 namespace ZeroGravity.UI
 {
 	[RequireComponent(typeof(Image))]
-	public class CargoResourceUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IEventSystemHandler
+	public class CargoResourceUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler,
+		IBeginDragHandler, IDragHandler, IEndDragHandler, IEventSystemHandler
 	{
 		public ICargoCompartment Compartment;
 
@@ -26,10 +27,7 @@ namespace ZeroGravity.UI
 
 		public CargoPanel MyCargoPanel
 		{
-			get
-			{
-				return GetComponentInParent<CargoPanel>();
-			}
+			get { return GetComponentInParent<CargoPanel>(); }
 		}
 
 		public void OnPointerEnter(PointerEventData eventData)
@@ -74,7 +72,7 @@ namespace ZeroGravity.UI
 			if (Quantity > 0f)
 			{
 				CargoTransferingResource component = MyCargoPanel.DragingItem.GetComponent<CargoTransferingResource>();
-				component.Icon.sprite = Client.Instance.SpriteManager.GetSprite(Resource.ResourceType);
+				component.Icon.sprite = SpriteManager.Instance.GetSprite(Resource.ResourceType);
 				component.FromCompartment = Compartment;
 				component.FromResource = Resource;
 				component.Quantity = Quantity;

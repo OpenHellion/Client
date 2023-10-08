@@ -1,4 +1,5 @@
 using System;
+using OpenHellion;
 using UnityEngine;
 using ZeroGravity.CharacterMovement;
 using ZeroGravity.LevelDesign;
@@ -7,47 +8,30 @@ namespace ZeroGravity.Objects
 {
 	public abstract class SpaceObjectTransferable : SpaceObject, ISoundOccludable
 	{
-		[HideInInspector]
-		public SceneMoveablePlatform OnPlatform;
+		[HideInInspector] public SceneMoveablePlatform OnPlatform;
 
-		[SerializeField]
-		protected TransitionTriggerHelper TransitionTrigger;
+		[SerializeField] protected TransitionTriggerHelper TransitionTrigger;
 
-		private Vector3 _Gravity;
+		private Vector3 _gravity;
 
-		[NonSerialized]
-		public float ImpactVelocity;
+		[NonSerialized] public float ImpactVelocity;
 
 		private SceneTriggerRoom _currentRoomTrigger;
 
 		public SceneTriggerRoom EnterVesselRoomTrigger;
 
-		private bool gravitySet;
+		private bool _gravitySet;
 
 		protected bool IsDestroying;
 
-		public Vector3 Gravity
-		{
-			get
-			{
-				return (!(Parent != null)) ? _Gravity : (Parent.transform.rotation * _Gravity);
-			}
-		}
+		public Vector3 Gravity => Parent is null ? _gravity : Parent.transform.rotation * _gravity;
 
-		public Vector3 GravityDirection
-		{
-			get
-			{
-				return (!(Parent != null)) ? _Gravity.normalized : (Parent.transform.rotation * _Gravity.normalized);
-			}
-		}
+		public Vector3 GravityDirection =>
+			Parent is null ? _gravity.normalized : (Parent.transform.rotation * _gravity.normalized);
 
 		public SceneTriggerRoom CurrentRoomTrigger
 		{
-			get
-			{
-				return _currentRoomTrigger;
-			}
+			get { return _currentRoomTrigger; }
 			set
 			{
 				_currentRoomTrigger = value;
@@ -64,28 +48,24 @@ namespace ZeroGravity.Objects
 					{
 						(this as MyPlayer).Pressure = 0f;
 					}
+
 					if (value != null)
 					{
-						Client.Instance.AmbientSounds.SwitchAmbience(value.Ambience);
-						Client.Instance.AmbientSounds.SetEnvironment(value.EnvironmentReverb);
+						World.AmbientSounds.SwitchAmbience(value.Ambience);
+						World.AmbientSounds.SetEnvironment(value.EnvironmentReverb);
 					}
 					else
 					{
-						Client.Instance.AmbientSounds.SwitchAmbience(SoundManager.Instance.SpaceAmbience);
-						Client.Instance.AmbientSounds.SetEnvironment(SoundManager.Instance.SpaceEnvironment);
+						World.AmbientSounds.SwitchAmbience(SoundManager.Instance.SpaceAmbience);
+						World.AmbientSounds.SetEnvironment(SoundManager.Instance.SpaceEnvironment);
 					}
-					Client.Instance.CanvasManager.CanvasUI.HelmetHud.WarningsUpdate();
+
+					World.InGameGUI.HelmetHud.WarningsUpdate();
 				}
 			}
 		}
 
-		public bool IsInsideSpaceObject
-		{
-			get
-			{
-				return Parent != null && Parent is SpaceObjectVessel;
-			}
-		}
+		public bool IsInsideSpaceObject => Parent is not null && Parent is SpaceObjectVessel;
 
 		public void SetSoundEnvirontment(SceneTriggerRoom roomTrigger)
 		{
@@ -105,17 +85,19 @@ namespace ZeroGravity.Objects
 
 		private void UpdateGravity()
 		{
-			Vector3 gravity = ((!(_currentRoomTrigger == null) && _currentRoomTrigger.UseGravity) ? _currentRoomTrigger.GravityForce : Vector3.zero);
+			Vector3 gravity = _currentRoomTrigger is not null && _currentRoomTrigger.UseGravity
+				? _currentRoomTrigger.GravityForce
+				: Vector3.zero;
 			SetGravity(gravity);
 		}
 
 		public void SetGravity(Vector3 newGravity)
 		{
-			if (!gravitySet || !Gravity.IsEpsilonEqual(newGravity, 0.0001f))
+			if (!_gravitySet || !Gravity.IsEpsilonEqual(newGravity, 0.0001f))
 			{
-				gravitySet = true;
-				Vector3 gravity = _Gravity;
-				_Gravity = newGravity;
+				_gravitySet = true;
+				Vector3 gravity = _gravity;
+				_gravity = newGravity;
 				OnGravityChanged(gravity);
 			}
 		}
@@ -135,11 +117,11 @@ namespace ZeroGravity.Objects
 
 		public void CheckRoomTrigger(SceneTriggerRoom trigger)
 		{
-			if (CurrentRoomTrigger != null && (trigger == null || CurrentRoomTrigger == trigger))
+			if (CurrentRoomTrigger is not null && (trigger is null || CurrentRoomTrigger == trigger))
 			{
 				UpdateGravity();
 			}
-			else if (trigger == null && CurrentRoomTrigger == null)
+			else if (trigger is null && CurrentRoomTrigger is null)
 			{
 				UpdateGravity();
 			}
@@ -151,12 +133,13 @@ namespace ZeroGravity.Objects
 			{
 				OnPlatform.RemoveFromPlatform(this);
 			}
+
 			IsDestroying = true;
 		}
 
 		public virtual void SetParentTransferableObjectsRoot()
 		{
-			base.transform.parent = Parent.TransferableObjectsRoot.transform;
+			transform.parent = Parent.TransferableObjectsRoot.transform;
 		}
 	}
 }

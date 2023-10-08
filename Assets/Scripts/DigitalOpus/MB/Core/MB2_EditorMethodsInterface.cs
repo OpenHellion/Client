@@ -13,7 +13,8 @@ namespace DigitalOpus.MB.Core
 
 		void AddTextureFormat(Texture2D tx, bool isNormalMap);
 
-		void SaveAtlasToAssetDatabase(Texture2D atlas, ShaderTextureProperty texPropertyName, int atlasNum, Material resMat);
+		void SaveAtlasToAssetDatabase(Texture2D atlas, ShaderTextureProperty texPropertyName, int atlasNum,
+			Material resMat);
 
 		void SetMaterialTextureProperty(Material target, ShaderTextureProperty texPropName, string texturePath);
 

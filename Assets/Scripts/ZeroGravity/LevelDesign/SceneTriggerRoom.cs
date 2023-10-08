@@ -25,27 +25,22 @@ namespace ZeroGravity.LevelDesign
 
 		private List<MonoBehaviour> BehaviourScripts = new List<MonoBehaviour>();
 
-		[SerializeField]
-		private int _inSceneID;
+		[SerializeField] private int _inSceneID;
 
 		public Vector3 GravityForce;
 
-		[SerializeField]
-		[FormerlySerializedAs("UseGravity")]
+		[SerializeField] [FormerlySerializedAs("UseGravity")]
 		private bool _UseGravity = true;
 
 		public bool GravityAutoToggle;
 
 		public bool AirFiltering = true;
 
-		[SerializeField]
-		private bool _disablePlayerInsideOccluder;
+		[SerializeField] private bool _disablePlayerInsideOccluder;
 
-		[HideInInspector]
-		public SpaceObjectVessel ParentVessel;
+		[HideInInspector] public SpaceObjectVessel ParentVessel;
 
-		[HideInInspector]
-		public List<SceneDoor> Doors;
+		[HideInInspector] public List<SceneDoor> Doors;
 
 		[Tooltip("Actual volume in cubic meters. ")]
 		public float Volume = 1f;
@@ -53,64 +48,47 @@ namespace ZeroGravity.LevelDesign
 		[Tooltip("Parent SceneTriggerRoom object")]
 		public SceneTriggerRoom ParentRoom;
 
-		[SerializeField]
-		private float _AirPressure = 1f;
+		[SerializeField] private float _AirPressure = 1f;
 
-		[SerializeField]
-		private float _AirQuality = 1f;
+		[SerializeField] private float _AirQuality = 1f;
 
-		[Space(10f)]
-		public float PressurizeSpeed = 3f;
+		[Space(10f)] public float PressurizeSpeed = 3f;
 
 		public float DepressurizeSpeed = 3f;
 
 		public float VentSpeed = 5f;
 
-		[NonSerialized]
-		public float AirPressureChangeRate;
+		[NonSerialized] public float AirPressureChangeRate;
 
-		[NonSerialized]
-		public float AirQualityChangeRate;
+		[NonSerialized] public float AirQualityChangeRate;
 
-		[NonSerialized]
-		public RoomPressurizationStatus PressurizationStatus;
+		[NonSerialized] public RoomPressurizationStatus PressurizationStatus;
 
 		private bool isApplicationQuitting;
 
 		public PressureAmbientGameObjects PressureGOsp;
 
-		[Space(10f)]
-		[Title("EFFECTS")]
-		public List<ParticleSystem> PressurizationParticles;
+		[Space(10f)] [Title("EFFECTS")] public List<ParticleSystem> PressurizationParticles;
 
 		public List<ParticleSystem> DepressurizationParticles;
 
-		[Title("SOUND")]
-		public List<SoundEffect> PressurizationSounds;
+		[Title("SOUND")] public List<SoundEffect> PressurizationSounds;
 
-		[HideInInspector]
-		public string EnvironmentReverb = string.Empty;
+		[HideInInspector] public string EnvironmentReverb = string.Empty;
 
-		[HideInInspector]
-		public uint EnvironmentReverbId;
+		[HideInInspector] public uint EnvironmentReverbId;
 
-		[HideInInspector]
-		public string Ambience = string.Empty;
+		[HideInInspector] public string Ambience = string.Empty;
 
-		[NonSerialized]
-		public bool Fire;
+		[NonSerialized] public bool Fire;
 
-		[NonSerialized]
-		public bool Breach;
+		[NonSerialized] public bool Breach;
 
-		[NonSerialized]
-		public bool GravityMalfunction;
+		[NonSerialized] public bool GravityMalfunction;
 
-		[NonSerialized]
-		public short CompoundRoomID;
+		[NonSerialized] public short CompoundRoomID;
 
-		[NonSerialized]
-		public List<SceneTriggerRoom> ConnectedRooms;
+		[NonSerialized] public List<SceneTriggerRoom> ConnectedRooms;
 
 		private float oldPressure;
 
@@ -130,14 +108,8 @@ namespace ZeroGravity.LevelDesign
 
 		public int InSceneID
 		{
-			get
-			{
-				return _inSceneID;
-			}
-			set
-			{
-				_inSceneID = value;
-			}
+			get { return _inSceneID; }
+			set { _inSceneID = value; }
 		}
 
 		public override bool IsInteractable => false;
@@ -154,34 +126,19 @@ namespace ZeroGravity.LevelDesign
 
 		public bool UseGravity
 		{
-			get
-			{
-				return !GravityMalfunction && _UseGravity;
-			}
-			set
-			{
-				_UseGravity = value;
-			}
+			get { return !GravityMalfunction && _UseGravity; }
+			set { _UseGravity = value; }
 		}
 
 		public float AirQuality
 		{
-			get
-			{
-				return _AirQuality;
-			}
-			set
-			{
-				_AirQuality = value;
-			}
+			get { return _AirQuality; }
+			set { _AirQuality = value; }
 		}
 
 		public float AirPressure
 		{
-			get
-			{
-				return _AirPressure;
-			}
+			get { return _AirPressure; }
 			set
 			{
 				_AirPressure = value;
@@ -190,6 +147,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					MyPlayer.Instance.Pressure = value;
 				}
+
 				if (value <= 0.5f && !oldPressure.IsEpsilonEqual(value, 0.03f))
 				{
 					oldPressure = value;
@@ -199,7 +157,10 @@ namespace ZeroGravity.LevelDesign
 
 		public float InterpolatedAirQuality => _AirQuality;
 
-		public float InterpolatedAirPressure => Mathf.Clamp01(_AirPressure + (AirPressureChangeRate * (Time.time - lastAirPressureTime) - AirPressureChangeRate));
+		public float InterpolatedAirPressure => Mathf.Clamp01(_AirPressure +
+		                                                      (AirPressureChangeRate *
+		                                                       (Time.time - lastAirPressureTime) -
+		                                                       AirPressureChangeRate));
 
 		public void AddBehaviourScript(MonoBehaviour script)
 		{
@@ -233,10 +194,12 @@ namespace ZeroGravity.LevelDesign
 					}
 				}
 			}
+
 			if (PressureGOsp != null)
 			{
 				PressureGOsp.CheckPressureForAmbient(AirPressure, IsAirOk, CritAir);
 			}
+
 			UpdatePressurizationEffects();
 		}
 
@@ -254,6 +217,7 @@ namespace ZeroGravity.LevelDesign
 						}
 					}
 				}
+
 				if (PressurizationParticles != null && PressurizationParticles.Count != 0)
 				{
 					foreach (ParticleSystem pressurizationParticle in PressurizationParticles)
@@ -264,6 +228,7 @@ namespace ZeroGravity.LevelDesign
 						}
 					}
 				}
+
 				{
 					foreach (SoundEffect pressurizationSound in PressurizationSounds)
 					{
@@ -272,9 +237,11 @@ namespace ZeroGravity.LevelDesign
 							pressurizationSound.Play(0);
 						}
 					}
+
 					return;
 				}
 			}
+
 			if (PressurizationStatus == RoomPressurizationStatus.Depressurize)
 			{
 				if (PressurizationParticles != null && PressurizationParticles.Count != 0)
@@ -287,6 +254,7 @@ namespace ZeroGravity.LevelDesign
 						}
 					}
 				}
+
 				if (DepressurizationParticles != null && DepressurizationParticles.Count != 0)
 				{
 					foreach (ParticleSystem depressurizationParticle2 in DepressurizationParticles)
@@ -297,6 +265,7 @@ namespace ZeroGravity.LevelDesign
 						}
 					}
 				}
+
 				{
 					foreach (SoundEffect pressurizationSound2 in PressurizationSounds)
 					{
@@ -305,9 +274,11 @@ namespace ZeroGravity.LevelDesign
 							pressurizationSound2.Play(0);
 						}
 					}
+
 					return;
 				}
 			}
+
 			if (PressurizationStatus == RoomPressurizationStatus.Vent)
 			{
 				foreach (SoundEffect pressurizationSound3 in PressurizationSounds)
@@ -317,8 +288,10 @@ namespace ZeroGravity.LevelDesign
 						pressurizationSound3.Play(2);
 					}
 				}
+
 				return;
 			}
+
 			if (PressurizationParticles != null && PressurizationParticles.Count != 0)
 			{
 				foreach (ParticleSystem pressurizationParticle3 in PressurizationParticles)
@@ -329,6 +302,7 @@ namespace ZeroGravity.LevelDesign
 					}
 				}
 			}
+
 			if (DepressurizationParticles != null && DepressurizationParticles.Count != 0)
 			{
 				foreach (ParticleSystem depressurizationParticle3 in DepressurizationParticles)
@@ -339,6 +313,7 @@ namespace ZeroGravity.LevelDesign
 					}
 				}
 			}
+
 			foreach (SoundEffect pressurizationSound4 in PressurizationSounds)
 			{
 				if (pressurizationSound4.IsPlaying)
@@ -381,11 +356,13 @@ namespace ZeroGravity.LevelDesign
 			{
 				ParentVessel = GetComponentInParent<SpaceObjectVessel>();
 			}
+
 			ConnectedRooms = GetConnectedRooms();
 			if (!(ParentVessel != null))
 			{
 				return;
 			}
+
 			SceneDoor[] componentsInChildren = ParentVessel.GeometryRoot.GetComponentsInChildren<SceneDoor>();
 			foreach (SceneDoor sceneDoor in componentsInChildren)
 			{
@@ -450,17 +427,21 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
+
 			if (MyPlayer.Instance != null)
 			{
-				TransitionTriggerHelper componentInChildren = MyPlayer.Instance.GetComponentInChildren<TransitionTriggerHelper>();
+				TransitionTriggerHelper componentInChildren =
+					MyPlayer.Instance.GetComponentInChildren<TransitionTriggerHelper>();
 				if (componentInChildren != null)
 				{
 					componentInChildren.ExitTriggers(GetComponentsInChildren<Collider>());
 				}
 			}
+
 			if (ParentVessel != null)
 			{
-				TransitionTriggerHelper[] componentsInChildren = ParentVessel.GeometryRoot.GetComponentsInChildren<TransitionTriggerHelper>();
+				TransitionTriggerHelper[] componentsInChildren =
+					ParentVessel.GeometryRoot.GetComponentsInChildren<TransitionTriggerHelper>();
 				foreach (TransitionTriggerHelper transitionTriggerHelper in componentsInChildren)
 				{
 					transitionTriggerHelper.ExitTriggers(GetComponentsInChildren<Collider>());
@@ -479,30 +460,36 @@ namespace ZeroGravity.LevelDesign
 			{
 				traversedRooms = new HashSet<SceneTriggerRoom>();
 			}
+
 			List<SceneTriggerRoom> list = new List<SceneTriggerRoom>();
 			if (traversedRooms.Add(this))
 			{
 				list.Add(this);
 				if (ParentVessel != null)
 				{
-					List<SceneTriggerRoom> list2 = ParentVessel.RoomTriggers.Values.Where((SceneTriggerRoom m) => m.ParentRoom == this && m.RoomName.IsNullOrEmpty()).ToList();
+					List<SceneTriggerRoom> list2 = ParentVessel.RoomTriggers.Values
+						.Where((SceneTriggerRoom m) => m.ParentRoom == this && m.RoomName.IsNullOrEmpty()).ToList();
 					if (ParentRoom != null && ParentRoom.RoomName.IsNullOrEmpty())
 					{
 						list2.Add(ParentRoom);
 					}
+
 					{
 						foreach (SceneTriggerRoom r in list2)
 						{
-							SceneDoor sceneDoor = ParentVessel.Doors.Values.FirstOrDefault((SceneDoor m) => (m.Room1 == this && m.Room2 == r) || (m.Room1 == r && m.Room2 == this));
+							SceneDoor sceneDoor = ParentVessel.Doors.Values.FirstOrDefault((SceneDoor m) =>
+								(m.Room1 == this && m.Room2 == r) || (m.Room1 == r && m.Room2 == this));
 							if (sceneDoor == null || !sceneDoor.IsSealable)
 							{
 								list.AddRange(r.GetConnectedRooms(traversedRooms));
 							}
 						}
+
 						return list;
 					}
 				}
 			}
+
 			return list;
 		}
 	}

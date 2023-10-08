@@ -22,7 +22,8 @@ namespace RootMotion.Demos
 
 		private void LateUpdate()
 		{
-			Vector3 position = Vector3.Lerp(character1.ik.solver.rightHandEffector.bone.position, character2.ik.solver.rightHandEffector.bone.position, 0.5f);
+			Vector3 position = Vector3.Lerp(character1.ik.solver.rightHandEffector.bone.position,
+				character2.ik.solver.rightHandEffector.bone.position, 0.5f);
 			handShake.transform.position = position;
 		}
 	}

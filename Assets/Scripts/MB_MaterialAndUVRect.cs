@@ -16,7 +16,8 @@ public class MB_MaterialAndUVRect
 
 	public Rect samplingEncapsulatinRect;
 
-	public MB_MaterialAndUVRect(Material m, Rect destRect, Rect samplingRectMatAndUVTiling, Rect sourceMaterialTiling, Rect samplingEncapsulatinRect, string objName)
+	public MB_MaterialAndUVRect(Material m, Rect destRect, Rect samplingRectMatAndUVTiling, Rect sourceMaterialTiling,
+		Rect samplingEncapsulatinRect, string objName)
 	{
 		material = m;
 		atlasRect = destRect;
@@ -37,6 +38,8 @@ public class MB_MaterialAndUVRect
 		{
 			return false;
 		}
-		return material == ((MB_MaterialAndUVRect)obj).material && samplingEncapsulatinRect == ((MB_MaterialAndUVRect)obj).samplingEncapsulatinRect;
+
+		return material == ((MB_MaterialAndUVRect)obj).material &&
+		       samplingEncapsulatinRect == ((MB_MaterialAndUVRect)obj).samplingEncapsulatinRect;
 	}
 }

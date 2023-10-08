@@ -10,10 +10,7 @@ namespace ZeroGravity.LevelDesign
 
 		public int Counter
 		{
-			get
-			{
-				return _Counter;
-			}
+			get { return _Counter; }
 			set
 			{
 				_Counter = value;
@@ -24,7 +21,8 @@ namespace ZeroGravity.LevelDesign
 		private void OnTriggerEnter(Collider coli)
 		{
 			GenericItem componentInParent = coli.gameObject.GetComponentInParent<GenericItem>();
-			if (componentInParent != null && componentInParent.SubType == GenericItemSubType.BasketBall && componentInParent.DynamicObj.Master && coli.gameObject.name == "ScoreTrigger")
+			if (componentInParent != null && componentInParent.SubType == GenericItemSubType.BasketBall &&
+			    componentInParent.DynamicObj.Master && coli.gameObject.name == "ScoreTrigger")
 			{
 				Counter++;
 			}
@@ -35,7 +33,8 @@ namespace ZeroGravity.LevelDesign
 			Item componentInParent = GetComponentInParent<Item>();
 			if (componentInParent != null && componentInParent.AttachPoint != null)
 			{
-				SceneNameTag[] componentsInChildren = componentInParent.AttachPoint.GetComponentsInChildren<SceneNameTag>();
+				SceneNameTag[] componentsInChildren =
+					componentInParent.AttachPoint.GetComponentsInChildren<SceneNameTag>();
 				foreach (SceneNameTag sceneNameTag in componentsInChildren)
 				{
 					sceneNameTag.SetNameTagText(text);

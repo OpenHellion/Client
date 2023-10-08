@@ -8,8 +8,7 @@ namespace ZeroGravity.ShipComponents
 {
 	public class GeneratorAir : Generator, IPowerConsumer, ILifeProvider
 	{
-		[SerializeField]
-		private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[3]
+		[SerializeField] private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[3]
 		{
 			new ResourceRequirement
 			{
@@ -25,26 +24,18 @@ namespace ZeroGravity.ShipComponents
 			}
 		};
 
-		[CompilerGenerated]
-		private static Func<ResourceRequirement, bool> _003C_003Ef__am_0024cache0;
+		[CompilerGenerated] private static Func<ResourceRequirement, bool> _003C_003Ef__am_0024cache0;
 
-		[CompilerGenerated]
-		private static Func<ResourceRequirement, bool> _003C_003Ef__am_0024cache1;
+		[CompilerGenerated] private static Func<ResourceRequirement, bool> _003C_003Ef__am_0024cache1;
 
 		public override GeneratorType Type
 		{
-			get
-			{
-				return GeneratorType.Air;
-			}
+			get { return GeneratorType.Air; }
 		}
 
 		public override ResourceRequirement[] ResourceRequirements
 		{
-			get
-			{
-				return _ResourceRequirements;
-			}
+			get { return _ResourceRequirements; }
 		}
 
 		public override GeneratorData GetData()
@@ -56,13 +47,17 @@ namespace ZeroGravity.ShipComponents
 				{
 					_003C_003Ef__am_0024cache0 = _003CGetData_003Em__0;
 				}
-				ResourceRequirement resourceRequirement = resourceRequirements.FirstOrDefault(_003C_003Ef__am_0024cache0);
+
+				ResourceRequirement resourceRequirement =
+					resourceRequirements.FirstOrDefault(_003C_003Ef__am_0024cache0);
 				ResourceRequirement[] resourceRequirements2 = ResourceRequirements;
 				if (_003C_003Ef__am_0024cache1 == null)
 				{
 					_003C_003Ef__am_0024cache1 = _003CGetData_003Em__1;
 				}
-				ResourceRequirement resourceRequirement2 = resourceRequirements2.FirstOrDefault(_003C_003Ef__am_0024cache1);
+
+				ResourceRequirement resourceRequirement2 =
+					resourceRequirements2.FirstOrDefault(_003C_003Ef__am_0024cache1);
 				if (resourceRequirement != null && resourceRequirement2 != null)
 				{
 					float num = resourceRequirement.Nominal + resourceRequirement2.Nominal;
@@ -74,6 +69,7 @@ namespace ZeroGravity.ShipComponents
 			catch
 			{
 			}
+
 			return base.GetData();
 		}
 

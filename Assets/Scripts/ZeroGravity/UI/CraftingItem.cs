@@ -25,8 +25,7 @@ namespace ZeroGravity.UI
 
 		public CargoResourceForCraftingUI ResourceForCrafting;
 
-		[CompilerGenerated]
-		private static Func<KeyValuePair<ResourceType, float>, float> _003C_003Ef__am_0024cache0;
+		[CompilerGenerated] private static Func<KeyValuePair<ResourceType, float>, float> _003C_003Ef__am_0024cache0;
 
 		private void Start()
 		{
@@ -34,7 +33,7 @@ namespace ZeroGravity.UI
 			Name.text = Item.GetName(Data.CompoundType) + text;
 			Name.color = Colors.Tier[Data.CompoundType.Tier];
 			TimeToCraft.text = FormatHelper.Timer(GetTime());
-			Icon.sprite = Client.Instance.SpriteManager.GetSprite(Data.CompoundType);
+			Icon.sprite = SpriteManager.Instance.GetSprite(Data.CompoundType);
 			if (CanFabricate())
 			{
 				GetComponent<Image>().color = Colors.White;
@@ -43,13 +42,15 @@ namespace ZeroGravity.UI
 			{
 				GetComponent<Image>().color = Colors.Gray;
 			}
+
 			foreach (KeyValuePair<ResourceType, float> resource in Data.Resources)
 			{
-				CargoResourceForCraftingUI cargoResourceForCraftingUI = UnityEngine.Object.Instantiate(ResourceForCrafting, ResourcesTransform);
+				CargoResourceForCraftingUI cargoResourceForCraftingUI =
+					UnityEngine.Object.Instantiate(ResourceForCrafting, ResourcesTransform);
 				cargoResourceForCraftingUI.transform.localScale = Vector3.one;
 				cargoResourceForCraftingUI.gameObject.SetActive(true);
 				cargoResourceForCraftingUI.Name.text = resource.Key.ToLocalizedString().ToUpper();
-				cargoResourceForCraftingUI.Icon.sprite = Client.Instance.SpriteManager.GetSprite(resource.Key);
+				cargoResourceForCraftingUI.Icon.sprite = SpriteManager.Instance.GetSprite(resource.Key);
 				cargoResourceForCraftingUI.Value.text = FormatHelper.FormatValue(resource.Value);
 			}
 		}
@@ -61,6 +62,7 @@ namespace ZeroGravity.UI
 			{
 				_003C_003Ef__am_0024cache0 = _003CGetTime_003Em__0;
 			}
+
 			return resources.Sum(_003C_003Ef__am_0024cache0) * Panel.Fabricator.TimePerResourceUnit;
 		}
 
@@ -74,8 +76,10 @@ namespace ZeroGravity.UI
 		{
 			if (Panel.Fabricator.CargoResources.Resources != null)
 			{
-				return Panel.Fabricator.HasEnoughResources(Data.CompoundType.Type, Data.CompoundType.SubType, Data.CompoundType.PartType, Data.CompoundType.Tier);
+				return Panel.Fabricator.HasEnoughResources(Data.CompoundType.Type, Data.CompoundType.SubType,
+					Data.CompoundType.PartType, Data.CompoundType.Tier);
 			}
+
 			return false;
 		}
 

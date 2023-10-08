@@ -1,3 +1,4 @@
+using OpenHellion;
 using UnityEngine;
 using ZeroGravity.Math;
 
@@ -9,8 +10,6 @@ namespace ZeroGravity.Objects
 
 		public GameObject PlanetsSpaceGameObjectVisual;
 
-		public GameObject SunSpaceGameObject;
-
 		public string PrefabPath;
 
 		public float AsteroidGasBurstDmgMultiplier;
@@ -19,7 +18,7 @@ namespace ZeroGravity.Objects
 
 		public float[] RadarSignatureModifierValues;
 
-		private Vector3 targetPosition;
+		private Vector3 _targetPosition;
 
 		public OrbitParameters Orbit { get; set; }
 
@@ -29,21 +28,9 @@ namespace ZeroGravity.Objects
 
 		public double Radius { get; set; }
 
-		public RadarVisibilityType RadarVisibilityType
-		{
-			get
-			{
-				return RadarVisibilityType.Visible;
-			}
-		}
+		public RadarVisibilityType RadarVisibilityType => RadarVisibilityType.Visible;
 
-		public Vector3D Position
-		{
-			get
-			{
-				return Orbit.Position;
-			}
-		}
+		public Vector3D Position => Orbit.Position;
 
 		public CelestialBody ParentCelesitalBody
 		{
@@ -53,18 +40,8 @@ namespace ZeroGravity.Objects
 				{
 					return Orbit.Parent.CelestialBody;
 				}
-				return null;
-			}
-			set
-			{
-			}
-		}
 
-		public bool IsDummyObject
-		{
-			get
-			{
-				return true;
+				return null;
 			}
 		}
 
@@ -79,6 +56,7 @@ namespace ZeroGravity.Objects
 					num = parent.ApoapsisDistance + num;
 					parent = parent.Parent;
 				}
+
 				return num;
 			}
 		}
@@ -90,23 +68,28 @@ namespace ZeroGravity.Objects
 			Orbit.SetCelestialBody(this);
 		}
 
-		public bool Set(CelestialBody parent, string name, double mass, double radius, double rotPeriod, double eccentricity, double semiMajorAxis, double inclination, double argumentOfPeriapsis, double longitudeOfAscendingNode, string prefabPath, double solarSystemTime)
+		public bool Set(CelestialBody parent, string name, double mass, double radius, double rotPeriod,
+			double eccentricity, double semiMajorAxis, double inclination, double argumentOfPeriapsis,
+			double longitudeOfAscendingNode, string prefabPath, double solarSystemTime)
 		{
 			PrefabPath = prefabPath;
 			Name = name;
 			Radius = radius;
 			if (parent != null)
 			{
-				Orbit.InitFromElements(parent.Orbit, mass, radius, rotPeriod, eccentricity, semiMajorAxis, inclination, argumentOfPeriapsis, longitudeOfAscendingNode, 0.0, 0.0);
+				Orbit.InitFromElements(parent.Orbit, mass, radius, rotPeriod, eccentricity, semiMajorAxis, inclination,
+					argumentOfPeriapsis, longitudeOfAscendingNode, 0.0, 0.0);
 			}
 			else
 			{
-				Orbit.InitFromElements(null, mass, radius, rotPeriod, eccentricity, semiMajorAxis, inclination, argumentOfPeriapsis, longitudeOfAscendingNode, 0.0, 0.0);
+				Orbit.InitFromElements(null, mass, radius, rotPeriod, eccentricity, semiMajorAxis, inclination,
+					argumentOfPeriapsis, longitudeOfAscendingNode, 0.0, 0.0);
 			}
+
 			return Orbit.IsOrbitValid;
 		}
 
-		public void UpdatePosition(double timeDelta, bool resetTime = false)
+		public void UpdatePosition(SolarSystem solarSystem, double timeDelta, bool resetTime = false)
 		{
 			if (Orbit.IsOrbitValid)
 			{
@@ -118,9 +101,12 @@ namespace ZeroGravity.Objects
 				{
 					Orbit.UpdateOrbit(timeDelta);
 				}
+
 				if (PlanetsSpaceGameObjectVisual != null)
 				{
-					PlanetsSpaceGameObjectVisual.transform.localRotation = Quaternion.AngleAxis((float)Orbit.GetRotationAngle(Client.Instance.SolarSystem.CurrentTime), Vector3.up);
+					PlanetsSpaceGameObjectVisual.transform.localRotation =
+						Quaternion.AngleAxis((float)Orbit.GetRotationAngle(solarSystem.CurrentTime),
+							Vector3.up);
 				}
 			}
 		}
@@ -133,7 +119,6 @@ namespace ZeroGravity.Objects
 			gameObject.name = Name;
 			float num = (float)(Orbit.Radius / 149597870.7);
 			gameObject.transform.localScale = new Vector3(num, num, num);
-			SunSpaceGameObject = gameObject;
 		}
 
 		public void CreatePlanetsSpaceGameObject(Transform planetsRoot)
@@ -164,11 +149,11 @@ namespace ZeroGravity.Objects
 				if (forceChange)
 				{
 					PlanetsSpaceGameObject.transform.localPosition = position;
-					targetPosition = position;
+					_targetPosition = position;
 				}
 				else
 				{
-					targetPosition = position;
+					_targetPosition = position;
 				}
 			}
 		}
@@ -177,29 +162,36 @@ namespace ZeroGravity.Objects
 		{
 			if (PlanetsSpaceGameObject != null)
 			{
-				PlanetsSpaceGameObject.transform.localPosition = Vector3.Lerp(PlanetsSpaceGameObject.transform.localPosition, targetPosition, deltaTime);
+				PlanetsSpaceGameObject.transform.localPosition =
+					Vector3.Lerp(PlanetsSpaceGameObject.transform.localPosition, _targetPosition, deltaTime);
 			}
 		}
 
-		public float GetRadarSignatureModifier(ArtificialBody ab)
+		public float GetRadarSignatureModifier(World world, ArtificialBody ab)
 		{
 			if (RadarSignatureModifierValues == null)
 			{
 				return 1f;
 			}
+
 			double magnitude = (ab.Position - Position).Magnitude;
-			double num = ((Orbit.GravityInfluenceRadius != double.PositiveInfinity) ? Orbit.GravityInfluenceRadius : Client.Instance.ExposureRange);
+			double num = ((Orbit.GravityInfluenceRadius != double.PositiveInfinity)
+				? Orbit.GravityInfluenceRadius
+				: world.ExposureRange);
 			return RadarSignatureModifierValues[(int)(MathHelper.Clamp(magnitude / num, 0.0, 1.0) * 99.0)];
 		}
 
-		public float GetScanningSensitivityModifier(ArtificialBody ab)
+		public float GetScanningSensitivityModifier(World world, ArtificialBody ab)
 		{
 			if (ScanningSensitivityModifierValues == null)
 			{
 				return 1f;
 			}
+
 			double magnitude = (ab.Position - Position).Magnitude;
-			double num = ((Orbit.GravityInfluenceRadius != double.PositiveInfinity) ? Orbit.GravityInfluenceRadius : Client.Instance.ExposureRange);
+			double num = ((Orbit.GravityInfluenceRadius != double.PositiveInfinity)
+				? Orbit.GravityInfluenceRadius
+				: world.ExposureRange);
 			return ScanningSensitivityModifierValues[(int)(MathHelper.Clamp(magnitude / num, 0.0, 1.0) * 99.0)];
 		}
 	}

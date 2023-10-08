@@ -5,8 +5,7 @@ namespace ZeroGravity.ShipComponents
 {
 	public class SubSystemGeneric : SubSystem
 	{
-		[SerializeField]
-		private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
+		[SerializeField] private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
 		{
 			new ResourceRequirement
 			{
@@ -16,18 +15,12 @@ namespace ZeroGravity.ShipComponents
 
 		public override SubSystemType Type
 		{
-			get
-			{
-				return SubSystemType.Generic;
-			}
+			get { return SubSystemType.Generic; }
 		}
 
 		public override ResourceRequirement[] ResourceRequirements
 		{
-			get
-			{
-				return _ResourceRequirements;
-			}
+			get { return _ResourceRequirements; }
 		}
 	}
 }

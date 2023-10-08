@@ -54,7 +54,8 @@ namespace RootMotion.Demos
 
 		private void Start()
 		{
-			Debug.Log("FBBIKSettings is deprecated, you can now edit all the settings from the custom inspector of the FullBodyBipedIK component.");
+			Debug.Log(
+				"FBBIKSettings is deprecated, you can now edit all the settings from the custom inspector of the FullBodyBipedIK component.");
 			UpdateSettings();
 			if (disableAfterStart)
 			{

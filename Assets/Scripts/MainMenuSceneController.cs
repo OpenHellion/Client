@@ -80,6 +80,7 @@ public class MainMenuSceneController : MonoBehaviour
 			focusTime -= Time.deltaTime;
 			yield return new WaitForEndOfFrame();
 		}
+
 		dof.focusDistance.value = ChangeFocusCurve.Evaluate(0f);
 	}
 
@@ -94,6 +95,7 @@ public class MainMenuSceneController : MonoBehaviour
 			focusTime -= Time.deltaTime;
 			yield return new WaitForEndOfFrame();
 		}
+
 		dof.focusDistance.value = ChangeFocusCurve.Evaluate(1f);
 	}
 
@@ -108,6 +110,7 @@ public class MainMenuSceneController : MonoBehaviour
 			fadeTime -= Time.deltaTime;
 			yield return new WaitForEndOfFrame();
 		}
+
 		colorGrading.postExposure.value = FadeInCurve.Evaluate(1f);
 	}
 
@@ -122,6 +125,7 @@ public class MainMenuSceneController : MonoBehaviour
 			fadeTime -= Time.deltaTime;
 			yield return new WaitForEndOfFrame();
 		}
+
 		colorGrading.postExposure.value = FadeOutCurve.Evaluate(1f);
 		base.gameObject.SetActive(false);
 	}

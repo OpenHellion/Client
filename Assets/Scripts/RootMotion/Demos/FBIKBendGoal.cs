@@ -13,7 +13,8 @@ namespace RootMotion.Demos
 
 		private void Start()
 		{
-			Debug.Log("FBIKBendGoal is deprecated, you can now a bend goal from the custom inspector of the FullBodyBipedIK component.");
+			Debug.Log(
+				"FBIKBendGoal is deprecated, you can now a bend goal from the custom inspector of the FullBodyBipedIK component.");
 		}
 
 		private void Update()

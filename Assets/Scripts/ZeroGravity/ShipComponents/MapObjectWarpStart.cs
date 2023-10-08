@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using ZeroGravity.Math;
+using ZeroGravity.UI;
 
 namespace ZeroGravity.ShipComponents
 {
@@ -12,49 +13,34 @@ namespace ZeroGravity.ShipComponents
 
 		public float TimeToLive = 120f;
 
-		[SerializeField]
-		private Sprite _Icon;
+		[SerializeField] private Sprite _Icon;
 
-		[NonSerialized]
-		public Vector3D WarpStartPosition;
+		[NonSerialized] public Vector3D WarpStartPosition;
 
-		[NonSerialized]
-		public Quaternion WarpConeRotation;
-
-		public new string Name { get; set; }
+		[NonSerialized] public Quaternion WarpConeRotation;
 
 		public override Sprite Icon
 		{
-			get
-			{
-				return (!(_Icon != null)) ? Client.Instance.SpriteManager.DefaultRadarObject : _Icon;
-			}
-			set
-			{
-			}
+			get => !(_Icon != null) ? SpriteManager.Instance.DefaultRadarObject : _Icon;
+			set { }
 		}
 
 		public override string Description { get; set; }
 
-		public override Vector3D TruePosition
-		{
-			get
-			{
-				return WarpStartPosition;
-			}
-		}
+		public override Vector3D TruePosition => WarpStartPosition;
 
 		public override void CreateVisual()
 		{
-			base.gameObject.SetLayerRecursively("Map");
+			GameObject thisObject = gameObject;
+			thisObject.SetLayerRecursively("Map");
 			WarpCone.transform.rotation = WarpConeRotation;
-			UnityEngine.Object.Destroy(base.gameObject, TimeToLive);
+			Destroy(thisObject, TimeToLive);
 		}
 
 		public override void UpdateObject()
 		{
-			Position.position = base.ObjectPosition;
-			WarpCone.transform.localScale = WarpConeScale * (float)base.ObjectScale;
+			Position.position = ObjectPosition;
+			WarpCone.transform.localScale = WarpConeScale * (float)ObjectScale;
 		}
 
 		public override void UpdateVisibility()

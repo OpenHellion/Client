@@ -1,3 +1,4 @@
+using OpenHellion.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,23 +7,15 @@ namespace ZeroGravity.UI
 {
 	public class NotificationUI : MonoBehaviour
 	{
-		public CanvasUI.NotificationType Type;
+		public InGameGUI.NotificationType Type;
 
 		public Image Icon;
 
 		public TextMeshProUGUI Content;
 
-		private float timer;
+		private float _timer;
 
-		public float TimerTreshold = 3f;
-
-		public Sprite IconSprite
-		{
-			get
-			{
-				return Client.Instance.SpriteManager.GetSprite(Type);
-			}
-		}
+		public Sprite IconSprite => SpriteManager.Instance.GetSprite(Type);
 
 		private void Start()
 		{

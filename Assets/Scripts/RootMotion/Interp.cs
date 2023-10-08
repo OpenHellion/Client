@@ -9,62 +9,62 @@ namespace RootMotion
 		{
 			switch (mode)
 			{
-			case InterpolationMode.None:
-				return None(t, 0f, 1f);
-			case InterpolationMode.InOutCubic:
-				return InOutCubic(t, 0f, 1f);
-			case InterpolationMode.InOutQuintic:
-				return InOutQuintic(t, 0f, 1f);
-			case InterpolationMode.InQuintic:
-				return InQuintic(t, 0f, 1f);
-			case InterpolationMode.InQuartic:
-				return InQuartic(t, 0f, 1f);
-			case InterpolationMode.InCubic:
-				return InCubic(t, 0f, 1f);
-			case InterpolationMode.InQuadratic:
-				return InQuadratic(t, 0f, 1f);
-			case InterpolationMode.OutQuintic:
-				return OutQuintic(t, 0f, 1f);
-			case InterpolationMode.OutQuartic:
-				return OutQuartic(t, 0f, 1f);
-			case InterpolationMode.OutCubic:
-				return OutCubic(t, 0f, 1f);
-			case InterpolationMode.OutInCubic:
-				return OutInCubic(t, 0f, 1f);
-			case InterpolationMode.OutInQuartic:
-				return OutInCubic(t, 0f, 1f);
-			case InterpolationMode.BackInCubic:
-				return BackInCubic(t, 0f, 1f);
-			case InterpolationMode.BackInQuartic:
-				return BackInQuartic(t, 0f, 1f);
-			case InterpolationMode.OutBackCubic:
-				return OutBackCubic(t, 0f, 1f);
-			case InterpolationMode.OutBackQuartic:
-				return OutBackQuartic(t, 0f, 1f);
-			case InterpolationMode.OutElasticSmall:
-				return OutElasticSmall(t, 0f, 1f);
-			case InterpolationMode.OutElasticBig:
-				return OutElasticBig(t, 0f, 1f);
-			case InterpolationMode.InElasticSmall:
-				return InElasticSmall(t, 0f, 1f);
-			case InterpolationMode.InElasticBig:
-				return InElasticBig(t, 0f, 1f);
-			case InterpolationMode.InSine:
-				return InSine(t, 0f, 1f);
-			case InterpolationMode.OutSine:
-				return OutSine(t, 0f, 1f);
-			case InterpolationMode.InOutSine:
-				return InOutSine(t, 0f, 1f);
-			case InterpolationMode.InElastic:
-				return OutElastic(t, 0f, 1f);
-			case InterpolationMode.OutElastic:
-				return OutElastic(t, 0f, 1f);
-			case InterpolationMode.InBack:
-				return InBack(t, 0f, 1f);
-			case InterpolationMode.OutBack:
-				return OutBack(t, 0f, 1f);
-			default:
-				return 0f;
+				case InterpolationMode.None:
+					return None(t, 0f, 1f);
+				case InterpolationMode.InOutCubic:
+					return InOutCubic(t, 0f, 1f);
+				case InterpolationMode.InOutQuintic:
+					return InOutQuintic(t, 0f, 1f);
+				case InterpolationMode.InQuintic:
+					return InQuintic(t, 0f, 1f);
+				case InterpolationMode.InQuartic:
+					return InQuartic(t, 0f, 1f);
+				case InterpolationMode.InCubic:
+					return InCubic(t, 0f, 1f);
+				case InterpolationMode.InQuadratic:
+					return InQuadratic(t, 0f, 1f);
+				case InterpolationMode.OutQuintic:
+					return OutQuintic(t, 0f, 1f);
+				case InterpolationMode.OutQuartic:
+					return OutQuartic(t, 0f, 1f);
+				case InterpolationMode.OutCubic:
+					return OutCubic(t, 0f, 1f);
+				case InterpolationMode.OutInCubic:
+					return OutInCubic(t, 0f, 1f);
+				case InterpolationMode.OutInQuartic:
+					return OutInCubic(t, 0f, 1f);
+				case InterpolationMode.BackInCubic:
+					return BackInCubic(t, 0f, 1f);
+				case InterpolationMode.BackInQuartic:
+					return BackInQuartic(t, 0f, 1f);
+				case InterpolationMode.OutBackCubic:
+					return OutBackCubic(t, 0f, 1f);
+				case InterpolationMode.OutBackQuartic:
+					return OutBackQuartic(t, 0f, 1f);
+				case InterpolationMode.OutElasticSmall:
+					return OutElasticSmall(t, 0f, 1f);
+				case InterpolationMode.OutElasticBig:
+					return OutElasticBig(t, 0f, 1f);
+				case InterpolationMode.InElasticSmall:
+					return InElasticSmall(t, 0f, 1f);
+				case InterpolationMode.InElasticBig:
+					return InElasticBig(t, 0f, 1f);
+				case InterpolationMode.InSine:
+					return InSine(t, 0f, 1f);
+				case InterpolationMode.OutSine:
+					return OutSine(t, 0f, 1f);
+				case InterpolationMode.InOutSine:
+					return InOutSine(t, 0f, 1f);
+				case InterpolationMode.InElastic:
+					return OutElastic(t, 0f, 1f);
+				case InterpolationMode.OutElastic:
+					return OutElastic(t, 0f, 1f);
+				case InterpolationMode.InBack:
+					return InBack(t, 0f, 1f);
+				case InterpolationMode.OutBack:
+					return OutBack(t, 0f, 1f);
+				default:
+					return 0f;
 			}
 		}
 
@@ -80,10 +80,12 @@ namespace RootMotion
 			{
 				return target;
 			}
+
 			if (value < target)
 			{
 				return Mathf.Clamp(value + Time.deltaTime * increaseSpeed, float.NegativeInfinity, target);
 			}
+
 			return Mathf.Clamp(value - Time.deltaTime * decreaseSpeed, target, float.PositiveInfinity);
 		}
 
@@ -252,10 +254,12 @@ namespace RootMotion
 			{
 				return b;
 			}
+
 			if ((t /= num) == 1f)
 			{
 				return b + c;
 			}
+
 			if (num4 == 0f || num4 < Mathf.Abs(c))
 			{
 				num4 = c;
@@ -265,7 +269,9 @@ namespace RootMotion
 			{
 				num3 = num2 / ((float)Math.PI * 2f) * Mathf.Asin(c / num4);
 			}
-			return 0f - num4 * Mathf.Pow(2f, 10f * (t -= 1f)) * Mathf.Sin((t * num - num3) * ((float)Math.PI * 2f) / num2) + b;
+
+			return 0f - num4 * Mathf.Pow(2f, 10f * (t -= 1f)) *
+				Mathf.Sin((t * num - num3) * ((float)Math.PI * 2f) / num2) + b;
 		}
 
 		private static float OutElastic(float t, float b, float c)
@@ -279,10 +285,12 @@ namespace RootMotion
 			{
 				return b;
 			}
+
 			if ((t /= num) == 1f)
 			{
 				return b + c;
 			}
+
 			if (num4 == 0f || num4 < Mathf.Abs(c))
 			{
 				num4 = c;
@@ -292,6 +300,7 @@ namespace RootMotion
 			{
 				num3 = num2 / ((float)Math.PI * 2f) * Mathf.Asin(c / num4);
 			}
+
 			return num4 * Mathf.Pow(2f, -10f * t) * Mathf.Sin((t * num - num3) * ((float)Math.PI * 2f) / num2) + c + b;
 		}
 

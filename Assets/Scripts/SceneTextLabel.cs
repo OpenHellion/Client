@@ -12,8 +12,7 @@ public class SceneTextLabel : MonoBehaviour
 
 	private Component comp;
 
-	[SerializeField]
-	public Material sourceMat;
+	[SerializeField] public Material sourceMat;
 
 	private Material matInstance;
 
@@ -26,10 +25,12 @@ public class SceneTextLabel : MonoBehaviour
 		{
 			comp = GetComponent<Decalicious>();
 		}
+
 		if (comp == null)
 		{
 			comp = GetComponent<MeshRenderer>();
 		}
+
 		InstantiateMaterial();
 	}
 

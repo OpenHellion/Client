@@ -4,15 +4,13 @@ namespace RootMotion.Demos
 {
 	public class WeaponRifle : WeaponBase
 	{
-		[Header("Shooting")]
-		public Transform shootFrom;
+		[Header("Shooting")] public Transform shootFrom;
 
 		public float range = 300f;
 
 		public LayerMask hitLayers;
 
-		[Header("FX")]
-		public ParticleSystem muzzleFlash;
+		[Header("FX")] public ParticleSystem muzzleFlash;
 
 		public ParticleSystem muzzleSmoke;
 

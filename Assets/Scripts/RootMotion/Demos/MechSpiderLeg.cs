@@ -40,22 +40,13 @@ namespace RootMotion.Demos
 
 		public bool isStepping
 		{
-			get
-			{
-				return stepProgress < 1f;
-			}
+			get { return stepProgress < 1f; }
 		}
 
 		public Vector3 position
 		{
-			get
-			{
-				return ik.GetIKSolver().GetIKPosition();
-			}
-			set
-			{
-				ik.GetIKSolver().SetIKPosition(value);
-			}
+			get { return ik.GetIKSolver().GetIKPosition(); }
+			set { ik.GetIKSolver().SetIKPosition(value); }
 		}
 
 		private void Start()
@@ -78,10 +69,12 @@ namespace RootMotion.Demos
 			Vector3 rhs = mechSpider.body.position - position;
 			Vector3 axis = Vector3.Cross(up, rhs);
 			up = Quaternion.AngleAxis(focus, axis) * up;
-			if (Physics.Raycast(vector + up * mechSpider.raycastHeight * mechSpider.scale, -up, out hit, mechSpider.raycastHeight * mechSpider.scale + distance, mechSpider.raycastLayers))
+			if (Physics.Raycast(vector + up * mechSpider.raycastHeight * mechSpider.scale, -up, out hit,
+				    mechSpider.raycastHeight * mechSpider.scale + distance, mechSpider.raycastLayers))
 			{
 				stepFound = true;
 			}
+
 			return hit.point + mechSpider.transform.up * footHeight * mechSpider.scale;
 		}
 
@@ -90,12 +83,16 @@ namespace RootMotion.Demos
 			if (!isStepping && !(Time.time < lastStepTime + minDelay) && (!(unSync != null) || !unSync.isStepping))
 			{
 				bool stepFound = false;
-				Vector3 stepTarget = GetStepTarget(out stepFound, raycastFocus, mechSpider.raycastDistance * mechSpider.scale);
+				Vector3 stepTarget = GetStepTarget(out stepFound, raycastFocus,
+					mechSpider.raycastDistance * mechSpider.scale);
 				if (!stepFound)
 				{
-					stepTarget = GetStepTarget(out stepFound, 0f - raycastFocus, mechSpider.raycastDistance * 3f * mechSpider.scale);
+					stepTarget = GetStepTarget(out stepFound, 0f - raycastFocus,
+						mechSpider.raycastDistance * 3f * mechSpider.scale);
 				}
-				if (stepFound && !(Vector3.Distance(position, stepTarget) < maxOffset * mechSpider.scale * Random.Range(0.9f, 1.2f)))
+
+				if (stepFound && !(Vector3.Distance(position, stepTarget) <
+				                   maxOffset * mechSpider.scale * Random.Range(0.9f, 1.2f)))
 				{
 					StopAllCoroutines();
 					StartCoroutine(Step(position, stepTarget));
@@ -113,12 +110,14 @@ namespace RootMotion.Demos
 				position += mechSpider.transform.up * yOffset.Evaluate(stepProgress) * mechSpider.scale;
 				yield return null;
 			}
+
 			position = targetPosition;
 			if (sand != null)
 			{
 				sand.transform.position = position - mechSpider.transform.up * footHeight * mechSpider.scale;
 				sand.Emit(20);
 			}
+
 			lastStepTime = Time.time;
 		}
 	}

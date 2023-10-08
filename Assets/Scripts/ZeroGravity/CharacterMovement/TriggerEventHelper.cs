@@ -6,11 +6,9 @@ namespace ZeroGravity.CharacterMovement
 {
 	public class TriggerEventHelper : MonoBehaviour
 	{
-		[SerializeField]
-		private MyCharacterController characterController;
+		[SerializeField] private MyCharacterController characterController;
 
-		[SerializeField]
-		private OtherCharacterController otherCharacterController;
+		[SerializeField] private OtherCharacterController otherCharacterController;
 
 		private void OnTriggerEnter(Collider coli)
 		{
@@ -19,14 +17,15 @@ namespace ZeroGravity.CharacterMovement
 			{
 				return;
 			}
+
 			if (characterController != null && characterController.isActiveAndEnabled)
 			{
 				characterController.ToggleInPlayerCollider(true);
-				if (Client.IsGameBuild)
-				{
-					SpaceObjectVessel spaceObjectVessel = coli.GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
-					characterController.NearbyVessel = ((!(spaceObjectVessel.DockedToMainVessel != null)) ? spaceObjectVessel : spaceObjectVessel.DockedToMainVessel);
-				}
+				SpaceObjectVessel spaceObjectVessel =
+					coli.GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
+				characterController.NearbyVessel = ((!(spaceObjectVessel.DockedToMainVessel != null))
+					? spaceObjectVessel
+					: spaceObjectVessel.DockedToMainVessel);
 			}
 			else if (otherCharacterController != null && otherCharacterController.isActiveAndEnabled)
 			{

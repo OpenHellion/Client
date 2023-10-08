@@ -5,7 +5,7 @@ using UnityEngine;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
-using ZeroGravity.UI;
+using static OpenHellion.UI.InGameGUI;
 
 namespace ZeroGravity
 {
@@ -71,37 +71,38 @@ namespace ZeroGravity
 			}
 		};
 
-		public static Dictionary<RadarVisibilityType, Color> RadarVisibility = new Dictionary<RadarVisibilityType, Color>
-		{
+		public static Dictionary<RadarVisibilityType, Color> RadarVisibility =
+			new Dictionary<RadarVisibilityType, Color>
 			{
-				RadarVisibilityType.Visible,
-				hexToColor("#1d8e4c")
-			},
-			{
-				RadarVisibilityType.Unknown,
-				hexToColor("#c06228")
-			},
-			{
-				RadarVisibilityType.AlwaysVisible,
-				hexToColor("#288fc0")
-			},
-			{
-				RadarVisibilityType.Doomed,
-				hexToColor("#EA4141")
-			},
-			{
-				RadarVisibilityType.Warp,
-				hexToColor("#49F2F0")
-			},
-			{
-				RadarVisibilityType.Distress,
-				hexToColor("#aa2020")
-			},
-			{
-				RadarVisibilityType.Invisible,
-				hexToColor("#ffffff")
-			}
-		};
+				{
+					RadarVisibilityType.Visible,
+					hexToColor("#1d8e4c")
+				},
+				{
+					RadarVisibilityType.Unknown,
+					hexToColor("#c06228")
+				},
+				{
+					RadarVisibilityType.AlwaysVisible,
+					hexToColor("#288fc0")
+				},
+				{
+					RadarVisibilityType.Doomed,
+					hexToColor("#EA4141")
+				},
+				{
+					RadarVisibilityType.Warp,
+					hexToColor("#49F2F0")
+				},
+				{
+					RadarVisibilityType.Distress,
+					hexToColor("#aa2020")
+				},
+				{
+					RadarVisibilityType.Invisible,
+					hexToColor("#ffffff")
+				}
+			};
 
 		public static Dictionary<int, Color> Tier = new Dictionary<int, Color>
 		{
@@ -277,18 +278,18 @@ namespace ZeroGravity
 
 		public static Color BlueprintIcon = hexToColor("#8C8C8C");
 
-		public static Dictionary<CanvasUI.NotificationType, Color> Notification = new Dictionary<CanvasUI.NotificationType, Color>
+		public static Dictionary<NotificationType, Color> Notification = new Dictionary<NotificationType, Color>
 		{
 			{
-				CanvasUI.NotificationType.General,
+				NotificationType.General,
 				new Color(0.7647059f, 0.7647059f, 0.7647059f, 10f / 51f)
 			},
 			{
-				CanvasUI.NotificationType.Alert,
+				NotificationType.Alert,
 				new Color(0.7058824f, 10f / 51f, 10f / 51f, 10f / 51f)
 			},
 			{
-				CanvasUI.NotificationType.Quest,
+				NotificationType.Quest,
 				new Color(0.28627452f, 0.9490196f, 0.9411765f, 10f / 51f)
 			}
 		};
@@ -304,6 +305,7 @@ namespace ZeroGravity
 			{
 				a = byte.Parse(hex.Substring(6, 2), NumberStyles.HexNumber);
 			}
+
 			return new Color32(r, g, b, a);
 		}
 	}

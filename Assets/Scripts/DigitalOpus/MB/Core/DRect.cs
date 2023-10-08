@@ -14,26 +14,17 @@ namespace DigitalOpus.MB.Core
 
 		public Vector2 min
 		{
-			get
-			{
-				return new Vector2((float)x, (float)y);
-			}
+			get { return new Vector2((float)x, (float)y); }
 		}
 
 		public Vector2 max
 		{
-			get
-			{
-				return new Vector2((float)(x + width), (float)(y + width));
-			}
+			get { return new Vector2((float)(x + width), (float)(y + width)); }
 		}
 
 		public Vector2 size
 		{
-			get
-			{
-				return new Vector2((float)width, (float)width);
-			}
+			get { return new Vector2((float)width, (float)width); }
 		}
 
 		public DRect(Rect r)
@@ -80,6 +71,7 @@ namespace DigitalOpus.MB.Core
 			{
 				return true;
 			}
+
 			return false;
 		}
 
@@ -95,7 +87,8 @@ namespace DigitalOpus.MB.Core
 
 		public override string ToString()
 		{
-			return string.Format("(x={0},y={1},w={2},h={3})", x.ToString("F5"), y.ToString("F5"), width.ToString("F5"), height.ToString("F5"));
+			return string.Format("(x={0},y={1},w={2},h={3})", x.ToString("F5"), y.ToString("F5"), width.ToString("F5"),
+				height.ToString("F5"));
 		}
 
 		public bool Encloses(DRect smallToTestIfFits)
@@ -108,7 +101,8 @@ namespace DigitalOpus.MB.Core
 			double num6 = y;
 			double num7 = x + width;
 			double num8 = y + height;
-			return num5 <= num && num <= num7 && num5 <= num3 && num3 <= num7 && num6 <= num2 && num2 <= num8 && num6 <= num4 && num4 <= num8;
+			return num5 <= num && num <= num7 && num5 <= num3 && num3 <= num7 && num6 <= num2 && num2 <= num8 &&
+			       num6 <= num4 && num4 <= num8;
 		}
 
 		public override int GetHashCode()

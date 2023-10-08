@@ -44,7 +44,7 @@ namespace ZeroGravity.Data
 
 		public List<DoorData> Doors;
 
-		public List<SceneTriggerExecuterData> SceneTriggerExecuters;
+		public List<SceneTriggerExecutorData> SceneTriggerExecuters;
 
 		public List<SceneDockingPortData> DockingPorts;
 

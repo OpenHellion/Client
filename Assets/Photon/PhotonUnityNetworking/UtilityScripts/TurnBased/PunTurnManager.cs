@@ -27,12 +27,12 @@ namespace Photon.Pun.UtilityScripts
     /// </summary>
 	public class PunTurnManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
-        
+
         /// <summary>
         /// External definition for better garbage collection management, used in ProcessEvent.
         /// </summary>
         Player sender;
-        
+
         /// <summary>
         /// Wraps accessing the "turn" custom properties of a room.
         /// </summary>
@@ -213,9 +213,9 @@ namespace Photon.Pun.UtilityScripts
             {
                 return;
             }
-            
+
             sender = PhotonNetwork.CurrentRoom.GetPlayer(senderId);
-            
+
             switch (eventCode)
 			{
 			case EvMove:

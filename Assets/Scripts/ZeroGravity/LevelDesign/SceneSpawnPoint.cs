@@ -2,9 +2,11 @@ using System.Collections.Generic;
 using Nakama;
 using OpenHellion;
 using OpenHellion.Net;
+using OpenHellion.Social;
 using OpenHellion.Social.RichPresence;
 using ThreeEyedGames;
 using UnityEngine;
+using UnityEngine.Serialization;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
@@ -26,8 +28,7 @@ namespace ZeroGravity.LevelDesign
 
 		public delegate void GetInvitedPlayersDelegate(List<PlayerInviteData> availablePlayers);
 
-		[Tooltip("InSceneID will be assigned automatically")]
-		[SerializeField]
+		[Tooltip("InSceneID will be assigned automatically")] [SerializeField]
 		private int _inSceneID;
 
 		public TagAction TagAction;
@@ -36,14 +37,13 @@ namespace ZeroGravity.LevelDesign
 
 		public SpawnPointType SpawnType;
 
-		public SceneTriggerExecuter Executer;
+		[FormerlySerializedAs("Executer")] public SceneTriggerExecutor Executor;
 
 		public string ExecuterState;
 
 		public string ExecuterOccupiedStates;
 
-		[HideInInspector]
-		public SpaceObjectVessel ParentVessel;
+		[HideInInspector] public SpaceObjectVessel ParentVessel;
 
 		public GameObject StatusMesh;
 
@@ -51,16 +51,12 @@ namespace ZeroGravity.LevelDesign
 
 		private GetInvitedPlayersDelegate onPlayersLodedDelegate;
 
+		private static World _world;
+
 		public int InSceneID
 		{
-			get
-			{
-				return _inSceneID;
-			}
-			set
-			{
-				_inSceneID = value;
-			}
+			get { return _inSceneID; }
+			set { _inSceneID = value; }
 		}
 
 		public long PlayerGUID { get; private set; }
@@ -77,10 +73,12 @@ namespace ZeroGravity.LevelDesign
 
 		private void Awake()
 		{
+			_world ??= GameObject.Find("/World").GetComponent<World>();
+
 			if (StatusMesh != null)
 			{
 				DefaultMaterial = StatusMesh.GetComponent<Decalicious>().Material;
-				StatusMesh.GetComponent<Decalicious>().Material = Object.Instantiate(DefaultMaterial);
+				StatusMesh.GetComponent<Decalicious>().Material = Instantiate(DefaultMaterial);
 			}
 		}
 
@@ -92,21 +90,25 @@ namespace ZeroGravity.LevelDesign
 				{
 					SpawnType = details.NewType.Value;
 				}
+
 				if (details.NewState.HasValue)
 				{
 					State = details.NewState.Value;
 				}
+
 				if (details.PlayerGUID.HasValue)
 				{
 					PlayerGUID = details.PlayerGUID.Value;
 					PlayerName = ((PlayerGUID <= 0) ? string.Empty : details.PlayerName);
 					PlayerId = details.PlayerId;
 				}
+
 				InvitedPlayerName = details.InvitedPlayerName;
 				if (InvitedPlayerName == null)
 				{
 					InvitedPlayerName = string.Empty;
 				}
+
 				InvitedPlayerId = details.InvitedPlayerId;
 				UpdateState();
 			}
@@ -133,9 +135,11 @@ namespace ZeroGravity.LevelDesign
 					StatusMesh.GetComponent<Decalicious>().Material.SetColor("_EmissionColor", Colors.Yellow);
 				}
 			}
-			if (MyPlayer.Instance.LockedToTrigger != null && MyPlayer.Instance.LockedToTrigger.TriggerType == SceneTriggerType.CryoPodPanel)
+
+			if (MyPlayer.Instance.LockedToTrigger != null &&
+			    MyPlayer.Instance.LockedToTrigger.TriggerType == SceneTriggerType.CryoPodPanel)
 			{
-				Client.Instance.InGamePanels.Cryo.UpdateUI();
+				_world.InWorldPanels.Cryo.UpdateUI();
 			}
 		}
 
@@ -166,7 +170,8 @@ namespace ZeroGravity.LevelDesign
 					NewState = SpawnPointState.Locked,
 					PlayerGUID = MyPlayer.Instance.GUID
 				};
-				parentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, spawnPoint);
+				parentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null,
+					spawnPoint);
 			}
 		}
 
@@ -176,7 +181,8 @@ namespace ZeroGravity.LevelDesign
 			{
 				Dbg.Error("UnlockSpawnPoint, Spawn point vessel is NULL", base.name, InSceneID);
 			}
-			else if (SpawnType != 0 && State != 0 && State != SpawnPointState.Authorized && PlayerGUID == MyPlayer.Instance.GUID)
+			else if (SpawnType != 0 && State != 0 && State != SpawnPointState.Authorized &&
+			         PlayerGUID == MyPlayer.Instance.GUID)
 			{
 				SpaceObjectVessel parentVessel = ParentVessel;
 				SpawnPointStats spawnPoint = new SpawnPointStats
@@ -185,7 +191,8 @@ namespace ZeroGravity.LevelDesign
 					NewState = SpawnPointState.Unlocked,
 					PlayerGUID = MyPlayer.Instance.GUID
 				};
-				parentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, spawnPoint);
+				parentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null,
+					spawnPoint);
 			}
 		}
 
@@ -204,7 +211,8 @@ namespace ZeroGravity.LevelDesign
 					NewState = SpawnPointState.Authorized,
 					PlayerGUID = MyPlayer.Instance.GUID
 				};
-				parentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, spawnPoint);
+				parentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null,
+					spawnPoint);
 				MyPlayer.Instance.HomeStationGUID = ParentVessel.GUID;
 			}
 		}
@@ -215,7 +223,8 @@ namespace ZeroGravity.LevelDesign
 			{
 				Dbg.Error("HackSpawnPoint, Spawn point vessel is NULL", base.name, InSceneID);
 			}
-			else if (SpawnType != 0 && State != 0 && State != SpawnPointState.Authorized && PlayerGUID != MyPlayer.Instance.GUID)
+			else if (SpawnType != 0 && State != 0 && State != SpawnPointState.Authorized &&
+			         PlayerGUID != MyPlayer.Instance.GUID)
 			{
 				SpaceObjectVessel parentVessel = ParentVessel;
 				SpawnPointStats spawnPoint = new SpawnPointStats
@@ -225,7 +234,8 @@ namespace ZeroGravity.LevelDesign
 					NewState = SpawnPointState.Unlocked,
 					PlayerGUID = MyPlayer.Instance.GUID
 				};
-				parentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, spawnPoint);
+				parentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null,
+					spawnPoint);
 			}
 		}
 
@@ -237,10 +247,12 @@ namespace ZeroGravity.LevelDesign
 			}
 			else
 			{
-				if (SpawnType is SpawnPointType.SimpleSpawn || State is SpawnPointState.Authorized || (State is SpawnPointState.Locked && PlayerGUID != MyPlayer.Instance.GUID))
+				if (SpawnType is SpawnPointType.SimpleSpawn || State is SpawnPointState.Authorized ||
+				    (State is SpawnPointState.Locked && PlayerGUID != MyPlayer.Instance.GUID))
 				{
 					return;
 				}
+
 				SpawnPointStats spawnPoint;
 				if (player is null)
 				{
@@ -251,7 +263,8 @@ namespace ZeroGravity.LevelDesign
 						InvitedPlayerId = string.Empty,
 						InvitedPlayerName = string.Empty
 					};
-					ParentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, spawnPoint);
+					ParentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null,
+						spawnPoint);
 					return;
 				}
 
@@ -262,29 +275,30 @@ namespace ZeroGravity.LevelDesign
 					InvitedPlayerId = player.PlayerId,
 					InvitedPlayerName = player.Name
 				};
-				ParentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, spawnPoint);
+				ParentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null,
+					spawnPoint);
 
 				// Send invite.
-				if (!Client.Instance.SinglePlayerMode)
-				{
-					// TODO: Invite using Nakama.
-					//Client.Instance.Nakama.Invite(player.PlayerId, Client.Instance.GetInviteString(new VesselObjectID(ParentVessel.GUID, InSceneID)));
-				}
+				// TODO: Invite using Nakama.
+				//_world.Nakama.Invite(player.PlayerId, _world.GetInviteString(new VesselObjectID(ParentVessel.GUID, InSceneID)));
 			}
 		}
 
-		public async void GetPlayersForInvite(bool getNakamaFriends, bool getPlayerFromServer, GetInvitedPlayersDelegate onPlayersLoaded)
+		public async void GetPlayersForInvite(bool getNakamaFriends, bool getPlayerFromServer,
+			GetInvitedPlayersDelegate onPlayersLoaded)
 		{
-			if (SpawnType == SpawnPointType.SimpleSpawn || State == SpawnPointState.Authorized || (State == SpawnPointState.Locked && PlayerGUID != MyPlayer.Instance.GUID))
+			if (SpawnType == SpawnPointType.SimpleSpawn || State == SpawnPointState.Authorized ||
+			    (State == SpawnPointState.Locked && PlayerGUID != MyPlayer.Instance.GUID))
 			{
 				return;
 			}
+
 			if (getNakamaFriends)
 			{
 				List<PlayerInviteData> list = new List<PlayerInviteData>();
 
 				// Loop through each friend and add them to the list.
-				IApiFriend[] nakamaFriends = await Client.Instance.Nakama.GetFriends();
+				IApiFriend[] nakamaFriends = await _world.Nakama.GetFriends();
 				foreach (IApiFriend friend in nakamaFriends)
 				{
 					// If friend is online.
@@ -302,6 +316,7 @@ namespace ZeroGravity.LevelDesign
 
 				onPlayersLoaded(list);
 			}
+
 			if (getPlayerFromServer)
 			{
 				NetworkController.Instance.SendToGameServer(new PlayersOnServerRequest
@@ -316,18 +331,19 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public void ParsePlayersOnServerResponse(PlayersOnServerResponse data)
+		public async void ParsePlayersOnServerResponse(PlayersOnServerResponse data)
 		{
 			if (onPlayersLodedDelegate == null)
 			{
 				return;
 			}
+
 			List<PlayerInviteData> list = new List<PlayerInviteData>();
 			if (data.PlayersOnServer != null && data.PlayersOnServer.Count > 0)
 			{
 				foreach (PlayerOnServerData item in data.PlayersOnServer)
 				{
-					if (item.PlayerId != NetworkController.PlayerId)
+					if (item.PlayerId != await _world.Nakama.GetUserId())
 					{
 						list.Add(new PlayerInviteData
 						{
@@ -339,6 +355,7 @@ namespace ZeroGravity.LevelDesign
 					}
 				}
 			}
+
 			if (list.Count > 0)
 			{
 				onPlayersLodedDelegate(list);

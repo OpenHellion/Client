@@ -14,10 +14,7 @@ namespace RootMotion.FinalIK
 
 		protected override bool boneLengthCanBeZero
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public void SolveForward(Vector3 position)
@@ -58,6 +55,7 @@ namespace RootMotion.FinalIK
 			{
 				return target.position;
 			}
+
 			return IKPosition;
 		}
 
@@ -67,17 +65,20 @@ namespace RootMotion.FinalIK
 			{
 				IKPosition = bones[bones.Length - 1].transform.position;
 			}
+
 			for (int i = 0; i < bones.Length; i++)
 			{
 				bones[i].solverPosition = bones[i].transform.position;
 				bones[i].solverRotation = bones[i].transform.rotation;
 			}
+
 			limitedBones = new bool[bones.Length];
 			solverLocalPositions = new Vector3[bones.Length];
 			InitiateBones();
 			for (int j = 0; j < bones.Length; j++)
 			{
-				solverLocalPositions[j] = Quaternion.Inverse(GetParentSolverRotation(j)) * (bones[j].transform.position - GetParentSolverPosition(j));
+				solverLocalPositions[j] = Quaternion.Inverse(GetParentSolverRotation(j)) *
+				                          (bones[j].transform.position - GetParentSolverPosition(j));
 			}
 		}
 
@@ -87,26 +88,34 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			IKPositionWeight = Mathf.Clamp(IKPositionWeight, 0f, 1f);
 			OnPreSolve();
 			if (target != null)
 			{
 				IKPosition = target.position;
 			}
+
 			if (XY)
 			{
 				IKPosition.z = bones[0].transform.position.z;
 			}
+
 			Vector3 vector = ((maxIterations <= 1) ? Vector3.zero : GetSingularityOffset());
-			for (int i = 0; i < maxIterations && (!(vector == Vector3.zero) || i < 1 || !(tolerance > 0f) || !(base.positionOffset < tolerance * tolerance)); i++)
+			for (int i = 0;
+			     i < maxIterations && (!(vector == Vector3.zero) || i < 1 || !(tolerance > 0f) ||
+			                           !(base.positionOffset < tolerance * tolerance));
+			     i++)
 			{
 				lastLocalDirection = localDirection;
 				if (OnPreIteration != null)
 				{
 					OnPreIteration(i);
 				}
+
 				Solve(IKPosition + ((i != 0) ? Vector3.zero : vector));
 			}
+
 			OnPostSolve();
 		}
 
@@ -116,6 +125,7 @@ namespace RootMotion.FinalIK
 			{
 				pos1.z = pos2.z;
 			}
+
 			return pos2 + (pos1 - pos2).normalized * length;
 		}
 
@@ -129,12 +139,15 @@ namespace RootMotion.FinalIK
 				if (i < bones.Length - 1)
 				{
 					bones[i].length = (bones[i].transform.position - bones[i + 1].transform.position).magnitude;
-					bones[i].axis = Quaternion.Inverse(bones[i].transform.rotation) * (bones[i + 1].transform.position - bones[i].transform.position);
+					bones[i].axis = Quaternion.Inverse(bones[i].transform.rotation) *
+					                (bones[i + 1].transform.position - bones[i].transform.position);
 					chainLength += bones[i].length;
 				}
+
 				if (useRotationLimits)
 				{
-					solverLocalPositions[i] = Quaternion.Inverse(GetParentSolverRotation(i)) * (bones[i].transform.position - GetParentSolverPosition(i));
+					solverLocalPositions[i] = Quaternion.Inverse(GetParentSolverRotation(i)) *
+					                          (bones[i].transform.position - GetParentSolverPosition(i));
 				}
 			}
 		}
@@ -149,6 +162,7 @@ namespace RootMotion.FinalIK
 			{
 				MapToSolverPositionsLimited();
 			}
+
 			lastLocalDirection = localDirection;
 		}
 
@@ -160,16 +174,20 @@ namespace RootMotion.FinalIK
 
 		private void ForwardReach(Vector3 position)
 		{
-			bones[bones.Length - 1].solverPosition = Vector3.Lerp(bones[bones.Length - 1].solverPosition, position, IKPositionWeight);
+			bones[bones.Length - 1].solverPosition =
+				Vector3.Lerp(bones[bones.Length - 1].solverPosition, position, IKPositionWeight);
 			for (int i = 0; i < limitedBones.Length; i++)
 			{
 				limitedBones[i] = false;
 			}
+
 			for (int num = bones.Length - 2; num > -1; num--)
 			{
-				bones[num].solverPosition = SolveJoint(bones[num].solverPosition, bones[num + 1].solverPosition, bones[num].length);
+				bones[num].solverPosition = SolveJoint(bones[num].solverPosition, bones[num + 1].solverPosition,
+					bones[num].length);
 				LimitForward(num, num + 1);
 			}
+
 			LimitForward(0, 0);
 		}
 
@@ -216,10 +234,12 @@ namespace RootMotion.FinalIK
 			{
 				return bones[index - 1].solverRotation;
 			}
+
 			if (bones[0].transform.parent == null)
 			{
 				return Quaternion.identity;
 			}
+
 			return bones[0].transform.parent.rotation;
 		}
 
@@ -229,10 +249,12 @@ namespace RootMotion.FinalIK
 			{
 				return bones[index - 1].solverPosition;
 			}
+
 			if (bones[0].transform.parent == null)
 			{
 				return Vector3.zero;
 			}
+
 			return bones[0].transform.parent.position;
 		}
 
@@ -241,11 +263,13 @@ namespace RootMotion.FinalIK
 			changed = false;
 			Quaternion parentSolverRotation = GetParentSolverRotation(index);
 			Quaternion localRotation = Quaternion.Inverse(parentSolverRotation) * q;
-			Quaternion limitedLocalRotation = bones[index].rotationLimit.GetLimitedLocalRotation(localRotation, out changed);
+			Quaternion limitedLocalRotation =
+				bones[index].rotationLimit.GetLimitedLocalRotation(localRotation, out changed);
 			if (!changed)
 			{
 				return q;
 			}
+
 			return parentSolverRotation * limitedLocalRotation;
 		}
 
@@ -255,12 +279,15 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			Vector3 solverPosition = bones[bones.Length - 1].solverPosition;
 			for (int i = rotateBone; i < bones.Length - 1 && !limitedBones[i]; i++)
 			{
-				Quaternion rotation = Quaternion.FromToRotation(bones[i].solverRotation * bones[i].axis, bones[i + 1].solverPosition - bones[i].solverPosition);
+				Quaternion rotation = Quaternion.FromToRotation(bones[i].solverRotation * bones[i].axis,
+					bones[i + 1].solverPosition - bones[i].solverPosition);
 				SolverRotate(i, rotation, false);
 			}
+
 			bool changed = false;
 			Quaternion limitedRotation = GetLimitedRotation(limitBone, bones[limitBone].solverRotation, out changed);
 			if (changed)
@@ -271,7 +298,9 @@ namespace RootMotion.FinalIK
 					bones[limitBone].solverRotation = limitedRotation;
 					SolverRotateChildren(limitBone, rotation2);
 					SolverMoveChildrenAroundPoint(limitBone, rotation2);
-					Quaternion rotation3 = Quaternion.FromToRotation(bones[bones.Length - 1].solverPosition - bones[rotateBone].solverPosition, solverPosition - bones[rotateBone].solverPosition);
+					Quaternion rotation3 = Quaternion.FromToRotation(
+						bones[bones.Length - 1].solverPosition - bones[rotateBone].solverPosition,
+						solverPosition - bones[rotateBone].solverPosition);
 					SolverRotate(rotateBone, rotation3, true);
 					SolverMoveChildrenAroundPoint(rotateBone, rotation3);
 					SolverMove(rotateBone, solverPosition - bones[bones.Length - 1].solverPosition);
@@ -281,6 +310,7 @@ namespace RootMotion.FinalIK
 					bones[limitBone].solverRotation = limitedRotation;
 				}
 			}
+
 			limitedBones[limitBone] = true;
 		}
 
@@ -301,7 +331,8 @@ namespace RootMotion.FinalIK
 			bones[0].solverPosition = position;
 			for (int i = 1; i < bones.Length; i++)
 			{
-				bones[i].solverPosition = SolveJoint(bones[i].solverPosition, bones[i - 1].solverPosition, bones[i - 1].length);
+				bones[i].solverPosition = SolveJoint(bones[i].solverPosition, bones[i - 1].solverPosition,
+					bones[i - 1].length);
 			}
 		}
 
@@ -311,21 +342,26 @@ namespace RootMotion.FinalIK
 			for (int i = 0; i < bones.Length - 1; i++)
 			{
 				Vector3 vector = SolveJoint(bones[i + 1].solverPosition, bones[i].solverPosition, bones[i].length);
-				Quaternion quaternion = Quaternion.FromToRotation(bones[i].solverRotation * bones[i].axis, vector - bones[i].solverPosition);
+				Quaternion quaternion = Quaternion.FromToRotation(bones[i].solverRotation * bones[i].axis,
+					vector - bones[i].solverPosition);
 				Quaternion quaternion2 = quaternion * bones[i].solverRotation;
 				if (bones[i].rotationLimit != null)
 				{
 					bool changed = false;
 					quaternion2 = GetLimitedRotation(i, quaternion2, out changed);
 				}
+
 				Quaternion rotation = QuaTools.FromToRotation(bones[i].solverRotation, quaternion2);
 				bones[i].solverRotation = quaternion2;
 				SolverRotateChildren(i, rotation);
-				bones[i + 1].solverPosition = bones[i].solverPosition + bones[i].solverRotation * solverLocalPositions[i + 1];
+				bones[i + 1].solverPosition =
+					bones[i].solverPosition + bones[i].solverRotation * solverLocalPositions[i + 1];
 			}
+
 			for (int j = 0; j < bones.Length; j++)
 			{
-				bones[j].solverRotation = Quaternion.LookRotation(bones[j].solverRotation * Vector3.forward, bones[j].solverRotation * Vector3.up);
+				bones[j].solverRotation = Quaternion.LookRotation(bones[j].solverRotation * Vector3.forward,
+					bones[j].solverRotation * Vector3.up);
 			}
 		}
 

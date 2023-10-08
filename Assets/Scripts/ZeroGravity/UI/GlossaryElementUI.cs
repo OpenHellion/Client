@@ -5,12 +5,12 @@ using ZeroGravity.Data;
 
 namespace ZeroGravity.UI
 {
-	public class GlossaryElementUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IEventSystemHandler
+	public class GlossaryElementUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler,
+		IEventSystemHandler
 	{
 		public AbstractGlossaryElement Element;
 
-		[Title("UI")]
-		public GlossaryUI Screen;
+		[Title("UI")] public GlossaryUI Screen;
 
 		public Image Icon;
 

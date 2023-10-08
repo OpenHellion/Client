@@ -41,6 +41,7 @@ namespace ZeroGravity.UI
 				Holder.Activate(false);
 				return;
 			}
+
 			Holder.Activate(true);
 			if (VideoSource.isPlaying)
 			{

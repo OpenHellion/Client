@@ -51,7 +51,7 @@ namespace Photon.Voice.Unity
         public bool IsDebugEnabled { get { return this.LogLevel == DebugLevel.ALL; } }
 
         private readonly Object context;
-        
+
         #region ILogger
 
         public void LogError(string fmt, params object[] args)
@@ -70,7 +70,7 @@ namespace Photon.Voice.Unity
 
         public void LogWarning(string fmt, params object[] args)
         {
-            if (!this.IsWarningEnabled) return;            
+            if (!this.IsWarningEnabled) return;
             fmt = this.GetFormatString(fmt);
             if (this.context == null)
             {

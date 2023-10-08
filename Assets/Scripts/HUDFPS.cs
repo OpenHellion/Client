@@ -58,6 +58,7 @@ public class HUDFPS : MonoBehaviour
 			style.normal.textColor = Color.white;
 			style.alignment = TextAnchor.MiddleCenter;
 		}
+
 		GUI.color = ((!updateColor) ? Color.white : color);
 		startRect = GUI.Window(0, startRect, DoMyWindow, string.Empty);
 	}

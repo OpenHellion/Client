@@ -34,6 +34,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					continue;
 				}
+
 				string[] array = eventObject.ScriptFunctionName.Split('/');
 				MonoBehaviour monoBehaviour = null;
 				MonoBehaviour[] components = eventObject.Object.GetComponents<MonoBehaviour>();
@@ -45,16 +46,21 @@ namespace ZeroGravity.LevelDesign
 						break;
 					}
 				}
+
 				if (!(monoBehaviour == null))
 				{
-					MethodInfo method = monoBehaviour.GetType().GetMethod(array[1], BindingFlags.Instance | BindingFlags.Public);
+					MethodInfo method = monoBehaviour.GetType()
+						.GetMethod(array[1], BindingFlags.Instance | BindingFlags.Public);
 					if (method != null)
 					{
 						eventObject.DelegateFunc = Delegate.CreateDelegate(method.GetType(), monoBehaviour, method);
 						continue;
 					}
-					PropertyInfo property = monoBehaviour.GetType().GetProperty(array[1], BindingFlags.Instance | BindingFlags.Public);
-					eventObject.DelegateFunc = Delegate.CreateDelegate(property.GetGetMethod().GetType(), monoBehaviour, property.GetGetMethod());
+
+					PropertyInfo property = monoBehaviour.GetType()
+						.GetProperty(array[1], BindingFlags.Instance | BindingFlags.Public);
+					eventObject.DelegateFunc = Delegate.CreateDelegate(property.GetGetMethod().GetType(), monoBehaviour,
+						property.GetGetMethod());
 				}
 			}
 		}
@@ -67,6 +73,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					CreateEvents();
 				}
+
 				for (int i = 0; i < EventObjects.Count; i++)
 				{
 					EventObjects[i].DelegateFunc.DynamicInvoke(EventObjects[i].Value);

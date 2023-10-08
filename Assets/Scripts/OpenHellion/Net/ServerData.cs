@@ -1,7 +1,8 @@
 using System;
 using ZeroGravity.Network;
 
-namespace OpenHellion.Net {
+namespace OpenHellion.Net
+{
 	public class ServerData
 	{
 		public CharacterData CharacterData;
@@ -12,9 +13,9 @@ namespace OpenHellion.Net {
 
 		public string IpAddress;
 
-		public uint GamePort;
+		public int GamePort;
 
-		public uint StatusPort;
+		public int StatusPort;
 
 		public uint Hash;
 

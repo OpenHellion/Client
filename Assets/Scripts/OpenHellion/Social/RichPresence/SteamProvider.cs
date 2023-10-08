@@ -20,9 +20,9 @@ using Steamworks;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using OpenHellion.Net.Message;
-using ZeroGravity;
 using OpenHellion.IO;
+using OpenHellion.Net.Message;
+using OpenHellion;
 
 namespace OpenHellion.Social.RichPresence
 {
@@ -48,12 +48,16 @@ namespace OpenHellion.Social.RichPresence
 		{
 			if (!Packsize.Test())
 			{
-				Dbg.Error("[Steamworks.NET] Packsize Test returned false, the wrong version of Steamworks.NET is being run in this platform.", this);
+				Dbg.Error(
+					"[Steamworks.NET] Packsize Test returned false, the wrong version of Steamworks.NET is being run in this platform.",
+					this);
 			}
 
 			if (!DllCheck.Test())
 			{
-				Dbg.Error("[Steamworks.NET] DllCheck Test returned false, One or more of the Steamworks binaries seems to be the wrong version.", this);
+				Dbg.Error(
+					"[Steamworks.NET] DllCheck Test returned false, One or more of the Steamworks binaries seems to be the wrong version.",
+					this);
 			}
 
 			// https://partner.steamgames.com/doc/sdk/api#initialization_and_shutdown
@@ -83,7 +87,8 @@ namespace OpenHellion.Social.RichPresence
 				SteamUserStats.RequestCurrentStats();
 			}
 
-			m_GameRichPresenceJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested);
+			m_GameRichPresenceJoinRequested =
+				Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested);
 		}
 
 		// OnApplicationQuit gets called too early to shutdown the SteamAPI.
@@ -102,7 +107,8 @@ namespace OpenHellion.Social.RichPresence
 
 			if (!m_currentStatsRequested)
 			{
-				m_userStatsReceivedCallback = Callback<UserStatsReceived_t>.Create(callback => {
+				m_userStatsReceivedCallback = Callback<UserStatsReceived_t>.Create(callback =>
+				{
 					m_userStatsReceived = true;
 				});
 				m_currentStatsRequested = SteamUserStats.RequestCurrentStats();
@@ -114,6 +120,7 @@ namespace OpenHellion.Social.RichPresence
 				{
 					result.RunSynchronously();
 				}
+
 				if (m_storeStats)
 				{
 					SteamUserStats.StoreStats();
@@ -123,16 +130,15 @@ namespace OpenHellion.Social.RichPresence
 		}
 
 		// When we are joining a game.
+		// TODO: Add invites.
 		private void OnGameRichPresenceJoinRequested(GameRichPresenceJoinRequested_t param)
 		{
 			InviteMessage inviteMessage = JsonSerialiser.Deserialize<InviteMessage>(param.m_rgchConnect);
-			Client.Instance.ProcessInvitation(inviteMessage);
 		}
 
 		/// <inheritdoc/>
 		public void UpdateStatus()
 		{
-
 		}
 
 		/// <inheritdoc/>

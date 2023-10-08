@@ -32,13 +32,11 @@ namespace ZeroGravity.ShipComponents
 			}
 		}
 
-		[SerializeField]
-		private string _Name = "Refinery";
+		[SerializeField] private string _Name = "Refinery";
 
 		private List<ICargoCompartment> _Compartments;
 
-		[SerializeField]
-		private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
+		[SerializeField] private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
 		{
 			new ResourceRequirement
 			{
@@ -55,39 +53,26 @@ namespace ZeroGravity.ShipComponents
 
 		public List<RefinedResourcesData> Resources;
 
-		[NonSerialized]
-		public float CurrentProgress;
+		[NonSerialized] public float CurrentProgress;
 
 		public override SubSystemType Type
 		{
-			get
-			{
-				return SubSystemType.Refinery;
-			}
+			get { return SubSystemType.Refinery; }
 		}
 
 		public string Name
 		{
-			get
-			{
-				return _Name;
-			}
+			get { return _Name; }
 		}
 
 		public List<ICargoCompartment> Compartments
 		{
-			get
-			{
-				return _Compartments;
-			}
+			get { return _Compartments; }
 		}
 
 		public override ResourceRequirement[] ResourceRequirements
 		{
-			get
-			{
-				return _ResourceRequirements;
-			}
+			get { return _ResourceRequirements; }
 		}
 
 		protected override void Start()
@@ -102,18 +87,21 @@ namespace ZeroGravity.ShipComponents
 			subSystemRefineryAuxData.Capacity = Capacity;
 			subSystemRefineryAuxData.ProcessingTime = ProcessingTime;
 			subSystemRefineryAuxData.Resources = Resources;
-			subSystemRefineryAuxData.CargoCompartments = new List<CargoCompartmentData> { (!(CargoResources == null)) ? CargoResources.GetData() : null };
+			subSystemRefineryAuxData.CargoCompartments = new List<CargoCompartmentData>
+				{ (!(CargoResources == null)) ? CargoResources.GetData() : null };
 			return subSystemRefineryAuxData;
 		}
 
 		public ICargoCompartment GetCompartment(short? id = null)
 		{
-			_003CGetCompartment_003Ec__AnonStorey0 _003CGetCompartment_003Ec__AnonStorey = new _003CGetCompartment_003Ec__AnonStorey0();
+			_003CGetCompartment_003Ec__AnonStorey0 _003CGetCompartment_003Ec__AnonStorey =
+				new _003CGetCompartment_003Ec__AnonStorey0();
 			_003CGetCompartment_003Ec__AnonStorey.id = id;
 			if (_003CGetCompartment_003Ec__AnonStorey.id.HasValue)
 			{
 				return _Compartments.Find(_003CGetCompartment_003Ec__AnonStorey._003C_003Em__0);
 			}
+
 			return _Compartments[0];
 		}
 
@@ -124,13 +112,17 @@ namespace ZeroGravity.ShipComponents
 			{
 				_Compartments = new List<ICargoCompartment> { CargoResources };
 			}
-			using (List<CargoCompartmentDetails>.Enumerator enumerator = refineryAuxDetails.CargoCompartments.GetEnumerator())
+
+			using (List<CargoCompartmentDetails>.Enumerator enumerator =
+			       refineryAuxDetails.CargoCompartments.GetEnumerator())
 			{
 				while (enumerator.MoveNext())
 				{
-					_003CSetAuxDetails_003Ec__AnonStorey1 _003CSetAuxDetails_003Ec__AnonStorey = new _003CSetAuxDetails_003Ec__AnonStorey1();
+					_003CSetAuxDetails_003Ec__AnonStorey1 _003CSetAuxDetails_003Ec__AnonStorey =
+						new _003CSetAuxDetails_003Ec__AnonStorey1();
 					_003CSetAuxDetails_003Ec__AnonStorey.ccd = enumerator.Current;
-					ICargoCompartment cargoCompartment = _Compartments.Find(_003CSetAuxDetails_003Ec__AnonStorey._003C_003Em__0);
+					ICargoCompartment cargoCompartment =
+						_Compartments.Find(_003CSetAuxDetails_003Ec__AnonStorey._003C_003Em__0);
 					if (cargoCompartment != null)
 					{
 						cargoCompartment.Resources = _003CSetAuxDetails_003Ec__AnonStorey.ccd.Resources;

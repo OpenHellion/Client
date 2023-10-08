@@ -52,14 +52,18 @@ namespace RootMotion.FinalIK
 						lastRelativePos = vector;
 						firstUpdate = false;
 					}
+
 					Vector3 vector2 = (vector - lastRelativePos) / deltaTime;
 					smoothDelta = ((!(speed <= 0f)) ? Vector3.Lerp(smoothDelta, vector2, deltaTime * speed) : vector2);
 					Vector3 v = relativeTo.TransformDirection(smoothDelta);
-					Vector3 vector3 = V3Tools.ExtractVertical(v, solver.GetRoot().up, verticalWeight) + V3Tools.ExtractHorizontal(v, solver.GetRoot().up, horizontalWeight);
+					Vector3 vector3 = V3Tools.ExtractVertical(v, solver.GetRoot().up, verticalWeight) +
+					                  V3Tools.ExtractHorizontal(v, solver.GetRoot().up, horizontalWeight);
 					for (int i = 0; i < effectorLinks.Length; i++)
 					{
-						solver.GetEffector(effectorLinks[i].effector).positionOffset += vector3 * w * effectorLinks[i].weight;
+						solver.GetEffector(effectorLinks[i].effector).positionOffset +=
+							vector3 * w * effectorLinks[i].weight;
 					}
+
 					lastRelativePos = vector;
 				}
 			}
@@ -73,8 +77,7 @@ namespace RootMotion.FinalIK
 			}
 		}
 
-		[Tooltip("The amplified bodies.")]
-		public Body[] bodies;
+		[Tooltip("The amplified bodies.")] public Body[] bodies;
 
 		protected override void OnModifyOffset()
 		{
@@ -82,10 +85,14 @@ namespace RootMotion.FinalIK
 			{
 				if (!Warning.logged)
 				{
-					Warning.Log("Amplifier needs the Fix Transforms option of the FBBIK to be set to true. Otherwise it might amplify to infinity, should the animator of the character stop because of culling.", base.transform);
+					Warning.Log(
+						"Amplifier needs the Fix Transforms option of the FBBIK to be set to true. Otherwise it might amplify to infinity, should the animator of the character stop because of culling.",
+						base.transform);
 				}
+
 				return;
 			}
+
 			Body[] array = bodies;
 			foreach (Body body in array)
 			{

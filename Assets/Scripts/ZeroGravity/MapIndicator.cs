@@ -14,10 +14,7 @@ namespace ZeroGravity
 
 		public Animator Animator
 		{
-			get
-			{
-				return GetComponent<Animator>();
-			}
+			get { return GetComponent<Animator>(); }
 		}
 
 		public void SetIndicator(IndicatorAction action)
@@ -26,18 +23,18 @@ namespace ZeroGravity
 			{
 				switch (action)
 				{
-				case IndicatorAction.hover:
-					Animator.SetBool("Hover", true);
-					break;
-				case IndicatorAction.unhover:
-					Animator.SetBool("Hover", false);
-					break;
-				case IndicatorAction.click:
-					Animator.SetBool("Click", true);
-					break;
-				case IndicatorAction.release:
-					Animator.SetBool("Click", false);
-					break;
+					case IndicatorAction.hover:
+						Animator.SetBool("Hover", true);
+						break;
+					case IndicatorAction.unhover:
+						Animator.SetBool("Hover", false);
+						break;
+					case IndicatorAction.click:
+						Animator.SetBool("Click", true);
+						break;
+					case IndicatorAction.release:
+						Animator.SetBool("Click", false);
+						break;
 				}
 			}
 		}

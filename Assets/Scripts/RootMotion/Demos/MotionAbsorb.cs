@@ -35,8 +35,7 @@ namespace RootMotion.Demos
 		[Tooltip("Array containing the absorbers")]
 		public Absorber[] absorbers;
 
-		[Tooltip("The master weight")]
-		public float weight = 1f;
+		[Tooltip("The master weight")] public float weight = 1f;
 
 		[Tooltip("Weight falloff curve (how fast will the effect reduce after impact)")]
 		public AnimationCurve falloff;
@@ -61,6 +60,7 @@ namespace RootMotion.Demos
 			{
 				absorbers[i].SetToBone(ik.solver);
 			}
+
 			while (timer > 0f)
 			{
 				timer -= Time.deltaTime * falloffSpeed;
@@ -69,8 +69,10 @@ namespace RootMotion.Demos
 				{
 					absorbers[j].SetEffectorWeights(ik.solver, w * weight);
 				}
+
 				yield return null;
 			}
+
 			yield return null;
 		}
 	}

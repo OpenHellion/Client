@@ -5,14 +5,11 @@ namespace RootMotion.Demos
 	[RequireComponent(typeof(Animator))]
 	public class CharacterAnimationSimple : CharacterAnimationBase
 	{
-		[SerializeField]
-		private CharacterThirdPerson characterController;
+		[SerializeField] private CharacterThirdPerson characterController;
 
-		[SerializeField]
-		private float pivotOffset;
+		[SerializeField] private float pivotOffset;
 
-		[SerializeField]
-		private AnimationCurve moveSpeed;
+		[SerializeField] private AnimationCurve moveSpeed;
 
 		private Animator animator;
 
@@ -28,6 +25,7 @@ namespace RootMotion.Demos
 			{
 				return base.transform.position;
 			}
+
 			return base.transform.position + base.transform.forward * pivotOffset;
 		}
 

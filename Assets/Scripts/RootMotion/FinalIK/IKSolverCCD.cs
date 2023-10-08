@@ -27,6 +27,7 @@ namespace RootMotion.FinalIK
 			{
 				IKPosition = bones[bones.Length - 1].transform.position;
 			}
+
 			InitiateBones();
 		}
 
@@ -36,25 +37,33 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			IKPositionWeight = Mathf.Clamp(IKPositionWeight, 0f, 1f);
 			if (target != null)
 			{
 				IKPosition = target.position;
 			}
+
 			if (XY)
 			{
 				IKPosition.z = bones[0].transform.position.z;
 			}
+
 			Vector3 vector = ((maxIterations <= 1) ? Vector3.zero : GetSingularityOffset());
-			for (int i = 0; i < maxIterations && (!(vector == Vector3.zero) || i < 1 || !(tolerance > 0f) || !(base.positionOffset < tolerance * tolerance)); i++)
+			for (int i = 0;
+			     i < maxIterations && (!(vector == Vector3.zero) || i < 1 || !(tolerance > 0f) ||
+			                           !(base.positionOffset < tolerance * tolerance));
+			     i++)
 			{
 				lastLocalDirection = localDirection;
 				if (OnPreIteration != null)
 				{
 					OnPreIteration(i);
 				}
+
 				Solve(IKPosition + ((i != 0) ? Vector3.zero : vector));
 			}
+
 			lastLocalDirection = localDirection;
 		}
 
@@ -71,15 +80,20 @@ namespace RootMotion.FinalIK
 						Vector3 vector2 = targetPosition - bones[num].transform.position;
 						float current = Mathf.Atan2(vector.x, vector.y) * 57.29578f;
 						float num3 = Mathf.Atan2(vector2.x, vector2.y) * 57.29578f;
-						bones[num].transform.rotation = Quaternion.AngleAxis(Mathf.DeltaAngle(current, num3) * num2, Vector3.back) * bones[num].transform.rotation;
+						bones[num].transform.rotation =
+							Quaternion.AngleAxis(Mathf.DeltaAngle(current, num3) * num2, Vector3.back) *
+							bones[num].transform.rotation;
 					}
+
 					if (useRotationLimits && bones[num].rotationLimit != null)
 					{
 						bones[num].rotationLimit.Apply();
 					}
 				}
+
 				return;
 			}
+
 			for (int num4 = bones.Length - 2; num4 > -1; num4--)
 			{
 				float num5 = bones[num4].weight * IKPositionWeight;
@@ -87,16 +101,19 @@ namespace RootMotion.FinalIK
 				{
 					Vector3 fromDirection = bones[bones.Length - 1].transform.position - bones[num4].transform.position;
 					Vector3 toDirection = targetPosition - bones[num4].transform.position;
-					Quaternion quaternion = Quaternion.FromToRotation(fromDirection, toDirection) * bones[num4].transform.rotation;
+					Quaternion quaternion = Quaternion.FromToRotation(fromDirection, toDirection) *
+					                        bones[num4].transform.rotation;
 					if (num5 >= 1f)
 					{
 						bones[num4].transform.rotation = quaternion;
 					}
 					else
 					{
-						bones[num4].transform.rotation = Quaternion.Lerp(bones[num4].transform.rotation, quaternion, num5);
+						bones[num4].transform.rotation =
+							Quaternion.Lerp(bones[num4].transform.rotation, quaternion, num5);
 					}
 				}
+
 				if (useRotationLimits && bones[num4].rotationLimit != null)
 				{
 					bones[num4].rotationLimit.Apply();

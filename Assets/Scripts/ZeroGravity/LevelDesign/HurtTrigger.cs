@@ -11,8 +11,7 @@ namespace ZeroGravity.LevelDesign
 	{
 		public HurtType HurtType;
 
-		[Tooltip("HP per sec.")]
-		public float Damage;
+		[Tooltip("HP per sec.")] public float Damage;
 
 		public bool InstantDamage;
 
@@ -24,58 +23,37 @@ namespace ZeroGravity.LevelDesign
 
 		public override bool ExclusivePlayerLocking
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public override bool CameraMovementAllowed
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public override bool IsInteractable
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public override bool IsNearTrigger
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public override PlayerHandsCheckType PlayerHandsCheck
 		{
-			get
-			{
-				return PlayerHandsCheckType.DontCheck;
-			}
+			get { return PlayerHandsCheckType.DontCheck; }
 		}
 
 		public override List<ItemType> PlayerHandsItemType
 		{
-			get
-			{
-				return null;
-			}
+			get { return null; }
 		}
 
 		public override SceneTriggerType TriggerType
 		{
-			get
-			{
-				return SceneTriggerType.HurtTrigger;
-			}
+			get { return SceneTriggerType.HurtTrigger; }
 		}
 
 		private void FixedUpdate()

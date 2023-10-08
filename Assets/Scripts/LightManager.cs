@@ -15,6 +15,7 @@ public class LightManager<T> : MonoBehaviour
 			{
 				return s_Instance;
 			}
+
 			s_Instance = (LightManager<T>)Object.FindObjectOfType(typeof(LightManager<T>));
 			return s_Instance;
 		}
@@ -33,6 +34,7 @@ public class LightManager<T> : MonoBehaviour
 		{
 			return false;
 		}
+
 		instance.m_Container.Add(t);
 		return true;
 	}

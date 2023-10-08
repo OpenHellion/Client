@@ -58,30 +58,30 @@ namespace ZeroGravity.Objects
 
 		public new SpaceObject Parent
 		{
-			get
-			{
-				return base.Parent;
-			}
-			set
-			{
-				base.Parent = value;
-			}
+			get { return base.Parent; }
+			set { base.Parent = value; }
 		}
 
 		public void UpdateMovement()
 		{
 			if (Time.time - movementReceivedTime <= 1f)
 			{
-				base.transform.localPosition += (movementLocalVelocity + movementLocalVelocityCorrection) * Time.deltaTime;
-				base.transform.localRotation = Quaternion.Slerp(base.transform.localRotation, movementTargetLocalRotation, Mathf.Pow(Time.time - movementReceivedTime, 0.5f));
-				if (base.CurrentRoomTrigger != null && base.CurrentRoomTrigger.GravityForce.IsNotEpsilonZero() && base.CurrentRoomTrigger.UseGravity)
+				base.transform.localPosition +=
+					(movementLocalVelocity + movementLocalVelocityCorrection) * Time.deltaTime;
+				base.transform.localRotation = Quaternion.Slerp(base.transform.localRotation,
+					movementTargetLocalRotation, Mathf.Pow(Time.time - movementReceivedTime, 0.5f));
+				if (base.CurrentRoomTrigger != null && base.CurrentRoomTrigger.GravityForce.IsNotEpsilonZero() &&
+				    base.CurrentRoomTrigger.UseGravity)
 				{
-					base.transform.localPosition += Vector3.Project(movementTargetLocalPosition - base.transform.localPosition, base.transform.up) * 0.1f;
+					base.transform.localPosition +=
+						Vector3.Project(movementTargetLocalPosition - base.transform.localPosition, base.transform.up) *
+						0.1f;
 				}
 			}
 		}
 
-		public void SetMovementData(Vector3 localPosition, Quaternion localRotation, Vector3 localVelocity, float timestamp)
+		public void SetMovementData(Vector3 localPosition, Quaternion localRotation, Vector3 localVelocity,
+			float timestamp)
 		{
 			movementReceivedTime = Time.time;
 			float num = movementTimestamp;
@@ -92,12 +92,15 @@ namespace ZeroGravity.Objects
 			float num2 = ((!(num > 0f)) ? 0f : (movementTimestamp - num));
 			movementTargetLocalPosition = localPosition;
 			movementLocalVelocity = localVelocity;
-			movementLocalVelocityCorrection = ((!(num2 < 1f)) ? Vector3.zero : ((vector - base.transform.localPosition) * num2));
+			movementLocalVelocityCorrection =
+				((!(num2 < 1f)) ? Vector3.zero : ((vector - base.transform.localPosition) * num2));
 			movementTargetLocalRotation = localRotation;
-			if (movementLocalVelocity == Vector3.zero || Vector3.Dot(movementLocalVelocity.normalized, vector2.normalized) < 0f)
+			if (movementLocalVelocity == Vector3.zero ||
+			    Vector3.Dot(movementLocalVelocity.normalized, vector2.normalized) < 0f)
 			{
 				base.transform.localPosition = movementTargetLocalPosition;
 			}
+
 			if (movementTargetLocalRotation == quaternion)
 			{
 				base.transform.localRotation = movementTargetLocalRotation;
@@ -113,6 +116,7 @@ namespace ZeroGravity.Objects
 			{
 				tpsController = base.transform.GetComponent<OtherCharacterController>();
 			}
+
 			InitInventory();
 			tpsController.PlayerName = PlayerName;
 		}
@@ -133,7 +137,8 @@ namespace ZeroGravity.Objects
 				child.parent = parentTransform;
 				child.localScale = Vector3.one;
 				child.localPosition = Vector3.zero;
-				child.localRotation = Quaternion.Euler((!(child.name == "Root")) ? Vector3.zero : new Vector3(0f, 90f, -90f));
+				child.localRotation =
+					Quaternion.Euler((!(child.name == "Root")) ? Vector3.zero : new Vector3(0f, 90f, -90f));
 				child.gameObject.SetActive(activeGeometry);
 			}
 		}
@@ -146,10 +151,12 @@ namespace ZeroGravity.Objects
 			tpsController.CurrentOutfit = o;
 			SetOutfitParent(o.OutfitTrans.GetChildren(), tpsController.Outfit, activeGeometry: true);
 			RefreshOutfitData();
-			tpsController.TransitionHelperGO.transform.parent = base.AnimHelper.GetBone(AnimatorHelper.HumanBones.Spine2);
+			tpsController.TransitionHelperGO.transform.parent =
+				base.AnimHelper.GetBone(AnimatorHelper.HumanBones.Spine2);
 			tpsController.TransitionHelperGO.transform.Reset();
 			Inventory.SetOutfit(o);
-			InventorySlot inventorySlot = tpsController.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Helmet).Values.FirstOrDefault();
+			InventorySlot inventorySlot = tpsController.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Helmet).Values
+				.FirstOrDefault();
 			if (inventorySlot != null && inventorySlot.Item != null)
 			{
 				Helmet helmet = inventorySlot.Item as Helmet;
@@ -157,7 +164,9 @@ namespace ZeroGravity.Objects
 				helmet.gameObject.SetActive(value: true);
 				helmet.AttachToObject(inventorySlot, sendAttachMessage: false);
 			}
-			InventorySlot inventorySlot2 = tpsController.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Jetpack).Values.FirstOrDefault();
+
+			InventorySlot inventorySlot2 = tpsController.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Jetpack)
+				.Values.FirstOrDefault();
 			if (inventorySlot2 != null && inventorySlot2.Item != null)
 			{
 				Jetpack jetpack = inventorySlot2.Item as Jetpack;
@@ -165,6 +174,7 @@ namespace ZeroGravity.Objects
 				jetpack.gameObject.SetActive(value: true);
 				jetpack.AttachToObject(inventorySlot2, sendAttachMessage: false);
 			}
+
 			if (HairObject != null)
 			{
 				HairObject.transform.parent = AnimatorHelperHair.GetBone(AnimatorHelper.HumanBones.Head);
@@ -178,10 +188,12 @@ namespace ZeroGravity.Objects
 		{
 			if (tpsController.CurrentOutfit != null)
 			{
-				tpsController.CurrentOutfit.SetOutfitParent(tpsController.Outfit.GetChildren(), tpsController.CurrentOutfit.OutfitTrans, activateGeometry: false);
+				tpsController.CurrentOutfit.SetOutfitParent(tpsController.Outfit.GetChildren(),
+					tpsController.CurrentOutfit.OutfitTrans, activateGeometry: false);
 				tpsController.CurrentOutfit.FoldedOutfitTrans.gameObject.SetActive(value: true);
 				return;
 			}
+
 			foreach (Transform child in tpsController.Outfit.GetChildren())
 			{
 				child.parent = tpsController.BasicOutfitHolder;
@@ -191,7 +203,8 @@ namespace ZeroGravity.Objects
 
 		public void TakeOffOutfit()
 		{
-			InventorySlot inventorySlot = tpsController.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Helmet).Values.FirstOrDefault();
+			InventorySlot inventorySlot = tpsController.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Helmet).Values
+				.FirstOrDefault();
 			if (inventorySlot != null && inventorySlot.Item != null)
 			{
 				Helmet helmet = inventorySlot.Item as Helmet;
@@ -199,7 +212,9 @@ namespace ZeroGravity.Objects
 				helmet.gameObject.SetActive(value: false);
 				helmet.transform.parent = tpsController.CurrentOutfit.transform;
 			}
-			InventorySlot inventorySlot2 = tpsController.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Jetpack).Values.FirstOrDefault();
+
+			InventorySlot inventorySlot2 = tpsController.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Jetpack)
+				.Values.FirstOrDefault();
 			if (inventorySlot2 != null && inventorySlot2.Item != null)
 			{
 				Jetpack jetpack = inventorySlot2.Item as Jetpack;
@@ -207,18 +222,22 @@ namespace ZeroGravity.Objects
 				jetpack.gameObject.SetActive(value: false);
 				jetpack.transform.parent = tpsController.CurrentOutfit.transform;
 			}
+
 			RemoveOutfit();
 			foreach (Transform child in tpsController.BasicOutfitHolder.GetChildren())
 			{
 				child.parent = tpsController.Outfit;
 				child.localPosition = Vector3.zero;
-				child.localRotation = Quaternion.Euler((!(child.name == "Root")) ? Vector3.zero : new Vector3(0f, 90f, -90f));
+				child.localRotation =
+					Quaternion.Euler((!(child.name == "Root")) ? Vector3.zero : new Vector3(0f, 90f, -90f));
 				child.gameObject.SetActive(value: true);
 			}
+
 			tpsController.CurrentOutfit = null;
 			RefreshOutfitData();
 			Inventory.SetOutfit(null);
-			tpsController.TransitionHelperGO.transform.parent = base.AnimHelper.GetBone(AnimatorHelper.HumanBones.Spine2);
+			tpsController.TransitionHelperGO.transform.parent =
+				base.AnimHelper.GetBone(AnimatorHelper.HumanBones.Spine2);
 			tpsController.TransitionHelperGO.transform.Reset();
 			if (HairObject != null)
 			{
@@ -235,17 +254,19 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			if (cmm.ParentType == SpaceObjectType.PlayerPivot && Parent is SpaceObjectVessel)
 			{
-				Pivot pivot = (Pivot)(Parent = Client.Instance.SolarSystem.GetArtificialBody(base.GUID) as Pivot);
+				Pivot pivot = (Pivot)(Parent = World.SolarSystem.GetArtificialBody(base.GUID) as Pivot);
 			}
 			else if (cmm.ParentType != SpaceObjectType.PlayerPivot && Parent is Pivot)
 			{
 				Pivot pivot2 = Parent as Pivot;
-				Parent = Client.Instance.GetVessel(cmm.ParentGUID);
-				Client.Instance.SolarSystem.RemoveArtificialBody(base.GUID);
-				UnityEngine.Object.Destroy(pivot2.gameObject);
+				Parent = World.GetVessel(cmm.ParentGUID);
+				World.SolarSystem.RemoveArtificialBody(base.GUID);
+				Destroy(pivot2.gameObject);
 			}
+
 			if (cmm.PivotReset && Parent is Pivot)
 			{
 				Vector3 value = cmm.PivotPositionCorrection.ToVector3();
@@ -254,12 +275,13 @@ namespace ZeroGravity.Objects
 			}
 			else if (Parent is SpaceObjectVessel && Parent.GUID != cmm.ParentGUID)
 			{
-				SpaceObjectVessel vessel = Client.Instance.GetVessel(cmm.ParentGUID);
+				SpaceObjectVessel vessel = World.GetVessel(cmm.ParentGUID);
 				if (vessel != null)
 				{
 					Parent = vessel;
 				}
 			}
+
 			tpsController.MovementMessageReceived(cmm);
 		}
 
@@ -271,6 +293,7 @@ namespace ZeroGravity.Objects
 			{
 				array[i] = bone.FindChildByName(tpsController.ReferenceHead.bones[i].name);
 			}
+
 			tpsController.ReferenceHead.bones = array;
 		}
 
@@ -284,6 +307,7 @@ namespace ZeroGravity.Objects
 			{
 				array[i] = bone.FindChildByName(tpsController.ReferenceHead.bones[i].name);
 			}
+
 			tpsController.HeadSkin.bones = array;
 			tpsController.animHelper.aimIKController.UpdateIKBones();
 		}
@@ -297,15 +321,18 @@ namespace ZeroGravity.Objects
 				{
 					RemoveOutfit();
 				}
+
 				if (Inventory.ItemInHands != null && Inventory.ItemInHands is HandDrill)
 				{
 					UnityEngine.Object.Destroy((Inventory.ItemInHands as HandDrill).effectScript.gameObject);
 				}
+
 				base.gameObject.SetActive(value: false);
 				if (killPlayerMessage.CorpseDetails != null)
 				{
 					Corpse.SpawnCorpse(killPlayerMessage.CorpseDetails, this);
 				}
+
 				UnityEngine.Object.Destroy(base.gameObject);
 			}
 		}
@@ -319,6 +346,7 @@ namespace ZeroGravity.Objects
 					DynamicObjects.Add(DynamicObject.SpawnDynamicObject(item, this));
 				}
 			}
+
 			DynamicObjectDetailsQueue = null;
 		}
 
@@ -327,6 +355,7 @@ namespace ZeroGravity.Objects
 			if (!isDrilling || Inventory.CheckIfItemInHandsIsType<HandDrill>())
 			{
 			}
+
 			tpsController.animHelper.UpdateVelocities();
 		}
 
@@ -342,22 +371,30 @@ namespace ZeroGravity.Objects
 			{
 				return null;
 			}
-			if (Client.Instance.GetPlayer(characterDetails.GUID) != null)
+
+			if (World.GetPlayer(characterDetails.GUID) != null)
 			{
 				return null;
 			}
+
 			if (parent == null)
 			{
 				if (characterDetails.ParentID == MyPlayer.Instance.Parent.GUID)
 				{
 					parent = MyPlayer.Instance.Parent;
 				}
-				else if (characterDetails.ParentType == SpaceObjectType.Ship || characterDetails.ParentType == SpaceObjectType.Asteroid || characterDetails.ParentType == SpaceObjectType.PlayerPivot || characterDetails.ParentType == SpaceObjectType.Station)
+				else if (characterDetails.ParentType == SpaceObjectType.Ship ||
+				         characterDetails.ParentType == SpaceObjectType.Asteroid ||
+				         characterDetails.ParentType == SpaceObjectType.PlayerPivot ||
+				         characterDetails.ParentType == SpaceObjectType.Station)
 				{
-					parent = Client.Instance.SolarSystem.GetArtificialBody(characterDetails.ParentID);
+					parent = World.SolarSystem.GetArtificialBody(characterDetails.ParentID);
 				}
 			}
-			GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/ThirdPersonCharacter"), new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject;
+
+			GameObject gameObject =
+				UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/ThirdPersonCharacter"),
+					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject;
 			gameObject.SetActive(value: false);
 			OtherPlayer otherPlayer = gameObject.AddComponent<OtherPlayer>();
 			otherPlayer.tpsController = otherPlayer.GetComponent<OtherCharacterController>();
@@ -376,15 +413,20 @@ namespace ZeroGravity.Objects
 					genderItem = setting;
 				}
 			}
+
 			if (genderItem == null)
 			{
 				Dbg.Error("AAAAAAAAAAAAAA, trece lice dzenderica prsla");
 				return null;
 			}
+
 			b2 = (byte)((characterDetails.Gender != 0) ? 1 : 0);
 			otherPlayer.AnimatorHelperHair = genderItem.Outfit.GetComponent<AnimatorHelper>();
 			otherPlayer.tpsController.Outfit = genderItem.Outfit;
-			GameObject gameObject2 = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/Heads/" + characterDetails.Gender.ToString() + "/Head" + b)) as GameObject;
+			GameObject gameObject2 =
+				UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/Heads/" +
+				                                              characterDetails.Gender.ToString() + "/Head" +
+				                                              b)) as GameObject;
 			gameObject2.transform.parent = gameObject.transform;
 			gameObject2.transform.localPosition = new Vector3(0f, -1.34f, 0f);
 			gameObject2.transform.localRotation = Quaternion.identity;
@@ -392,24 +434,33 @@ namespace ZeroGravity.Objects
 			gameObject2.GetComponent<SkinnedMeshRenderer>().shadowCastingMode = ShadowCastingMode.On;
 			if (b2 != 0)
 			{
-				otherPlayer.HairObject = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/Hairs/" + characterDetails.Gender.ToString() + "/Hair" + b2)) as GameObject;
-				otherPlayer.HairObject.transform.parent = otherPlayer.AnimatorHelperHair.GetBone(AnimatorHelper.HumanBones.Head);
+				otherPlayer.HairObject =
+					UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/Hairs/" +
+					                                              characterDetails.Gender.ToString() + "/Hair" +
+					                                              b2)) as GameObject;
+				otherPlayer.HairObject.transform.parent =
+					otherPlayer.AnimatorHelperHair.GetBone(AnimatorHelper.HumanBones.Head);
 				otherPlayer.HairObject.transform.localPosition = Vector3.zero;
 				otherPlayer.HairObject.transform.localScale = Vector3.one;
 				otherPlayer.hairMesh = otherPlayer.HairObject.GetComponent<SkinnedMeshRenderer>();
 			}
+
 			otherPlayer.tpsController.HeadSkin = gameObject2.GetComponent<SkinnedMeshRenderer>();
-			otherPlayer.tpsController.HeadSkin.rootBone = otherPlayer.AnimatorHelperHair.GetBone(AnimatorHelper.HumanBones.Spine2);
+			otherPlayer.tpsController.HeadSkin.rootBone =
+				otherPlayer.AnimatorHelperHair.GetBone(AnimatorHelper.HumanBones.Spine2);
 			otherPlayer.tpsController.TPSAnimator = otherPlayer.AnimatorHelperHair.GetComponent<Animator>();
 			otherPlayer.tpsController.RagdollComponent = genderItem.Outfit.GetComponent<RagdollHelper>();
 			otherPlayer.tpsController.animHelper = otherPlayer.AnimatorHelperHair;
 			otherPlayer.tpsController.hips = otherPlayer.AnimatorHelperHair.GetBone(AnimatorHelper.HumanBones.Hips);
 			otherPlayer.tpsController.spine2 = otherPlayer.AnimatorHelperHair.GetBone(AnimatorHelper.HumanBones.Spine2);
-			otherPlayer.tpsController.ReferenceHead.rootBone = otherPlayer.AnimatorHelperHair.GetBone(AnimatorHelper.HumanBones.Spine2);
+			otherPlayer.tpsController.ReferenceHead.rootBone =
+				otherPlayer.AnimatorHelperHair.GetBone(AnimatorHelper.HumanBones.Spine2);
 			otherPlayer.UpdateReferenceHead();
 			otherPlayer.RefreshOutfitData();
-			otherPlayer.tpsController.TransitionHelperGO.transform.parent = otherPlayer.AnimatorHelperHair.GetBone(AnimatorHelper.HumanBones.Spine2);
-			otherPlayer.tpsController.TransitionHelperGO.GetComponent<TransitionTriggerHelper>().SetTransferableObject(otherPlayer);
+			otherPlayer.tpsController.TransitionHelperGO.transform.parent =
+				otherPlayer.AnimatorHelperHair.GetBone(AnimatorHelper.HumanBones.Spine2);
+			otherPlayer.tpsController.TransitionHelperGO.GetComponent<TransitionTriggerHelper>()
+				.SetTransferableObject(otherPlayer);
 			otherPlayer.tpsController.SetPlayer(otherPlayer);
 			otherPlayer.GUID = characterDetails.GUID;
 			otherPlayer.PlayerName = characterDetails.Name;
@@ -421,14 +472,17 @@ namespace ZeroGravity.Objects
 			{
 				targetingPoint.MainObject = otherPlayer;
 			}
-			Client.Instance.AddPlayer(otherPlayer.GUID, otherPlayer);
+
+			World.AddPlayer(otherPlayer.GUID, otherPlayer);
 			SceneSpawnPoint sceneSpawnPoint = null;
 			if (characterDetails.SpawnPointID > 0)
 			{
 				if (parent.Type == SpaceObjectType.Ship)
 				{
-					sceneSpawnPoint = (parent as Ship).GetStructureObject<SceneSpawnPoint>(characterDetails.SpawnPointID);
+					sceneSpawnPoint =
+						(parent as Ship).GetStructureObject<SceneSpawnPoint>(characterDetails.SpawnPointID);
 				}
+
 				if (sceneSpawnPoint != null)
 				{
 					otherPlayer.transform.position = sceneSpawnPoint.transform.position;
@@ -440,7 +494,9 @@ namespace ZeroGravity.Objects
 				otherPlayer.transform.localPosition = characterDetails.TransformData.LocalPosition.ToVector3();
 				otherPlayer.transform.localRotation = characterDetails.TransformData.LocalRotation.ToQuaternion();
 			}
-			otherPlayer.tpsController.SetTargetPositionAndRotation(otherPlayer.transform.localPosition, otherPlayer.transform.localRotation, instant: true);
+
+			otherPlayer.tpsController.SetTargetPositionAndRotation(otherPlayer.transform.localPosition,
+				otherPlayer.transform.localRotation, instant: true);
 			gameObject.SetActive(value: true);
 			otherPlayer.PlayerStatsMessageListener(new PlayerStatsMessage
 			{
@@ -460,11 +516,15 @@ namespace ZeroGravity.Objects
 					{
 						otherPlayer.InitInventory();
 					}
-					DynamicObjectDetails dynamicObjectDetails = characterDetails.DynamicObjects.Find((DynamicObjectDetails x) => x.AttachData.IsAttached && x.AttachData.InventorySlotID == -2);
+
+					DynamicObjectDetails dynamicObjectDetails =
+						characterDetails.DynamicObjects.Find((DynamicObjectDetails x) =>
+							x.AttachData.IsAttached && x.AttachData.InventorySlotID == -2);
 					if (dynamicObjectDetails != null)
 					{
 						DynamicObject.SpawnDynamicObject(dynamicObjectDetails, otherPlayer);
 					}
+
 					foreach (DynamicObjectDetails dynamicObject in characterDetails.DynamicObjects)
 					{
 						if (dynamicObject != dynamicObjectDetails)
@@ -474,27 +534,33 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
-			if (sceneSpawnPoint != null && sceneSpawnPoint.Executer != null)
+
+			if (sceneSpawnPoint != null && sceneSpawnPoint.Executor != null)
 			{
 				if (otherPlayer.tpsController == null)
 				{
 					otherPlayer.tpsController = otherPlayer.transform.GetComponent<OtherCharacterController>();
 				}
-				sceneSpawnPoint.Executer.SetExecuterDetails(new SceneTriggerExecuterDetails
+
+				sceneSpawnPoint.Executor.SetExecuterDetails(new SceneTriggerExecutorDetails
 				{
 					PlayerThatActivated = otherPlayer.GUID,
-					InSceneID = sceneSpawnPoint.Executer.InSceneID,
+					InSceneID = sceneSpawnPoint.Executor.InSceneID,
 					IsImmediate = true,
 					IsFail = false,
-					CurrentStateID = sceneSpawnPoint.Executer.CurrentStateID,
-					NewStateID = sceneSpawnPoint.Executer.GetStateID(sceneSpawnPoint.ExecuterState)
+					CurrentStateID = sceneSpawnPoint.Executor.CurrentStateID,
+					NewStateID = sceneSpawnPoint.Executor.GetStateID(sceneSpawnPoint.ExecuterState)
 				}, isInstant: false, null, checkCurrentState: false);
 			}
-			if (Client.Instance.CharacterInteractionStatesQueue.ContainsKey(otherPlayer.GUID))
+
+			if (World.CharacterInteractionStatesQueue.ContainsKey(otherPlayer.GUID))
 			{
-				Client.Instance.CharacterInteractionStatesQueue[otherPlayer.GUID].Executer.CharacterInteractInstant(Client.Instance.CharacterInteractionStatesQueue[otherPlayer.GUID], otherPlayer.GUID);
-				Client.Instance.CharacterInteractionStatesQueue.Remove(otherPlayer.GUID);
+				World.CharacterInteractionStatesQueue[otherPlayer.GUID].Executor
+					.CharacterInteractInstant(World.CharacterInteractionStatesQueue[otherPlayer.GUID],
+						otherPlayer.GUID);
+				World.CharacterInteractionStatesQueue.Remove(otherPlayer.GUID);
 			}
+
 			return otherPlayer;
 		}
 
@@ -544,11 +610,7 @@ namespace ZeroGravity.Objects
 			EventSystem.RemoveListener(typeof(KillPlayerMessage), KillPlayerMessageListener);
 			EventSystem.RemoveListener(typeof(PlayerDrillingMessage), PlayerDrillingMessageListener);
 			EventSystem.RemoveListener(typeof(PlayerStatsMessage), PlayerStatsMessageListener);
-			Client.Instance.RemovePlayer(base.GUID);
-		}
-
-		private void SwitchParentResponseListener(NetworkData data)
-		{
+			World.RemovePlayer(base.GUID);
 		}
 
 		public void PlayerDrillingMessageListener(NetworkData data)
@@ -571,6 +633,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			tpsController.animHelper.animationData.ReloadType = psm.ReloadType;
 			tpsController.animHelper.animationData.IsCrouch = (psm.AnimationStatesMask & 1) != 0;
 			tpsController.animHelper.animationData.IsJump = (psm.AnimationStatesMask & 2) != 0;
@@ -593,47 +656,80 @@ namespace ZeroGravity.Objects
 			tpsController.UpdateAnimatorOneFrame();
 			if (psm.LockedToTriggerID != null && Parent is SpaceObjectVessel)
 			{
-				LockedToTrigger = Parent.GeometryRoot.GetComponentsInChildren<BaseSceneTrigger>(includeInactive: true).FirstOrDefault((BaseSceneTrigger m) => m.GetID() == psm.LockedToTriggerID);
+				LockedToTrigger = Parent.GeometryRoot.GetComponentsInChildren<BaseSceneTrigger>(includeInactive: true)
+					.FirstOrDefault((BaseSceneTrigger m) => m.GetID() == psm.LockedToTriggerID);
 			}
 			else
 			{
 				LockedToTrigger = null;
 			}
-			float num = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Shot).Sum((PlayerDamage m) => m.Amount));
+
+			float num = ((psm.DamageList == null)
+				? 0f
+				: psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Shot)
+					.Sum((PlayerDamage m) => m.Amount));
 			if (num > float.Epsilon)
 			{
 				tpsController.HealthSounds.Play(1);
 			}
-			float num2 = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Pressure).Sum((PlayerDamage m) => m.Amount));
+
+			float num2 = ((psm.DamageList == null)
+				? 0f
+				: psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Pressure)
+					.Sum((PlayerDamage m) => m.Amount));
 			if (num2 > float.Epsilon)
 			{
 				tpsController.HealthSounds.Play(0);
 			}
-			float num3 = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Impact).Sum((PlayerDamage m) => m.Amount));
+
+			float num3 = ((psm.DamageList == null)
+				? 0f
+				: psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Impact)
+					.Sum((PlayerDamage m) => m.Amount));
 			if (num3 > float.Epsilon)
 			{
 				tpsController.HealthSounds.Play(1);
 			}
-			float num4 = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Suffocate).Sum((PlayerDamage m) => m.Amount));
+
+			float num4 = ((psm.DamageList == null)
+				? 0f
+				: psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Suffocate)
+					.Sum((PlayerDamage m) => m.Amount));
 			if (num4 > float.Epsilon)
 			{
 				tpsController.HealthSounds.Play(0);
 			}
-			float num5 = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Frost).Sum((PlayerDamage m) => m.Amount));
+
+			float num5 = ((psm.DamageList == null)
+				? 0f
+				: psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Frost)
+					.Sum((PlayerDamage m) => m.Amount));
 			if (num5 > float.Epsilon)
 			{
 			}
-			float num6 = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Heat).Sum((PlayerDamage m) => m.Amount));
+
+			float num6 = ((psm.DamageList == null)
+				? 0f
+				: psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Heat)
+					.Sum((PlayerDamage m) => m.Amount));
 			if (num6 > float.Epsilon)
 			{
 				tpsController.HealthSounds.Play(1);
 			}
-			float num7 = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Shred).Sum((PlayerDamage m) => m.Amount));
+
+			float num7 = ((psm.DamageList == null)
+				? 0f
+				: psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.Shred)
+					.Sum((PlayerDamage m) => m.Amount));
 			if (num7 > float.Epsilon)
 			{
 				tpsController.HealthSounds.Play(1);
 			}
-			float num8 = ((psm.DamageList == null) ? 0f : psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.SpaceExposure).Sum((PlayerDamage m) => m.Amount));
+
+			float num8 = ((psm.DamageList == null)
+				? 0f
+				: psm.DamageList.Where((PlayerDamage m) => m.HurtType == HurtType.SpaceExposure)
+					.Sum((PlayerDamage m) => m.Amount));
 			if (num8 > float.Epsilon)
 			{
 				tpsController.HealthSounds.Play(1);
@@ -644,7 +740,8 @@ namespace ZeroGravity.Objects
 		{
 			base.transform.position = position;
 			base.transform.rotation = rotation;
-			tpsController.SetTargetPositionAndRotation(base.transform.localPosition, base.transform.localRotation, instant: true);
+			tpsController.SetTargetPositionAndRotation(base.transform.localPosition, base.transform.localRotation,
+				instant: true);
 		}
 
 		public override void EnterVessel(SpaceObjectVessel vessel)
@@ -662,12 +759,14 @@ namespace ZeroGravity.Objects
 			tpsController.ModifyPositionAndRotation(position, rotation);
 		}
 
-		public override void SetTargetPositionAndRotation(Vector3? position, Vector3? forward, Vector3? up, bool instant = false, double time = -1.0)
+		public override void SetTargetPositionAndRotation(Vector3? position, Vector3? forward, Vector3? up,
+			bool instant = false, double time = -1.0)
 		{
 			IsInVisibilityRange = true;
 			if (forward.HasValue && up.HasValue)
 			{
-				tpsController.SetTargetPositionAndRotation(position, Quaternion.LookRotation(forward.Value, up.Value), instant);
+				tpsController.SetTargetPositionAndRotation(position, Quaternion.LookRotation(forward.Value, up.Value),
+					instant);
 			}
 			else
 			{

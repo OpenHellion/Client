@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
+using OpenHellion;
 using POpusCodec;
 using POpusCodec.Enums;
 using Steamworks;
@@ -12,32 +13,41 @@ using ZeroGravity.Objects;
 using ZeroGravity.UI;
 using OpenHellion.Social.RichPresence;
 using OpenHellion.IO;
+using UnityEngine.Serialization;
 
 namespace ZeroGravity.Audio
 {
 	// TODO: Make this use Nakama instead.
 	public class VoiceCommTransmitter : MonoBehaviour
 	{
-		private AudioClip inAudioClip;
+		private AudioClip _inAudioClip;
 
-		private string micDevice;
+		private string _micDevice;
 
-		private int samplerate = 48000;
+		private const int SampleRate = 48000;
 
-		private bool talk;
+		private bool _talk;
 
-		private bool radio;
+		private bool _radio;
 
-		private OpusEncoder opusEncoder;
+		private OpusEncoder _opusEncoder;
 
-		private int lastSample;
+		private int _lastSample;
 
-		[SerializeField]
-		private float maxRadioDistance = 1000f;
+		[SerializeField, FormerlySerializedAs("maxRadioDistance")]
+		private float _maxRadioDistance = 1000f;
+
+		private static World _world;
+
+		private void Awake()
+		{
+			_world ??= GameObject.Find("/World").GetComponent<World>();
+		}
 
 		private void Start()
 		{
-			opusEncoder = new OpusEncoder(SamplingRate.Sampling48000, Channels.Mono, 56000, OpusApplicationType.Voip, Delay.Delay40ms);
+			_opusEncoder = new OpusEncoder(SamplingRate.Sampling48000, Channels.Mono, 56000, OpusApplicationType.Voip,
+				Delay.Delay40ms);
 		}
 
 		private void Update()
@@ -46,40 +56,44 @@ namespace ZeroGravity.Audio
 			{
 				return;
 			}
-			if (InputManager.GetButtonDown(InputManager.ConfigAction.Talk) && !talk)
+
+			if (InputManager.GetButtonDown(InputManager.ConfigAction.Talk) && !_talk)
 			{
 				if (Microphone.devices.Length > 0)
 				{
-					if (MyPlayer.isAudioDebug)
+					if (MyPlayer.IsAudioDebug)
 					{
 						Dbg.Log("Start " + AudioListener.volume);
 					}
-					micDevice = Microphone.devices[0];
-					inAudioClip = Microphone.Start(micDevice, loop: true, 5, samplerate);
-					lastSample = 0;
-					radio = false;
-					talk = true;
+
+					_micDevice = Microphone.devices[0];
+					_inAudioClip = Microphone.Start(_micDevice, loop: true, 5, SampleRate);
+					_lastSample = 0;
+					_radio = false;
+					_talk = true;
 				}
 			}
-			else if (InputManager.GetButtonDown(InputManager.ConfigAction.Radio) && !talk)
+			else if (InputManager.GetButtonDown(InputManager.ConfigAction.Radio) && !_talk)
 			{
 				if (Microphone.devices.Length > 0)
 				{
-					micDevice = Microphone.devices[0];
-					inAudioClip = Microphone.Start(micDevice, loop: true, 5, samplerate);
-					lastSample = 0;
-					radio = true;
-					talk = true;
+					_micDevice = Microphone.devices[0];
+					_inAudioClip = Microphone.Start(_micDevice, loop: true, 5, SampleRate);
+					_lastSample = 0;
+					_radio = true;
+					_talk = true;
 				}
 			}
-			else if ((InputManager.GetButtonUp(InputManager.ConfigAction.Talk) || InputManager.GetButtonUp(InputManager.ConfigAction.Radio)) && talk)
+			else if ((InputManager.GetButtonUp(InputManager.ConfigAction.Talk) ||
+			          InputManager.GetButtonUp(InputManager.ConfigAction.Radio)) && _talk)
 			{
-				if (MyPlayer.isAudioDebug)
+				if (MyPlayer.IsAudioDebug)
 				{
 					Dbg.Log("Stop " + AudioListener.volume);
 				}
-				inAudioClip = null;
-				talk = false;
+
+				_inAudioClip = null;
+				_talk = false;
 			}
 		}
 
@@ -89,73 +103,85 @@ namespace ZeroGravity.Audio
 			{
 				return;
 			}
+
 			SceneTriggerRoom currentRoomTrigger = MyPlayer.Instance.CurrentRoomTrigger;
 			Helmet currentHelmet = MyPlayer.Instance.CurrentHelmet;
-			if (!talk || inAudioClip is null || ((currentRoomTrigger is null || !(currentRoomTrigger.AirPressure > 0f)) && (currentHelmet is null || !currentHelmet.IsVisorActive)))
+			if (!_talk || _inAudioClip is null ||
+			    ((currentRoomTrigger is null || !(currentRoomTrigger.AirPressure > 0f)) &&
+			     (currentHelmet is null || !currentHelmet.IsVisorActive)))
 			{
 				return;
 			}
+
 			int num = -1;
 			List<byte[]> list = new List<byte[]>();
 			while (true)
 			{
-				int num2 = Microphone.GetPosition(micDevice);
+				int num2 = Microphone.GetPosition(_micDevice);
 				if (num2 == num)
 				{
 					break;
 				}
-				if (num2 < lastSample)
+
+				if (num2 < _lastSample)
 				{
-					num2 += inAudioClip.samples;
+					num2 += _inAudioClip.samples;
 				}
-				int num3 = num2 - lastSample;
-				int num4 = opusEncoder.FrameSizePerChannel * inAudioClip.channels;
+
+				int num3 = num2 - _lastSample;
+				int num4 = _opusEncoder.FrameSizePerChannel * _inAudioClip.channels;
 				if (num3 >= num4)
 				{
-					float[] array = new float[opusEncoder.FrameSizePerChannel * inAudioClip.channels];
-					if (lastSample + num4 > inAudioClip.samples)
+					float[] array = new float[_opusEncoder.FrameSizePerChannel * _inAudioClip.channels];
+					if (_lastSample + num4 > _inAudioClip.samples)
 					{
-						float[] array2 = new float[inAudioClip.samples - lastSample];
-						float[] array3 = new float[num4 - (inAudioClip.samples - lastSample)];
+						float[] array2 = new float[_inAudioClip.samples - _lastSample];
+						float[] array3 = new float[num4 - (_inAudioClip.samples - _lastSample)];
 						if (array2.Length > 0)
 						{
-							inAudioClip.GetData(array2, lastSample);
+							_inAudioClip.GetData(array2, _lastSample);
 							Array.Copy(array2, 0, array, array3.Length, array2.Length);
 						}
-						inAudioClip.GetData(array3, 0);
+
+						_inAudioClip.GetData(array3, 0);
 						Array.Copy(array3, 0, array, 0, array3.Length);
 					}
 					else
 					{
-						inAudioClip.GetData(array, lastSample);
+						_inAudioClip.GetData(array, _lastSample);
 					}
-					lastSample += opusEncoder.FrameSizePerChannel * inAudioClip.channels;
-					if (lastSample > inAudioClip.samples)
+
+					_lastSample += _opusEncoder.FrameSizePerChannel * _inAudioClip.channels;
+					if (_lastSample > _inAudioClip.samples)
 					{
-						lastSample %= inAudioClip.samples;
+						_lastSample %= _inAudioClip.samples;
 					}
-					ArraySegment<byte> arraySegment = opusEncoder.Encode(array);
+
+					ArraySegment<byte> arraySegment = _opusEncoder.Encode(array);
 					byte[] array4 = new byte[arraySegment.Count];
 					Array.Copy(arraySegment.Array, array4, arraySegment.Count);
 					list.Add(array4);
 				}
+
 				num = num2;
 			}
+
 			if (list.Count > 0)
 			{
 				VoiceCommDataMessage voiceCommDataMessage = new VoiceCommDataMessage
 				{
 					SourceGUID = MyPlayer.Instance.GUID,
-					IsRadioComm = radio,
+					IsRadioComm = _radio,
 					AudioPackets = list
 				};
 				byte[] msgBytes = await ProtoSerialiser.Pack(voiceCommDataMessage);
 				HashSet<OtherPlayer> hashSet = new HashSet<OtherPlayer>();
 				hashSet.UnionWith(GetAllPlayersFromSameVessel());
-				if (radio)
+				if (_radio)
 				{
-					hashSet.UnionWith(GetAllPlayersWithinRadius(transform.position, maxRadioDistance));
+					hashSet.UnionWith(GetAllPlayersWithinRadius(transform.position, _maxRadioDistance));
 				}
+
 				SendP2PPacketToPlayers(hashSet, msgBytes);
 			}
 		}
@@ -167,6 +193,7 @@ namespace ZeroGravity.Audio
 				SpaceObjectVessel mainVessel = (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel;
 				return mainVessel.GetComponentsInChildren<OtherPlayer>();
 			}
+
 			return new OtherPlayer[0];
 		}
 
@@ -174,13 +201,14 @@ namespace ZeroGravity.Audio
 		{
 			float num = radius * radius;
 			HashSet<OtherPlayer> hashSet = new HashSet<OtherPlayer>();
-			foreach (OtherPlayer value in Client.Instance.Players.Values)
+			foreach (OtherPlayer value in _world.Players.Values)
 			{
 				if ((value.transform.position - position).sqrMagnitude < num)
 				{
 					hashSet.Add(value);
 				}
 			}
+
 			return hashSet;
 		}
 
@@ -201,7 +229,7 @@ namespace ZeroGravity.Audio
 						//sni.SetSteamID(new CSteamID(ulong.Parse(otherPlayer.NativeId)));
 
 						// https://partner.steamgames.com/doc/api/steamnetworkingtypes#message_sending_flags
-						SteamNetworkingMessages.SendMessageToUser(ref sni, msg, (uint) msgBytes.Length, 8, 0);
+						SteamNetworkingMessages.SendMessageToUser(ref sni, msg, (uint)msgBytes.Length, 8, 0);
 					}
 					catch
 					{

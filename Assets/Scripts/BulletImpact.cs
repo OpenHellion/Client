@@ -21,19 +21,19 @@ public class BulletImpact : MonoBehaviour
 
 	public SoundEffect SoundEffect;
 
-	[CompilerGenerated]
-	private static Func<Collider, bool> _003C_003Ef__am_0024cache0;
+	[CompilerGenerated] private static Func<Collider, bool> _003C_003Ef__am_0024cache0;
 
-	[CompilerGenerated]
-	private static Func<Collider, bool> _003C_003Ef__am_0024cache1;
+	[CompilerGenerated] private static Func<Collider, bool> _003C_003Ef__am_0024cache1;
 
 	public void Play()
 	{
-		Collider[] source = Physics.OverlapSphere(base.transform.position, 0.2f, 1 << LayerMask.NameToLayer("Triggers"));
+		Collider[] source =
+			Physics.OverlapSphere(base.transform.position, 0.2f, 1 << LayerMask.NameToLayer("Triggers"));
 		if (_003C_003Ef__am_0024cache0 == null)
 		{
 			_003C_003Ef__am_0024cache0 = _003CPlay_003Em__0;
 		}
+
 		Collider collider = source.FirstOrDefault(_003C_003Ef__am_0024cache0);
 		SceneTriggerRoom sceneTriggerRoom = null;
 		if (collider != null)
@@ -46,12 +46,14 @@ public class BulletImpact : MonoBehaviour
 			{
 				_003C_003Ef__am_0024cache1 = _003CPlay_003Em__1;
 			}
+
 			collider = source.FirstOrDefault(_003C_003Ef__am_0024cache1);
 			if (collider != null)
 			{
 				sceneTriggerRoom = collider.GetComponent<SceneTriggerRoomSegment>().BaseRoom;
 			}
 		}
+
 		if (sceneTriggerRoom != null)
 		{
 			SoundEffect.SetEnvironment(sceneTriggerRoom.EnvironmentReverb);
@@ -80,6 +82,7 @@ public class BulletImpact : MonoBehaviour
 		{
 			UnityEngine.Object.Destroy(Decal);
 		}
+
 		UnityEngine.Object.Destroy(base.gameObject);
 	}
 

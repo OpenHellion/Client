@@ -13,10 +13,12 @@ namespace OpenHellion.IO
 			{
 				return true;
 			}
+
 			return false;
 		}
 
-		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+		public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+			JsonSerializer serializer)
 		{
 			try
 			{
@@ -25,6 +27,7 @@ namespace OpenHellion.IO
 					JObject jo = JObject.Load(reader);
 					return DynamicObjectAuxData.GetJsonData(jo, serializer);
 				}
+
 				if (objectType == typeof(SystemAuxData))
 				{
 					JObject jo2 = JObject.Load(reader);
@@ -34,6 +37,7 @@ namespace OpenHellion.IO
 			catch
 			{
 			}
+
 			return null;
 		}
 

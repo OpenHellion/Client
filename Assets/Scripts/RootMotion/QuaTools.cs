@@ -10,10 +10,12 @@ namespace RootMotion
 			{
 				return Quaternion.identity;
 			}
+
 			if (weight >= 1f)
 			{
 				return q;
 			}
+
 			return Quaternion.Lerp(Quaternion.identity, q, weight);
 		}
 
@@ -23,10 +25,12 @@ namespace RootMotion
 			{
 				return Quaternion.identity;
 			}
+
 			if (weight >= 1f)
 			{
 				return q;
 			}
+
 			return Quaternion.Slerp(Quaternion.identity, q, weight);
 		}
 
@@ -41,6 +45,7 @@ namespace RootMotion
 			{
 				angle = 0f - angle;
 			}
+
 			return Quaternion.AngleAxis(angle, axis);
 		}
 
@@ -55,6 +60,7 @@ namespace RootMotion
 			{
 				return Quaternion.identity;
 			}
+
 			return to * Quaternion.Inverse(from);
 		}
 
@@ -68,6 +74,7 @@ namespace RootMotion
 			{
 				flag = true;
 			}
+
 			float num3 = Vector3.Dot(v, Vector3.up);
 			float num4 = Mathf.Abs(num3);
 			if (num4 > num2)
@@ -76,6 +83,7 @@ namespace RootMotion
 				vector = Vector3.up;
 				flag = num3 < 0f;
 			}
+
 			float num5 = Vector3.Dot(v, Vector3.forward);
 			num4 = Mathf.Abs(num5);
 			if (num4 > num2)
@@ -83,10 +91,12 @@ namespace RootMotion
 				vector = Vector3.forward;
 				flag = num5 < 0f;
 			}
+
 			if (flag)
 			{
 				vector = -vector;
 			}
+
 			return vector;
 		}
 	}

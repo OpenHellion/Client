@@ -13,28 +13,22 @@ namespace RootMotion.Demos
 			Linear = 1
 		}
 
-		[Tooltip("The component that updates the camera.")]
-		[SerializeField]
+		[Tooltip("The component that updates the camera.")] [SerializeField]
 		private CameraController cameraController;
 
-		[Tooltip("Acceleration of movement.")]
-		[SerializeField]
+		[Tooltip("Acceleration of movement.")] [SerializeField]
 		private float accelerationTime = 0.2f;
 
-		[Tooltip("Turning speed.")]
-		[SerializeField]
+		[Tooltip("Turning speed.")] [SerializeField]
 		private float turnTime = 0.2f;
 
-		[Tooltip("If true, will run on left shift, if not will walk on left shift.")]
-		[SerializeField]
+		[Tooltip("If true, will run on left shift, if not will walk on left shift.")] [SerializeField]
 		private bool walkByDefault = true;
 
-		[Tooltip("Smooth or linear rotation.")]
-		[SerializeField]
+		[Tooltip("Smooth or linear rotation.")] [SerializeField]
 		private RotationMode rotationMode;
 
-		[Tooltip("Procedural motion speed (if not using root motion).")]
-		[SerializeField]
+		[Tooltip("Procedural motion speed (if not using root motion).")] [SerializeField]
 		private float moveSpeed = 3f;
 
 		private Animator animator;
@@ -77,41 +71,47 @@ namespace RootMotion.Demos
 			{
 				return;
 			}
+
 			Vector3 inputVector = GetInputVector();
 			if (inputVector == Vector3.zero)
 			{
 				return;
 			}
+
 			Vector3 forward = base.transform.forward;
 			switch (rotationMode)
 			{
-			case RotationMode.Smooth:
-			{
-				Vector3 vector = cameraController.transform.rotation * inputVector;
-				float current = Mathf.Atan2(forward.x, forward.z) * 57.29578f;
-				float target = Mathf.Atan2(vector.x, vector.z) * 57.29578f;
-				float angle = Mathf.SmoothDampAngle(current, target, ref angleVel, turnTime);
-				base.transform.rotation = Quaternion.AngleAxis(angle, Vector3.up);
-				break;
-			}
-			case RotationMode.Linear:
-			{
-				Vector3 inputVectorRaw = GetInputVectorRaw();
-				if (inputVectorRaw != Vector3.zero)
+				case RotationMode.Smooth:
 				{
-					linearTargetDirection = cameraController.transform.rotation * inputVectorRaw;
+					Vector3 vector = cameraController.transform.rotation * inputVector;
+					float current = Mathf.Atan2(forward.x, forward.z) * 57.29578f;
+					float target = Mathf.Atan2(vector.x, vector.z) * 57.29578f;
+					float angle = Mathf.SmoothDampAngle(current, target, ref angleVel, turnTime);
+					base.transform.rotation = Quaternion.AngleAxis(angle, Vector3.up);
+					break;
 				}
-				forward = Vector3.RotateTowards(forward, linearTargetDirection, Time.deltaTime * (1f / turnTime), 1f);
-				forward.y = 0f;
-				base.transform.rotation = Quaternion.LookRotation(forward);
-				break;
-			}
+				case RotationMode.Linear:
+				{
+					Vector3 inputVectorRaw = GetInputVectorRaw();
+					if (inputVectorRaw != Vector3.zero)
+					{
+						linearTargetDirection = cameraController.transform.rotation * inputVectorRaw;
+					}
+
+					forward = Vector3.RotateTowards(forward, linearTargetDirection, Time.deltaTime * (1f / turnTime),
+						1f);
+					forward.y = 0f;
+					base.transform.rotation = Quaternion.LookRotation(forward);
+					break;
+				}
 			}
 		}
 
 		private void Move()
 		{
-			float target = (walkByDefault ? ((!Input.GetKey(KeyCode.LeftShift)) ? 0.5f : 1f) : ((!Input.GetKey(KeyCode.LeftShift)) ? 1f : 0.5f));
+			float target = (walkByDefault
+				? ((!Input.GetKey(KeyCode.LeftShift)) ? 0.5f : 1f)
+				: ((!Input.GetKey(KeyCode.LeftShift)) ? 1f : 0.5f));
 			speed = Mathf.SmoothDamp(speed, target, ref speedVel, accelerationTime);
 			float num = GetInputVector().magnitude * speed;
 			animator.SetFloat("Speed", num);

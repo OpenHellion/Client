@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using ZeroGravity.UI;
 
 namespace ZeroGravity.Objects
 {
 	public class MilitaryCorpAssaultRifle : Weapon
 	{
-		[Title("UI")]
-		public GameObject regular;
+		[Title("UI")] public GameObject regular;
 
 		public GameObject stance;
 
@@ -28,7 +28,7 @@ namespace ZeroGravity.Objects
 				regular.SetActive(false);
 				stance.SetActive(true);
 				AmmoCountInStance.text = Quantity.ToString();
-				FireMode.sprite = Client.Instance.SpriteManager.GetSprite(CurrentWeaponMod.ModsFireMode);
+				FireMode.sprite = SpriteManager.Instance.GetSprite(CurrentWeaponMod.ModsFireMode);
 			}
 			else
 			{

@@ -17,28 +17,23 @@ namespace ZeroGravity.Objects
 
 		private Animator turretAnimator;
 
-		[SerializeField]
-		private PortableTurretTargettingHelper targettingHelper;
+		[SerializeField] private PortableTurretTargettingHelper targettingHelper;
 
 		public Transform detectionRaycastSource;
 
 		public List<Vector3> raycastDirections = new List<Vector3>();
 
-		[Range(0f, 1f)]
-		public float animationPercentage_Horizontal;
+		[Range(0f, 1f)] public float animationPercentage_Horizontal;
 
-		[Range(0f, 1f)]
-		public float animationPercentage_Vertical;
+		[Range(0f, 1f)] public float animationPercentage_Vertical;
 
 		private float oldPercentage_Horizontal;
 
 		private float oldPercentage_Vertical;
 
-		[SerializeField]
-		private Transform turretBaseMovable;
+		[SerializeField] private Transform turretBaseMovable;
 
-		[SerializeField]
-		private Transform turretBaseStatic;
+		[SerializeField] private Transform turretBaseStatic;
 
 		private HashSet<TargetingPoint> Targets = new HashSet<TargetingPoint>();
 
@@ -52,8 +47,7 @@ namespace ZeroGravity.Objects
 
 		public Collider[] FoldedColliders;
 
-		[SerializeField]
-		private TargetingPoint currentTarget;
+		[SerializeField] private TargetingPoint currentTarget;
 
 		public float leftRightAngle;
 
@@ -63,8 +57,7 @@ namespace ZeroGravity.Objects
 
 		public float vFrameDifference;
 
-		[Tooltip("HP per second")]
-		public float Damage;
+		[Tooltip("HP per second")] public float Damage;
 
 		private float elapsedTime;
 
@@ -80,8 +73,7 @@ namespace ZeroGravity.Objects
 
 		private bool rotationUpPlaying;
 
-		[SerializeField]
-		private ParticleSystem ShootingEffect;
+		[SerializeField] private ParticleSystem ShootingEffect;
 
 		public SoundEffect TurretSound;
 
@@ -89,8 +81,7 @@ namespace ZeroGravity.Objects
 
 		private bool playTargetingSound;
 
-		[SerializeField]
-		private float turretAngularSpeed;
+		[SerializeField] private float turretAngularSpeed;
 
 		private bool isShooting;
 
@@ -108,26 +99,26 @@ namespace ZeroGravity.Objects
 
 		public TargetingPoint CurrentTarget
 		{
-			get
-			{
-				return currentTarget;
-			}
+			get { return currentTarget; }
 			set
 			{
 				if (!(currentTarget == value))
 				{
 					if (value != null && currentTarget == null)
 					{
-						animationPercentage_Horizontal = turretAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1f;
+						animationPercentage_Horizontal =
+							turretAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1f;
 						oldPercentage_Horizontal = turretAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1f;
 						animationPercentage_Vertical = 0f;
 						oldPercentage_Vertical = 0.25f;
 						turretAnimator.SetBool("HasTarget", value: true);
 						TurretSound.Play(3);
 					}
-					else if ((!(value == null) || !(currentTarget != null)) && value != null && currentTarget != null && !(value.MainObject != currentTarget.MainObject))
+					else if ((!(value == null) || !(currentTarget != null)) && value != null && currentTarget != null &&
+					         !(value.MainObject != currentTarget.MainObject))
 					{
 					}
+
 					currentTarget = value;
 				}
 			}
@@ -137,18 +128,19 @@ namespace ZeroGravity.Objects
 		{
 			get
 			{
-				return (!(base.AttachPoint != null) || !(base.AttachPoint is ActiveSceneAttachPoint)) ? null : (base.AttachPoint as ActiveSceneAttachPoint).BaseVesselSystem;
+				return (!(base.AttachPoint != null) || !(base.AttachPoint is ActiveSceneAttachPoint))
+					? null
+					: (base.AttachPoint as ActiveSceneAttachPoint).BaseVesselSystem;
 			}
-			set
-			{
-			}
+			set { }
 		}
 
 		private new void Awake()
 		{
 			base.Awake();
 			turretAnimator = GetComponentInChildren<Animator>(includeInactive: true);
-			shootingRaycastMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("Player")) | (1 << LayerMask.NameToLayer("DynamicObject"));
+			shootingRaycastMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("Player")) |
+			                      (1 << LayerMask.NameToLayer("DynamicObject"));
 			EventSystem.AddListener(typeof(PortableTurretShootingMessage), PortableTurretShootingMessageListener);
 			radius = targettingHelper.GetComponent<SphereCollider>().radius;
 		}
@@ -170,11 +162,13 @@ namespace ZeroGravity.Objects
 				{
 					DestroyTurret();
 				}
-				else if (base.Health <= base.MaxHealth * 0.5f && portableTurretStats.Health.Value > base.MaxHealth * 0.5f)
+				else if (base.Health <= base.MaxHealth * 0.5f &&
+				         portableTurretStats.Health.Value > base.MaxHealth * 0.5f)
 				{
 					RestoreTurret();
 				}
 			}
+
 			base.ProcesStatsData(portableTurretStats);
 			if (portableTurretStats.IsStunned.HasValue)
 			{
@@ -188,6 +182,7 @@ namespace ZeroGravity.Objects
 				oldPercentage_Horizontal = 0f;
 				oldPercentage_Vertical = 0f;
 			}
+
 			if (portableTurretStats.IsActive.HasValue)
 			{
 				_isActive = portableTurretStats.IsActive.Value;
@@ -231,16 +226,19 @@ namespace ZeroGravity.Objects
 				ShootingEffect.Stop();
 				if (!isOnPlayer && !isDestroyed)
 				{
-					turretAnimator.SetBool("IsActive", !flag && BaseVesselSystem != null && BaseVesselSystem.Status == SystemStatus.Online);
+					turretAnimator.SetBool("IsActive",
+						!flag && BaseVesselSystem != null && BaseVesselSystem.Status == SystemStatus.Online);
 					targettingHelper.gameObject.SetActive(!flag);
 					_isActive = !flag;
 				}
 				else if (flag && !isDestroyed)
 				{
-					turretAnimator.SetBool("IsActive", !flag && BaseVesselSystem != null && BaseVesselSystem.Status == SystemStatus.Online);
+					turretAnimator.SetBool("IsActive",
+						!flag && BaseVesselSystem != null && BaseVesselSystem.Status == SystemStatus.Online);
 					_isActive = !flag;
 					canTarget = !flag;
 				}
+
 				Collider[] unfoldedColliders = UnfoldedColliders;
 				foreach (Collider collider in unfoldedColliders)
 				{
@@ -259,16 +257,14 @@ namespace ZeroGravity.Objects
 
 		private void Update()
 		{
-			if (!Client.IsGameBuild)
-			{
-				UpdateHealthIndicator(TestHealthPercentage, 1f);
-				ApplyTierColor();
-			}
 			if (IsActive && canTarget)
 			{
 				DoTurretRotation();
 				DoTargetting();
-				if (CurrentTarget != null && CurrentTarget.MainObject is MyPlayer && Mathf.Abs(vFrameDifference) < 0.1f && Mathf.Abs(hFrameDifference) < 0.1f && animationPercentage_Horizontal.IsEpsilonEqual(oldPercentage_Horizontal, 0.01f) && animationPercentage_Vertical.IsEpsilonEqual(oldPercentage_Vertical, 0.01f))
+				if (CurrentTarget is not null && CurrentTarget.MainObject is MyPlayer &&
+				    Mathf.Abs(vFrameDifference) < 0.1f && Mathf.Abs(hFrameDifference) < 0.1f &&
+				    animationPercentage_Horizontal.IsEpsilonEqual(oldPercentage_Horizontal, 0.01f) &&
+				    animationPercentage_Vertical.IsEpsilonEqual(oldPercentage_Vertical, 0.01f))
 				{
 					StartShooting();
 				}
@@ -276,7 +272,8 @@ namespace ZeroGravity.Objects
 				{
 					StopShooting();
 				}
-				if (CurrentTarget != null && CurrentTarget.Targetable && CurrentTarget.MainObject is DynamicObject)
+
+				if (CurrentTarget is not null && CurrentTarget.Targetable && CurrentTarget.MainObject is DynamicObject)
 				{
 					targetTimer += Time.deltaTime;
 					if (targetTimer >= LookAtTime)
@@ -286,6 +283,7 @@ namespace ZeroGravity.Objects
 						ResetTargetting();
 					}
 				}
+
 				if (shootingSoundPlaying)
 				{
 					shootTimer -= Time.deltaTime;
@@ -294,6 +292,7 @@ namespace ZeroGravity.Objects
 						shootTimer = 0.1f;
 					}
 				}
+
 				TurretSound.Play(3);
 			}
 			else
@@ -336,9 +335,13 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
-			Vector3 vector = ((!(CurrentTarget.MainObject is Player)) ? CurrentTarget.transform.position : (CurrentTarget.MainObject as Player).AnimHelper.GetBone(AnimatorHelper.HumanBones.Spine2).position);
+
+			Vector3 vector = ((!(CurrentTarget.MainObject is Player))
+				? CurrentTarget.transform.position
+				: (CurrentTarget.MainObject as Player).AnimHelper.GetBone(AnimatorHelper.HumanBones.Spine2).position);
 			Vector3 vec = vector - turretBaseMovable.position;
-			upDownAngle = Mathf.Clamp(135f - MathHelper.AngleSigned(turretBaseMovable.up, vec, turretBaseMovable.right), 0f, 135f);
+			upDownAngle = Mathf.Clamp(135f - MathHelper.AngleSigned(turretBaseMovable.up, vec, turretBaseMovable.right),
+				0f, 135f);
 			Vector3 vec2 = Vector3.ProjectOnPlane(vector - turretBaseStatic.position, turretBaseStatic.up);
 			leftRightAngle = MathHelper.AngleSigned(turretBaseStatic.forward, vec2, turretBaseStatic.up);
 			if (leftRightAngle <= 0f && leftRightAngle >= -180f)
@@ -349,6 +352,7 @@ namespace ZeroGravity.Objects
 			{
 				animationPercentage_Horizontal = leftRightAngle / 360f;
 			}
+
 			animationPercentage_Vertical = upDownAngle / 135f;
 			if (!animationPercentage_Horizontal.IsEpsilonEqual(oldPercentage_Horizontal, 0.001f))
 			{
@@ -357,15 +361,22 @@ namespace ZeroGravity.Objects
 				{
 					hFrameDifference *= -1f;
 				}
+
 				if (Mathf.Abs(hFrameDifference) > turretAngularSpeed * Time.deltaTime)
 				{
 					if (!rotationRightPlaying && !isShooting)
 					{
 						rotationRightPlaying = true;
 					}
-					for (animationPercentage_Horizontal = oldPercentage_Horizontal + turretAngularSpeed * Time.deltaTime * (float)MathHelper.Sign(hFrameDifference); animationPercentage_Horizontal > 1f; animationPercentage_Horizontal -= 1f)
+
+					for (animationPercentage_Horizontal = oldPercentage_Horizontal +
+					                                      turretAngularSpeed * Time.deltaTime *
+					                                      (float)MathHelper.Sign(hFrameDifference);
+					     animationPercentage_Horizontal > 1f;
+					     animationPercentage_Horizontal -= 1f)
 					{
 					}
+
 					while (animationPercentage_Horizontal < 0f)
 					{
 						animationPercentage_Horizontal += 1f;
@@ -375,13 +386,16 @@ namespace ZeroGravity.Objects
 				{
 					animationPercentage_Horizontal = oldPercentage_Horizontal + hFrameDifference;
 				}
+
 				oldPercentage_Horizontal = animationPercentage_Horizontal;
 				turretAnimator.CrossFade("Horizontal", 0f, 1, animationPercentage_Horizontal);
 			}
+
 			if (animationPercentage_Vertical.IsEpsilonEqual(oldPercentage_Vertical, 0.001f))
 			{
 				return;
 			}
+
 			vFrameDifference = animationPercentage_Vertical - oldPercentage_Vertical;
 			if (Mathf.Abs(vFrameDifference) > turretAngularSpeed * Time.deltaTime)
 			{
@@ -389,9 +403,15 @@ namespace ZeroGravity.Objects
 				{
 					rotationUpPlaying = true;
 				}
-				for (animationPercentage_Vertical = oldPercentage_Vertical + turretAngularSpeed * Time.deltaTime * (float)MathHelper.Sign(vFrameDifference); animationPercentage_Vertical > 1f; animationPercentage_Vertical -= 1f)
+
+				for (animationPercentage_Vertical = oldPercentage_Vertical +
+				                                    turretAngularSpeed * Time.deltaTime *
+				                                    (float)MathHelper.Sign(vFrameDifference);
+				     animationPercentage_Vertical > 1f;
+				     animationPercentage_Vertical -= 1f)
 				{
 				}
+
 				while (animationPercentage_Vertical < 0f)
 				{
 					animationPercentage_Vertical += 1f;
@@ -401,6 +421,7 @@ namespace ZeroGravity.Objects
 			{
 				animationPercentage_Vertical = oldPercentage_Vertical + vFrameDifference;
 			}
+
 			oldPercentage_Vertical = animationPercentage_Vertical;
 			turretAnimator.CrossFade("Vertical", 0f, 2, animationPercentage_Vertical);
 		}
@@ -408,21 +429,31 @@ namespace ZeroGravity.Objects
 		private void DoTargetting()
 		{
 			bool flag = true;
-			List<TargetingPoint> list = Targets.OrderByDescending((TargetingPoint y) => y.Priority).ThenBy((TargetingPoint x) => (!(x == null)) ? (x.transform.position - detectionRaycastSource.position).sqrMagnitude : float.MaxValue).ToList();
+			List<TargetingPoint> list = Targets.OrderByDescending((TargetingPoint y) => y.Priority)
+				.ThenBy((TargetingPoint x) =>
+					(!(x == null))
+						? (x.transform.position - detectionRaycastSource.position).sqrMagnitude
+						: float.MaxValue).ToList();
 			List<TargetingPoint> list2 = new List<TargetingPoint>();
 			foreach (TargetingPoint item in list)
 			{
-				if (item == null || (item.MainObject is DynamicObject && (item.MainObject as DynamicObject).IsAttached) || !item.Targetable || !item.gameObject.activeInHierarchy)
+				if (item == null ||
+				    (item.MainObject is DynamicObject && (item.MainObject as DynamicObject).IsAttached) ||
+				    !item.Targetable || !item.gameObject.activeInHierarchy)
 				{
 					list2.Add(item);
 					continue;
 				}
+
 				if ((item.MainObject is Player && !ShouldShootAtPlayer(item.MainObject as Player)) || !item.Targetable)
 				{
 					flag = true;
 					continue;
 				}
-				RaycastHit[] source = Physics.RaycastAll(detectionRaycastSource.position, item.transform.position - detectionRaycastSource.position, radius, shootingRaycastMask, QueryTriggerInteraction.Ignore);
+
+				RaycastHit[] source = Physics.RaycastAll(detectionRaycastSource.position,
+					item.transform.position - detectionRaycastSource.position, radius, shootingRaycastMask,
+					QueryTriggerInteraction.Ignore);
 				foreach (RaycastHit item2 in source.OrderBy((RaycastHit x) => x.distance))
 				{
 					Player componentInParent = item2.collider.GetComponentInParent<Player>();
@@ -432,24 +463,29 @@ namespace ZeroGravity.Objects
 						flag = false;
 						break;
 					}
+
 					Item componentInParent2 = item2.collider.GetComponentInParent<Item>();
 					if (componentInParent2 == this)
 					{
 						continue;
 					}
+
 					if (componentInParent2 != null && item.MainObject == componentInParent2.DynamicObj)
 					{
 						CurrentTarget = item;
 						flag = false;
 					}
+
 					break;
 				}
 			}
+
 			foreach (TargetingPoint item3 in list2)
 			{
 				Targets.Remove(item3);
 				TargetIgnoreList.Remove(item3);
 			}
+
 			if (flag || CurrentTarget == null)
 			{
 				ResetTargetting();
@@ -484,11 +520,13 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			TargetingPoint component = coli.GetComponent<TargetingPoint>();
 			if (!(component != null) || (!(component.MainObject is Player) && !(component.MainObject is DynamicObject)))
 			{
 				return;
 			}
+
 			Targets.Remove(component);
 			TargetIgnoreList.Remove(component);
 			component.Targetable = true;
@@ -499,6 +537,7 @@ namespace ZeroGravity.Objects
 				{
 					turretAnimator.CrossFade("ReconMode", 0f, 0, animationPercentage_Horizontal);
 				}
+
 				ResetTargetting();
 			}
 		}
@@ -511,10 +550,12 @@ namespace ZeroGravity.Objects
 
 		private bool ShouldShootAtPlayer(Player pl)
 		{
-			if (DynamicObj.Parent is SpaceObjectVessel && base.AttachPoint != null && !(DynamicObj.Parent as SpaceObjectVessel).IsPlayerAuthorized(MyPlayer.Instance))
+			if (DynamicObj.Parent is SpaceObjectVessel && base.AttachPoint != null &&
+			    !(DynamicObj.Parent as SpaceObjectVessel).IsPlayerAuthorized(MyPlayer.Instance))
 			{
 				return true;
 			}
+
 			return false;
 		}
 

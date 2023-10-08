@@ -27,6 +27,7 @@ namespace RootMotion
 			{
 				layerMask = (int)layerMask | (1 << LayerMask.NameToLayer(layerName));
 			}
+
 			return layerMask;
 		}
 
@@ -37,6 +38,7 @@ namespace RootMotion
 			{
 				layerMask = (int)layerMask | (1 << num);
 			}
+
 			return layerMask;
 		}
 
@@ -71,6 +73,7 @@ namespace RootMotion
 					}
 				}
 			}
+
 			return list.ToArray();
 		}
 
@@ -85,6 +88,7 @@ namespace RootMotion
 					list.Add(i);
 				}
 			}
+
 			return list.ToArray();
 		}
 

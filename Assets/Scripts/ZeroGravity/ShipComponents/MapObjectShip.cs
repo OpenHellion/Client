@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ZeroGravity.Math;
 using ZeroGravity.Objects;
+using ZeroGravity.UI;
 
 namespace ZeroGravity.ShipComponents
 {
@@ -24,43 +25,30 @@ namespace ZeroGravity.ShipComponents
 
 		public MeshRenderer IconRenderer;
 
-		private bool scanningConeActive;
+		private bool _scanningConeActive;
 
-		[NonSerialized]
-		public float ScanningConeAngle = 45f;
+		[NonSerialized] public float ScanningConeAngle = 45f;
 
-		public override string Name
-		{
-			get
-			{
-				return (MainObject as Ship).CommandVesselName;
-			}
-		}
+		public override string Name => (MainObject as Ship).CommandVesselName;
 
 		public override Sprite Icon
 		{
 			get
 			{
-				if (base.Map != null && this == base.Map.MyShip)
+				if (Map != null && this == Map.MyShip)
 				{
-					return Client.Instance.SpriteManager.GetSprite(MainObject as SpaceObjectVessel);
+					return SpriteManager.Instance.GetSprite(MainObject as SpaceObjectVessel);
 				}
-				return Client.Instance.SpriteManager.GetSprite(MainObject as SpaceObjectVessel, true);
+
+				return SpriteManager.Instance.GetSprite(MainObject as SpaceObjectVessel, true);
 			}
-			set
-			{
-			}
+			set { }
 		}
 
 		public override string Description
 		{
-			get
-			{
-				return (MainObject as SpaceObjectVessel).GetDescription();
-			}
-			set
-			{
-			}
+			get => (MainObject as SpaceObjectVessel).GetDescription();
+			set { }
 		}
 
 		public override OrbitParameters Orbit
@@ -71,6 +59,7 @@ namespace ZeroGravity.ShipComponents
 				{
 					return (MainObject as SpaceObjectVessel).LastKnownMapOrbit;
 				}
+
 				return base.Orbit;
 			}
 		}
@@ -79,23 +68,25 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (MainObject != null)
 			{
-				base.gameObject.SetLayerRecursively("Map");
+				gameObject.SetLayerRecursively("Map");
 				SetOrbit();
 				UpdateOrbitPlane();
 				SetIcon();
 				if ((MainObject as Ship).RadarSystem == null)
 				{
-					UnityEngine.Object.Destroy(ScanningCone);
-					UnityEngine.Object.Destroy(ScanningEffectCone);
-					UnityEngine.Object.Destroy(Yaw);
+					Destroy(ScanningCone);
+					Destroy(ScanningEffectCone);
+					Destroy(Yaw);
 				}
 			}
+
 			int renderQueue = MathHelper.RandomRange(0, 2000);
-			if ((((object)IconRenderer != null) ? IconRenderer.material : null) != null)
+			if ((IconRenderer != null ? IconRenderer.material : null) != null)
 			{
 				IconRenderer.material.renderQueue = renderQueue;
 			}
-			if ((((object)ObjectVisibilityBackground != null) ? ObjectVisibilityBackground.material : null) != null)
+
+			if ((ObjectVisibilityBackground != null ? ObjectVisibilityBackground.material : null) != null)
 			{
 				ObjectVisibilityBackground.material.renderQueue = renderQueue;
 			}
@@ -103,34 +94,43 @@ namespace ZeroGravity.ShipComponents
 
 		public override void UpdateObject()
 		{
-			Position.position = base.ObjectPosition;
+			Position.position = ObjectPosition;
 			Orbits.localScale = Vector3.one * (float)base.ObjectScale;
-			DistressVisual.SetActive(base.RadarVisibilityType == RadarVisibilityType.Distress);
-			if (base.Map == null || base.Map.SelectedObject != this)
+			DistressVisual.SetActive(RadarVisibilityType == RadarVisibilityType.Distress);
+			if (Map == null || Map.SelectedObject != this)
 			{
 				ToggleCone(false);
 			}
+
 			if (!(ScanningCone != null))
 			{
 				return;
 			}
-			ScanningCone.Activate(scanningConeActive && !ScanningEffectCone.activeSelf);
+
+			ScanningCone.Activate(_scanningConeActive && !ScanningEffectCone.activeSelf);
 			if (ScanningCone.activeSelf && (MainObject as Ship).RadarSystem != null)
 			{
 				if (ScanningConeAngle < 1f)
 				{
 					ScanningConeAngle = 1f;
 				}
-				double num = (double)(MainObject as Ship).RadarSystem.SignalAmplification * (MainObject as Ship).RadarSystem.GetCelestialSensivityModifier();
+
+				double num = (MainObject as Ship).RadarSystem.SignalAmplification *
+				             (MainObject as Ship).RadarSystem.GetCelestialSensitivityModifier();
 				if (MyPlayer.Instance.InDebrisField != null)
 				{
-					num *= (double)MyPlayer.Instance.InDebrisField.ScanningSensitivityMultiplier;
+					num *= MyPlayer.Instance.InDebrisField.ScanningSensitivityMultiplier;
 				}
-				float num2 = (float)((MainObject as Ship).RadarSystem.ActiveScanFuzzySensitivity * 1000.0 / (double)ScanningConeAngle * (double)ReferentRadarSignature * num);
-				float num3 = (float)(2.0 * System.Math.Tan((double)ScanningConeAngle * (System.Math.PI / 180.0) / 2.0));
-				ScanningCone.transform.localScale = new Vector3(num3 * num2, num3 * num2, num2) * (float)base.ObjectScale;
-				ScanningEffectCone.transform.localScale = ScanningCone.transform.localScale * ScanningEffectConeScaleMultiplier;
-				Yaw.transform.localScale = new Vector3(PitchYawScale, PitchYawScale, PitchYawScale) * (float)base.ObjectScale;
+
+				float num2 = (float)((MainObject as Ship).RadarSystem.ActiveScanFuzzySensitivity * 1000.0 /
+					(double)ScanningConeAngle * (double)ReferentRadarSignature * num);
+				float num3 = (float)(2.0 * System.Math.Tan(ScanningConeAngle * (System.Math.PI / 180.0) / 2.0));
+				ScanningCone.transform.localScale =
+					new Vector3(num3 * num2, num3 * num2, num2) * (float)base.ObjectScale;
+				ScanningEffectCone.transform.localScale =
+					ScanningCone.transform.localScale * ScanningEffectConeScaleMultiplier;
+				Yaw.transform.localScale =
+					new Vector3(PitchYawScale, PitchYawScale, PitchYawScale) * (float)base.ObjectScale;
 			}
 		}
 
@@ -140,35 +140,33 @@ namespace ZeroGravity.ShipComponents
 			{
 				return;
 			}
-			List<Vector3D> list = null;
-			bool parentChanged = false;
-			list = Orbit.GetFlightPathPositions(NumberOfOrbitPositions, 60.0, out parentChanged);
-			MyOrbitRenderer.positionCount = list.Count;
-			if (list != null && list.Count > 0)
+
+			List<Vector3D> flightPathPositions =
+				Orbit.GetFlightPathPositions(World, NumberOfOrbitPositions, 60.0, out var parentChanged);
+			MyOrbitRenderer.positionCount = flightPathPositions.Count;
+			if (flightPathPositions.Count > 0)
 			{
-				for (int i = 0; i < list.Count; i++)
+				for (int i = 0; i < flightPathPositions.Count; i++)
 				{
-					MyOrbitRenderer.SetPosition(i, list[i].ToVector3());
+					MyOrbitRenderer.SetPosition(i, flightPathPositions[i].ToVector3());
 				}
 			}
+
 			MyOrbitRenderer.transform.SetParent(Orbits);
 			MyOrbitRenderer.startColor = OrbitColor;
 			MyOrbitRenderer.endColor = OrbitColor;
-			bool loop = false;
-			if (Orbit.Eccentricity < 1.0 && Orbit.Eccentricity > 0.0 && !parentChanged)
-			{
-				loop = true;
-			}
+			bool loop = Orbit.Eccentricity < 1.0 && Orbit.Eccentricity > 0.0 && !parentChanged;
+
 			MyOrbitRenderer.loop = loop;
-			if (base.Map != null && base.Map.MyShip == this)
+			if (Map != null && Map.MyShip == this)
 			{
 				if (Orbit.PeriapsisDistance < Orbit.Parent.Radius)
 				{
-					base.Map.Panel.ShowWarning(Localization.GetLocalizedField("UnstableOrbit").ToUpper());
+					Map.NavPanel.ShowWarning(Localization.GetLocalizedField("UnstableOrbit").ToUpper());
 				}
 				else
 				{
-					base.Map.Panel.HideWarning();
+					Map.NavPanel.HideWarning();
 				}
 			}
 		}
@@ -178,10 +176,10 @@ namespace ZeroGravity.ShipComponents
 			if (Icon != null)
 			{
 				IconRenderer.material.SetTexture("_MainTex", Icon.texture);
-				float x = Icon.rect.width / (float)Icon.texture.width;
-				float y = Icon.rect.height / (float)Icon.texture.height;
-				float x2 = 1f - (Icon.rect.x + Icon.rect.width) / (float)Icon.texture.width;
-				float y2 = 1f - (Icon.rect.y + Icon.rect.height) / (float)Icon.texture.height;
+				float x = Icon.rect.width / Icon.texture.width;
+				float y = Icon.rect.height / Icon.texture.height;
+				float x2 = 1f - (Icon.rect.x + Icon.rect.width) / Icon.texture.width;
+				float y2 = 1f - (Icon.rect.y + Icon.rect.height) / Icon.texture.height;
 				IconRenderer.material.SetTextureScale("_MainTex", new Vector2(x, y));
 				IconRenderer.material.SetTextureOffset("_MainTex", new Vector2(x2, y2));
 			}
@@ -191,7 +189,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (ScanningCone != null)
 			{
-				scanningConeActive = val;
+				_scanningConeActive = val;
 				Pitch.Activate(val);
 				Yaw.Activate(val);
 			}

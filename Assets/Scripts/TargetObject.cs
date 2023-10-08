@@ -1,27 +1,32 @@
 using UnityEngine;
+using OpenHellion;
 using ZeroGravity;
 using ZeroGravity.Objects;
+using ZeroGravity.UI;
 
 public class TargetObject
 {
-	public ArtificialBody AB;
+	public ArtificialBody ArtificialBody;
 
 	public string Name
 	{
 		get
 		{
-			if (AB is Asteroid)
+			if (ArtificialBody is Asteroid)
 			{
-				return (AB as Asteroid).Name;
+				return (ArtificialBody as Asteroid).Name;
 			}
-			if (AB is Pivot)
+
+			if (ArtificialBody is Pivot)
 			{
-				return (AB as Pivot).GetComponentInChildren<OtherPlayer>().PlayerName;
+				return (ArtificialBody as Pivot).GetComponentInChildren<OtherPlayer>().PlayerName;
 			}
-			if (AB is Ship)
+
+			if (ArtificialBody is Ship)
 			{
-				return (AB as Ship).CommandVesselName;
+				return (ArtificialBody as Ship).CommandVesselName;
 			}
+
 			return "Unknown";
 		}
 	}
@@ -30,45 +35,42 @@ public class TargetObject
 	{
 		get
 		{
-			if (AB is Asteroid)
+			if (ArtificialBody is Asteroid)
 			{
-				return Client.Instance.SpriteManager.GetSprite((AB as Asteroid).Type);
+				return SpriteManager.Instance.GetSprite((ArtificialBody as Asteroid).Type);
 			}
-			if (AB is Pivot)
+
+			if (ArtificialBody is Pivot)
 			{
-				return Client.Instance.SpriteManager.GetSprite((AB as Pivot).Type);
+				return SpriteManager.Instance.GetSprite((ArtificialBody as Pivot).Type);
 			}
-			if (AB is SpaceObjectVessel)
+
+			if (ArtificialBody is SpaceObjectVessel)
 			{
-				return Client.Instance.SpriteManager.GetSprite(AB as SpaceObjectVessel, true);
+				return SpriteManager.Instance.GetSprite(ArtificialBody as SpaceObjectVessel, true);
 			}
-			return Client.Instance.SpriteManager.GetSprite(AB.Type);
+
+			return SpriteManager.Instance.GetSprite(ArtificialBody.Type);
 		}
 	}
 
-	public float Distance
-	{
-		get
-		{
-			return (float)(MyPlayer.Instance.Parent.Position - AB.Position).Magnitude;
-		}
-	}
+	public float Distance => (float)(MyPlayer.Instance.Parent.Position - ArtificialBody.Position).Magnitude;
 
-	public float DistanceFromCamera
-	{
-		get
-		{
-			return ((AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() - Quaternion.LookRotation(MyPlayer.Instance.Parent.Forward, MyPlayer.Instance.Parent.Up) * MyPlayer.Instance.FpsController.MainCamera.transform.position).magnitude;
-		}
-	}
+	public float DistanceFromCamera => ((ArtificialBody.Position - MyPlayer.Instance.Parent.Position).ToVector3() -
+	                                    Quaternion.LookRotation(MyPlayer.Instance.Parent.Forward,
+		                                    MyPlayer.Instance.Parent.Up) *
+	                                    MyPlayer.Instance.FpsController.MainCamera.transform.position).magnitude;
 
 	public float AngleFromCameraForward
 	{
 		get
 		{
-			Quaternion quaternion = Quaternion.LookRotation(MyPlayer.Instance.Parent.Forward, MyPlayer.Instance.Parent.Up);
+			Quaternion quaternion =
+				Quaternion.LookRotation(MyPlayer.Instance.Parent.Forward, MyPlayer.Instance.Parent.Up);
 			Vector3 to = quaternion * MyPlayer.Instance.FpsController.MainCamera.transform.forward;
-			return Vector3.Angle(((AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() - quaternion * MyPlayer.Instance.FpsController.MainCamera.transform.position).normalized, to);
+			return Vector3.Angle(
+				((ArtificialBody.Position - MyPlayer.Instance.Parent.Position).ToVector3() -
+				 quaternion * MyPlayer.Instance.FpsController.MainCamera.transform.position).normalized, to);
 		}
 	}
 }

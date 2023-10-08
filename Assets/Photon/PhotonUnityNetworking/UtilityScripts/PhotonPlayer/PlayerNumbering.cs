@@ -74,7 +74,7 @@ namespace Photon.Pun.UtilityScripts
 
             instance = this;
             if (dontDestroyOnLoad)
-            { 
+            {
                 DontDestroyOnLoad(this.gameObject);
             }
 

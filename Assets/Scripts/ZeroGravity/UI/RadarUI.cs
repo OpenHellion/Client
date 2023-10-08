@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using ZeroGravity.Math;
 using ZeroGravity.Objects;
@@ -11,11 +13,9 @@ namespace ZeroGravity.UI
 {
 	public class RadarUI : MonoBehaviour
 	{
-		[HideInInspector]
-		public bool CanRadarWork;
+		[HideInInspector] public bool CanRadarWork;
 
-		[HideInInspector]
-		public bool IsActive = true;
+		[HideInInspector] public bool IsActive = true;
 
 		public GameObject Root;
 
@@ -41,7 +41,17 @@ namespace ZeroGravity.UI
 
 		public GameObject RadarCroshair;
 
-		public int CurrentRadarRange => (int)(10000f * (MyPlayer.Instance.CurrentHelmet == null ? 1f : MyPlayer.Instance.CurrentHelmet.TierMultiplier));
+		[FormerlySerializedAs("_worldState")] [SerializeField] private World _world;
+		private Camera _mainCamera;
+
+		public int CurrentRadarRange => (int)(10000f * (MyPlayer.Instance.CurrentHelmet == null
+			? 1f
+			: MyPlayer.Instance.CurrentHelmet.TierMultiplier));
+
+		private void Awake()
+		{
+			_mainCamera = Camera.main;
+		}
 
 		private void Start()
 		{
@@ -57,11 +67,13 @@ namespace ZeroGravity.UI
 				ToggleTargeting(val: false);
 				return;
 			}
+
 			if (CanRadarWork && !base.gameObject.activeInHierarchy)
 			{
 				ToggleTargeting(val: true);
 				base.gameObject.SetActive(value: true);
 			}
+
 			UpdateRadarList();
 			if (AllTargets.Count <= 0)
 			{
@@ -71,16 +83,19 @@ namespace ZeroGravity.UI
 			{
 				SetTarget(AllTargets[0]);
 			}
+
 			if (AllTargets.Count > 0)
 			{
 				UpdateOverlayTargets();
 				CalculateScaleAndRotation();
 			}
+
 			if (HoveredTarget != null && Mouse.current.leftButton.wasPressedThisFrame)
 			{
 				int index = AllTargets.IndexOf(HoveredTarget);
 				SetTarget(AllTargets[index]);
 			}
+
 			if (Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero() && AllTargets.Count > 0)
 			{
 				float axis = Mouse.current.scroll.y.ReadValue();
@@ -93,20 +108,26 @@ namespace ZeroGravity.UI
 				{
 					num = ((AllTargets.Count - 1 > num) ? (num + 1) : 0);
 				}
+
 				SetTarget(AllTargets[num]);
 			}
-			RadarCroshair.Activate(!Client.Instance.CanvasManager.CanvasUI.IsCroshairActive);
+
+			RadarCroshair.Activate(!_world.InGameGUI.IsCroshairActive);
 		}
 
 		public void UpdateRadarList()
 		{
 			Vector3D myPos = MyPlayer.Instance.Parent.Position + MyPlayer.Instance.transform.position.ToVector3D();
-			List<TargetObject> list2 = AllTargets.Where((TargetObject m) => m.AB == null || m.AB is not SpaceObjectVessel || !(m.AB as SpaceObjectVessel).IsMainVessel || m.Distance > CurrentRadarRange).ToList();
+			List<TargetObject> list2 = AllTargets.Where((TargetObject m) =>
+				m.ArtificialBody == null || m.ArtificialBody is not SpaceObjectVessel ||
+				!(m.ArtificialBody as SpaceObjectVessel).IsMainVessel || m.Distance > CurrentRadarRange).ToList();
 			foreach (TargetObject item in list2)
 			{
 				AllTargets.Remove(item);
 			}
-			TargetOverlayUI[] componentsInChildren = OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(includeInactive: true);
+
+			TargetOverlayUI[] componentsInChildren =
+				OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(includeInactive: true);
 			foreach (TargetOverlayUI targetOverlayUI in componentsInChildren)
 			{
 				if (list2.Contains(targetOverlayUI.Target))
@@ -114,16 +135,21 @@ namespace ZeroGravity.UI
 					Destroy(targetOverlayUI.gameObject);
 				}
 			}
-			List<ArtificialBody> list = AllTargets.Select((TargetObject m) => m.AB).ToList();
-			foreach (ArtificialBody item2 in Client.Instance.SolarSystem.ArtificialBodies.Where((ArtificialBody m) => m is SpaceObjectVessel && (m as SpaceObjectVessel).VesselData != null && (m as SpaceObjectVessel).IsMainVessel && !(m as SpaceObjectVessel).IsWarpOnline && (myPos - m.Position).Magnitude <= (double)CurrentRadarRange && !list.Contains(m)))
+
+			List<ArtificialBody> list = AllTargets.Select((TargetObject m) => m.ArtificialBody).ToList();
+			foreach (ArtificialBody item2 in _world.SolarSystem.ArtificialBodies.Where((ArtificialBody m) =>
+				         m is SpaceObjectVessel && (m as SpaceObjectVessel).VesselData != null &&
+				         (m as SpaceObjectVessel).IsMainVessel && !(m as SpaceObjectVessel).IsWarpOnline &&
+				         (myPos - m.Position).Magnitude <= (double)CurrentRadarRange && !list.Contains(m)))
 			{
 				TargetObject targetObject = new TargetObject
 				{
-					AB = item2
+					ArtificialBody = item2
 				};
 				AllTargets.Add(targetObject);
 				CreateOverlayTargets(targetObject);
 			}
+
 			if (!AllTargets.Contains(SelectedTarget))
 			{
 				SetTarget(AllTargets.FirstOrDefault());
@@ -133,31 +159,38 @@ namespace ZeroGravity.UI
 		public void CreateOverlayTargets(TargetObject target)
 		{
 			TargetOverlayUI targetOverlayUI = Instantiate(TargetOnScreen, OverlayTargets);
-			targetOverlayUI.AB = target.AB;
+			targetOverlayUI.AB = target.ArtificialBody;
 			targetOverlayUI.Target = target;
 			targetOverlayUI.Name.text = target.Name;
 		}
 
 		public void UpdateOverlayTargets()
 		{
-			TargetOverlayUI[] componentsInChildren = OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(includeInactive: true);
+			TargetOverlayUI[] componentsInChildren =
+				OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(includeInactive: true);
 			foreach (TargetOverlayUI targetOverlayUI in componentsInChildren)
 			{
 				if (targetOverlayUI.Name.text != targetOverlayUI.Target.Name)
 				{
 					targetOverlayUI.Name.text = targetOverlayUI.Target.Name;
 				}
-				Vector3 pos = !targetOverlayUI.Target.AB.IsDummyObject ? targetOverlayUI.Target.AB.transform.position : ((targetOverlayUI.Target.AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() - MyPlayer.Instance.transform.position);
+
+				Vector3 pos = !targetOverlayUI.Target.ArtificialBody.IsDummyObject
+					? targetOverlayUI.Target.ArtificialBody.transform.position
+					: ((targetOverlayUI.Target.ArtificialBody.Position - MyPlayer.Instance.Parent.Position)
+						.ToVector3() - MyPlayer.Instance.transform.position);
 				Vector2 localPoint = Vector2.zero;
 				Vector3 arrowUp;
 				Vector3 positionOnOverlay = GetPositionOnOverlay(pos, out arrowUp);
-				RectTransformUtility.ScreenPointToLocalPointInRectangle(OverlayTargets.GetComponent<RectTransform>(), positionOnOverlay, Client.Instance.CanvasManager.Canvas.worldCamera, out localPoint);
+				RectTransformUtility.ScreenPointToLocalPointInRectangle(OverlayTargets.GetComponent<RectTransform>(),
+					positionOnOverlay, _mainCamera, out localPoint);
 				targetOverlayUI.transform.localPosition = localPoint;
 				targetOverlayUI.transform.rotation = Quaternion.identity;
 				if (!targetOverlayUI.gameObject.activeInHierarchy)
 				{
 					targetOverlayUI.gameObject.SetActive(value: true);
 				}
+
 				if (arrowUp != Vector3.zero)
 				{
 					targetOverlayUI.Distance.gameObject.Activate(value: false);
@@ -169,36 +202,50 @@ namespace ZeroGravity.UI
 					targetOverlayUI.Distance.gameObject.Activate(value: true);
 					targetOverlayUI.OffScreenTarget.gameObject.Activate(value: false);
 				}
-				HoveredTarget = AllTargets.OrderBy((TargetObject m) => m.AngleFromCameraForward).FirstOrDefault((TargetObject m) => m.AngleFromCameraForward < 3f);
+
+				HoveredTarget = AllTargets.OrderBy((TargetObject m) => m.AngleFromCameraForward)
+					.FirstOrDefault((TargetObject m) => m.AngleFromCameraForward < 3f);
 				if (HoveredTarget != targetOverlayUI.Target && targetOverlayUI.Hovered.activeInHierarchy)
 				{
 					targetOverlayUI.Hovered.SetActive(value: false);
 				}
-				if (HoveredTarget != null && HoveredTarget == targetOverlayUI.Target && !targetOverlayUI.Hovered.activeInHierarchy)
+
+				if (HoveredTarget != null && HoveredTarget == targetOverlayUI.Target &&
+				    !targetOverlayUI.Hovered.activeInHierarchy)
 				{
 					targetOverlayUI.Hovered.SetActive(value: true);
 				}
+
 				if (SelectedTarget != targetOverlayUI.Target && targetOverlayUI.Selected.activeInHierarchy)
 				{
 					targetOverlayUI.Default.SetActive(value: true);
 					targetOverlayUI.Selected.SetActive(value: false);
 					targetOverlayUI.Distance.color = Colors.GrayDefault;
 				}
-				if (SelectedTarget != null && SelectedTarget == targetOverlayUI.Target && !targetOverlayUI.Selected.activeInHierarchy)
+
+				if (SelectedTarget != null && SelectedTarget == targetOverlayUI.Target &&
+				    !targetOverlayUI.Selected.activeInHierarchy)
 				{
 					targetOverlayUI.Default.SetActive(value: false);
 					targetOverlayUI.Selected.SetActive(value: true);
 					targetOverlayUI.Distance.color = Colors.White;
 				}
-				if ((targetOverlayUI.Target == SelectedTarget || targetOverlayUI.Target == HoveredTarget) && !targetOverlayUI.NameHolder.activeInHierarchy)
+
+				if ((targetOverlayUI.Target == SelectedTarget || targetOverlayUI.Target == HoveredTarget) &&
+				    !targetOverlayUI.NameHolder.activeInHierarchy)
 				{
 					targetOverlayUI.NameHolder.SetActive(value: true);
 				}
-				if (targetOverlayUI.Target != SelectedTarget && targetOverlayUI.Target != HoveredTarget && targetOverlayUI.NameHolder.activeInHierarchy)
+
+				if (targetOverlayUI.Target != SelectedTarget && targetOverlayUI.Target != HoveredTarget &&
+				    targetOverlayUI.NameHolder.activeInHierarchy)
 				{
 					targetOverlayUI.NameHolder.SetActive(value: false);
 				}
-				targetOverlayUI.Distance.text = FormatHelper.DistanceFormat(((targetOverlayUI.Target.AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() - MyPlayer.Instance.transform.position).magnitude);
+
+				targetOverlayUI.Distance.text = FormatHelper.DistanceFormat(
+					((targetOverlayUI.Target.ArtificialBody.Position - MyPlayer.Instance.Parent.Position).ToVector3() -
+					 MyPlayer.Instance.transform.position).magnitude);
 			}
 		}
 
@@ -206,7 +253,8 @@ namespace ZeroGravity.UI
 		{
 			arrowUp = Vector3.zero;
 			Vector3 vector = MyPlayer.Instance.FpsController.MainCamera.WorldToScreenPoint(pos);
-			if (vector.x < 0f || vector.x > (float)Screen.width || vector.y < 0f || vector.y > (float)Screen.height || vector.z < 0f)
+			if (vector.x < 0f || vector.x > (float)Screen.width || vector.y < 0f || vector.y > (float)Screen.height ||
+			    vector.z < 0f)
 			{
 				Vector3 vector2 = new Vector3(Screen.width, Screen.height, 0f) / 2f;
 				Vector3 vector3 = vector - vector2;
@@ -214,10 +262,16 @@ namespace ZeroGravity.UI
 				{
 					vector3 = Quaternion.Euler(0f, 0f, 180f) * vector3;
 				}
-				vector = (!(System.Math.Abs(vector3.x / (float)Screen.width) > System.Math.Abs(vector3.y / (float)Screen.height))) ? (vector3 / System.Math.Abs(vector3.y / ((float)Screen.height / 2f)) + vector2) : (vector3 / System.Math.Abs(vector3.x / ((float)Screen.width / 2f)) + vector2);
+
+				vector =
+					(!(System.Math.Abs(vector3.x / (float)Screen.width) >
+					   System.Math.Abs(vector3.y / (float)Screen.height)))
+						? (vector3 / System.Math.Abs(vector3.y / ((float)Screen.height / 2f)) + vector2)
+						: (vector3 / System.Math.Abs(vector3.x / ((float)Screen.width / 2f)) + vector2);
 				arrowUp = (vector2 - vector).normalized;
 				arrowUp.z = 0f;
 			}
+
 			vector.z = 0f;
 			return vector;
 		}
@@ -230,8 +284,13 @@ namespace ZeroGravity.UI
 				{
 					ParametersHolder.SetActive(value: true);
 				}
-				Vector3 vector = (SelectedTarget.AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() - MyPlayer.Instance.transform.position;
-				Vector3 vector2 = (SelectedTarget.AB.Velocity - MyPlayer.Instance.Parent.Velocity).ToVector3() - MyPlayer.Instance.rigidBody.velocity;
+
+				Vector3 vector =
+					(SelectedTarget.ArtificialBody.Position - MyPlayer.Instance.Parent.Position).ToVector3() -
+					MyPlayer.Instance.transform.position;
+				Vector3 vector2 =
+					(SelectedTarget.ArtificialBody.Velocity - MyPlayer.Instance.Parent.Velocity).ToVector3() -
+					MyPlayer.Instance.rigidBody.velocity;
 				Vector3 vector3 = Vector3.Project(vector2, vector.normalized);
 				Vector3 vector4 = Vector3.ProjectOnPlane(vector2, vector.normalized);
 				float magnitude = vector.magnitude;
@@ -246,7 +305,7 @@ namespace ZeroGravity.UI
 
 		private void SetTarget(TargetObject target = null)
 		{
-			if (target != null && target.AB != null)
+			if (target != null && target.ArtificialBody != null)
 			{
 				SelectedTarget = target;
 				TargetName.text = SelectedTarget.Name;
@@ -254,6 +313,7 @@ namespace ZeroGravity.UI
 				{
 					ParametersHolder.SetActive(value: true);
 				}
+
 				if (IsActive)
 				{
 					ToggleStarDust(value: true);
@@ -273,7 +333,7 @@ namespace ZeroGravity.UI
 				if (AllTargets.Count > 0)
 				{
 					ParticleSystem.MainModule main = MyPlayer.Instance.FpsController.StarDustParticle.main;
-					main.customSimulationSpace = SelectedTarget.AB.transform;
+					main.customSimulationSpace = SelectedTarget.ArtificialBody.transform;
 					MyPlayer.Instance.FpsController.StarDustParticle.gameObject.SetActive(value: true);
 					MyPlayer.Instance.FpsController.StarDustParticle.Play();
 				}

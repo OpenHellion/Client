@@ -65,6 +65,7 @@ namespace DigitalOpus.MB.Core
 			{
 				num = pos;
 			}
+
 			for (int i = 0; i < logMessages.Length; i++)
 			{
 				int num2 = (num + i) % logMessages.Length;
@@ -72,8 +73,10 @@ namespace DigitalOpus.MB.Core
 				{
 					break;
 				}
+
 				stringBuilder.AppendLine(logMessages[num2]);
 			}
+
 			return stringBuilder.ToString();
 		}
 	}

@@ -7,8 +7,7 @@ public class FlexibleUIData : ScriptableObject
 
 	public Sprite menuButtonSprite;
 
-	[Title("TRANSITION COLORS")]
-	public Color normal;
+	[Title("TRANSITION COLORS")] public Color normal;
 
 	public Color highlight;
 
@@ -16,8 +15,7 @@ public class FlexibleUIData : ScriptableObject
 
 	public Color disabled;
 
-	[Title("TYPE COLORS")]
-	public Color defaultColor;
+	[Title("TYPE COLORS")] public Color defaultColor;
 
 	public Color iconColor;
 

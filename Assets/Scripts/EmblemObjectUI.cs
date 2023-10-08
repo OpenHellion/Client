@@ -6,14 +6,11 @@ using ZeroGravity.UI;
 
 public class EmblemObjectUI : MonoBehaviour
 {
-	[NonSerialized]
-	public SecurityScreen Panel;
+	[NonSerialized] public SecurityScreen Panel;
 
-	[NonSerialized]
-	public string EmblemId;
+	[NonSerialized] public string EmblemId;
 
-	[NonSerialized]
-	public Texture2D Texture;
+	[NonSerialized] public Texture2D Texture;
 
 	public RawImage Image;
 

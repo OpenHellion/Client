@@ -68,15 +68,16 @@ namespace ZeroGravity.UI
 			StatusBarUI[] componentsInChildren = Root.GetComponentsInChildren<StatusBarUI>(true);
 			foreach (StatusBarUI statusBarUI in componentsInChildren)
 			{
-				UnityEngine.Object.DestroyImmediate(statusBarUI.gameObject);
+				DestroyImmediate(statusBarUI.gameObject);
 			}
+
 			IEnumerator enumerator = ResourcesTransform.GetComponentInChildren<Transform>(true).GetEnumerator();
 			try
 			{
 				while (enumerator.MoveNext())
 				{
 					Transform transform = (Transform)enumerator.Current;
-					UnityEngine.Object.Destroy(transform.gameObject);
+					Destroy(transform.gameObject);
 				}
 			}
 			finally
@@ -87,11 +88,13 @@ namespace ZeroGravity.UI
 					disposable.Dispose();
 				}
 			}
+
 			RecycleResourcesHolder.gameObject.SetActive(false);
 			if (item == null)
 			{
 				return;
 			}
+
 			CurrentItem = item;
 			ItemName.text = CurrentItem.Name;
 			ItemName.color = Colors.Tier[item.Tier];
@@ -105,7 +108,8 @@ namespace ZeroGravity.UI
 				MachineryPart machineryPart = item as MachineryPart;
 				Text itemTooltip = ItemTooltip;
 				itemTooltip.text = itemTooltip.text + " " + FormatHelper.PartTier(machineryPart);
-				if (machineryPart.PartType == MachineryPartType.NaniteCore || machineryPart.PartType == MachineryPartType.MillitaryNaniteCore)
+				if (machineryPart.PartType == MachineryPartType.NaniteCore ||
+				    machineryPart.PartType == MachineryPartType.MillitaryNaniteCore)
 				{
 					Armor.Activate(true);
 					ItemArmor.text = machineryPart.AuxValue.ToString("0.0");
@@ -135,6 +139,7 @@ namespace ZeroGravity.UI
 					AddBar(Localization.Capacity.ToUpper(), repairTool.Quantity, repairTool.MaxQuantity);
 				}
 			}
+
 			Text itemTooltip2 = ItemTooltip;
 			itemTooltip2.text = itemTooltip2.text + "\n" + item.GetInfo();
 			if (item.Expendable)
@@ -150,22 +155,27 @@ namespace ZeroGravity.UI
 					ItemHealth.text = FormatHelper.CurrentMax(item.Health, item.MaxHealth);
 				}
 			}
+
 			if (item is Canister || item is RepairTool || item is HandDrill)
 			{
 				Capacity.Activate(true);
 				if (item is Canister)
 				{
-					ItemCapacity.text = FormatHelper.CurrentMax((item as Canister).Quantity, (item as Canister).MaxQuantity);
+					ItemCapacity.text =
+						FormatHelper.CurrentMax((item as Canister).Quantity, (item as Canister).MaxQuantity);
 				}
 				else if (item is HandDrill)
 				{
-					ItemCapacity.text = FormatHelper.CurrentMax((item as HandDrill).Quantity, (item as HandDrill).MaxQuantity);
+					ItemCapacity.text =
+						FormatHelper.CurrentMax((item as HandDrill).Quantity, (item as HandDrill).MaxQuantity);
 				}
 				else
 				{
-					ItemCapacity.text = FormatHelper.CurrentMax((item as RepairTool).Quantity, (item as RepairTool).MaxQuantity);
+					ItemCapacity.text =
+						FormatHelper.CurrentMax((item as RepairTool).Quantity, (item as RepairTool).MaxQuantity);
 				}
 			}
+
 			if (item is IBatteryConsumer || item is Battery)
 			{
 				Battery.Activate(true);
@@ -178,11 +188,13 @@ namespace ZeroGravity.UI
 					ItemBattery.text = FormatHelper.Percentage((item as Battery).BatteryPrecentage);
 				}
 			}
+
 			if (item is Outfit)
 			{
 				Armor.Activate(true);
 				ItemArmor.text = (item as Outfit).Armor.ToString("0.0");
 			}
+
 			if (item is Weapon)
 			{
 				Ammo.Activate(true);
@@ -190,11 +202,13 @@ namespace ZeroGravity.UI
 				ItemAmmo.text = (item as Weapon).QuantityCheck();
 				ItemDamage.text = (item as Weapon).CurrentWeaponMod.Damage.ToString("0.0");
 			}
+
 			if (item is Magazine)
 			{
 				Ammo.Activate(true);
 				ItemAmmo.text = (item as Magazine).QuantityCheck();
 			}
+
 			if (recycle)
 			{
 				GetRecycleResources(item);
@@ -220,6 +234,7 @@ namespace ZeroGravity.UI
 					disposable.Dispose();
 				}
 			}
+
 			Dictionary<ResourceType, float> recycleResources = Item.GetRecycleResources(itm);
 			if (recycleResources != null)
 			{
@@ -229,11 +244,12 @@ namespace ZeroGravity.UI
 					gameObject.transform.localScale = Vector3.one;
 					gameObject.SetActive(true);
 					CargoResourceForCraftingUI component = gameObject.GetComponent<CargoResourceForCraftingUI>();
-					component.Icon.sprite = Client.Instance.SpriteManager.GetSprite(item.Key);
+					component.Icon.sprite = SpriteManager.Instance.GetSprite(item.Key);
 					component.Value.text = FormatHelper.FormatValue(item.Value);
 					component.Name.text = item.Key.ToLocalizedString().ToUpper();
 				}
 			}
+
 			RecycleResourcesHolder.transform.SetAsLastSibling();
 			RecycleResourcesHolder.gameObject.SetActive(true);
 		}

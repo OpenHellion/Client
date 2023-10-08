@@ -1,4 +1,5 @@
 using System.Linq;
+using OpenHellion;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
@@ -41,6 +42,7 @@ namespace ZeroGravity.Objects
 				{
 					return SceneTagObject.TagsToString(TaskObject.Tags);
 				}
+
 				return string.Empty;
 			}
 		}
@@ -53,6 +55,7 @@ namespace ZeroGravity.Objects
 				{
 					return Localization.GetLocalizedField(TaskObject.NameTag, useDefault: true);
 				}
+
 				Dbg.Error("Quest trigger has missing TaskObject (Quest ID: " + Quest.ID + ", QuestTriggerID: " + ID);
 				return string.Empty;
 			}
@@ -66,14 +69,16 @@ namespace ZeroGravity.Objects
 				{
 					return Localization.GetLocalizedField(TaskObject.DescriptionTag, useDefault: true);
 				}
+
 				Dbg.Error("Quest trigger has missing TaskObject (Quest ID: " + Quest.ID + ", QuestTriggerID: " + ID);
 				return string.Empty;
 			}
 		}
 
-		public QuestTrigger(Quest quest, QuestTriggerData data)
+		public QuestTrigger(QuestCollectionObject questCollection, Quest quest, QuestTriggerData data)
 		{
-			TaskObject = Client.Instance.QuestCollection.Tasks.FirstOrDefault((QuestTaskObject m) => m.QuestID == quest.ID && m.QuestTriggerID == data.ID);
+			TaskObject = questCollection.Tasks.FirstOrDefault((QuestTaskObject m) =>
+				m.QuestID == quest.ID && m.QuestTriggerID == data.ID);
 			ID = data.ID;
 			Quest = quest;
 			BatchID = data.BatchID;
@@ -82,16 +87,19 @@ namespace ZeroGravity.Objects
 			{
 				checkStation = true;
 			}
+
 			if (Tag != string.Empty)
 			{
 				checkTag = true;
 			}
+
 			CelestialGUID = data.Celestial;
 			checkCelestial = CelestialGUID != CelestialBodyGUID.None;
 			if (Type == QuestTriggerType.Activate)
 			{
 				Status = QuestStatus.Active;
 			}
+
 			DependencyBatchID = data.DependencyBatchID;
 			DependencyTpe = data.DependencyTpe;
 			TaskObject.Quest = Quest;
@@ -106,7 +114,9 @@ namespace ZeroGravity.Objects
 
 		public bool CheckLocation(SpaceObjectVessel vessel)
 		{
-			return (!checkStation || (checkStation && StationMainVesselGUID == vessel.MainVessel.GUID)) && (!checkCelestial || (checkCelestial && vessel.ParentCelesitalBody.GUID == (long)CelestialGUID)) && (!checkTag || (checkTag && SceneHelper.CompareTags(vessel.VesselData.Tag, Tag)));
+			return (!checkStation || (checkStation && StationMainVesselGUID == vessel.MainVessel.GUID)) &&
+			       (!checkCelestial || (checkCelestial && vessel.ParentCelesitalBody.GUID == (long)CelestialGUID)) &&
+			       (!checkTag || (checkTag && SceneHelper.CompareTags(vessel.VesselData.Tag, Tag)));
 		}
 	}
 }

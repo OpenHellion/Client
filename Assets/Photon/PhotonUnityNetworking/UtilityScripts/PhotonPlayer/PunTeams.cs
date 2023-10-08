@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="PunTeams.cs" company="Exit Games GmbH">
-//   Part of: Photon Unity Utilities, 
+//   Part of: Photon Unity Utilities,
 // </copyright>
 // <summary>
 // Implements teams in a room/game with help of player properties. Access them by Player.GetTeam extension.
@@ -8,7 +8,7 @@
 // <remarks>
 // Teams are defined by enum Team. Change this to get more / different teams.
 // There are no rules when / if you can join a team. You could add this in JoinTeam or something.
-// </remarks>                                                                                           
+// </remarks>
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
 

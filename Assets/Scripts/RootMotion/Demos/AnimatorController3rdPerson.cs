@@ -30,8 +30,11 @@ namespace RootMotion.Demos
 
 		private void OnAnimatorMove()
 		{
-			velocity = Vector3.Lerp(velocity, base.transform.rotation * Vector3.ClampMagnitude(moveInput, 1f) * moveSpeed, Time.deltaTime * blendSpeed);
-			base.transform.position += Vector3.Lerp(velocity * Time.deltaTime, animator.deltaPosition, rootMotionWeight);
+			velocity = Vector3.Lerp(velocity,
+				base.transform.rotation * Vector3.ClampMagnitude(moveInput, 1f) * moveSpeed,
+				Time.deltaTime * blendSpeed);
+			base.transform.position +=
+				Vector3.Lerp(velocity * Time.deltaTime, animator.deltaPosition, rootMotionWeight);
 		}
 
 		public virtual void Move(Vector3 moveInput, bool isMoving, Vector3 faceDirection, Vector3 aimTarget)
@@ -44,10 +47,12 @@ namespace RootMotion.Demos
 			{
 				num2 = Mathf.Clamp(num2, num - maxAngle, num2);
 			}
+
 			if (num < 0f - maxAngle)
 			{
 				num2 = Mathf.Clamp(num2, num2, num + maxAngle);
 			}
+
 			base.transform.Rotate(Vector3.up, num2);
 			moveBlend = Vector3.Lerp(moveBlend, moveInput, Time.deltaTime * blendSpeed);
 			animator.SetFloat("X", moveBlend.x);

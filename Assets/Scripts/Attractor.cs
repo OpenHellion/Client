@@ -17,6 +17,7 @@ public class Attractor : MonoBehaviour
 		{
 			return;
 		}
+
 		InitializeIfNeeded();
 		if (m_Particles.Length >= 1)
 		{
@@ -26,10 +27,13 @@ public class Attractor : MonoBehaviour
 			{
 				position -= pSys.transform.position;
 			}
+
 			for (int i = 0; i < particles; i++)
 			{
-				m_Particles[i].position = Vector3.MoveTowards(m_Particles[i].position, position, Time.deltaTime * attraction);
+				m_Particles[i].position =
+					Vector3.MoveTowards(m_Particles[i].position, position, Time.deltaTime * attraction);
 			}
+
 			pSys.SetParticles(m_Particles, particles);
 		}
 	}

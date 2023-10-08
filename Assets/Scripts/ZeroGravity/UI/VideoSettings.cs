@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using OpenHellion.Data;
+using OpenHellion.UI;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
@@ -9,7 +11,7 @@ namespace ZeroGravity.UI
 {
 	public class VideoSettings : MonoBehaviour
 	{
-		public static VideoSettingsData VideoData = new VideoSettingsData();
+		public VideoSettingsData VideoData = new VideoSettingsData();
 
 		public Resolution[] resolutions;
 
@@ -39,67 +41,26 @@ namespace ZeroGravity.UI
 
 		public Toggle ChromaticAberration;
 
-		public GameObject CantChangeTexture;
-
-		public GameObject CantChangeQuality;
-
 		public List<PostProcessProfile> PostEffectProfiles;
 
-		[SerializeField]
-		private GameObject _resolutionElement;
+		[SerializeField] private GameObject _resolutionElement;
 
 		private void Start()
 		{
 			qualitySettingsDropdown.value = VideoData.QualityIndex;
 			qualitySettingsDropdown.RefreshShownValue();
-			fullScreenToggle.onValueChanged.AddListener(delegate
-			{
-				OnFullscreenChange();
-			});
-			resolutionDropdown.onValueChanged.AddListener(delegate
-			{
-				OnResolutionChange();
-			});
-			qualitySettingsDropdown.onValueChanged.AddListener(delegate
-			{
-				OnQualityChange();
-			});
-			textureQualityDropdown.onValueChanged.AddListener(delegate
-			{
-				OnTextureChange();
-			});
-			shadowQualityDropdown.onValueChanged.AddListener(delegate
-			{
-				OnShadowChange();
-			});
-			antialiasingDropdown.onValueChanged.AddListener(delegate
-			{
-				OnAliasingChange();
-			});
-			VolumetricLighting.onValueChanged.AddListener(delegate
-			{
-				OnVolumetricChange();
-			});
-			AmbientOcclusion.onValueChanged.AddListener(delegate
-			{
-				AmbientOcclusionSetter();
-			});
-			MotionBlur.onValueChanged.AddListener(delegate
-			{
-				MotionBlurSetter();
-			});
-			EyeAdaptation.onValueChanged.AddListener(delegate
-			{
-				EyeAdaptationSetter();
-			});
-			Bloom.onValueChanged.AddListener(delegate
-			{
-				BloomSetter();
-			});
-			ChromaticAberration.onValueChanged.AddListener(delegate
-			{
-				ChromaticAberrationSetter();
-			});
+			fullScreenToggle.onValueChanged.AddListener(delegate { OnFullscreenChange(); });
+			resolutionDropdown.onValueChanged.AddListener(delegate { OnResolutionChange(); });
+			qualitySettingsDropdown.onValueChanged.AddListener(delegate { OnQualityChange(); });
+			textureQualityDropdown.onValueChanged.AddListener(delegate { OnTextureChange(); });
+			shadowQualityDropdown.onValueChanged.AddListener(delegate { OnShadowChange(); });
+			antialiasingDropdown.onValueChanged.AddListener(delegate { OnAliasingChange(); });
+			VolumetricLighting.onValueChanged.AddListener(delegate { OnVolumetricChange(); });
+			AmbientOcclusion.onValueChanged.AddListener(delegate { AmbientOcclusionSetter(); });
+			MotionBlur.onValueChanged.AddListener(delegate { MotionBlurSetter(); });
+			EyeAdaptation.onValueChanged.AddListener(delegate { EyeAdaptationSetter(); });
+			Bloom.onValueChanged.AddListener(delegate { BloomSetter(); });
+			ChromaticAberration.onValueChanged.AddListener(delegate { ChromaticAberrationSetter(); });
 
 			// Hide resolution dropdown if we are not in fullscreen.
 			_resolutionElement.SetActive(VideoData.Fullscreen);
@@ -115,6 +76,7 @@ namespace ZeroGravity.UI
 				Resolution resolution = array[i];
 				resolutionDropdown.options.Add(new Dropdown.OptionData(resolution.ToString()));
 			}
+
 			qualityLevels = QualitySettings.names;
 			qualitySettingsDropdown.options.Clear();
 			string[] array2 = qualityLevels;
@@ -163,37 +125,25 @@ namespace ZeroGravity.UI
 			VideoData.QualityIndex = qualitySettingsDropdown.value;
 			QualitySettings.SetQualityLevel(VideoData.QualityIndex, applyExpensiveChanges: false);
 			qualitySettingsDropdown.RefreshShownValue();
-			qualitySettingsDropdown.onValueChanged.AddListener(delegate
-			{
-				OnQualityChange();
-			});
+			qualitySettingsDropdown.onValueChanged.AddListener(delegate { OnQualityChange(); });
 
 			// Texture quality.
 			VideoData.TextureIndex = QualitySettings.masterTextureLimit;
 			textureQualityDropdown.value = VideoData.TextureIndex;
 			textureQualityDropdown.RefreshShownValue();
-			textureQualityDropdown.onValueChanged.AddListener(delegate
-			{
-				OnTextureChange();
-			});
+			textureQualityDropdown.onValueChanged.AddListener(delegate { OnTextureChange(); });
 
 			// Shadow quality.
 			VideoData.ShadowIndex = (int)QualitySettings.shadows;
 			shadowQualityDropdown.value = VideoData.ShadowIndex;
 			shadowQualityDropdown.RefreshShownValue();
-			shadowQualityDropdown.onValueChanged.AddListener(delegate
-			{
-				OnShadowChange();
-			});
+			shadowQualityDropdown.onValueChanged.AddListener(delegate { OnShadowChange(); });
 
 			// Anti-aliasing.
 			VideoData.AntialiasingIndex = 1;
 			antialiasingDropdown.value = VideoData.AntialiasingIndex;
 			antialiasingDropdown.RefreshShownValue();
-			antialiasingDropdown.onValueChanged.AddListener(delegate
-			{
-				OnAliasingChange();
-			});
+			antialiasingDropdown.onValueChanged.AddListener(delegate { OnAliasingChange(); });
 
 			// Volumetric lighing. TODO: Off until I can fix it.
 			VolumetricLighting.isOn = false;
@@ -209,20 +159,24 @@ namespace ZeroGravity.UI
 				Resolution resolution = array[i];
 				resolutionDropdown.options.Add(new Dropdown.OptionData(resolution.ToString()));
 			}
+
 			qualityLevels = QualitySettings.names;
 			string[] array2 = qualityLevels;
 			foreach (string text in array2)
 			{
 				qualitySettingsDropdown.options.Add(new Dropdown.OptionData(text.ToString()));
 			}
+
 			if (videoData == null)
 			{
 				SetDefault();
 				return;
 			}
+
 			VideoData = videoData;
 			resolutionDropdown.value = VideoData.ResolutionIndex;
-			Screen.SetResolution(resolutions[resolutionDropdown.value].width, resolutions[resolutionDropdown.value].height, VideoData.Fullscreen);
+			Screen.SetResolution(resolutions[resolutionDropdown.value].width,
+				resolutions[resolutionDropdown.value].height, VideoData.Fullscreen);
 			fullScreenToggle.isOn = VideoData.Fullscreen;
 			SetQualityOnStart();
 
@@ -236,7 +190,6 @@ namespace ZeroGravity.UI
 			antialiasingDropdown.RefreshShownValue();
 			// Disabled.
 			VolumetricLighting.isOn = false;
-			Client.Instance.VolumetricOption = false;
 
 			AmbientOcclusion.isOn = VideoData.AmbientOcclusion;
 			MotionBlur.isOn = VideoData.MotionBlur;
@@ -255,8 +208,6 @@ namespace ZeroGravity.UI
 			VideoData.ShadowIndex = shadowQualityDropdown.value;
 			VideoData.AntialiasingIndex = antialiasingDropdown.value;
 			VideoData.VolumetricLights = VolumetricLighting.isOn;
-			Client.Instance.VolumetricOption = VideoData.VolumetricLights;
-			Client.Instance.AntialiasingOption = VideoData.AntialiasingIndex;
 			QualitySettings.masterTextureLimit = VideoData.TextureIndex;
 			QualitySettings.shadows = (ShadowQuality)VideoData.ShadowIndex;
 			VideoData.AmbientOcclusion = AmbientOcclusion.isOn;
@@ -264,7 +215,6 @@ namespace ZeroGravity.UI
 			VideoData.EyeAdaptation = EyeAdaptation.isOn;
 			VideoData.Bloom = Bloom.isOn;
 			VideoData.ChromaticAberration = ChromaticAberration.isOn;
-			VideoData.isSaved = true;
 			UpdatePostEffects();
 		}
 
@@ -310,7 +260,8 @@ namespace ZeroGravity.UI
 
 		public void OnResolutionChange()
 		{
-			Screen.SetResolution(resolutions[resolutionDropdown.value].width, resolutions[resolutionDropdown.value].height, VideoData.Fullscreen);
+			Screen.SetResolution(resolutions[resolutionDropdown.value].width,
+				resolutions[resolutionDropdown.value].height, VideoData.Fullscreen);
 			VideoData.ResolutionIndex = resolutionDropdown.value;
 			resolutionDropdown.RefreshShownValue();
 		}
@@ -319,17 +270,20 @@ namespace ZeroGravity.UI
 		{
 			if (resolutions != null)
 			{
-				Screen.SetResolution(resolutions[VideoData.ResolutionIndex].width, resolutions[VideoData.ResolutionIndex].height, VideoData.Fullscreen);
+				Screen.SetResolution(resolutions[VideoData.ResolutionIndex].width,
+					resolutions[VideoData.ResolutionIndex].height, VideoData.Fullscreen);
 			}
 			else
 			{
-				Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, VideoData.Fullscreen);
+				Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height,
+					VideoData.Fullscreen);
 			}
 		}
 
 		public void OnQualityChange()
 		{
-			Client.Instance.ShowConfirmMessageBox(Localization.Video, Localization.SaveQualitySettings, Localization.Yes, Localization.No, ConfirmQualityChange);
+			GlobalGUI.ShowConfirmMessageBox(Localization.Video, Localization.SaveQualitySettings, Localization.Yes,
+				Localization.No, ConfirmQualityChange);
 		}
 
 		public void OnTextureChange()
@@ -366,10 +320,8 @@ namespace ZeroGravity.UI
 			VideoData.ShadowIndex = masterTextureLimit;
 
 			VideoData.AntialiasingIndex = antialiasingDropdown.value;
-			Client.Instance.AntialiasingOption = VideoData.AntialiasingIndex;
 
 			VideoData.VolumetricLights = VolumetricLighting.isOn;
-			Client.Instance.VolumetricOption = VideoData.VolumetricLights;
 
 			qualitySettingsDropdown.RefreshShownValue();
 			textureQualityDropdown.RefreshShownValue();

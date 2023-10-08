@@ -34,7 +34,8 @@ namespace ZeroGravity.UI
 			}
 		};
 
-		private Dictionary<CargoCompartment, RefuelingSubSystemPrefab> resourceContainers = new Dictionary<CargoCompartment, RefuelingSubSystemPrefab>();
+		private Dictionary<CargoCompartment, RefuelingSubSystemPrefab> resourceContainers =
+			new Dictionary<CargoCompartment, RefuelingSubSystemPrefab>();
 
 		private SpaceObjectVessel parentVessel;
 
@@ -44,6 +45,7 @@ namespace ZeroGravity.UI
 			{
 				parentVessel = GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
 			}
+
 			RefuelingStationText.text = "<color=#ec5500>AltCorp</color>" + Localization.RefuelingStation;
 			Invoke("MakeResourceContainers", 3f);
 		}
@@ -55,13 +57,17 @@ namespace ZeroGravity.UI
 			{
 				return;
 			}
+
 			foreach (CargoCompartment compartment in rcv.Compartments)
 			{
 				RefuelingSubSystemPrefab value;
 				if (resourceContainers.TryGetValue(compartment, out value))
 				{
-					value.ValueOfCompartment.text = "<color=#989898>" + (compartment.Capacity - compartment.AvailableCapacity).ToString("f1") + "</color> / " + compartment.Capacity.ToString("f1");
-					value.Filler.fillAmount = (compartment.Capacity - compartment.AvailableCapacity) / compartment.Capacity;
+					value.ValueOfCompartment.text = "<color=#989898>" +
+					                                (compartment.Capacity - compartment.AvailableCapacity).ToString(
+						                                "f1") + "</color> / " + compartment.Capacity.ToString("f1");
+					value.Filler.fillAmount =
+						(compartment.Capacity - compartment.AvailableCapacity) / compartment.Capacity;
 				}
 			}
 		}
@@ -72,13 +78,16 @@ namespace ZeroGravity.UI
 			{
 				return;
 			}
+
 			VesselSystem[] componentsInChildren = parentVessel.GeometryRoot.GetComponentsInChildren<VesselSystem>();
 			foreach (VesselSystem vesselSystem in componentsInChildren)
 			{
-				if (!(vesselSystem is SubSystemRCS) && !(vesselSystem is SubSystemEngine) && !(vesselSystem is GeneratorAir) && !(vesselSystem is GeneratorPower))
+				if (!(vesselSystem is SubSystemRCS) && !(vesselSystem is SubSystemEngine) &&
+				    !(vesselSystem is GeneratorAir) && !(vesselSystem is GeneratorPower))
 				{
 					continue;
 				}
+
 				ResourceContainer[] array = vesselSystem.ResourceContainers;
 				foreach (ResourceContainer resourceContainer in array)
 				{
@@ -86,14 +95,19 @@ namespace ZeroGravity.UI
 					{
 						try
 						{
-							GameObject gameObject = UnityEngine.Object.Instantiate(refuelingSubSystemPrefab, refuelingSubSystemPrefab.transform.parent);
+							GameObject gameObject = UnityEngine.Object.Instantiate(refuelingSubSystemPrefab,
+								refuelingSubSystemPrefab.transform.parent);
 							RefuelingSubSystemPrefab component = gameObject.GetComponent<RefuelingSubSystemPrefab>();
 							string value = vesselSystem.name;
 							namesOfSystems.TryGetValue(vesselSystem.GetType(), out value);
 							component.Name.text = value;
 							component.NameOfCompartment.text = compartment.Name;
-							component.ValueOfCompartment.text = "<color=#989898>" + (compartment.Capacity - compartment.AvailableCapacity).ToString("f1") + "</color> / " + compartment.Capacity.ToString("f1");
-							component.Filler.fillAmount = (compartment.Capacity - compartment.AvailableCapacity) / compartment.Capacity;
+							component.ValueOfCompartment.text = "<color=#989898>" +
+							                                    (compartment.Capacity - compartment.AvailableCapacity)
+							                                    .ToString("f1") + "</color> / " +
+							                                    compartment.Capacity.ToString("f1");
+							component.Filler.fillAmount = (compartment.Capacity - compartment.AvailableCapacity) /
+							                              compartment.Capacity;
 							gameObject.SetActive(true);
 							resourceContainers.Add(compartment, component);
 						}

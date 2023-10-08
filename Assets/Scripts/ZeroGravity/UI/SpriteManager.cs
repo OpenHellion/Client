@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion.UI;
 using UnityEngine;
 using ZeroGravity;
 using ZeroGravity.Data;
@@ -12,6 +13,20 @@ namespace ZeroGravity.UI
 {
 	public class SpriteManager : MonoBehaviour
 	{
+		public static SpriteManager Instance;
+
+		private void Awake()
+		{
+			if (Instance is not null)
+			{
+				Debug.LogError("SpriteManager already exists.");
+				Destroy(this);
+			}
+
+			DontDestroyOnLoad(this);
+			Instance = this;
+		}
+
 		[Serializable]
 		public class MachineryParts
 		{
@@ -87,7 +102,7 @@ namespace ZeroGravity.UI
 		[Serializable]
 		public class NotificationObject
 		{
-			public CanvasUI.NotificationType Key;
+			public InGameGUI.NotificationType Key;
 
 			public Sprite Sprite;
 		}
@@ -104,50 +119,35 @@ namespace ZeroGravity.UI
 
 		public Sprite DefaultMachineryPart;
 
-		[SerializeField]
-		private List<MachineryParts> _MachineryPartsSprites;
+		[SerializeField] private List<MachineryParts> _MachineryPartsSprites;
 
-		[HideInInspector]
-		public Dictionary<MachineryPartType, Sprite> MachineryPartsSprites;
+		[HideInInspector] public Dictionary<MachineryPartType, Sprite> MachineryPartsSprites;
 
-		[Space(30f)]
-		public Sprite DefaultGenericItemSprite;
+		[Space(30f)] public Sprite DefaultGenericItemSprite;
 
-		[SerializeField]
-		private List<GenericItems> _GenericItemsSprites;
+		[SerializeField] private List<GenericItems> _GenericItemsSprites;
 
-		[HideInInspector]
-		public Dictionary<GenericItemSubType, Sprite> GenericItemsSprites;
+		[HideInInspector] public Dictionary<GenericItemSubType, Sprite> GenericItemsSprites;
 
-		[Space(30f)]
-		public Sprite DefaultInventorySlotSprite;
+		[Space(30f)] public Sprite DefaultInventorySlotSprite;
 
-		[SerializeField]
-		private List<SlotTypes> _InventorySlotSprites;
+		[SerializeField] private List<SlotTypes> _InventorySlotSprites;
 
-		[HideInInspector]
-		public Dictionary<InventorySlot.Group, Sprite> InventorySlotSprites;
+		[HideInInspector] public Dictionary<InventorySlot.Group, Sprite> InventorySlotSprites;
 
-		[Space(30f)]
-		public Sprite DefaultAttachPointSprite;
+		[Space(30f)] public Sprite DefaultAttachPointSprite;
 
-		[SerializeField]
-		private List<AttachPoints> _AttachPointSprites;
+		[SerializeField] private List<AttachPoints> _AttachPointSprites;
 
-		[HideInInspector]
-		public Dictionary<Localization.StandardInteractionTip, Sprite> AttachPointSprites;
+		[HideInInspector] public Dictionary<Localization.StandardInteractionTip, Sprite> AttachPointSprites;
 
-		[Space(30f)]
-		public Sprite DefaultItemSprite;
+		[Space(30f)] public Sprite DefaultItemSprite;
 
-		[SerializeField]
-		private List<AllItems> _AllItemsSprites;
+		[SerializeField] private List<AllItems> _AllItemsSprites;
 
-		[HideInInspector]
-		public Dictionary<ItemType, Sprite> AllItemsSprites;
+		[HideInInspector] public Dictionary<ItemType, Sprite> AllItemsSprites;
 
-		[Space(30f)]
-		public Sprite DefaultSpaceObject;
+		[Space(30f)] public Sprite DefaultSpaceObject;
 
 		public Sprite MainStationSprite;
 
@@ -155,74 +155,67 @@ namespace ZeroGravity.UI
 
 		public Sprite CustomOrbitSprite;
 
-		[SerializeField]
-		private List<SpaceObjects> _SpaceObjectSprites;
+		[SerializeField] private List<SpaceObjects> _SpaceObjectSprites;
 
-		[HideInInspector]
-		public Dictionary<GameScenes.SceneID, Sprite> SpaceObjectSprites;
+		[HideInInspector] public Dictionary<GameScenes.SceneID, Sprite> SpaceObjectSprites;
 
-		[Space(30f)]
-		public Sprite DefaultRadarObject;
+		[Space(30f)] public Sprite DefaultRadarObject;
 
-		[SerializeField]
-		private List<RadarObjects> _RadarObjectsSprites;
+		[SerializeField] private List<RadarObjects> _RadarObjectsSprites;
 
-		[HideInInspector]
-		public Dictionary<SpaceObjectType, Sprite> RadarObjectsSprites;
+		[HideInInspector] public Dictionary<SpaceObjectType, Sprite> RadarObjectsSprites;
 
-		[Space(30f)]
-		public Sprite DefaultResourceObject;
+		[Space(30f)] public Sprite DefaultResourceObject;
 
-		[SerializeField]
-		private List<ResourceObject> _ResourceObjectsSprites;
+		[SerializeField] private List<ResourceObject> _ResourceObjectsSprites;
 
-		[HideInInspector]
-		public Dictionary<ResourceType, Sprite> ResourceObjectsSprites;
+		[HideInInspector] public Dictionary<ResourceType, Sprite> ResourceObjectsSprites;
 
-		[Space(30f)]
-		public Texture2D DefaultSceneTexture;
+		[Space(30f)] public Texture2D DefaultSceneTexture;
 
 		public Texture2D InviteTexture;
 
 		public Texture2D NewGameTexture;
 
-		[SerializeField]
-		private List<SceneObject> _SceneObjectTextures;
+		[SerializeField] private List<SceneObject> _SceneObjectTextures;
 
-		[HideInInspector]
-		public Dictionary<SpawnSetupType, Texture2D> SceneObjectTextures;
+		[HideInInspector] public Dictionary<SpawnSetupType, Texture2D> SceneObjectTextures;
 
-		[Space(30f)]
-		public Sprite DefaultNotificationSprite;
+		[Space(30f)] public Sprite DefaultNotificationSprite;
 
-		[SerializeField]
-		private List<NotificationObject> _NotificationObjectsSprites;
+		[SerializeField] private List<NotificationObject> _NotificationObjectsSprites;
 
-		[HideInInspector]
-		public Dictionary<CanvasUI.NotificationType, Sprite> NotificationObjectsSprites;
+		[HideInInspector] public Dictionary<InGameGUI.NotificationType, Sprite> NotificationObjectsSprites;
 
-		[Space(30f)]
-		public Sprite DefaultWeaponMod;
+		[Space(30f)] public Sprite DefaultWeaponMod;
 
-		[SerializeField]
-		private List<WeaponModObject> _WeaponModSprites;
+		[SerializeField] private List<WeaponModObject> _WeaponModSprites;
 
-		[HideInInspector]
-		public Dictionary<WeaponMod.FireMode, Sprite> WeaponModSprites;
+		[HideInInspector] public Dictionary<WeaponMod.FireMode, Sprite> WeaponModSprites;
 
 		private void Start()
 		{
-			SpaceObjectSprites = _SpaceObjectSprites.ToDictionary((SpaceObjects x) => x.Key, (SpaceObjects y) => y.Sprite);
-			MachineryPartsSprites = _MachineryPartsSprites.ToDictionary((MachineryParts x) => x.Key, (MachineryParts y) => y.Sprite);
-			GenericItemsSprites = _GenericItemsSprites.ToDictionary((GenericItems x) => x.Key, (GenericItems y) => y.Sprite);
+			SpaceObjectSprites =
+				_SpaceObjectSprites.ToDictionary((SpaceObjects x) => x.Key, (SpaceObjects y) => y.Sprite);
+			MachineryPartsSprites =
+				_MachineryPartsSprites.ToDictionary((MachineryParts x) => x.Key, (MachineryParts y) => y.Sprite);
+			GenericItemsSprites =
+				_GenericItemsSprites.ToDictionary((GenericItems x) => x.Key, (GenericItems y) => y.Sprite);
 			AllItemsSprites = _AllItemsSprites.ToDictionary((AllItems x) => x.Key, (AllItems y) => y.Sprite);
-			RadarObjectsSprites = _RadarObjectsSprites.ToDictionary((RadarObjects x) => x.Key, (RadarObjects y) => y.Sprite);
-			ResourceObjectsSprites = _ResourceObjectsSprites.ToDictionary((ResourceObject x) => x.Key, (ResourceObject y) => y.Sprite);
-			SceneObjectTextures = _SceneObjectTextures.ToDictionary((SceneObject x) => x.Key, (SceneObject y) => y.Texture);
-			InventorySlotSprites = _InventorySlotSprites.ToDictionary((SlotTypes x) => x.Key, (SlotTypes y) => y.Sprite);
-			NotificationObjectsSprites = _NotificationObjectsSprites.ToDictionary((NotificationObject x) => x.Key, (NotificationObject y) => y.Sprite);
-			AttachPointSprites = _AttachPointSprites.ToDictionary((AttachPoints x) => x.Key, (AttachPoints y) => y.Sprite);
-			WeaponModSprites = _WeaponModSprites.ToDictionary((WeaponModObject x) => x.Key, (WeaponModObject y) => y.Sprite);
+			RadarObjectsSprites =
+				_RadarObjectsSprites.ToDictionary((RadarObjects x) => x.Key, (RadarObjects y) => y.Sprite);
+			ResourceObjectsSprites =
+				_ResourceObjectsSprites.ToDictionary((ResourceObject x) => x.Key, (ResourceObject y) => y.Sprite);
+			SceneObjectTextures =
+				_SceneObjectTextures.ToDictionary((SceneObject x) => x.Key, (SceneObject y) => y.Texture);
+			InventorySlotSprites =
+				_InventorySlotSprites.ToDictionary((SlotTypes x) => x.Key, (SlotTypes y) => y.Sprite);
+			NotificationObjectsSprites = _NotificationObjectsSprites.ToDictionary((NotificationObject x) => x.Key,
+				(NotificationObject y) => y.Sprite);
+			AttachPointSprites =
+				_AttachPointSprites.ToDictionary((AttachPoints x) => x.Key, (AttachPoints y) => y.Sprite);
+			WeaponModSprites =
+				_WeaponModSprites.ToDictionary((WeaponModObject x) => x.Key, (WeaponModObject y) => y.Sprite);
 		}
 
 		public Sprite GetSprite(Item item)
@@ -231,10 +224,12 @@ namespace ZeroGravity.UI
 			{
 				return GetSprite((item as GenericItem).SubType);
 			}
+
 			if (item.Type == ItemType.MachineryPart)
 			{
 				return GetSprite((item as MachineryPart).PartType);
 			}
+
 			return GetSprite(item.Type);
 		}
 
@@ -244,10 +239,12 @@ namespace ZeroGravity.UI
 			{
 				return GetSprite(item.SubType);
 			}
+
 			if (item.Type == ItemType.MachineryPart)
 			{
 				return GetSprite(item.PartType);
 			}
+
 			return GetSprite(item.Type);
 		}
 
@@ -260,12 +257,15 @@ namespace ZeroGravity.UI
 				{
 					return value;
 				}
+
 				return DefaultSpaceObject;
 			}
+
 			if (mainVessel.IsStation)
 			{
 				return MainStationSprite;
 			}
+
 			return MainOutpostSprite;
 		}
 
@@ -275,6 +275,7 @@ namespace ZeroGravity.UI
 			{
 				return value;
 			}
+
 			return DefaultSpaceObject;
 		}
 
@@ -284,6 +285,7 @@ namespace ZeroGravity.UI
 			{
 				return value;
 			}
+
 			return DefaultMachineryPart;
 		}
 
@@ -293,6 +295,7 @@ namespace ZeroGravity.UI
 			{
 				return value;
 			}
+
 			return DefaultGenericItemSprite;
 		}
 
@@ -302,6 +305,7 @@ namespace ZeroGravity.UI
 			{
 				return value;
 			}
+
 			return DefaultInventorySlotSprite;
 		}
 
@@ -311,6 +315,7 @@ namespace ZeroGravity.UI
 			{
 				return value;
 			}
+
 			return DefaultItemSprite;
 		}
 
@@ -320,6 +325,7 @@ namespace ZeroGravity.UI
 			{
 				return value;
 			}
+
 			return DefaultAttachPointSprite;
 		}
 
@@ -329,6 +335,7 @@ namespace ZeroGravity.UI
 			{
 				return value;
 			}
+
 			return DefaultRadarObject;
 		}
 
@@ -338,6 +345,7 @@ namespace ZeroGravity.UI
 			{
 				return value;
 			}
+
 			return DefaultResourceObject;
 		}
 
@@ -347,15 +355,17 @@ namespace ZeroGravity.UI
 			{
 				return value;
 			}
+
 			return DefaultSceneTexture;
 		}
 
-		public Sprite GetSprite(CanvasUI.NotificationType notificationType)
+		public Sprite GetSprite(InGameGUI.NotificationType notificationType)
 		{
 			if (NotificationObjectsSprites.TryGetValue(notificationType, out var value))
 			{
 				return value;
 			}
+
 			return DefaultResourceObject;
 		}
 
@@ -365,6 +375,7 @@ namespace ZeroGravity.UI
 			{
 				return value;
 			}
+
 			return DefaultWeaponMod;
 		}
 	}

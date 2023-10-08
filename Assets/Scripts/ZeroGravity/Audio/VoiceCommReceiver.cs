@@ -13,11 +13,9 @@ namespace ZeroGravity.Audio
 {
 	public class VoiceCommReceiver : MonoBehaviour
 	{
-		[SerializeField]
-		public AudioSource audioSource;
+		[SerializeField] public AudioSource audioSource;
 
-		[SerializeField]
-		private AnimationCurve volumeCurve = new AnimationCurve(new Keyframe
+		[SerializeField] private AnimationCurve volumeCurve = new AnimationCurve(new Keyframe
 		{
 			time = 0f,
 			value = 1f,
@@ -31,37 +29,26 @@ namespace ZeroGravity.Audio
 			outTangent = 0f
 		});
 
-		[SerializeField]
-		private float maxAudibleDistance = 100f;
+		[SerializeField] private float maxAudibleDistance = 100f;
 
-		[SerializeField]
-		private float bulkheadFactor = 0.1f;
+		[SerializeField] private float bulkheadFactor = 0.1f;
 
-		[SerializeField]
-		[Range(0f, 1f)]
-		private float naturalVoiceSpatialBlend = 0.8f;
+		[SerializeField] [Range(0f, 1f)] private float naturalVoiceSpatialBlend = 0.8f;
 
-		[SerializeField]
-		private AudioReverbFilter naturalVoiceReverbFilter;
+		[SerializeField] private AudioReverbFilter naturalVoiceReverbFilter;
 
-		[SerializeField]
-		[Range(-10000f, 2000f)]
+		[SerializeField] [Range(-10000f, 2000f)]
 		private float reverbLeveNear;
 
-		[SerializeField]
-		[Range(-10000f, 2000f)]
+		[SerializeField] [Range(-10000f, 2000f)]
 		private float reverbLeveFar;
 
-		[Space(10f)]
-		[SerializeField]
-		[Range(0f, 1f)]
+		[Space(10f)] [SerializeField] [Range(0f, 1f)]
 		private float radioVoiceMaxVolume = 1f;
 
-		[SerializeField]
-		private Behaviour[] radioVoiceFilters;
+		[SerializeField] private Behaviour[] radioVoiceFilters;
 
-		[SerializeField]
-		private AnimationCurve NoiseCurve = new AnimationCurve(new Keyframe
+		[SerializeField] private AnimationCurve NoiseCurve = new AnimationCurve(new Keyframe
 		{
 			time = 0f,
 			value = 0f,
@@ -75,8 +62,7 @@ namespace ZeroGravity.Audio
 			outTangent = 2f
 		});
 
-		[SerializeField]
-		private float maxRadioDistance = 1000f;
+		[SerializeField] private float maxRadioDistance = 1000f;
 
 		private AudioClip outAudioClip;
 
@@ -101,6 +87,7 @@ namespace ZeroGravity.Audio
 			{
 				audioSource = GetComponent<AudioSource>();
 			}
+
 			opusDecoder = new OpusDecoder<float>(SamplingRate.Sampling48000, Channels.Mono);
 			outAudioClip = AudioClip.Create("VoiceCommAudioClip", samplerate * 10, 1, samplerate, true, OnAudioRead);
 			audioSource.clip = outAudioClip;
@@ -119,13 +106,15 @@ namespace ZeroGravity.Audio
 			{
 				return;
 			}
+
 			foreach (byte[] audioPacket in voiceCommDataMessage.AudioPackets)
 			{
 				DecodeAudioPacket(audioPacket);
 			}
+
 			isRadioComm = voiceCommDataMessage.IsRadioComm;
 			UpdateAudioParameters();
-			if (MyPlayer.isAudioDebug)
+			if (MyPlayer.IsAudioDebug)
 			{
 				Dbg.Log("Voice message arrived.");
 			}
@@ -139,6 +128,7 @@ namespace ZeroGravity.Audio
 				audioData.Clear();
 				return;
 			}
+
 			FrameBuffer buf = new FrameBuffer(bytes, FrameFlags.PartialFrame);
 			float[] collection = opusDecoder.DecodePacket(ref buf);
 			// float[] collection = opusDecoder.DecodePacketFloat(bytes);
@@ -157,13 +147,15 @@ namespace ZeroGravity.Audio
 			{
 				return;
 			}
+
 			if (isRadioComm)
 			{
 				distance = (MyPlayer.Instance.transform.position - thisPlayer.transform.position).magnitude;
-				if (MyPlayer.isAudioDebug)
+				if (MyPlayer.IsAudioDebug)
 				{
 					Dbg.Log("Voice distance " + distance);
 				}
+
 				if (distance <= maxRadioDistance)
 				{
 					naturalVoiceReverbFilter.enabled = false;
@@ -172,6 +164,7 @@ namespace ZeroGravity.Audio
 					{
 						behaviour.enabled = true;
 					}
+
 					audioSource.volume = radioVoiceMaxVolume;
 					audioSource.spatialBlend = 0f;
 				}
@@ -183,10 +176,11 @@ namespace ZeroGravity.Audio
 			else if (thisPlayer.CurrentRoomTrigger != null && thisPlayer.CurrentRoomTrigger.AirPressure > 0f)
 			{
 				float? num = MyPlayer.Instance.GetDistance(thisPlayer, out bool throughBulkhead);
-				if (MyPlayer.isAudioDebug)
+				if (MyPlayer.IsAudioDebug)
 				{
 					Dbg.Log("Voice distance " + num);
 				}
+
 				if (num.HasValue && num.Value <= maxAudibleDistance)
 				{
 					naturalVoiceReverbFilter.enabled = true;
@@ -195,8 +189,12 @@ namespace ZeroGravity.Audio
 					{
 						behaviour2.enabled = false;
 					}
-					audioSource.volume = volumeCurve.Evaluate(Mathf.Clamp01(num.Value / maxAudibleDistance)) * ((!throughBulkhead) ? 1f : bulkheadFactor) * thisPlayer.CurrentRoomTrigger.AirPressure;
-					naturalVoiceReverbFilter.reverbLevel = Mathf.Lerp(reverbLeveNear, reverbLeveFar, num.Value / maxAudibleDistance);
+
+					audioSource.volume = volumeCurve.Evaluate(Mathf.Clamp01(num.Value / maxAudibleDistance)) *
+					                     ((!throughBulkhead) ? 1f : bulkheadFactor) *
+					                     thisPlayer.CurrentRoomTrigger.AirPressure;
+					naturalVoiceReverbFilter.reverbLevel =
+						Mathf.Lerp(reverbLeveNear, reverbLeveFar, num.Value / maxAudibleDistance);
 					audioSource.spatialBlend = naturalVoiceSpatialBlend;
 				}
 			}
@@ -212,7 +210,8 @@ namespace ZeroGravity.Audio
 			{
 				if (audioData.Count >= data.Length)
 				{
-					if (maxRadioDistance > 0f && MathHelper.RandomRange(maxAudibleDistance / maxRadioDistance, 1f) > NoiseCurve.Evaluate(Mathf.Clamp01(distance / maxRadioDistance)))
+					if (maxRadioDistance > 0f && MathHelper.RandomRange(maxAudibleDistance / maxRadioDistance, 1f) >
+					    NoiseCurve.Evaluate(Mathf.Clamp01(distance / maxRadioDistance)))
 					{
 						Array.Copy(audioData.GetRange(0, data.Length).ToArray(), data, data.Length);
 					}
@@ -223,6 +222,7 @@ namespace ZeroGravity.Audio
 							data[i] = MathHelper.RandomRange(-0.1f, 0.1f);
 						}
 					}
+
 					audioData.RemoveRange(0, data.Length);
 				}
 				else
@@ -231,6 +231,7 @@ namespace ZeroGravity.Audio
 					Array.Clear(data, 0, data.Length - audioData.Count);
 					audioData.Clear();
 				}
+
 				emptyAudioFramesCounter = 0;
 			}
 			else

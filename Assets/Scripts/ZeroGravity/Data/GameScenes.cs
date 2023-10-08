@@ -77,12 +77,14 @@ namespace ZeroGravity.Data
 
 			public static bool IsDerelict(SceneID sceneId)
 			{
-				return sceneId == SceneID.Generic_Debris_JuncRoom001 || sceneId == SceneID.Generic_Debris_JuncRoom002 || sceneId == SceneID.Generic_Debris_Corridor001 || sceneId == SceneID.Generic_Debris_Corridor002;
+				return sceneId == SceneID.Generic_Debris_JuncRoom001 || sceneId == SceneID.Generic_Debris_JuncRoom002 ||
+				       sceneId == SceneID.Generic_Debris_Corridor001 || sceneId == SceneID.Generic_Debris_Corridor002;
 			}
 
 			public static bool IsShip(SceneID sceneId)
 			{
-				return sceneId == SceneID.AltCorp_Shuttle_SARA || sceneId == SceneID.AltCorp_Ship_Tamara || sceneId == SceneID.Slavica || sceneId == SceneID.AltCorp_Shuttle_CECA;
+				return sceneId == SceneID.AltCorp_Shuttle_SARA || sceneId == SceneID.AltCorp_Ship_Tamara ||
+				       sceneId == SceneID.Slavica || sceneId == SceneID.AltCorp_Shuttle_CECA;
 			}
 
 			public static bool IsAsteroid(SceneID sceneId)

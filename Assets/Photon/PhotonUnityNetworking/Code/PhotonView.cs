@@ -42,7 +42,7 @@ namespace Photon.Pun
                 MonoImporter.SetExecutionOrder(monoScript, photonViewExecutionOrder); // very early but allows other scripts to run even earlier...
             }
 
-            DestroyImmediate(go); 
+            DestroyImmediate(go);
         }
         #endif
 
@@ -61,7 +61,7 @@ namespace Photon.Pun
         bool ObservedComponentsFoldoutOpen = true;
         #pragma warning restore 0414
         #endif
-        
+
         #if UNITY_EDITOR
         /// called by Editor to reset the component
         private void Reset()
@@ -138,7 +138,7 @@ namespace Photon.Pun
 
         /// Default to manual so existing PVs in projects default to same as before. Reset() changes this to AutoAll for new implementations.
         public ObservableSearch observableSearch = ObservableSearch.Manual;
-        
+
         public List<Component> ObservedComponents;
 
 
@@ -152,7 +152,7 @@ namespace Photon.Pun
         {
             get { return this.IsRoomView; }
         }
-        
+
         /// <summary>True if the PhotonView was loaded with the scene (game object) or instantiated with InstantiateRoomObject.</summary>
         /// <remarks>
         /// Room objects are not owned by a particular player but belong to the scene. Thus they don't get destroyed when their
@@ -184,12 +184,12 @@ namespace Photon.Pun
         }
 
         public Player Controller { get; private set; }
-        
+
         public int CreatorActorNr { get; private set; }
 
         public bool AmOwner { get; private set; }
 
-        
+
         /// <summary>
         /// The owner of a PhotonView is the creator of an object by default Ownership can be transferred and the owner may not be in the room anymore. Objects in the scene don't have an owner.
         /// </summary>
@@ -235,7 +235,7 @@ namespace Photon.Pun
             }
         }
 
-        
+
         [NonSerialized]
         private int controllerActorNr;
 
@@ -280,7 +280,7 @@ namespace Photon.Pun
         /// This field is the "runtime" ViewID as backup for the property.
         [NonSerialized]
         private int viewIdField = 0;
-        
+
         /// <summary>
         /// The ID of the PhotonView. Identifies it in a networked game (per room).
         /// </summary>
@@ -300,7 +300,7 @@ namespace Photon.Pun
                     Debug.LogWarning("Changing a ViewID while it's in use is not possible (except setting it to 0 (not being used). Current ViewID: " + this.viewIdField);
                     return;
                 }
-                
+
                 if (value == 0 && this.viewIdField != 0)
                 {
                     PhotonNetwork.LocalCleanPhotonView(this);
@@ -331,7 +331,7 @@ namespace Photon.Pun
 
         protected internal bool removedFromLocalViewList;
 
-        
+
         /// <summary>Will FindObservables() and assign the sceneViewId, if that is != 0. This initializes the PhotonView if loaded with the scene. Called once by Unity, when this instance is created.</summary>
         protected internal void Awake()
         {
@@ -339,7 +339,7 @@ namespace Photon.Pun
             {
                 return;
             }
-            
+
             if (this.sceneViewId != 0)
             {
                 // PhotonNetwork.Instantiate will set a ViewID != 0 before the object awakes. So only objects loaded with the scene ever use the sceneViewId (even if the obj got pooled)
@@ -364,7 +364,7 @@ namespace Photon.Pun
             this.lastOnSerializeDataSent = null;
         }
 
-        
+
         /// called by OnJoinedRoom, OnMasterClientSwitched, OnPlayerEnteredRoom and OnEvent for OwnershipUpdate
         /// OnPlayerLeftRoom will set a new controller directly, if the controller or owner left
         internal void RebuildControllerCache(bool ownerHasChanged = false)
@@ -485,7 +485,7 @@ namespace Photon.Pun
         /// </summary>
         /// <remarks>
         /// This is called via PhotonView.Awake(), which in turn is called immediately by the engine's AddComponent method.
-        /// 
+        ///
         /// Changing the ObservedComponents of a PhotonView at runtime can be problematic, if other clients are not also
         /// updating their list.
         /// </remarks>
@@ -697,7 +697,7 @@ namespace Photon.Pun
             return PhotonNetwork.GetPhotonView(viewID);
         }
 
-        
+
         #region Callback Interfaces
 
 

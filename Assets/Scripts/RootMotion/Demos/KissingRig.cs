@@ -33,10 +33,7 @@ namespace RootMotion.Demos
 
 			private Transform neck
 			{
-				get
-				{
-					return ik.solver.spineMapping.spineBones[ik.solver.spineMapping.spineBones.Length - 1];
-				}
+				get { return ik.solver.spineMapping.spineBones[ik.solver.spineMapping.spineBones.Length - 1]; }
 			}
 
 			public void Initiate()
@@ -56,8 +53,14 @@ namespace RootMotion.Demos
 				InverseTransformEffector(FullBodyBipedEffector.LeftShoulder, mouth, mouthTarget.position, weight);
 				InverseTransformEffector(FullBodyBipedEffector.RightShoulder, mouth, mouthTarget.position, weight);
 				InverseTransformEffector(FullBodyBipedEffector.Body, mouth, mouthTarget.position, weight);
-				ik.solver.bodyEffector.position = Vector3.Lerp(new Vector3(ik.solver.bodyEffector.position.x, ik.solver.bodyEffector.bone.position.y, ik.solver.bodyEffector.position.z), ik.solver.bodyEffector.position, bodyWeightVertical * weight);
-				ik.solver.bodyEffector.position = Vector3.Lerp(new Vector3(ik.solver.bodyEffector.bone.position.x, ik.solver.bodyEffector.position.y, ik.solver.bodyEffector.bone.position.z), ik.solver.bodyEffector.position, bodyWeightHorizontal * weight);
+				ik.solver.bodyEffector.position = Vector3.Lerp(
+					new Vector3(ik.solver.bodyEffector.position.x, ik.solver.bodyEffector.bone.position.y,
+						ik.solver.bodyEffector.position.z), ik.solver.bodyEffector.position,
+					bodyWeightVertical * weight);
+				ik.solver.bodyEffector.position = Vector3.Lerp(
+					new Vector3(ik.solver.bodyEffector.bone.position.x, ik.solver.bodyEffector.position.y,
+						ik.solver.bodyEffector.bone.position.z), ik.solver.bodyEffector.position,
+					bodyWeightHorizontal * weight);
 				ik.solver.leftHandEffector.position = touchTargetLeftHand.position;
 				ik.solver.rightHandEffector.position = touchTargetRightHand.position;
 				ik.solver.leftHandEffector.rotation = touchTargetLeftHand.rotation;
@@ -65,13 +68,16 @@ namespace RootMotion.Demos
 				neckRotation = neck.rotation;
 				ik.solver.Update();
 				neck.rotation = Quaternion.Slerp(neck.rotation, neckRotation, neckRotationWeight * weight);
-				ik.references.head.localRotation = Quaternion.AngleAxis(headTiltAngle * weight, headTiltAxis) * ik.references.head.localRotation;
+				ik.references.head.localRotation = Quaternion.AngleAxis(headTiltAngle * weight, headTiltAxis) *
+				                                   ik.references.head.localRotation;
 			}
 
-			private void InverseTransformEffector(FullBodyBipedEffector effector, Transform target, Vector3 targetPosition, float weight)
+			private void InverseTransformEffector(FullBodyBipedEffector effector, Transform target,
+				Vector3 targetPosition, float weight)
 			{
 				Vector3 vector = ik.solver.GetEffector(effector).bone.position - target.position;
-				ik.solver.GetEffector(effector).position = Vector3.Lerp(ik.solver.GetEffector(effector).bone.position, targetPosition + vector, weight);
+				ik.solver.GetEffector(effector).position = Vector3.Lerp(ik.solver.GetEffector(effector).bone.position,
+					targetPosition + vector, weight);
 			}
 		}
 

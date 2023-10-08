@@ -8,8 +8,7 @@ namespace RootMotion.FinalIK
 	{
 		public int iterations = 4;
 
-		[Range(0f, 1f)]
-		public float rootPin;
+		[Range(0f, 1f)] public float rootPin;
 
 		public FABRIKChain[] chains = new FABRIKChain[0];
 
@@ -26,6 +25,7 @@ namespace RootMotion.FinalIK
 				message = "IKSolverFABRIKRoot contains no chains.";
 				return false;
 			}
+
 			FABRIKChain[] array = chains;
 			foreach (FABRIKChain fABRIKChain in array)
 			{
@@ -34,6 +34,7 @@ namespace RootMotion.FinalIK
 					return false;
 				}
 			}
+
 			for (int j = 0; j < chains.Length; j++)
 			{
 				for (int k = 0; k < chains.Length; k++)
@@ -45,6 +46,7 @@ namespace RootMotion.FinalIK
 					}
 				}
 			}
+
 			for (int l = 0; l < chains.Length; l++)
 			{
 				for (int m = 0; m < chains[l].children.Length; m++)
@@ -52,44 +54,55 @@ namespace RootMotion.FinalIK
 					int num = chains[l].children[m];
 					if (num < 0)
 					{
-						message = chains[l].ik.name + "IKSolverFABRIKRoot chain at index " + l + " has invalid children array. Child index is < 0.";
+						message = chains[l].ik.name + "IKSolverFABRIKRoot chain at index " + l +
+						          " has invalid children array. Child index is < 0.";
 						return false;
 					}
+
 					if (num == l)
 					{
-						message = chains[l].ik.name + "IKSolverFABRIKRoot chain at index " + l + " has invalid children array. Child index is referencing to itself.";
+						message = chains[l].ik.name + "IKSolverFABRIKRoot chain at index " + l +
+						          " has invalid children array. Child index is referencing to itself.";
 						return false;
 					}
+
 					if (num >= chains.Length)
 					{
-						message = chains[l].ik.name + "IKSolverFABRIKRoot chain at index " + l + " has invalid children array. Child index > number of chains";
+						message = chains[l].ik.name + "IKSolverFABRIKRoot chain at index " + l +
+						          " has invalid children array. Child index > number of chains";
 						return false;
 					}
+
 					for (int n = 0; n < chains.Length; n++)
 					{
 						if (num != n)
 						{
 							continue;
 						}
+
 						for (int num2 = 0; num2 < chains[n].children.Length; num2++)
 						{
 							if (chains[n].children[num2] == l)
 							{
-								message = "Circular parenting. " + chains[n].ik.name + " already has " + chains[l].ik.name + " listed as it's child.";
+								message = "Circular parenting. " + chains[n].ik.name + " already has " +
+								          chains[l].ik.name + " listed as it's child.";
 								return false;
 							}
 						}
 					}
+
 					for (int num3 = 0; num3 < chains[l].children.Length; num3++)
 					{
 						if (m != num3 && chains[l].children[num3] == num)
 						{
-							message = "Chain number " + num + " is represented more than once in the children of " + chains[l].ik.name;
+							message = "Chain number " + num + " is represented more than once in the children of " +
+							          chains[l].ik.name;
 							return false;
 						}
 					}
 				}
 			}
+
 			return true;
 		}
 
@@ -117,6 +130,7 @@ namespace RootMotion.FinalIK
 			{
 				chains[i].Initiate();
 			}
+
 			isRoot = new bool[chains.Length];
 			for (int j = 0; j < chains.Length; j++)
 			{
@@ -136,6 +150,7 @@ namespace RootMotion.FinalIK
 					}
 				}
 			}
+
 			return true;
 		}
 
@@ -145,16 +160,19 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			IKPositionWeight = Mathf.Clamp(IKPositionWeight, 0f, 1f);
 			for (int i = 0; i < chains.Length; i++)
 			{
 				chains[i].ik.solver.IKPositionWeight = IKPositionWeight;
 			}
+
 			if (IKPositionWeight <= 0f)
 			{
 				zeroWeightApplied = true;
 				return;
 			}
+
 			zeroWeightApplied = false;
 			for (int j = 0; j < iterations; j++)
 			{
@@ -165,6 +183,7 @@ namespace RootMotion.FinalIK
 						chains[k].Stage1(chains);
 					}
 				}
+
 				Vector3 centroid = GetCentroid();
 				root.position = centroid;
 				for (int l = 0; l < chains.Length; l++)
@@ -184,6 +203,7 @@ namespace RootMotion.FinalIK
 			{
 				AddPointsToArray(ref array, chains[i]);
 			}
+
 			return array;
 		}
 
@@ -198,6 +218,7 @@ namespace RootMotion.FinalIK
 					return point;
 				}
 			}
+
 			return null;
 		}
 
@@ -220,6 +241,7 @@ namespace RootMotion.FinalIK
 			{
 				return position;
 			}
+
 			float num = 0f;
 			for (int i = 0; i < chains.Length; i++)
 			{
@@ -228,13 +250,16 @@ namespace RootMotion.FinalIK
 					num += chains[i].pull;
 				}
 			}
+
 			for (int j = 0; j < chains.Length; j++)
 			{
 				if (isRoot[j] && num > 0f)
 				{
-					position += (chains[j].ik.solver.bones[0].solverPosition - root.position) * (chains[j].pull / Mathf.Clamp(num, 1f, num));
+					position += (chains[j].ik.solver.bones[0].solverPosition - root.position) *
+					            (chains[j].pull / Mathf.Clamp(num, 1f, num));
 				}
 			}
+
 			return Vector3.Lerp(position, root.position, rootPin);
 		}
 	}

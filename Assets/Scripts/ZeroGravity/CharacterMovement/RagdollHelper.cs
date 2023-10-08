@@ -22,11 +22,9 @@ namespace ZeroGravity.CharacterMovement
 			public Vector3 storedPosition;
 		}
 
-		[SerializeField]
-		private AnimatorHelper animHelper;
+		[SerializeField] private AnimatorHelper animHelper;
 
-		[SerializeField]
-		private Transform rootTransform;
+		[SerializeField] private Transform rootTransform;
 
 		private MyPlayer objMyPlayer;
 
@@ -42,11 +40,9 @@ namespace ZeroGravity.CharacterMovement
 
 		private RagdollState ragdollState;
 
-		[SerializeField]
-		private float ragdollToMecanimBlendTime = 0.5f;
+		[SerializeField] private float ragdollToMecanimBlendTime = 0.5f;
 
-		[SerializeField]
-		private float mecanimToGetUpTransitionTime = 0.05f;
+		[SerializeField] private float mecanimToGetUpTransitionTime = 0.05f;
 
 		private float ragdollingEndTime = -100f;
 
@@ -56,10 +52,7 @@ namespace ZeroGravity.CharacterMovement
 
 		private bool Ragdolled
 		{
-			get
-			{
-				return ragdollState != RagdollState.Animated;
-			}
+			get { return ragdollState != RagdollState.Animated; }
 			set
 			{
 				if (value)
@@ -77,6 +70,7 @@ namespace ZeroGravity.CharacterMovement
 					{
 						return;
 					}
+
 					SetKinematic(true);
 					ragdollingEndTime = Time.time;
 					ragdollState = RagdollState.BlendToAnim;
@@ -91,8 +85,10 @@ namespace ZeroGravity.CharacterMovement
 						{
 							bodyPart.storedRotation = bodyPart.transform.localRotation;
 						}
+
 						bodyPart.storedPosition = bodyPart.transform.position;
 					}
+
 					if (objMyPlayer != null)
 					{
 						if (Vector3.Dot(bone.up, objMyPlayer.GravityDirection) >= 0f)
@@ -104,6 +100,7 @@ namespace ZeroGravity.CharacterMovement
 							animHelper.SetParameterTrigger(AnimatorHelper.Triggers.GetUpFromBelly);
 						}
 					}
+
 					animHelper.ToggleMainAnimator(true);
 				}
 			}
@@ -128,6 +125,7 @@ namespace ZeroGravity.CharacterMovement
 			{
 				animHelper = GetComponent<AnimatorHelper>();
 			}
+
 			RefreshRagdollVariables();
 		}
 
@@ -146,20 +144,26 @@ namespace ZeroGravity.CharacterMovement
 			{
 				return;
 			}
-			float value = 1f - (Time.time - ragdollingEndTime - mecanimToGetUpTransitionTime) / ragdollToMecanimBlendTime;
+
+			float value = 1f - (Time.time - ragdollingEndTime - mecanimToGetUpTransitionTime) /
+				ragdollToMecanimBlendTime;
 			value = Mathf.Clamp01(value);
 			foreach (BodyPart bodyPart in bodyParts)
 			{
 				if (bodyPart.transform == animHelper.GetBone(AnimatorHelper.HumanBones.Hips))
 				{
-					bodyPart.transform.position = Vector3.Lerp(bodyPart.transform.position, bodyPart.storedPosition, value);
-					bodyPart.transform.rotation = Quaternion.Lerp(bodyPart.transform.rotation, bodyPart.storedRotation, value);
+					bodyPart.transform.position =
+						Vector3.Lerp(bodyPart.transform.position, bodyPart.storedPosition, value);
+					bodyPart.transform.rotation =
+						Quaternion.Lerp(bodyPart.transform.rotation, bodyPart.storedRotation, value);
 				}
 				else
 				{
-					bodyPart.transform.localRotation = Quaternion.Lerp(bodyPart.transform.localRotation, bodyPart.storedRotation, value);
+					bodyPart.transform.localRotation = Quaternion.Lerp(bodyPart.transform.localRotation,
+						bodyPart.storedRotation, value);
 				}
 			}
+
 			if (value == 0f)
 			{
 				ragdollState = RagdollState.Animated;
@@ -190,6 +194,7 @@ namespace ZeroGravity.CharacterMovement
 				{
 					objMyPlayer.RagdollFinished();
 				}
+
 				wasRagdolled = false;
 				base.enabled = false;
 			}
@@ -201,6 +206,7 @@ namespace ZeroGravity.CharacterMovement
 			{
 				return;
 			}
+
 			foreach (Rigidbody ragdollRigidBody in ragdollRigidBodies)
 			{
 				if (obj != null)
@@ -235,6 +241,7 @@ namespace ZeroGravity.CharacterMovement
 				{
 					objCorpse = spaceObj as Corpse;
 				}
+
 				for (int i = 0; i < ragdollColliders.Count; i++)
 				{
 					ragdollColliders[i].isTrigger = false;
@@ -269,6 +276,7 @@ namespace ZeroGravity.CharacterMovement
 				{
 					continue;
 				}
+
 				bodyParts.Add(new BodyPart
 				{
 					transform = transform
@@ -299,11 +307,13 @@ namespace ZeroGravity.CharacterMovement
 				rigidbody.isKinematic = true;
 				rigidbody.useGravity = false;
 			}
+
 			Collider[] componentsInChildren2 = base.transform.GetComponentsInChildren<Collider>(true);
 			foreach (Collider collider in componentsInChildren2)
 			{
 				collider.isTrigger = true;
 			}
+
 			animHelper.ToggleMainAnimator(true);
 			wasRagdolled = false;
 			base.enabled = false;

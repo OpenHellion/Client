@@ -7,8 +7,7 @@ namespace RootMotion.FinalIK
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/Grounder/Grounder Biped")]
 	public class GrounderBipedIK : Grounder
 	{
-		[Tooltip("The BipedIK componet.")]
-		public BipedIK ik;
+		[Tooltip("The BipedIK componet.")] public BipedIK ik;
 
 		[Tooltip("The amount of spine bending towards upward slopes.")]
 		public float spineBend = 7f;
@@ -37,7 +36,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Scrpt Reference")]
 		protected override void OpenScriptReference()
 		{
-			Application.OpenURL("http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_grounder_biped_i_k.html");
+			Application.OpenURL(
+				"http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_grounder_biped_i_k.html");
 		}
 
 		public override void Reset()
@@ -52,14 +52,17 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			if (!ik.solvers.leftFoot.initiated)
 			{
 				return false;
 			}
+
 			if (!ik.solvers.rightFoot.initiated)
 			{
 				return false;
 			}
+
 			return true;
 		}
 
@@ -81,9 +84,12 @@ namespace RootMotion.FinalIK
 			footRotations[0] = Quaternion.identity;
 			footRotations[1] = Quaternion.identity;
 			IKSolverFABRIK spine = ik.solvers.spine;
-			spine.OnPreUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(spine.OnPreUpdate, new IKSolver.UpdateDelegate(OnSolverUpdate));
+			spine.OnPreUpdate =
+				(IKSolver.UpdateDelegate)Delegate.Combine(spine.OnPreUpdate,
+					new IKSolver.UpdateDelegate(OnSolverUpdate));
 			IKSolverLimb rightFoot = ik.solvers.rightFoot;
-			rightFoot.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(rightFoot.OnPostUpdate, new IKSolver.UpdateDelegate(OnPostSolverUpdate));
+			rightFoot.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(rightFoot.OnPostUpdate,
+				new IKSolver.UpdateDelegate(OnPostSolverUpdate));
 			animatedPelvisLocalPosition = ik.references.pelvis.localPosition;
 			solver.Initiate(ik.references.root, feet);
 			initiated = true;
@@ -104,19 +110,23 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			if (weight <= 0f)
 			{
 				if (lastWeight <= 0f)
 				{
 					return;
 				}
+
 				OnDisable();
 			}
+
 			lastWeight = weight;
 			if (OnPreGrounder != null)
 			{
 				OnPreGrounder();
 			}
+
 			if (ik.references.pelvis.localPosition != solvedPelvisLocalPosition)
 			{
 				animatedPelvisLocalPosition = ik.references.pelvis.localPosition;
@@ -125,6 +135,7 @@ namespace RootMotion.FinalIK
 			{
 				ik.references.pelvis.localPosition = animatedPelvisLocalPosition;
 			}
+
 			solver.Update();
 			ik.references.pelvis.position += solver.pelvis.IKOffset * weight;
 			SetLegIK(ik.solvers.leftFoot, 0);
@@ -142,6 +153,7 @@ namespace RootMotion.FinalIK
 				ik.references.leftUpperArm.rotation = rotation;
 				ik.references.rightUpperArm.rotation = rotation2;
 			}
+
 			if (OnPostGrounder != null)
 			{
 				OnPostGrounder();
@@ -161,8 +173,10 @@ namespace RootMotion.FinalIK
 			{
 				for (int i = 0; i < feet.Length; i++)
 				{
-					feet[i].rotation = Quaternion.Slerp(Quaternion.identity, solver.legs[i].rotationOffset, weight) * footRotations[i];
+					feet[i].rotation = Quaternion.Slerp(Quaternion.identity, solver.legs[i].rotationOffset, weight) *
+					                   footRotations[i];
 				}
+
 				solvedPelvisLocalPosition = ik.references.pelvis.localPosition;
 			}
 		}
@@ -172,9 +186,11 @@ namespace RootMotion.FinalIK
 			if (initiated && ik != null)
 			{
 				IKSolverFABRIK spine = ik.solvers.spine;
-				spine.OnPreUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(spine.OnPreUpdate, new IKSolver.UpdateDelegate(OnSolverUpdate));
+				spine.OnPreUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(spine.OnPreUpdate,
+					new IKSolver.UpdateDelegate(OnSolverUpdate));
 				IKSolverLimb rightFoot = ik.solvers.rightFoot;
-				rightFoot.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(rightFoot.OnPostUpdate, new IKSolver.UpdateDelegate(OnPostSolverUpdate));
+				rightFoot.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(rightFoot.OnPostUpdate,
+					new IKSolver.UpdateDelegate(OnPostSolverUpdate));
 			}
 		}
 	}

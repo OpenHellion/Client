@@ -1,4 +1,5 @@
 using System;
+using OpenHellion;
 using ZeroGravity.Math;
 using ZeroGravity.Network;
 
@@ -30,45 +31,31 @@ namespace ZeroGravity.Objects
 
 		public RadarVisibilityType RadarVisibilityType
 		{
-			get
-			{
-				return RadarVisibilityType.Visible;
-			}
+			get { return RadarVisibilityType.Visible; }
 		}
 
 		public long GUID { get; set; }
 
 		public CelestialBody ParentCelesitalBody
 		{
-			get
-			{
-				return Orbit.Parent.CelestialBody;
-			}
-			set
-			{
-			}
+			get { return Orbit.Parent.CelestialBody; }
+			set { }
 		}
 
 		public Vector3D Position
 		{
-			get
-			{
-				return Orbit.Position;
-			}
+			get { return Orbit.Position; }
 		}
 
 		public bool IsDummyObject
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
-		public DebrisField(DebrisFieldDetails data)
+		public DebrisField(World world, DebrisFieldDetails data)
 		{
 			Orbit = new OrbitParameters();
-			Orbit.ParseNetworkData(data.Orbit);
+			Orbit.ParseNetworkData(world, data.Orbit);
 			Name = data.Name;
 			Type = data.Type;
 			Radius = data.Radius;
@@ -93,6 +80,7 @@ namespace ZeroGravity.Objects
 			{
 				return false;
 			}
+
 			QuaternionD rotation;
 			Vector3D centerPosition;
 			Orbit.GetOrbitPlaneData(out rotation, out centerPosition);
@@ -101,9 +89,13 @@ namespace ZeroGravity.Objects
 			Vector3D vector3D3 = vector3D2.Normalized * Orbit.SemiMajorAxis;
 			if ((vector3D3 - vector3D).SqrMagnitude <= radiusSq)
 			{
-				orbitVelocity = Orbit.VelocityAtEccentricAnomaly(Vector3D.Angle(rotation * Vector3D.Forward, vector3D2.Normalized) * (System.Math.PI / 180.0), false).Normalized;
+				orbitVelocity = Orbit
+					.VelocityAtEccentricAnomaly(
+						Vector3D.Angle(rotation * Vector3D.Forward, vector3D2.Normalized) * (System.Math.PI / 180.0),
+						false).Normalized;
 				return true;
 			}
+
 			return false;
 		}
 	}

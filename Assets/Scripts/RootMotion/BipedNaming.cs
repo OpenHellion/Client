@@ -25,9 +25,11 @@ namespace RootMotion
 			Right = 2
 		}
 
-		public static string[] typeLeft = new string[9] { " L ", "_L_", "-L-", " l ", "_l_", "-l-", "Left", "left", "CATRigL" };
+		public static string[] typeLeft = new string[9]
+			{ " L ", "_L_", "-L-", " l ", "_l_", "-l-", "Left", "left", "CATRigL" };
 
-		public static string[] typeRight = new string[9] { " R ", "_R_", "-R-", " r ", "_r_", "-r-", "Right", "right", "CATRigR" };
+		public static string[] typeRight = new string[9]
+			{ " R ", "_R_", "-R-", " r ", "_r_", "-r-", "Right", "right", "CATRigR" };
 
 		public static string[] typeSpine = new string[16]
 		{
@@ -37,7 +39,8 @@ namespace RootMotion
 
 		public static string[] typeHead = new string[2] { "Head", "head" };
 
-		public static string[] typeArm = new string[10] { "Arm", "arm", "Hand", "hand", "Wrist", "Wrist", "Elbow", "elbow", "Palm", "palm" };
+		public static string[] typeArm = new string[10]
+			{ "Arm", "arm", "Hand", "hand", "Wrist", "Wrist", "Elbow", "elbow", "Palm", "palm" };
 
 		public static string[] typeLeg = new string[16]
 		{
@@ -61,7 +64,8 @@ namespace RootMotion
 			"Pinky", "pinky", "Ring", "Thumb", "thumb", "Adjust", "adjust", "Twist", "twist"
 		};
 
-		public static string[] typeExcludeLeg = new string[7] { "Toe", "toe", "Platform", "Adjust", "adjust", "Twist", "twist" };
+		public static string[] typeExcludeLeg = new string[7]
+			{ "Toe", "toe", "Platform", "Adjust", "adjust", "Twist", "twist" };
 
 		public static string[] typeExcludeTail = Array.Empty<string>();
 
@@ -84,6 +88,7 @@ namespace RootMotion
 					array[array.Length - 1] = transform;
 				}
 			}
+
 			return array;
 		}
 
@@ -98,6 +103,7 @@ namespace RootMotion
 					array[array.Length - 1] = transform;
 				}
 			}
+
 			return array;
 		}
 
@@ -114,6 +120,7 @@ namespace RootMotion
 			{
 				return null;
 			}
+
 			return bonesOfTypeAndSide[0];
 		}
 
@@ -130,11 +137,13 @@ namespace RootMotion
 						break;
 					}
 				}
+
 				if (flag)
 				{
 					return transform;
 				}
 			}
+
 			return null;
 		}
 
@@ -144,26 +153,32 @@ namespace RootMotion
 			{
 				return BoneType.Spine;
 			}
+
 			if (isHead(boneName))
 			{
 				return BoneType.Head;
 			}
+
 			if (isArm(boneName))
 			{
 				return BoneType.Arm;
 			}
+
 			if (isLeg(boneName))
 			{
 				return BoneType.Leg;
 			}
+
 			if (isTail(boneName))
 			{
 				return BoneType.Tail;
 			}
+
 			if (isEye(boneName))
 			{
 				return BoneType.Eye;
 			}
+
 			return BoneType.Unassigned;
 		}
 
@@ -173,14 +188,17 @@ namespace RootMotion
 			{
 				return BoneSide.Left;
 			}
+
 			if (isRight(boneName))
 			{
 				return BoneSide.Right;
 			}
+
 			return BoneSide.Center;
 		}
 
-		public static Transform GetBone(Transform[] transforms, BoneType boneType, BoneSide boneSide = BoneSide.Center, params string[][] namings)
+		public static Transform GetBone(Transform[] transforms, BoneType boneType, BoneSide boneSide = BoneSide.Center,
+			params string[][] namings)
 		{
 			Transform[] bonesOfTypeAndSide = GetBonesOfTypeAndSide(boneType, boneSide, transforms);
 			return GetNamingMatch(bonesOfTypeAndSide, namings);
@@ -237,6 +255,7 @@ namespace RootMotion
 			{
 				return false;
 			}
+
 			foreach (string value in namingConvention)
 			{
 				if (boneName.Contains(value))
@@ -244,6 +263,7 @@ namespace RootMotion
 					return true;
 				}
 			}
+
 			return false;
 		}
 
@@ -256,6 +276,7 @@ namespace RootMotion
 					return true;
 				}
 			}
+
 			return false;
 		}
 
@@ -268,6 +289,7 @@ namespace RootMotion
 					return true;
 				}
 			}
+
 			return false;
 		}
 
@@ -283,6 +305,7 @@ namespace RootMotion
 			{
 				return boneName.Substring(0, 1);
 			}
+
 			return string.Empty;
 		}
 
@@ -292,6 +315,7 @@ namespace RootMotion
 			{
 				return boneName.Substring(boneName.Length - 1, 1);
 			}
+
 			return string.Empty;
 		}
 	}

@@ -40,17 +40,17 @@ public class FlexibleUIMenuButton : FlexibleUI
 		image.type = Image.Type.Sliced;
 		switch (buttonType)
 		{
-		case ButtonType.Default:
-			image.color = skinData.normal;
-			hover.color = skinData.defaultColor;
-			icon.gameObject.SetActive(false);
-			image.color = new Color(1f, 1f, 1f, 0.4f);
-			break;
-		case ButtonType.Icon:
-			image.color = skinData.defaultColor;
-			hover.color = skinData.iconColor;
-			icon.gameObject.SetActive(true);
-			break;
+			case ButtonType.Default:
+				image.color = skinData.normal;
+				hover.color = skinData.defaultColor;
+				icon.gameObject.SetActive(false);
+				image.color = new Color(1f, 1f, 1f, 0.4f);
+				break;
+			case ButtonType.Icon:
+				image.color = skinData.defaultColor;
+				hover.color = skinData.iconColor;
+				icon.gameObject.SetActive(true);
+				break;
 		}
 	}
 }

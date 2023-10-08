@@ -27,8 +27,7 @@ namespace ZeroGravity.UI
 
 		public Color RedColor;
 
-		[HideInInspector]
-		public Ship ParentShip;
+		[HideInInspector] public Ship ParentShip;
 
 		private void Start()
 		{
@@ -40,10 +39,6 @@ namespace ZeroGravity.UI
 
 		private void Update()
 		{
-			if (!Client.IsGameBuild)
-			{
-				return;
-			}
 			EngineThrustFiller.fillAmount = Mathf.Abs(ParentShip.EngineThrustPercentage);
 			EngineThrustVal.text = (ParentShip.EngineThrustPercentage * 100f).ToString("f0");
 			if (ParentShip.EngineThrustPercentage >= 0f)
@@ -57,18 +52,21 @@ namespace ZeroGravity.UI
 			{
 				EngineReverse.gameObject.SetActive(true);
 			}
+
 			if (ParentShip.EngineOnLine)
 			{
 				if (EngineStatus.sprite != EngineOn)
 				{
 					EngineStatus.sprite = EngineOn;
 				}
+
 				if (ParentShip.EngineThrustPercentage > 0f)
 				{
 					if (EngineThrustFiller.color != BlueColor)
 					{
 						EngineThrustFiller.color = BlueColor;
 					}
+
 					EngineAcceleration.text = Mathf.Abs(ParentShip.EngineThrustPercentage * 10f).ToString("f1");
 				}
 				else if (ParentShip.EngineThrustPercentage == 0f)
@@ -77,6 +75,7 @@ namespace ZeroGravity.UI
 					{
 						EngineThrustFiller.color = OrangeColor;
 					}
+
 					EngineAcceleration.text = "0.0";
 				}
 				else
@@ -85,7 +84,11 @@ namespace ZeroGravity.UI
 					{
 						EngineThrustFiller.color = RedColor;
 					}
-					EngineAcceleration.text = Mathf.Abs(ParentShip.EngineThrustPercentage * 10f * ((!(ParentShip.Engine != null)) ? 0f : (ParentShip.Engine.ReverseAcceleration / ParentShip.Engine.Acceleration))).ToString("f1");
+
+					EngineAcceleration.text =
+						Mathf.Abs(ParentShip.EngineThrustPercentage * 10f * ((!(ParentShip.Engine != null))
+							? 0f
+							: (ParentShip.Engine.ReverseAcceleration / ParentShip.Engine.Acceleration))).ToString("f1");
 				}
 			}
 			else
@@ -94,10 +97,12 @@ namespace ZeroGravity.UI
 				{
 					EngineStatus.sprite = EngineOff;
 				}
+
 				if (EngineThrustFiller.color != OrangeColor)
 				{
 					EngineThrustFiller.color = OrangeColor;
 				}
+
 				EngineAcceleration.text = "0.0";
 			}
 		}

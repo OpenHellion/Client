@@ -31,7 +31,7 @@ namespace Photon.Voice.Unity.Editor
         private SerializedProperty globalRecordersLogLevelSp;
         private SerializedProperty globalSpeakersLogLevelSp;
         private SerializedProperty globalPlayDelaySettingsSp;
-        
+
         private const string notAvailable = "N/A?";
         protected string photonLibraryVersion;
         protected string photonVoiceVersion;
@@ -89,13 +89,13 @@ namespace Photon.Voice.Unity.Editor
                     EditorGUILayout.HelpBox("Speaker prefab needs to have a Speaker component in the hierarchy.", MessageType.Info);
                 }
                 this.connection.SpeakerPrefab = EditorGUILayout.ObjectField(new GUIContent("Speaker Prefab",
-                        "Prefab that contains Speaker component to be instantiated when receiving a new remote audio source info"), this.connection.SpeakerPrefab, 
+                        "Prefab that contains Speaker component to be instantiated when receiving a new remote audio source info"), this.connection.SpeakerPrefab,
                     typeof(GameObject), false) as GameObject;
                 EditorGUILayout.PropertyField(this.globalPlayDelaySettingsSp, new GUIContent("Global Playback Delay Configuration", "Remote audio stream playback delay to compensate packets latency variations."), true);
                 this.connection.SetGlobalPlaybackDelaySettings(
-                    this.globalPlayDelaySettingsSp.FindPropertyRelative("MinDelaySoft").intValue, 
+                    this.globalPlayDelaySettingsSp.FindPropertyRelative("MinDelaySoft").intValue,
                     this.globalPlayDelaySettingsSp.FindPropertyRelative("MaxDelaySoft").intValue,
-                    this.globalPlayDelaySettingsSp.FindPropertyRelative("MaxDelayHard").intValue); 
+                    this.globalPlayDelaySettingsSp.FindPropertyRelative("MaxDelayHard").intValue);
             }
             else
             {
@@ -126,7 +126,7 @@ namespace Photon.Voice.Unity.Editor
                     EditorGUILayout.HelpBox("Speaker prefab needs to have a Speaker component in the hierarchy.", MessageType.Info);
                 }
                 prefab = EditorGUILayout.ObjectField(new GUIContent("Speaker Prefab",
-                        "Prefab that contains Speaker component to be instantiated when receiving a new remote audio source info"), prefab, 
+                        "Prefab that contains Speaker component to be instantiated when receiving a new remote audio source info"), prefab,
                     typeof(GameObject), false) as GameObject;
                 if (prefab == null || prefab.GetComponentInChildren<Speaker>() != null)
                 {
@@ -301,7 +301,7 @@ namespace Photon.Voice.Unity.Editor
                 GUILayout.Label(string.Format("Discarded: {0} (max: {1}) UnreliableDelta: {2} (max: {3})",peer.CountDiscarded, this.maxCountDiscarded, peer.DeltaUnreliableNumber, maxDeltaUnreliableNumber));
                 #endif
                 GUILayout.Label(string.Format("RTT (ping): {0}[+/-{1}]ms, last={2}ms", peer.RoundTripTime, peer.RoundTripTimeVariance, peer.LastRoundTripTime));
-                //GUILayout.Label(string.Format("{0}ms since last ACK sent, {1}ms since last sent, {2}ms since last received",  peer.ConnectionTime - peer.LastSendAckTime, peer.ConnectionTime - peer.LastSendOutgoingTime, peer.ConnectionTime - peer.TimestampOfLastSocketReceive)); //add 
+                //GUILayout.Label(string.Format("{0}ms since last ACK sent, {1}ms since last sent, {2}ms since last received",  peer.ConnectionTime - peer.LastSendAckTime, peer.ConnectionTime - peer.LastSendOutgoingTime, peer.ConnectionTime - peer.TimestampOfLastSocketReceive)); //add
                 GUILayout.Label(string.Format("Reliable Commands Resent: {0}", peer.ResentReliableCommands));
                 //GUILayout.Label(string.Format("last operation={0}B current dispatch:{1}B", peer.ByteCountLastOperation, peer.ByteCountCurrentDispatch));
                 //GUILayout.Label(string.Format("Packets Lost: by challenge={0} by CRC={1}", peer.PacketLossByChallenge, peer.PacketLossByCrc));
@@ -356,13 +356,13 @@ namespace Photon.Voice.Unity.Editor
                 gls.LongestOpResponseCallback,
                 gls.LongestOpResponseCallbackOpCode));
             GUILayout.Label("\tMessages", EditorStyles.boldLabel);
-            GUILayout.Label(string.Format("\t\tTotal: Out {0,4}msg | In {1,4}msg | Sum {2,4}msg", 
-                gls.TotalOutgoingMessageCount, 
-                gls.TotalIncomingMessageCount, 
+            GUILayout.Label(string.Format("\t\tTotal: Out {0,4}msg | In {1,4}msg | Sum {2,4}msg",
+                gls.TotalOutgoingMessageCount,
+                gls.TotalIncomingMessageCount,
                 gls.TotalMessageCount));
-            GUILayout.Label(string.Format("\t\tAverage: Out {0,4}msg/s | In {1,4}msg/s | Sum {2,4}msg/s", 
-                gls.TotalOutgoingMessageCount / elapsedSeconds, 
-                gls.TotalIncomingMessageCount / elapsedSeconds, 
+            GUILayout.Label(string.Format("\t\tAverage: Out {0,4}msg/s | In {1,4}msg/s | Sum {2,4}msg/s",
+                gls.TotalOutgoingMessageCount / elapsedSeconds,
+                gls.TotalIncomingMessageCount / elapsedSeconds,
                 gls.TotalMessageCount / elapsedSeconds));
         }
 
@@ -503,12 +503,12 @@ namespace Photon.Voice.Unity.Editor
             {
                 m = gb;
                 u = "GB";
-            } 
+            }
             else if (bytes >= mb)
             {
                 m = mb;
                 u = "MB";
-            } 
+            }
             else if (bytes >= kb)
             {
                 m = kb;

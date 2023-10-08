@@ -13,21 +13,17 @@ public class FogLight : LightOverride
 
 	public bool m_ForceOnForFog;
 
-	[Tooltip("Only one shadowed fog AreaLight at a time.")]
-	[Title("Shadows")]
+	[Tooltip("Only one shadowed fog AreaLight at a time.")] [Title("Shadows")]
 	public bool m_Shadows;
 
 	[Tooltip("Always at most half the res of the AreaLight's shadowmap.")]
 	public TextureSize m_ShadowmapRes = TextureSize.x256;
 
-	[Range(0f, 3f)]
-	public int m_BlurIterations;
+	[Range(0f, 3f)] public int m_BlurIterations;
 
-	[MinValue(0f)]
-	public float m_BlurSize = 1f;
+	[MinValue(0f)] public float m_BlurSize = 1f;
 
-	[MinValue(0f)]
-	[Tooltip("Affects shadow softness.")]
+	[MinValue(0f)] [Tooltip("Affects shadow softness.")]
 	public float m_ESMExponent = 40f;
 
 	public bool m_Bounded = true;
@@ -54,10 +50,7 @@ public class FogLight : LightOverride
 
 	private bool directionalShadow
 	{
-		get
-		{
-			return m_Shadows && base.type == Type.Directional;
-		}
+		get { return m_Shadows && base.type == Type.Directional; }
 	}
 
 	public override bool GetForceOn()
@@ -115,18 +108,22 @@ public class FogLight : LightOverride
 		{
 			m_BufGrabShadowmap.Clear();
 		}
+
 		if (m_BufGrabShadowParams != null)
 		{
 			m_BufGrabShadowParams.Clear();
 		}
+
 		if (!directionalShadow)
 		{
 			return;
 		}
+
 		if (m_ShadowParamsCB == null)
 		{
 			m_ShadowParamsCB = new ComputeBuffer(1, 336);
 		}
+
 		Graphics.SetRandomWriteTarget(2, m_ShadowParamsCB);
 		m_BufGrabShadowParams.DrawProcedural(Matrix4x4.identity, m_CopyShadowParamsMaterial, 0, MeshTopology.Points, 1);
 		int num = 4096;
@@ -143,22 +140,26 @@ public class FogLight : LightOverride
 		{
 			temp = new int[num3 - 1];
 		}
+
 		int i = 0;
 		int num4 = num / 2;
 		for (; i < num3; i++)
 		{
-			m_BufGrabShadowmap.SetGlobalVector("_TexelSize", new Vector4(0.5f / (float)num4, 0.5f / (float)num4, 0f, 0f));
+			m_BufGrabShadowmap.SetGlobalVector("_TexelSize",
+				new Vector4(0.5f / (float)num4, 0.5f / (float)num4, 0f, 0f));
 			RenderTargetIdentifier dest;
 			if (i < num3 - 1)
 			{
 				temp[i] = Shader.PropertyToID("ShadowmapDownscaleTemp" + i);
-				m_BufGrabShadowmap.GetTemporaryRT(temp[i], num4, num4, 0, FilterMode.Bilinear, format, RenderTextureReadWrite.Linear);
+				m_BufGrabShadowmap.GetTemporaryRT(temp[i], num4, num4, 0, FilterMode.Bilinear, format,
+					RenderTextureReadWrite.Linear);
 				dest = new RenderTargetIdentifier(temp[i]);
 			}
 			else
 			{
 				dest = new RenderTargetIdentifier(m_Shadowmap);
 			}
+
 			if (i == 0)
 			{
 				m_BufGrabShadowmap.SetGlobalTexture("_DirShadowmap", renderTargetIdentifier);
@@ -168,6 +169,7 @@ public class FogLight : LightOverride
 			{
 				m_BufGrabShadowmap.Blit(temp[i - 1], dest, m_BlurShadowmapMaterial, 5);
 			}
+
 			num4 /= 2;
 		}
 	}
@@ -178,14 +180,17 @@ public class FogLight : LightOverride
 		{
 			m_BufGrabShadowmap.Clear();
 		}
+
 		if (m_BufGrabShadowParams != null)
 		{
 			m_BufGrabShadowParams.Clear();
 		}
+
 		if (m_ShadowParamsCB != null)
 		{
 			m_ShadowParamsCB.Release();
 		}
+
 		m_ShadowParamsCB = null;
 	}
 
@@ -196,6 +201,7 @@ public class FogLight : LightOverride
 			cs.SetFloat("_DirLightShadows", 0f);
 			return false;
 		}
+
 		cs.SetFloat("_DirLightShadows", 1f);
 		cs.SetBuffer(kernel, "_ShadowParams", m_ShadowParamsCB);
 		cs.SetTexture(kernel, "_DirectionalShadowmap", m_Shadowmap);

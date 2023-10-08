@@ -6,8 +6,7 @@ namespace RootMotion.Demos
 {
 	public abstract class PickUp2Handed : MonoBehaviour
 	{
-		[SerializeField]
-		private int GUIspace;
+		[SerializeField] private int GUIspace;
 
 		public InteractionSystem interactionSystem;
 
@@ -29,10 +28,7 @@ namespace RootMotion.Demos
 
 		private bool holding
 		{
-			get
-			{
-				return interactionSystem.IsPaused(FullBodyBipedEffector.LeftHand);
-			}
+			get { return interactionSystem.IsPaused(FullBodyBipedEffector.LeftHand); }
 		}
 
 		private void OnGUI()
@@ -51,6 +47,7 @@ namespace RootMotion.Demos
 			{
 				interactionSystem.ResumeAll();
 			}
+
 			GUILayout.EndHorizontal();
 		}
 
@@ -59,11 +56,14 @@ namespace RootMotion.Demos
 		private void Start()
 		{
 			InteractionSystem obj = interactionSystem;
-			obj.OnInteractionStart = (InteractionSystem.InteractionDelegate)Delegate.Combine(obj.OnInteractionStart, new InteractionSystem.InteractionDelegate(OnStart));
+			obj.OnInteractionStart = (InteractionSystem.InteractionDelegate)Delegate.Combine(obj.OnInteractionStart,
+				new InteractionSystem.InteractionDelegate(OnStart));
 			InteractionSystem obj2 = interactionSystem;
-			obj2.OnInteractionPause = (InteractionSystem.InteractionDelegate)Delegate.Combine(obj2.OnInteractionPause, new InteractionSystem.InteractionDelegate(OnPause));
+			obj2.OnInteractionPause = (InteractionSystem.InteractionDelegate)Delegate.Combine(obj2.OnInteractionPause,
+				new InteractionSystem.InteractionDelegate(OnPause));
 			InteractionSystem obj3 = interactionSystem;
-			obj3.OnInteractionResume = (InteractionSystem.InteractionDelegate)Delegate.Combine(obj3.OnInteractionResume, new InteractionSystem.InteractionDelegate(OnDrop));
+			obj3.OnInteractionResume = (InteractionSystem.InteractionDelegate)Delegate.Combine(obj3.OnInteractionResume,
+				new InteractionSystem.InteractionDelegate(OnDrop));
 		}
 
 		private void OnPause(FullBodyBipedEffector effectorType, InteractionObject interactionObject)
@@ -76,6 +76,7 @@ namespace RootMotion.Demos
 				{
 					component.isKinematic = true;
 				}
+
 				pickUpPosition = obj.transform.position;
 				pickUpRotation = obj.transform.rotation;
 				holdWeight = 0f;
@@ -119,11 +120,16 @@ namespace RootMotion.Demos
 			if (!(interactionSystem == null))
 			{
 				InteractionSystem obj = interactionSystem;
-				obj.OnInteractionStart = (InteractionSystem.InteractionDelegate)Delegate.Remove(obj.OnInteractionStart, new InteractionSystem.InteractionDelegate(OnStart));
+				obj.OnInteractionStart = (InteractionSystem.InteractionDelegate)Delegate.Remove(obj.OnInteractionStart,
+					new InteractionSystem.InteractionDelegate(OnStart));
 				InteractionSystem obj2 = interactionSystem;
-				obj2.OnInteractionPause = (InteractionSystem.InteractionDelegate)Delegate.Remove(obj2.OnInteractionPause, new InteractionSystem.InteractionDelegate(OnPause));
+				obj2.OnInteractionPause =
+					(InteractionSystem.InteractionDelegate)Delegate.Remove(obj2.OnInteractionPause,
+						new InteractionSystem.InteractionDelegate(OnPause));
 				InteractionSystem obj3 = interactionSystem;
-				obj3.OnInteractionResume = (InteractionSystem.InteractionDelegate)Delegate.Remove(obj3.OnInteractionResume, new InteractionSystem.InteractionDelegate(OnDrop));
+				obj3.OnInteractionResume =
+					(InteractionSystem.InteractionDelegate)Delegate.Remove(obj3.OnInteractionResume,
+						new InteractionSystem.InteractionDelegate(OnDrop));
 			}
 		}
 	}

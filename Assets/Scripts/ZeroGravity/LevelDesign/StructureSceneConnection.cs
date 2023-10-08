@@ -6,8 +6,7 @@ namespace ZeroGravity.LevelDesign
 {
 	public class StructureSceneConnection : MonoBehaviour, ISceneObject
 	{
-		[Tooltip("InSceneID will be assigned automatically")]
-		[SerializeField]
+		[Tooltip("InSceneID will be assigned automatically")] [SerializeField]
 		private int _inSceneID;
 
 		public StructureConnection.ConnectionType Type;
@@ -23,14 +22,8 @@ namespace ZeroGravity.LevelDesign
 
 		public int InSceneID
 		{
-			get
-			{
-				return _inSceneID;
-			}
-			set
-			{
-				_inSceneID = value;
-			}
+			get { return _inSceneID; }
+			set { _inSceneID = value; }
 		}
 
 		public void ToggleObjects(bool showEnabled)
@@ -45,10 +38,12 @@ namespace ZeroGravity.LevelDesign
 					}
 				}
 			}
+
 			if (EnabledObjects == null || EnabledObjects.Count <= 0)
 			{
 				return;
 			}
+
 			foreach (GameObject enabledObject in EnabledObjects)
 			{
 				if (enabledObject != null)

@@ -51,11 +51,18 @@ namespace RootMotion.Demos
 
 			public void Initiate(InteractionSystem interactionSystem)
 			{
-				raycastDirectionLocal = spherecastFrom.InverseTransformDirection(interactionObject.transform.position - spherecastFrom.position);
+				raycastDirectionLocal =
+					spherecastFrom.InverseTransformDirection(interactionObject.transform.position -
+					                                         spherecastFrom.position);
 				raycastDistance = Vector3.Distance(spherecastFrom.position, interactionObject.transform.position);
-				interactionSystem.OnInteractionStart = (InteractionSystem.InteractionDelegate)Delegate.Combine(interactionSystem.OnInteractionStart, new InteractionSystem.InteractionDelegate(OnInteractionStart));
-				interactionSystem.OnInteractionResume = (InteractionSystem.InteractionDelegate)Delegate.Combine(interactionSystem.OnInteractionResume, new InteractionSystem.InteractionDelegate(OnInteractionResume));
-				interactionSystem.OnInteractionStop = (InteractionSystem.InteractionDelegate)Delegate.Combine(interactionSystem.OnInteractionStop, new InteractionSystem.InteractionDelegate(OnInteractionStop));
+				interactionSystem.OnInteractionStart = (InteractionSystem.InteractionDelegate)Delegate.Combine(
+					interactionSystem.OnInteractionStart,
+					new InteractionSystem.InteractionDelegate(OnInteractionStart));
+				interactionSystem.OnInteractionResume = (InteractionSystem.InteractionDelegate)Delegate.Combine(
+					interactionSystem.OnInteractionResume,
+					new InteractionSystem.InteractionDelegate(OnInteractionResume));
+				interactionSystem.OnInteractionStop = (InteractionSystem.InteractionDelegate)Delegate.Combine(
+					interactionSystem.OnInteractionStop, new InteractionSystem.InteractionDelegate(OnInteractionStop));
 				hit.normal = Vector3.forward;
 				targetPosition = interactionObject.transform.position;
 				targetRotation = interactionObject.transform.rotation;
@@ -68,11 +75,14 @@ namespace RootMotion.Demos
 				{
 					return false;
 				}
-				bool result = Physics.SphereCast(spherecastFrom.position, spherecastRadius, direction, out hit, raycastDistance, touchLayers);
+
+				bool result = Physics.SphereCast(spherecastFrom.position, spherecastRadius, direction, out hit,
+					raycastDistance, touchLayers);
 				if (hit.distance < minDistance)
 				{
 					result = false;
 				}
+
 				return result;
 			}
 
@@ -82,6 +92,7 @@ namespace RootMotion.Demos
 				{
 					return;
 				}
+
 				Vector3 vector = spherecastFrom.TransformDirection(raycastDirectionLocal);
 				hit.point = spherecastFrom.position + vector;
 				bool flag = FindWalls(vector);
@@ -109,6 +120,7 @@ namespace RootMotion.Demos
 						targetPosition = hit.point;
 						targetRotation = Quaternion.LookRotation(-hit.normal);
 					}
+
 					if (Vector3.Distance(interactionObject.transform.position, hit.point) > releaseDistance)
 					{
 						if (flag)
@@ -122,11 +134,17 @@ namespace RootMotion.Demos
 						}
 					}
 				}
-				float b = ((inTouch && (!interactionSystem.IsPaused(effectorType) || !(interactionObject.transform.position == targetPosition))) ? 1f : 0f);
+
+				float b = ((inTouch && (!interactionSystem.IsPaused(effectorType) ||
+				                        !(interactionObject.transform.position == targetPosition)))
+					? 1f
+					: 0f);
 				speedF = Mathf.Lerp(speedF, b, Time.deltaTime * 3f * interactionSystem.speed);
 				float t = Time.deltaTime * lerpSpeed * speedF * interactionSystem.speed;
-				interactionObject.transform.position = Vector3.Lerp(interactionObject.transform.position, targetPosition, t);
-				interactionObject.transform.rotation = Quaternion.Slerp(interactionObject.transform.rotation, targetRotation, t);
+				interactionObject.transform.position =
+					Vector3.Lerp(interactionObject.transform.position, targetPosition, t);
+				interactionObject.transform.rotation =
+					Quaternion.Slerp(interactionObject.transform.rotation, targetRotation, t);
 			}
 
 			private void StopTouch(InteractionSystem interactionSystem)
@@ -138,6 +156,7 @@ namespace RootMotion.Demos
 					interactionSystem.ResumeInteraction(effectorType);
 					return;
 				}
+
 				speedF = 0f;
 				targetPosition = hit.point;
 				targetRotation = Quaternion.LookRotation(-hit.normal);
@@ -171,9 +190,15 @@ namespace RootMotion.Demos
 			{
 				if (initiated)
 				{
-					interactionSystem.OnInteractionStart = (InteractionSystem.InteractionDelegate)Delegate.Remove(interactionSystem.OnInteractionStart, new InteractionSystem.InteractionDelegate(OnInteractionStart));
-					interactionSystem.OnInteractionResume = (InteractionSystem.InteractionDelegate)Delegate.Remove(interactionSystem.OnInteractionResume, new InteractionSystem.InteractionDelegate(OnInteractionResume));
-					interactionSystem.OnInteractionStop = (InteractionSystem.InteractionDelegate)Delegate.Remove(interactionSystem.OnInteractionStop, new InteractionSystem.InteractionDelegate(OnInteractionStop));
+					interactionSystem.OnInteractionStart = (InteractionSystem.InteractionDelegate)Delegate.Remove(
+						interactionSystem.OnInteractionStart,
+						new InteractionSystem.InteractionDelegate(OnInteractionStart));
+					interactionSystem.OnInteractionResume = (InteractionSystem.InteractionDelegate)Delegate.Remove(
+						interactionSystem.OnInteractionResume,
+						new InteractionSystem.InteractionDelegate(OnInteractionResume));
+					interactionSystem.OnInteractionStop = (InteractionSystem.InteractionDelegate)Delegate.Remove(
+						interactionSystem.OnInteractionStop,
+						new InteractionSystem.InteractionDelegate(OnInteractionStop));
 				}
 			}
 		}

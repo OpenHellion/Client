@@ -15,58 +15,37 @@ namespace ZeroGravity.LevelDesign
 
 		public override bool ExclusivePlayerLocking
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public override SceneTriggerType TriggerType
 		{
-			get
-			{
-				return SceneTriggerType.Ladder;
-			}
+			get { return SceneTriggerType.Ladder; }
 		}
 
 		public override PlayerHandsCheckType PlayerHandsCheck
 		{
-			get
-			{
-				return PlayerHandsCheckType.DontCheck;
-			}
+			get { return PlayerHandsCheckType.DontCheck; }
 		}
 
 		public override List<ItemType> PlayerHandsItemType
 		{
-			get
-			{
-				return null;
-			}
+			get { return null; }
 		}
 
 		public override bool IsNearTrigger
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public override bool IsInteractable
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public override bool CameraMovementAllowed
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public void LadderAttach(MyPlayer pl, bool checkGravity = true)
@@ -75,11 +54,16 @@ namespace ZeroGravity.LevelDesign
 			{
 				pl.FpsController.ToggleOnLadder(this, true);
 				pl.FpsController.ToggleAttached(true);
-				pl.transform.position = StartPosition.position + Vector3.Project(pl.transform.position - StartPosition.position, StartPosition.up);
+				pl.transform.position = StartPosition.position +
+				                        Vector3.Project(pl.transform.position - StartPosition.position,
+					                        StartPosition.up);
 				pl.transform.rotation = StartPosition.rotation;
 				pl.FpsController.ResetVelocity();
 				pl.FpsController.ToggleAutoFreeLook(true);
-				pl.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true);
+				pl.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					true);
 			}
 		}
 
@@ -100,17 +84,21 @@ namespace ZeroGravity.LevelDesign
 						vector2 = DetachPoints[i].position + vector;
 					}
 				}
+
 				pl.rigidBody.AddForce((vector2 - pl.transform.position).normalized * 200f, ForceMode.Impulse);
 			}
 			else
 			{
 				pl.rigidBody.AddForce(pl.transform.right * 200f, ForceMode.Impulse);
 			}
+
 			pl.rigidBody.AddForce(pl.transform.up * 100f, ForceMode.Impulse);
 			pl.FpsController.ToggleOnLadder(null, false);
 			pl.FpsController.ToggleAutoFreeLook(false);
 			pl.FpsController.ToggleAttached(false);
-			pl.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false);
+			pl.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false);
 		}
 
 		public override bool Interact(MyPlayer player, bool interactWithOverlappingTriggers = true)
@@ -119,11 +107,13 @@ namespace ZeroGravity.LevelDesign
 			{
 				return false;
 			}
+
 			LadderAttach(player);
 			if (interactWithOverlappingTriggers)
 			{
 				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
 			}
+
 			return true;
 		}
 

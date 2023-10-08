@@ -7,8 +7,7 @@ namespace ZeroGravity.ShipComponents
 	{
 		public float ResponseTime;
 
-		[SerializeField]
-		private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
+		[SerializeField] private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
 		{
 			new ResourceRequirement
 			{
@@ -18,18 +17,12 @@ namespace ZeroGravity.ShipComponents
 
 		public override GeneratorType Type
 		{
-			get
-			{
-				return GeneratorType.Power;
-			}
+			get { return GeneratorType.Power; }
 		}
 
 		public override ResourceRequirement[] ResourceRequirements
 		{
-			get
-			{
-				return _ResourceRequirements;
-			}
+			get { return _ResourceRequirements; }
 		}
 
 		public override SystemAuxData GetAuxData()

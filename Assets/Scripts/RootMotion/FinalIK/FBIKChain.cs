@@ -13,11 +13,9 @@ namespace RootMotion.FinalIK
 
 			public float pullElasticity;
 
-			[SerializeField]
-			private Transform bone1;
+			[SerializeField] private Transform bone1;
 
-			[SerializeField]
-			private Transform bone2;
+			[SerializeField] private Transform bone2;
 
 			private float crossFade;
 
@@ -31,7 +29,8 @@ namespace RootMotion.FinalIK
 
 			public bool isRigid { get; private set; }
 
-			public ChildConstraint(Transform bone1, Transform bone2, float pushElasticity = 0f, float pullElasticity = 0f)
+			public ChildConstraint(Transform bone1, Transform bone2, float pushElasticity = 0f,
+				float pullElasticity = 0f)
 			{
 				this.bone1 = bone1;
 				this.bone2 = bone2;
@@ -48,7 +47,8 @@ namespace RootMotion.FinalIK
 
 			public void OnPreSolve(IKSolverFullBody solver)
 			{
-				nominalDistance = Vector3.Distance(solver.chain[chain1Index].nodes[0].transform.position, solver.chain[chain2Index].nodes[0].transform.position);
+				nominalDistance = Vector3.Distance(solver.chain[chain1Index].nodes[0].transform.position,
+					solver.chain[chain2Index].nodes[0].transform.position);
 				isRigid = pushElasticity <= 0f && pullElasticity <= 0f;
 				if (isRigid)
 				{
@@ -59,6 +59,7 @@ namespace RootMotion.FinalIK
 				{
 					crossFade = 0.5f;
 				}
+
 				inverseCrossFade = 1f - crossFade;
 			}
 
@@ -68,7 +69,9 @@ namespace RootMotion.FinalIK
 				{
 					return;
 				}
-				Vector3 vector = solver.chain[chain2Index].nodes[0].solverPosition - solver.chain[chain1Index].nodes[0].solverPosition;
+
+				Vector3 vector = solver.chain[chain2Index].nodes[0].solverPosition -
+				                 solver.chain[chain1Index].nodes[0].solverPosition;
 				float magnitude = vector.magnitude;
 				if (magnitude != nominalDistance && magnitude != 0f)
 				{
@@ -78,6 +81,7 @@ namespace RootMotion.FinalIK
 						float num2 = ((!(magnitude > nominalDistance)) ? pushElasticity : pullElasticity);
 						num = 1f - num2;
 					}
+
 					num *= 1f - nominalDistance / magnitude;
 					Vector3 vector2 = vector * num;
 					solver.chain[chain1Index].nodes[0].solverPosition += vector2 * crossFade;
@@ -94,20 +98,15 @@ namespace RootMotion.FinalIK
 			Cubic = 2
 		}
 
-		[Range(0f, 1f)]
-		public float pin;
+		[Range(0f, 1f)] public float pin;
 
-		[Range(0f, 1f)]
-		public float pull = 1f;
+		[Range(0f, 1f)] public float pull = 1f;
 
-		[Range(0f, 1f)]
-		public float push;
+		[Range(0f, 1f)] public float push;
 
-		[Range(-1f, 1f)]
-		public float pushParent;
+		[Range(-1f, 1f)] public float pushParent;
 
-		[Range(0f, 1f)]
-		public float reach = 0.1f;
+		[Range(0f, 1f)] public float reach = 0.1f;
 
 		public Smoothing reachSmoothing = Smoothing.Exponential;
 
@@ -175,6 +174,7 @@ namespace RootMotion.FinalIK
 					return i;
 				}
 			}
+
 			return -1;
 		}
 
@@ -185,6 +185,7 @@ namespace RootMotion.FinalIK
 				message = "FBIK chain contains no nodes.";
 				return false;
 			}
+
 			IKSolver.Node[] array = nodes;
 			foreach (IKSolver.Node node in array)
 			{
@@ -194,6 +195,7 @@ namespace RootMotion.FinalIK
 					return false;
 				}
 			}
+
 			return true;
 		}
 
@@ -205,17 +207,20 @@ namespace RootMotion.FinalIK
 			{
 				node.solverPosition = node.transform.position;
 			}
+
 			CalculateBoneLengths(solver);
 			ChildConstraint[] array2 = childConstraints;
 			foreach (ChildConstraint childConstraint in array2)
 			{
 				childConstraint.Initiate(solver);
 			}
+
 			if (nodes.Length == 3)
 			{
 				bendConstraint.SetBones(nodes[0].transform, nodes[1].transform, nodes[2].transform);
 				bendConstraint.Initiate(solver);
 			}
+
 			crossFades = new float[children.Length];
 			initiated = true;
 		}
@@ -226,19 +231,23 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			for (int i = 0; i < nodes.Length; i++)
 			{
 				nodes[i].solverPosition = nodes[i].transform.position + nodes[i].offset;
 			}
+
 			CalculateBoneLengths(solver);
 			if (!fullBody)
 			{
 				return;
 			}
+
 			for (int j = 0; j < childConstraints.Length; j++)
 			{
 				childConstraints[j].OnPreSolve(solver);
 			}
+
 			if (children.Length > 0)
 			{
 				float num = nodes[nodes.Length - 1].effectorPositionWeight;
@@ -246,17 +255,21 @@ namespace RootMotion.FinalIK
 				{
 					num += solver.chain[children[k]].nodes[0].effectorPositionWeight * solver.chain[children[k]].pull;
 				}
+
 				num = Mathf.Clamp(num, 1f, float.PositiveInfinity);
 				for (int l = 0; l < children.Length; l++)
 				{
-					crossFades[l] = solver.chain[children[l]].nodes[0].effectorPositionWeight * solver.chain[children[l]].pull / num;
+					crossFades[l] = solver.chain[children[l]].nodes[0].effectorPositionWeight *
+						solver.chain[children[l]].pull / num;
 				}
 			}
+
 			pullParentSum = 0f;
 			for (int m = 0; m < children.Length; m++)
 			{
 				pullParentSum += solver.chain[children[m]].pull;
 			}
+
 			pullParentSum = Mathf.Clamp(pullParentSum, 1f, float.PositiveInfinity);
 			if (nodes.Length == 3)
 			{
@@ -266,6 +279,7 @@ namespace RootMotion.FinalIK
 			{
 				reachForce = 0f;
 			}
+
 			if (push > 0f && nodes.Length > 1)
 			{
 				distance = Vector3.Distance(nodes[0].transform.position, nodes[nodes.Length - 1].transform.position);
@@ -281,18 +295,23 @@ namespace RootMotion.FinalIK
 				length += nodes[i].length;
 				if (nodes[i].length == 0f)
 				{
-					Warning.Log("Bone " + nodes[i].transform.name + " - " + nodes[i + 1].transform.name + " length is zero, can not solve.", nodes[i].transform);
+					Warning.Log(
+						"Bone " + nodes[i].transform.name + " - " + nodes[i + 1].transform.name +
+						" length is zero, can not solve.", nodes[i].transform);
 					return;
 				}
 			}
+
 			for (int j = 0; j < children.Length; j++)
 			{
-				solver.chain[children[j]].rootLength = (solver.chain[children[j]].nodes[0].transform.position - nodes[nodes.Length - 1].transform.position).magnitude;
+				solver.chain[children[j]].rootLength = (solver.chain[children[j]].nodes[0].transform.position -
+				                                        nodes[nodes.Length - 1].transform.position).magnitude;
 				if (solver.chain[children[j]].rootLength == 0f)
 				{
 					return;
 				}
 			}
+
 			if (nodes.Length == 3)
 			{
 				sqrMag1 = nodes[0].length * nodes[0].length;
@@ -307,14 +326,17 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			for (int i = 0; i < children.Length; i++)
 			{
 				solver.chain[children[i]].Reach(solver);
 			}
+
 			if (reachForce <= 0f)
 			{
 				return;
 			}
+
 			Vector3 vector = nodes[2].solverPosition - nodes[0].solverPosition;
 			if (!(vector == Vector3.zero))
 			{
@@ -324,13 +346,14 @@ namespace RootMotion.FinalIK
 				num = Mathf.Clamp(num + reachForce, -1f, 1f);
 				switch (reachSmoothing)
 				{
-				case Smoothing.Exponential:
-					num *= num;
-					break;
-				case Smoothing.Cubic:
-					num *= num * num;
-					break;
+					case Smoothing.Exponential:
+						num *= num;
+						break;
+					case Smoothing.Cubic:
+						num *= num * num;
+						break;
 				}
+
 				Vector3 vector3 = vector2 * Mathf.Clamp(num, 0f, magnitude);
 				nodes[0].solverPosition += vector3 * (1f - nodes[0].effectorPositionWeight);
 				nodes[2].solverPosition += vector3;
@@ -344,35 +367,41 @@ namespace RootMotion.FinalIK
 			{
 				zero += solver.chain[children[i]].Push(solver) * solver.chain[children[i]].pushParent;
 			}
+
 			nodes[nodes.Length - 1].solverPosition += zero;
 			if (nodes.Length < 2)
 			{
 				return Vector3.zero;
 			}
+
 			if (push <= 0f)
 			{
 				return Vector3.zero;
 			}
+
 			Vector3 vector = nodes[2].solverPosition - nodes[0].solverPosition;
 			float magnitude = vector.magnitude;
 			if (magnitude == 0f)
 			{
 				return Vector3.zero;
 			}
+
 			float num = 1f - magnitude / distance;
 			if (num <= 0f)
 			{
 				return Vector3.zero;
 			}
+
 			switch (pushSmoothing)
 			{
-			case Smoothing.Exponential:
-				num *= num;
-				break;
-			case Smoothing.Cubic:
-				num *= num * num;
-				break;
+				case Smoothing.Exponential:
+					num *= num;
+					break;
+				case Smoothing.Cubic:
+					num *= num * num;
+					break;
 			}
+
 			Vector3 vector2 = -vector * num * push;
 			nodes[0].solverPosition += vector2;
 			return vector2;
@@ -384,10 +413,12 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			for (int i = 0; i < children.Length; i++)
 			{
 				solver.chain[children[i]].SolveTrigonometric(solver, calculateBendDirection);
 			}
+
 			if (nodes.Length == 3)
 			{
 				Vector3 vector = nodes[2].solverPosition - nodes[0].solverPosition;
@@ -396,7 +427,9 @@ namespace RootMotion.FinalIK
 				{
 					float num = Mathf.Clamp(magnitude, 0f, length * 0.99999f);
 					Vector3 direction = vector / magnitude * num;
-					Vector3 bendDirection = ((!calculateBendDirection || !bendConstraint.initiated) ? (nodes[1].solverPosition - nodes[0].solverPosition) : bendConstraint.GetDir(solver));
+					Vector3 bendDirection = ((!calculateBendDirection || !bendConstraint.initiated)
+						? (nodes[1].solverPosition - nodes[0].solverPosition)
+						: bendConstraint.GetDir(solver));
 					Vector3 dirToBendPoint = GetDirToBendPoint(direction, bendDirection, num);
 					nodes[1].solverPosition = nodes[0].solverPosition + dirToBendPoint;
 				}
@@ -409,11 +442,13 @@ namespace RootMotion.FinalIK
 			{
 				solver.chain[children[i]].Stage1(solver);
 			}
+
 			if (children.Length == 0)
 			{
 				ForwardReach(nodes[nodes.Length - 1].solverPosition);
 				return;
 			}
+
 			Vector3 solverPosition = nodes[nodes.Length - 1].solverPosition;
 			SolveChildConstraints(solver);
 			for (int j = 0; j < children.Length; j++)
@@ -421,13 +456,17 @@ namespace RootMotion.FinalIK
 				Vector3 vector = solver.chain[children[j]].nodes[0].solverPosition;
 				if (solver.chain[children[j]].rootLength > 0f)
 				{
-					vector = SolveFABRIKJoint(nodes[nodes.Length - 1].solverPosition, solver.chain[children[j]].nodes[0].solverPosition, solver.chain[children[j]].rootLength);
+					vector = SolveFABRIKJoint(nodes[nodes.Length - 1].solverPosition,
+						solver.chain[children[j]].nodes[0].solverPosition, solver.chain[children[j]].rootLength);
 				}
+
 				if (pullParentSum > 0f)
 				{
-					solverPosition += (vector - nodes[nodes.Length - 1].solverPosition) * (solver.chain[children[j]].pull / pullParentSum);
+					solverPosition += (vector - nodes[nodes.Length - 1].solverPosition) *
+					                  (solver.chain[children[j]].pull / pullParentSum);
 				}
 			}
+
 			ForwardReach(Vector3.Lerp(solverPosition, nodes[nodes.Length - 1].solverPosition, pin));
 		}
 
@@ -442,6 +481,7 @@ namespace RootMotion.FinalIK
 					SolveConstraintSystems(solver);
 				}
 			}
+
 			for (int j = 0; j < children.Length; j++)
 			{
 				solver.chain[children[j]].Stage2(solver, nodes[nodes.Length - 1].solverPosition);
@@ -453,7 +493,8 @@ namespace RootMotion.FinalIK
 			SolveChildConstraints(solver);
 			for (int i = 0; i < children.Length; i++)
 			{
-				SolveLinearConstraint(nodes[nodes.Length - 1], solver.chain[children[i]].nodes[0], crossFades[i], solver.chain[children[i]].rootLength);
+				SolveLinearConstraint(nodes[nodes.Length - 1], solver.chain[children[i]].nodes[0], crossFades[i],
+					solver.chain[children[i]].rootLength);
 			}
 		}
 
@@ -470,6 +511,7 @@ namespace RootMotion.FinalIK
 			{
 				return Vector3.zero;
 			}
+
 			return Quaternion.LookRotation(direction, bendDirection) * new Vector3(0f, y, num);
 		}
 
@@ -498,7 +540,8 @@ namespace RootMotion.FinalIK
 			nodes[nodes.Length - 1].solverPosition = position;
 			for (int num = nodes.Length - 2; num > -1; num--)
 			{
-				nodes[num].solverPosition = SolveFABRIKJoint(nodes[num].solverPosition, nodes[num + 1].solverPosition, nodes[num].length);
+				nodes[num].solverPosition = SolveFABRIKJoint(nodes[num].solverPosition, nodes[num + 1].solverPosition,
+					nodes[num].length);
 			}
 		}
 
@@ -508,10 +551,12 @@ namespace RootMotion.FinalIK
 			{
 				position = SolveFABRIKJoint(nodes[0].solverPosition, position, rootLength);
 			}
+
 			nodes[0].solverPosition = position;
 			for (int i = 1; i < nodes.Length; i++)
 			{
-				nodes[i].solverPosition = SolveFABRIKJoint(nodes[i].solverPosition, nodes[i - 1].solverPosition, nodes[i - 1].length);
+				nodes[i].solverPosition = SolveFABRIKJoint(nodes[i].solverPosition, nodes[i - 1].solverPosition,
+					nodes[i - 1].length);
 			}
 		}
 	}

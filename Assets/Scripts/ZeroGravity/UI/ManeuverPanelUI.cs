@@ -23,10 +23,7 @@ namespace ZeroGravity.UI
 
 		public string Message
 		{
-			get
-			{
-				return message;
-			}
+			get { return message; }
 			set
 			{
 				message = value;
@@ -40,6 +37,7 @@ namespace ZeroGravity.UI
 			{
 				TimerText.text = GetTimeFormat(TimerLeft);
 			}
+
 			if (TimerLeft >= 0f)
 			{
 				TimerLeft -= Time.deltaTime;
@@ -54,7 +52,8 @@ namespace ZeroGravity.UI
 		private string GetTimeFormat(float time)
 		{
 			TimeSpan timeSpan = TimeSpan.FromSeconds(time);
-			return timeSpan.Hours.ToString("f0") + ": " + timeSpan.Minutes.ToString("f0") + ": " + timeSpan.Seconds.ToString("f0");
+			return timeSpan.Hours.ToString("f0") + ": " + timeSpan.Minutes.ToString("f0") + ": " +
+			       timeSpan.Seconds.ToString("f0");
 		}
 	}
 }

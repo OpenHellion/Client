@@ -31,7 +31,7 @@ namespace Photon.Voice
     /// Extends LoadBalancingClient with media streaming functionality.
     /// </summary>
     /// <remarks>
-    /// Use your normal LoadBalancing workflow to join a Voice room. 
+    /// Use your normal LoadBalancing workflow to join a Voice room.
     /// All standard LoadBalancing features are available.
     /// Use <see cref="VoiceClient"/> to work with media streams.
     /// </remarks>
@@ -124,7 +124,7 @@ namespace Photon.Voice
                     {
                         this.LoadBalancingPeer.OpChangeGroups(new byte[0], null);
                     }
-                }                
+                }
             }
         }
 
@@ -222,7 +222,7 @@ namespace Photon.Voice
             // check for voice event first
             if (ev.Code == VoiceEvent.Code)
             {
-                // Payloads are arrays. If first array element is 0 than next is event subcode. Otherwise, the event is data frame with voiceId in 1st element.                    
+                // Payloads are arrays. If first array element is 0 than next is event subcode. Otherwise, the event is data frame with voiceId in 1st element.
                 protocol.onVoiceEvent(ev[(byte)ParameterCode.CustomEventContent], VOICE_CHANNEL, ev.Sender, ev.Sender == this.LocalPlayer.ActorNumber);
             }
             else
@@ -237,7 +237,7 @@ namespace Photon.Voice
                         }
                         else
                         {
-                            this.voiceClient.onPlayerJoin(VOICE_CHANNEL, playerId);                            
+                            this.voiceClient.onPlayerJoin(VOICE_CHANNEL, playerId);
                         }
                         break;
                     case (byte)EventCode.Leave:
@@ -276,7 +276,7 @@ namespace Photon.Voice
                     }
                     break;
             }
-        }        
+        }
 
         #endregion
 

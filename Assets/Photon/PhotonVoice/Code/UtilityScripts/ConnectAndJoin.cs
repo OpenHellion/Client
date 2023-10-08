@@ -29,12 +29,12 @@ namespace Photon.Voice.Unity.UtilityScripts
 
         [SerializeField]
         private bool autoTransmit = true;
-        
+
         [SerializeField]
         private bool publishUserId = false;
 
         public string RoomName;
-        
+
         private readonly EnterRoomParams enterRoomParams = new EnterRoomParams
         {
             RoomOptions = new RoomOptions()

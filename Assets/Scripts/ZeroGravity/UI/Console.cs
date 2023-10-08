@@ -12,8 +12,7 @@ namespace ZeroGravity.UI
 {
 	public class Console : MonoBehaviour
 	{
-		[Tooltip("Text in this field will be displayed when user requests help in console")]
-		[TextArea(10, 20)]
+		[Tooltip("Text in this field will be displayed when user requests help in console")] [TextArea(10, 20)]
 		public string HelpText;
 
 		public InputField inputField;
@@ -44,12 +43,10 @@ namespace ZeroGravity.UI
 				MainCanvas.SetActive(!MainCanvas.activeSelf);
 				inputField.ActivateInputField();
 				inputField.Select();
-				if (Client.IsGameBuild)
-				{
-					MyPlayer.Instance.FpsController.ToggleMovement(!MainCanvas.activeSelf);
-					MyPlayer.Instance.FpsController.ToggleCameraMovement(!MainCanvas.activeSelf);
-				}
+				MyPlayer.Instance.FpsController.ToggleMovement(!MainCanvas.activeSelf);
+				MyPlayer.Instance.FpsController.ToggleCameraMovement(!MainCanvas.activeSelf);
 			}
+
 			if (Keyboard.current.escapeKey.isPressed)
 			{
 				MainCanvas.SetActive(false);
@@ -68,6 +65,7 @@ namespace ZeroGravity.UI
 				inputField.text = string.Empty;
 				return;
 			}
+
 			string[] array = inputField.text.Split(" ".ToCharArray(), 2);
 			string command = inputField.text;
 			if (array.Length == 2)
@@ -79,8 +77,11 @@ namespace ZeroGravity.UI
 					inputField.text = string.Empty;
 					return;
 				}
-				command = array[0] + " " + comands[array2[0]] + ((array2.Length != 2) ? string.Empty : ("=" + array2[1]));
+
+				command = array[0] + " " + comands[array2[0]] +
+				          ((array2.Length != 2) ? string.Empty : ("=" + array2[1]));
 			}
+
 			try
 			{
 				ConsoleText.text = ExecuteCommand(command);
@@ -89,12 +90,15 @@ namespace ZeroGravity.UI
 			{
 				ConsoleText.text = ex.Message;
 			}
+
 			inputField.text = string.Empty;
 		}
 
 		public string GetHelpText()
 		{
-			return "Available command types are: set, get, execute, save, load.\nSet command format: set FieldName=newValue\nGet command format: get FieldName\nExec command format: exec FunctionName\n\n" + HelpText;
+			return
+				"Available command types are: set, get, execute, save, load.\nSet command format: set FieldName=newValue\nGet command format: get FieldName\nExec command format: exec FunctionName\n\n" +
+				HelpText;
 		}
 
 		public string ExecuteCommand(string command)
@@ -104,51 +108,62 @@ namespace ZeroGravity.UI
 			{
 				return GetHelpText();
 			}
+
 			if (array.Length == 1 && array[0] == "save")
 			{
 				saveSettings();
 				return "Settings saved.";
 			}
+
 			if (array.Length == 1 && array[0] == "load")
 			{
 				loadSettings();
 				return "Settings loadad.";
 			}
+
 			if (array.Length == 1 && array[0] == "list")
 			{
 				return listSettings();
 			}
+
 			if (array.Length != 2)
 			{
 				throw new Exception("Wrong command format, enter \"help\" for more info");
 			}
+
 			string[] array2 = array[1].Split(new string[1] { "->" }, StringSplitOptions.None);
 			if (array2.Length != 3)
 			{
 				throw new Exception("Wrong command format, enter \"help\" for more info");
 			}
+
 			string[] array3 = array2[2].Split(new char[1] { '=' }, 2);
 			if (array3[0].Length == 0 || (array[0] == "set" && array3.Length != 2))
 			{
 				throw new Exception("Wrong command format, enter \"help\" for more info");
 			}
+
 			GameObject gameObject = GameObject.Find(array2[0]);
 			if (gameObject == null)
 			{
 				throw new Exception("Cannot find game object \"" + array2[0] + "\"");
 			}
+
 			Component component = gameObject.GetComponent(array2[1]);
 			if (component == null)
 			{
 				throw new Exception("Cannot find component \"" + array2[1] + "\"");
 			}
-			BindingFlags bindingAttr = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
+
+			BindingFlags bindingAttr = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public |
+			                           BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
 			string[] array4 = array3[0].Split('/');
 			MemberInfo[] member = component.GetType().GetMember(array4[0], bindingAttr);
 			if (member == null || member.Length == 0)
 			{
 				throw new Exception("Cannot find component member \"" + array4[0] + "\"");
 			}
+
 			object obj = component;
 			object parent = null;
 			MemberInfo parentMemberInfo = null;
@@ -158,6 +173,7 @@ namespace ZeroGravity.UI
 				{
 					throw new Exception("Only root methods can be executed.");
 				}
+
 				for (int i = 1; i < array4.Length; i++)
 				{
 					parent = obj;
@@ -173,31 +189,38 @@ namespace ZeroGravity.UI
 						{
 							throw new Exception("Cannot find child member \"" + array4[i] + "\"");
 						}
+
 						obj = ((PropertyInfo)member[0]).GetValue(obj, null);
 						member = ((PropertyInfo)member[0]).PropertyType.GetMember(array4[i], bindingAttr);
 					}
+
 					if (member == null || member.Length == 0)
 					{
 						throw new Exception("Cannot find child member \"" + array4[i] + "\"");
 					}
 				}
 			}
+
 			MemberInfo memberInfo = member[0];
-			if ((array[0] == "set" || array[0] == "get") && memberInfo.MemberType != MemberTypes.Field && memberInfo.MemberType != MemberTypes.Property)
+			if ((array[0] == "set" || array[0] == "get") && memberInfo.MemberType != MemberTypes.Field &&
+			    memberInfo.MemberType != MemberTypes.Property)
 			{
 				throw new Exception("Member type for get and set commands must be field or property");
 			}
+
 			if (array[0] == "exec" && memberInfo.MemberType != MemberTypes.Method)
 			{
 				throw new Exception("Member type for exec command must be method without parameters");
 			}
+
 			if (array[0] == "set")
 			{
 				if (obj.GetType().IsValueType)
 				{
 					if (!SetMemberValue(parent, parentMemberInfo, obj, memberInfo, array3[1]))
 					{
-						throw new Exception("Failed to set value \"" + array3[1] + "\" to member \"" + array3[0] + "\"");
+						throw new Exception("Failed to set value \"" + array3[1] + "\" to member \"" + array3[0] +
+						                    "\"");
 					}
 				}
 				else if (!SetMemberValue(obj, memberInfo, array3[1]))
@@ -211,6 +234,7 @@ namespace ZeroGravity.UI
 				{
 					return ((FieldInfo)memberInfo).GetValue(obj).ToString();
 				}
+
 				if (memberInfo.MemberType == MemberTypes.Property)
 				{
 					return ((PropertyInfo)memberInfo).GetValue(obj, null).ToString();
@@ -220,10 +244,12 @@ namespace ZeroGravity.UI
 			{
 				((MethodInfo)memberInfo).Invoke(obj, null);
 			}
+
 			return "OK";
 		}
 
-		private bool SetMemberValue(object parent, MemberInfo parentMemberInfo, object obj, MemberInfo membInfo, string value)
+		private bool SetMemberValue(object parent, MemberInfo parentMemberInfo, object obj, MemberInfo membInfo,
+			string value)
 		{
 			bool result = SetMemberValue(obj, membInfo, value);
 			try
@@ -233,11 +259,13 @@ namespace ZeroGravity.UI
 					((FieldInfo)parentMemberInfo).SetValue(parent, obj);
 					return result;
 				}
+
 				if (parentMemberInfo.MemberType == MemberTypes.Property)
 				{
 					((PropertyInfo)parentMemberInfo).SetValue(parent, obj, null);
 					return result;
 				}
+
 				return result;
 			}
 			catch
@@ -267,6 +295,7 @@ namespace ZeroGravity.UI
 						{
 							return false;
 						}
+
 						fieldInfo.SetValue(obj, value);
 					}
 				}
@@ -287,6 +316,7 @@ namespace ZeroGravity.UI
 						{
 							return false;
 						}
+
 						propertyInfo.SetValue(obj, value, null);
 					}
 				}
@@ -295,6 +325,7 @@ namespace ZeroGravity.UI
 			{
 				return false;
 			}
+
 			return true;
 		}
 
@@ -307,13 +338,15 @@ namespace ZeroGravity.UI
 				ConsoleComand consoleComand = array[i];
 				try
 				{
-					stringBuilder.Append(consoleComand.shortcut).Append("=").Append(ExecuteCommand("get " + consoleComand.command))
+					stringBuilder.Append(consoleComand.shortcut).Append("=")
+						.Append(ExecuteCommand("get " + consoleComand.command))
 						.Append("\r\n");
 				}
 				catch
 				{
 				}
 			}
+
 			return stringBuilder.ToString();
 		}
 
@@ -326,13 +359,15 @@ namespace ZeroGravity.UI
 				ConsoleComand consoleComand = array[i];
 				try
 				{
-					stringBuilder.Append(consoleComand.shortcut).Append("=").Append(ExecuteCommand("get " + consoleComand.command))
+					stringBuilder.Append(consoleComand.shortcut).Append("=")
+						.Append(ExecuteCommand("get " + consoleComand.command))
 						.Append("\r\n");
 				}
 				catch
 				{
 				}
 			}
+
 			File.WriteAllText("console_settings.dat", stringBuilder.ToString());
 		}
 
@@ -352,6 +387,7 @@ namespace ZeroGravity.UI
 				{
 				}
 			}
+
 			ConsoleComand[] array4 = comandHelper;
 			for (int j = 0; j < array4.Length; j++)
 			{

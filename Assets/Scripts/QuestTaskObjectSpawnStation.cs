@@ -4,8 +4,7 @@ using ZeroGravity.Data;
 [CreateAssetMenu(fileName = "QuestTask", menuName = "Quests/Quest Task - Spawn Station")]
 public class QuestTaskObjectSpawnStation : QuestTaskObject
 {
-	[Space(10f)]
-	public string SpawnRuleName;
+	[Space(10f)] public string SpawnRuleName;
 
 	public override QuestTriggerData CreateQuestTriggerData()
 	{

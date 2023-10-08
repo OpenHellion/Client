@@ -1,3 +1,4 @@
+using OpenHellion;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
@@ -6,8 +7,7 @@ namespace ZeroGravity.Objects
 {
 	public class Grenade : Item
 	{
-		[Space(25f)]
-		private bool isActive;
+		[Space(25f)] private bool isActive;
 
 		private bool isThrown;
 
@@ -34,12 +34,16 @@ namespace ZeroGravity.Objects
 			{
 				return false;
 			}
+
 			throwStartTime = Time.time;
-			Client.Instance.CanvasManager.CanvasUI.ThrowingItemToggle(true);
+			World.InGameGUI.ThrowingItemToggle(true);
 			isActive = true;
 			GrenadeSounds.Play(0);
 			GrenadeSounds.Play(2);
-			MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true);
+			MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, true);
 			DynamicObject dynamicObj = DynamicObj;
 			GrenadeStats statsData = new GrenadeStats
 			{
@@ -53,15 +57,20 @@ namespace ZeroGravity.Objects
 		{
 			if (isActive && !isThrown)
 			{
-				RequestDrop(Mathf.Clamp(Time.time - throwStartTime - Client.DROP_THRESHOLD, 0f, Client.DROP_MAX_TIME) * 2f);
-				MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false);
+				RequestDrop(Mathf.Clamp(Time.time - throwStartTime - World.DROP_THRESHOLD, 0f,
+					World.DROP_MAX_TIME) * 2f);
+				MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, false);
 				isThrown = true;
 			}
 			else
 			{
 				actionCanceled = false;
 			}
-			Client.Instance.CanvasManager.CanvasUI.ThrowingItemToggle(false);
+
+			World.InGameGUI.ThrowingItemToggle(false);
 		}
 
 		public override bool SecondaryFunction()
@@ -70,11 +79,15 @@ namespace ZeroGravity.Objects
 			{
 				return false;
 			}
+
 			isActive = false;
 			timer = 0f;
 			actionCanceled = true;
 			GrenadeSounds.Play(1);
-			MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false);
+			MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, false);
 			DynamicObject dynamicObj = DynamicObj;
 			GrenadeStats statsData = new GrenadeStats
 			{
@@ -96,14 +109,19 @@ namespace ZeroGravity.Objects
 		{
 			if (base.Explode())
 			{
-				MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false);
+				MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, false);
 				Renderer[] renderers = Renderers;
 				foreach (Renderer renderer in renderers)
 				{
 					renderer.enabled = false;
 				}
+
 				return true;
 			}
+
 			return false;
 		}
 
@@ -119,10 +137,12 @@ namespace ZeroGravity.Objects
 			{
 				isActive = grenadeStats.IsActive.Value;
 			}
+
 			if (grenadeStats.Time.HasValue)
 			{
 				timer = DetonationTime - grenadeStats.Time.Value;
 			}
+
 			if (grenadeStats.Blast.HasValue && grenadeStats.Blast.Value)
 			{
 				Explode();

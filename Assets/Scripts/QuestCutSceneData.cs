@@ -11,13 +11,11 @@ public class QuestCutSceneData : ScriptableObject
 	{
 		public QuestCutSceneCharacter Character;
 
-		[TextArea(4, 4)]
-		public string Dialogue = string.Empty;
+		[TextArea(4, 4)] public string Dialogue = string.Empty;
 
 		public bool PlaySound;
 
-		[ShowIf(nameof(PlaySound), true)]
-		public string DialogueSound = string.Empty;
+		[ShowIf(nameof(PlaySound), true)] public string DialogueSound = string.Empty;
 
 		public bool SkipInJournal;
 

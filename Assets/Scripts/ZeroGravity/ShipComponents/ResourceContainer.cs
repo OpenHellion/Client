@@ -20,61 +20,47 @@ namespace ZeroGravity.ShipComponents
 
 		public float NominalOutput;
 
-		[NonSerialized]
-		public float QuantityChangeRate;
+		[NonSerialized] public float QuantityChangeRate;
 
 		private List<ICargoCompartment> _Compartments;
 
-		[SerializeField]
-		private string _Name = "Resource Tank";
+		[SerializeField] private string _Name = "Resource Tank";
 
 		public override VesselComponentType ComponentType
 		{
-			get
-			{
-				return VesselComponentType.ResourceContainer;
-			}
+			get { return VesselComponentType.ResourceContainer; }
 		}
 
 		public float Capacity
 		{
-			get
-			{
-				return (!(CargoCompartment != null)) ? 0f : CargoCompartment.Capacity;
-			}
+			get { return (!(CargoCompartment != null)) ? 0f : CargoCompartment.Capacity; }
 		}
 
 		public float Quantity
 		{
 			get
 			{
-				return (!(CargoCompartment != null) || CargoCompartment.Resources == null || CargoCompartment.Resources.Count <= 0) ? 0f : CargoCompartment.Resources[0].Quantity;
+				return (!(CargoCompartment != null) || CargoCompartment.Resources == null ||
+				        CargoCompartment.Resources.Count <= 0)
+					? 0f
+					: CargoCompartment.Resources[0].Quantity;
 			}
 		}
 
 		public List<ICargoCompartment> Compartments
 		{
-			get
-			{
-				return _Compartments;
-			}
+			get { return _Compartments; }
 		}
 
 		public string Name
 		{
-			get
-			{
-				return _Name;
-			}
+			get { return _Name; }
 		}
 
 		private new void Start()
 		{
-			if (Client.IsGameBuild)
-			{
-				_ParentVessel = GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
-				_Compartments = new List<ICargoCompartment> { CargoCompartment };
-			}
+			_ParentVessel = GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
+			_Compartments = new List<ICargoCompartment> { CargoCompartment };
 		}
 
 		public ICargoCompartment GetCompartment(short? id)
@@ -87,7 +73,8 @@ namespace ZeroGravity.ShipComponents
 			ResourceContainerData resourceContainerData = new ResourceContainerData();
 			resourceContainerData.InSceneID = base.InSceneID;
 			resourceContainerData.DistributionSystemType = DistributionSystemType;
-			resourceContainerData.CargoCompartment = ((!(CargoCompartment != null)) ? null : CargoCompartment.GetData());
+			resourceContainerData.CargoCompartment =
+				((!(CargoCompartment != null)) ? null : CargoCompartment.GetData());
 			resourceContainerData.NominalInput = NominalInput;
 			resourceContainerData.NominalOutput = NominalOutput;
 			resourceContainerData.IsInUse = IsInUse;

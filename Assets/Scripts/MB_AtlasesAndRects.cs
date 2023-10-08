@@ -7,8 +7,7 @@ public class MB_AtlasesAndRects
 {
 	public Texture2D[] atlases;
 
-	[NonSerialized]
-	public List<MB_MaterialAndUVRect> mat2rect_map;
+	[NonSerialized] public List<MB_MaterialAndUVRect> mat2rect_map;
 
 	public string[] texPropertyNames;
 }

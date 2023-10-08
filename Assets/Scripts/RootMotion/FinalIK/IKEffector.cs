@@ -10,11 +10,9 @@ namespace RootMotion.FinalIK
 
 		public Transform target;
 
-		[Range(0f, 1f)]
-		public float positionWeight;
+		[Range(0f, 1f)] public float positionWeight;
 
-		[Range(0f, 1f)]
-		public float rotationWeight;
+		[Range(0f, 1f)] public float rotationWeight;
 
 		public Vector3 position = Vector3.zero;
 
@@ -24,8 +22,7 @@ namespace RootMotion.FinalIK
 
 		public bool effectChildNodes = true;
 
-		[Range(0f, 1f)]
-		public float maintainRelativePositionWeight;
+		[Range(0f, 1f)] public float maintainRelativePositionWeight;
 
 		public Transform[] childBones = new Transform[0];
 
@@ -103,11 +100,14 @@ namespace RootMotion.FinalIK
 				message = "IK Effector bone is null.";
 				return false;
 			}
+
 			if (solver.GetPoint(bone) == null)
 			{
-				message = "IK Effector is referencing to a bone '" + bone.name + "' that does not excist in the Node Chain.";
+				message = "IK Effector is referencing to a bone '" + bone.name +
+				          "' that does not excist in the Node Chain.";
 				return false;
 			}
+
 			Transform[] array = childBones;
 			foreach (Transform transform in array)
 			{
@@ -117,30 +117,39 @@ namespace RootMotion.FinalIK
 					return false;
 				}
 			}
+
 			Transform[] array2 = childBones;
 			foreach (Transform transform2 in array2)
 			{
 				if (solver.GetPoint(transform2) == null)
 				{
-					message = "IK Effector is referencing to a bone '" + transform2.name + "' that does not excist in the Node Chain.";
+					message = "IK Effector is referencing to a bone '" + transform2.name +
+					          "' that does not excist in the Node Chain.";
 					return false;
 				}
 			}
+
 			if (planeBone1 != null && solver.GetPoint(planeBone1) == null)
 			{
-				message = "IK Effector is referencing to a bone '" + planeBone1.name + "' that does not excist in the Node Chain.";
+				message = "IK Effector is referencing to a bone '" + planeBone1.name +
+				          "' that does not excist in the Node Chain.";
 				return false;
 			}
+
 			if (planeBone2 != null && solver.GetPoint(planeBone2) == null)
 			{
-				message = "IK Effector is referencing to a bone '" + planeBone2.name + "' that does not excist in the Node Chain.";
+				message = "IK Effector is referencing to a bone '" + planeBone2.name +
+				          "' that does not excist in the Node Chain.";
 				return false;
 			}
+
 			if (planeBone3 != null && solver.GetPoint(planeBone3) == null)
 			{
-				message = "IK Effector is referencing to a bone '" + planeBone3.name + "' that does not excist in the Node Chain.";
+				message = "IK Effector is referencing to a bone '" + planeBone3.name +
+				          "' that does not excist in the Node Chain.";
 				return false;
 			}
+
 			return true;
 		}
 
@@ -156,6 +165,7 @@ namespace RootMotion.FinalIK
 			{
 				solver.GetChainAndNodeIndexes(childBones[i], out childChainIndexes[i], out childNodeIndexes[i]);
 			}
+
 			localPositions = new Vector3[childBones.Length];
 			usePlaneNodes = false;
 			if (planeBone1 != null)
@@ -170,6 +180,7 @@ namespace RootMotion.FinalIK
 						usePlaneNodes = true;
 					}
 				}
+
 				isEndEffector = true;
 			}
 			else
@@ -206,35 +217,50 @@ namespace RootMotion.FinalIK
 			solver.GetNode(chainIndex, nodeIndex).effectorPositionWeight = posW;
 			solver.GetNode(chainIndex, nodeIndex).effectorRotationWeight = rotW;
 			solver.GetNode(chainIndex, nodeIndex).solverRotation = rotation;
-			if (float.IsInfinity(positionOffset.x) || float.IsInfinity(positionOffset.y) || float.IsInfinity(positionOffset.z))
+			if (float.IsInfinity(positionOffset.x) || float.IsInfinity(positionOffset.y) ||
+			    float.IsInfinity(positionOffset.z))
 			{
-				Debug.LogError("Invalid IKEffector.positionOffset (contains Infinity)! Please make sure not to set IKEffector.positionOffset to infinite values.", bone);
+				Debug.LogError(
+					"Invalid IKEffector.positionOffset (contains Infinity)! Please make sure not to set IKEffector.positionOffset to infinite values.",
+					bone);
 			}
+
 			if (float.IsNaN(positionOffset.x) || float.IsNaN(positionOffset.y) || float.IsNaN(positionOffset.z))
 			{
-				Debug.LogError("Invalid IKEffector.positionOffset (contains NaN)! Please make sure not to set IKEffector.positionOffset to NaN values.", bone);
+				Debug.LogError(
+					"Invalid IKEffector.positionOffset (contains NaN)! Please make sure not to set IKEffector.positionOffset to NaN values.",
+					bone);
 			}
+
 			if (positionOffset.sqrMagnitude > 1E+10f)
 			{
-				Debug.LogError("Additive effector positionOffset detected in Full Body IK (extremely large value). Make sure you are not circularily adding to effector positionOffset each frame.", bone);
+				Debug.LogError(
+					"Additive effector positionOffset detected in Full Body IK (extremely large value). Make sure you are not circularily adding to effector positionOffset each frame.",
+					bone);
 			}
+
 			if (float.IsInfinity(position.x) || float.IsInfinity(position.y) || float.IsInfinity(position.z))
 			{
 				Debug.LogError("Invalid IKEffector.position (contains Infinity)!");
 			}
+
 			solver.GetNode(chainIndex, nodeIndex).offset += positionOffset * solver.IKPositionWeight;
 			if (effectChildNodes && solver.iterations > 0)
 			{
 				for (int i = 0; i < childBones.Length; i++)
 				{
 					localPositions[i] = childBones[i].transform.position - bone.transform.position;
-					solver.GetNode(childChainIndexes[i], childNodeIndexes[i]).offset += positionOffset * solver.IKPositionWeight;
+					solver.GetNode(childChainIndexes[i], childNodeIndexes[i]).offset +=
+						positionOffset * solver.IKPositionWeight;
 				}
 			}
+
 			if (usePlaneNodes && maintainRelativePositionWeight > 0f)
 			{
-				animatedPlaneRotation = Quaternion.LookRotation(planeBone2.position - planeBone1.position, planeBone3.position - planeBone1.position);
+				animatedPlaneRotation = Quaternion.LookRotation(planeBone2.position - planeBone1.position,
+					planeBone3.position - planeBone1.position);
 			}
+
 			firstUpdate = true;
 		}
 
@@ -252,9 +278,12 @@ namespace RootMotion.FinalIK
 			Vector3 upwards = solverPosition3 - solverPosition;
 			if (vector == Vector3.zero)
 			{
-				Warning.Log("Make sure you are not placing 2 or more FBBIK effectors of the same chain to exactly the same position.", bone);
+				Warning.Log(
+					"Make sure you are not placing 2 or more FBBIK effectors of the same chain to exactly the same position.",
+					bone);
 				return Quaternion.identity;
 			}
+
 			return Quaternion.LookRotation(vector, upwards);
 		}
 
@@ -265,12 +294,16 @@ namespace RootMotion.FinalIK
 				animatedPosition = bone.position + solver.GetNode(chainIndex, nodeIndex).offset;
 				firstUpdate = false;
 			}
-			solver.GetNode(chainIndex, nodeIndex).solverPosition = Vector3.Lerp(GetPosition(solver, out planeRotationOffset), position, posW);
+
+			solver.GetNode(chainIndex, nodeIndex).solverPosition =
+				Vector3.Lerp(GetPosition(solver, out planeRotationOffset), position, posW);
 			if (effectChildNodes)
 			{
 				for (int i = 0; i < childBones.Length; i++)
 				{
-					solver.GetNode(childChainIndexes[i], childNodeIndexes[i]).solverPosition = Vector3.Lerp(solver.GetNode(childChainIndexes[i], childNodeIndexes[i]).solverPosition, solver.GetNode(chainIndex, nodeIndex).solverPosition + localPositions[i], posW);
+					solver.GetNode(childChainIndexes[i], childNodeIndexes[i]).solverPosition = Vector3.Lerp(
+						solver.GetNode(childChainIndexes[i], childNodeIndexes[i]).solverPosition,
+						solver.GetNode(chainIndex, nodeIndex).solverPosition + localPositions[i], posW);
 				}
 			}
 		}
@@ -282,16 +315,20 @@ namespace RootMotion.FinalIK
 			{
 				return solver.GetNode(chainIndex, nodeIndex).solverPosition;
 			}
+
 			if (maintainRelativePositionWeight <= 0f)
 			{
 				return animatedPosition;
 			}
+
 			Vector3 vector = bone.position;
 			Vector3 vector2 = vector - planeBone1.position;
 			planeRotationOffset = GetPlaneRotation(solver) * Quaternion.Inverse(animatedPlaneRotation);
 			vector = solver.GetNode(plane1ChainIndex, plane1NodeIndex).solverPosition + planeRotationOffset * vector2;
-			planeRotationOffset = Quaternion.Lerp(Quaternion.identity, planeRotationOffset, maintainRelativePositionWeight);
-			return Vector3.Lerp(animatedPosition, vector + solver.GetNode(chainIndex, nodeIndex).offset, maintainRelativePositionWeight);
+			planeRotationOffset =
+				Quaternion.Lerp(Quaternion.identity, planeRotationOffset, maintainRelativePositionWeight);
+			return Vector3.Lerp(animatedPosition, vector + solver.GetNode(chainIndex, nodeIndex).offset,
+				maintainRelativePositionWeight);
 		}
 	}
 }

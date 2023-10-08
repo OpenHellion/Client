@@ -16,10 +16,7 @@ namespace RootMotion.FinalIK
 
 		private bool positionChanged
 		{
-			get
-			{
-				return transform.localPosition != lastLocalPosition;
-			}
+			get { return transform.localPosition != lastLocalPosition; }
 		}
 
 		public ConstraintPositionOffset()
@@ -41,10 +38,12 @@ namespace RootMotion.FinalIK
 					lastLocalPosition = transform.localPosition;
 					initiated = true;
 				}
+
 				if (positionChanged)
 				{
 					defaultLocalPosition = transform.localPosition;
 				}
+
 				transform.localPosition = defaultLocalPosition;
 				transform.position += offset * weight;
 				lastLocalPosition = transform.localPosition;

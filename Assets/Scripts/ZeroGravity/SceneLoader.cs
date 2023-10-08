@@ -34,7 +34,7 @@ namespace ZeroGravity
 
 		private readonly Dictionary<long, string> _celestialScenes = new Dictionary<long, string>();
 
-		public bool IsPreloading { get; private set; }
+		public static bool IsPreloading { get; private set; }
 
 		private Transform _geometryCacheTransform;
 
@@ -50,7 +50,8 @@ namespace ZeroGravity
 			DontDestroyOnLoad(this);
 
 			_geometryCacheTransform = transform.root;
-			List<StructureSceneData> structureJson = JsonSerialiser.LoadResource<List<StructureSceneData>>("Data/Structures");
+			List<StructureSceneData> structureJson =
+				JsonSerialiser.LoadResource<List<StructureSceneData>>("Data/Structures");
 			if (structureJson != null)
 			{
 				foreach (StructureSceneData item in structureJson)
@@ -58,11 +59,14 @@ namespace ZeroGravity
 					_structureScenes.Add(item.ItemID, item.SceneName);
 				}
 			}
-			List<CelestialSceneData> celestialSceneJson = JsonSerialiser.LoadResource<List<CelestialSceneData>>("Data/Asteroids");
+
+			List<CelestialSceneData> celestialSceneJson =
+				JsonSerialiser.LoadResource<List<CelestialSceneData>>("Data/Asteroids");
 			if (celestialSceneJson == null)
 			{
 				return;
 			}
+
 			foreach (CelestialSceneData sceneData in celestialSceneJson)
 			{
 				_celestialScenes.Add(sceneData.ItemID, sceneData.SceneName);
@@ -98,10 +102,12 @@ namespace ZeroGravity
 				Dbg.Log("Started preloading...");
 				return;
 			}
+
 			_geometryCacheTransform = geometryCache.transform;
 
 			// Initialize structures.
-			StructureScene[] structureCache = _geometryCacheTransform.gameObject.GetComponentsInChildren<StructureScene>(includeInactive: true);
+			StructureScene[] structureCache =
+				_geometryCacheTransform.gameObject.GetComponentsInChildren<StructureScene>(includeInactive: true);
 			foreach (StructureScene structureScene in structureCache)
 			{
 				_loadedSceneReferences.Add(new SceneReference
@@ -113,7 +119,8 @@ namespace ZeroGravity
 			}
 
 			// Initialize celestial bodies.
-			AsteroidScene[] celestialScene = _geometryCacheTransform.gameObject.GetComponentsInChildren<AsteroidScene>(includeInactive: true);
+			AsteroidScene[] celestialScene =
+				_geometryCacheTransform.gameObject.GetComponentsInChildren<AsteroidScene>(includeInactive: true);
 			foreach (AsteroidScene asteroidScene in celestialScene)
 			{
 				_loadedSceneReferences.Add(new SceneReference
@@ -148,6 +155,7 @@ namespace ZeroGravity
 				_StartupGUI.UpdateProgressBar(currentSceneNumber / totalNumberOfScenes);
 				yield return StartCoroutine(LoadSceneCoroutine(SceneType.Structure, str.Key));
 			}
+
 			_StartupGUI.ClosePreloading();
 			IsPreloading = false;
 			Dbg.Log("Done preloading.");
@@ -164,14 +172,17 @@ namespace ZeroGravity
 			{
 				yield break;
 			}
+
 			foreach (GameScenes.SceneID sceneID in sceneIDs)
 			{
-				KeyValuePair<long, string> kv2 = _structureScenes.FirstOrDefault((KeyValuePair<long, string> m) => m.Key == (long)sceneID);
+				KeyValuePair<long, string> kv2 =
+					_structureScenes.FirstOrDefault((KeyValuePair<long, string> m) => m.Key == (long)sceneID);
 				if (kv2.Key != 0)
 				{
 					yield return StartCoroutine(LoadSceneCoroutine(SceneType.Structure, kv2.Key));
 					continue;
 				}
+
 				kv2 = _celestialScenes.FirstOrDefault((KeyValuePair<long, string> m) => m.Key == (long)sceneID);
 				if (kv2.Key != 0)
 				{
@@ -182,32 +193,38 @@ namespace ZeroGravity
 
 		public GameObject GetLoadedScene(SceneType type, long guid)
 		{
-			SceneReference sceneItem = _loadedSceneReferences.Find((SceneReference m) => m.GUID == guid && m.Type == type);
+			SceneReference sceneItem =
+				_loadedSceneReferences.Find((SceneReference m) => m.GUID == guid && m.Type == type);
 			if (sceneItem != null)
 			{
-				if (InitialisingSceneManager.SceneLoadType == InitialisingSceneManager.SceneLoadTypeValue.PreloadWithCopy)
+				if (InitialisingSceneManager.SceneLoadType ==
+				    InitialisingSceneManager.SceneLoadTypeValue.PreloadWithCopy)
 				{
 					return Instantiate(sceneItem.RootObject);
 				}
+
 				_loadedSceneReferences.Remove(sceneItem);
 				return sceneItem.RootObject;
 			}
+
 			Dbg.Error("Cannot find loaded scene of type", type, "with guid", guid);
 			return null;
 		}
 
 		public IEnumerator LoadSceneCoroutine(SceneType type, long guid)
 		{
-			if (InitialisingSceneManager.SceneLoadType == InitialisingSceneManager.SceneLoadTypeValue.PreloadWithCopy && _loadedSceneReferences.FirstOrDefault((SceneReference m) => m.GUID == guid && m.Type == type) != null)
+			if (InitialisingSceneManager.SceneLoadType == InitialisingSceneManager.SceneLoadTypeValue.PreloadWithCopy &&
+			    _loadedSceneReferences.FirstOrDefault((SceneReference m) => m.GUID == guid && m.Type == type) != null)
 			{
 				yield break;
 			}
+
 			string sceneName = ((type != 0) ? _celestialScenes[guid] : _structureScenes[guid]);
 			if (sceneName.IsNullOrEmpty())
 			{
 				yield break;
 			}
-			Client.Instance.LoadingScenesCount++;
+
 			if (_scenesCurrentlyLoading.Contains(guid))
 			{
 				yield return new WaitWhile(() => _scenesCurrentlyLoading.Contains(guid));
@@ -259,9 +276,9 @@ namespace ZeroGravity
 						}
 					}
 				}
+
 				_scenesCurrentlyLoading.Remove(guid);
 			}
-			Client.Instance.LoadingScenesCount--;
 		}
 	}
 }

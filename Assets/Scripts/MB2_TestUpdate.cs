@@ -38,6 +38,7 @@ public class MB2_TestUpdate : MonoBehaviour
 		{
 			uv[i] = Mathf.Sin(Time.time) * uvs[i];
 		}
+
 		m.uv = uv;
 		meshbaker.UpdateGameObjects(new GameObject[1] { objWithChangingUVs }, true, true, true, true, true);
 		meshbaker.Apply(false, true, true, true, true, false, false, false, false);
@@ -47,6 +48,7 @@ public class MB2_TestUpdate : MonoBehaviour
 		{
 			uv[j] = Mathf.Sin(Time.time) * uvs[j];
 		}
+
 		m.uv = uv;
 		multiMeshBaker.UpdateGameObjects(new GameObject[1] { objWithChangingUVs }, true, true, true, true, true);
 		multiMeshBaker.Apply(false, true, true, true, true, false, false, false, false);

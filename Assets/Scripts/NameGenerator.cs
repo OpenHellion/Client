@@ -142,6 +142,7 @@ public static class NameGenerator
 				disposable.Dispose();
 			}
 		}
+
 		foreach (KeyValuePair<GameScenes.SceneID, string> item in shipNaming)
 		{
 			if (item.Value.ToLower().StartsWith(text.ToLower()))
@@ -149,6 +150,7 @@ public static class NameGenerator
 				return item.Key;
 			}
 		}
+
 		foreach (KeyValuePair<GameScenes.SceneID, string> item2 in shipNaming)
 		{
 			if (item2.Value.ToLower().Contains(text.ToLower()))
@@ -156,6 +158,7 @@ public static class NameGenerator
 				return item2.Key;
 			}
 		}
+
 		return GameScenes.SceneID.None;
 	}
 }

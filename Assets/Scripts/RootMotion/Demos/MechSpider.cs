@@ -43,24 +43,30 @@ namespace RootMotion.Demos
 		{
 			Vector3 legsPlaneNormal = GetLegsPlaneNormal();
 			Quaternion quaternion = Quaternion.FromToRotation(base.transform.up, legsPlaneNormal);
-			base.transform.rotation = Quaternion.Slerp(base.transform.rotation, quaternion * base.transform.rotation, Time.deltaTime * rootRotationSpeed);
+			base.transform.rotation = Quaternion.Slerp(base.transform.rotation, quaternion * base.transform.rotation,
+				Time.deltaTime * rootRotationSpeed);
 			Vector3 legCentroid = GetLegCentroid();
-			Vector3 vector = Vector3.Project(legCentroid + base.transform.up * height * scale - base.transform.position, base.transform.up);
+			Vector3 vector = Vector3.Project(legCentroid + base.transform.up * height * scale - base.transform.position,
+				base.transform.up);
 			base.transform.position += vector * Time.deltaTime * (rootPositionSpeed * scale);
-			if (Physics.Raycast(base.transform.position + base.transform.up * raycastHeight * scale, -base.transform.up, out rootHit, raycastHeight * scale + raycastDistance * scale, raycastLayers))
+			if (Physics.Raycast(base.transform.position + base.transform.up * raycastHeight * scale, -base.transform.up,
+				    out rootHit, raycastHeight * scale + raycastDistance * scale, raycastLayers))
 			{
 				rootHit.distance -= raycastHeight * scale + minHeight * scale;
 				if (rootHit.distance < 0f)
 				{
 					Vector3 b = base.transform.position - base.transform.up * rootHit.distance;
-					base.transform.position = Vector3.Lerp(base.transform.position, b, Time.deltaTime * rootPositionSpeed * scale);
+					base.transform.position = Vector3.Lerp(base.transform.position, b,
+						Time.deltaTime * rootPositionSpeed * scale);
 				}
 			}
+
 			sine += Time.deltaTime * breatheSpeed;
 			if (sine >= (float)Math.PI * 2f)
 			{
 				sine -= (float)Math.PI * 2f;
 			}
+
 			float num = Mathf.Sin(sine) * breatheMagnitude * scale;
 			Vector3 vector2 = base.transform.up * num;
 			body.transform.position = base.transform.position + vector2;
@@ -74,6 +80,7 @@ namespace RootMotion.Demos
 			{
 				zero += legs[i].position * num;
 			}
+
 			return zero;
 		}
 
@@ -84,6 +91,7 @@ namespace RootMotion.Demos
 			{
 				return vector;
 			}
+
 			float t = 1f / Mathf.Lerp(legs.Length, 1f, legRotationWeight);
 			for (int i = 0; i < legs.Length; i++)
 			{
@@ -95,6 +103,7 @@ namespace RootMotion.Demos
 				b = Quaternion.Lerp(Quaternion.identity, b, t);
 				vector = b * vector;
 			}
+
 			return vector;
 		}
 	}

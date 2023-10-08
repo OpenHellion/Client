@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using ZeroGravity.Data;
@@ -16,9 +14,6 @@ namespace ZeroGravity
 		public static char CR = '\n';
 
 		public static char LF = '\r';
-
-		[CompilerGenerated]
-		private static Func<Transform, GameObject> _003C_003Ef__am_0024cache0;
 
 		public static float[] ToArray(this Vector3 v)
 		{
@@ -37,14 +32,17 @@ namespace ZeroGravity
 			{
 				result.x -= 360f;
 			}
+
 			if (result.y > 180f)
 			{
 				result.y -= 360f;
 			}
+
 			if (result.z > 180f)
 			{
 				result.z -= 360f;
 			}
+
 			return result;
 		}
 
@@ -55,6 +53,7 @@ namespace ZeroGravity
 			{
 				return meshData;
 			}
+
 			meshData.Vertices = new float[s.vertexCount * 3];
 			for (int i = 0; i < s.vertexCount; i++)
 			{
@@ -62,11 +61,13 @@ namespace ZeroGravity
 				meshData.Vertices[i * 3 + 1] = s.vertices[i].y;
 				meshData.Vertices[i * 3 + 2] = s.vertices[i].z;
 			}
+
 			meshData.Indices = s.GetIndices(0);
 			return meshData;
 		}
 
-		public static void AddIfExists(this AnimatorOverrideController animOverride, string clipName, AnimationClip animClip)
+		public static void AddIfExists(this AnimatorOverrideController animOverride, string clipName,
+			AnimationClip animClip)
 		{
 			if (animClip != null)
 			{
@@ -112,14 +113,17 @@ namespace ZeroGravity
 			{
 				result.X -= 360.0;
 			}
+
 			if (result.Y > 180.0)
 			{
 				result.Y -= 360.0;
 			}
+
 			if (result.Z > 180.0)
 			{
 				result.Z -= 360.0;
 			}
+
 			return result;
 		}
 
@@ -129,6 +133,7 @@ namespace ZeroGravity
 			{
 				return new Vector3(arr[0], arr[1], arr[2]);
 			}
+
 			return Vector3.zero;
 		}
 
@@ -138,6 +143,7 @@ namespace ZeroGravity
 			{
 				return new Quaternion(arr[0], arr[1], arr[2], arr[3]);
 			}
+
 			return Quaternion.identity;
 		}
 
@@ -147,6 +153,7 @@ namespace ZeroGravity
 			{
 				return new Vector3D(arr[0], arr[1], arr[2]);
 			}
+
 			return Vector3D.Zero;
 		}
 
@@ -156,6 +163,7 @@ namespace ZeroGravity
 			{
 				return new Vector3D(arr[0], arr[1], arr[2]);
 			}
+
 			return Vector3D.Zero;
 		}
 
@@ -165,6 +173,7 @@ namespace ZeroGravity
 			{
 				return new QuaternionD(arr[0], arr[1], arr[2], arr[3]);
 			}
+
 			return QuaternionD.Identity;
 		}
 
@@ -174,6 +183,7 @@ namespace ZeroGravity
 			{
 				return new QuaternionD(arr[0], arr[1], arr[2], arr[3]);
 			}
+
 			return QuaternionD.Identity;
 		}
 
@@ -189,12 +199,13 @@ namespace ZeroGravity
 
 		public static bool IsNotEpsilonZero(this Vector3 value, float epsilon = float.Epsilon)
 		{
-			return System.Math.Abs(value.x) > epsilon || System.Math.Abs(value.y) > epsilon || System.Math.Abs(value.z) > epsilon;
+			return MathF.Abs(value.x) > epsilon || MathF.Abs(value.y) > epsilon || MathF.Abs(value.z) > epsilon;
 		}
 
 		public static bool IsNotEpsilonZero(this Vector3D value, double epsilon = double.Epsilon)
 		{
-			return System.Math.Abs(value.X) > epsilon || System.Math.Abs(value.Y) > epsilon || System.Math.Abs(value.Z) > epsilon;
+			return System.Math.Abs(value.X) > epsilon || System.Math.Abs(value.Y) > epsilon ||
+			       System.Math.Abs(value.Z) > epsilon;
 		}
 
 		public static bool IsInfinity(this Vector3 value)
@@ -209,7 +220,8 @@ namespace ZeroGravity
 
 		public static bool IsInfinity(this Quaternion value)
 		{
-			return float.IsInfinity(value.x) || float.IsInfinity(value.y) || float.IsInfinity(value.z) || float.IsInfinity(value.w);
+			return float.IsInfinity(value.x) || float.IsInfinity(value.y) || float.IsInfinity(value.z) ||
+			       float.IsInfinity(value.w);
 		}
 
 		public static bool IsNaN(this Quaternion value)
@@ -229,7 +241,7 @@ namespace ZeroGravity
 
 		public static bool IsEpsilonEqual(this float val, float other, float epsilon = float.Epsilon)
 		{
-			return !(System.Math.Abs(val - other) > epsilon);
+			return !(MathF.Abs(val - other) > epsilon);
 		}
 
 		public static bool IsEpsilonEqualD(this double val, double other, double epsilon = double.Epsilon)
@@ -239,17 +251,20 @@ namespace ZeroGravity
 
 		public static bool IsEpsilonEqual(this Vector3 val, Vector3 other, float epsilon = float.Epsilon)
 		{
-			return !(Mathf.Abs(val.x - other.x) > epsilon) && !(Mathf.Abs(val.y - other.y) > epsilon) && !(Mathf.Abs(val.z - other.z) > epsilon);
+			return !(Mathf.Abs(val.x - other.x) > epsilon) && !(Mathf.Abs(val.y - other.y) > epsilon) &&
+			       !(Mathf.Abs(val.z - other.z) > epsilon);
 		}
 
 		public static bool IsEpsilonEqual(this Quaternion val, Quaternion other, float epsilon = float.Epsilon)
 		{
-			return !(Mathf.Abs(val.x - other.x) > epsilon) && !(Mathf.Abs(val.y - other.y) > epsilon) && !(Mathf.Abs(val.z - other.z) > epsilon) && !(Mathf.Abs(val.w - other.w) > epsilon);
+			return !(Mathf.Abs(val.x - other.x) > epsilon) && !(Mathf.Abs(val.y - other.y) > epsilon) &&
+			       !(Mathf.Abs(val.z - other.z) > epsilon) && !(Mathf.Abs(val.w - other.w) > epsilon);
 		}
 
 		public static bool IsEpsilonEqual(this Vector3D val, Vector3D other, double epsilon = double.Epsilon)
 		{
-			return !(System.Math.Abs(val.X - other.X) > epsilon) && !(System.Math.Abs(val.Y - other.Y) > epsilon) && !(System.Math.Abs(val.Z - other.Z) > epsilon);
+			return !(System.Math.Abs(val.X - other.X) > epsilon) && !(System.Math.Abs(val.Y - other.Y) > epsilon) &&
+			       !(System.Math.Abs(val.Z - other.Z) > epsilon);
 		}
 
 		public static Vector3D ToVector3D(this Vector3 value)
@@ -282,10 +297,12 @@ namespace ZeroGravity
 
 		public static bool IsValid(this Vector3 v)
 		{
-			if (double.IsNaN(v.x) || double.IsInfinity(v.x) || double.IsNaN(v.y) || double.IsInfinity(v.y) || double.IsNaN(v.z) || double.IsInfinity(v.z))
+			if (double.IsNaN(v.x) || double.IsInfinity(v.x) || double.IsNaN(v.y) || double.IsInfinity(v.y) ||
+			    double.IsNaN(v.z) || double.IsInfinity(v.z))
 			{
 				return false;
 			}
+
 			return true;
 		}
 
@@ -310,10 +327,12 @@ namespace ZeroGravity
 
 		public static bool IsValid(this Vector3D v)
 		{
-			if (double.IsNaN(v.X) || double.IsInfinity(v.X) || double.IsNaN(v.Y) || double.IsInfinity(v.Y) || double.IsNaN(v.Z) || double.IsInfinity(v.Z))
+			if (double.IsNaN(v.X) || double.IsInfinity(v.X) || double.IsNaN(v.Y) || double.IsInfinity(v.Y) ||
+			    double.IsNaN(v.Z) || double.IsInfinity(v.Z))
 			{
 				return false;
 			}
+
 			return true;
 		}
 
@@ -344,27 +363,16 @@ namespace ZeroGravity
 			{
 				return ThisGObj.transform;
 			}
-			IEnumerator enumerator = ThisGObj.GetEnumerator();
-			try
+
+			foreach (Transform item in ThisGObj)
 			{
-				while (enumerator.MoveNext())
+				Transform transform = FindChildByName(item, ThisName);
+				if ((bool)transform)
 				{
-					Transform thisGObj = (Transform)enumerator.Current;
-					Transform transform = thisGObj.FindChildByName(ThisName);
-					if ((bool)transform)
-					{
-						return transform;
-					}
+					return transform;
 				}
 			}
-			finally
-			{
-				IDisposable disposable;
-				if ((disposable = enumerator as IDisposable) != null)
-				{
-					disposable.Dispose();
-				}
-			}
+
 			return null;
 		}
 
@@ -394,14 +402,16 @@ namespace ZeroGravity
 			{
 				return target;
 			}
+
 			for (int i = 0; i < target.childCount; i++)
 			{
-				Transform transform = target.GetChild(i).Search(name);
+				Transform transform = Search(target.GetChild(i), name);
 				if (transform != null)
 				{
 					return transform;
 				}
 			}
+
 			return null;
 		}
 
@@ -410,7 +420,7 @@ namespace ZeroGravity
 			int mask = LayerMask.GetMask(skipLayers);
 			int layer2 = LayerMask.NameToLayer(layer);
 			int num = 0;
-			Transform[] componentsInChildren = target.GetComponentsInChildren<Transform>(true);
+			Transform[] componentsInChildren = target.GetComponentsInChildren<Transform>(includeInactive: true);
 			foreach (Transform transform in componentsInChildren)
 			{
 				num = 1 << transform.gameObject.layer;
@@ -425,11 +435,11 @@ namespace ZeroGravity
 		{
 			int mask = LayerMask.GetMask(skipLayers);
 			int num = 0;
-			Transform[] componentsInChildren = target.GetComponentsInChildren<Transform>(true);
+			Transform[] componentsInChildren = target.GetComponentsInChildren<Transform>(includeInactive: true);
 			foreach (Transform transform in componentsInChildren)
 			{
 				num = 1 << transform.gameObject.layer;
-				if (transform.gameObject != null && (num & mask) != num)
+				if (transform.gameObject is not null && (num & mask) != num)
 				{
 					transform.gameObject.layer = layer;
 				}
@@ -443,7 +453,9 @@ namespace ZeroGravity
 			{
 				return (T)null;
 			}
-			BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+			BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public |
+			                           BindingFlags.NonPublic;
 			PropertyInfo[] properties = type.GetProperties(bindingAttr);
 			PropertyInfo[] array = properties;
 			foreach (PropertyInfo propertyInfo in array)
@@ -459,36 +471,26 @@ namespace ZeroGravity
 					}
 				}
 			}
+
 			FieldInfo[] fields = type.GetFields(bindingAttr);
 			FieldInfo[] array2 = fields;
 			foreach (FieldInfo fieldInfo in array2)
 			{
 				fieldInfo.SetValue(comp, fieldInfo.GetValue(other));
 			}
+
 			return comp as T;
 		}
 
 		public static List<Transform> GetChildren(this Transform transform)
 		{
 			List<Transform> list = new List<Transform>();
-			IEnumerator enumerator = transform.GetEnumerator();
-			try
+			foreach (Transform item in transform)
 			{
-				while (enumerator.MoveNext())
-				{
-					Transform item = (Transform)enumerator.Current;
-					list.Add(item);
-				}
-				return list;
+				list.Add(item);
 			}
-			finally
-			{
-				IDisposable disposable;
-				if ((disposable = enumerator as IDisposable) != null)
-				{
-					disposable.Dispose();
-				}
-			}
+
+			return list;
 		}
 
 		public static string GetPathFromParent(this Transform transform, Transform fromParent)
@@ -499,6 +501,7 @@ namespace ZeroGravity
 				transform = transform.parent;
 				text = transform.name + "/" + text;
 			}
+
 			return text;
 		}
 
@@ -526,17 +529,14 @@ namespace ZeroGravity
 			{
 				list.Add(item);
 			}
+
 			return list;
 		}
 
 		public static void DestroyAll(this Transform t, bool childrenOnly = false)
 		{
-			Transform[] componentsInChildren = t.GetComponentsInChildren<Transform>(true);
-			if (_003C_003Ef__am_0024cache0 == null)
-			{
-				_003C_003Ef__am_0024cache0 = _003CDestroyAll_003Em__0;
-			}
-			foreach (GameObject item in componentsInChildren.Select(_003C_003Ef__am_0024cache0))
+			foreach (GameObject item in from m in t.GetComponentsInChildren<Transform>(includeInactive: true)
+			         select m.gameObject)
 			{
 				if (!childrenOnly || !(item == t.gameObject))
 				{
@@ -547,12 +547,13 @@ namespace ZeroGravity
 
 		public static void DestroyAll(this GameObject go, bool childrenOnly = false)
 		{
-			go.transform.DestroyAll(childrenOnly);
+			DestroyAll(go.transform, childrenOnly);
 		}
 
 		public static void DestroyAll<T>(this Transform t, bool childrenOnly = false) where T : Component
 		{
-			foreach (GameObject item in t.GetComponentsInChildren<T>(true).Select(_003CDestroyAll_00601_003Em__1))
+			foreach (GameObject item in from m in t.GetComponentsInChildren<T>(includeInactive: true)
+			         select m.gameObject)
 			{
 				if (!childrenOnly || !(item == t.gameObject))
 				{
@@ -563,7 +564,7 @@ namespace ZeroGravity
 
 		public static void DestroyAll<T>(this GameObject go, bool childrenOnly = false) where T : Component
 		{
-			go.transform.DestroyAll<T>(childrenOnly);
+			DestroyAll<T>(go.transform, childrenOnly);
 		}
 
 		public static T GetNextInLoop<T>(this IEnumerator<T> enumerator)
@@ -572,12 +573,13 @@ namespace ZeroGravity
 			{
 				enumerator.Reset();
 			}
+
 			return enumerator.Current;
 		}
 
 		public static T ToEnum<T>(this string value)
 		{
-			return (T)Enum.Parse(typeof(T), value, true);
+			return (T)Enum.Parse(typeof(T), value, ignoreCase: true);
 		}
 
 		public static void Activate(this GameObject go, bool value)
@@ -606,18 +608,6 @@ namespace ZeroGravity
 		public static bool IsInvoking(this MonoBehaviour mb, Action func)
 		{
 			return mb.IsInvoking(func.Method.Name);
-		}
-
-		[CompilerGenerated]
-		private static GameObject _003CDestroyAll_003Em__0(Transform m)
-		{
-			return m.gameObject;
-		}
-
-		[CompilerGenerated]
-		private static GameObject _003CDestroyAll_00601_003Em__1<T>(T m) where T : Component
-		{
-			return m.gameObject;
 		}
 	}
 }

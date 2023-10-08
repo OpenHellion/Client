@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,6 +8,8 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
 using OpenHellion.Net;
+using OpenHellion.UI;
+using Object = UnityEngine.Object;
 
 namespace ZeroGravity
 {
@@ -46,19 +49,18 @@ namespace ZeroGravity
 
 		public QuestCutSceneUI LogUI;
 
-		private List<QuestCutSceneUI> logElements = new List<QuestCutSceneUI>();
+		private readonly List<QuestCutSceneUI> _logElements = new List<QuestCutSceneUI>();
 
-		private void Start()
-		{
-		}
+		[SerializeField] private InGameGUI _inGameGUI;
 
-		private void Update()
+		private void Awake()
 		{
+			QuestUI.Init(_inGameGUI);
 		}
 
 		public void Toggle(bool val)
 		{
-			base.gameObject.SetActive(val);
+			gameObject.SetActive(val);
 			if (val)
 			{
 				AvailableQuests.text = Localization.AvailableQuests + " (" + AllQuests.Count + ")".ToUpper();
@@ -72,12 +74,14 @@ namespace ZeroGravity
 			{
 				allQuest.RefreshQuestUI();
 			}
+
 			DescriptionHolder.DestroyAll<TaskUI>();
 			if (SelectedQuest == null && AllQuests.Count > 0)
 			{
 				SelectedQuest = AllQuests[0];
 				SelectedQuest.RefreshQuestUI();
 			}
+
 			if (SelectedQuest != null)
 			{
 				SelectedQuestName.text = SelectedQuest.Quest.Name;
@@ -98,6 +102,7 @@ namespace ZeroGravity
 							{
 								taskUI.transform.SetAsFirstSibling();
 							}
+
 							taskUI.Name.text = questTrigger.Name;
 							taskUI.CompletedObject.SetActive(questTrigger.Status == QuestStatus.Completed);
 							if (questTrigger.Description != null)
@@ -107,7 +112,9 @@ namespace ZeroGravity
 						}
 					}
 				}
-				SkipQuest.Activate(!SelectedQuest.Quest.IsFinished && (SelectedQuest.Quest.CanSkip || SelectedQuest.Quest.QuestObject.Skippable));
+
+				SkipQuest.Activate(!SelectedQuest.Quest.IsFinished &&
+				                   (SelectedQuest.Quest.CanSkip || SelectedQuest.Quest.QuestObject.Skippable));
 				SetQuestLog();
 				QuestHolder.SetActive(value: true);
 				QuestLog.SetActive(value: true);
@@ -135,33 +142,40 @@ namespace ZeroGravity
 
 		public void SetQuestLog()
 		{
-			logElements.Clear();
+			_logElements.Clear();
 			LogHolder.DestroyAll<Transform>(childrenOnly: true);
-			if (!(SelectedQuest != null))
+			if (SelectedQuest == null)
 			{
 				return;
 			}
+
 			foreach (QuestTrigger qt in SelectedQuest.Quest.QuestTriggers)
 			{
 				if (qt.Status != QuestStatus.Completed)
 				{
 					continue;
 				}
-				QuestCutSceneData questCutSceneData = Client.Instance.CanvasManager.CanvasUI.QuestCutScene.QuestCollection.CutScenes.FirstOrDefault((QuestCutSceneData m) => m.QuestTriggerID == qt.ID && m.QuestID == SelectedQuest.Quest.ID);
-				if (!(questCutSceneData != null))
+
+				QuestCutSceneData questCutSceneData =
+					_inGameGUI.QuestCutScene.QuestCollection.CutScenes.FirstOrDefault((QuestCutSceneData m) =>
+						m.QuestTriggerID == qt.ID && m.QuestID == SelectedQuest.Quest.ID);
+				if (questCutSceneData == null)
 				{
 					continue;
 				}
-				if (qt.Name != null && qt.Name != string.Empty)
+
+				if (!string.IsNullOrEmpty(qt.Name))
 				{
-					GameObject gameObject = Object.Instantiate(LogHeading, LogHolder);
+					GameObject gameObject = Instantiate(LogHeading, LogHolder);
 					gameObject.transform.Reset();
 					gameObject.GetComponent<Text>().text = qt.Name;
 				}
-				if (Client.Instance.CanvasManager.CanvasUI.QuestCutScene.DontPlayCutScenes)
+
+				if (_inGameGUI.QuestCutScene.DontPlayCutScenes)
 				{
 					continue;
 				}
+
 				foreach (QuestCutSceneData.QuestCutSceneElement element in questCutSceneData.Elements)
 				{
 					if (!element.SkipInJournal)
@@ -170,8 +184,9 @@ namespace ZeroGravity
 					}
 				}
 			}
-			LogBody.SetActive(logElements.Count > 0);
-			NoLogAvailable.SetActive(logElements.Count <= 0);
+
+			LogBody.SetActive(_logElements.Count > 0);
+			NoLogAvailable.SetActive(_logElements.Count <= 0);
 		}
 
 		private void CreateLogItem(QuestCutSceneData.QuestCutSceneElement element)
@@ -185,7 +200,7 @@ namespace ZeroGravity
 			questCutSceneUI.Icon.sprite = element.Character.CharacterImage;
 			questCutSceneUI.Content.text = element.Dialogue.Replace('|', ' ');
 			questCutSceneUI.CharacterName.text = element.Character.CharacterName;
-			logElements.Add(questCutSceneUI);
+			_logElements.Add(questCutSceneUI);
 		}
 
 		public void SkipQuestAction()
@@ -196,5 +211,4 @@ namespace ZeroGravity
 			});
 		}
 	}
-
 }

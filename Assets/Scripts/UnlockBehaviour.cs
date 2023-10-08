@@ -15,7 +15,9 @@ public class UnlockBehaviour : StateMachineBehaviour
 			}
 			else if (itemToUnlock == AnimatorHelper.UnlockAnimator.Equip)
 			{
-				component.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false);
+				component.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, false);
 			}
 		}
 	}

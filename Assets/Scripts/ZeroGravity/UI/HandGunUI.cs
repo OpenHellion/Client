@@ -9,20 +9,15 @@ namespace ZeroGravity.UI
 
 		private bool _IsSingleFire;
 
-		[SerializeField]
-		private Text AmmoCoaunt;
+		[SerializeField] private Text AmmoCoaunt;
 
-		[SerializeField]
-		private Text AutomaticModText;
+		[SerializeField] private Text AutomaticModText;
 
-		[SerializeField]
-		private Image AutomaticModSquare;
+		[SerializeField] private Image AutomaticModSquare;
 
-		[SerializeField]
-		private Text SingleModText;
+		[SerializeField] private Text SingleModText;
 
-		[SerializeField]
-		private Image SingleModSquare;
+		[SerializeField] private Image SingleModSquare;
 
 		private Color NotSelectedSquare = new Color(1f, 0f, 0f, 1f / 15f);
 
@@ -34,10 +29,7 @@ namespace ZeroGravity.UI
 
 		public int BulletCount
 		{
-			get
-			{
-				return _BulletCount;
-			}
+			get { return _BulletCount; }
 			set
 			{
 				_BulletCount = value;
@@ -47,10 +39,7 @@ namespace ZeroGravity.UI
 
 		public bool IsSingleFire
 		{
-			get
-			{
-				return _IsSingleFire;
-			}
+			get { return _IsSingleFire; }
 			set
 			{
 				_IsSingleFire = value;

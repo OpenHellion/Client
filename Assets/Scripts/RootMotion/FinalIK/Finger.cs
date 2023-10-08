@@ -6,8 +6,7 @@ namespace RootMotion.FinalIK
 	[Serializable]
 	public class Finger
 	{
-		[Tooltip("Master Weight for the finger.")]
-		[Range(0f, 1f)]
+		[Tooltip("Master Weight for the finger.")] [Range(0f, 1f)]
 		public float weight = 1f;
 
 		[Tooltip("The first bone of the finger.")]
@@ -19,7 +18,8 @@ namespace RootMotion.FinalIK
 		[Tooltip("The (optional) third bone of the finger. This can be ignored for thumbs.")]
 		public Transform bone3;
 
-		[Tooltip("The fingertip object. If your character doesn't have tip bones, you can create an empty GameObject and parent it to the last bone in the finger. Place it to the tip of the finger.")]
+		[Tooltip(
+			"The fingertip object. If your character doesn't have tip bones, you can create an empty GameObject and parent it to the last bone in the finger. Place it to the tip of the finger.")]
 		public Transform tip;
 
 		[Tooltip("The IK target (optional, can use IKPosition and IKRotation directly).")]
@@ -37,26 +37,14 @@ namespace RootMotion.FinalIK
 
 		public Vector3 IKPosition
 		{
-			get
-			{
-				return solver.IKPosition;
-			}
-			set
-			{
-				solver.IKPosition = value;
-			}
+			get { return solver.IKPosition; }
+			set { solver.IKPosition = value; }
 		}
 
 		public Quaternion IKRotation
 		{
-			get
-			{
-				return solver.IKRotation;
-			}
-			set
-			{
-				solver.IKRotation = value;
-			}
+			get { return solver.IKRotation; }
+			set { solver.IKRotation = value; }
 		}
 
 		public bool IsValid(ref string errorMessage)
@@ -66,6 +54,7 @@ namespace RootMotion.FinalIK
 				errorMessage = "One of the bones in the Finger Rig is null, can not initiate solvers.";
 				return false;
 			}
+
 			return true;
 		}
 
@@ -78,6 +67,7 @@ namespace RootMotion.FinalIK
 				Warning.Log(errorMessage, hand);
 				return;
 			}
+
 			solver = new IKSolverLimb();
 			solver.IKPositionWeight = weight;
 			solver.bendModifier = IKSolverLimb.BendModifier.Target;
@@ -90,6 +80,7 @@ namespace RootMotion.FinalIK
 				bone3DefaultLocalPosition = bone3.localPosition;
 				bone3DefaultLocalRotation = bone3.localRotation;
 			}
+
 			solver.SetChain(bone1, bone2, tip, hand);
 			solver.Initiate(hand);
 			initiated = true;
@@ -114,17 +105,20 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			float num = weight * masterWeight;
 			if (num <= 0f)
 			{
 				return;
 			}
+
 			solver.target = target;
 			if (target != null)
 			{
 				IKPosition = target.position;
 				IKRotation = target.rotation;
 			}
+
 			if (bone3 != null)
 			{
 				if (num >= 1f)
@@ -136,6 +130,7 @@ namespace RootMotion.FinalIK
 					bone3.rotation = Quaternion.Lerp(bone3.rotation, IKRotation * bone3RelativeToTarget, num);
 				}
 			}
+
 			solver.IKPositionWeight = num;
 			solver.Update();
 		}

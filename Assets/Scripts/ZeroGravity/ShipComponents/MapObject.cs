@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using OpenHellion;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Math;
@@ -9,7 +10,7 @@ namespace ZeroGravity.ShipComponents
 {
 	public abstract class MapObject : MonoBehaviour
 	{
-		public CelestialBodyData cbd;
+		public CelestialBodyData CelestialBodyData;
 
 		public IMapMainObject MainObject;
 
@@ -22,9 +23,6 @@ namespace ZeroGravity.ShipComponents
 		public LineRenderer MyOrbitRenderer;
 
 		public int NumberOfOrbitPositions = 750;
-
-		[SerializeField]
-		private Material orbitMaterial;
 
 		public AnimationCurve OrbitFadeCurve;
 
@@ -48,8 +46,7 @@ namespace ZeroGravity.ShipComponents
 
 		public GameObject DistressVisual;
 
-		[HideInInspector]
-		public SphereCollider PositionCollider;
+		[HideInInspector] public SphereCollider PositionCollider;
 
 		public Renderer ObjectVisibilityBackground;
 
@@ -57,70 +54,27 @@ namespace ZeroGravity.ShipComponents
 
 		public float NewObjectVisibilityDuration;
 
-		protected Color newObjectColorFadeIncrement;
+		protected Color NewObjectColorFadeIncrement;
 
-		[NonSerialized]
-		public float CreationTime;
+		protected float CreationTime;
 
-		[HideInInspector]
-		public Map Map
-		{
-			get
-			{
-				return Client.Instance.Map;
-			}
-		}
+		protected static World World;
+
+		public Map Map => World.Map;
 
 		public virtual string Name
 		{
-			get
-			{
-				return MainObject.Name;
-			}
-			set
-			{
-			}
+			get => MainObject.Name;
+			set { }
 		}
 
-		public double ObjectScale
-		{
-			get
-			{
-				return Map.Scale / 149597870700.0;
-			}
-		}
+		protected double ObjectScale => Map.Scale / 149597870700.0;
 
-		public virtual Vector3D TruePosition
-		{
-			get
-			{
-				return MainObject.Position;
-			}
-		}
+		public virtual Vector3D TruePosition => MainObject.Position;
 
-		public virtual float Radius
-		{
-			get
-			{
-				return (float)MainObject.Radius;
-			}
-		}
+		public virtual float Radius => (float)MainObject.Radius;
 
-		public Vector3 ObjectPosition
-		{
-			get
-			{
-				return ((TruePosition - Map.Focus) * ObjectScale).ToVector3();
-			}
-		}
-
-		public virtual double RadarSignature
-		{
-			get
-			{
-				return 0.0;
-			}
-		}
+		public Vector3 ObjectPosition => ((TruePosition - Map.Focus) * ObjectScale).ToVector3();
 
 		public virtual OrbitParameters Orbit
 		{
@@ -130,6 +84,7 @@ namespace ZeroGravity.ShipComponents
 				{
 					return MainObject.Orbit;
 				}
+
 				return null;
 			}
 		}
@@ -146,17 +101,12 @@ namespace ZeroGravity.ShipComponents
 				{
 					return RadarVisibilityType.AlwaysVisible;
 				}
+
 				return MainObject.RadarVisibilityType;
 			}
 		}
 
-		public virtual bool IsVisibleOnMap
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public virtual bool IsVisibleOnMap => true;
 
 		public virtual Color OrbitColor
 		{
@@ -168,8 +118,10 @@ namespace ZeroGravity.ShipComponents
 					{
 						return Colors.Cyan;
 					}
+
 					return Colors.White;
 				}
+
 				return Colors.White;
 			}
 		}
@@ -180,18 +132,18 @@ namespace ZeroGravity.ShipComponents
 			{
 				if (MainObject != null)
 				{
-					return Client.Instance.GetVesselExposureDamage(MainObject.Orbit.Position.Magnitude);
+					return World.GetVesselExposureDamage(MainObject.Orbit.Position.Magnitude);
 				}
+
 				return 0f;
 			}
 		}
 
-		public float PlayerExposureDamage
+		public float PlayerExposureDamage => World.GetPlayerExposureDamage(MainObject.Orbit.Position.Magnitude);
+
+		private void Awake()
 		{
-			get
-			{
-				return Client.Instance.GetPlayerExposureDamage(MainObject.Orbit.Position.Magnitude);
-			}
+			World ??= GameObject.Find("/World").GetComponent<World>();
 		}
 
 		private void OnEnable()
@@ -201,6 +153,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				DistressVisual.SetActive(RadarVisibilityType == RadarVisibilityType.Distress);
 			}
+
 			if (this == Map.MyShip)
 			{
 				Position.GetComponent<SphereCollider>().radius = 0.15f;
@@ -221,6 +174,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				return;
 			}
+
 			UpdateObject();
 			UpdateOrbitColors();
 			UpdateOrbitPlane();
@@ -230,7 +184,7 @@ namespace ZeroGravity.ShipComponents
 				if (component != null)
 				{
 					Color color = component.material.GetColor("_Tint");
-					component.material.SetColor("_Tint", color - newObjectColorFadeIncrement * Time.deltaTime);
+					component.material.SetColor("_Tint", color - NewObjectColorFadeIncrement * Time.deltaTime);
 				}
 			}
 		}
@@ -254,6 +208,7 @@ namespace ZeroGravity.ShipComponents
 				{
 					orbitAlpha = SelectedOrbitFadeCurve.Evaluate(((float)Map.Scale - num2) * 1f / (num - num2));
 				}
+
 				orbitColor.a = orbitAlpha;
 				MyOrbitRenderer.startColor = orbitColor;
 				MyOrbitRenderer.endColor = orbitColor;
@@ -281,8 +236,10 @@ namespace ZeroGravity.ShipComponents
 				{
 					MyOrbitRenderer.SetPosition(i, list[i].ToVector3());
 				}
+
 				MyOrbitRenderer.SetPosition(NumberOfOrbitPositions - 1, list[0].ToVector3());
 			}
+
 			MyOrbitRenderer.transform.SetParent(Orbits);
 			MyOrbitRenderer.startColor = OrbitColor;
 			MyOrbitRenderer.endColor = OrbitColor;
@@ -297,7 +254,9 @@ namespace ZeroGravity.ShipComponents
 				Orbit.GetOrbitPlaneData(out rotation, out centerPosition);
 				OrbitPlane.localPosition = (centerPosition * ObjectScale).ToVector3();
 				OrbitPlane.localRotation = rotation.ToQuaternion();
-				OrbitPlane.localScale = (new Vector3D(Orbit.SemiMinorAxis * 2.0, Orbit.SemiMinorAxis * 2.0, Orbit.SemiMajorAxis * 2.0) * ObjectScale).ToVector3();
+				OrbitPlane.localScale =
+					(new Vector3D(Orbit.SemiMinorAxis * 2.0, Orbit.SemiMinorAxis * 2.0, Orbit.SemiMajorAxis * 2.0) *
+					 ObjectScale).ToVector3();
 			}
 		}
 
@@ -323,6 +282,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				Map.SelectedObject = null;
 			}
+
 			if (DistressVisual != null)
 			{
 				DistressVisual.Activate(RadarVisibilityType == RadarVisibilityType.Distress);
@@ -334,7 +294,7 @@ namespace ZeroGravity.ShipComponents
 			if (Map.SelectedObject == this)
 			{
 				Map.SelectMapObject(null);
-				Map.Panel.HideHoverInfo();
+				Map.NavPanel.HideHoverInfo();
 			}
 		}
 	}

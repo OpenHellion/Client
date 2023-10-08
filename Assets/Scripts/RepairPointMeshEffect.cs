@@ -6,8 +6,7 @@ public class RepairPointMeshEffect : MonoBehaviour
 
 	public AnimationCurve Curve;
 
-	[Range(0f, 1f)]
-	public float Intensity;
+	[Range(0f, 1f)] public float Intensity;
 
 	private void Awake()
 	{

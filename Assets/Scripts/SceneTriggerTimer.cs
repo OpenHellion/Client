@@ -30,6 +30,7 @@ public class SceneTriggerTimer : MonoBehaviour
 			duration -= Time.deltaTime;
 			yield return new WaitForEndOfFrame();
 		}
+
 		if (Collider != null)
 		{
 			Collider.enabled = true;

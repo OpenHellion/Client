@@ -28,6 +28,7 @@ namespace ZeroGravity.Data
 					itemCompoundType.Tier = DefaultAuxData.Tier;
 					return itemCompoundType;
 				}
+
 				if (ItemType == ItemType.MachineryPart)
 				{
 					itemCompoundType = new ItemCompoundType();
@@ -37,6 +38,7 @@ namespace ZeroGravity.Data
 					itemCompoundType.Tier = DefaultAuxData.Tier;
 					return itemCompoundType;
 				}
+
 				itemCompoundType = new ItemCompoundType();
 				itemCompoundType.Type = ItemType;
 				itemCompoundType.SubType = GenericItemSubType.None;

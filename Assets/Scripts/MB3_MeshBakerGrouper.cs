@@ -4,8 +4,7 @@ public class MB3_MeshBakerGrouper : MonoBehaviour
 {
 	public MB3_MeshBakerGrouperCore grouper;
 
-	[HideInInspector]
-	public Bounds sourceObjectBounds = new Bounds(Vector3.zero, Vector3.one);
+	[HideInInspector] public Bounds sourceObjectBounds = new Bounds(Vector3.zero, Vector3.one);
 
 	private void OnDrawGizmosSelected()
 	{
@@ -13,6 +12,7 @@ public class MB3_MeshBakerGrouper : MonoBehaviour
 		{
 			return;
 		}
+
 		if (grouper.clusterGrouper.clusterType == MB3_MeshBakerGrouperCore.ClusterType.grid)
 		{
 			Vector3 cellSize = grouper.clusterGrouper.cellSize;
@@ -20,6 +20,7 @@ public class MB3_MeshBakerGrouper : MonoBehaviour
 			{
 				return;
 			}
+
 			Vector3 vector = sourceObjectBounds.center - sourceObjectBounds.extents;
 			Vector3 origin = grouper.clusterGrouper.origin;
 			origin.x %= cellSize.x;
@@ -32,16 +33,20 @@ public class MB3_MeshBakerGrouper : MonoBehaviour
 			{
 				vector.x -= cellSize.x;
 			}
+
 			if (vector.y > sourceObjectBounds.center.y - sourceObjectBounds.extents.y)
 			{
 				vector.y -= cellSize.y;
 			}
+
 			if (vector.z > sourceObjectBounds.center.z - sourceObjectBounds.extents.z)
 			{
 				vector.z -= cellSize.z;
 			}
+
 			Vector3 vector2 = vector;
-			int num = Mathf.CeilToInt(sourceObjectBounds.size.x / cellSize.x + sourceObjectBounds.size.y / cellSize.y + sourceObjectBounds.size.z / cellSize.z);
+			int num = Mathf.CeilToInt(sourceObjectBounds.size.x / cellSize.x + sourceObjectBounds.size.y / cellSize.y +
+			                          sourceObjectBounds.size.z / cellSize.z);
 			if (num > 200)
 			{
 				Gizmos.DrawWireCube(grouper.clusterGrouper.origin + cellSize / 2f, cellSize);
@@ -59,18 +64,23 @@ public class MB3_MeshBakerGrouper : MonoBehaviour
 							Gizmos.DrawWireCube(vector + cellSize / 2f, cellSize);
 							vector.z += cellSize.z;
 						}
+
 						vector.y += cellSize.y;
 					}
+
 					vector.x += cellSize.x;
 				}
 			}
 		}
-		if (grouper.clusterGrouper.clusterType == MB3_MeshBakerGrouperCore.ClusterType.pie && !(grouper.clusterGrouper.pieAxis.magnitude < 0.1f) && grouper.clusterGrouper.pieNumSegments >= 1)
+
+		if (grouper.clusterGrouper.clusterType == MB3_MeshBakerGrouperCore.ClusterType.pie &&
+		    !(grouper.clusterGrouper.pieAxis.magnitude < 0.1f) && grouper.clusterGrouper.pieNumSegments >= 1)
 		{
 			float magnitude = sourceObjectBounds.extents.magnitude;
 			DrawCircle(grouper.clusterGrouper.pieAxis, grouper.clusterGrouper.origin, magnitude, 24);
 			Quaternion quaternion = Quaternion.FromToRotation(Vector3.up, grouper.clusterGrouper.pieAxis);
-			Quaternion quaternion2 = Quaternion.AngleAxis(180f / (float)grouper.clusterGrouper.pieNumSegments, Vector3.up);
+			Quaternion quaternion2 =
+				Quaternion.AngleAxis(180f / (float)grouper.clusterGrouper.pieNumSegments, Vector3.up);
 			Vector3 vector3 = quaternion2 * Vector3.forward;
 			for (int i = 0; i < grouper.clusterGrouper.pieNumSegments; i++)
 			{

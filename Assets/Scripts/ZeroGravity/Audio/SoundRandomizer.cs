@@ -25,11 +25,13 @@ namespace ZeroGravity.Audio
 				CurrentFrequency -= Time.deltaTime;
 				return;
 			}
+
 			int index = Random.Range(0, SoundSources.Count - 1);
 			if (!SoundSources[index].IsPlaying())
 			{
 				SoundSources[index].PlaySound();
 			}
+
 			CurrentFrequency = Random.Range(Frequency - RandomFrequencyOffset, Frequency + RandomFrequencyOffset);
 		}
 	}

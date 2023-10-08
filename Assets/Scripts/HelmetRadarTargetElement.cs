@@ -6,11 +6,9 @@ using ZeroGravity.UI;
 
 public class HelmetRadarTargetElement : MonoBehaviour
 {
-	[SerializeField]
-	private new Text name;
+	[SerializeField] private new Text name;
 
-	[SerializeField]
-	private Text DistanceText;
+	[SerializeField] private Text DistanceText;
 
 	public GameObject NameSelected;
 
@@ -28,10 +26,7 @@ public class HelmetRadarTargetElement : MonoBehaviour
 
 	public bool IsSelected
 	{
-		get
-		{
-			return isSelected;
-		}
+		get { return isSelected; }
 		set
 		{
 			isSelected = value;
@@ -41,22 +36,13 @@ public class HelmetRadarTargetElement : MonoBehaviour
 
 	public string Name
 	{
-		get
-		{
-			return name.text;
-		}
-		set
-		{
-			name.text = value;
-		}
+		get { return name.text; }
+		set { name.text = value; }
 	}
 
 	public float Distance
 	{
-		get
-		{
-			return distance;
-		}
+		get { return distance; }
 		set
 		{
 			distance = value;
@@ -75,7 +61,8 @@ public class HelmetRadarTargetElement : MonoBehaviour
 	{
 		get
 		{
-			return ((AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() - MyPlayer.Instance.transform.position).magnitude;
+			return ((AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() -
+			        MyPlayer.Instance.transform.position).magnitude;
 		}
 	}
 
@@ -84,7 +71,8 @@ public class HelmetRadarTargetElement : MonoBehaviour
 		get
 		{
 			Vector3 forward = MyPlayer.Instance.FpsController.MainCamera.transform.forward;
-			Vector3 from = (AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() - MyPlayer.Instance.transform.position;
+			Vector3 from = (AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() -
+			               MyPlayer.Instance.transform.position;
 			return Vector3.Angle(from, forward);
 		}
 	}

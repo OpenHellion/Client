@@ -6,12 +6,9 @@ namespace RootMotion.FinalIK
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/Rotation Limits/Rotation Limit Spline")]
 	public class RotationLimitSpline : RotationLimit
 	{
-		[Range(0f, 180f)]
-		public float twistLimit = 180f;
+		[Range(0f, 180f)] public float twistLimit = 180f;
 
-		[SerializeField]
-		[HideInInspector]
-		public AnimationCurve spline;
+		[SerializeField] [HideInInspector] public AnimationCurve spline;
 
 		[ContextMenu("User Manual")]
 		private void OpenUserManual()
@@ -22,7 +19,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Scrpt Reference")]
 		private void OpenScriptReference()
 		{
-			Application.OpenURL("http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_rotation_limit_spline.html");
+			Application.OpenURL(
+				"http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_rotation_limit_spline.html");
 		}
 
 		[ContextMenu("Support Group")]
@@ -34,7 +32,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Asset Store Thread")]
 		private void ASThread()
 		{
-			Application.OpenURL("http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
+			Application.OpenURL(
+				"http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
 		}
 
 		public void SetSpline(Keyframe[] keyframes)
@@ -54,10 +53,12 @@ namespace RootMotion.FinalIK
 			{
 				return rotation;
 			}
+
 			if (rotation == Quaternion.identity)
 			{
 				return rotation;
 			}
+
 			Vector3 vector = rotation * axis;
 			float num = RotationLimit.GetOrthogonalAngle(vector, base.secondaryAxis, axis);
 			float num2 = Vector3.Dot(vector, base.crossAxis);
@@ -65,6 +66,7 @@ namespace RootMotion.FinalIK
 			{
 				num = 180f + (180f - num);
 			}
+
 			float maxDegreesDelta = spline.Evaluate(num);
 			Quaternion to = Quaternion.FromToRotation(axis, vector);
 			Quaternion quaternion = Quaternion.RotateTowards(Quaternion.identity, to, maxDegreesDelta);

@@ -20,7 +20,6 @@ namespace ZeroGravity.LevelDesign
 
 		public void Initialize()
 		{
-
 		}
 
 		public void CheckPressureForAmbient(float pressure, bool isAirOk, bool isAirCrit)
@@ -29,18 +28,22 @@ namespace ZeroGravity.LevelDesign
 			{
 				PressureUnder0_4bar.SetActive(pressure < 0.4f);
 			}
+
 			if (PressureAbove0_4barAndAirCritical != null)
 			{
 				PressureAbove0_4barAndAirCritical.SetActive(pressure >= 0.4f && isAirCrit);
 			}
+
 			if (PressureAbove0_4barAndAirBreathable != null)
 			{
 				PressureAbove0_4barAndAirBreathable.SetActive(pressure >= 0.4f && !isAirCrit && isAirOk);
 			}
+
 			if (PressureAbove0_4barAndAirNotBreathable != null)
 			{
 				PressureAbove0_4barAndAirNotBreathable.SetActive(pressure >= 0.4f && !isAirCrit && !isAirOk);
 			}
+
 			foreach (SceneLightController sceneLightController in SceneLightControllers)
 			{
 				if (!(sceneLightController == null))
@@ -49,10 +52,12 @@ namespace ZeroGravity.LevelDesign
 					{
 						sceneLightController.SwitchStateTo(SceneLightController.LightState.LowPressure);
 					}
+
 					if (pressure >= 0.4f && isAirOk)
 					{
 						sceneLightController.SwitchStateTo(SceneLightController.LightState.Normal);
 					}
+
 					if (pressure >= 0.4f && !isAirOk)
 					{
 						sceneLightController.SwitchStateTo(SceneLightController.LightState.ToxicAtmosphere);

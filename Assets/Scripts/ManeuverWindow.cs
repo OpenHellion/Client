@@ -26,6 +26,7 @@ public class ManeuverWindow : MonoBehaviour
 		{
 			StartTimeSeconds.text = num.ToString();
 		}
+
 		int num2 = (int)Mathf.Floor(time / 60f % 60f);
 		if (num2 < 10)
 		{
@@ -35,6 +36,7 @@ public class ManeuverWindow : MonoBehaviour
 		{
 			StartTimeMinutes.text = num2.ToString();
 		}
+
 		int num3 = (int)Mathf.Floor(time / 3600f);
 		if (num3 < 10)
 		{
@@ -57,6 +59,7 @@ public class ManeuverWindow : MonoBehaviour
 		{
 			EndTimeSeconds.text = num.ToString();
 		}
+
 		int num2 = (int)Mathf.Floor(time / 60f % 60f);
 		if (num2 < 10)
 		{
@@ -66,6 +69,7 @@ public class ManeuverWindow : MonoBehaviour
 		{
 			EndTimeMinutes.text = num2.ToString();
 		}
+
 		int num3 = (int)Mathf.Floor(time / 3600f);
 		if (num3 < 10)
 		{

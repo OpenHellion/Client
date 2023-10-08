@@ -45,6 +45,7 @@ namespace ZeroGravity.UI
 				ShowResults();
 				return;
 			}
+
 			ResultsTransform.DestroyAll<RecycleResultUI>();
 			Status.color = Colors.GreenText;
 			Status.text = Localization.Ready.ToUpper();
@@ -59,10 +60,12 @@ namespace ZeroGravity.UI
 			{
 				item = Recycler.Item;
 			}
+
 			if (item != null)
 			{
 				flag = item.Slots.Values.FirstOrDefault((ItemSlot m) => m.Item != null);
 			}
+
 			ResultsTransform.DestroyAll<RecycleResultUI>();
 			if (Recycler.AutoRecycle)
 			{
@@ -70,6 +73,7 @@ namespace ZeroGravity.UI
 				{
 					return;
 				}
+
 				Status.text = string.Empty;
 				ItemName.text = item.Name;
 				Dictionary<ResourceType, float> recycleResources = Item.GetRecycleResources(item);
@@ -91,6 +95,7 @@ namespace ZeroGravity.UI
 						component.Value.text = FormatHelper.FormatValue(recycleResources[key]);
 						num += recycleResources[key];
 					}
+
 					if (num > CheckCargo())
 					{
 						ResultsTransform.gameObject.Activate(value: false);
@@ -114,6 +119,7 @@ namespace ZeroGravity.UI
 					Status.color = Colors.BlueLight;
 					Status.text = Localization.Jettison.ToUpper();
 				}
+
 				CancelInvoke("UpdateUI");
 				Invoke("UpdateUI", 5f);
 			}
@@ -143,6 +149,7 @@ namespace ZeroGravity.UI
 					CargoCapacity += compartment.AvailableCapacity;
 				}
 			}
+
 			return CargoCapacity;
 		}
 	}

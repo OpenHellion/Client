@@ -32,14 +32,17 @@ public class MB3_MeshBakerGrouperCore
 			{
 				return FilterIntoGroupsNone(selection);
 			}
+
 			if (clusterType == ClusterType.grid)
 			{
 				return FilterIntoGroupsGrid(selection);
 			}
+
 			if (clusterType == ClusterType.pie)
 			{
 				return FilterIntoGroupsPie(selection);
 			}
+
 			return new Dictionary<string, List<Renderer>>();
 		}
 
@@ -52,6 +55,7 @@ public class MB3_MeshBakerGrouperCore
 			{
 				list.Add(selection[i].GetComponent<Renderer>());
 			}
+
 			dictionary.Add("MeshBaker", list);
 			return dictionary;
 		}
@@ -64,6 +68,7 @@ public class MB3_MeshBakerGrouperCore
 				Debug.LogError("cellSize x,y,z must all be greater than zero.");
 				return dictionary;
 			}
+
 			Debug.Log("Collecting renderers in each cell");
 			foreach (GameObject item in selection)
 			{
@@ -86,12 +91,14 @@ public class MB3_MeshBakerGrouperCore
 						list = new List<Renderer>();
 						dictionary.Add(key, list);
 					}
+
 					if (!list.Contains(component))
 					{
 						list.Add(component);
 					}
 				}
 			}
+
 			return dictionary;
 		}
 
@@ -103,11 +110,13 @@ public class MB3_MeshBakerGrouperCore
 				Debug.LogError("pieNumSegments must be greater than zero.");
 				return dictionary;
 			}
+
 			if (pieAxis.magnitude <= 1E-06f)
 			{
 				Debug.LogError("Pie axis must have length greater than zero.");
 				return dictionary;
 			}
+
 			pieAxis.Normalize();
 			Quaternion quaternion = Quaternion.FromToRotation(pieAxis, Vector3.up);
 			Debug.Log("Collecting renderers in each cell");
@@ -119,6 +128,7 @@ public class MB3_MeshBakerGrouperCore
 				{
 					continue;
 				}
+
 				Vector3 vector = component.transform.position - origin;
 				vector.Normalize();
 				vector = quaternion * vector;
@@ -135,6 +145,7 @@ public class MB3_MeshBakerGrouperCore
 						num = 360f + num;
 					}
 				}
+
 				int num2 = Mathf.FloorToInt(num / 360f * (float)pieNumSegments);
 				List<Renderer> list = null;
 				string key = "seg_" + num2;
@@ -147,11 +158,13 @@ public class MB3_MeshBakerGrouperCore
 					list = new List<Renderer>();
 					dictionary.Add(key, list);
 				}
+
 				if (!list.Contains(component))
 				{
 					list.Add(component);
 				}
 			}
+
 			return dictionary;
 		}
 	}
@@ -167,6 +180,7 @@ public class MB3_MeshBakerGrouperCore
 			Debug.LogError("Cluster Grouper was null.");
 			return;
 		}
+
 		Dictionary<string, List<Renderer>> dictionary = clusterGrouper.FilterIntoGroups(tb.GetObjectsToCombine());
 		Debug.Log("Found " + dictionary.Count + " cells with Renderers. Creating bakers.");
 		if (clusterOnLMIndex)
@@ -182,8 +196,10 @@ public class MB3_MeshBakerGrouperCore
 					dictionary2.Add(key, dictionary3[key3]);
 				}
 			}
+
 			dictionary = dictionary2;
 		}
+
 		foreach (string key4 in dictionary.Keys)
 		{
 			List<Renderer> gaws2 = dictionary[key4];
@@ -206,8 +222,10 @@ public class MB3_MeshBakerGrouperCore
 				list = new List<Renderer>();
 				dictionary.Add(gaws[i].lightmapIndex, list);
 			}
+
 			list.Add(gaws[i]);
 		}
+
 		return dictionary;
 	}
 
@@ -222,6 +240,7 @@ public class MB3_MeshBakerGrouperCore
 				num += mesh.vertexCount;
 			}
 		}
+
 		GameObject gameObject = new GameObject("MeshBaker-" + key);
 		gameObject.transform.position = Vector3.zero;
 		MB3_MeshBakerCommon mB3_MeshBakerCommon;
@@ -235,6 +254,7 @@ public class MB3_MeshBakerGrouperCore
 			mB3_MeshBakerCommon = gameObject.AddComponent<MB3_MeshBaker>();
 			mB3_MeshBakerCommon.useObjsToMeshFromTexBaker = false;
 		}
+
 		mB3_MeshBakerCommon.textureBakeResults = tb.textureBakeResults;
 		mB3_MeshBakerCommon.transform.parent = tb.transform;
 		for (int j = 0; j < gaws.Count; j++)

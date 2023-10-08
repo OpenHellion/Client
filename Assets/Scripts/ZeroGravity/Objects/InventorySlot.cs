@@ -64,8 +64,6 @@ namespace ZeroGravity.Objects
 
 		private Group slotGroup;
 
-		public int CycleIndex;
-
 		private Inventory slotInventory;
 
 		public Outfit Outfit;
@@ -80,60 +78,21 @@ namespace ZeroGravity.Objects
 
 		public InputManager.ConfigAction? ShortcutKey { get; private set; }
 
-		public bool MustBeEmptyToRemoveOutfit
-		{
-			get
-			{
-				return mustBeEmptyToRemoveOutfit;
-			}
-		}
+		public bool MustBeEmptyToRemoveOutfit => mustBeEmptyToRemoveOutfit;
 
-		public Type SlotType
-		{
-			get
-			{
-				return slotType;
-			}
-		}
+		public Type SlotType => slotType;
 
-		public int SlotSizeInt
-		{
-			get
-			{
-				return (int)slotSize;
-			}
-		}
+		public int SlotSizeInt => (int)slotSize;
 
-		public Size SlotSize
-		{
-			get
-			{
-				return slotSize;
-			}
-		}
+		public Size SlotSize => slotSize;
 
-		public Inventory Inventory
-		{
-			get
-			{
-				return slotInventory;
-			}
-		}
+		public Inventory Inventory => slotInventory;
 
-		public Group SlotGroup
-		{
-			get
-			{
-				return slotGroup;
-			}
-		}
+		public Group SlotGroup => slotGroup;
 
 		public Item Item
 		{
-			get
-			{
-				return _Item;
-			}
+			get { return _Item; }
 			private set
 			{
 				_Item = value;
@@ -141,7 +100,8 @@ namespace ZeroGravity.Objects
 				{
 					UI.UpdateSlot();
 				}
-				Client.Instance.CanvasManager.CanvasUI.HelmetHud.UpdateQuickSlots();
+
+				//_world.InGameGUI.HelmetHud.UpdateQuickSlots();
 			}
 		}
 
@@ -153,22 +113,25 @@ namespace ZeroGravity.Objects
 				{
 					return slotInventory.Parent;
 				}
+
 				if (Outfit != null)
 				{
 					return Outfit.DynamicObj;
 				}
+
 				throw new Exception("Inventory slot has no parent");
 			}
 		}
 
-		public InventorySlot(Outfit outfit, short slotID, Type type, Size size, Group group, InputManager.ConfigAction? shortKey, int cycleIndex, bool mustBeEmptyToRemove, Item item, List<AttachData> points, Inventory inv)
+		public InventorySlot(Outfit outfit, short slotID, Type type, Size size, Group group,
+			InputManager.ConfigAction? shortKey, int cycleIndex, bool mustBeEmptyToRemove, Item item,
+			List<AttachData> points, Inventory inv)
 		{
 			SlotID = slotID;
 			slotType = type;
 			slotSize = size;
 			slotGroup = group;
 			ShortcutKey = shortKey;
-			CycleIndex = cycleIndex;
 			mustBeEmptyToRemoveOutfit = mustBeEmptyToRemove;
 			slotInventory = inv;
 			Outfit = outfit;
@@ -180,9 +143,11 @@ namespace ZeroGravity.Objects
 				}
 				else
 				{
-					Dbg.Warning("Inventory slot has same item type in multiple attach points, ommited other attach points");
+					Dbg.Warning(
+						"Inventory slot has same item type in multiple attach points, ommited other attach points");
 				}
 			}
+
 			SetItem(item);
 		}
 
@@ -204,6 +169,7 @@ namespace ZeroGravity.Objects
 				{
 					return;
 				}
+
 				Item = item;
 				if (item != null)
 				{
@@ -221,16 +187,20 @@ namespace ZeroGravity.Objects
 					{
 						type = Item.EquipType.Inventory;
 					}
+
 					item.ChangeEquip(type, slotInventory.Parent as Player);
 				}
+
 				InventoryCharacterPreview.instance.RefreshPreviewCharacter(Inventory);
 				return;
 			}
+
 			Item = item;
 			if (!(item != null))
 			{
 				return;
 			}
+
 			item.AttachToObject(this, false);
 			if (slotInventory != null && slotInventory.Parent is Player)
 			{
@@ -247,6 +217,7 @@ namespace ZeroGravity.Objects
 				{
 					type2 = Item.EquipType.Inventory;
 				}
+
 				item.ChangeEquip(type2, slotInventory.Parent as Player);
 			}
 		}
@@ -257,10 +228,12 @@ namespace ZeroGravity.Objects
 			{
 				return false;
 			}
+
 			if (item is GenericItem && (item as GenericItem).SubType == GenericItemSubType.TransportBox)
 			{
 				return false;
 			}
+
 			return slotType == Type.Hands || attachPoints.ContainsKey(item.Type);
 		}
 
@@ -270,6 +243,7 @@ namespace ZeroGravity.Objects
 			{
 				return true;
 			}
+
 			foreach (ItemType key in itemTypes)
 			{
 				if (attachPoints.ContainsKey(key))
@@ -277,6 +251,7 @@ namespace ZeroGravity.Objects
 					return true;
 				}
 			}
+
 			return false;
 		}
 
@@ -286,37 +261,41 @@ namespace ZeroGravity.Objects
 			{
 				return attachPoints[ItemType.None];
 			}
+
 			if (attachPoints.ContainsKey(item.Type))
 			{
 				return attachPoints[item.Type];
 			}
+
 			return null;
 		}
 
 		public static InventorySlot CreateHandsSlot(GameObject handsAttachPoint, Inventory inv)
 		{
-			return new InventorySlot(null, -1, Type.Hands, Size.One, Group.Hands, null, -1, true, null, new List<AttachData>
-			{
-				new AttachData
+			return new InventorySlot(null, -1, Type.Hands, Size.One, Group.Hands, null, -1, true, null,
+				new List<AttachData>
 				{
-					HideAttachedObject = false,
-					ItemType = ItemType.None,
-					Point = handsAttachPoint
-				}
-			}, inv);
+					new AttachData
+					{
+						HideAttachedObject = false,
+						ItemType = ItemType.None,
+						Point = handsAttachPoint
+					}
+				}, inv);
 		}
 
 		public static InventorySlot CreateOutfitSlot(GameObject outfitAttachPoint, Inventory inv)
 		{
-			return new InventorySlot(null, -2, Type.Equip, Size.One, Group.Outfit, null, -1, false, null, new List<AttachData>
-			{
-				new AttachData
+			return new InventorySlot(null, -2, Type.Equip, Size.One, Group.Outfit, null, -1, false, null,
+				new List<AttachData>
 				{
-					HideAttachedObject = true,
-					ItemType = ItemType.None,
-					Point = outfitAttachPoint
-				}
-			}, inv);
+					new AttachData
+					{
+						HideAttachedObject = true,
+						ItemType = ItemType.None,
+						Point = outfitAttachPoint
+					}
+				}, inv);
 		}
 
 		public void SetAttachPoint(ItemType itemType, GameObject point, bool hideAttachedObject)
@@ -334,7 +313,8 @@ namespace ZeroGravity.Objects
 			{
 				return Item.Icon;
 			}
-			return Client.Instance.SpriteManager.GetSprite(SlotGroup);
+
+			return SpriteManager.Instance.GetSprite(SlotGroup);
 		}
 	}
 }

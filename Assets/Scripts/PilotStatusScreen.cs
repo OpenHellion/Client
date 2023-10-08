@@ -1,6 +1,8 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using OpenHellion;
+using UnityEngine.Serialization;
 using ZeroGravity;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -54,8 +56,7 @@ public class PilotStatusScreen : MonoBehaviour
 
 	public Image NaniteFiller;
 
-	[Title("Warinngs")]
-	public GameObject WarningActive;
+	[Title("Warnings")] public GameObject WarningActive;
 
 	public Text WarningLabel;
 
@@ -69,7 +70,9 @@ public class PilotStatusScreen : MonoBehaviour
 
 	public GameObject System;
 
-	public PilotOverlayUI ParentPilot => Client.Instance.InGamePanels.Pilot;
+	[FormerlySerializedAs("_worldState")] [SerializeField] private World _world;
+
+	private PilotOverlayUI ParentPilot => _world.InWorldPanels.Pilot;
 
 	private void Start()
 	{
@@ -80,34 +83,43 @@ public class PilotStatusScreen : MonoBehaviour
 
 	public void UpdateSystemsInfo()
 	{
-		if (ArmorSlot == null)
+		if (ArmorSlot is null)
 		{
-			ArmorSlot = ParentPilot.ParentShip.VesselBaseSystem.MachineryPartSlots.Where((SceneMachineryPartSlot m) => m.Scope == MachineryPartSlotScope.Armor).FirstOrDefault();
+			ArmorSlot = ParentPilot.ParentShip.VesselBaseSystem.MachineryPartSlots
+				.Where((SceneMachineryPartSlot m) => m.Scope == MachineryPartSlotScope.Armor).FirstOrDefault();
 		}
-		OffTargetAssistant.Activate(Client.Instance.OffSpeedHelper);
+
+		OffTargetAssistant.Activate(_world.OffSpeedHelper);
 		float num = ParentPilot.ParentShip.Health / ParentPilot.ParentShip.MaxHealth;
 		HealthValue.text = FormatHelper.Percentage(num);
 		HealthFiller.fillAmount = num;
 		HPDanger.Activate(num < 0.2f);
-		if (ParentPilot.ParentShip.RCS != null)
+		if (ParentPilot.ParentShip.RCS is not null)
 		{
-			float num2 = ParentPilot.ParentShip.RCS.ResourceContainers[0].Compartments[0].Capacity - ParentPilot.ParentShip.RCS.ResourceContainers[0].Compartments[0].AvailableCapacity;
+			float num2 = ParentPilot.ParentShip.RCS.ResourceContainers[0].Compartments[0].Capacity -
+			             ParentPilot.ParentShip.RCS.ResourceContainers[0].Compartments[0].AvailableCapacity;
 			float capacity = ParentPilot.ParentShip.RCS.ResourceContainers[0].Compartments[0].Capacity;
 			float num3 = num2 / capacity;
 			RCSValue.text = FormatHelper.Percentage(num3);
 			RCSFuel.fillAmount = num3;
 			RCSFuel.color = ((!(num3 < 0.2f)) ? Colors.Orange : Colors.Red);
-			RCSStatus.color = ((ParentPilot.ParentShip.RCS.Status != SystemStatus.Online) ? Colors.GrayDefault : Colors.White);
+			RCSStatus.color = ((ParentPilot.ParentShip.RCS.Status != SystemStatus.Online)
+				? Colors.GrayDefault
+				: Colors.White);
 		}
-		if (ParentPilot.ParentShip.Engine != null)
+
+		if (ParentPilot.ParentShip.Engine is not null)
 		{
-			float num4 = ParentPilot.ParentShip.Engine.ResourceContainers[0].Compartments[0].Capacity - ParentPilot.ParentShip.Engine.ResourceContainers[0].Compartments[0].AvailableCapacity;
+			float num4 = ParentPilot.ParentShip.Engine.ResourceContainers[0].Compartments[0].Capacity -
+			             ParentPilot.ParentShip.Engine.ResourceContainers[0].Compartments[0].AvailableCapacity;
 			float capacity2 = ParentPilot.ParentShip.Engine.ResourceContainers[0].Compartments[0].Capacity;
 			float val = num4 / capacity2;
 			EngineValue.text = FormatHelper.Percentage(val);
 			EngineStatus.text = ParentPilot.ParentShip.Engine.GetStatus(out var color);
 			EngineStatus.color = color;
-			ENGStatus.color = ((ParentPilot.ParentShip.Engine.Status != SystemStatus.Online) ? Colors.GrayDefault : Colors.White);
+			ENGStatus.color = ((ParentPilot.ParentShip.Engine.Status != SystemStatus.Online)
+				? Colors.GrayDefault
+				: Colors.White);
 			EngPowerUp.SetActive(ParentPilot.ParentShip.Engine.Status == SystemStatus.Powerup);
 			EngineNotAvailable.Activate(value: false);
 		}
@@ -116,15 +128,18 @@ public class PilotStatusScreen : MonoBehaviour
 			EngineStatus.text = string.Empty;
 			EngineNotAvailable.Activate(value: true);
 		}
-		if (ParentPilot.ParentShip.Capacitor != null)
+
+		if (ParentPilot.ParentShip.Capacitor is not null)
 		{
 			float num5 = ParentPilot.ParentShip.Capacitor.Capacity / ParentPilot.ParentShip.Capacitor.MaxCapacity;
 			PowerValue.text = FormatHelper.Percentage(num5);
 			Power.fillAmount = num5;
 			PowerDanger.SetActive(num5 < 0.2f);
 		}
+
 		WarningsUpdate();
-		if ((double)ParentPilot.ParentShip.ExposureDamage * SpaceObjectVessel.VesselDecayRateMultiplier * 3600.0 > (double)(ParentPilot.ParentShip.Armor * 3600f))
+		if ((double)ParentPilot.ParentShip.ExposureDamage * SpaceObjectVessel.VesselDecayRateMultiplier * 3600.0 >
+		    (double)(ParentPilot.ParentShip.Armor * 3600f))
 		{
 			Armor.color = Colors.FormatedRed;
 		}
@@ -132,7 +147,8 @@ public class PilotStatusScreen : MonoBehaviour
 		{
 			Armor.color = Colors.ArmorActive;
 		}
-		if ((((object)ArmorSlot != null) ? ArmorSlot.Item : null) != null)
+
+		if ((((object)ArmorSlot != null) ? ArmorSlot.Item : null) is not null)
 		{
 			NaniteFiller.fillAmount = ArmorSlot.Item.Health / ArmorSlot.Item.MaxHealth;
 		}
@@ -155,25 +171,30 @@ public class PilotStatusScreen : MonoBehaviour
 		CheckSystems();
 		if (ParentPilot.ParentShip != null)
 		{
-			SceneTriggerRoom[] componentsInChildren = ParentPilot.ParentShip.MainVessel.GetComponentsInChildren<SceneTriggerRoom>();
+			SceneTriggerRoom[] componentsInChildren =
+				ParentPilot.ParentShip.MainVessel.GetComponentsInChildren<SceneTriggerRoom>();
 			foreach (SceneTriggerRoom sceneTriggerRoom in componentsInChildren)
 			{
 				if (sceneTriggerRoom.Breach)
 				{
 					Breach.Activate(value: true);
 				}
+
 				if (sceneTriggerRoom.Fire)
 				{
 					Fire.Activate(value: true);
 				}
+
 				if (sceneTriggerRoom.GravityMalfunction)
 				{
 					Gravity.Activate(value: true);
 				}
 			}
 		}
+
 		DebrisWarning.Activate(MyPlayer.Instance.InDebrisField != null);
-		WarningActive.Activate(Breach.activeSelf || Fire.activeSelf || Gravity.activeSelf || DebrisWarning.activeSelf || System.activeSelf);
+		WarningActive.Activate(Breach.activeSelf || Fire.activeSelf || Gravity.activeSelf || DebrisWarning.activeSelf ||
+		                       System.activeSelf);
 		if (WarningActive.activeInHierarchy && WarningLabel.color != Colors.White)
 		{
 			WarningLabel.color = Colors.White;
@@ -194,6 +215,7 @@ public class PilotStatusScreen : MonoBehaviour
 				value = true;
 			}
 		}
+
 		foreach (Generator value3 in ParentPilot.ParentShip.Generators.Values)
 		{
 			if (value3.SecondaryStatus == SystemSecondaryStatus.Defective)
@@ -201,6 +223,7 @@ public class PilotStatusScreen : MonoBehaviour
 				value = true;
 			}
 		}
+
 		System.Activate(value);
 	}
 }

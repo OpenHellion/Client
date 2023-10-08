@@ -12,8 +12,7 @@ namespace ZeroGravity.UI
 
 		public QuestCutSceneData CurrentCutScene;
 
-		[ContextMenuItem("Test", "Test")]
-		public Animator Animator;
+		[ContextMenuItem("Test", "Test")] public Animator Animator;
 
 		public QuestCutSceneSound QuestCutSceneSound;
 
@@ -25,11 +24,11 @@ namespace ZeroGravity.UI
 
 		public TextTypeEffect DialogueText;
 
-		private int currentCutSceneElement;
+		private int _currentCutSceneElement;
 
 		public float Delay = 3f;
 
-		private bool sameQuestTracked;
+		private bool _sameQuestTracked;
 
 		public bool IsPlaying;
 
@@ -44,23 +43,24 @@ namespace ZeroGravity.UI
 
 		public void PlayCutScene(QuestTrigger trigger)
 		{
-			if (DontPlayCutScenes || !(trigger.TaskObject.CutScene != null))
+			if (DontPlayCutScenes || trigger.TaskObject.CutScene == null)
 			{
 				return;
 			}
+
 			if (IsPlaying)
 			{
-				if (!(CurrentCutScene == trigger.TaskObject.CutScene))
+				if (CurrentCutScene != trigger.TaskObject.CutScene)
 				{
 					OnCutSceneFinished();
 					CurrentCutScene = trigger.TaskObject.CutScene;
-					Invoke("PlayFirstElement", Delay + 3f + CurrentCutScene.Delay);
+					Invoke(nameof(PlayFirstElement), Delay + 3f + CurrentCutScene.Delay);
 				}
 			}
 			else
 			{
 				CurrentCutScene = trigger.TaskObject.CutScene;
-				Invoke("PlayFirstElement", Delay + CurrentCutScene.Delay);
+				Invoke(nameof(PlayFirstElement), Delay + CurrentCutScene.Delay);
 			}
 		}
 
@@ -79,61 +79,66 @@ namespace ZeroGravity.UI
 			voiceFinished = false;
 			QuestCutSceneSound.Stop();
 			IsPlaying = true;
-			currentCutSceneElement = 0;
+			_currentCutSceneElement = 0;
 			bool flag = false;
 			DialogueText.RestartAttributes();
-			while (!flag && currentCutSceneElement < CurrentCutScene.Elements.Count)
+			while (!flag && _currentCutSceneElement < CurrentCutScene.Elements.Count)
 			{
 				flag = true;
-				foreach (QuestCutSceneData.CutSceneDependencyTask taskDependency in CurrentCutScene.Elements[currentCutSceneElement].TaskDependencyList)
+				foreach (QuestCutSceneData.CutSceneDependencyTask taskDependency in CurrentCutScene
+					         .Elements[_currentCutSceneElement].TaskDependencyList)
 				{
-					if (taskDependency.Task.QuestTrigger != null && taskDependency.Task.QuestTrigger.Status != taskDependency.Status)
+					if (taskDependency.Task.QuestTrigger != null &&
+					    taskDependency.Task.QuestTrigger.Status != taskDependency.Status)
 					{
 						flag = false;
-						currentCutSceneElement++;
+						_currentCutSceneElement++;
 						break;
 					}
 				}
 			}
-			if (currentCutSceneElement < CurrentCutScene.Elements.Count)
+
+			if (_currentCutSceneElement < CurrentCutScene.Elements.Count)
 			{
-				CharacterImage.sprite = CurrentCutScene.Elements[currentCutSceneElement].Character.CharacterImage;
-				CharacterName.text = CurrentCutScene.Elements[currentCutSceneElement].Character.CharacterName;
+				CharacterImage.sprite = CurrentCutScene.Elements[_currentCutSceneElement].Character.CharacterImage;
+				CharacterName.text = CurrentCutScene.Elements[_currentCutSceneElement].Character.CharacterName;
 				QuestName.text = Localization.GetLocalizedField(CurrentCutScene.QuestName, true);
-				DialogueText.Text = CurrentCutScene.Elements[currentCutSceneElement].Dialogue;
-				base.gameObject.SetActive(true);
+				DialogueText.Text = CurrentCutScene.Elements[_currentCutSceneElement].Dialogue;
+				gameObject.SetActive(true);
 			}
 			else
 			{
-				Invoke("OnCutSceneFinished", Delay + 2f);
+				Invoke(nameof(OnCutSceneFinished), Delay + 2f);
 			}
 		}
 
 		public void PlayNextElement()
 		{
-			currentCutSceneElement++;
-			bool flag = false;
-			while (!flag && currentCutSceneElement < CurrentCutScene.Elements.Count)
+			_currentCutSceneElement++;
+			while (_currentCutSceneElement < CurrentCutScene.Elements.Count)
 			{
-				flag = true;
-				foreach (QuestCutSceneData.CutSceneDependencyTask taskDependency in CurrentCutScene.Elements[currentCutSceneElement].TaskDependencyList)
+				foreach (QuestCutSceneData.CutSceneDependencyTask taskDependency in CurrentCutScene
+					         .Elements[_currentCutSceneElement].TaskDependencyList)
 				{
-					if (taskDependency.Task.QuestTrigger != null && taskDependency.Task.QuestTrigger.Status != taskDependency.Status)
+					if (taskDependency.Task.QuestTrigger != null &&
+					    taskDependency.Task.QuestTrigger.Status != taskDependency.Status)
 					{
-						flag = false;
-						currentCutSceneElement++;
+						_currentCutSceneElement++;
 						break;
 					}
 				}
 			}
-			if (currentCutSceneElement < CurrentCutScene.Elements.Count)
+
+			if (_currentCutSceneElement < CurrentCutScene.Elements.Count)
 			{
-				if (CurrentCutScene.Elements[currentCutSceneElement - 1].Character.CharacterImage != CurrentCutScene.Elements[currentCutSceneElement].Character.CharacterImage)
+				if (CurrentCutScene.Elements[_currentCutSceneElement - 1].Character.CharacterImage !=
+				    CurrentCutScene.Elements[_currentCutSceneElement].Character.CharacterImage)
 				{
 					Animator.SetTrigger("ChangeCharacter");
 					return;
 				}
-				DialogueText.ResetWithNewText(CurrentCutScene.Elements[currentCutSceneElement].Dialogue);
+
+				DialogueText.ResetWithNewText(CurrentCutScene.Elements[_currentCutSceneElement].Dialogue);
 				PlayCutSceneSound();
 			}
 			else
@@ -148,6 +153,7 @@ namespace ZeroGravity.UI
 			{
 				Animator.SetTrigger("Close");
 			}
+
 			QuestCutSceneSound.Stop();
 			IsPlaying = false;
 		}
@@ -158,10 +164,12 @@ namespace ZeroGravity.UI
 			{
 				return;
 			}
+
 			if (voiceTextFinished)
 			{
 				textFinished = true;
-				if (CurrentCutScene.Elements.Count > currentCutSceneElement + 1 && !CurrentCutScene.Elements[currentCutSceneElement + 1].PlaySound)
+				if (CurrentCutScene.Elements.Count > _currentCutSceneElement + 1 &&
+				    !CurrentCutScene.Elements[_currentCutSceneElement + 1].PlaySound)
 				{
 					textFinished = false;
 					PlayNextElement();
@@ -169,11 +177,8 @@ namespace ZeroGravity.UI
 				else if (voiceFinished || !QuestCutSceneSound.IsPlaying)
 				{
 					textFinished = false;
-					voiceFinished = false;
-					if (CurrentCutScene.Elements.Count > currentCutSceneElement + 1 && !CurrentCutScene.Elements[currentCutSceneElement + 1].PlaySound)
-					{
-						voiceFinished = true;
-					}
+					voiceFinished = CurrentCutScene.Elements.Count > _currentCutSceneElement + 1 &&
+					                !CurrentCutScene.Elements[_currentCutSceneElement + 1].PlaySound;
 					PlayNextElement();
 				}
 			}
@@ -191,17 +196,17 @@ namespace ZeroGravity.UI
 
 		public void PlayCutSceneSound()
 		{
-			if (CurrentCutScene.Elements[currentCutSceneElement].PlaySound)
+			if (CurrentCutScene.Elements[_currentCutSceneElement].PlaySound)
 			{
-				QuestCutSceneSound.Play(CurrentCutScene.Elements[currentCutSceneElement].DialogueSound);
+				QuestCutSceneSound.Play(CurrentCutScene.Elements[_currentCutSceneElement].DialogueSound);
 			}
 		}
 
 		public void ChangeCharacter()
 		{
-			CharacterImage.sprite = CurrentCutScene.Elements[currentCutSceneElement].Character.CharacterImage;
-			CharacterName.text = CurrentCutScene.Elements[currentCutSceneElement].Character.CharacterName;
-			DialogueText.ResetWithNewText(CurrentCutScene.Elements[currentCutSceneElement].Dialogue);
+			CharacterImage.sprite = CurrentCutScene.Elements[_currentCutSceneElement].Character.CharacterImage;
+			CharacterName.text = CurrentCutScene.Elements[_currentCutSceneElement].Character.CharacterName;
+			DialogueText.ResetWithNewText(CurrentCutScene.Elements[_currentCutSceneElement].Dialogue);
 		}
 	}
 }

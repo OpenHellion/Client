@@ -17,10 +17,12 @@ namespace DigitalOpus.MB.Core
 			{
 				return true;
 			}
+
 			if (shaderName.Equals("Bumped Diffuse"))
 			{
 				return true;
 			}
+
 			return false;
 		}
 
@@ -41,8 +43,10 @@ namespace DigitalOpus.MB.Core
 		{
 			if (doColor)
 			{
-				return new Color(pixelColor.r * m_tintColor.r, pixelColor.g * m_tintColor.g, pixelColor.b * m_tintColor.b, pixelColor.a * m_tintColor.a);
+				return new Color(pixelColor.r * m_tintColor.r, pixelColor.g * m_tintColor.g,
+					pixelColor.b * m_tintColor.b, pixelColor.a * m_tintColor.a);
 			}
+
 			return pixelColor;
 		}
 
@@ -62,6 +66,7 @@ namespace DigitalOpus.MB.Core
 			{
 				return new Color(0.5f, 0.5f, 1f);
 			}
+
 			if (texPropertyName.name.Equals("_MainTex") && m != null && m.HasProperty("_Color"))
 			{
 				try
@@ -72,6 +77,7 @@ namespace DigitalOpus.MB.Core
 				{
 				}
 			}
+
 			return new Color(1f, 1f, 1f, 0f);
 		}
 	}

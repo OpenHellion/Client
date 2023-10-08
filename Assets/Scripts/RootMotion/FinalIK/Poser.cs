@@ -6,14 +6,11 @@ namespace RootMotion.FinalIK
 	{
 		public Transform poseRoot;
 
-		[Range(0f, 1f)]
-		public float weight = 1f;
+		[Range(0f, 1f)] public float weight = 1f;
 
-		[Range(0f, 1f)]
-		public float localRotationWeight = 1f;
+		[Range(0f, 1f)] public float localRotationWeight = 1f;
 
-		[Range(0f, 1f)]
-		public float localPositionWeight;
+		[Range(0f, 1f)] public float localPositionWeight;
 
 		public bool fixTransforms = true;
 

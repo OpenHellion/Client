@@ -19,6 +19,7 @@ namespace ZeroGravity
 			{
 				lerpValue = Mathf.Clamp01(lerpValue + (float)direction * Speed * Time.deltaTime);
 			}
+
 			if (lerpValue <= 0f)
 			{
 				base.gameObject.Activate(false);
@@ -32,6 +33,7 @@ namespace ZeroGravity
 			{
 				lerpValue = Mathf.Clamp01(direction);
 			}
+
 			Lens component = MyPlayer.Instance.FpsController.FarCamera.GetComponent<Lens>();
 			if (component != null)
 			{
@@ -46,6 +48,7 @@ namespace ZeroGravity
 					component.BH = null;
 				}
 			}
+
 			base.gameObject.Activate(true);
 		}
 	}

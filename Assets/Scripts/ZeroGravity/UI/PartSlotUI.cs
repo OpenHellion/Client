@@ -25,12 +25,13 @@ namespace ZeroGravity.UI
 		public void UpdateUI()
 		{
 			MachineryPartType machineryPartType = PartSlot.GetMachineryPartType();
-			PartIcon.sprite = Client.Instance.SpriteManager.GetSprite(machineryPartType);
+			PartIcon.sprite = SpriteManager.Instance.GetSprite(machineryPartType);
 			NameText.text = machineryPartType.ToLocalizedString().ToUpper();
 			if (PartSlot.Item == null)
 			{
 				PartIcon.color = Colors.Red;
-				DescriptionText.text = Localization.InsertPartToImprove + " " + PartSlot.Scope.ToLocalizedString().ToLower() + ".";
+				DescriptionText.text = Localization.InsertPartToImprove + " " +
+				                       PartSlot.Scope.ToLocalizedString().ToLower() + ".";
 				Health.gameObject.SetActive(false);
 				PartStatus.text = Localization.Missing.ToUpper();
 				PartStatus.color = Colors.Red;
@@ -38,7 +39,8 @@ namespace ZeroGravity.UI
 			else
 			{
 				PartIcon.color = Colors.White;
-				DescriptionText.text = PartSlot.GetDescription() + FormatHelper.PartTier(PartSlot.Item as MachineryPart);
+				DescriptionText.text =
+					PartSlot.GetDescription() + FormatHelper.PartTier(PartSlot.Item as MachineryPart);
 				float val = (PartSlot.Item as MachineryPart).Health / (PartSlot.Item as MachineryPart).MaxHealth;
 				Health.gameObject.SetActive(true);
 				Health.text = Localization.Health.ToUpper() + ": " + FormatHelper.Percentage(val);

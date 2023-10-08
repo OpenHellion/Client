@@ -39,6 +39,7 @@ namespace RootMotion.Demos
 			{
 				Debug.LogWarning("AimIK and LookAtIK need to have their 'Target' value assigned.", base.transform);
 			}
+
 			Pose();
 			aim.solver.Update();
 			if (lookAt != null)
@@ -58,6 +59,7 @@ namespace RootMotion.Demos
 				aimPoser.SetPoseActive(aimPose);
 				lastPose = aimPose;
 			}
+
 			AimPoser.Pose[] poses = aimPoser.poses;
 			foreach (AimPoser.Pose pose in poses)
 			{

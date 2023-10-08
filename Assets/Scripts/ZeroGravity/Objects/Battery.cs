@@ -16,10 +16,7 @@ namespace ZeroGravity.Objects
 
 		public float BatteryPrecentage
 		{
-			get
-			{
-				return CurrentPower / MaxPower;
-			}
+			get { return CurrentPower / MaxPower; }
 		}
 
 		private new void Start()
@@ -57,6 +54,7 @@ namespace ZeroGravity.Objects
 			{
 				fill.fillAmount = BatteryPrecentage;
 			}
+
 			if (CurrentPower <= MaxPower * 0.2f)
 			{
 				fill.color = Colors.Red;

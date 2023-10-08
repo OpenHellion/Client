@@ -23,6 +23,7 @@ namespace DigitalOpus.MB.Core
 			{
 				array[i] = props[i].name;
 			}
+
 			return array;
 		}
 	}

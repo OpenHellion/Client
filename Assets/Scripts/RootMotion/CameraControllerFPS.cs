@@ -35,10 +35,12 @@ namespace RootMotion
 			{
 				angle += 360f;
 			}
+
 			if (angle > 360f)
 			{
 				angle -= 360f;
 			}
+
 			return Mathf.Clamp(angle, min, max);
 		}
 	}

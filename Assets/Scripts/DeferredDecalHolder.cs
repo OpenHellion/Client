@@ -14,6 +14,7 @@ public class DeferredDecalHolder
 			{
 				myDecalHolder = new DeferredDecalHolder();
 			}
+
 			return myDecalHolder;
 		}
 	}

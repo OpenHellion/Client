@@ -13,11 +13,9 @@ namespace ZeroGravity.LevelDesign
 
 		public HitEffectType LeaveDecal;
 
-		[HideInInspector]
-		public float DamageMultiply = 1f;
+		[HideInInspector] public float DamageMultiply = 1f;
 
-		[HideInInspector]
-		public float DamageTreshold;
+		[HideInInspector] public float DamageTreshold;
 
 		private void Start()
 		{

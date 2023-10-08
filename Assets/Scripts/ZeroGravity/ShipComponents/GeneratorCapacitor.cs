@@ -7,8 +7,7 @@ namespace ZeroGravity.ShipComponents
 {
 	public class GeneratorCapacitor : Generator, IPowerConsumer, IPowerProvider
 	{
-		[SerializeField]
-		private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
+		[SerializeField] private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
 		{
 			new ResourceRequirement
 			{
@@ -26,18 +25,12 @@ namespace ZeroGravity.ShipComponents
 
 		public override GeneratorType Type
 		{
-			get
-			{
-				return GeneratorType.Capacitor;
-			}
+			get { return GeneratorType.Capacitor; }
 		}
 
 		public override ResourceRequirement[] ResourceRequirements
 		{
-			get
-			{
-				return _ResourceRequirements;
-			}
+			get { return _ResourceRequirements; }
 		}
 
 		public override SystemAuxData GetAuxData()
@@ -46,10 +39,12 @@ namespace ZeroGravity.ShipComponents
 			{
 				throw new Exception("Invalid Capacity");
 			}
+
 			if (NominalCapacity <= 0f)
 			{
 				throw new Exception("Invalid NominalCapacity");
 			}
+
 			GeneratorCapacitorAuxData generatorCapacitorAuxData = new GeneratorCapacitorAuxData();
 			generatorCapacitorAuxData.NominalCapacity = NominalCapacity;
 			generatorCapacitorAuxData.Capacity = Capacity;
@@ -71,6 +66,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				return 0f;
 			}
+
 			ResourceRequirement[] resourceRequirements = ResourceRequirements;
 			foreach (ResourceRequirement resourceRequirement in resourceRequirements)
 			{
@@ -79,6 +75,7 @@ namespace ZeroGravity.ShipComponents
 					return resourceRequirement.Nominal * InputFactor + resourceRequirement.Standby * InputFactorStandby;
 				}
 			}
+
 			return 0f;
 		}
 	}

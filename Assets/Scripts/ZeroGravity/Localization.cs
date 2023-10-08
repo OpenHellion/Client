@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
+using OpenHellion.UI;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -158,8 +159,6 @@ namespace ZeroGravity
 		public static string Connect;
 
 		public static string Play;
-
-		public static string PlaySP;
 
 		public static string Options;
 
@@ -324,20 +323,6 @@ namespace ZeroGravity
 		public static string PlayerSettings;
 
 		public static string GlobalSettings;
-
-		public static string Autosave;
-
-		public static string NewGame;
-
-		public static string NewGameDescription;
-
-		public static string SinglePlayer;
-
-		public static string SinglePlayerModeDescription;
-
-		public static string DeleteSaveGame;
-
-		public static string AreYouSureDeleteSaveGame;
 
 		public static string Multiplayer;
 
@@ -1773,8 +1758,6 @@ namespace ZeroGravity
 
 		public static string DockingPortController;
 
-		public static string MessageTerminal;
-
 		public static string HackingDescription;
 
 		public static string PullToUndock;
@@ -1948,10 +1931,6 @@ namespace ZeroGravity
 		public static string EquipSuitFirst;
 
 		public static string Error;
-
-		public static string UnableToStartSPGame;
-
-		public static string Hellion_SpExeIsMissing;
 
 		public static string RemoveOutfitTooltip;
 
@@ -2233,62 +2212,94 @@ namespace ZeroGravity
 				{ 24, "Data/localization_Ukrainian" }
 			};
 			Preload01 = "<color=#BEC070>Basics:</color> Cryopod serves as your re-spawn point.";
-			Preload02 = "<color=#BEC070>Basics:</color> Your character stays in game after you log out. Logout from a cryopod to keep your character safe.";
-			Preload03 = "<color=#BEC070>Basics:</color> Always equip the suit first then the jetpack and then the helmet.";
+			Preload02 =
+				"<color=#BEC070>Basics:</color> Your character stays in game after you log out. Logout from a cryopod to keep your character safe.";
+			Preload03 =
+				"<color=#BEC070>Basics:</color> Always equip the suit first then the jetpack and then the helmet.";
 			Preload04 = "<color=#BEC070>Basics:</color> Never leave your station without a loaded jetpack.";
 			Preload05 = "<color=#BEC070>Basics:</color> Welder can be used to repair any damage to ships and stations.";
-			Preload06 = "<color=#BEC070>Basics:</color> Pressure difference causes decompression, knocking you down or sucking you into space.";
+			Preload06 =
+				"<color=#BEC070>Basics:</color> Pressure difference causes decompression, knocking you down or sucking you into space.";
 			Preload07 = "<color=#BEC070>Basics:</color> You can suffocate in your suit if you run out of oxygen.";
-			Preload08 = "<color=#BEC070>Basics:</color> Staying inside a debris field will cause damage to your stations and ships.";
-			Preload09 = "<color=#BEC070>Basics:</color> Damage can cause different hazards like fire, breach and system malfunctions.";
+			Preload08 =
+				"<color=#BEC070>Basics:</color> Staying inside a debris field will cause damage to your stations and ships.";
+			Preload09 =
+				"<color=#BEC070>Basics:</color> Damage can cause different hazards like fire, breach and system malfunctions.";
 			Preload10 = "<color=#BEC070>Basics:</color> Fire needs oxygen. Decompressing a room will put it out.";
 			Preload11 = "<color=#BEC070>Basics:</color> Use parts to enhance your ship/station's systems.";
 			Preload12 = "<color=#BEC070>Basics:</color> Solar panel base output depends on distance from the sun.";
 			Preload13 = "<color=#BEC070>Basics:</color> Fusion Reactor requires a supply of Helium-3 to work.";
-			Preload14 = "<color=#BEC070>Basics:</color> Servomotors reduce power consumption of any system they are attached to.";
-			Preload15 = "<color=#BEC070>Basics:</color> Resource injectors reduce resource consumption of any system they are attached to.";
-			Preload16 = "<color=#BEC070>Basics:</color> Catalysts greatly improve the power output of reactors and solar panels.";
+			Preload14 =
+				"<color=#BEC070>Basics:</color> Servomotors reduce power consumption of any system they are attached to.";
+			Preload15 =
+				"<color=#BEC070>Basics:</color> Resource injectors reduce resource consumption of any system they are attached to.";
+			Preload16 =
+				"<color=#BEC070>Basics:</color> Catalysts greatly improve the power output of reactors and solar panels.";
 			Preload17 = "<color=#BEC070>Basics:</color> Core Containment increases maximum capacitor storage.";
-			Preload18 = "<color=#BEC070>Basics:</color> Salvage from derelicts can be refined into crafting components.";
+			Preload18 =
+				"<color=#BEC070>Basics:</color> Salvage from derelicts can be refined into crafting components.";
 			Preload19 = "<color=#BEC070>Basics:</color> When piloting press [R] to change radar range.";
 			Preload20 = "<color=#f0f0f0>Zero-G:</color> press [J] to activate jetpack.";
 			Preload21 = "<color=#f0f0f0>Zero-G:</color> use [Q] and [E] to rotate.";
-			Preload22 = "<color=#f0f0f0>Zero-G:</color> hold [SHIFT] to stabilize rotation and grab onto nearby walls to avoid decompression.";
-			Preload23 = "<color=#f0f0f0>Zero-G:</color> watch your acceleration and lateral speed indicators and mind the inertia.";
-			Preload24 = "<color=#f0f0f0>Zero-G:</color> when docking, use [R] to cycle docking ports of your current vessel.";
-			Preload25 = "<color=#f0f0f0>Zero-G:</color> when docking, use [UP/DOWN] to cycle targets, [LEFT/RIGHT] to change target ports.";
+			Preload22 =
+				"<color=#f0f0f0>Zero-G:</color> hold [SHIFT] to stabilize rotation and grab onto nearby walls to avoid decompression.";
+			Preload23 =
+				"<color=#f0f0f0>Zero-G:</color> watch your acceleration and lateral speed indicators and mind the inertia.";
+			Preload24 =
+				"<color=#f0f0f0>Zero-G:</color> when docking, use [R] to cycle docking ports of your current vessel.";
+			Preload25 =
+				"<color=#f0f0f0>Zero-G:</color> when docking, use [UP/DOWN] to cycle targets, [LEFT/RIGHT] to change target ports.";
 			Preload26 = "<color=#f0f0f0>Zero-G:</color> collisions are deadly, avoid bumping into other space objects.";
 			Preload27 = "<color=#f0f0f0>Zero-G:</color> moving in the vacuum of space is impossible without a jetpack.";
-			Preload28 = "<color=#D0815B>Base-Building:</color> Command Module adds a security interface to your station.";
-			Preload29 = "<color=#D0815B>Base-Building:</color> Security interface lets you control who can access your base.";
-			Preload30 = "<color=#D0815B>Base-Building:</color> Cargo Bay refinery can be used to refine a large quantity of resources at once.";
-			Preload31 = "<color=#D0815B>Base-Building:</color> Adding a Fabricator to your station will let you craft items.";
-			Preload32 = "<color=#D0815B>Base-Building:</color> Power Supply Module (PSM) provides a massive power production boost to your station.";
-			Preload33 = "<color=#D0815B>Base-Building:</color> Airlocks let you avoid decompression when going from station into space.";
+			Preload28 =
+				"<color=#D0815B>Base-Building:</color> Command Module adds a security interface to your station.";
+			Preload29 =
+				"<color=#D0815B>Base-Building:</color> Security interface lets you control who can access your base.";
+			Preload30 =
+				"<color=#D0815B>Base-Building:</color> Cargo Bay refinery can be used to refine a large quantity of resources at once.";
+			Preload31 =
+				"<color=#D0815B>Base-Building:</color> Adding a Fabricator to your station will let you craft items.";
+			Preload32 =
+				"<color=#D0815B>Base-Building:</color> Power Supply Module (PSM) provides a massive power production boost to your station.";
+			Preload33 =
+				"<color=#D0815B>Base-Building:</color> Airlocks let you avoid decompression when going from station into space.";
 			Preload34 = "<color=#D0815B>Base-Building:</color> Airlock requires a working Life Support System.";
-			Preload35 = "<color=#D0815B>Base-Building:</color> Refinery and Fabricator drain a lot of power. Ensure your power supply is adequate before activating them.";
-			Preload36 = "<color=#D05D5B>Combat:</color> Turrets are deadly but have limited range. Use cover and grenades when fighting them.";
+			Preload35 =
+				"<color=#D0815B>Base-Building:</color> Refinery and Fabricator drain a lot of power. Ensure your power supply is adequate before activating them.";
+			Preload36 =
+				"<color=#D05D5B>Combat:</color> Turrets are deadly but have limited range. Use cover and grenades when fighting them.";
 			Preload37 = "<color=#D05D5B>Combat:</color> EMP grenades will disable a Turret and let you pick it up.";
-			Preload38 = "<color=#D05D5B>Combat:</color> Hacking tools can be used to open locked doors and reset authorized security panels.";
-			Preload39 = "<color=#D05D5B>Combat:</color> Deploying a Turret in a station without a security interface will make it hostile.";
-			Preload40 = "<color=#D05D5B>Combat:</color> Only 'authorized personnel' can pass through locked doors and access system panels.";
-			Preload41 = "<color=#74A1CA>Navigation:</color> Upgrading Warp Drive with a better Singularity Cell Detonator will unlock faster warp.";
-			Preload42 = "<color=#74A1CA>Navigation:</color> Creating a custom orbit allows you to warp to any point in space.";
-			Preload43 = "<color=#74A1CA>Navigation:</color> Moving your station to a higher orbit will hide it from other players.";
-			Preload44 = "<color=#74A1CA>Navigation:</color> Warp Drive drains power directly from the capacitor. Ensure you have enough power stored before attempting warp.";
-			Preload45 = "<color=#74A1CA>Navigation:</color> Propulsion includes RCS for short distance travel, Engine for quick bursts of acceleration and Warp Drive for crossing vast interplanetary distances.";
-			Preload46 = "<color=#74A1CA>Navigation:</color> Explore former military zones for Command Modules, abandoned ships and propulsion upgrades.";
-			Preload47 = "<color=#74A1CA>Navigation:</color> Former industrial zones often contain industrial modules, raw resources and power supply upgrades.";
-			Preload48 = "<color=#74A1CA>Navigation:</color> Former civilian zones are an excellent source of medical supplies and Life Support upgrades.";
+			Preload38 =
+				"<color=#D05D5B>Combat:</color> Hacking tools can be used to open locked doors and reset authorized security panels.";
+			Preload39 =
+				"<color=#D05D5B>Combat:</color> Deploying a Turret in a station without a security interface will make it hostile.";
+			Preload40 =
+				"<color=#D05D5B>Combat:</color> Only 'authorized personnel' can pass through locked doors and access system panels.";
+			Preload41 =
+				"<color=#74A1CA>Navigation:</color> Upgrading Warp Drive with a better Singularity Cell Detonator will unlock faster warp.";
+			Preload42 =
+				"<color=#74A1CA>Navigation:</color> Creating a custom orbit allows you to warp to any point in space.";
+			Preload43 =
+				"<color=#74A1CA>Navigation:</color> Moving your station to a higher orbit will hide it from other players.";
+			Preload44 =
+				"<color=#74A1CA>Navigation:</color> Warp Drive drains power directly from the capacitor. Ensure you have enough power stored before attempting warp.";
+			Preload45 =
+				"<color=#74A1CA>Navigation:</color> Propulsion includes RCS for short distance travel, Engine for quick bursts of acceleration and Warp Drive for crossing vast interplanetary distances.";
+			Preload46 =
+				"<color=#74A1CA>Navigation:</color> Explore former military zones for Command Modules, abandoned ships and propulsion upgrades.";
+			Preload47 =
+				"<color=#74A1CA>Navigation:</color> Former industrial zones often contain industrial modules, raw resources and power supply upgrades.";
+			Preload48 =
+				"<color=#74A1CA>Navigation:</color> Former civilian zones are an excellent source of medical supplies and Life Support upgrades.";
 			ConnectingToMain = "Connecting to main server";
 			ConnectingToGame = "Connecting to game server";
 			Connect = "Connect";
-			Play = "Play Online";
-			PlaySP = "Single Player Game";
+			Play = "Start game";
 			Options = "Options";
 			Quit = "Quit";
 			Apply = "Apply";
-			Disclaimer = "This is the Alpha version of the game. It represents the basic vision behind this dark world. As the player base grows, we expect Hellion to evolve beyond these initial confines and become a true space survival that we can all enjoy. One of the cornerstones of this idea is an open and honest communication between developers and community. We are looking forward to your feedback as we believe that each and every one of you can add something to this project.\n\nSo grab your space suit, put on the helmet and dive into the void with us.\nHellion awaits!\n\nDo not hesitate to report any problems, bugs or other issues you may have while playing Hellion and make sure to contact us.\n\nZero Gravity Team";
+			Disclaimer =
+				"This is the Alpha version of the game. It represents the basic vision behind this dark world. As the player base grows, we expect Hellion to evolve beyond these initial confines and become a true space survival that we can all enjoy. One of the cornerstones of this idea is an open and honest communication between developers and community. We are looking forward to your feedback as we believe that each and every one of you can add something to this project.\n\nSo grab your space suit, put on the helmet and dive into the void with us.\nHellion awaits!\n\nDo not hesitate to report any problems, bugs or other issues you may have while playing Hellion and make sure to contact us.\n\nZero Gravity Team";
 			Welcome = "Welcome to Hellion";
 			Understand = "I understand";
 			ReadMore = "Read more";
@@ -2367,13 +2378,6 @@ namespace ZeroGravity
 			ServerSettings = "Server settings";
 			PlayerSettings = "Player settings";
 			GlobalSettings = "Global settings";
-			Autosave = "Autosave";
-			NewGame = "New game";
-			NewGameDescription = "Embark on a new adventure beneath an alien sky";
-			SinglePlayer = "Single player";
-			SinglePlayerModeDescription = "Your own private server just for single player mode";
-			DeleteSaveGame = "Delete save game";
-			AreYouSureDeleteSaveGame = "Are you sure you want to delete save game?";
 			Multiplayer = "Multiplayer";
 			JoinDiscord = "Join discord";
 			Movement = "Movement";
@@ -2447,7 +2451,8 @@ namespace ZeroGravity
 			ConnectionError = "Connection Error";
 			SystemError = "System Error";
 			Disabled = "Disabled";
-			InvalidSystemSpesifications = "This computer has invalid system specifications. You need at least 4 gigabytes of RAM and a processor with at least a 2 GHz clock speed.";
+			InvalidSystemSpesifications =
+				"This computer has invalid system specifications. You need at least 4 gigabytes of RAM and a processor with at least a 2 GHz clock speed.";
 			ConnectionToGameBroken = "Connection to the game server has been lost.";
 			DeleteCharacter = "Delete character";
 			DuplicatedControl = "Duplicated Control";
@@ -2456,9 +2461,11 @@ namespace ZeroGravity
 			VersionErrorMessage = "Please update your client";
 			AreYouSureLogout = "Are you sure you want to logout?";
 			AreYouSureExitGame = "Are you sure you want to exit?";
-			AreYouSureDeleteCharacter = "Are you sure you want to delete this character?\nAll active quests progress will be lost!";
+			AreYouSureDeleteCharacter =
+				"Are you sure you want to delete this character?\nAll active quests progress will be lost!";
 			AreYouSureRespawn = "Confirming this option will kill your character!\nAre you sure you want to respawn?";
-			AreYouSureLoad = "Confirming this option will delete all current progress! \n Are you sure you want to load game?";
+			AreYouSureLoad =
+				"Confirming this option will delete all current progress! \n Are you sure you want to load game?";
 			AreYouSureYouWantToSave = "Settings have been updated! \n Do you want to save changes?";
 			TryAgainLater = "Try again later";
 			SpawnErrorTitle = "Spawn error";
@@ -2702,9 +2709,11 @@ namespace ZeroGravity
 			Tut_1 = "Your cryosleep is over now. Welcome to Hellion!";
 			Tut_2 = "Pick up the suit, it will be your INVENTORY.\nPress [TAB] to access it.";
 			Tut_3 = "Equip Helmet and Jetpack.\nPress [H] to raise/lower Helmet Visor and save suit oxygen.";
-			Tut_4 = "Use [W,A,S,D] and Mouse to move in zero gravity.\nPress [SPACE] to move up.\nPress [LCTRL] to move down.\nHold [LSHIFT] to grab.\nPress [Q] and [E] to roll.";
+			Tut_4 =
+				"Use [W,A,S,D] and Mouse to move in zero gravity.\nPress [SPACE] to move up.\nPress [LCTRL] to move down.\nHold [LSHIFT] to grab.\nPress [Q] and [E] to roll.";
 			Tut_5 = "Make sure your suit is equipped and lower your visor before exiting the station.";
-			Tut_6 = "Manually override outer door by pulling the lever.\nHold [LSHIFT] to grab onto nearby wall and avoid decompression.";
+			Tut_6 =
+				"Manually override outer door by pulling the lever.\nHold [LSHIFT] to grab onto nearby wall and avoid decompression.";
 			Tut_7 = "Access the module's Docking Panel to begin docking procedure.";
 			CanisterIsEmpty = "Canister is empty";
 			ResourcesAreAlreadyFull = "Resources are already full";
@@ -2771,42 +2780,64 @@ namespace ZeroGravity
 			SoeHelmet = "Sons of Earth Mk9 - Helmet";
 			SoeJetpack = "Sons of Earth Mk9 - Jetpack";
 			AegisAssaultRifle = "Aegis assault rifle";
-			AltairRifleDescription = "A compact AltCorp carbine that combines good stopping power and decent rate of fire with exceptional accuracy.\n\nSingle: Dmg - 20, RPM - 150\nAuto: Dmg - 18, RPM - 300\n";
-			MilitaryAssaultRifleDescription = "SDS assault rifle designed to provide reliable firepower in any situation.\n\nAuto: Dmg - 21, RPM - 600\n";
-			MilitarySniperRifleDescription = "Magnetic version of the old anti-materiel rifle, the SDS ‘Lance’ is capable of delivering lethal force at any range with pinpoint accuracy.\n\nSingle: Dmg - 75, RPM - 36\n";
-			MilitaryHandGun01Description = "Small and compact, SDS ‘Rapier’ provides lethal firepower ideal for close quarters, making it perfect for peacekeeping duties.\n\nSingle: Dmg - 16, RPM - 180\nAuto: Dmg - 14, RPM - 480\n";
-			MilitaryHandGun02Description = "Heaviest hitter of all conventional weapons, SDS ‘Glaive’ is the most powerful sidearm available to Expedition personnel.\n\nSingle: Dmg - 28, RPM - 110\n";
+			AltairRifleDescription =
+				"A compact AltCorp carbine that combines good stopping power and decent rate of fire with exceptional accuracy.\n\nSingle: Dmg - 20, RPM - 150\nAuto: Dmg - 18, RPM - 300\n";
+			MilitaryAssaultRifleDescription =
+				"SDS assault rifle designed to provide reliable firepower in any situation.\n\nAuto: Dmg - 21, RPM - 600\n";
+			MilitarySniperRifleDescription =
+				"Magnetic version of the old anti-materiel rifle, the SDS ‘Lance’ is capable of delivering lethal force at any range with pinpoint accuracy.\n\nSingle: Dmg - 75, RPM - 36\n";
+			MilitaryHandGun01Description =
+				"Small and compact, SDS ‘Rapier’ provides lethal firepower ideal for close quarters, making it perfect for peacekeeping duties.\n\nSingle: Dmg - 16, RPM - 180\nAuto: Dmg - 14, RPM - 480\n";
+			MilitaryHandGun02Description =
+				"Heaviest hitter of all conventional weapons, SDS ‘Glaive’ is the most powerful sidearm available to Expedition personnel.\n\nSingle: Dmg - 28, RPM - 110\n";
 			AltairRifleAmmoDescription = "6mm rifle ammo\n\n";
 			MilitaryAssaultRifleAmmoDescription = "8mm rifle ammo\n\n";
 			MilitarySniperRifleAmmoDescription = "12mm sniper ammo\n\n";
 			MilitaryHandGunAmmo01Description = "8mm pistol ammo\n\n";
-			AltairPressurisedSuitDescription = "Standard Altair Corporation multi-purpose pressure suit.\n\nBallistic Protection - 4\n";
-			AltairEVASuitDescription = "Reinforced pressure suit, designed for prolonged EVA sessions and modified for use in Hellion system.\n";
-			AltairPressurisedHelmetDescription = "Battery powered HUD and communications interface for the AltCorp Mk9 Pressure suit.\n";
-			AltairEVAHelmetDescription = "Battery powered HUD and communications interface for the 'Proteus-h' EVA suit.\n";
-			AltairPressurisedJetpackDescription = "Oxygen supply and zero-g maneuvering system designed for the AltCorp Mk9 Pressure suit.\n";
-			AltairEVAJetpackDescription = "Oxygen supply and zero-g maneuvering system designed for the 'Proteus-h' EVA suit.\n";
+			AltairPressurisedSuitDescription =
+				"Standard Altair Corporation multi-purpose pressure suit.\n\nBallistic Protection - 4\n";
+			AltairEVASuitDescription =
+				"Reinforced pressure suit, designed for prolonged EVA sessions and modified for use in Hellion system.\n";
+			AltairPressurisedHelmetDescription =
+				"Battery powered HUD and communications interface for the AltCorp Mk9 Pressure suit.\n";
+			AltairEVAHelmetDescription =
+				"Battery powered HUD and communications interface for the 'Proteus-h' EVA suit.\n";
+			AltairPressurisedJetpackDescription =
+				"Oxygen supply and zero-g maneuvering system designed for the AltCorp Mk9 Pressure suit.\n";
+			AltairEVAJetpackDescription =
+				"Oxygen supply and zero-g maneuvering system designed for the 'Proteus-h' EVA suit.\n";
 			MachineryPartDescription = "Standard machinery part";
-			AltairHandDrillDescription = "AltCorp 5th generation portable Drilling System designed for zero-g mining operations.\n\n";
+			AltairHandDrillDescription =
+				"AltCorp 5th generation portable Drilling System designed for zero-g mining operations.\n\n";
 			AltairHandDrillBatteryDescription = "Standard AltCorp battery pack.\n";
-			AltairHandDrillCanisterDescription = "Standard AltCorp raw resource container. Compatible with the G5p Drilling System.\n";
+			AltairHandDrillCanisterDescription =
+				"Standard AltCorp raw resource container. Compatible with the G5p Drilling System.\n";
 			AltairResourceContainerDescription = "Small canister for emergency Jetpack refueling.\n";
 			AltairRefinedCanisterDescription = "Standard AltCorp refined resource container.\n";
 			AltairCrowbarDescription = "A simple and effective tool. Made out of high quality alloy steel.";
 			AltairGlowStickDescription = "A self-contained, temporary light source";
 			AltairMedpackSmallDescription = "Standard medical stimpack\n\nRecovery - 10HP/s\nDuration - 3s";
 			AltairMedpackBigDescription = "Military grade stimpack\n\nRecovery - 15HP/s\nDuration - 4s";
-			AltairDisposableHackingToolDescription = "Overrides access restrictions.\n\nA makeshift hacking device built to overload security systems. Crude but effective.\n";
-			AltairHandheldAsteroidScanningToolDescription = "Asteroid scanning device.\n\nAltCorp Asteroid Survey Assist Tool. Used to determine asteroid composition.\n";
+			AltairDisposableHackingToolDescription =
+				"Overrides access restrictions.\n\nA makeshift hacking device built to overload security systems. Crude but effective.\n";
+			AltairHandheldAsteroidScanningToolDescription =
+				"Asteroid scanning device.\n\nAltCorp Asteroid Survey Assist Tool. Used to determine asteroid composition.\n";
 			LogItemDescription = "Portable data storage device";
 			GenericItemDescription = "Nothing to see here, move along...";
-			APGrenadeDescription = "Standard issue SDS anti-personnel frag grenade.\n\nFuse time - 5s\nBlast Radius - 6m\nDmg - 103\n";
-			EMPGrenadeDescription = "SDS electromagnetic pulse grenade designed to disable high-end weapon systems without affecting personnel.\n\nFuse time - 5s\nBlast Radius - 10m\n";
-			PortableTurretDescription = "Automated sentry.\n\nFully automated SDS anti-personnel weapon that works as part of the station’s security system.\n";
-			SoeSuitDescription = "Mk9 Pressure Suit worn by Sons of Earth and customised for combat. Offers added ammo slots over storage capacity.\n\nBallistic Protection - 4\n";
-			SoeHelmetDescription = "Mk9 helmet worn by Sons of Earth. Heavily modified and adorned with their logos and symbols.\n";
-			SoeJetpackDescription = "Mk9 Jetpack worn by Sons of Earth. Features improved oxygen and fuel capacity compared to the standard version.\n";
-			AegisAssaultRifleDescription = "Custom version of the V-22 'Broadsword' assault rifle. Reserved exclusively for members of the AEGIS task force.\n\nAuto: Dmg - 25, RPM - 500\n";
+			APGrenadeDescription =
+				"Standard issue SDS anti-personnel frag grenade.\n\nFuse time - 5s\nBlast Radius - 6m\nDmg - 103\n";
+			EMPGrenadeDescription =
+				"SDS electromagnetic pulse grenade designed to disable high-end weapon systems without affecting personnel.\n\nFuse time - 5s\nBlast Radius - 10m\n";
+			PortableTurretDescription =
+				"Automated sentry.\n\nFully automated SDS anti-personnel weapon that works as part of the station’s security system.\n";
+			SoeSuitDescription =
+				"Mk9 Pressure Suit worn by Sons of Earth and customised for combat. Offers added ammo slots over storage capacity.\n\nBallistic Protection - 4\n";
+			SoeHelmetDescription =
+				"Mk9 helmet worn by Sons of Earth. Heavily modified and adorned with their logos and symbols.\n";
+			SoeJetpackDescription =
+				"Mk9 Jetpack worn by Sons of Earth. Features improved oxygen and fuel capacity compared to the standard version.\n";
+			AegisAssaultRifleDescription =
+				"Custom version of the V-22 'Broadsword' assault rifle. Reserved exclusively for members of the AEGIS task force.\n\nAuto: Dmg - 25, RPM - 500\n";
 			Flag = "AltCorp Flag";
 			BasketBall = "Basketball";
 			BookHolder = "Book holder";
@@ -2840,7 +2871,8 @@ namespace ZeroGravity
 			HoopDescription = "Basketball Hoop\nNear indestructible and zero-g friendly";
 			LavaLampDescription = "Lava lamp\nA perfect night light solution for your quarters";
 			PlantRingDescription = "Decorative plant ring.\n Sealed against vacuum exposure";
-			PlantZikaLeafDescription = "A rare strain of the bio-phosphorescent Zika Leaf plant.\nSealed against vacuum exposure";
+			PlantZikaLeafDescription =
+				"A rare strain of the bio-phosphorescent Zika Leaf plant.\nSealed against vacuum exposure";
 			PlantCanisterDescription = "Decorative bio-phosphorescent plant.\nSealed against vacuum exposure.";
 			PosterDescription = "Promotional poster";
 			TeslaBallDescription = "A small decorative lamp with a built in power source.";
@@ -2848,7 +2880,8 @@ namespace ZeroGravity
 			AltCorp_CupDescription = "Nothing like a warm cup of that special blend.";
 			CoffeeMachineDescription = "Do not use in zero gravity conditions";
 			ScrapDescription = "Recyclable. Otherwise useless.";
-			DiamondCoreDescription = "A replaceable diamond core drill bit specifically designed for the G5p Drilling System\n";
+			DiamondCoreDescription =
+				"A replaceable diamond core drill bit specifically designed for the G5p Drilling System\n";
 			Fuse = "Fuse";
 			ServoMotor = "Servo motor";
 			SolarPanel = "Solar panel";
@@ -2891,8 +2924,10 @@ namespace ZeroGravity
 			SingularityCellDetonatorDescription = "Expands warp options";
 			WarpCellDescription = "Standardized warp core cell container, compatible with all Expedition systems";
 			PressureRegulatorDescription = "MAX AIR OUTPUT of LS NODE";
-			NaniteCoreDescription = "Enhances vessel armor\nCompatible with all Nanite Diffuser Systems.\n\nMultipurpose civilian nanite core designed for prolonged exposure in low risk areas.\nExceptional durability at the cost of protection.\n";
-			MilitaryNaniteCoreDescription = "Enhances vessel armor\nCompatible with all Nanite Diffuser Systems.\n\nMilitary grade nanite core designed for search and rescue operations in high risk areas.\nImproved protection at the cost of durability.\n";
+			NaniteCoreDescription =
+				"Enhances vessel armor\nCompatible with all Nanite Diffuser Systems.\n\nMultipurpose civilian nanite core designed for prolonged exposure in low risk areas.\nExceptional durability at the cost of protection.\n";
+			MilitaryNaniteCoreDescription =
+				"Enhances vessel armor\nCompatible with all Nanite Diffuser Systems.\n\nMilitary grade nanite core designed for search and rescue operations in high risk areas.\nImproved protection at the cost of durability.\n";
 			EngineStatus = "Engine status";
 			ENG = "ENG";
 			FTL = "FTL";
@@ -3007,21 +3042,29 @@ namespace ZeroGravity
 			DragResourcesForCrafting = "Drag resources for crafting";
 			JoinHellionOnDiscord = "Join hellion \non discord";
 			AirLockcontrols = "Airlock controls";
-			LifeSupportInfo = "Maintains breathable conditions on ships and stations by generating air to increase room pressure and by filtering existing air to improve air quality. It consists of Air Generator sub-system, Air Tank and Air Filter sub-system.";
-			AirGeneratorDescription = "Air generator consumes <color=#ACAE15>power</color>, <color=#0DC2CC>oxygen</color> and <color=#28C066>nitrogen</color> to generate air for air tank.";
-			AirFilterDescription = "Air filter consumes <color=#ACAE15>power</color>, <color=#0DC2CC>oxygen</color> or carbon filter to replenish air quality.";
-			AirTankDescription = "Air tank serves as <color=#0DC2CC>air</color> storage for pressurizing and depressurizing rooms.";
+			LifeSupportInfo =
+				"Maintains breathable conditions on ships and stations by generating air to increase room pressure and by filtering existing air to improve air quality. It consists of Air Generator sub-system, Air Tank and Air Filter sub-system.";
+			AirGeneratorDescription =
+				"Air generator consumes <color=#ACAE15>power</color>, <color=#0DC2CC>oxygen</color> and <color=#28C066>nitrogen</color> to generate air for air tank.";
+			AirFilterDescription =
+				"Air filter consumes <color=#ACAE15>power</color>, <color=#0DC2CC>oxygen</color> or carbon filter to replenish air quality.";
+			AirTankDescription =
+				"Air tank serves as <color=#0DC2CC>air</color> storage for pressurizing and depressurizing rooms.";
 			VolumeDescription = "Maximum air volume of room";
 			PressurizeDescription = "Pressurize from air tank";
 			DepressurizeDescription = "Depressurize to air tank";
 			VentActionDescription = "Vents air to outer space";
 			PowerSupplySystem = "Power supply system";
-			PowerSupplyInfo = "System is in charge of generating power for ships and stations. Its main components are Solar panels, Fusion Reactor and a Capacitor.";
-			CapacitorDescription = "Capacitor acts as a battery and stores any excess <color=#ACAE15>power</color> that your ship/station is not using and allows operation of systems with extreme <color=#EA4141>power requirements</color>.";
-			SolarPanelDescription = "Solar Panels utilize sunlight to generate <color=#ACAE15>power</color>. Their efficiency depends on the distance from the <color=#FF9C5C>sun</color>.";
+			PowerSupplyInfo =
+				"System is in charge of generating power for ships and stations. Its main components are Solar panels, Fusion Reactor and a Capacitor.";
+			CapacitorDescription =
+				"Capacitor acts as a battery and stores any excess <color=#ACAE15>power</color> that your ship/station is not using and allows operation of systems with extreme <color=#EA4141>power requirements</color>.";
+			SolarPanelDescription =
+				"Solar Panels utilize sunlight to generate <color=#ACAE15>power</color>. Their efficiency depends on the distance from the <color=#FF9C5C>sun</color>.";
 			FusionReactorDescription = "Fusion Reactor consumes <color=#88498B>Helium-3</color> to generate power.";
 			CurrentVesselConsumtion = "Current vessel consumption";
-			ConnectedVesselDescription = "Docked vessel list shows all docked ships and modules along with their current <color=#EA4141>power consumption</color> values. All vessels have a base or minimum <color=#EA4141>power requirement</color> before any of their systems can be activated.";
+			ConnectedVesselDescription =
+				"Docked vessel list shows all docked ships and modules along with their current <color=#EA4141>power consumption</color> values. All vessels have a base or minimum <color=#EA4141>power requirement</color> before any of their systems can be activated.";
 			ToggleBaseConsumption = "Toggle base consumption";
 			Ammo = "Ammo";
 			Suits = "Suits";
@@ -3088,7 +3131,6 @@ namespace ZeroGravity
 			AirlockPanel = "Airlock panel controls";
 			NavigationPanel = "Navigation panel";
 			DockingPortController = "Docking port controller";
-			MessageTerminal = "Message terminal";
 			HackingDescription = "Use hacking tool to open door";
 			PullToUndock = "Pull to undock";
 			CapacitorTitle = Capacitor;
@@ -3176,8 +3218,6 @@ namespace ZeroGravity
 			AlreadyEquipped = "Already equipped";
 			EquipSuitFirst = "Equip suit first";
 			Error = "Error";
-			UnableToStartSPGame = "Unable to start single player game.";
-			Hellion_SpExeIsMissing = "File 'HELLION_SP.EXE' is missing. Game installation might be incomplete/corrupted or your AV software might have quarantined it.";
 			RemoveOutfitTooltip = "You must remove helmet and jetpack first";
 			Load = "Load";
 			LootAll = "Loot all";
@@ -3218,7 +3258,8 @@ namespace ZeroGravity
 			ChangeRadarRange = "Change radar range";
 			OffTarget = "Off target";
 			NoTargetModulesInRange = "Unauthorized access to target modules or out of range";
-			CreateCharacterLore = "The industrialists behind the Expedition project, the Altair Corporation was one of the largest groups involved in the colonization of Hellion second only to UN Government. It was responsible for the production of majority of resources as well as orbital construction from shipyards and refineries to large habitats.\n\nLike the company itself, their equipment is exceptionally robust and flexible. Their ships are among the most versatile in Hellion and can usually fit any role from mining and exploration to military applications. If you want something built safe and reliable, you can\ufffdt go wrong with Alt-Corp!";
+			CreateCharacterLore =
+				"The industrialists behind the Expedition project, the Altair Corporation was one of the largest groups involved in the colonization of Hellion second only to UN Government. It was responsible for the production of majority of resources as well as orbital construction from shipyards and refineries to large habitats.\n\nLike the company itself, their equipment is exceptionally robust and flexible. Their ships are among the most versatile in Hellion and can usually fit any role from mining and exploration to military applications. If you want something built safe and reliable, you can\ufffdt go wrong with Alt-Corp!";
 			RcsCancelManeuver = "Using RCS thrusters will cancel warp maneuver!";
 			QuestTerminalHint = "Check quest terminal for new available quests";
 			ToBeContinued = "To be continued";
@@ -3253,7 +3294,8 @@ namespace ZeroGravity
 			SpawnMiningDescription = "Start with a ship and basic equipment close to a random ore rich asteroid";
 			SpawnFreeRoamDescription = "Start with a ship and basic equipment on a random stable orbit";
 			SpawnPremadeStationDescription = "Start with a ship and basic equipment close to a random pre-made station";
-			SpawnDoomedDescription = "Start with a ship and basic equipment on a collision orbit close to a Doomed outpost";
+			SpawnDoomedDescription =
+				"Start with a ship and basic equipment on a collision orbit close to a Doomed outpost";
 			FreeRoamSteropes = "New free roam Steropes";
 			FreeRoamSteropesDescription = SpawnFreeRoamDescription;
 			MiningSteropes = "New mining Steropes";
@@ -3270,7 +3312,8 @@ namespace ZeroGravity
 			PressForLights = "Press [L] to toggle lights";
 			RotationControls = "In zero-g use [Q] and [E] to rotate";
 			HoldToStabilize = "Hold [SHIFT] to stabilize rotation and grab onto nearby walls";
-			UseResourceCanister = "Place Resource Canister into hands and press [LMB] to refill your Jetpack with Oxygen";
+			UseResourceCanister =
+				"Place Resource Canister into hands and press [LMB] to refill your Jetpack with Oxygen";
 			AssignOnCryo = "Assign on cryopod to make it your default spawn point";
 			DragItemToHands = "Press [TAB] and drag item to hands slot in order to use it";
 			WelderTooltip = "Welder can be used to fix both internal and external hull damage";
@@ -3293,7 +3336,8 @@ namespace ZeroGravity
 			AccountNotFound = "Account with this email or username doesn't exist.";
 			AccountAlreadyExists = "Account with this email or username already exists.";
 			InvalidEmail = "Email is invalid. Should be written as example@mail.com";
-			InvalidUsername = "Username is invalid. Valid characters are letters (a-z), numbers (0-9), full stops (.), and underscores (_).";
+			InvalidUsername =
+				"Username is invalid. Valid characters are letters (a-z), numbers (0-9), full stops (.), and underscores (_).";
 			ConsentToDataStorage = "You need to give consent to storing data before you can create an account";
 			defaultValues = GetJsonString();
 			Initialize();
@@ -3316,10 +3360,14 @@ namespace ZeroGravity
 
 			PreloadText = new[]
 			{
-				Preload01, Preload02, Preload03, Preload04, Preload05, Preload06, Preload07, Preload08, Preload09, Preload10,
-				Preload11, Preload12, Preload13, Preload14, Preload15, Preload16, Preload17, Preload18, Preload19, Preload20,
-				Preload21, Preload22, Preload23, Preload24, Preload25, Preload26, Preload27, Preload28, Preload29, Preload30,
-				Preload31, Preload32, Preload33, Preload34, Preload35, Preload36, Preload37, Preload38, Preload39, Preload40,
+				Preload01, Preload02, Preload03, Preload04, Preload05, Preload06, Preload07, Preload08, Preload09,
+				Preload10,
+				Preload11, Preload12, Preload13, Preload14, Preload15, Preload16, Preload17, Preload18, Preload19,
+				Preload20,
+				Preload21, Preload22, Preload23, Preload24, Preload25, Preload26, Preload27, Preload28, Preload29,
+				Preload30,
+				Preload31, Preload32, Preload33, Preload34, Preload35, Preload36, Preload37, Preload38, Preload39,
+				Preload40,
 				Preload41, Preload42, Preload43, Preload44, Preload45, Preload46, Preload47, Preload48
 			};
 
@@ -3430,15 +3478,19 @@ namespace ZeroGravity
 				{ ItemType.AegisAssaultRifle, AegisAssaultRifleDescription }
 			};
 
-			SystemChat = new[] { SystemNothing, SystemUnstable, SystemShipCalled, SystemShipInRange, SystemShipArrive, SystemServerRestart };
+			SystemChat = new[]
+			{
+				SystemNothing, SystemUnstable, SystemShipCalled, SystemShipInRange, SystemShipArrive,
+				SystemServerRestart
+			};
 
 			Enums = new Dictionary<Enum, string>
 			{
-				{ UI.Settings.SettingsType.All, All },
-				{ UI.Settings.SettingsType.Audio, Audio },
-				{ UI.Settings.SettingsType.Controls, Controls },
-				{ UI.Settings.SettingsType.Video, Video },
-				{ UI.Settings.SettingsType.Game, Game },
+				{ OpenHellion.Settings.SettingsType.All, All },
+				{ OpenHellion.Settings.SettingsType.Audio, Audio },
+				{ OpenHellion.Settings.SettingsType.Controls, Controls },
+				{ OpenHellion.Settings.SettingsType.Video, Video },
+				{ OpenHellion.Settings.SettingsType.Game, Game },
 				{ Gender.Male, Male.ToUpper() },
 				{ Gender.Female, Female.ToUpper() },
 				{ SpawnPointState.Authorized, Authorized },
@@ -3579,10 +3631,10 @@ namespace ZeroGravity
 				{ GenericItemSubType.RupturedInsulation, RupturedInsulation },
 				{ GenericItemSubType.BurnedPDU, BurnedPDU },
 				{ GenericItemSubType.DiamondCoreDrillBit, DiamondCore },
-				{ CanvasManager.LoadingScreenType.None, None },
-				{ CanvasManager.LoadingScreenType.Loading, Loading.ToUpper() },
-				{ CanvasManager.LoadingScreenType.ConnectingToMain, ConnectingToMain.ToUpper() },
-				{ CanvasManager.LoadingScreenType.ConnectingToGame, ConnectingToGame.ToUpper() },
+				{ GlobalGUI.LoadingScreenType.None, None },
+				{ GlobalGUI.LoadingScreenType.Loading, Loading.ToUpper() },
+				{ GlobalGUI.LoadingScreenType.ConnectingToMain, ConnectingToMain.ToUpper() },
+				{ GlobalGUI.LoadingScreenType.ConnectingToGame, ConnectingToGame.ToUpper() },
 				{ SpawnSetupType.Continue, Continue.ToUpper() },
 				{ SpawnSetupType.FreeRoamArges, FreeRoamArges },
 				{ SpawnSetupType.FreeRoamSteropes, FreeRoamSteropes },
@@ -3643,7 +3695,6 @@ namespace ZeroGravity
 				{ SceneTriggerType.AirlockPanel, AirlockPanel },
 				{ SceneTriggerType.NavigationPanel, NavigationPanel },
 				{ SceneTriggerType.DockingPortController, DockingPortController },
-				{ SceneTriggerType.MessageTerminal, MessageTerminal },
 				{ StandardInteractionTip.Ammo, Ammo },
 				{ StandardInteractionTip.Grenades, Grenades },
 				{ StandardInteractionTip.Suits, Suits },
@@ -3668,13 +3719,13 @@ namespace ZeroGravity
 				{ StandardInteractionTip.HackingDescription, HackingDescription },
 				{ StandardInteractionTip.Undock, PullToUndock },
 				{ StandardInteractionTip.Docking, DockingPanel },
-				{ ManeuverCourse.FeasibilityErrorType.Acceleration_High, AccelerationHigh },
-				{ ManeuverCourse.FeasibilityErrorType.Acceleration_Low, AccelerationLow },
-				{ ManeuverCourse.FeasibilityErrorType.Course_Impossible, CourseImpossible },
-				{ ManeuverCourse.FeasibilityErrorType.FTL_Capacity, FTLCapacity },
-				{ ManeuverCourse.FeasibilityErrorType.FTL_CellFuel, FTLCellFuel },
-				{ ManeuverCourse.FeasibilityErrorType.FTL_ManeuverIndex, FTLManeuverIndex },
-				{ ManeuverCourse.FeasibilityErrorType.FTL_Online, FTLOffline },
+				{ ManeuverCourse.FeasibilityErrorType.AccelerationHigh, AccelerationHigh },
+				{ ManeuverCourse.FeasibilityErrorType.AccelerationLow, AccelerationLow },
+				{ ManeuverCourse.FeasibilityErrorType.CourseImpossible, CourseImpossible },
+				{ ManeuverCourse.FeasibilityErrorType.FtlCapacity, FTLCapacity },
+				{ ManeuverCourse.FeasibilityErrorType.FtlCellFuel, FTLCellFuel },
+				{ ManeuverCourse.FeasibilityErrorType.FtlManeuverIndex, FTLManeuverIndex },
+				{ ManeuverCourse.FeasibilityErrorType.FtlOnline, FTLOffline },
 				{ ManeuverCourse.FeasibilityErrorType.ToManyDockedVessels, ToManyDockedVessels },
 				{ GameScenes.SceneID.AltCorp_Shuttle_SARA, AltCorp_Shuttle_SARA },
 				{ GameScenes.SceneID.AltCorp_Shuttle_CECA, AltCorp_Shuttle_CECA },
@@ -3709,7 +3760,6 @@ namespace ZeroGravity
 
 			CanvasManagerLocalization = new Dictionary<string, string>
 			{
-				{ "SinglePlayerText", SinglePlayer.ToUpper() },
 				{ "MultiplayerText", Multiplayer.ToUpper() },
 				{ "NameText", Name.ToUpper() },
 				{ "JoinDiscordText", JoinDiscord.ToUpper() },
@@ -3768,7 +3818,6 @@ namespace ZeroGravity
 				{ "OptionsText", Options.ToUpper() },
 				{ "PingText", Ping.ToUpper() },
 				{ "PlayText", Play.ToUpper() },
-				{ "PlaySPText", PlaySP.ToUpper() },
 				{ "PlayersText", Players.ToUpper() },
 				{ "PreAplhaText", PreAplha },
 				{ "QualityText", Quality.ToUpper() },
@@ -4193,18 +4242,23 @@ namespace ZeroGravity
 						fieldInfo.SetValue(null, value);
 					}
 				}
-				ScriptableObject[] array = Resources.FindObjectsOfTypeAll(typeof(ScriptableObject)) as ScriptableObject[];
+
+				ScriptableObject[] array =
+					Resources.FindObjectsOfTypeAll(typeof(ScriptableObject)) as ScriptableObject[];
 				foreach (ScriptableObject scriptableObject in array)
 				{
 					FieldInfo[] fields2 = scriptableObject.GetType().GetFields();
 					foreach (FieldInfo fieldInfo2 in fields2)
 					{
-						if (fieldInfo2.FieldType == typeof(string) && dict.TryGetValue("SO_" + scriptableObject.GetType().Name + "." + scriptableObject.name + "." + fieldInfo2.Name, out value))
+						if (fieldInfo2.FieldType == typeof(string) && dict.TryGetValue(
+							    "SO_" + scriptableObject.GetType().Name + "." + scriptableObject.name + "." +
+							    fieldInfo2.Name, out value))
 						{
 							fieldInfo2.SetValue(scriptableObject, value);
 						}
 					}
 				}
+
 				Initialize();
 				ControlsRebinder.Initialize();
 			}
@@ -4242,25 +4296,33 @@ namespace ZeroGravity
 				}
 
 				// Gets all fields on scriptable objects in the resources folder and adds them as keys.
-				ScriptableObject[] scriptableObjects = Resources.FindObjectsOfTypeAll(typeof(ScriptableObject)) as ScriptableObject[];
+				ScriptableObject[] scriptableObjects =
+					Resources.FindObjectsOfTypeAll(typeof(ScriptableObject)) as ScriptableObject[];
 				Debug.Assert(scriptableObjects != null, nameof(scriptableObjects) + " != null");
 				foreach (ScriptableObject scriptableObject in scriptableObjects)
 				{
 					FieldInfo[] fields2 = scriptableObject.GetType().GetFields();
 					foreach (FieldInfo fieldInfo2 in fields2)
 					{
-						if (fieldInfo2.CustomAttributes.FirstOrDefault((CustomAttributeData m) => m.AttributeType == typeof(LocalizeField)) != null && fieldInfo2.FieldType == typeof(string) && (string)fieldInfo2.GetValue(scriptableObject) != string.Empty)
+						if (fieldInfo2.CustomAttributes.FirstOrDefault((CustomAttributeData m) =>
+							    m.AttributeType == typeof(LocalizeField)) != null &&
+						    fieldInfo2.FieldType == typeof(string) &&
+						    (string)fieldInfo2.GetValue(scriptableObject) != string.Empty)
 						{
-							localisationKeys["SO_" + scriptableObject.GetType().Name + "." + scriptableObject.name + "." + fieldInfo2.Name] = (string)fieldInfo2.GetValue(scriptableObject);
+							localisationKeys[
+								"SO_" + scriptableObject.GetType().Name + "." + scriptableObject.name + "." +
+								fieldInfo2.Name] = (string)fieldInfo2.GetValue(scriptableObject);
 						}
 					}
 				}
+
 				return JsonConvert.SerializeObject(localisationKeys, Formatting.Indented);
 			}
 			catch (Exception ex)
 			{
 				Dbg.Error("Localization to string failed", ex.Message);
 			}
+
 			return null;
 		}
 

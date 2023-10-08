@@ -10,8 +10,7 @@ namespace ZeroGravity.LevelDesign
 {
 	public class VesselHealthDecal : MonoBehaviour
 	{
-		[NonSerialized]
-		public SpaceObjectVessel ParentVessel;
+		[NonSerialized] public SpaceObjectVessel ParentVessel;
 
 		public List<Decalicious> Decals = new List<Decalicious>();
 
@@ -30,6 +29,7 @@ namespace ZeroGravity.LevelDesign
 					return;
 				}
 			}
+
 			float num = 1f - ParentVessel.Health / ParentVessel.MaxHealth;
 			foreach (Decalicious decal in Decals)
 			{

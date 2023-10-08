@@ -26,10 +26,12 @@ namespace RootMotion.FinalIK
 				{
 					return false;
 				}
+
 				if (yaw <= 0f || pitch <= 0f)
 				{
 					return false;
 				}
+
 				if (yaw < 180f)
 				{
 					Vector3 vector = new Vector3(direction.x, 0f, direction.z);
@@ -37,6 +39,7 @@ namespace RootMotion.FinalIK
 					{
 						vector = Vector3.forward;
 					}
+
 					Vector3 from = new Vector3(d.x, 0f, d.z);
 					float num = Vector3.Angle(from, vector);
 					if (num > yaw + angleBuffer)
@@ -44,10 +47,12 @@ namespace RootMotion.FinalIK
 						return false;
 					}
 				}
+
 				if (pitch >= 180f)
 				{
 					return true;
 				}
+
 				float num2 = Vector3.Angle(Vector3.up, direction);
 				float num3 = Vector3.Angle(Vector3.up, d);
 				return Mathf.Abs(num3 - num2) < pitch + angleBuffer;
@@ -69,6 +74,7 @@ namespace RootMotion.FinalIK
 			{
 				return null;
 			}
+
 			for (int i = 0; i < poses.Length - 1; i++)
 			{
 				if (poses[i].IsInDirection(localDirection))
@@ -76,6 +82,7 @@ namespace RootMotion.FinalIK
 					return poses[i];
 				}
 			}
+
 			return poses[poses.Length - 1];
 		}
 

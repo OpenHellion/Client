@@ -14,21 +14,13 @@ namespace ZeroGravity.Data
 
 		public override AttachPointType AttachPointType
 		{
-			get
-			{
-				return AttachPointType.MachineryPartSlot;
-			}
+			get { return AttachPointType.MachineryPartSlot; }
 		}
 
 		public bool IsActive
 		{
-			get
-			{
-				return true;
-			}
-			set
-			{
-			}
+			get { return true; }
+			set { }
 		}
 	}
 }

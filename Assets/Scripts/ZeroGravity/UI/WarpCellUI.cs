@@ -51,7 +51,8 @@ namespace ZeroGravity.UI
 				Selected.SetActive(IsSelected);
 				FillerCurrent.fillAmount = Slot.Item.Health / Slot.Item.MaxHealth;
 				NoCellInSlot.SetActive(false);
-				Value.text = FormatHelper.FormatValue(Slot.Item.Health, true) + "/" + FormatHelper.FormatValue(Slot.Item.MaxHealth, true);
+				Value.text = FormatHelper.FormatValue(Slot.Item.Health, true) + "/" +
+				             FormatHelper.FormatValue(Slot.Item.MaxHealth, true);
 				if (!IsSelected)
 				{
 					FillerRequired.fillAmount = 0f;

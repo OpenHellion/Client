@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
+using ZeroGravity.UI;
 
 namespace ZeroGravity.Objects
 {
@@ -48,15 +49,18 @@ namespace ZeroGravity.Objects
 
 			internal KeyValuePair<ResourceType, float> _003C_003Em__0(ResourceType k)
 			{
-				_003CPrimaryFunction_003Ec__AnonStorey1 _003CPrimaryFunction_003Ec__AnonStorey = new _003CPrimaryFunction_003Ec__AnonStorey1();
+				_003CPrimaryFunction_003Ec__AnonStorey1 _003CPrimaryFunction_003Ec__AnonStorey =
+					new _003CPrimaryFunction_003Ec__AnonStorey1();
 				_003CPrimaryFunction_003Ec__AnonStorey._003C_003Ef__ref_00240 = this;
 				_003CPrimaryFunction_003Ec__AnonStorey.k = k;
 				ResourceType k2 = _003CPrimaryFunction_003Ec__AnonStorey.k;
-				IEnumerable<AsteroidMiningPoint> source = ast.MiningPoints.Values.Where(_003CPrimaryFunction_003Ec__AnonStorey._003C_003Em__0);
+				IEnumerable<AsteroidMiningPoint> source =
+					ast.MiningPoints.Values.Where(_003CPrimaryFunction_003Ec__AnonStorey._003C_003Em__0);
 				if (_003C_003Ef__am_0024cache0 == null)
 				{
 					_003C_003Ef__am_0024cache0 = _003C_003Em__1;
 				}
+
 				return new KeyValuePair<ResourceType, float>(k2, source.Sum(_003C_003Ef__am_0024cache0));
 			}
 
@@ -86,15 +90,11 @@ namespace ZeroGravity.Objects
 
 		private bool isScanning;
 
-		[CompilerGenerated]
-		private static Func<KeyValuePair<ResourceType, float>, bool> _003C_003Ef__am_0024cache0;
+		[CompilerGenerated] private static Func<KeyValuePair<ResourceType, float>, bool> _003C_003Ef__am_0024cache0;
 
 		public float Range
 		{
-			get
-			{
-				return (float)MaxRange * base.TierMultiplier;
-			}
+			get { return (float)MaxRange * base.TierMultiplier; }
 		}
 
 		private new void Start()
@@ -124,23 +124,28 @@ namespace ZeroGravity.Objects
 					GeometryRoot componentInParent = hitInfo.collider.gameObject.GetComponentInParent<GeometryRoot>();
 					if (componentInParent != null && componentInParent.MainObject is Asteroid)
 					{
-						_003CPrimaryFunction_003Ec__AnonStorey0 _003CPrimaryFunction_003Ec__AnonStorey = new _003CPrimaryFunction_003Ec__AnonStorey0();
+						_003CPrimaryFunction_003Ec__AnonStorey0 _003CPrimaryFunction_003Ec__AnonStorey =
+							new _003CPrimaryFunction_003Ec__AnonStorey0();
 						_003CPrimaryFunction_003Ec__AnonStorey.ast = componentInParent.MainObject as Asteroid;
 						if (_003CPrimaryFunction_003Ec__AnonStorey.ast != null && !isScanning)
 						{
 							UI.ScanStatus.text = Localization.Scanning.ToUpper();
 							UI.ScanStatus.color = Colors.Red;
 							isScanning = true;
-							IEnumerable<KeyValuePair<ResourceType, float>> source = Enum.GetValues(typeof(ResourceType)).Cast<ResourceType>().Select(_003CPrimaryFunction_003Ec__AnonStorey._003C_003Em__0);
+							IEnumerable<KeyValuePair<ResourceType, float>> source = Enum.GetValues(typeof(ResourceType))
+								.Cast<ResourceType>().Select(_003CPrimaryFunction_003Ec__AnonStorey._003C_003Em__0);
 							if (_003C_003Ef__am_0024cache0 == null)
 							{
 								_003C_003Ef__am_0024cache0 = _003CPrimaryFunction_003Em__0;
 							}
-							List<KeyValuePair<ResourceType, float>> list = source.Where(_003C_003Ef__am_0024cache0).ToList();
+
+							List<KeyValuePair<ResourceType, float>> list = source.Where(_003C_003Ef__am_0024cache0)
+								.ToList();
 							foreach (KeyValuePair<ResourceType, float> item in list)
 							{
 								InstantiateResources(item.Key, item.Value);
 							}
+
 							UI.Active.Activate(true);
 						}
 					}
@@ -158,6 +163,7 @@ namespace ZeroGravity.Objects
 					UI.Active.Activate(false);
 				}
 			}
+
 			return false;
 		}
 
@@ -184,8 +190,8 @@ namespace ZeroGravity.Objects
 
 		public void InstantiateResources(ResourceType res, float quantity)
 		{
-			GameObject gameObject = UnityEngine.Object.Instantiate(UI.Resource, UI.ResourcesHolder);
-			gameObject.GetComponentInChildren<Image>().sprite = Client.Instance.SpriteManager.GetSprite(res);
+			GameObject gameObject = Instantiate(UI.Resource, UI.ResourcesHolder);
+			gameObject.GetComponentInChildren<Image>().sprite = SpriteManager.Instance.GetSprite(res);
 			if (base.Tier == 2)
 			{
 				if (quantity < 500f)
@@ -214,6 +220,7 @@ namespace ZeroGravity.Objects
 				gameObject.GetComponentInChildren<Text>().text = Localization.Unknown.ToUpper();
 				gameObject.GetComponentInChildren<Text>().color = Colors.FormatedRed;
 			}
+
 			gameObject.Activate(true);
 		}
 

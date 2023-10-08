@@ -20,6 +20,7 @@ namespace DigitalOpus.MB.Core
 			{
 				_MBVersion = _CreateMBVersionConcrete();
 			}
+
 			return _MBVersion.version();
 		}
 
@@ -29,6 +30,7 @@ namespace DigitalOpus.MB.Core
 			{
 				_MBVersion = _CreateMBVersionConcrete();
 			}
+
 			return _MBVersion.GetMajorVersion();
 		}
 
@@ -38,6 +40,7 @@ namespace DigitalOpus.MB.Core
 			{
 				_MBVersion = _CreateMBVersionConcrete();
 			}
+
 			return _MBVersion.GetMinorVersion();
 		}
 
@@ -47,6 +50,7 @@ namespace DigitalOpus.MB.Core
 			{
 				_MBVersion = _CreateMBVersionConcrete();
 			}
+
 			return _MBVersion.GetActive(go);
 		}
 
@@ -56,6 +60,7 @@ namespace DigitalOpus.MB.Core
 			{
 				_MBVersion = _CreateMBVersionConcrete();
 			}
+
 			_MBVersion.SetActive(go, isActive);
 		}
 
@@ -65,6 +70,7 @@ namespace DigitalOpus.MB.Core
 			{
 				_MBVersion = _CreateMBVersionConcrete();
 			}
+
 			_MBVersion.SetActiveRecursively(go, isActive);
 		}
 
@@ -74,6 +80,7 @@ namespace DigitalOpus.MB.Core
 			{
 				_MBVersion = _CreateMBVersionConcrete();
 			}
+
 			return _MBVersion.FindSceneObjectsOfType(t);
 		}
 
@@ -83,6 +90,7 @@ namespace DigitalOpus.MB.Core
 			{
 				_MBVersion = _CreateMBVersionConcrete();
 			}
+
 			return _MBVersion.IsRunningAndMeshNotReadWriteable(m);
 		}
 
@@ -92,6 +100,7 @@ namespace DigitalOpus.MB.Core
 			{
 				_MBVersion = _CreateMBVersionConcrete();
 			}
+
 			return _MBVersion.GetMeshUV3orUV4(m, get3, LOG_LEVEL);
 		}
 
@@ -101,6 +110,7 @@ namespace DigitalOpus.MB.Core
 			{
 				_MBVersion = _CreateMBVersionConcrete();
 			}
+
 			_MBVersion.MeshClear(m, t);
 		}
 
@@ -110,6 +120,7 @@ namespace DigitalOpus.MB.Core
 			{
 				_MBVersion = _CreateMBVersionConcrete();
 			}
+
 			_MBVersion.MeshAssignUV3(m, uv3s);
 		}
 
@@ -119,6 +130,7 @@ namespace DigitalOpus.MB.Core
 			{
 				_MBVersion = _CreateMBVersionConcrete();
 			}
+
 			_MBVersion.MeshAssignUV4(m, uv4s);
 		}
 
@@ -128,6 +140,7 @@ namespace DigitalOpus.MB.Core
 			{
 				_MBVersion = _CreateMBVersionConcrete();
 			}
+
 			return _MBVersion.GetLightmapTilingOffset(r);
 		}
 
@@ -137,6 +150,7 @@ namespace DigitalOpus.MB.Core
 			{
 				_MBVersion = _CreateMBVersionConcrete();
 			}
+
 			return _MBVersion.GetBones(r);
 		}
 	}

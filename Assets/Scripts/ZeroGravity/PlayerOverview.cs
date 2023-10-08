@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using OpenHellion;
 using UnityEngine;
 using ZeroGravity.Objects;
 
@@ -16,14 +17,6 @@ namespace ZeroGravity
 
 		public List<GameObject> Options;
 
-		private void Start()
-		{
-		}
-
-		private void Update()
-		{
-		}
-
 		/// <summary>
 		/// 	Toggle the visibility of this menu.
 		/// </summary>
@@ -34,13 +27,13 @@ namespace ZeroGravity
 				return;
 			}
 
-			Client.Instance.OnInGameMenu(val);
+			Globals.ToggleCursor(val);
 
-			//Client.Instance.InputModule.ToggleCustomCursorPosition(!val);
 			if (MyPlayer.Instance.CurrentActiveItem != null)
 			{
 				MyPlayer.Instance.CurrentActiveItem.PrimaryReleased();
 			}
+
 			gameObject.SetActive(val);
 			if (val)
 			{
@@ -48,6 +41,7 @@ namespace ZeroGravity
 				{
 					MyPlayer.Instance.FpsController.ResetVelocity();
 				}
+
 				if (gloss)
 				{
 					ToggleGlossary(true);
@@ -59,7 +53,7 @@ namespace ZeroGravity
 			}
 			else
 			{
-				Client.Instance.CanvasManager.PlayerOverview.Inventory.LootingTarget = null;
+				Inventory.LootingTarget = null;
 			}
 		}
 
@@ -77,24 +71,24 @@ namespace ZeroGravity
 			RefreshNav(scr);
 			switch (scr)
 			{
-			case 0:
-				Blueprints.Toggle(false);
-				Inventory.Toggle(true);
-				Quests.Toggle(false);
-				Glossary.Toggle(false);
-				break;
-			case 1:
-				Blueprints.Toggle(false);
-				Inventory.Toggle(false);
-				Glossary.Toggle(false);
-				Quests.Toggle(true);
-				break;
-			case 2:
-				Inventory.Toggle(false);
-				Quests.Toggle(false);
-				Glossary.Toggle(false);
-				Blueprints.Toggle(true);
-				break;
+				case 0:
+					Blueprints.Toggle(false);
+					Inventory.Toggle(true);
+					Quests.Toggle(false);
+					Glossary.Toggle(false);
+					break;
+				case 1:
+					Blueprints.Toggle(false);
+					Inventory.Toggle(false);
+					Glossary.Toggle(false);
+					Quests.Toggle(true);
+					break;
+				case 2:
+					Inventory.Toggle(false);
+					Quests.Toggle(false);
+					Glossary.Toggle(false);
+					Blueprints.Toggle(true);
+					break;
 			}
 		}
 
@@ -104,6 +98,7 @@ namespace ZeroGravity
 			{
 				option.SetActive(false);
 			}
+
 			Options[opt].SetActive(true);
 		}
 	}

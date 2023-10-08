@@ -16,13 +16,11 @@ namespace ZeroGravity.Objects
 
 		public List<MachineryPartType> MachineryPartTypes;
 
-		[SerializeField]
-		private Transform _ItemPlacement;
+		[SerializeField] private Transform _ItemPlacement;
 
 		public ItemCompoundType SpawnItem;
 
-		[NonSerialized]
-		public ItemSlotUI UI;
+		[NonSerialized] public ItemSlotUI UI;
 
 		private SpaceObject _Parent;
 
@@ -30,30 +28,18 @@ namespace ZeroGravity.Objects
 
 		public Transform ItemPlacement
 		{
-			get
-			{
-				return (!(_ItemPlacement != null)) ? base.transform : _ItemPlacement;
-			}
+			get { return (!(_ItemPlacement != null)) ? base.transform : _ItemPlacement; }
 		}
 
 		public SpaceObject Parent
 		{
-			get
-			{
-				return _Parent;
-			}
-			set
-			{
-				_Parent = value;
-			}
+			get { return _Parent; }
+			set { _Parent = value; }
 		}
 
 		public Item Item
 		{
-			get
-			{
-				return _Item;
-			}
+			get { return _Item; }
 			private set
 			{
 				_Item = value;
@@ -64,6 +50,7 @@ namespace ZeroGravity.Objects
 					{
 						(Parent as DynamicObject).Item.UpdateUI();
 					}
+
 					UI.UpdateSlot();
 				}
 			}
@@ -87,8 +74,10 @@ namespace ZeroGravity.Objects
 				{
 					UI.UpdateSlot();
 				}
+
 				return true;
 			}
+
 			return false;
 		}
 
@@ -106,18 +95,22 @@ namespace ZeroGravity.Objects
 			{
 				return false;
 			}
+
 			if (ItemTypes.Count == 0 && GenericSubTypes.Count == 0 && MachineryPartTypes.Count == 0)
 			{
 				return true;
 			}
+
 			if (item is GenericItem && GenericSubTypes.Contains((item as GenericItem).SubType))
 			{
 				return true;
 			}
+
 			if (item is MachineryPart && MachineryPartTypes.Contains((item as MachineryPart).PartType))
 			{
 				return true;
 			}
+
 			return ItemTypes.Contains(item.Type);
 		}
 
@@ -130,20 +123,21 @@ namespace ZeroGravity.Objects
 			}
 			else if (ItemTypes.Count == 0 && GenericSubTypes.Count == 0 && MachineryPartTypes.Count == 0)
 			{
-				result = Client.Instance.SpriteManager.DefaultItemSlot;
+				result = SpriteManager.Instance.DefaultItemSlot;
 			}
 			else if (ItemTypes.Count == 0 && MachineryPartTypes.Count == 0 && GenericSubTypes.Count == 1)
 			{
-				result = Client.Instance.SpriteManager.GetSprite(GenericSubTypes[0]);
+				result = SpriteManager.Instance.GetSprite(GenericSubTypes[0]);
 			}
 			else if (ItemTypes.Count == 0 && MachineryPartTypes.Count == 1 && GenericSubTypes.Count == 0)
 			{
-				result = Client.Instance.SpriteManager.GetSprite(MachineryPartTypes[0]);
+				result = SpriteManager.Instance.GetSprite(MachineryPartTypes[0]);
 			}
 			else if (ItemTypes.Count == 1 && MachineryPartTypes.Count == 0 && GenericSubTypes.Count == 0)
 			{
-				result = Client.Instance.SpriteManager.GetSprite(ItemTypes[0]);
+				result = SpriteManager.Instance.GetSprite(ItemTypes[0]);
 			}
+
 			return result;
 		}
 

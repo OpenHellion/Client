@@ -26,10 +26,7 @@ namespace ZeroGravity.Data
 
 			public GameScenes.SceneID SceneID
 			{
-				get
-				{
-					return NameGenerator.GetSceneID(StructureType);
-				}
+				get { return NameGenerator.GetSceneID(StructureType); }
 			}
 		}
 

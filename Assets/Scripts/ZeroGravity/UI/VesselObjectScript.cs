@@ -11,46 +11,35 @@ namespace ZeroGravity.UI
 {
 	public class VesselObjectScript : MonoBehaviour, IDropHandler, IEventSystemHandler
 	{
-		[NonSerialized]
-		public SpaceObjectVessel Vessel;
+		[NonSerialized] public SpaceObjectVessel Vessel;
 
 		public Image Icon;
 
 		public GameObject Selected;
 
-		[NonSerialized]
-		public PowerSupply PowerPanel;
+		[NonSerialized] public PowerSupply PowerPanel;
 
-		[Title("POWER SUPPLY")]
-		public Text PS_Output;
+		[Title("POWER SUPPLY")] public Text PS_Output;
 
 		public GameObject CapacitorHolder;
 
 		public Image CapacitorFiller;
 
-		[NonSerialized]
-		public LifeSupportPanel LifePanel;
+		[NonSerialized] public LifeSupportPanel LifePanel;
 
-		[Title("LIFE SUPPORT")]
-		public Image AirTankFiller;
+		[Title("LIFE SUPPORT")] public Image AirTankFiller;
 
-		[NonSerialized]
-		public ResourceContainer AirContainer;
+		[NonSerialized] public ResourceContainer AirContainer;
 
-		[NonSerialized]
-		public CargoPanel MyCargoPanel;
+		[NonSerialized] public CargoPanel MyCargoPanel;
 
-		[Title("CARGO")]
-		public SceneCargoBay Cargo;
+		[Title("CARGO")] public SceneCargoBay Cargo;
 
 		public Image CapacityFiller;
 
 		public bool IsAuthorized
 		{
-			get
-			{
-				return Vessel.IsPlayerAuthorizedOrNoSecurity(MyPlayer.Instance);
-			}
+			get { return Vessel.IsPlayerAuthorizedOrNoSecurity(MyPlayer.Instance); }
 		}
 
 		public void OnDrop(PointerEventData eventData)
@@ -65,7 +54,7 @@ namespace ZeroGravity.UI
 
 		private void Start()
 		{
-			Icon.sprite = Client.Instance.SpriteManager.GetSprite(Vessel);
+			Icon.sprite = SpriteManager.Instance.GetSprite(Vessel);
 		}
 
 		public void LS_UpdateAirTank()
@@ -77,6 +66,7 @@ namespace ZeroGravity.UI
 					AirContainer = resourceContainer.Value;
 				}
 			}
+
 			AirTankFiller.fillAmount = AirContainer.Quantity / AirContainer.Capacity;
 		}
 
@@ -97,12 +87,14 @@ namespace ZeroGravity.UI
 
 		public float CargoCapacityFillerValue()
 		{
-			return (Cargo.CargoBayResources.Capacity - Cargo.CargoBayResources.AvailableCapacity) / Cargo.CargoBayResources.Capacity;
+			return (Cargo.CargoBayResources.Capacity - Cargo.CargoBayResources.AvailableCapacity) /
+			       Cargo.CargoBayResources.Capacity;
 		}
 
 		public string CargoCapacityText()
 		{
-			return FormatHelper.CurrentMax(Cargo.CargoBayResources.Capacity - Cargo.CargoBayResources.AvailableCapacity, Cargo.CargoBayResources.Capacity);
+			return FormatHelper.CurrentMax(Cargo.CargoBayResources.Capacity - Cargo.CargoBayResources.AvailableCapacity,
+				Cargo.CargoBayResources.Capacity);
 		}
 	}
 }

@@ -20,10 +20,7 @@ namespace RootMotion.FinalIK
 
 		private bool rotationChanged
 		{
-			get
-			{
-				return transform.localRotation != lastLocalRotation;
-			}
+			get { return transform.localRotation != lastLocalRotation; }
 		}
 
 		public ConstraintRotationOffset()
@@ -45,10 +42,12 @@ namespace RootMotion.FinalIK
 					lastLocalRotation = transform.localRotation;
 					initiated = true;
 				}
+
 				if (rotationChanged)
 				{
 					defaultLocalRotation = transform.localRotation;
 				}
+
 				transform.localRotation = defaultLocalRotation;
 				transform.rotation = Quaternion.Slerp(transform.rotation, offset, weight);
 				lastLocalRotation = transform.localRotation;

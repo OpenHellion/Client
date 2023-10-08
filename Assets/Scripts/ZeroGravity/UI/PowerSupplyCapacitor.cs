@@ -7,8 +7,7 @@ namespace ZeroGravity.UI
 {
 	public class PowerSupplyCapacitor : MonoBehaviour
 	{
-		[HideInInspector]
-		public GeneratorCapacitor Capacitor;
+		[HideInInspector] public GeneratorCapacitor Capacitor;
 
 		public Text Value;
 

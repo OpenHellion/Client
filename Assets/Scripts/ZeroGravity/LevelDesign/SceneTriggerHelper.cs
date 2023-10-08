@@ -1,6 +1,5 @@
-using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using OpenHellion;
 using UnityEngine;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
@@ -9,25 +8,15 @@ namespace ZeroGravity.LevelDesign
 {
 	public static class SceneTriggerHelper
 	{
-		[CompilerGenerated]
-		private sealed class _003COtherPlayerLockedToTrigger_003Ec__AnonStorey0
-		{
-			internal BaseSceneTrigger trigger;
-
-			internal bool _003C_003Em__0(OtherPlayer m)
-			{
-				return m.LockedToTrigger == trigger;
-			}
-		}
-
-		public static void InteractWithOverlappingTriggers(GameObject triggerGo, BaseSceneTrigger trigger, MyPlayer player)
+		public static void InteractWithOverlappingTriggers(GameObject triggerGo, BaseSceneTrigger trigger,
+			MyPlayer player)
 		{
 			BaseSceneTrigger[] components = triggerGo.GetComponents<BaseSceneTrigger>();
 			foreach (BaseSceneTrigger baseSceneTrigger in components)
 			{
 				if (baseSceneTrigger != trigger)
 				{
-					baseSceneTrigger.Interact(player, false);
+					baseSceneTrigger.Interact(player, interactWithOverlappingTriggers: false);
 				}
 			}
 		}
@@ -41,6 +30,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return null;
 			}
+
 			while (true)
 			{
 				transform = transform.transform.parent;
@@ -52,26 +42,28 @@ namespace ZeroGravity.LevelDesign
 						text += component.GameName;
 						break;
 					}
+
 					AsteroidScene component2 = transform.GetComponent<AsteroidScene>();
 					if (component2 != null)
 					{
 						text += component2.GameName;
 						break;
 					}
+
 					text = text + transform.gameObject.name + "|";
 					continue;
 				}
+
 				text += "root";
 				break;
 			}
-			return new VesselObjectID(componentInParent.GUID, System.Math.Abs(text.GetHashCode()));
+
+			return new VesselObjectID(componentInParent.GUID, Mathf.Abs(text.GetHashCode()));
 		}
 
-		public static bool OtherPlayerLockedToTrigger(this BaseSceneTrigger trigger)
+		public static bool OtherPlayerLockedToTrigger(this BaseSceneTrigger trigger, World state)
 		{
-			_003COtherPlayerLockedToTrigger_003Ec__AnonStorey0 _003COtherPlayerLockedToTrigger_003Ec__AnonStorey = new _003COtherPlayerLockedToTrigger_003Ec__AnonStorey0();
-			_003COtherPlayerLockedToTrigger_003Ec__AnonStorey.trigger = trigger;
-			return Client.Instance.Players.Values.FirstOrDefault(_003COtherPlayerLockedToTrigger_003Ec__AnonStorey._003C_003Em__0) != null;
+			return state.Players.Values.FirstOrDefault((OtherPlayer m) => m.LockedToTrigger == trigger) != null;
 		}
 	}
 }

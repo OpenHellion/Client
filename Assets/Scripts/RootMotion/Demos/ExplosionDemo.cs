@@ -50,10 +50,12 @@ namespace RootMotion.Demos
 				float num = explosionForceByDistance.Evaluate(vector.magnitude);
 				r.velocity = (vector.normalized + Vector3.up * upForce) * num * forceMlp;
 			}
+
 			if (weight < 0.5f && character.isGrounded)
 			{
 				weight = Mathf.Clamp(weight - Time.deltaTime * 3f, 0f, 1f);
 			}
+
 			SetEffectorWeights(weightFalloff.Evaluate(weight));
 			base.transform.localScale = scale.Evaluate(weight) * defaultScale;
 		}

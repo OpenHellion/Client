@@ -1,5 +1,3 @@
-#pragma warning disable UNT0013
-
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -7,14 +5,13 @@ using UnityEngine;
 using Steamworks;
 using System;
 using System.Runtime.InteropServices;
-using OpenHellion.Social.RichPresence;
-using ZeroGravity.Network;
 using System.Collections.Concurrent;
 using System.Linq;
-using ZeroGravity;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using OpenHellion.IO;
+using OpenHellion.Social.RichPresence;
+using ZeroGravity.Network;
 
 namespace OpenHellion.Net
 {
@@ -24,7 +21,7 @@ namespace OpenHellion.Net
 
 		public static string NameOfCurrentServer = string.Empty;
 
-		private GSConnection _gameConnection;
+		private GsConnection _gameConnection;
 
 		private bool _getP2PPacketsThreadActive;
 
@@ -38,14 +35,14 @@ namespace OpenHellion.Net
 
 		private readonly ConcurrentQueue<Tuple<float, Type>> _receivedLog = new ConcurrentQueue<Tuple<float, Type>>();
 
-		private const int _maxNetworkDataLogsSize = 3000;
+		private const int MaxNetworkDataLogsSize = 3000;
 
 		private readonly DateTime _clientStartTime = DateTime.UtcNow.ToUniversalTime();
 
-		[Title("Diagnostics")]
-		public int UnprocessedPackets;
+		[Title("Diagnostics")] public int UnprocessedPackets;
 
 		private static NetworkController _instance;
+
 		public static NetworkController Instance
 		{
 			get
@@ -56,35 +53,6 @@ namespace OpenHellion.Net
 				}
 
 				return _instance;
-			}
-		}
-
-		private string _playerId = null;
-		public static string PlayerId
-		{
-			get
-			{
-				if (Instance._playerId.IsNullOrEmpty())
-				{
-					Instance._playerId = PlayerPrefs.GetString("player_id", null);
-
-					// Generate new player id.
-					if (Instance._playerId.IsNullOrEmpty())
-					{
-						string uuid = Guid.NewGuid().ToString();
-						Instance._playerId = uuid;
-						PlayerPrefs.SetString("player_id", uuid);
-
-						Dbg.Log("Generated new player id: " + uuid);
-					}
-				}
-
-				return Instance._playerId;
-			}
-			set
-			{
-				Instance._playerId = value;
-				PlayerPrefs.SetString("player_id", value);
 			}
 		}
 
@@ -114,6 +82,7 @@ namespace OpenHellion.Net
 				SendToGameServer(spawnObjectsRequest);
 				_spawnObjectsList.Clear();
 			}
+
 			if (_subscribeToObjectsList.Count > 0)
 			{
 				SubscribeToObjectsRequest subscribeToObjectsRequest = new SubscribeToObjectsRequest
@@ -124,6 +93,7 @@ namespace OpenHellion.Net
 				SendToGameServer(subscribeToObjectsRequest);
 				_subscribeToObjectsList.Clear();
 			}
+
 			if (_unsubscribeFromObjectsList.Count > 0)
 			{
 				UnsubscribeFromObjectsRequest unsubscribeFromObjectsRequest = new UnsubscribeFromObjectsRequest
@@ -162,24 +132,14 @@ namespace OpenHellion.Net
 			_subscribeToObjectsList.Remove(guid);
 		}
 
-		public void ConnectToGame(ServerData serverData, CharacterData characterData)
+		public void ConnectToGame(ServerData serverData, string userId)
 		{
-			CharacterData = characterData;
+			CharacterData = serverData.CharacterData;
 			_gameConnection?.Disconnect();
-			_gameConnection = new GSConnection();
+			_gameConnection = new GsConnection();
 
 			NameOfCurrentServer = serverData.Name;
-			_gameConnection.Connect(serverData.IpAddress, (int) serverData.GamePort, serverData.Id);
-		}
-
-		public void ConnectToGameSp(int port, CharacterData characterData)
-		{
-			CharacterData = characterData;
-			_gameConnection?.Disconnect();
-
-			Dbg.Log("Connecting to singleplayer server with port", port);
-			_gameConnection = new GSConnection();
-			_gameConnection.Connect("127.0.0.1", port, string.Empty);
+			_gameConnection.Connect(serverData.IpAddress, serverData.GamePort, serverData.Id, userId);
 		}
 
 		public void SendToGameServer(NetworkData data)
@@ -229,7 +189,8 @@ namespace OpenHellion.Net
 		///		and will result in errors/ problems if used.<br />
 		///		It used to be blocking, but I made it async. This is still called blocking in some places, though.
 		/// </remarks>
-		public static async Task<NetworkData> SendTcp(NetworkData data, string address, int port, bool getResponse = true, bool logException = false)
+		public static async Task<NetworkData> SendTcp(NetworkData data, string address, int port,
+			bool getResponse = true, bool logException = false)
 		{
 			try
 			{
@@ -258,6 +219,7 @@ namespace OpenHellion.Net
 					Dbg.Error(ex.Message, ex.StackTrace);
 				}
 			}
+
 			return null;
 		}
 
@@ -279,7 +241,7 @@ namespace OpenHellion.Net
 		{
 			_getP2PPacketsThreadActive = true;
 
-			// Create pointer array and put data in it.
+			// Create pointer array and put 1data in it.
 			IntPtr[] ptr = new IntPtr[1];
 			int msgSize = SteamNetworkingMessages.ReceiveMessagesOnChannel(0, ptr, 1);
 
@@ -298,7 +260,7 @@ namespace OpenHellion.Net
 					Marshal.Copy(netMessage.m_pData, message, 0, message.Length);
 
 					// Deseralise data and invoke code.
-					NetworkData networkData = await ProtoSerialiser.Unpack((Stream)new MemoryStream(message));
+					NetworkData networkData = await ProtoSerialiser.Unpack(new MemoryStream(message));
 					Debug.Log(networkData);
 					if (networkData is ISteamP2PMessage)
 					{
@@ -310,13 +272,15 @@ namespace OpenHellion.Net
 			{
 				Marshal.DestroyStructure<SteamNetworkingMessage_t>(ptr[0]);
 			}
+
 			_getP2PPacketsThreadActive = false;
 		}
 
 		public static void LogReceivedNetworkData(Type type)
 		{
-			Instance._receivedLog.Enqueue(new Tuple<float, Type>((float)(DateTime.UtcNow.ToUniversalTime() - Instance._clientStartTime).TotalSeconds, type));
-			while (Instance._receivedLog.Count > _maxNetworkDataLogsSize)
+			Instance._receivedLog.Enqueue(new Tuple<float, Type>(
+				(float)(DateTime.UtcNow.ToUniversalTime() - Instance._clientStartTime).TotalSeconds, type));
+			while (Instance._receivedLog.Count > MaxNetworkDataLogsSize)
 			{
 				Instance._receivedLog.TryDequeue(out var _);
 			}
@@ -324,8 +288,9 @@ namespace OpenHellion.Net
 
 		public static void LogSentNetworkData(Type type)
 		{
-			Instance._sentLog.Enqueue(new Tuple<float, Type>((float)(DateTime.UtcNow.ToUniversalTime() - Instance._clientStartTime).TotalSeconds, type));
-			while (Instance._sentLog.Count > _maxNetworkDataLogsSize)
+			Instance._sentLog.Enqueue(new Tuple<float, Type>(
+				(float)(DateTime.UtcNow.ToUniversalTime() - Instance._clientStartTime).TotalSeconds, type));
+			while (Instance._sentLog.Count > MaxNetworkDataLogsSize)
 			{
 				Instance._sentLog.TryDequeue(out var _);
 			}
@@ -337,22 +302,27 @@ namespace OpenHellion.Net
 
 			Tuple<float, Type>[] source = Instance._receivedLog.ToArray();
 			float lastRecvdTime = source.Last().Item1;
-			IEnumerable<Tuple<float, Type>> recvd = source.Where((Tuple<float, Type> m) => lastRecvdTime - m.Item1 <= 300f);
+			IEnumerable<Tuple<float, Type>> recvd =
+				source.Where((Tuple<float, Type> m) => lastRecvdTime - m.Item1 <= 300f);
 			float item = recvd.First().Item1;
 			string text = "Received packets (in last " + (lastRecvdTime - item).ToString("0") + "s):\n";
 			text += string.Join("\n", from z in (from x in recvd.Select((Tuple<float, Type> m) => m.Item2).Distinct()
-					select new Tuple<string, int>(x.Name, recvd.Count((Tuple<float, Type> n) => n.Item2 == x)) into y
+					select new Tuple<string, int>(x.Name, recvd.Count((Tuple<float, Type> n) => n.Item2 == x))
+					into y
 					orderby y.Item2
 					select y).Reverse()
 				select z.Item1 + ": " + z.Item2);
 
 			Tuple<float, Type>[] source2 = Instance._sentLog.ToArray();
 			float lastSentTime = source2.Last().Item1;
-			IEnumerable<Tuple<float, Type>> sent = source2.Where((Tuple<float, Type> m) => lastSentTime - m.Item1 <= 300f);
+			IEnumerable<Tuple<float, Type>> sent =
+				source2.Where((Tuple<float, Type> m) => lastSentTime - m.Item1 <= 300f);
 			float item2 = sent.First().Item1;
 			text = text + "\n\nSent packets (in last " + (lastSentTime - item2).ToString("0") + "s):\n";
-			return text + string.Join("\n", from z in (from x in sent.Select((Tuple<float, Type> m) => m.Item2).Distinct()
-					select new Tuple<string, int>(x.Name, sent.Count((Tuple<float, Type> n) => n.Item2 == x)) into y
+			return text + string.Join("\n",
+				from z in (from x in sent.Select((Tuple<float, Type> m) => m.Item2).Distinct()
+					select new Tuple<string, int>(x.Name, sent.Count((Tuple<float, Type> n) => n.Item2 == x))
+					into y
 					orderby y.Item2
 					select y).Reverse()
 				select z.Item1 + ": " + z.Item2);

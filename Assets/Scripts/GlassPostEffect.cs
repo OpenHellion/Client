@@ -27,10 +27,7 @@ public class GlassPostEffect : MonoBehaviour
 
 	public float ReflectionSaturation;
 
-	[Space(20f)]
-	[ContextMenuItem("Raise", "Raise")]
-	[ContextMenuItem("Lower", "Lower")]
-	[Range(0f, 1f)]
+	[Space(20f)] [ContextMenuItem("Raise", "Raise")] [ContextMenuItem("Lower", "Lower")] [Range(0f, 1f)]
 	public float LowerVisor;
 
 	private void OnEnable()
@@ -43,9 +40,11 @@ public class GlassPostEffect : MonoBehaviour
 		}
 		else
 		{
-			Debug.LogWarning(base.gameObject.name + ": Shader is not assigned. Disabling image effect.", base.gameObject);
+			Debug.LogWarning(base.gameObject.name + ": Shader is not assigned. Disabling image effect.",
+				base.gameObject);
 			base.enabled = false;
 		}
+
 		LowerVisor = 0f;
 	}
 
@@ -101,9 +100,11 @@ public class GlassPostEffect : MonoBehaviour
 			{
 				LowerVisor += 5f * Time.deltaTime;
 			}
+
 			AkSoundEngine.SetRTPCValue(SoundManager.Instance.HelmetOn, LowerVisor);
 			yield return new WaitForEndOfFrame();
 		}
+
 		if (raise)
 		{
 			LowerVisor = 0f;
@@ -112,6 +113,7 @@ public class GlassPostEffect : MonoBehaviour
 		{
 			LowerVisor = 1f;
 		}
+
 		AkSoundEngine.SetRTPCValue(SoundManager.Instance.HelmetOn, LowerVisor);
 	}
 }

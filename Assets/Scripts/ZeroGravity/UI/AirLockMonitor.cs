@@ -12,7 +12,7 @@ namespace ZeroGravity.UI
 
 		public SceneDoor OutterDoor;
 
-		public SceneTriggerExecuter PresurizationControl;
+		public SceneTriggerExecutor PresurizationControl;
 
 		public Image AirQualityFiller;
 
@@ -82,15 +82,17 @@ namespace ZeroGravity.UI
 
 		private void Update()
 		{
-			if (!Client.IsGameBuild || Room == null)
+			if (Room == null)
 			{
 				return;
 			}
+
 			timer += Time.deltaTime;
 			if (timer < 2f)
 			{
 				return;
 			}
+
 			timer = 0f;
 			AirQualityFiller.fillAmount = Room.AirQuality;
 			AirQualityText.text = (Room.AirQuality * 100f).ToString("f0");
@@ -102,6 +104,7 @@ namespace ZeroGravity.UI
 				{
 					DepressuriseImage.sprite = DepressuriseActive;
 				}
+
 				Color color = DepressuriseImage.color;
 				if (depresurizeLerp > 0)
 				{
@@ -119,6 +122,7 @@ namespace ZeroGravity.UI
 						depresurizeLerp = 1;
 					}
 				}
+
 				DepressuriseImage.color = color;
 			}
 			else if (DepressuriseImage.sprite != DepressuriseInactive)
@@ -128,12 +132,14 @@ namespace ZeroGravity.UI
 				color2.a = 1f;
 				DepressuriseImage.color = color2;
 			}
+
 			if (PresurizationControl != null && PresurizationControl.CurrentState == "Pressurise")
 			{
 				if (PressuriseImage.sprite != PressuriseActive)
 				{
 					PressuriseImage.sprite = PressuriseActive;
 				}
+
 				Color color3 = PressuriseImage.color;
 				if (presurizeLerp > 0)
 				{
@@ -151,6 +157,7 @@ namespace ZeroGravity.UI
 						presurizeLerp = 1;
 					}
 				}
+
 				PressuriseImage.color = color3;
 			}
 			else if (PressuriseImage.sprite != PressuriseInactive)
@@ -160,6 +167,7 @@ namespace ZeroGravity.UI
 				color4.a = 1f;
 				PressuriseImage.color = color4;
 			}
+
 			if (InnerDoor != null && InnerDoor.IsOpen)
 			{
 				if (InnerDoorImage.sprite != InnerDoorOpened)
@@ -171,6 +179,7 @@ namespace ZeroGravity.UI
 			{
 				InnerDoorImage.sprite = InnerDoorClosed;
 			}
+
 			if (OutterDoor != null && OutterDoor.IsOpen)
 			{
 				if (OuterDoorImage.sprite != OuterDoorOpened)
@@ -182,12 +191,14 @@ namespace ZeroGravity.UI
 			{
 				OuterDoorImage.sprite = OuterDoorClosed;
 			}
+
 			if (InnerDoor != null && OutterDoor != null && OutterDoor.IsOpen && InnerDoor.IsOpen)
 			{
 				if (DoorImage.sprite != DoorActive)
 				{
 					DoorImage.sprite = DoorActive;
 				}
+
 				Color color5 = DoorImage.color;
 				if (doorAlarm > 0)
 				{
@@ -205,6 +216,7 @@ namespace ZeroGravity.UI
 						doorAlarm = 1;
 					}
 				}
+
 				DoorImage.color = color5;
 			}
 			else if (DoorImage.sprite != DoorInactive)

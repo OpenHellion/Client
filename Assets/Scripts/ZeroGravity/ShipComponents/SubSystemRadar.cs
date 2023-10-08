@@ -1,6 +1,6 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
+using OpenHellion;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;
@@ -13,8 +13,7 @@ namespace ZeroGravity.ShipComponents
 {
 	public class SubSystemRadar : SubSystem
 	{
-		[SerializeField]
-		private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
+		[SerializeField] private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
 		{
 			new ResourceRequirement
 			{
@@ -22,8 +21,7 @@ namespace ZeroGravity.ShipComponents
 			}
 		};
 
-		[Title("Sensivity")]
-		public double ActiveScanSensitivity = 3600.0;
+		[Title("Sensivity")] public double ActiveScanSensitivity = 3600.0;
 
 		public double ActiveScanFuzzySensitivity = 7200.0;
 
@@ -35,9 +33,7 @@ namespace ZeroGravity.ShipComponents
 		[FormerlySerializedAs("warpDetectionSensitivity")]
 		public double WarpDetectionSensitivity = 1000.0;
 
-		[SerializeField]
-		[Range(0.2f, 1f)]
-		private float fuzzySphereSize = 1f;
+		[SerializeField] [Range(0.2f, 1f)] private float fuzzySphereSize = 1f;
 
 		public Task ActiveScanTask;
 
@@ -55,16 +51,19 @@ namespace ZeroGravity.ShipComponents
 				{
 					return 1f;
 				}
+
 				return SignalAmplifier.TierMultiplier;
 			}
 		}
 
 		private bool ActiveScanObject(ArtificialBody target, float scanAngle, Vector3 scanDirection)
 		{
-			if (target.RadarVisibilityType == RadarVisibilityType.Distress || target.RadarVisibilityType == RadarVisibilityType.AlwaysVisible)
+			if (target.RadarVisibilityType == RadarVisibilityType.Distress ||
+			    target.RadarVisibilityType == RadarVisibilityType.AlwaysVisible)
 			{
 				return false;
 			}
+
 			Vector3D vector3D = target.Position - base.ParentVessel.Position;
 			double magnitude = vector3D.Magnitude;
 			float num = (float)Vector3D.Angle(scanDirection.ToVector3D(), vector3D.Normalized);
@@ -86,63 +85,80 @@ namespace ZeroGravity.ShipComponents
 						spaceObjectVessel.SetLastKnownMapOrbit();
 						if (spaceObjectVessel.VesselData != null && spaceObjectVessel.VesselData.SpawnRuleID != 0)
 						{
-							Client.Instance.Map.UnknownVisibilityOrbits[spaceObjectVessel.VesselData.SpawnRuleID] = spaceObjectVessel.LastKnownMapOrbit;
+							World.Map.UnknownVisibilityOrbits[spaceObjectVessel.VesselData.SpawnRuleID] =
+								spaceObjectVessel.LastKnownMapOrbit;
 						}
 					}
+
 					return true;
 				}
-				if (target.RadarVisibilityType == RadarVisibilityType.Invisible && flag2 && !flag3 && !flag && spaceObjectVessel != null)
+
+				if (target.RadarVisibilityType == RadarVisibilityType.Invisible && flag2 && !flag3 && !flag &&
+				    spaceObjectVessel != null)
 				{
-					double num5 = System.Math.Cos(((double)scanAngle / 2.0 - (double)num) * (System.Math.PI / 180.0)) * magnitude;
+					double num5 = System.Math.Cos(((double)scanAngle / 2.0 - (double)num) * (System.Math.PI / 180.0)) *
+					              magnitude;
 					double num6 = num5 / System.Math.Cos((double)scanAngle / 2.0 * (System.Math.PI / 180.0));
 					double num7 = System.Math.Sqrt(num6 * num6 - num5 * num5);
 					Vector3D vector3D2 = base.ParentVessel.Position + scanDirection.ToVector3D().Normalized * num6;
 					if (fuzzySphereSize == 1f)
 					{
-						Client.Instance.Map.InitializeMapObjectFuzzyScan(vector3D2, num7 * 2.0, spaceObjectVessel);
+						World.Map.InitializeMapObjectFuzzyScan(vector3D2, num7 * 2.0, spaceObjectVessel);
 					}
 					else
 					{
 						Vector3D vector3D3 = vector3D - vector3D2;
 						double num8 = num7 * (double)fuzzySphereSize;
 						int hashCode = target.GetHashCode();
-						Vector3D vector3D4 = new Vector3D(MathHelper.RandomRange(-1.0, 1.0, hashCode), MathHelper.RandomRange(-1.0, 1.0, hashCode), MathHelper.RandomRange(-1.0, 1.0, hashCode)).Normalized * num8;
-						Vector3D position = ((!(vector3D3.Magnitude > num7 - num8)) ? (target.Position + vector3D4) : (target.Position + Vector3D.Project(vector3D4, -vector3D3)));
-						Client.Instance.Map.InitializeMapObjectFuzzyScan(position, num8 * 2.0, spaceObjectVessel);
+						Vector3D vector3D4 = new Vector3D(MathHelper.RandomRange(-1.0, 1.0, hashCode),
+								MathHelper.RandomRange(-1.0, 1.0, hashCode),
+								MathHelper.RandomRange(-1.0, 1.0, hashCode))
+							.Normalized * num8;
+						Vector3D position = ((!(vector3D3.Magnitude > num7 - num8))
+							? (target.Position + vector3D4)
+							: (target.Position + Vector3D.Project(vector3D4, -vector3D3)));
+						World.Map.InitializeMapObjectFuzzyScan(position, num8 * 2.0, spaceObjectVessel);
 					}
 				}
 			}
+
 			return false;
 		}
 
 		public double GetSensitivityMultiplier()
 		{
-			double num = (double)SignalAmplification * GetCelestialSensivityModifier();
-			foreach (DebrisField debrisField in Client.Instance.DebrisFields)
+			double num = (double)SignalAmplification * GetCelestialSensitivityModifier();
+			foreach (DebrisField debrisField in World.DebrisFields)
 			{
 				if (debrisField.CheckObject(base.ParentVessel))
 				{
 					num *= (double)debrisField.ScanningSensitivityMultiplier;
 				}
 			}
+
 			return num;
 		}
 
 		public bool PassiveScanObject(ArtificialBody target)
 		{
-			if (target.RadarVisibilityType == RadarVisibilityType.Distress || target.RadarVisibilityType == RadarVisibilityType.AlwaysVisible)
+			if (target.RadarVisibilityType == RadarVisibilityType.Distress ||
+			    target.RadarVisibilityType == RadarVisibilityType.AlwaysVisible)
 			{
 				return false;
 			}
-			if (target == base.ParentVessel || (MyPlayer.Instance != null && target.GUID == MyPlayer.Instance.HomeStationGUID))
+
+			if (target == base.ParentVessel ||
+			    (MyPlayer.Instance != null && target.GUID == MyPlayer.Instance.HomeStationGUID))
 			{
 				if (target.RadarVisibilityType != RadarVisibilityType.Visible)
 				{
 					target.RadarVisibilityType = RadarVisibilityType.Visible;
 					return true;
 				}
+
 				return false;
 			}
+
 			Vector3D relTargetPosition = target.Position - base.ParentVessel.Position;
 			double magnitude = relTargetPosition.Magnitude;
 			double sensitivityMultiplier = GetSensitivityMultiplier();
@@ -155,79 +171,98 @@ namespace ZeroGravity.ShipComponents
 			if (target.RadarVisibilityType != RadarVisibilityType.Warp && target.Maneuver?.Type == ManeuverType.Warp)
 			{
 				target.RadarVisibilityType = RadarVisibilityType.Warp;
-				if (spaceObjectVessel != null)
+				if (spaceObjectVessel is not null)
 				{
 					spaceObjectVessel.ResetLastKnownMapOrbit();
 				}
+
 				if (flag2 && !flag)
 				{
-					Client.Instance.Map.InitializeMapObjectStartWarpFar(target.Position, (magnitude - num2) / (num3 - num2));
+					World.Map.InitializeMapObjectStartWarpFar(target.Position, (magnitude - num2) / (num3 - num2));
 				}
 				else if (flag)
 				{
-					Client.Instance.Map.InitializeMapObjectStartWarpNear(target.Position, Quaternion.LookRotation(target.Forward, target.Up));
+					World.Map.InitializeMapObjectStartWarpNear(target.Position,
+						Quaternion.LookRotation(target.Forward, target.Up));
 				}
+
 				return true;
 			}
+
 			if (target.RadarVisibilityType == RadarVisibilityType.Warp && target.Maneuver == null && flag2 && !flag)
 			{
 				target.RadarVisibilityType = RadarVisibilityType.Invisible;
-				if (spaceObjectVessel != null)
+				if (spaceObjectVessel is not null)
 				{
 					spaceObjectVessel.ResetLastKnownMapOrbit();
 				}
-				Client.Instance.Map.InitializeMapObjectEndWarp(target.Position, (magnitude - num2) / (num3 - num2));
+
+				World.Map.InitializeMapObjectEndWarp(target.Position, (magnitude - num2) / (num3 - num2));
 				return true;
 			}
+
 			if (target.Maneuver == null)
 			{
 				if (target.RadarVisibilityType == RadarVisibilityType.Visible && !flag)
 				{
 					target.RadarVisibilityType = RadarVisibilityType.Unknown;
-					if (spaceObjectVessel != null)
+					if (spaceObjectVessel is not null)
 					{
 						spaceObjectVessel.SetLastKnownMapOrbit();
 						if (spaceObjectVessel.VesselData != null && spaceObjectVessel.VesselData.SpawnRuleID != 0)
 						{
-							Client.Instance.Map.UnknownVisibilityOrbits[spaceObjectVessel.VesselData.SpawnRuleID] = spaceObjectVessel.LastKnownMapOrbit;
+							World.Map.UnknownVisibilityOrbits[spaceObjectVessel.VesselData.SpawnRuleID] =
+								spaceObjectVessel.LastKnownMapOrbit;
 						}
 					}
+
 					return true;
 				}
+
 				if (target.RadarVisibilityType != RadarVisibilityType.Visible && flag)
 				{
 					target.RadarVisibilityType = RadarVisibilityType.Visible;
 					if (spaceObjectVessel?.VesselData != null && spaceObjectVessel.VesselData.SpawnRuleID != 0)
 					{
-						Client.Instance.Map.UnknownVisibilityOrbits.Remove(spaceObjectVessel.VesselData.SpawnRuleID);
+						World.Map.UnknownVisibilityOrbits.Remove(spaceObjectVessel.VesselData.SpawnRuleID);
 						spaceObjectVessel.ResetLastKnownMapOrbit();
 					}
+
 					return true;
 				}
-				if (target.RadarVisibilityType == RadarVisibilityType.Unknown && spaceObjectVessel?.LastKnownMapOrbit != null && (spaceObjectVessel.LastKnownMapOrbit.Position - base.ParentVessel.Position).Magnitude < num2)
+
+				if (target.RadarVisibilityType == RadarVisibilityType.Unknown &&
+				    spaceObjectVessel?.LastKnownMapOrbit != null &&
+				    (spaceObjectVessel.LastKnownMapOrbit.Position - ParentVessel.Position).Magnitude < num2)
 				{
 					target.RadarVisibilityType = RadarVisibilityType.Invisible;
-					if (spaceObjectVessel != null)
+					if (spaceObjectVessel is not null)
 					{
 						spaceObjectVessel.ResetLastKnownMapOrbit();
 					}
+
 					return true;
 				}
-				if (target.RadarVisibilityType == RadarVisibilityType.Invisible && spaceObjectVessel?.VesselData != null && spaceObjectVessel.VesselData.SpawnRuleID != 0 && Client.Instance.Map.UnknownVisibilityOrbits.TryGetValue(spaceObjectVessel.VesselData.SpawnRuleID, out var value))
+
+				if (target.RadarVisibilityType == RadarVisibilityType.Invisible &&
+				    spaceObjectVessel?.VesselData != null && spaceObjectVessel.VesselData.SpawnRuleID != 0 &&
+				    World.Map.UnknownVisibilityOrbits.TryGetValue(spaceObjectVessel.VesselData.SpawnRuleID,
+					    out var value))
 				{
 					target.RadarVisibilityType = RadarVisibilityType.Unknown;
 					spaceObjectVessel.LastKnownMapOrbit = value;
 					return true;
 				}
 			}
+
 			return false;
 		}
 
 		private double CheckBehindPlanets(Vector3D relTargetPosition, double distance)
 		{
-			foreach (CelestialBody celestialBody in Client.Instance.SolarSystem.GetCelestialBodies())
+			foreach (CelestialBody celestialBody in World.SolarSystem.GetCelestialBodies())
 			{
-				Vector3D from = celestialBody.Position - base.ParentVessel.Position;
+				Vector3D from = celestialBody.Position - ParentVessel.Position;
 				double magnitude = from.Magnitude;
 				double num = System.Math.Asin(celestialBody.Radius / magnitude) * (180.0 / System.Math.PI);
 				double num2 = Vector3D.Angle(from, relTargetPosition);
@@ -237,24 +272,28 @@ namespace ZeroGravity.ShipComponents
 					return 0.0;
 				}
 			}
+
 			return 1.0;
 		}
 
 		public void PassiveScan()
 		{
 			bool flag = false;
-			foreach (ArtificialBody artificialBody in Client.Instance.SolarSystem.ArtificialBodies)
+			foreach (ArtificialBody artificialBody in World.SolarSystem.ArtificialBodies)
 			{
-				if (!(artificialBody is Pivot) && (!(artificialBody is SpaceObjectVessel) || (artificialBody as SpaceObjectVessel).IsMainVessel) && PassiveScanObject(artificialBody))
+				if (!(artificialBody is Pivot) &&
+				    (!(artificialBody is SpaceObjectVessel) || (artificialBody as SpaceObjectVessel).IsMainVessel) &&
+				    PassiveScanObject(artificialBody))
 				{
 					flag = true;
 				}
 			}
+
 			if (flag)
 			{
-				Client.Instance.SolarSystem.ArtificialBodiesVisiblityModified();
-				Client.Instance.Map.SaveMapDetails();
-				Client.Instance.Map.IsInitializing = false;
+				World.SolarSystem.ArtificialBodiesVisiblityModified();
+				World.Map.SaveMapDetails();
+				World.Map.IsInitializing = false;
 			}
 		}
 
@@ -264,18 +303,23 @@ namespace ZeroGravity.ShipComponents
 			{
 				return;
 			}
+
 			bool flag = false;
-			foreach (ArtificialBody item in Client.Instance.SolarSystem.ArtificialBodies.OrderBy((ArtificialBody m) => (m.Position - base.ParentVessel.Position).SqrMagnitude).Reverse())
+			foreach (ArtificialBody item in World.SolarSystem.ArtificialBodies
+				         .OrderBy((ArtificialBody m) => (m.Position - base.ParentVessel.Position).SqrMagnitude)
+				         .Reverse())
 			{
-				if (!(item is Pivot) && (!(item is SpaceObjectVessel) || (item as SpaceObjectVessel).IsMainVessel) && ActiveScanObject(item, angle, scanDirection))
+				if (item is not Pivot && (item is not SpaceObjectVessel || (item as SpaceObjectVessel).IsMainVessel) &&
+				    ActiveScanObject(item, angle, scanDirection))
 				{
 					flag = true;
 				}
 			}
+
 			if (flag)
 			{
-				Client.Instance.SolarSystem.ArtificialBodiesVisiblityModified();
-				Client.Instance.Map.SaveMapDetails();
+				World.SolarSystem.ArtificialBodiesVisiblityModified();
+				World.Map.SaveMapDetails();
 			}
 		}
 
@@ -292,18 +336,21 @@ namespace ZeroGravity.ShipComponents
 			{
 				if (details.Status == SystemStatus.Online)
 				{
-					Client.Instance.Map.ShowScanningEffect();
+					World.Map.ShowScanningEffect();
 				}
 				else
 				{
-					if (details.SecondaryStatus != SystemSecondaryStatus.Defective && details.SecondaryStatus != SystemSecondaryStatus.Malfunction)
+					if (details.SecondaryStatus != SystemSecondaryStatus.Defective &&
+					    details.SecondaryStatus != SystemSecondaryStatus.Malfunction)
 					{
 						ActiveScanTask.RunSynchronously();
 					}
+
 					ActiveScanTask = null;
-					Client.Instance.Map.HideScanningEffect();
+					World.Map.HideScanningEffect();
 				}
 			}
+
 			base.SetDetails(details, instant);
 		}
 
@@ -313,19 +360,21 @@ namespace ZeroGravity.ShipComponents
 			for (OrbitParameters parent = target.Orbit.Parent; parent != null; parent = parent.Parent)
 			{
 				CelestialBody celestialBody = parent.CelestialBody;
-				num *= (double)celestialBody.GetRadarSignatureModifier(target);
+				num *= (double)celestialBody.GetRadarSignatureModifier(World, target);
 			}
+
 			return num;
 		}
 
-		public double GetCelestialSensivityModifier()
+		public double GetCelestialSensitivityModifier()
 		{
 			double num = 1.0;
 			for (OrbitParameters parent = base.ParentVessel.Orbit.Parent; parent != null; parent = parent.Parent)
 			{
 				CelestialBody celestialBody = parent.CelestialBody;
-				num *= (double)celestialBody.GetScanningSensitivityModifier(base.ParentVessel);
+				num *= (double)celestialBody.GetScanningSensitivityModifier(World, ParentVessel);
 			}
+
 			return num;
 		}
 

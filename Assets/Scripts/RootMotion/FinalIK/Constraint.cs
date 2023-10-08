@@ -12,10 +12,7 @@ namespace RootMotion.FinalIK
 
 		public bool isValid
 		{
-			get
-			{
-				return transform != null;
-			}
+			get { return transform != null; }
 		}
 
 		public abstract void UpdateConstraint();

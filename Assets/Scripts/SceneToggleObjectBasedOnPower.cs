@@ -4,21 +4,14 @@ using ZeroGravity.ShipComponents;
 
 public class SceneToggleObjectBasedOnPower : MonoBehaviour, IVesselSystemAccessory
 {
-	[SerializeField]
-	private VesselSystem _BaseVesselSystem;
+	[SerializeField] private VesselSystem _BaseVesselSystem;
 
 	public bool Reverse;
 
 	public VesselSystem BaseVesselSystem
 	{
-		get
-		{
-			return _BaseVesselSystem;
-		}
-		set
-		{
-			_BaseVesselSystem = value;
-		}
+		get { return _BaseVesselSystem; }
+		set { _BaseVesselSystem = value; }
 	}
 
 	private void Start()

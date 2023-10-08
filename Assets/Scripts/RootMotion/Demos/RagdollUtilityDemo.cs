@@ -13,7 +13,8 @@ namespace RootMotion.Demos
 
 		private void OnGUI()
 		{
-			GUILayout.Label(" Press R to switch to ragdoll. \n Weigh in one of the FBBIK effectors to make kinematic changes to the ragdoll pose.\n A to blend back to animation");
+			GUILayout.Label(
+				" Press R to switch to ragdoll. \n Weigh in one of the FBBIK effectors to make kinematic changes to the ragdoll pose.\n A to blend back to animation");
 		}
 
 		private void Update()
@@ -22,6 +23,7 @@ namespace RootMotion.Demos
 			{
 				ragdollUtility.EnableRagdoll();
 			}
+
 			if (Input.GetKeyDown(KeyCode.A))
 			{
 				Vector3 vector = pelvis.position - root.position;

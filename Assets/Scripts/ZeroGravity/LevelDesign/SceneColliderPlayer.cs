@@ -6,10 +6,7 @@ namespace ZeroGravity.LevelDesign
 	{
 		public SceneColliderType Type
 		{
-			get
-			{
-				return SceneColliderType.Player;
-			}
+			get { return SceneColliderType.Player; }
 		}
 	}
 }

@@ -33,28 +33,35 @@ namespace RootMotion.Demos
 					interactionSystem.ResumeAll();
 					isSitting = false;
 				}
+
 				return;
 			}
+
 			if (GUILayout.Button("Pick Up Ball"))
 			{
 				interactionSystem.StartInteraction(FullBodyBipedEffector.RightHand, ball, interrupt);
 			}
+
 			if (GUILayout.Button("Button Left Hand"))
 			{
 				interactionSystem.StartInteraction(FullBodyBipedEffector.LeftHand, button, interrupt);
 			}
+
 			if (GUILayout.Button("Button Right Hand"))
 			{
 				interactionSystem.StartInteraction(FullBodyBipedEffector.RightHand, button, interrupt);
 			}
+
 			if (GUILayout.Button("Put Out Cigarette"))
 			{
 				interactionSystem.StartInteraction(FullBodyBipedEffector.RightFoot, cigarette, interrupt);
 			}
+
 			if (GUILayout.Button("Open Door"))
 			{
 				interactionSystem.StartInteraction(FullBodyBipedEffector.LeftHand, door, interrupt);
 			}
+
 			if (!interactionSystem.inInteraction && GUILayout.Button("Sit Down"))
 			{
 				interactionSystem.StartInteraction(FullBodyBipedEffector.Body, benchMain, interrupt);

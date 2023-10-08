@@ -11,8 +11,7 @@ namespace ZeroGravity.ShipComponents
 	{
 		public List<SpaceObjectVessel> Vessels = new List<SpaceObjectVessel>();
 
-		[CompilerGenerated]
-		private static Func<Collider, bool> _003C_003Ef__am_0024cache0;
+		[CompilerGenerated] private static Func<Collider, bool> _003C_003Ef__am_0024cache0;
 
 		public override void CreateVisual()
 		{
@@ -21,6 +20,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				_003C_003Ef__am_0024cache0 = _003CCreateVisual_003Em__0;
 			}
+
 			foreach (Collider item in source.Where(_003C_003Ef__am_0024cache0))
 			{
 				MapObjectFuzzyScan componentInParent = item.GetComponentInParent<MapObjectFuzzyScan>();
@@ -42,6 +42,7 @@ namespace ZeroGravity.ShipComponents
 					}
 				}
 			}
+
 			base.CreateVisual();
 		}
 

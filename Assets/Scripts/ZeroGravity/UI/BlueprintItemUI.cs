@@ -13,8 +13,7 @@ namespace ZeroGravity.UI
 	{
 		public BlueprintsUI Screen;
 
-		[NonSerialized]
-		public ItemCompoundType CompoundType;
+		[NonSerialized] public ItemCompoundType CompoundType;
 
 		public Image Icon;
 
@@ -42,13 +41,17 @@ namespace ZeroGravity.UI
 
 		private void Start()
 		{
-			Icon.sprite = Client.Instance.SpriteManager.GetSprite(CompoundType);
+			Icon.sprite = SpriteManager.Instance.GetSprite(CompoundType);
 		}
 
 		public void InstantiateTiers(bool inst)
 		{
-			DynamicObjectData dynamicObjectData = StaticData.DynamicObjectsDataList.Values.FirstOrDefault(_003CInstantiateTiers_003Em__0);
-			int num = ((dynamicObjectData.DefaultAuxData.TierMultipliers == null || dynamicObjectData.DefaultAuxData.TierMultipliers.Length < 1) ? 1 : dynamicObjectData.DefaultAuxData.TierMultipliers.Length);
+			DynamicObjectData dynamicObjectData =
+				StaticData.DynamicObjectsDataList.Values.FirstOrDefault(_003CInstantiateTiers_003Em__0);
+			int num = ((dynamicObjectData.DefaultAuxData.TierMultipliers == null ||
+			            dynamicObjectData.DefaultAuxData.TierMultipliers.Length < 1)
+				? 1
+				: dynamicObjectData.DefaultAuxData.TierMultipliers.Length);
 			float num2 = 0f;
 			for (int i = 0; i < num; i++)
 			{
@@ -74,6 +77,7 @@ namespace ZeroGravity.UI
 						gameObject.GetComponent<Image>().color = color;
 						gameObject.GetComponentInChildren<Text>().color = Colors.Gray;
 					}
+
 					if (num2 == (float)num)
 					{
 						Screen.TiersDescription.text = Localization.AllTiersUnlocked.ToUpper();
@@ -89,6 +93,7 @@ namespace ZeroGravity.UI
 					{
 						num2 += 1f;
 					}
+
 					TierColor.fillAmount = num2 / (float)num;
 					if (num2 == 0f)
 					{

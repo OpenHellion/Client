@@ -13,10 +13,12 @@ namespace RootMotion.FinalIK
 			[Tooltip("The time of the event since interaction start.")]
 			public float time;
 
-			[Tooltip("If true, the interaction will be paused on this event. The interaction can be resumed by InteractionSystem.ResumeInteraction() or InteractionSystem.ResumeAll;")]
+			[Tooltip(
+				"If true, the interaction will be paused on this event. The interaction can be resumed by InteractionSystem.ResumeInteraction() or InteractionSystem.ResumeAll;")]
 			public bool pause;
 
-			[Tooltip("If true, the object will be parented to the effector bone on this event. Note that picking up like this can be done by only a single effector at a time. If you wish to pick up an object with both hands, see the Interaction PickUp2Handed demo scene.")]
+			[Tooltip(
+				"If true, the object will be parented to the effector bone on this event. Note that picking up like this can be done by only a single effector at a time. If you wish to pick up an object with both hands, see the Interaction PickUp2Handed demo scene.")]
 			public bool pickUp;
 
 			[Tooltip("The animations called on this event.")]
@@ -32,6 +34,7 @@ namespace RootMotion.FinalIK
 				{
 					animatorEvent.Activate(pickUp);
 				}
+
 				Message[] array2 = messages;
 				foreach (Message message in array2)
 				{
@@ -72,10 +75,10 @@ namespace RootMotion.FinalIK
 			[Tooltip("The name of the animation state.")]
 			public string animationState;
 
-			[Tooltip("The crossfading time.")]
-			public float crossfadeTime = 0.3f;
+			[Tooltip("The crossfading time.")] public float crossfadeTime = 0.3f;
 
-			[Tooltip("The layer of the animation state (if using Legacy, the animation state will be forced to this layer).")]
+			[Tooltip(
+				"The layer of the animation state (if using Legacy, the animation state will be forced to this layer).")]
 			public int layer;
 
 			[Tooltip("Should the animation always start from 0 normalized time?")]
@@ -91,8 +94,10 @@ namespace RootMotion.FinalIK
 					{
 						animator.applyRootMotion = false;
 					}
+
 					Activate(animator);
 				}
+
 				if (animation != null)
 				{
 					Activate(animation);
@@ -122,6 +127,7 @@ namespace RootMotion.FinalIK
 					{
 						animation[animationState].normalizedTime = 0f;
 					}
+
 					animation[animationState].layer = layer;
 					animation.CrossFade(animationState, crossfadeTime);
 				}
@@ -150,8 +156,7 @@ namespace RootMotion.FinalIK
 			[Tooltip("The type of the curve (InteractionObject.WeightCurve.Type).")]
 			public Type type;
 
-			[Tooltip("The weight curve.")]
-			public AnimationCurve curve;
+			[Tooltip("The weight curve.")] public AnimationCurve curve;
 
 			public float GetValue(float timer)
 			{
@@ -177,13 +182,16 @@ namespace RootMotion.FinalIK
 			}
 		}
 
-		[Tooltip("If the Interaction System has a 'Look At' LookAtIK component assigned, will use it to make the character look at the specified Transform. If unassigned, will look at this GameObject.")]
+		[Tooltip(
+			"If the Interaction System has a 'Look At' LookAtIK component assigned, will use it to make the character look at the specified Transform. If unassigned, will look at this GameObject.")]
 		public Transform otherLookAtTarget;
 
-		[Tooltip("The root Transform of the InteractionTargets. If null, will use this GameObject. GetComponentsInChildren<InteractionTarget>() will be used at initiation to find all InteractionTargets associated with this InteractionObject.")]
+		[Tooltip(
+			"The root Transform of the InteractionTargets. If null, will use this GameObject. GetComponentsInChildren<InteractionTarget>() will be used at initiation to find all InteractionTargets associated with this InteractionObject.")]
 		public Transform otherTargetsRoot;
 
-		[Tooltip("If assigned, all PositionOffset channels will be applied in the rotation space of this Transform. If not, they will be in the rotation space of the character.")]
+		[Tooltip(
+			"If assigned, all PositionOffset channels will be applied in the rotation space of this Transform. If not, they will be in the rotation space of the character.")]
 		public Transform positionOffsetSpace;
 
 		public WeightCurve[] weightCurves;
@@ -206,6 +214,7 @@ namespace RootMotion.FinalIK
 				{
 					return otherLookAtTarget;
 				}
+
 				return base.transform;
 			}
 		}
@@ -218,6 +227,7 @@ namespace RootMotion.FinalIK
 				{
 					return otherTargetsRoot;
 				}
+
 				return base.transform;
 			}
 		}
@@ -237,13 +247,15 @@ namespace RootMotion.FinalIK
 		[ContextMenu("TUTORIAL VIDEO (PART 3: ANIMATION)")]
 		private void OpenTutorial3()
 		{
-			Application.OpenURL("https://www.youtube.com/watch?v=sQfB2RcT1T4&index=14&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6");
+			Application.OpenURL(
+				"https://www.youtube.com/watch?v=sQfB2RcT1T4&index=14&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6");
 		}
 
 		[ContextMenu("TUTORIAL VIDEO (PART 4: TRIGGERS)")]
 		private void OpenTutorial4()
 		{
-			Application.OpenURL("https://www.youtube.com/watch?v=-TDZpNjt2mk&index=15&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6");
+			Application.OpenURL(
+				"https://www.youtube.com/watch?v=-TDZpNjt2mk&index=15&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6");
 		}
 
 		[ContextMenu("Support Group")]
@@ -255,7 +267,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Asset Store Thread")]
 		private void ASThread()
 		{
-			Application.OpenURL("http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
+			Application.OpenURL(
+				"http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
 		}
 
 		public void Initiate()
@@ -268,10 +281,12 @@ namespace RootMotion.FinalIK
 					length = Mathf.Clamp(length, time, length);
 				}
 			}
+
 			for (int j = 0; j < events.Length; j++)
 			{
 				length = Mathf.Clamp(length, events[j].time, length);
 			}
+
 			targets = targetsRoot.GetComponentsInChildren<InteractionTarget>();
 		}
 
@@ -285,6 +300,7 @@ namespace RootMotion.FinalIK
 					return true;
 				}
 			}
+
 			Multiplier[] array2 = multipliers;
 			foreach (Multiplier multiplier in array2)
 			{
@@ -293,6 +309,7 @@ namespace RootMotion.FinalIK
 					return true;
 				}
 			}
+
 			return false;
 		}
 
@@ -307,6 +324,7 @@ namespace RootMotion.FinalIK
 			{
 				return GetTarget(effectorType);
 			}
+
 			for (int i = 0; i < targets.Length; i++)
 			{
 				if (targets[i].effectorType == effectorType && targets[i].tag == tag)
@@ -314,6 +332,7 @@ namespace RootMotion.FinalIK
 					return targets[i].transform;
 				}
 			}
+
 			return base.transform;
 		}
 
@@ -322,28 +341,36 @@ namespace RootMotion.FinalIK
 			lastUsedInteractionSystem = interactionSystem;
 		}
 
-		public void Apply(IKSolverFullBodyBiped solver, FullBodyBipedEffector effector, InteractionTarget target, float timer, float weight)
+		public void Apply(IKSolverFullBodyBiped solver, FullBodyBipedEffector effector, InteractionTarget target,
+			float timer, float weight)
 		{
 			for (int i = 0; i < weightCurves.Length; i++)
 			{
 				float num = ((!(target == null)) ? target.GetValue(weightCurves[i].type) : 1f);
 				Apply(solver, effector, weightCurves[i].type, weightCurves[i].GetValue(timer), weight * num);
 			}
+
 			for (int j = 0; j < multipliers.Length; j++)
 			{
 				if (multipliers[j].curve == multipliers[j].result && !Warning.logged)
 				{
-					Warning.Log("InteractionObject Multiplier 'Curve' " + multipliers[j].curve.ToString() + "and 'Result' are the same.", base.transform);
+					Warning.Log(
+						"InteractionObject Multiplier 'Curve' " + multipliers[j].curve.ToString() +
+						"and 'Result' are the same.", base.transform);
 				}
+
 				int weightCurveIndex = GetWeightCurveIndex(multipliers[j].curve);
 				if (weightCurveIndex != -1)
 				{
 					float num2 = ((!(target == null)) ? target.GetValue(multipliers[j].result) : 1f);
-					Apply(solver, effector, multipliers[j].result, multipliers[j].GetValue(weightCurves[weightCurveIndex], timer), weight * num2);
+					Apply(solver, effector, multipliers[j].result,
+						multipliers[j].GetValue(weightCurves[weightCurveIndex], timer), weight * num2);
 				}
 				else if (!Warning.logged)
 				{
-					Warning.Log("InteractionObject Multiplier curve " + multipliers[j].curve.ToString() + "does not exist.", base.transform);
+					Warning.Log(
+						"InteractionObject Multiplier curve " + multipliers[j].curve.ToString() + "does not exist.",
+						base.transform);
 				}
 			}
 		}
@@ -356,6 +383,7 @@ namespace RootMotion.FinalIK
 				float num = ((!(target == null)) ? target.GetValue(weightCurveType) : 1f);
 				return weightCurves[weightCurveIndex].GetValue(timer) * num;
 			}
+
 			for (int i = 0; i < multipliers.Length; i++)
 			{
 				if (multipliers[i].result == weightCurveType)
@@ -368,6 +396,7 @@ namespace RootMotion.FinalIK
 					}
 				}
 			}
+
 			return 0f;
 		}
 
@@ -376,39 +405,49 @@ namespace RootMotion.FinalIK
 			Initiate();
 		}
 
-		private void Apply(IKSolverFullBodyBiped solver, FullBodyBipedEffector effector, WeightCurve.Type type, float value, float weight)
+		private void Apply(IKSolverFullBodyBiped solver, FullBodyBipedEffector effector, WeightCurve.Type type,
+			float value, float weight)
 		{
 			switch (type)
 			{
-			case WeightCurve.Type.PositionWeight:
-				solver.GetEffector(effector).positionWeight = Mathf.Lerp(solver.GetEffector(effector).positionWeight, value, weight);
-				break;
-			case WeightCurve.Type.RotationWeight:
-				solver.GetEffector(effector).rotationWeight = Mathf.Lerp(solver.GetEffector(effector).rotationWeight, value, weight);
-				break;
-			case WeightCurve.Type.PositionOffsetX:
-				solver.GetEffector(effector).position += ((!(positionOffsetSpace != null)) ? solver.GetRoot().rotation : positionOffsetSpace.rotation) * Vector3.right * value * weight;
-				break;
-			case WeightCurve.Type.PositionOffsetY:
-				solver.GetEffector(effector).position += ((!(positionOffsetSpace != null)) ? solver.GetRoot().rotation : positionOffsetSpace.rotation) * Vector3.up * value * weight;
-				break;
-			case WeightCurve.Type.PositionOffsetZ:
-				solver.GetEffector(effector).position += ((!(positionOffsetSpace != null)) ? solver.GetRoot().rotation : positionOffsetSpace.rotation) * Vector3.forward * value * weight;
-				break;
-			case WeightCurve.Type.Pull:
-				solver.GetChain(effector).pull = Mathf.Lerp(solver.GetChain(effector).pull, value, weight);
-				break;
-			case WeightCurve.Type.Reach:
-				solver.GetChain(effector).reach = Mathf.Lerp(solver.GetChain(effector).reach, value, weight);
-				break;
-			case WeightCurve.Type.Push:
-				solver.GetChain(effector).push = Mathf.Lerp(solver.GetChain(effector).push, value, weight);
-				break;
-			case WeightCurve.Type.PushParent:
-				solver.GetChain(effector).pushParent = Mathf.Lerp(solver.GetChain(effector).pushParent, value, weight);
-				break;
-			case WeightCurve.Type.RotateBoneWeight:
-				break;
+				case WeightCurve.Type.PositionWeight:
+					solver.GetEffector(effector).positionWeight =
+						Mathf.Lerp(solver.GetEffector(effector).positionWeight, value, weight);
+					break;
+				case WeightCurve.Type.RotationWeight:
+					solver.GetEffector(effector).rotationWeight =
+						Mathf.Lerp(solver.GetEffector(effector).rotationWeight, value, weight);
+					break;
+				case WeightCurve.Type.PositionOffsetX:
+					solver.GetEffector(effector).position +=
+						((!(positionOffsetSpace != null)) ? solver.GetRoot().rotation : positionOffsetSpace.rotation) *
+						Vector3.right * value * weight;
+					break;
+				case WeightCurve.Type.PositionOffsetY:
+					solver.GetEffector(effector).position +=
+						((!(positionOffsetSpace != null)) ? solver.GetRoot().rotation : positionOffsetSpace.rotation) *
+						Vector3.up * value * weight;
+					break;
+				case WeightCurve.Type.PositionOffsetZ:
+					solver.GetEffector(effector).position +=
+						((!(positionOffsetSpace != null)) ? solver.GetRoot().rotation : positionOffsetSpace.rotation) *
+						Vector3.forward * value * weight;
+					break;
+				case WeightCurve.Type.Pull:
+					solver.GetChain(effector).pull = Mathf.Lerp(solver.GetChain(effector).pull, value, weight);
+					break;
+				case WeightCurve.Type.Reach:
+					solver.GetChain(effector).reach = Mathf.Lerp(solver.GetChain(effector).reach, value, weight);
+					break;
+				case WeightCurve.Type.Push:
+					solver.GetChain(effector).push = Mathf.Lerp(solver.GetChain(effector).push, value, weight);
+					break;
+				case WeightCurve.Type.PushParent:
+					solver.GetChain(effector).pushParent =
+						Mathf.Lerp(solver.GetChain(effector).pushParent, value, weight);
+					break;
+				case WeightCurve.Type.RotateBoneWeight:
+					break;
 			}
 		}
 
@@ -421,6 +460,7 @@ namespace RootMotion.FinalIK
 					return targets[i].transform;
 				}
 			}
+
 			return base.transform;
 		}
 
@@ -433,6 +473,7 @@ namespace RootMotion.FinalIK
 					return i;
 				}
 			}
+
 			return -1;
 		}
 
@@ -445,6 +486,7 @@ namespace RootMotion.FinalIK
 					return i;
 				}
 			}
+
 			return -1;
 		}
 
@@ -457,7 +499,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Scrpt Reference")]
 		private void OpenScriptReference()
 		{
-			Application.OpenURL("http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_interaction_object.html");
+			Application.OpenURL(
+				"http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_interaction_object.html");
 		}
 	}
 }

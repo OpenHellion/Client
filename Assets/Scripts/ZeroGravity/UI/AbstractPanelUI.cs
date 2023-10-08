@@ -29,15 +29,15 @@ namespace ZeroGravity.UI
 
 		protected List<SceneCargoBay> Cargos = new List<SceneCargoBay>();
 
-		protected float generalOutput;
+		protected float GeneralOutput;
 
-		protected float generalConsumption;
+		protected float GeneralConsumption;
 
-		protected float curCap;
+		protected float CurCap;
 
-		protected float maxCap;
+		private float _maxCap;
 
-		protected float powDiff;
+		private float _powDiff;
 
 		public Text GeneralCapacity;
 
@@ -47,7 +47,6 @@ namespace ZeroGravity.UI
 
 		public virtual void OnInteract()
 		{
-			Client.Instance.CanvasManager.QuickTipHolder.Activate(value: false);
 		}
 
 		public virtual void OnDetach()
@@ -61,6 +60,7 @@ namespace ZeroGravity.UI
 			{
 				ParentVessel = MyPlayer.Instance.CurrentRoomTrigger.ParentVessel;
 			}
+
 			AllVessels.Add(ParentVessel.MainVessel);
 			foreach (SpaceObjectVessel allDockedVessel in ParentVessel.MainVessel.AllDockedVessels)
 			{
@@ -80,22 +80,29 @@ namespace ZeroGravity.UI
 			FillAllVessels();
 			foreach (SpaceObjectVessel allVessel in AllVessels)
 			{
-				IPowerProvider[] componentsInChildren = allVessel.GeometryRoot.GetComponentsInChildren<IPowerProvider>();
+				IPowerProvider[] componentsInChildren =
+					allVessel.GeometryRoot.GetComponentsInChildren<IPowerProvider>();
 				if (componentsInChildren != null && componentsInChildren.Length > 0)
 				{
-					foreach (GeneratorCapacitor item7 in componentsInChildren.Where((IPowerProvider m) => m is GeneratorCapacitor))
+					foreach (GeneratorCapacitor item7 in componentsInChildren.Where((IPowerProvider m) =>
+						         m is GeneratorCapacitor))
 					{
 						Capacitors.Add(item7);
 					}
-					foreach (GeneratorPower item8 in componentsInChildren.Where((IPowerProvider m) => m is GeneratorPower))
+
+					foreach (GeneratorPower item8 in componentsInChildren.Where((IPowerProvider m) =>
+						         m is GeneratorPower))
 					{
 						PowerGenerators.Add(item8);
 					}
-					foreach (GeneratorSolar item9 in componentsInChildren.Where((IPowerProvider m) => m is GeneratorSolar))
+
+					foreach (GeneratorSolar item9 in componentsInChildren.Where((IPowerProvider m) =>
+						         m is GeneratorSolar))
 					{
 						SolarGenerators.Add(item9);
 					}
 				}
+
 				ILifeProvider[] componentsInChildren2 = allVessel.GeometryRoot.GetComponentsInChildren<ILifeProvider>();
 				if (componentsInChildren2 != null && componentsInChildren2.Length > 0)
 				{
@@ -106,9 +113,11 @@ namespace ZeroGravity.UI
 						LifeGenerators.Add(item4);
 					}
 				}
-				foreach (IPowerConsumer item10 in from m in allVessel.GeometryRoot.GetComponentsInChildren<IPowerConsumer>()
-					where !(m is VesselBaseSystem)
-					select m)
+
+				foreach (IPowerConsumer item10 in from m in allVessel.GeometryRoot
+					         .GetComponentsInChildren<IPowerConsumer>()
+				         where !(m is VesselBaseSystem)
+				         select m)
 				{
 					if (!(item10 is GeneratorCapacitor))
 					{
@@ -116,79 +125,90 @@ namespace ZeroGravity.UI
 						Consumers.Add(item5);
 					}
 				}
-				foreach (ResourceContainer item11 in from m in allVessel.GeometryRoot.GetComponentsInChildren<ResourceContainer>()
-					where m.DistributionSystemType == DistributionSystemType.Air
-					select m)
+
+				foreach (ResourceContainer item11 in from m in allVessel.GeometryRoot
+					         .GetComponentsInChildren<ResourceContainer>()
+				         where m.DistributionSystemType == DistributionSystemType.Air
+				         select m)
 				{
 					AirTanks.Add(item11);
 				}
+
 				SceneCargoBay[] componentsInChildren3 = allVessel.GeometryRoot.GetComponentsInChildren<SceneCargoBay>();
 				foreach (SceneCargoBay item6 in componentsInChildren3)
 				{
 					Cargos.Add(item6);
 				}
 			}
+
 			GetPowerStatus();
 		}
 
 		public void GetPowerStatus()
 		{
-			generalOutput = 0f;
-			generalConsumption = 0f;
-			curCap = 0f;
-			maxCap = 0f;
-			powDiff = 0f;
+			GeneralOutput = 0f;
+			GeneralConsumption = 0f;
+			CurCap = 0f;
+			_maxCap = 0f;
+			_powDiff = 0f;
 			foreach (GeneratorPower powerGenerator in PowerGenerators)
 			{
 				if (powerGenerator.Status == SystemStatus.Online)
 				{
-					generalOutput += powerGenerator.MaxOutput;
+					GeneralOutput += powerGenerator.MaxOutput;
 				}
 			}
+
 			foreach (GeneratorSolar solarGenerator in SolarGenerators)
 			{
 				if (solarGenerator.Status == SystemStatus.Online)
 				{
-					generalOutput += solarGenerator.MaxOutput;
+					GeneralOutput += solarGenerator.MaxOutput;
 				}
 			}
+
 			foreach (GeneratorCapacitor capacitor in Capacitors)
 			{
-				curCap += capacitor.Capacity;
-				maxCap += capacitor.MaxCapacity;
+				CurCap += capacitor.Capacity;
+				_maxCap += capacitor.MaxCapacity;
 			}
+
 			foreach (VesselSystem consumer in Consumers)
 			{
 				if (consumer.Status == SystemStatus.Online)
 				{
-					generalConsumption += (consumer as IPowerConsumer).GetPowerConsumption();
+					GeneralConsumption += (consumer as IPowerConsumer).GetPowerConsumption();
 				}
 			}
+
 			foreach (SpaceObjectVessel allVessel in AllVessels)
 			{
 				Ship ship = allVessel as Ship;
-				if (ship.VesselBaseSystem.IsSwitchedOn() && ship.VesselBaseSystem.SecondaryStatus != SystemSecondaryStatus.Malfunction)
+				if (ship.VesselBaseSystem.IsSwitchedOn() &&
+				    ship.VesselBaseSystem.SecondaryStatus != SystemSecondaryStatus.Malfunction)
 				{
-					generalConsumption += ship.VesselBaseSystem.GetPowerConsumption();
+					GeneralConsumption += ship.VesselBaseSystem.GetPowerConsumption();
 				}
 			}
+
 			if (GeneralCapacityFiller != null)
 			{
-				GeneralCapacityFiller.fillAmount = curCap / maxCap;
+				GeneralCapacityFiller.fillAmount = CurCap / _maxCap;
 			}
-			powDiff = generalOutput - generalConsumption;
+
+			_powDiff = GeneralOutput - GeneralConsumption;
 			if (GeneralCapacity != null && PowerDiff != null)
 			{
-				GeneralCapacity.text = FormatHelper.CurrentMax(curCap, maxCap);
-				if (powDiff >= 0f)
+				GeneralCapacity.text = FormatHelper.CurrentMax(CurCap, _maxCap);
+				if (_powDiff >= 0f)
 				{
 					PowerDiff.color = Colors.Green;
-					PowerDiff.text = "+" + FormatHelper.FormatValue(powDiff, round: true);
+					PowerDiff.text = "+" + FormatHelper.FormatValue(_powDiff, round: true);
 				}
 				else
 				{
 					PowerDiff.color = Colors.PowerRed;
-					PowerDiff.text = FormatHelper.FormatValue(powDiff, round: true);
+					PowerDiff.text = FormatHelper.FormatValue(_powDiff, round: true);
 				}
 			}
 		}

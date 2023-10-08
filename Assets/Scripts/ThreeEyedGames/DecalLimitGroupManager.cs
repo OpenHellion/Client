@@ -20,6 +20,7 @@ namespace ThreeEyedGames
 				Instance = this;
 				return;
 			}
+
 			Debug.LogError("There cannot be more than one instance of DecalLimitGroupManager. Destroying.");
 			UnityEngine.Object.DestroyImmediate(this);
 		}

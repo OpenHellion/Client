@@ -7,10 +7,7 @@ namespace ZeroGravity.ShipComponents
 	{
 		public DistributionLineType Type
 		{
-			get
-			{
-				return DistributionLineType.Helium3;
-			}
+			get { return DistributionLineType.Helium3; }
 		}
 
 		public bool IsConnected { get; private set; }

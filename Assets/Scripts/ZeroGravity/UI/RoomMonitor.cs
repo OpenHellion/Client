@@ -62,12 +62,14 @@ namespace ZeroGravity.UI
 					GravityImage.sprite = Gravity1sprite1;
 					gravitySpriteCouter = Time.time;
 				}
+
 				if (GravityImage.color.a != 1f)
 				{
 					Color color = GravityImage.color;
 					color.a = 1f;
 					GravityImage.color = color;
 				}
+
 				if (Time.time - gravitySpriteCouter > gravitySpriteThreshold)
 				{
 					if (GravityImage.sprite == Gravity1sprite1)
@@ -94,6 +96,7 @@ namespace ZeroGravity.UI
 					GravityImage.sprite = Gravity0sprite;
 					GravityBorder.sprite = Gravity0borderSprite;
 				}
+
 				Color color2 = GravityImage.color;
 				if (gravityLerp > 0)
 				{
@@ -111,8 +114,10 @@ namespace ZeroGravity.UI
 						gravityLerp = 1;
 					}
 				}
+
 				GravityImage.color = color2;
 			}
+
 			PreassureFiller.fillAmount = roomTrigger.AirPressure;
 			PressureText.text = roomTrigger.AirPressure.ToString("F1");
 			if (roomTrigger.AirPressure > 0.3f && roomTrigger.AirPressure < 1f)
@@ -126,6 +131,7 @@ namespace ZeroGravity.UI
 			{
 				PreassureFiller.color = redColor;
 			}
+
 			AirQualityFiller.fillAmount = roomTrigger.AirQuality;
 			AirQualityText.text = (roomTrigger.AirQuality * 100f).ToString("f0");
 			if ((double)roomTrigger.AirPressure < -0.67 * (double)roomTrigger.AirQuality + 1.0)

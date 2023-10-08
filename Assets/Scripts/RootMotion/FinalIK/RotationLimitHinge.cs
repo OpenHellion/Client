@@ -12,8 +12,7 @@ namespace RootMotion.FinalIK
 
 		public float max = 90f;
 
-		[HideInInspector]
-		public float zeroAxisDisplayOffset;
+		[HideInInspector] public float zeroAxisDisplayOffset;
 
 		private Quaternion lastRotation = Quaternion.identity;
 
@@ -28,7 +27,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Scrpt Reference")]
 		private void OpenScriptReference()
 		{
-			Application.OpenURL("http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_rotation_limit_hinge.html");
+			Application.OpenURL(
+				"http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_rotation_limit_hinge.html");
 		}
 
 		[ContextMenu("Support Group")]
@@ -40,7 +40,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Asset Store Thread")]
 		private void ASThread()
 		{
-			Application.OpenURL("http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
+			Application.OpenURL(
+				"http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
 		}
 
 		protected override Quaternion LimitRotation(Quaternion rotation)
@@ -55,11 +56,13 @@ namespace RootMotion.FinalIK
 			{
 				return Quaternion.AngleAxis(0f, axis);
 			}
+
 			Quaternion quaternion = RotationLimit.Limit1DOF(rotation, axis);
 			if (!useLimits)
 			{
 				return quaternion;
 			}
+
 			Quaternion quaternion2 = quaternion * Quaternion.Inverse(lastRotation);
 			float num = Quaternion.Angle(Quaternion.identity, quaternion2);
 			Vector3 vector = new Vector3(axis.z, axis.x, axis.y);
@@ -68,6 +71,7 @@ namespace RootMotion.FinalIK
 			{
 				num = 0f - num;
 			}
+
 			lastAngle = Mathf.Clamp(lastAngle + num, min, max);
 			return Quaternion.AngleAxis(lastAngle, axis);
 		}

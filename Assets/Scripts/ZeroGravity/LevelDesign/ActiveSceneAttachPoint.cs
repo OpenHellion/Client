@@ -7,40 +7,32 @@ namespace ZeroGravity.LevelDesign
 {
 	public class ActiveSceneAttachPoint : SceneAttachPoint, IVesselSystemAccessory
 	{
-		[SerializeField]
-		private VesselSystem _BaseVesselSystem;
+		[SerializeField] private VesselSystem _BaseVesselSystem;
 
 		public override Item Item
 		{
-			get
-			{
-				return base.Item;
-			}
+			get { return base.Item; }
 			protected set
 			{
 				if (Item != value && Item != null && Item is IVesselSystemAccessory && BaseVesselSystem != null)
 				{
 					BaseVesselSystem.Accessories.Remove(Item as IVesselSystemAccessory);
 				}
+
 				if (value != null && value is IVesselSystemAccessory && BaseVesselSystem != null)
 				{
 					BaseVesselSystem.Accessories.Add(value as IVesselSystemAccessory);
 					(value as IVesselSystemAccessory).BaseVesselSystemUpdated();
 				}
+
 				base.Item = value;
 			}
 		}
 
 		public VesselSystem BaseVesselSystem
 		{
-			get
-			{
-				return _BaseVesselSystem;
-			}
-			set
-			{
-				_BaseVesselSystem = value;
-			}
+			get { return _BaseVesselSystem; }
+			set { _BaseVesselSystem = value; }
 		}
 
 		protected override void Start()

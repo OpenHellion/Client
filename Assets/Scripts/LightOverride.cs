@@ -11,11 +11,9 @@ public abstract class LightOverride : MonoBehaviour
 		Directional = 4
 	}
 
-	[Title("Overrides")]
-	public float m_IntensityMult = 1f;
+	[Title("Overrides")] public float m_IntensityMult = 1f;
 
-	[MinValue(0f)]
-	public float m_RangeMult = 1f;
+	[MinValue(0f)] public float m_RangeMult = 1f;
 
 	private Type m_Type;
 
@@ -35,24 +33,23 @@ public abstract class LightOverride : MonoBehaviour
 			{
 				return false;
 			}
+
 			Init();
 			switch (m_Type)
 			{
-			case Type.Point:
-				return m_Light.enabled || GetForceOn();
-			case Type.Tube:
-				return m_TubeLight.enabled || GetForceOn();
-			case Type.Area:
-				return m_AreaLight.enabled || GetForceOn();
-			case Type.Directional:
-				return m_Light.enabled || GetForceOn();
-			default:
-				return false;
+				case Type.Point:
+					return m_Light.enabled || GetForceOn();
+				case Type.Tube:
+					return m_TubeLight.enabled || GetForceOn();
+				case Type.Area:
+					return m_AreaLight.enabled || GetForceOn();
+				case Type.Directional:
+					return m_Light.enabled || GetForceOn();
+				default:
+					return false;
 			}
 		}
-		private set
-		{
-		}
+		private set { }
 	}
 
 	public new Light light
@@ -62,9 +59,7 @@ public abstract class LightOverride : MonoBehaviour
 			Init();
 			return m_Light;
 		}
-		private set
-		{
-		}
+		private set { }
 	}
 
 	public TubeLight tubeLight
@@ -74,9 +69,7 @@ public abstract class LightOverride : MonoBehaviour
 			Init();
 			return m_TubeLight;
 		}
-		private set
-		{
-		}
+		private set { }
 	}
 
 	public AreaLight areaLight
@@ -86,9 +79,7 @@ public abstract class LightOverride : MonoBehaviour
 			Init();
 			return m_AreaLight;
 		}
-		private set
-		{
-		}
+		private set { }
 	}
 
 	public Type type
@@ -98,9 +89,7 @@ public abstract class LightOverride : MonoBehaviour
 			Init();
 			return m_Type;
 		}
-		private set
-		{
-		}
+		private set { }
 	}
 
 	private void Update()
@@ -115,19 +104,20 @@ public abstract class LightOverride : MonoBehaviour
 		{
 			return;
 		}
+
 		if ((m_Light = GetComponent<Light>()) != null)
 		{
 			switch (m_Light.type)
 			{
-			case LightType.Point:
-				m_Type = Type.Point;
-				break;
-			case LightType.Directional:
-				m_Type = Type.Directional;
-				break;
-			default:
-				m_Type = Type.None;
-				break;
+				case LightType.Point:
+					m_Type = Type.Point;
+					break;
+				case LightType.Directional:
+					m_Type = Type.Directional;
+					break;
+				default:
+					m_Type = Type.None;
+					break;
 			}
 		}
 		else if ((m_TubeLight = GetComponent<TubeLight>()) != null)
@@ -138,6 +128,7 @@ public abstract class LightOverride : MonoBehaviour
 		{
 			m_Type = Type.Area;
 		}
+
 		m_Initialized = true;
 	}
 }

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using OpenHellion;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using ZeroGravity;
 using ZeroGravity.ShipComponents;
@@ -17,13 +19,9 @@ public class PilotTargetList : MonoBehaviour
 
 	public GameObject NotActive;
 
-	public PilotOverlayUI ParentPilot
-	{
-		get
-		{
-			return Client.Instance.InGamePanels.Pilot;
-		}
-	}
+	[FormerlySerializedAs("_worldState")] [SerializeField] private World _world;
+
+	private PilotOverlayUI ParentPilot => _world.InWorldPanels.Pilot;
 
 	private void Start()
 	{
@@ -37,7 +35,7 @@ public class PilotTargetList : MonoBehaviour
 		targetInListUI.gameObject.transform.localScale = Vector3.one;
 		targetInListUI.gameObject.SetActive(true);
 		targetInListUI.Target = target;
-		targetInListUI.AB = target.AB;
+		targetInListUI.AB = target.ArtificialBody;
 		targetInListUI.Name.text = target.Name;
 		targetInListUI.Icon.sprite = target.Icon;
 	}
@@ -50,14 +48,17 @@ public class PilotTargetList : MonoBehaviour
 		{
 			list.Add(item);
 		}
+
 		foreach (TargetInListUI item2 in list)
 		{
 			if (ParentPilot.SelectedTarget != null)
 			{
-				item2.Selected.SetActive(ParentPilot.SelectedTarget.AB == item2.AB);
+				item2.Selected.SetActive(ParentPilot.SelectedTarget.ArtificialBody == item2.AB);
 			}
+
 			item2.Distance.text = FormatHelper.DistanceFormat(item2.Target.Distance);
 		}
+
 		GoToCurrentElement();
 	}
 

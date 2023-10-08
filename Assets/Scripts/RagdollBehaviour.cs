@@ -11,10 +11,13 @@ public class RagdollBehaviour : StateMachineBehaviour
 		{
 			component.OnRagdollStateExit();
 		}
+
 		if (component2 != null)
 		{
 			component2.SetParameter(null, null, null, null, null, null, null, null, null, false);
-			component2.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false);
+			component2.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, false);
 		}
 	}
 }

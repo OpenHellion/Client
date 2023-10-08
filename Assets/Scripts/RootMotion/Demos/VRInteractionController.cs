@@ -6,8 +6,7 @@ namespace RootMotion.Demos
 	[RequireComponent(typeof(InteractionSystem))]
 	public class VRInteractionController : MonoBehaviour
 	{
-		[Tooltip("How long do we need to stare at triggers?")]
-		[Range(0f, 10f)]
+		[Tooltip("How long do we need to stare at triggers?")] [Range(0f, 10f)]
 		public float triggerTime = 1f;
 
 		private float timer;
@@ -22,6 +21,7 @@ namespace RootMotion.Demos
 				{
 					return 0f;
 				}
+
 				return timer / triggerTime;
 			}
 		}
@@ -59,10 +59,12 @@ namespace RootMotion.Demos
 			{
 				return false;
 			}
+
 			if (!interactionSystem.TriggerEffectorsReady(index))
 			{
 				return false;
 			}
+
 			return true;
 		}
 	}

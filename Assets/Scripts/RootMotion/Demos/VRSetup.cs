@@ -28,6 +28,7 @@ namespace RootMotion.Demos
 			{
 				gameObject.SetActive(false);
 			}
+
 			Cursor.lockState = CursorLockMode.Locked;
 			if (characterController != null)
 			{
@@ -42,14 +43,17 @@ namespace RootMotion.Demos
 			{
 				Application.Quit();
 			}
+
 			if (!isFinished && characterController != null)
 			{
 				characterController.transform.rotation = Quaternion.identity;
 			}
+
 			if (!Input.GetKeyDown(KeyCode.R))
 			{
 				return;
 			}
+
 			GameObject[] array = enableOnR;
 			foreach (GameObject gameObject in array)
 			{
@@ -67,8 +71,10 @@ namespace RootMotion.Demos
 				{
 					characterController.moveSpeed = moveSpeed;
 				}
+
 				characterController.transform.position += Vector3.up * 0.001f;
 			}
+
 			isFinished = true;
 		}
 	}

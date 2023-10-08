@@ -28,14 +28,8 @@ namespace ZeroGravity.UI
 
 		public float Value
 		{
-			get
-			{
-				return ParseValue(inputField.text);
-			}
-			set
-			{
-				inputField.text = value.ToString();
-			}
+			get { return ParseValue(inputField.text); }
+			set { inputField.text = value.ToString(); }
 		}
 
 		private void Awake()
@@ -53,6 +47,7 @@ namespace ZeroGravity.UI
 			{
 				return;
 			}
+
 			float result = 0f;
 			float.TryParse(inputField.text, out result);
 			if (inputField.interactable)
@@ -66,6 +61,7 @@ namespace ZeroGravity.UI
 					result -= Increment;
 				}
 			}
+
 			if (!LoopValue)
 			{
 				if (result >= MinValue && result <= MaxValue)
@@ -94,6 +90,7 @@ namespace ZeroGravity.UI
 				ApplyChanges = false;
 				inputField.text = value.ToString();
 			}
+
 			if (OnChange != null)
 			{
 				OnChange(value);
@@ -112,6 +109,7 @@ namespace ZeroGravity.UI
 			{
 				result = MaxValue;
 			}
+
 			return result;
 		}
 
@@ -122,6 +120,7 @@ namespace ZeroGravity.UI
 				ApplyChanges = true;
 				return;
 			}
+
 			float value = ParseValue(strValue);
 			UpdateField(value);
 		}

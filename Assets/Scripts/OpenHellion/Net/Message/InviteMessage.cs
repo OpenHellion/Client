@@ -1,6 +1,6 @@
 using System;
-using ZeroGravity.Network;
 using Newtonsoft.Json;
+using ZeroGravity.Network;
 
 namespace OpenHellion.Net.Message
 {

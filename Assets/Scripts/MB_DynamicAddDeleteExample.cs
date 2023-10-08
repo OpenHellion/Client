@@ -30,6 +30,7 @@ public class MB_DynamicAddDeleteExample : MonoBehaviour
 				}
 			}
 		}
+
 		mbd.AddDeleteGameObjects(array, null, true);
 		mbd.Apply();
 		objs = objsInCombined.ToArray();
@@ -51,6 +52,7 @@ public class MB_DynamicAddDeleteExample : MonoBehaviour
 
 	private void OnGUI()
 	{
-		GUILayout.Label("Dynamically instantiates game objects. \nRepeatedly adds and removes some of them\n from the combined mesh.");
+		GUILayout.Label(
+			"Dynamically instantiates game objects. \nRepeatedly adds and removes some of them\n from the combined mesh.");
 	}
 }

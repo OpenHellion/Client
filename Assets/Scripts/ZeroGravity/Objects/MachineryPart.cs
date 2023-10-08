@@ -10,10 +10,7 @@ namespace ZeroGravity.Objects
 
 		public string PartName
 		{
-			get
-			{
-				return PartType.ToLocalizedString();
-			}
+			get { return PartType.ToLocalizedString(); }
 		}
 
 		public string PartDescription
@@ -25,6 +22,7 @@ namespace ZeroGravity.Objects
 				{
 					return value;
 				}
+
 				return string.Empty;
 			}
 		}

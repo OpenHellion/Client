@@ -8,8 +8,7 @@ namespace ZeroGravity.ShipComponents
 {
 	public class SubSystemFTL : SubSystem, IPowerConsumer
 	{
-		[SerializeField]
-		private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
+		[SerializeField] private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
 		{
 			new ResourceRequirement
 			{
@@ -17,8 +16,7 @@ namespace ZeroGravity.ShipComponents
 			}
 		};
 
-		[Tooltip("Towable mass in tons")]
-		public float BaseTowingCapacity;
+		[Tooltip("Towable mass in tons")] public float BaseTowingCapacity;
 
 		public WarpData[] WarpsData;
 
@@ -30,18 +28,12 @@ namespace ZeroGravity.ShipComponents
 
 		public override SubSystemType Type
 		{
-			get
-			{
-				return SubSystemType.FTL;
-			}
+			get { return SubSystemType.FTL; }
 		}
 
 		public override ResourceRequirement[] ResourceRequirements
 		{
-			get
-			{
-				return _ResourceRequirements;
-			}
+			get { return _ResourceRequirements; }
 		}
 
 		public Dictionary<int, float?> WarpCellsFuel { get; private set; }
@@ -52,6 +44,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				throw new Exception("At least 1 Warp must be defined.");
 			}
+
 			SubSystemFTLAuxData subSystemFTLAuxData = new SubSystemFTLAuxData();
 			subSystemFTLAuxData.BaseTowingCapacity = BaseTowingCapacity;
 			subSystemFTLAuxData.WarpsData = WarpsData;

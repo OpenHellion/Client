@@ -1,3 +1,4 @@
+using OpenHellion.Data;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -28,10 +29,7 @@ namespace ZeroGravity.UI
 
 		public float VoiceVolumeSetter
 		{
-			get
-			{
-				return currentVoice;
-			}
+			get { return currentVoice; }
 			set
 			{
 				currentVoice = value;
@@ -42,10 +40,7 @@ namespace ZeroGravity.UI
 
 		public float AmbienceVolumeSetter
 		{
-			get
-			{
-				return currentAmbience;
-			}
+			get { return currentAmbience; }
 			set
 			{
 				currentAmbience = value;
@@ -56,10 +51,7 @@ namespace ZeroGravity.UI
 
 		public float VolumeSetter
 		{
-			get
-			{
-				return currentVolume;
-			}
+			get { return currentVolume; }
 			set
 			{
 				currentVolume = value;
@@ -113,6 +105,7 @@ namespace ZeroGravity.UI
 				SetDefault();
 				return;
 			}
+
 			AudioData = audioData;
 			VolumeSetter = AudioData.Volume;
 			VoiceVolumeSetter = AudioData.VoiceVolume;

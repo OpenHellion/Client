@@ -12,18 +12,22 @@ namespace DigitalOpus.MB.Core
 				{
 					Debug.LogError(msg);
 				}
+
 				if (l == MB2_LogLevel.warn)
 				{
 					Debug.LogWarning(string.Format("frm={0} WARN {1}", Time.frameCount, msg));
 				}
+
 				if (l == MB2_LogLevel.info)
 				{
 					Debug.Log(string.Format("frm={0} INFO {1}", Time.frameCount, msg));
 				}
+
 				if (l == MB2_LogLevel.debug)
 				{
 					Debug.Log(string.Format("frm={0} DEBUG {1}", Time.frameCount, msg));
 				}
+
 				if (l == MB2_LogLevel.trace)
 				{
 					Debug.Log(string.Format("frm={0} TRACE {1}", Time.frameCount, msg));

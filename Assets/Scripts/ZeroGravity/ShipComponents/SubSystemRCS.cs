@@ -7,8 +7,7 @@ namespace ZeroGravity.ShipComponents
 {
 	public class SubSystemRCS : SubSystem
 	{
-		[SerializeField]
-		private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
+		[SerializeField] private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[1]
 		{
 			new ResourceRequirement
 			{
@@ -56,12 +55,14 @@ namespace ZeroGravity.ShipComponents
 		{
 			try
 			{
-				float nominal = Array.Find(ResourceRequirements, (ResourceRequirement m) => m.ResourceType == DistributionSystemType.RCS).Nominal;
+				float nominal = Array.Find(ResourceRequirements,
+					(ResourceRequirement m) => m.ResourceType == DistributionSystemType.RCS).Nominal;
 				return ResourceContainers[0].Compartments[0].Resources[0].Quantity > nominal;
 			}
 			catch
 			{
 			}
+
 			return false;
 		}
 	}

@@ -37,11 +37,9 @@ namespace RootMotion.FinalIK
 
 		public BendModifier bendModifier;
 
-		[Range(0f, 1f)]
-		public float maintainRotationWeight;
+		[Range(0f, 1f)] public float maintainRotationWeight;
 
-		[Range(0f, 1f)]
-		public float bendModifierWeight = 1f;
+		[Range(0f, 1f)] public float bendModifierWeight = 1f;
 
 		public Transform bendGoal;
 
@@ -75,6 +73,7 @@ namespace RootMotion.FinalIK
 				{
 					return axisDirectionsLeft;
 				}
+
 				return axisDirectionsRight;
 			}
 		}
@@ -113,16 +112,20 @@ namespace RootMotion.FinalIK
 			{
 				parentDefaultRotation = Quaternion.Inverse(defaultRootRotation) * bone1.transform.parent.rotation;
 			}
+
 			if (bone3.rotationLimit != null)
 			{
 				bone3.rotationLimit.Disable();
 			}
+
 			bone3DefaultRotation = bone3.transform.rotation;
-			Vector3 vector = Vector3.Cross(bone2.transform.position - bone1.transform.position, bone3.transform.position - bone2.transform.position);
+			Vector3 vector = Vector3.Cross(bone2.transform.position - bone1.transform.position,
+				bone3.transform.position - bone2.transform.position);
 			if (vector != Vector3.zero)
 			{
 				bendNormal = vector;
 			}
+
 			animationNormal = bendNormal;
 			StoreAxisDirections(ref axisDirectionsLeft);
 			StoreAxisDirections(ref axisDirectionsRight);
@@ -137,6 +140,7 @@ namespace RootMotion.FinalIK
 				_bendNormal = bendNormal;
 				bendNormal = GetModifiedBendNormal();
 			}
+
 			if (maintainRotationWeight * IKPositionWeight > 0f)
 			{
 				bone3RotationBeforeSolve = ((!maintainRotationFor1Frame) ? bone3.transform.rotation : maintainRotation);
@@ -150,9 +154,11 @@ namespace RootMotion.FinalIK
 			{
 				bendNormal = _bendNormal;
 			}
+
 			if (maintainRotationWeight * IKPositionWeight > 0f)
 			{
-				bone3.transform.rotation = Quaternion.Slerp(bone3.transform.rotation, bone3RotationBeforeSolve, maintainRotationWeight * IKPositionWeight);
+				bone3.transform.rotation = Quaternion.Slerp(bone3.transform.rotation, bone3RotationBeforeSolve,
+					maintainRotationWeight * IKPositionWeight);
 			}
 		}
 
@@ -171,94 +177,115 @@ namespace RootMotion.FinalIK
 			{
 				return bendNormal;
 			}
+
 			switch (bendModifier)
 			{
-			case BendModifier.Animation:
-				if (!maintainBendFor1Frame)
-				{
-					MaintainBend();
-				}
-				maintainBendFor1Frame = false;
-				return Vector3.Lerp(bendNormal, animationNormal, num);
-			case BendModifier.Parent:
-			{
-				if (bone1.transform.parent == null)
-				{
-					return bendNormal;
-				}
-				Quaternion quaternion = bone1.transform.parent.rotation * Quaternion.Inverse(parentDefaultRotation);
-				return Quaternion.Slerp(Quaternion.identity, quaternion * Quaternion.Inverse(defaultRootRotation), num) * bendNormal;
-			}
-			case BendModifier.Target:
-			{
-				Quaternion b = IKRotation * Quaternion.Inverse(bone3DefaultRotation);
-				return Quaternion.Slerp(Quaternion.identity, b, num) * bendNormal;
-			}
-			case BendModifier.Arm:
-			{
-				if (bone1.transform.parent == null)
-				{
-					return bendNormal;
-				}
-				if (goal == AvatarIKGoal.LeftFoot || goal == AvatarIKGoal.RightFoot)
-				{
-					if (!Warning.logged)
+				case BendModifier.Animation:
+					if (!maintainBendFor1Frame)
 					{
-						LogWarning("Trying to use the 'Arm' bend modifier on a leg.");
+						MaintainBend();
 					}
-					return bendNormal;
-				}
-				Vector3 normalized = (IKPosition - bone1.transform.position).normalized;
-				normalized = Quaternion.Inverse(bone1.transform.parent.rotation * Quaternion.Inverse(parentDefaultRotation)) * normalized;
-				if (goal == AvatarIKGoal.LeftHand)
+
+					maintainBendFor1Frame = false;
+					return Vector3.Lerp(bendNormal, animationNormal, num);
+				case BendModifier.Parent:
 				{
-					normalized.x = 0f - normalized.x;
-				}
-				for (int i = 1; i < axisDirections.Length; i++)
-				{
-					axisDirections[i].dot = Mathf.Clamp(Vector3.Dot(axisDirections[i].direction, normalized), 0f, 1f);
-					axisDirections[i].dot = Interp.Float(axisDirections[i].dot, InterpolationMode.InOutQuintic);
-				}
-				Vector3 vector2 = axisDirections[0].axis;
-				for (int j = 1; j < axisDirections.Length; j++)
-				{
-					vector2 = Vector3.Slerp(vector2, axisDirections[j].axis, axisDirections[j].dot);
-				}
-				if (goal == AvatarIKGoal.LeftHand)
-				{
-					vector2.x = 0f - vector2.x;
-					vector2 = -vector2;
-				}
-				Vector3 vector3 = bone1.transform.parent.rotation * Quaternion.Inverse(parentDefaultRotation) * vector2;
-				if (num >= 1f)
-				{
-					return vector3;
-				}
-				return Vector3.Lerp(bendNormal, vector3, num);
-			}
-			case BendModifier.Goal:
-			{
-				if (bendGoal == null)
-				{
-					if (!Warning.logged)
+					if (bone1.transform.parent == null)
 					{
-						LogWarning("Trying to use the 'Goal' Bend Modifier, but the Bend Goal is unassigned.");
+						return bendNormal;
 					}
-					return bendNormal;
+
+					Quaternion quaternion = bone1.transform.parent.rotation * Quaternion.Inverse(parentDefaultRotation);
+					return Quaternion.Slerp(Quaternion.identity, quaternion * Quaternion.Inverse(defaultRootRotation),
+						num) * bendNormal;
 				}
-				Vector3 vector = Vector3.Cross(bendGoal.position - bone1.transform.position, IKPosition - bone1.transform.position);
-				if (vector == Vector3.zero)
+				case BendModifier.Target:
 				{
-					return bendNormal;
+					Quaternion b = IKRotation * Quaternion.Inverse(bone3DefaultRotation);
+					return Quaternion.Slerp(Quaternion.identity, b, num) * bendNormal;
 				}
-				if (num >= 1f)
+				case BendModifier.Arm:
 				{
-					return vector;
+					if (bone1.transform.parent == null)
+					{
+						return bendNormal;
+					}
+
+					if (goal == AvatarIKGoal.LeftFoot || goal == AvatarIKGoal.RightFoot)
+					{
+						if (!Warning.logged)
+						{
+							LogWarning("Trying to use the 'Arm' bend modifier on a leg.");
+						}
+
+						return bendNormal;
+					}
+
+					Vector3 normalized = (IKPosition - bone1.transform.position).normalized;
+					normalized =
+						Quaternion.Inverse(bone1.transform.parent.rotation *
+						                   Quaternion.Inverse(parentDefaultRotation)) * normalized;
+					if (goal == AvatarIKGoal.LeftHand)
+					{
+						normalized.x = 0f - normalized.x;
+					}
+
+					for (int i = 1; i < axisDirections.Length; i++)
+					{
+						axisDirections[i].dot =
+							Mathf.Clamp(Vector3.Dot(axisDirections[i].direction, normalized), 0f, 1f);
+						axisDirections[i].dot = Interp.Float(axisDirections[i].dot, InterpolationMode.InOutQuintic);
+					}
+
+					Vector3 vector2 = axisDirections[0].axis;
+					for (int j = 1; j < axisDirections.Length; j++)
+					{
+						vector2 = Vector3.Slerp(vector2, axisDirections[j].axis, axisDirections[j].dot);
+					}
+
+					if (goal == AvatarIKGoal.LeftHand)
+					{
+						vector2.x = 0f - vector2.x;
+						vector2 = -vector2;
+					}
+
+					Vector3 vector3 = bone1.transform.parent.rotation * Quaternion.Inverse(parentDefaultRotation) *
+					                  vector2;
+					if (num >= 1f)
+					{
+						return vector3;
+					}
+
+					return Vector3.Lerp(bendNormal, vector3, num);
 				}
-				return Vector3.Lerp(bendNormal, vector, num);
-			}
-			default:
-				return bendNormal;
+				case BendModifier.Goal:
+				{
+					if (bendGoal == null)
+					{
+						if (!Warning.logged)
+						{
+							LogWarning("Trying to use the 'Goal' Bend Modifier, but the Bend Goal is unassigned.");
+						}
+
+						return bendNormal;
+					}
+
+					Vector3 vector = Vector3.Cross(bendGoal.position - bone1.transform.position,
+						IKPosition - bone1.transform.position);
+					if (vector == Vector3.zero)
+					{
+						return bendNormal;
+					}
+
+					if (num >= 1f)
+					{
+						return vector;
+					}
+
+					return Vector3.Lerp(bendNormal, vector, num);
+				}
+				default:
+					return bendNormal;
 			}
 		}
 	}

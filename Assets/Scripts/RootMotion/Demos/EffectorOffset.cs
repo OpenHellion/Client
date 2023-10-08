@@ -5,8 +5,7 @@ namespace RootMotion.Demos
 {
 	public class EffectorOffset : OffsetModifier
 	{
-		[Range(0f, 1f)]
-		public float handsMaintainRelativePositionWeight;
+		[Range(0f, 1f)] public float handsMaintainRelativePositionWeight;
 
 		public Vector3 bodyOffset;
 

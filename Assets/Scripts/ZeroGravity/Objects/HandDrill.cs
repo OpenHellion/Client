@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion;
 using OpenHellion.Net;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,8 +19,7 @@ namespace ZeroGravity.Objects
 
 		public GameObject HurtTrigger;
 
-		[SerializeField]
-		private Transform drillTip;
+		[SerializeField] private Transform drillTip;
 
 		public Transform BatteryPos;
 
@@ -39,8 +39,7 @@ namespace ZeroGravity.Objects
 
 		private bool initiateDrilling;
 
-		[SerializeField]
-		public Animator drillAnimator;
+		[SerializeField] public Animator drillAnimator;
 
 		public Transform rayTransform;
 
@@ -117,18 +116,23 @@ namespace ZeroGravity.Objects
 				{
 					result = 0;
 				}
+
 				return (byte)result != 0;
 			}
 		}
 
 		public override bool CanReloadOnInteract(Item item)
 		{
-			return (Battery == null && item is Battery) || (Canister == null && item is Canister) || (DrillBit == null && item is GenericItem && (item as GenericItem).SubType == GenericItemSubType.DiamondCoreDrillBit);
+			return (Battery == null && item is Battery) || (Canister == null && item is Canister) ||
+			       (DrillBit == null && item is GenericItem &&
+			        (item as GenericItem).SubType == GenericItemSubType.DiamondCoreDrillBit);
 		}
 
 		public void CreateParticle()
 		{
-			drillEffectTransform = GameObject.Instantiate((!(DynamicObj.Parent is MyPlayer)) ? drillingParticle3rd : drillingParticle, (!(DynamicObj.Parent is MyPlayer)) ? TipOfItem : MyPlayer.Instance.MuzzleFlashTransform).transform;
+			drillEffectTransform = GameObject
+				.Instantiate((!(DynamicObj.Parent is MyPlayer)) ? drillingParticle3rd : drillingParticle,
+					(!(DynamicObj.Parent is MyPlayer)) ? TipOfItem : MyPlayer.Instance.MuzzleFlashTransform).transform;
 			drillEffectTransform.Reset();
 			effectScript = drillEffectTransform.GetComponent<DrillEffectScript>();
 		}
@@ -146,6 +150,7 @@ namespace ZeroGravity.Objects
 					isPlayingSpin = true;
 					DrillSoundEffect.Play(0);
 				}
+
 				playerDrillingMessage.isDrilling = true;
 				AsteroidMiningPoint asteroidMiningPoint = null;
 				Collider[] array = Physics.OverlapSphere(drillTip.position, 0.05f);
@@ -157,9 +162,11 @@ namespace ZeroGravity.Objects
 						break;
 					}
 				}
+
 				if (asteroidMiningPoint != null && asteroidMiningPoint.Quantity > 0f)
 				{
-					if (Physics.Raycast(rayTransform.position, TipOfItem.forward, out var hitInfo, 1f, Client.DefaultLayerMask))
+					if (Physics.Raycast(rayTransform.position, TipOfItem.forward, out var hitInfo, 1f,
+						    World.DefaultLayerMask))
 					{
 						drillEffectTransform.forward = hitInfo.normal;
 						effectScript.ToggleEffect(true);
@@ -168,6 +175,7 @@ namespace ZeroGravity.Objects
 							isPlayingDrilling = true;
 							RockDrillingSoundEffect.Play(0);
 						}
+
 						playerDrillingMessage.dontPlayEffect = false;
 					}
 					else if (effectScript != null)
@@ -177,16 +185,22 @@ namespace ZeroGravity.Objects
 							isPlayingDrilling = true;
 							RockDrillingSoundEffect.Play(0);
 						}
+
 						effectScript.ToggleEffect(false);
 						playerDrillingMessage.dontPlayEffect = true;
 					}
+
 					miningTime += Time.deltaTime;
 					miningPoint = asteroidMiningPoint;
 					if (DynamicObj.Parent is MyPlayer)
 					{
 						MyPlayer.Instance.IsUsingItemInHands = true;
-						MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true);
+						MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null,
+							null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+							null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+							null, true);
 					}
+
 					if ((double)miningTime > 0.02)
 					{
 						playerDrillingMessage.MiningTime = miningTime;
@@ -205,6 +219,7 @@ namespace ZeroGravity.Objects
 					{
 						NetworkController.Instance.SendToGameServer(playerDrillingMessage);
 					}
+
 					miningTime = 0f;
 					miningPoint = null;
 					playerDrillingMessage.dontPlayEffect = true;
@@ -214,8 +229,13 @@ namespace ZeroGravity.Objects
 						isPlayingDrilling = false;
 						RockDrillingSoundEffect.Play(1);
 					}
-					MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false);
+
+					MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null,
+						null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+						null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+						false);
 				}
+
 				if ((double)miningTime > 0.02 || flag)
 				{
 					playerDrillingMessage.MiningTime = miningTime;
@@ -227,10 +247,12 @@ namespace ZeroGravity.Objects
 			{
 				PrimaryReleased();
 			}
+
 			return false;
 		}
 
-		public override void TriggerItemAnimation(AnimatorHelper.ReloadType rType, string triggerName, string blendTreeParamName)
+		public override void TriggerItemAnimation(AnimatorHelper.ReloadType rType, string triggerName,
+			string blendTreeParamName)
 		{
 			drillAnimator.SetFloat(blendTreeParamName, (float)rType);
 			drillAnimator.SetTrigger(triggerName);
@@ -252,47 +274,53 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public override void ReloadStepComplete(Player pl, AnimatorHelper.ReloadStepType reloadStepType, ref Item currentReloadItem, ref Item newReloadItem)
+		public override void ReloadStepComplete(Player pl, AnimatorHelper.ReloadStepType reloadStepType,
+			ref Item currentReloadItem, ref Item newReloadItem)
 		{
 			switch (reloadStepType)
 			{
-			case AnimatorHelper.ReloadStepType.ReloadStart:
-				currentReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.LeftInteractBone);
-				UpdateUI();
-				break;
-			case AnimatorHelper.ReloadStepType.ItemSwitch:
-				newReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.LeftInteractBone);
-				if (currentReloadItem != null)
-				{
-					currentReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.Hips, resetTransform: false);
-				}
-				break;
-			case AnimatorHelper.ReloadStepType.ReloadEnd:
-				if (pl is MyPlayer)
-				{
-					pl.Inventory.HandsSlot.UI.UpdateSlot();
+				case AnimatorHelper.ReloadStepType.ReloadStart:
+					currentReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.LeftInteractBone);
+					UpdateUI();
+					break;
+				case AnimatorHelper.ReloadStepType.ItemSwitch:
+					newReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.LeftInteractBone);
 					if (currentReloadItem != null)
+					{
+						currentReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.Hips, resetTransform: false);
+					}
+
+					break;
+				case AnimatorHelper.ReloadStepType.ReloadEnd:
+					if (pl is MyPlayer)
+					{
+						pl.Inventory.HandsSlot.UI.UpdateSlot();
+						if (currentReloadItem != null)
+						{
+							pl.Inventory.AddToInventoryOrDrop(currentReloadItem, null);
+						}
+					}
+
+					UpdateUI();
+					break;
+				case AnimatorHelper.ReloadStepType.UnloadEnd:
+					if (currentReloadItem != null && pl is MyPlayer)
 					{
 						pl.Inventory.AddToInventoryOrDrop(currentReloadItem, null);
 					}
-				}
-				UpdateUI();
-				break;
-			case AnimatorHelper.ReloadStepType.UnloadEnd:
-				if (currentReloadItem != null && pl is MyPlayer)
-				{
-					pl.Inventory.AddToInventoryOrDrop(currentReloadItem, null);
-				}
-				UpdateUI();
-				break;
+
+					UpdateUI();
+					break;
 			}
 		}
 
 		protected override void Awake()
 		{
 			base.Awake();
-			canisterSlot = Slots.FirstOrDefault((KeyValuePair<short, ItemSlot> m) => m.Value.ItemTypes.Contains(ItemType.AltairHandDrillCanister)).Value;
-			drillBitSlot = Slots.FirstOrDefault((KeyValuePair<short, ItemSlot> m) => m.Value.GenericSubTypes.Contains(GenericItemSubType.DiamondCoreDrillBit)).Value;
+			canisterSlot = Slots.FirstOrDefault((KeyValuePair<short, ItemSlot> m) =>
+				m.Value.ItemTypes.Contains(ItemType.AltairHandDrillCanister)).Value;
+			drillBitSlot = Slots.FirstOrDefault((KeyValuePair<short, ItemSlot> m) =>
+				m.Value.GenericSubTypes.Contains(GenericItemSubType.DiamondCoreDrillBit)).Value;
 		}
 
 		protected override void Start()
@@ -302,6 +330,7 @@ namespace ZeroGravity.Objects
 			{
 				DrillCanvas.GetComponent<Canvas>().worldCamera = MyPlayer.Instance.FpsController.MainCamera;
 			}
+
 			DrillCanvas.SetActive(Battery != null);
 		}
 
@@ -316,15 +345,18 @@ namespace ZeroGravity.Objects
 			{
 				DynamicObj.OnPlatform.RemoveFromPlatform(DynamicObj);
 			}
+
 			GetComponent<Collider>().enabled = isEnabled;
 			if (Battery != null)
 			{
 				Battery.GetComponent<Collider>().enabled = false;
 			}
+
 			if (Canister != null)
 			{
 				Canister.GetComponent<Collider>().enabled = false;
 			}
+
 			return true;
 		}
 
@@ -365,10 +397,12 @@ namespace ZeroGravity.Objects
 			{
 				UpdateUI();
 			}
+
 			if (!Timer.Update() || !(Battery != null) || !(Canister != null))
 			{
 				return;
 			}
+
 			UpdateUI();
 			if (Canister.CargoCompartment.Resources != null)
 			{
@@ -381,6 +415,7 @@ namespace ZeroGravity.Objects
 					currentHandDrillResourceIndex++;
 				}
 			}
+
 			UpdateResources();
 		}
 
@@ -392,6 +427,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			EnergyFiller.fillAmount = Battery.BatteryPrecentage;
 			LowPowerMask.SetActive(Battery.BatteryPrecentage <= 0.1f);
 			if (Canister != null)
@@ -415,10 +451,13 @@ namespace ZeroGravity.Objects
 
 		private void UpdateResources()
 		{
-			if (Canister.CargoCompartment != null && Canister.CargoCompartment.Resources != null && currentHandDrillResourceIndex < Canister.CargoCompartment.Resources.Count)
+			if (Canister.CargoCompartment != null && Canister.CargoCompartment.Resources != null &&
+			    currentHandDrillResourceIndex < Canister.CargoCompartment.Resources.Count)
 			{
-				ResourceName.text = Canister.CargoCompartment.Resources[currentHandDrillResourceIndex].ResourceType.ToString().CamelCaseToSpaced().ToUpper();
-				ResourceValue.text = Canister.CargoCompartment.Resources[currentHandDrillResourceIndex].Quantity.ToString("f0");
+				ResourceName.text = Canister.CargoCompartment.Resources[currentHandDrillResourceIndex].ResourceType
+					.ToString().CamelCaseToSpaced().ToUpper();
+				ResourceValue.text = Canister.CargoCompartment.Resources[currentHandDrillResourceIndex].Quantity
+					.ToString("f0");
 				NoOfElements.text = currentHandDrillResourceIndex + 1 + "/" + Canister.CargoCompartment.Resources.Count;
 			}
 		}
@@ -433,28 +472,35 @@ namespace ZeroGravity.Objects
 				DrillSoundEffect.Play(1);
 				isPlayingSpin = false;
 			}
+
 			if (isPlayingDrilling)
 			{
 				RockDrillingSoundEffect.Play(1);
 				isPlayingDrilling = false;
 			}
+
 			if (effectScript != null)
 			{
 				effectScript.ToggleEffect(false);
 			}
+
 			if (DynamicObj.Parent is Player)
 			{
 				(DynamicObj.Parent as Player).IsUsingItemInHands = false;
 			}
+
 			if (DynamicObj.Parent is MyPlayer)
 			{
-				MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false);
+				MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, false);
 				PlayerDrillingMessage playerDrillingMessage = new PlayerDrillingMessage();
 				playerDrillingMessage.isDrilling = false;
 				playerDrillingMessage.dontPlayEffect = true;
 				PlayerDrillingMessage data = playerDrillingMessage;
 				NetworkController.Instance.SendToGameServer(data);
 			}
+
 			UpdateUI();
 		}
 
@@ -464,6 +510,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			if (type != EquipTo)
 			{
 				PrimaryReleased();
@@ -476,6 +523,7 @@ namespace ZeroGravity.Objects
 			{
 				CreateParticle();
 			}
+
 			DrillCanvas.SetActive(Battery != null);
 			UpdateUI();
 		}

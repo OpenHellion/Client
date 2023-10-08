@@ -27,7 +27,8 @@ namespace ZeroGravity
 
 		public void SetSpawnOption(string command)
 		{
-			_003CSetSpawnOption_003Ec__AnonStorey0 _003CSetSpawnOption_003Ec__AnonStorey = new _003CSetSpawnOption_003Ec__AnonStorey0();
+			_003CSetSpawnOption_003Ec__AnonStorey0 _003CSetSpawnOption_003Ec__AnonStorey =
+				new _003CSetSpawnOption_003Ec__AnonStorey0();
 			_003CSetSpawnOption_003Ec__AnonStorey.command = command;
 			_003CSetSpawnOption_003Ec__AnonStorey._0024this = this;
 			GetComponent<Button>().onClick.AddListener(_003CSetSpawnOption_003Ec__AnonStorey._003C_003Em__0);

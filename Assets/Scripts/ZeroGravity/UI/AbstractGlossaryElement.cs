@@ -6,8 +6,7 @@ namespace ZeroGravity.UI
 	{
 		public string Name;
 
-		[TextArea(8, 8)]
-		public string Description;
+		[TextArea(8, 8)] public string Description;
 
 		public Sprite Image;
 

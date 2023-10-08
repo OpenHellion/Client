@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.Serialization;
 using ZeroGravity.Data;
 using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
@@ -8,116 +8,34 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneTriggerDockingPanel : BaseSceneTrigger
 	{
-		[SerializeField]
-		private bool _cancelExecuterAtSameTime;
-
-		[SerializeField]
-		private bool _isExteriorTrigger = true;
-
-		public SceneTriggerExecuter Executer;
+		[FormerlySerializedAs("Executer")] public SceneTriggerExecutor Executor;
 
 		public string ExecuterInteractAction;
 
 		public string ExecuterCancelAction;
 
-		private DockingPanel myDockingPanel;
+		public override bool ExclusivePlayerLocking => true;
 
-		public override bool ExclusivePlayerLocking
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override SceneTriggerType TriggerType => SceneTriggerType.DockingPanel;
 
-		public override SceneTriggerType TriggerType
-		{
-			get
-			{
-				return SceneTriggerType.DockingPanel;
-			}
-		}
+		public override PlayerHandsCheckType PlayerHandsCheck => PlayerHandsCheckType.StoreItemInHands;
 
-		public override PlayerHandsCheckType PlayerHandsCheck
-		{
-			get
-			{
-				return PlayerHandsCheckType.StoreItemInHands;
-			}
-		}
+		public override List<ItemType> PlayerHandsItemType => null;
 
-		public override List<ItemType> PlayerHandsItemType
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public override bool IsNearTrigger => true;
 
-		public override bool IsNearTrigger
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool IsInteractable => true;
 
-		public override bool IsInteractable
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool CameraMovementAllowed => true;
 
-		public override bool CameraMovementAllowed
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public DockingPanel MyDockingPanel => World.InWorldPanels.Docking;
 
-		public bool CancelExecuterAtSameTime
-		{
-			get
-			{
-				return _cancelExecuterAtSameTime;
-			}
-		}
-
-		public bool IsExteriorTrigger
-		{
-			get
-			{
-				return _isExteriorTrigger;
-			}
-		}
-
-		public DockingPanel MyDockingPanel
-		{
-			get
-			{
-				if (myDockingPanel == null)
-				{
-					myDockingPanel = Client.Instance.InGamePanels.Docking;
-				}
-				return myDockingPanel;
-			}
-		}
-
-		public Ship MyParentShip
-		{
-			get
-			{
-				return GetComponentInParent<GeometryRoot>().MainObject as Ship;
-			}
-		}
+		public Ship MyParentShip => GetComponentInParent<GeometryRoot>().MainObject as Ship;
 
 		private void Awake()
 		{
 			StandardTip = Localization.StandardInteractionTip.Docking;
-			if (CheckAuthorizationType == AuthorizationType.none)
+			if (CheckAuthorizationType == AuthorizationType.None)
 			{
 				CheckAuthorizationType = AuthorizationType.AuthorizedOrNoSecurity;
 			}
@@ -127,21 +45,25 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (!CheckAuthorization())
 			{
-				Client.Instance.CanvasManager.CanvasUI.Alert(Localization.UnauthorizedAccess.ToUpper());
+				World.InGameGUI.Alert(Localization.UnauthorizedAccess.ToUpper());
 				return false;
 			}
+
 			if (!base.Interact(player, interactWithOverlappingTriggers))
 			{
 				return false;
 			}
-			if (Executer != null && !ExecuterInteractAction.IsNullOrEmpty())
+
+			if (Executor != null && !ExecuterInteractAction.IsNullOrEmpty())
 			{
-				Executer.ChangeState(ExecuterInteractAction);
+				Executor.ChangeState(ExecuterInteractAction);
 			}
+
 			if (interactWithOverlappingTriggers)
 			{
-				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
+				SceneTriggerHelper.InteractWithOverlappingTriggers(gameObject, this, player);
 			}
+
 			MyDockingPanel.OnInteract(MyParentShip);
 			player.AttachToPanel(this, false);
 			return true;
@@ -150,10 +72,11 @@ namespace ZeroGravity.LevelDesign
 		public override void CancelInteract(MyPlayer player)
 		{
 			base.CancelInteract(player);
-			if (Executer != null && !ExecuterCancelAction.IsNullOrEmpty())
+			if (Executor != null && !ExecuterCancelAction.IsNullOrEmpty())
 			{
-				Executer.ChangeState(ExecuterCancelAction);
+				Executor.ChangeState(ExecuterCancelAction);
 			}
+
 			MyDockingPanel.OnDetach();
 			player.DetachFromPanel();
 		}

@@ -17,12 +17,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using OpenHellion.Social;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using OpenHellion.Social;
 using UnityEngine;
 using UnityEngine.UIElements;
 using ZeroGravity;
@@ -59,15 +59,10 @@ namespace OpenHellion.UI
 		private Button _createScreenBackButton;
 		private Button _createScreenButton;
 
-		private VisualElement _errorBox;
-		private Label _errorTitle;
-		private Label _errorDescription;
-		private Button _errorBoxClose;
-
 		private IEnumerator<string> _shuffledTexts;
 		private IEnumerator<Sprite> _shuffledImages;
 
-		private void OnEnable()
+		private void Awake()
 		{
 			_NakamaClient.OnRequireAuthentication.AddListener(OpenAuthenticationScreen);
 
@@ -94,15 +89,9 @@ namespace OpenHellion.UI
 			_createScreenBackButton = _createAccountScreen.Q("BackButton") as Button;
 			_createScreenButton = _createAccountScreen.Q("CreateAccount") as Button;
 
-			_errorBox = uiDocument.rootVisualElement.Q("ErrorBox");
-			_errorTitle = _errorBox.Q("ErrorTitle") as Label;
-			_errorDescription = _errorBox.Q("ErrorDescription") as Label;
-			_errorBoxClose = _errorBox.Q("ErrorBoxClose") as Button;
-
 			_preloadBottom.visible = false;
 			_authenticationScreen.visible = false;
 			_createAccountScreen.visible = false;
-			_errorBox.visible = false;
 
 			_preloadBackground.style.backgroundImage = new StyleBackground(_PreloadImages[0]);
 
@@ -119,12 +108,13 @@ namespace OpenHellion.UI
 			_createScreenButton.clicked += CreateNewAccount;
 		}
 
-		private void OnDisable()
+		private void OnDestroy()
 		{
 			CloseAuthenticationScreen();
 			CloseCreateAccountScreen();
 			ClosePreloading();
-			CloseErrorBox();
+
+			_NakamaClient.OnRequireAuthentication.RemoveListener(OpenAuthenticationScreen);
 		}
 
 		private void OpenAuthenticationScreen()
@@ -140,7 +130,7 @@ namespace OpenHellion.UI
 
 			if (!Regex.IsMatch(email, "\\S+@\\S+\\.\\w+"))
 			{
-				ShowErrorMessage(Localization.Error, Localization.InvalidEmail, null);
+				GlobalGUI.ShowErrorMessage(Localization.Error, Localization.InvalidEmail, null);
 				return;
 			}
 
@@ -172,7 +162,7 @@ namespace OpenHellion.UI
 		{
 			if (!_createScreenConsent.value)
 			{
-				ShowErrorMessage(Localization.Error, Localization.ConsentToDataStorage, null);
+				GlobalGUI.ShowErrorMessage(Localization.Error, Localization.ConsentToDataStorage, null);
 				return;
 			}
 
@@ -183,13 +173,13 @@ namespace OpenHellion.UI
 
 			if (Regex.IsMatch(username, "[^a-z0-9_.]"))
 			{
-				ShowErrorMessage(Localization.Error, Localization.InvalidUsername, null);
+				GlobalGUI.ShowErrorMessage(Localization.Error, Localization.InvalidUsername, null);
 				return;
 			}
 
 			if (!Regex.IsMatch(email, "\\S+@\\S+\\.\\w+"))
 			{
-				ShowErrorMessage(Localization.Error, Localization.InvalidEmail, null);
+				GlobalGUI.ShowErrorMessage(Localization.Error, Localization.InvalidEmail, null);
 				return;
 			}
 
@@ -206,7 +196,6 @@ namespace OpenHellion.UI
 				Dbg.Log("Successfully created a new Nakama account.");
 				CloseCreateAccountScreen();
 			}
-
 		}
 
 		private void CloseCreateAccountScreen()
@@ -248,21 +237,6 @@ namespace OpenHellion.UI
 			_preloadText.text = _shuffledTexts.GetNextInLoop();
 			_preloadBackground.style.backgroundImage = new StyleBackground(_shuffledImages.GetNextInLoop());
 			yield return new WaitForSeconds(10f);
-		}
-
-		public void ShowErrorMessage(string title, string text, Action onClose)
-		{
-			_errorBox.visible = true;
-			_errorTitle.text = title;
-			_errorDescription.text = text;
-
-			_errorBoxClose.clicked += CloseErrorBox;
-			_errorBoxClose.clicked += onClose;
-		}
-
-		private void CloseErrorBox()
-		{
-			_errorBox.visible = false;
 		}
 	}
 }

@@ -35,10 +35,12 @@ namespace ZeroGravity.ShipComponents
 					}
 				}
 			}
+
 			if (EnabledObjects == null || EnabledObjects.Count <= 0)
 			{
 				return;
 			}
+
 			foreach (GameObject enabledObject in EnabledObjects)
 			{
 				if (enabledObject != null)

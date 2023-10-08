@@ -40,6 +40,7 @@ public class BulletHoleDestroyer : MonoBehaviour
 			yield return new WaitForEndOfFrame();
 			lerpHelper += lerpStep * Time.deltaTime;
 		}
+
 		Destroy(gameObject);
 	}
 }

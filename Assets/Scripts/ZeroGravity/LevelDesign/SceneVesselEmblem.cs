@@ -49,22 +49,27 @@ namespace ZeroGravity.LevelDesign
 				{
 					Textures.TryGetValue(emblemId, out value);
 				}
+
 				if (value == null)
 				{
 					value = EmptyEmblem;
 				}
+
 				matInstance.mainTexture = value;
 				if (matInstance.HasProperty("_SpecularTex"))
 				{
 					matInstance.SetTexture("_SpecularTex", value);
 				}
+
 				if (matInstance.HasProperty("_MaskTex"))
 				{
 				}
+
 				if (matInstance.HasProperty("_SmoothnessTex"))
 				{
 					matInstance.SetTexture("_SmoothnessTex", value);
 				}
+
 				if (matInstance.HasProperty("_SpecularMultiplier"))
 				{
 					matInstance.SetColor("_SpecularMultiplier", Color.white);

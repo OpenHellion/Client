@@ -23,8 +23,10 @@ namespace ZeroGravity.Data
 				{
 					dictionary[item.ResourceType] = item.Quantity;
 				}
+
 				return dictionary;
 			}
+
 			return dictionary;
 		}
 
@@ -41,8 +43,10 @@ namespace ZeroGravity.Data
 						Quantity = item.Value
 					});
 				}
+
 				return list;
 			}
+
 			return list;
 		}
 	}

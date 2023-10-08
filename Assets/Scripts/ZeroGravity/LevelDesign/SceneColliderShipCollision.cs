@@ -8,10 +8,7 @@ namespace ZeroGravity.LevelDesign
 
 		public SceneColliderType Type
 		{
-			get
-			{
-				return SceneColliderType.ShipCollision;
-			}
+			get { return SceneColliderType.ShipCollision; }
 		}
 	}
 }

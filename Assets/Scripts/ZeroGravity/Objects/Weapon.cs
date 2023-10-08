@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenHellion;
 using UnityEngine;
 using ZeroGravity.CharacterMovement;
 using ZeroGravity.Data;
@@ -13,21 +14,17 @@ namespace ZeroGravity.Objects
 	{
 		public float CrouchAimMultiplier;
 
-		[SerializeField]
-		private Transform magazinePos;
+		[SerializeField] private Transform magazinePos;
 
-		[SerializeField]
-		private Transform NormalTipOfTheGun;
+		[SerializeField] private Transform NormalTipOfTheGun;
 
-		[SerializeField]
-		private Transform SpecialTipOfTheGun;
+		[SerializeField] private Transform SpecialTipOfTheGun;
 
 		private float lastFireTime;
 
 		private ItemSlot magazineSlot;
 
-		[Title("Effects and anims")]
-		public GameObject MuzzleFlash;
+		[Title("Effects and anims")] public GameObject MuzzleFlash;
 
 		public GameObject ImpactEffects;
 
@@ -35,18 +32,15 @@ namespace ZeroGravity.Objects
 
 		public MuzzleActivator currentMuzzle;
 
-		[Title("Mods")]
-		public List<WeaponMod> Mods;
+		[Title("Mods")] public List<WeaponMod> Mods;
 
-		[HideInInspector]
-		public WeaponMod CurrentWeaponMod;
+		[HideInInspector] public WeaponMod CurrentWeaponMod;
 
 		public bool CanZoom;
 
 		private bool isSpecialStance;
 
-		[Title("Sounds")]
-		public SoundEffect SoundEffect;
+		[Title("Sounds")] public SoundEffect SoundEffect;
 
 		private int shootingLayerMask;
 
@@ -56,7 +50,8 @@ namespace ZeroGravity.Objects
 
 		public override Transform TipOfItem => (!IsSpecialStance) ? NormalTipOfTheGun : SpecialTipOfTheGun;
 
-		public Vector2 CurrentRecoil => (!IsSpecialStance) ? CurrentWeaponMod.NormalRecoil : CurrentWeaponMod.SpecialRecoil;
+		public Vector2 CurrentRecoil =>
+			(!IsSpecialStance) ? CurrentWeaponMod.NormalRecoil : CurrentWeaponMod.SpecialRecoil;
 
 		public float Range => CurrentWeaponMod.Range;
 
@@ -68,16 +63,14 @@ namespace ZeroGravity.Objects
 
 		public bool IsSpecialStance
 		{
-			get
-			{
-				return isSpecialStance;
-			}
+			get { return isSpecialStance; }
 			set
 			{
 				if (CanZoom)
 				{
 					ToggleZoomCamera(value);
 				}
+
 				isSpecialStance = value;
 			}
 		}
@@ -85,13 +78,11 @@ namespace ZeroGravity.Objects
 		protected override void Awake()
 		{
 			base.Awake();
-			if (Client.IsGameBuild)
-			{
-				animHelper = MyPlayer.Instance.animHelper;
-			}
+			animHelper = MyPlayer.Instance.animHelper;
 			CurrentWeaponMod = Mods[0];
 			shootingLayerMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("FirstPerson"));
-			magazineSlot = Slots.FirstOrDefault((KeyValuePair<short, ItemSlot> m) => m.Value.ItemTypes.FirstOrDefault(ItemTypeRange.IsAmmo) != ItemType.None).Value;
+			magazineSlot = Slots.FirstOrDefault((KeyValuePair<short, ItemSlot> m) =>
+				m.Value.ItemTypes.FirstOrDefault(ItemTypeRange.IsAmmo) != ItemType.None).Value;
 		}
 
 		public override void UpdateUI()
@@ -112,20 +103,22 @@ namespace ZeroGravity.Objects
 				MyPlayer instance = MyPlayer.Instance;
 				if (instance.CurrentStance == MyPlayer.PlayerStance.Special)
 				{
-					instance.ChangeCamerasFov(Client.Instance.DefaultCameraFov);
+					instance.ChangeCamerasFov(Globals.Instance.DefaultCameraFov);
 					instance.ChangeStance(MyPlayer.PlayerStance.Active, ActiveSpeedMultiplier);
 					IsSpecialStance = false;
 					UpdateUI();
 				}
 				else
 				{
-					instance.ChangeCamerasFov(Client.Instance.SpecialCameraFov);
+					instance.ChangeCamerasFov(Globals.Instance.SpecialCameraFov);
 					instance.ChangeStance(MyPlayer.PlayerStance.Special, SpecialSpeedMultiplier);
 					IsSpecialStance = true;
 					UpdateUI();
 				}
+
 				return true;
 			}
+
 			return false;
 		}
 
@@ -139,11 +132,13 @@ namespace ZeroGravity.Objects
 			List<Magazine> list = new List<Magazine>();
 			foreach (InventorySlot value in MyPlayer.Instance.Inventory.GetAllSlots().Values)
 			{
-				if (value.Item != null && value.Item.Type == ReloadWithTypes[0] && (value.Item as Magazine).Quantity > 0f)
+				if (value.Item != null && value.Item.Type == ReloadWithTypes[0] &&
+				    (value.Item as Magazine).Quantity > 0f)
 				{
 					list.Add(value.Item as Magazine);
 				}
 			}
+
 			if (list.Count > 0)
 			{
 				list.OrderBy((Magazine x) => x.Quantity).Reverse();
@@ -158,8 +153,11 @@ namespace ZeroGravity.Objects
 				Magazine newReloadingItem = (Magazine)newItem;
 				if (magazinePos is not null)
 				{
-					MyPlayer.Instance.ChangeCamerasFov(Client.Instance.DefaultCameraFov);
-					MyPlayer.Instance.ReloadItem(newReloadingItem, Magazine, (!(Magazine != null)) ? AnimatorHelper.ReloadType.JustLoad : AnimatorHelper.ReloadType.FullReload, Type);
+					MyPlayer.Instance.ChangeCamerasFov(Globals.Instance.DefaultCameraFov);
+					MyPlayer.Instance.ReloadItem(newReloadingItem, Magazine,
+						(!(Magazine != null))
+							? AnimatorHelper.ReloadType.JustLoad
+							: AnimatorHelper.ReloadType.FullReload, Type);
 					ToggleZoomCamera(status: false);
 				}
 			}
@@ -185,21 +183,30 @@ namespace ZeroGravity.Objects
 					Vector3 euler = CalculateRecoil(CurrentRecoil.x, CurrentRecoil.y);
 					if (MyPlayer.Instance.CurrentStance == MyPlayer.PlayerStance.Active)
 					{
-						Vector3 vector = fpsController.MainCamera.transform.position + fpsController.MouseLookXTransform.forward * CurrentWeaponMod.Range + CalculateRecoil(CurrentRecoil.x, CurrentRecoil.y) - TipOfItem.position;
+						Vector3 vector = fpsController.MainCamera.transform.position +
+							fpsController.MouseLookXTransform.forward * CurrentWeaponMod.Range +
+							CalculateRecoil(CurrentRecoil.x, CurrentRecoil.y) - TipOfItem.position;
 					}
 					else
 					{
 						Vector3 vector = TipOfItem.forward;
 					}
-					SpaceObject spaceObject = ((!(MyPlayer.Instance.Parent is SpaceObjectVessel)) ? MyPlayer.Instance.Parent : (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel);
+
+					SpaceObject spaceObject = ((!(MyPlayer.Instance.Parent is SpaceObjectVessel))
+						? MyPlayer.Instance.Parent
+						: (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel);
 					ShotData shotData = new ShotData();
-					shotData.Position = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) * MyPlayer.Instance.FpsController.MainCamera.transform.position).ToArray();
-					shotData.Orientation = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) * MyPlayer.Instance.FpsController.MainCamera.transform.forward.normalized).ToArray();
+					shotData.Position = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) *
+					                     MyPlayer.Instance.FpsController.MainCamera.transform.position).ToArray();
+					shotData.Orientation = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) *
+					                        MyPlayer.Instance.FpsController.MainCamera.transform.forward.normalized)
+						.ToArray();
 					shotData.parentGUID = spaceObject.GUID;
 					shotData.parentType = spaceObject.Type;
 					shotData.Range = Range;
 					ShotData shotData2 = shotData;
-					MyPlayer.Instance.Attack(shotData2, this, CurrentWeaponMod.ThrustPerShot, CurrentWeaponMod.RotationPerShot);
+					MyPlayer.Instance.Attack(shotData2, this, CurrentWeaponMod.ThrustPerShot,
+						CurrentWeaponMod.RotationPerShot);
 					animHelper.SetParameterTrigger(AnimatorHelper.Triggers.Shoot);
 					StartCoroutine(MyPlayer.Instance.FpsController.AddCharacterRotationByTime(euler, 0.2f));
 				}
@@ -210,7 +217,8 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public void ConsumeShotAndPlayEffect(RaycastHit hit, BulletImpact.BulletImpactType bulletImpactType, Vector3 direction)
+		public void ConsumeShotAndPlayEffect(RaycastHit hit, BulletImpact.BulletImpactType bulletImpactType,
+			Vector3 direction)
 		{
 			Magazine.ChangeQuantity(-1f);
 			currentMuzzle.ActivateMuzzle();
@@ -219,7 +227,8 @@ namespace ZeroGravity.Objects
 			PlayBulletHitEffect(hit, bulletImpactType, direction);
 		}
 
-		public void PlayBulletHitEffect(RaycastHit hitInfo, BulletImpact.BulletImpactType bulletImpactType, Vector3 direction)
+		public void PlayBulletHitEffect(RaycastHit hitInfo, BulletImpact.BulletImpactType bulletImpactType,
+			Vector3 direction)
 		{
 			if (hitInfo.collider != null)
 			{
@@ -228,39 +237,45 @@ namespace ZeroGravity.Objects
 				Vector3 point = hitInfo.point;
 				switch (bulletImpactType)
 				{
-				case BulletImpact.BulletImpactType.Metal:
-					bulletImpact = Client.Instance.EffectPrefabs.BulletHitMetal;
-					point = hitInfo.point + hitInfo.normal * 0.1f;
-					forward = hitInfo.normal;
-					break;
-				case BulletImpact.BulletImpactType.Flesh:
-					bulletImpact = Client.Instance.EffectPrefabs.BulletHitFlesh;
-					point = hitInfo.point;
-					forward = direction;
-					break;
-				case BulletImpact.BulletImpactType.Object:
-					bulletImpact = Client.Instance.EffectPrefabs.BulletHitObject;
-					point = hitInfo.point + hitInfo.normal * 0.1f;
-					forward = hitInfo.normal;
-					break;
+					case BulletImpact.BulletImpactType.Metal:
+						bulletImpact = World.EffectPrefabs.BulletHitMetal;
+						point = hitInfo.point + hitInfo.normal * 0.1f;
+						forward = hitInfo.normal;
+						break;
+					case BulletImpact.BulletImpactType.Flesh:
+						bulletImpact = World.EffectPrefabs.BulletHitFlesh;
+						point = hitInfo.point;
+						forward = direction;
+						break;
+					case BulletImpact.BulletImpactType.Object:
+						bulletImpact = World.EffectPrefabs.BulletHitObject;
+						point = hitInfo.point + hitInfo.normal * 0.1f;
+						forward = hitInfo.normal;
+						break;
 				}
+
 				BulletImpact component = GameObject.Instantiate(bulletImpact.gameObject).GetComponent<BulletImpact>();
 				component.transform.position = hitInfo.point + hitInfo.normal * 0.1f;
 				component.transform.forward = forward;
 				if (bulletImpact.Decal != null)
 				{
-					MeshRenderer componentInChildren = component.Decal.GetComponentInChildren<MeshRenderer>(includeInactive: true);
-					MeshRenderer componentInChildren2 = bulletImpact.Decal.GetComponentInChildren<MeshRenderer>(includeInactive: true);
+					MeshRenderer componentInChildren =
+						component.Decal.GetComponentInChildren<MeshRenderer>(includeInactive: true);
+					MeshRenderer componentInChildren2 =
+						bulletImpact.Decal.GetComponentInChildren<MeshRenderer>(includeInactive: true);
 					componentInChildren.sharedMaterial = componentInChildren2.sharedMaterial;
 					component.Decal.transform.SetParent(hitInfo.transform);
 				}
+
 				component.Play();
 			}
 		}
 
 		public Vector3 CalculateRecoil(float maxHorizontal, float maxVertical)
 		{
-			return new Vector3(UnityEngine.Random.Range(0f - maxVertical, 0f), UnityEngine.Random.Range(0f - maxHorizontal, maxHorizontal), 0f) * ((!MyPlayer.Instance.FpsController.IsCrouch) ? 1f : CrouchAimMultiplier);
+			return new Vector3(UnityEngine.Random.Range(0f - maxVertical, 0f),
+				       UnityEngine.Random.Range(0f - maxHorizontal, maxHorizontal), 0f) *
+			       ((!MyPlayer.Instance.FpsController.IsCrouch) ? 1f : CrouchAimMultiplier);
 		}
 
 		public void ChangeMod(int mod, bool send = true)
@@ -273,11 +288,13 @@ namespace ZeroGravity.Objects
 				{
 					SetMuzzleFlash();
 				}
+
 				if (send)
 				{
 					SetStatsForSending(mod);
 				}
-				Client.Instance.CanvasManager.CanvasUI.HelmetHud.CheckFireMod();
+
+				World.InGameGUI.HelmetHud.CheckFireMod();
 			}
 		}
 
@@ -299,7 +316,9 @@ namespace ZeroGravity.Objects
 			{
 				GameObject.Destroy(MyPlayer.Instance.MuzzleFlashTransform.GetChild(0).gameObject);
 			}
-			currentMuzzle = GameObject.Instantiate(MuzzleFlash, NormalTipOfTheGun.position, NormalTipOfTheGun.rotation).GetComponent<MuzzleActivator>();
+
+			currentMuzzle = GameObject.Instantiate(MuzzleFlash, NormalTipOfTheGun.position, NormalTipOfTheGun.rotation)
+				.GetComponent<MuzzleActivator>();
 			currentMuzzle.transform.SetParent(MyPlayer.Instance.MuzzleFlashTransform);
 		}
 
@@ -311,7 +330,7 @@ namespace ZeroGravity.Objects
 
 		private void LateUpdate()
 		{
-			if (DynamicObj.Parent is MyPlayer && Client.IsGameBuild && MyPlayer.Instance.CurrentActiveItem == this)
+			if (DynamicObj.Parent is MyPlayer && MyPlayer.Instance.CurrentActiveItem == this)
 			{
 				if (currentMuzzle.transform != MyPlayer.Instance.MuzzleFlashTransform)
 				{
@@ -319,6 +338,7 @@ namespace ZeroGravity.Objects
 					currentMuzzle.transform.localPosition = Vector3.zero;
 					currentMuzzle.transform.localRotation = Quaternion.identity;
 				}
+
 				MyPlayer.Instance.MuzzleFlashTransform.position = NormalTipOfTheGun.position;
 				MyPlayer.Instance.MuzzleFlashTransform.rotation = NormalTipOfTheGun.rotation;
 			}
@@ -330,6 +350,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			if (pl is OtherPlayer)
 			{
 				(pl as OtherPlayer).CurrentWeapon = ((type != EquipTo) ? null : this);
@@ -337,7 +358,10 @@ namespace ZeroGravity.Objects
 				{
 					GameObject.Destroy(NormalTipOfTheGun.GetChild(0).gameObject);
 				}
-				currentMuzzle = GameObject.Instantiate(MuzzleFlash, NormalTipOfTheGun.position, NormalTipOfTheGun.rotation).GetComponent<MuzzleActivator>();
+
+				currentMuzzle = GameObject
+					.Instantiate(MuzzleFlash, NormalTipOfTheGun.position, NormalTipOfTheGun.rotation)
+					.GetComponent<MuzzleActivator>();
 				currentMuzzle.transform.SetParent(NormalTipOfTheGun);
 				currentMuzzle.currentSmoke.SetActive(value: false);
 			}
@@ -372,6 +396,7 @@ namespace ZeroGravity.Objects
 			{
 				ChangeMod(weaponStats.CurrentMod.Value, send: false);
 			}
+
 			UpdateUI();
 		}
 
@@ -386,17 +411,20 @@ namespace ZeroGravity.Objects
 			{
 				return true;
 			}
+
 			if (mySlot.SlotType == InventorySlot.Type.Hands && nextSlot.CanFitItem(this))
 			{
 				inv.ExitCombatStance();
 				return false;
 			}
+
 			if (Magazine != null && nextSlot.Item == null && nextSlot.CanFitItem(Magazine) && nextSlot.SlotType != 0)
 			{
 				inv.AddToInventory(Magazine, nextSlot, null);
 				UpdateUI();
 				return true;
 			}
+
 			return false;
 		}
 
@@ -412,6 +440,7 @@ namespace ZeroGravity.Objects
 			{
 				Magazine.GetComponent<Collider>().enabled = false;
 			}
+
 			return true;
 		}
 
@@ -428,35 +457,40 @@ namespace ZeroGravity.Objects
 					RateOfFire = mod.RateOfFire
 				});
 			}
+
 			WeaponData baseAuxData = GetBaseAuxData<WeaponData>();
 			baseAuxData.weaponMods = list;
 			baseAuxData.CurrentMod = Mods.IndexOf(CurrentWeaponMod);
 			return baseAuxData;
 		}
 
-		public override void ReloadStepComplete(Player pl, AnimatorHelper.ReloadStepType reloadStepType, ref Item currentReloadItem, ref Item newReloadItem)
+		public override void ReloadStepComplete(Player pl, AnimatorHelper.ReloadStepType reloadStepType,
+			ref Item currentReloadItem, ref Item newReloadItem)
 		{
 			switch (reloadStepType)
 			{
-			case AnimatorHelper.ReloadStepType.ReloadStart:
-				currentReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.LeftInteractBone);
-				break;
-			case AnimatorHelper.ReloadStepType.ItemSwitch:
-				newReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.LeftInteractBone);
-				if (currentReloadItem != null)
-				{
-					currentReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.Hips, resetTransform: false);
-				}
-				break;
-			case AnimatorHelper.ReloadStepType.ReloadEnd:
-				newReloadItem.RequestAttach(magazineSlot);
-				UpdateUI();
-				break;
-			case AnimatorHelper.ReloadStepType.UnloadEnd:
-				UpdateUI();
-				break;
+				case AnimatorHelper.ReloadStepType.ReloadStart:
+					currentReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.LeftInteractBone);
+					break;
+				case AnimatorHelper.ReloadStepType.ItemSwitch:
+					newReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.LeftInteractBone);
+					if (currentReloadItem != null)
+					{
+						currentReloadItem.AttachToBone(pl, AnimatorHelper.HumanBones.Hips, resetTransform: false);
+					}
+
+					break;
+				case AnimatorHelper.ReloadStepType.ReloadEnd:
+					newReloadItem.RequestAttach(magazineSlot);
+					UpdateUI();
+					break;
+				case AnimatorHelper.ReloadStepType.UnloadEnd:
+					UpdateUI();
+					break;
 			}
-			if (IsSpecialStance && CanZoom && (reloadStepType == AnimatorHelper.ReloadStepType.ReloadEnd || reloadStepType == AnimatorHelper.ReloadStepType.UnloadEnd))
+
+			if (IsSpecialStance && CanZoom && (reloadStepType == AnimatorHelper.ReloadStepType.ReloadEnd ||
+			                                   reloadStepType == AnimatorHelper.ReloadStepType.UnloadEnd))
 			{
 				ToggleZoomCamera(status: true);
 			}

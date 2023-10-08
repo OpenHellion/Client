@@ -11,6 +11,7 @@ namespace RootMotion
 			{
 				return Vector3.zero;
 			}
+
 			return Vector3.Project(v, verticalAxis) * weight;
 		}
 
@@ -20,29 +21,34 @@ namespace RootMotion
 			{
 				return Vector3.zero;
 			}
+
 			Vector3 tangent = v;
 			Vector3.OrthoNormalize(ref normal, ref tangent);
 			return Vector3.Project(v, tangent) * weight;
 		}
 
-		public static Vector3 ClampDirection(Vector3 direction, Vector3 normalDirection, float clampWeight, int clampSmoothing, out bool changed)
+		public static Vector3 ClampDirection(Vector3 direction, Vector3 normalDirection, float clampWeight,
+			int clampSmoothing, out bool changed)
 		{
 			changed = false;
 			if (clampWeight <= 0f)
 			{
 				return direction;
 			}
+
 			if (clampWeight >= 1f)
 			{
 				changed = true;
 				return normalDirection;
 			}
+
 			float num = Vector3.Angle(normalDirection, direction);
 			float num2 = 1f - num / 180f;
 			if (num2 > clampWeight)
 			{
 				return direction;
 			}
+
 			changed = true;
 			float num3 = ((!(clampWeight > 0f)) ? 1f : Mathf.Clamp(1f - (clampWeight - num2) / (1f - num2), 0f, 1f));
 			float num4 = ((!(clampWeight > 0f)) ? 1f : Mathf.Clamp(num2 / clampWeight, 0f, 1f));
@@ -51,6 +57,7 @@ namespace RootMotion
 				float f = num4 * (float)Math.PI * 0.5f;
 				num4 = Mathf.Sin(f);
 			}
+
 			return Vector3.Slerp(normalDirection, direction, num4 * num3);
 		}
 
@@ -62,6 +69,7 @@ namespace RootMotion
 			{
 				return Vector3.zero;
 			}
+
 			float num3 = num / num2;
 			return origin + direction.normalized * num3;
 		}

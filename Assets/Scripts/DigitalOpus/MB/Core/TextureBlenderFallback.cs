@@ -37,8 +37,10 @@ namespace DigitalOpus.MB.Core
 		{
 			if (m_doTintColor)
 			{
-				return new Color(pixelColor.r * m_tintColor.r, pixelColor.g * m_tintColor.g, pixelColor.b * m_tintColor.b, pixelColor.a * m_tintColor.a);
+				return new Color(pixelColor.r * m_tintColor.r, pixelColor.g * m_tintColor.g,
+					pixelColor.b * m_tintColor.b, pixelColor.a * m_tintColor.a);
 			}
+
 			return pixelColor;
 		}
 
@@ -48,6 +50,7 @@ namespace DigitalOpus.MB.Core
 			{
 				return true;
 			}
+
 			return false;
 		}
 
@@ -65,6 +68,7 @@ namespace DigitalOpus.MB.Core
 			{
 				return new Color(0.5f, 0.5f, 1f);
 			}
+
 			if (texProperty.name.Equals("_MainTex"))
 			{
 				if (mat != null && mat.HasProperty("_Color"))
@@ -95,6 +99,7 @@ namespace DigitalOpus.MB.Core
 							{
 							}
 						}
+
 						Debug.LogWarning(color);
 						return color;
 					}
@@ -121,6 +126,7 @@ namespace DigitalOpus.MB.Core
 							{
 							}
 						}
+
 						return result;
 					}
 					catch (Exception)
@@ -134,10 +140,12 @@ namespace DigitalOpus.MB.Core
 				{
 					return new Color(0f, 0f, 0f, 0f);
 				}
+
 				if (texProperty.name.Equals("_OcclusionMap"))
 				{
 					return new Color(1f, 1f, 1f, 1f);
 				}
+
 				if (texProperty.name.Equals("_EmissionMap"))
 				{
 					if (mat != null && mat.HasProperty("_EmissionScaleUI"))
@@ -153,6 +161,7 @@ namespace DigitalOpus.MB.Core
 								{
 									return new Color(float2, float2, float2, float2);
 								}
+
 								return color3;
 							}
 							catch (Exception)
@@ -177,6 +186,7 @@ namespace DigitalOpus.MB.Core
 					return new Color(0f, 0f, 0f, 0f);
 				}
 			}
+
 			return new Color(1f, 1f, 1f, 0f);
 		}
 
@@ -188,14 +198,17 @@ namespace DigitalOpus.MB.Core
 			{
 				color = a.GetColor(propertyName);
 			}
+
 			if (b.HasProperty(propertyName))
 			{
 				color2 = b.GetColor(propertyName);
 			}
+
 			if (color != color2)
 			{
 				return false;
 			}
+
 			return true;
 		}
 
@@ -207,14 +220,17 @@ namespace DigitalOpus.MB.Core
 			{
 				num = a.GetFloat(propertyName);
 			}
+
 			if (b.HasProperty(propertyName))
 			{
 				num2 = b.GetFloat(propertyName);
 			}
+
 			if (num != num2)
 			{
 				return false;
 			}
+
 			return true;
 		}
 	}

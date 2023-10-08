@@ -27,26 +27,19 @@ namespace ZeroGravity.Objects
 
 		private int currentGun;
 
-		[SerializeField]
-		private Transform baseTransform;
+		[SerializeField] private Transform baseTransform;
 
-		[SerializeField]
-		private Transform gunsTransform;
+		[SerializeField] private Transform gunsTransform;
 
-		[SerializeField]
-		private Transform leftGunTransform;
+		[SerializeField] private Transform leftGunTransform;
 
-		[SerializeField]
-		private Transform rightGunTransform;
+		[SerializeField] private Transform rightGunTransform;
 
 		private float lerpValue;
 
 		private void Start()
 		{
-			if (Client.IsGameBuild)
-			{
-				mainCamera = MyPlayer.Instance.FpsController.MainCamera.transform;
-			}
+			mainCamera = MyPlayer.Instance.FpsController.MainCamera.transform;
 			EventSystem.AddListener(typeof(TurretShootingMessage), ShootingDataListener);
 		}
 
@@ -64,6 +57,7 @@ namespace ZeroGravity.Objects
 				forward = Quaternion.AngleAxis(x, vector) * forward;
 				up = Vector3.Cross(forward, vector);
 			}
+
 			if (freezeBase)
 			{
 				lerpValue = 0f;

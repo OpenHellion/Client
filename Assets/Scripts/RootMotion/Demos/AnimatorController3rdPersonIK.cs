@@ -7,11 +7,9 @@ namespace RootMotion.Demos
 	[RequireComponent(typeof(FullBodyBipedIK))]
 	public class AnimatorController3rdPersonIK : AnimatorController3rdPerson
 	{
-		[SerializeField]
-		private bool useIK = true;
+		[SerializeField] private bool useIK = true;
 
-		[Range(0f, 1f)]
-		public float headLookWeight = 1f;
+		[Range(0f, 1f)] public float headLookWeight = 1f;
 
 		public Vector3 gunHoldOffset;
 
@@ -53,6 +51,7 @@ namespace RootMotion.Demos
 			{
 				useIK = !useIK;
 			}
+
 			if (useIK)
 			{
 				Read();
@@ -65,7 +64,8 @@ namespace RootMotion.Demos
 		private void Read()
 		{
 			leftHandPosRelToRightHand = ik.references.rightHand.InverseTransformPoint(ik.references.leftHand.position);
-			leftHandRotRelToRightHand = Quaternion.Inverse(ik.references.rightHand.rotation) * ik.references.leftHand.rotation;
+			leftHandRotRelToRightHand =
+				Quaternion.Inverse(ik.references.rightHand.rotation) * ik.references.leftHand.rotation;
 		}
 
 		private void AimIK()
@@ -89,8 +89,10 @@ namespace RootMotion.Demos
 
 		private void HeadLookAt(Vector3 lookAtTarget)
 		{
-			Quaternion b = Quaternion.FromToRotation(ik.references.head.rotation * headLookAxis, lookAtTarget - ik.references.head.position);
-			ik.references.head.rotation = Quaternion.Lerp(Quaternion.identity, b, headLookWeight) * ik.references.head.rotation;
+			Quaternion b = Quaternion.FromToRotation(ik.references.head.rotation * headLookAxis,
+				lookAtTarget - ik.references.head.position);
+			ik.references.head.rotation =
+				Quaternion.Lerp(Quaternion.identity, b, headLookWeight) * ik.references.head.rotation;
 		}
 	}
 }

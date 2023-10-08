@@ -72,16 +72,21 @@ namespace DigitalOpus.MB.Core
 		{
 			if (propertyToDo == Prop.doColor)
 			{
-				return new Color(pixelColor.r * m_tintColor.r, pixelColor.g * m_tintColor.g, pixelColor.b * m_tintColor.b, pixelColor.a * m_tintColor.a);
+				return new Color(pixelColor.r * m_tintColor.r, pixelColor.g * m_tintColor.g,
+					pixelColor.b * m_tintColor.b, pixelColor.a * m_tintColor.a);
 			}
+
 			if (propertyToDo == Prop.doSpecular)
 			{
 				return pixelColor;
 			}
+
 			if (propertyToDo == Prop.doEmission)
 			{
-				return new Color(pixelColor.r * m_emission.r, pixelColor.g * m_emission.g, pixelColor.b * m_emission.b, pixelColor.a * m_emission.a);
+				return new Color(pixelColor.r * m_emission.r, pixelColor.g * m_emission.g, pixelColor.b * m_emission.b,
+					pixelColor.a * m_emission.a);
 			}
+
 			return pixelColor;
 		}
 
@@ -91,18 +96,22 @@ namespace DigitalOpus.MB.Core
 			{
 				return false;
 			}
+
 			if (!TextureBlenderFallback._compareColor(a, b, m_defaultSpecular, "_SpecColor"))
 			{
 				return false;
 			}
+
 			if (!TextureBlenderFallback._compareFloat(a, b, m_defaultGlossiness, "_Glossiness"))
 			{
 				return false;
 			}
+
 			if (!TextureBlenderFallback._compareColor(a, b, m_defaultEmission, "_EmissionColor"))
 			{
 				return false;
 			}
+
 			return true;
 		}
 
@@ -127,6 +136,7 @@ namespace DigitalOpus.MB.Core
 			{
 				return new Color(0.5f, 0.5f, 1f);
 			}
+
 			if (texPropertyName.name.Equals("_MainTex"))
 			{
 				if (mat != null && mat.HasProperty("_Color"))
@@ -159,6 +169,7 @@ namespace DigitalOpus.MB.Core
 							{
 							}
 						}
+
 						Debug.LogWarning(color);
 						return color;
 					}
@@ -166,6 +177,7 @@ namespace DigitalOpus.MB.Core
 					{
 					}
 				}
+
 				if (!flag)
 				{
 					return m_defaultSpecular;
@@ -177,10 +189,12 @@ namespace DigitalOpus.MB.Core
 				{
 					return new Color(0f, 0f, 0f, 0f);
 				}
+
 				if (texPropertyName.name.Equals("_OcclusionMap"))
 				{
 					return new Color(1f, 1f, 1f, 1f);
 				}
+
 				if (texPropertyName.name.Equals("_EmissionMap"))
 				{
 					if (mat != null)
@@ -189,6 +203,7 @@ namespace DigitalOpus.MB.Core
 						{
 							return Color.black;
 						}
+
 						try
 						{
 							return mat.GetColor("_EmissionColor");
@@ -203,6 +218,7 @@ namespace DigitalOpus.MB.Core
 					return new Color(0f, 0f, 0f, 0f);
 				}
 			}
+
 			return new Color(1f, 1f, 1f, 0f);
 		}
 	}

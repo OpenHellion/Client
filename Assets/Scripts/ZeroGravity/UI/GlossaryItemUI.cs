@@ -5,7 +5,7 @@ namespace ZeroGravity.UI
 {
 	public class GlossaryItemUI : MonoBehaviour
 	{
-		public GlosseryMenu Menu;
+		public GlossaryMenu Menu;
 
 		public GlosseryItem GlossaryItm;
 

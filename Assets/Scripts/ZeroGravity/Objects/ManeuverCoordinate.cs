@@ -45,8 +45,10 @@ namespace ZeroGravity.Objects
 			double num = (double)coordinate.LongitudeOfAscendingNode % 360.0;
 			double trueAnomalyAngleDeg = (double)coordinate.PositionOnOrbit % 360.0;
 			OrbitParameters orbitParameters = new OrbitParameters();
-			orbitParameters.InitFromPeriapisAndApoapsis(coordinate.TargetCel.Orbit, periapsisDistance, apoapsisDistance, inclination, argumentOfPeriapsis, longitudeOfAscendingNode, trueAnomalyAngleDeg, 0.0);
-			coordinate.PositionOnOrbit = (float)(orbitParameters.TrueAnomalyAtZeroTimeFromCurrent(time) * (180.0 / System.Math.PI));
+			orbitParameters.InitFromPeriapisAndApoapsis(coordinate.TargetCel.Orbit, periapsisDistance, apoapsisDistance,
+				inclination, argumentOfPeriapsis, longitudeOfAscendingNode, trueAnomalyAngleDeg, 0.0);
+			coordinate.PositionOnOrbit =
+				(float)(orbitParameters.TrueAnomalyAtZeroTimeFromCurrent(time) * (180.0 / System.Math.PI));
 		}
 	}
 }

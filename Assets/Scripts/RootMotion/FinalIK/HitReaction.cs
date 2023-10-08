@@ -14,8 +14,7 @@ namespace RootMotion.FinalIK
 			[Tooltip("Linking this hit point to a collider")]
 			public Collider collider;
 
-			[Tooltip("Only used if this hit point gets hit when already processing another hit")]
-			[SerializeField]
+			[Tooltip("Only used if this hit point gets hit when already processing another hit")] [SerializeField]
 			private float crossFadeTime = 0.1f;
 
 			private float length;
@@ -38,15 +37,18 @@ namespace RootMotion.FinalIK
 				{
 					length = GetLength();
 				}
+
 				if (length <= 0f)
 				{
 					Debug.LogError("Hit Point WeightCurve length is zero.");
 					return;
 				}
+
 				if (timer < 1f)
 				{
 					crossFader = 0f;
 				}
+
 				crossFadeSpeed = ((!(crossFadeTime > 0f)) ? 0f : (1f / crossFadeTime));
 				CrossFadeStart();
 				timer = 0f;
@@ -69,6 +71,7 @@ namespace RootMotion.FinalIK
 					{
 						crossFader = 1f;
 					}
+
 					OnApply(solver, weight);
 				}
 			}
@@ -86,8 +89,7 @@ namespace RootMotion.FinalIK
 			[Serializable]
 			public class EffectorLink
 			{
-				[Tooltip("The FBBIK effector type")]
-				public FullBodyBipedEffector effector;
+				[Tooltip("The FBBIK effector type")] public FullBodyBipedEffector effector;
 
 				[Tooltip("The weight of this effector (could also be negative)")]
 				public float weight;
@@ -119,8 +121,12 @@ namespace RootMotion.FinalIK
 
 			protected override float GetLength()
 			{
-				float num = ((offsetInForceDirection.keys.Length <= 0) ? 0f : offsetInForceDirection.keys[offsetInForceDirection.length - 1].time);
-				float min = ((offsetInUpDirection.keys.Length <= 0) ? 0f : offsetInUpDirection.keys[offsetInUpDirection.length - 1].time);
+				float num = ((offsetInForceDirection.keys.Length <= 0)
+					? 0f
+					: offsetInForceDirection.keys[offsetInForceDirection.length - 1].time);
+				float min = ((offsetInUpDirection.keys.Length <= 0)
+					? 0f
+					: offsetInUpDirection.keys[offsetInUpDirection.length - 1].time);
 				return Mathf.Clamp(num, min, num);
 			}
 
@@ -136,7 +142,8 @@ namespace RootMotion.FinalIK
 			protected override void OnApply(IKSolverFullBodyBiped solver, float weight)
 			{
 				Vector3 vector = solver.GetRoot().up * base.force.magnitude;
-				Vector3 offset = offsetInForceDirection.Evaluate(base.timer) * base.force + offsetInUpDirection.Evaluate(base.timer) * vector;
+				Vector3 offset = offsetInForceDirection.Evaluate(base.timer) * base.force +
+				                 offsetInUpDirection.Evaluate(base.timer) * vector;
 				offset *= weight;
 				EffectorLink[] array = effectorLinks;
 				foreach (EffectorLink effectorLink in array)
@@ -155,8 +162,7 @@ namespace RootMotion.FinalIK
 				[Tooltip("Reference to the bone that this hit point rotates")]
 				public Transform bone;
 
-				[Tooltip("Weight of rotating the bone")]
-				[Range(0f, 1f)]
+				[Tooltip("Weight of rotating the bone")] [Range(0f, 1f)]
 				public float weight;
 
 				private Quaternion lastValue = Quaternion.identity;
@@ -165,7 +171,8 @@ namespace RootMotion.FinalIK
 
 				public void Apply(IKSolverFullBodyBiped solver, Quaternion offset, float crossFader)
 				{
-					current = Quaternion.Lerp(lastValue, Quaternion.Lerp(Quaternion.identity, offset, weight), crossFader);
+					current = Quaternion.Lerp(lastValue, Quaternion.Lerp(Quaternion.identity, offset, weight),
+						crossFader);
 					bone.rotation = current * bone.rotation;
 				}
 
@@ -185,7 +192,9 @@ namespace RootMotion.FinalIK
 
 			protected override float GetLength()
 			{
-				return (aroundCenterOfMass.keys.Length <= 0) ? 0f : aroundCenterOfMass.keys[aroundCenterOfMass.length - 1].time;
+				return (aroundCenterOfMass.keys.Length <= 0)
+					? 0f
+					: aroundCenterOfMass.keys[aroundCenterOfMass.length - 1].time;
 			}
 
 			protected override void CrossFadeStart()
@@ -203,6 +212,7 @@ namespace RootMotion.FinalIK
 				{
 					rigidbody = collider.GetComponent<Rigidbody>();
 				}
+
 				if (rigidbody != null)
 				{
 					Vector3 axis = Vector3.Cross(base.force, base.point - rigidbody.worldCenterOfMass);
@@ -230,6 +240,7 @@ namespace RootMotion.FinalIK
 			{
 				hitPointEffector.Apply(ik.solver, weight);
 			}
+
 			HitPointBone[] array2 = boneHitPoints;
 			foreach (HitPointBone hitPointBone in array2)
 			{
@@ -244,6 +255,7 @@ namespace RootMotion.FinalIK
 				Debug.LogError("No IK assigned in HitReaction");
 				return;
 			}
+
 			HitPointEffector[] array = effectorHitPoints;
 			foreach (HitPointEffector hitPointEffector in array)
 			{
@@ -252,6 +264,7 @@ namespace RootMotion.FinalIK
 					hitPointEffector.Hit(force, point);
 				}
 			}
+
 			HitPointBone[] array2 = boneHitPoints;
 			foreach (HitPointBone hitPointBone in array2)
 			{

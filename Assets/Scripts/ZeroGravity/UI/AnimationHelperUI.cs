@@ -20,6 +20,7 @@ namespace ZeroGravity.UI
 			{
 				color.a = 0.5f;
 			}
+
 			img.color = color;
 		}
 	}

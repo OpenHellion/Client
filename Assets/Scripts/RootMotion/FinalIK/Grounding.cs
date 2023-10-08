@@ -50,17 +50,15 @@ namespace RootMotion.FinalIK
 
 			public float stepHeightFromGround
 			{
-				get
-				{
-					return Mathf.Clamp(heightFromGround, 0f - grounding.maxStep, grounding.maxStep);
-				}
+				get { return Mathf.Clamp(heightFromGround, 0f - grounding.maxStep, grounding.maxStep); }
 			}
 
 			private float rootYOffset
 			{
 				get
 				{
-					return grounding.GetVerticalOffset(transform.position, grounding.root.position - up * grounding.heightOffset);
+					return grounding.GetVerticalOffset(transform.position,
+						grounding.root.position - up * grounding.heightOffset);
 				}
 			}
 
@@ -98,12 +96,14 @@ namespace RootMotion.FinalIK
 				{
 					return;
 				}
+
 				deltaTime = Time.time - lastTime;
 				lastTime = Time.time;
 				if (deltaTime == 0f)
 				{
 					return;
 				}
+
 				up = grounding.up;
 				heightFromGround = float.PositiveInfinity;
 				velocity = (transform.position - lastPosition) / deltaTime;
@@ -114,40 +114,47 @@ namespace RootMotion.FinalIK
 				{
 					grounding.quality = Quality.Fastest;
 				}
+
 				switch (grounding.quality)
 				{
-				case Quality.Fastest:
-				{
-					RaycastHit raycastHit2 = GetRaycastHit(vector);
-					SetFootToPoint(raycastHit2.normal, raycastHit2.point);
-					break;
-				}
-				case Quality.Simple:
-				{
-					heelHit = GetRaycastHit(Vector3.zero);
-					RaycastHit raycastHit = GetRaycastHit(grounding.root.forward * grounding.footRadius + vector);
-					Vector3 vector2 = Vector3.Cross(rhs: GetRaycastHit(grounding.root.right * grounding.footRadius * 0.5f).point - heelHit.point, lhs: raycastHit.point - heelHit.point).normalized;
-					if (Vector3.Dot(vector2, up) < 0f)
+					case Quality.Fastest:
 					{
-						vector2 = -vector2;
+						RaycastHit raycastHit2 = GetRaycastHit(vector);
+						SetFootToPoint(raycastHit2.normal, raycastHit2.point);
+						break;
 					}
-					SetFootToPlane(vector2, heelHit.point, heelHit.point);
-					break;
+					case Quality.Simple:
+					{
+						heelHit = GetRaycastHit(Vector3.zero);
+						RaycastHit raycastHit = GetRaycastHit(grounding.root.forward * grounding.footRadius + vector);
+						Vector3 vector2 = Vector3
+							.Cross(
+								rhs: GetRaycastHit(grounding.root.right * grounding.footRadius * 0.5f).point -
+								     heelHit.point, lhs: raycastHit.point - heelHit.point).normalized;
+						if (Vector3.Dot(vector2, up) < 0f)
+						{
+							vector2 = -vector2;
+						}
+
+						SetFootToPlane(vector2, heelHit.point, heelHit.point);
+						break;
+					}
+					case Quality.Best:
+					{
+						heelHit = GetRaycastHit(Vector3.zero);
+						RaycastHit capsuleHit = GetCapsuleHit(vector);
+						SetFootToPlane(capsuleHit.normal, capsuleHit.point, heelHit.point);
+						break;
+					}
 				}
-				case Quality.Best:
-				{
-					heelHit = GetRaycastHit(Vector3.zero);
-					RaycastHit capsuleHit = GetCapsuleHit(vector);
-					SetFootToPlane(capsuleHit.normal, capsuleHit.point, heelHit.point);
-					break;
-				}
-				}
+
 				isGrounded = heightFromGround < grounding.maxStep;
 				float num = stepHeightFromGround;
 				if (!grounding.rootGrounded)
 				{
 					num = 0f;
 				}
+
 				IKOffset = Interp.LerpValue(IKOffset, num, grounding.footSpeed, grounding.footSpeed);
 				IKOffset = Mathf.Lerp(IKOffset, num, deltaTime * grounding.footSpeed);
 				float verticalOffset = grounding.GetVerticalOffset(transform.position, grounding.root.position);
@@ -156,7 +163,9 @@ namespace RootMotion.FinalIK
 				RotateFoot();
 				IKPosition = transform.position - up * IKOffset;
 				float footRotationWeight = grounding.footRotationWeight;
-				rotationOffset = ((!(footRotationWeight >= 1f)) ? Quaternion.Slerp(Quaternion.identity, r, footRotationWeight) : r);
+				rotationOffset = ((!(footRotationWeight >= 1f))
+					? Quaternion.Slerp(Quaternion.identity, r, footRotationWeight)
+					: r);
 			}
 
 			private RaycastHit GetCapsuleHit(Vector3 offsetFromHeel)
@@ -167,7 +176,8 @@ namespace RootMotion.FinalIK
 				hitInfo.normal = up;
 				Vector3 vector2 = vector + grounding.maxStep * up;
 				Vector3 point = vector2 + offsetFromHeel;
-				Physics.CapsuleCast(vector2, point, grounding.footRadius, -up, out hitInfo, grounding.maxStep * 3f, grounding.layers);
+				Physics.CapsuleCast(vector2, point, grounding.footRadius, -up, out hitInfo, grounding.maxStep * 3f,
+					grounding.layers);
 				return hitInfo;
 			}
 
@@ -181,7 +191,9 @@ namespace RootMotion.FinalIK
 				{
 					return hitInfo;
 				}
-				Physics.Raycast(vector + grounding.maxStep * up, -up, out hitInfo, grounding.maxStep * 3f, grounding.layers);
+
+				Physics.Raycast(vector + grounding.maxStep * up, -up, out hitInfo, grounding.maxStep * 3f,
+					grounding.layers);
 				return hitInfo;
 			}
 
@@ -191,7 +203,9 @@ namespace RootMotion.FinalIK
 				{
 					return normal;
 				}
-				return Vector3.RotateTowards(up, normal, grounding.maxFootRotationAngle * ((float)Math.PI / 180f), deltaTime);
+
+				return Vector3.RotateTowards(up, normal, grounding.maxFootRotationAngle * ((float)Math.PI / 180f),
+					deltaTime);
 			}
 
 			private void SetFootToPoint(Vector3 normal, Vector3 point)
@@ -204,7 +218,8 @@ namespace RootMotion.FinalIK
 			{
 				planeNormal = RotateNormal(planeNormal);
 				toHitNormal = Quaternion.FromToRotation(up, planeNormal);
-				Vector3 hitPoint = V3Tools.LineToPlane(transform.position + up * grounding.maxStep, -up, planeNormal, planePoint);
+				Vector3 hitPoint = V3Tools.LineToPlane(transform.position + up * grounding.maxStep, -up, planeNormal,
+					planePoint);
 				heightFromGround = GetHeightFromGround(hitPoint);
 				float max = GetHeightFromGround(heelHitPoint);
 				heightFromGround = Mathf.Clamp(heightFromGround, float.NegativeInfinity, max);
@@ -227,10 +242,12 @@ namespace RootMotion.FinalIK
 				{
 					return Quaternion.identity;
 				}
+
 				if (grounding.maxFootRotationAngle >= 180f)
 				{
 					return toHitNormal;
 				}
+
 				return Quaternion.RotateTowards(Quaternion.identity, toHitNormal, grounding.maxFootRotationAngle);
 			}
 		}
@@ -281,6 +298,7 @@ namespace RootMotion.FinalIK
 				{
 					return;
 				}
+
 				float num = Time.time - lastTime;
 				lastTime = Time.time;
 				if (!(num <= 0f))
@@ -290,6 +308,7 @@ namespace RootMotion.FinalIK
 					{
 						b = 0f;
 					}
+
 					heightOffset = Mathf.Lerp(heightOffset, b, num * grounding.pelvisSpeed);
 					Vector3 p = grounding.root.position - lastRootPosition;
 					lastRootPosition = grounding.root.position;
@@ -318,37 +337,37 @@ namespace RootMotion.FinalIK
 		[Tooltip("Amount of velocity based prediction of the foot positions.")]
 		public float prediction = 0.05f;
 
-		[Tooltip("Weight of rotating the feet to the ground normal offset.")]
-		[Range(0f, 1f)]
+		[Tooltip("Weight of rotating the feet to the ground normal offset.")] [Range(0f, 1f)]
 		public float footRotationWeight = 1f;
 
 		[Tooltip("Speed of slerping the feet to their grounded rotations.")]
 		public float footRotationSpeed = 7f;
 
-		[Tooltip("Max Foot Rotation Angle. Max angular offset from the foot's rotation.")]
-		[Range(0f, 90f)]
+		[Tooltip("Max Foot Rotation Angle. Max angular offset from the foot's rotation.")] [Range(0f, 90f)]
 		public float maxFootRotationAngle = 45f;
 
-		[Tooltip("If true, solver will rotate with the character root so the character can be grounded for example to spherical planets. For performance reasons leave this off unless needed.")]
+		[Tooltip(
+			"If true, solver will rotate with the character root so the character can be grounded for example to spherical planets. For performance reasons leave this off unless needed.")]
 		public bool rotateSolver;
 
 		[Tooltip("The speed of moving the character up/down.")]
 		public float pelvisSpeed = 5f;
 
-		[Tooltip("Used for smoothing out vertical pelvis movement (range 0 - 1).")]
-		[Range(0f, 1f)]
+		[Tooltip("Used for smoothing out vertical pelvis movement (range 0 - 1).")] [Range(0f, 1f)]
 		public float pelvisDamper;
 
 		[Tooltip("The weight of lowering the pelvis to the lowest foot.")]
 		public float lowerPelvisWeight = 1f;
 
-		[Tooltip("The weight of lifting the pelvis to the highest foot. This is useful when you don't want the feet to go too high relative to the body when crouching.")]
+		[Tooltip(
+			"The weight of lifting the pelvis to the highest foot. This is useful when you don't want the feet to go too high relative to the body when crouching.")]
 		public float liftPelvisWeight;
 
 		[Tooltip("The radius of the spherecast from the root that determines whether the character root is grounded.")]
 		public float rootSphereCastRadius = 0.1f;
 
-		[Tooltip("The raycasting quality. Fastest is a single raycast per foot, Simple is three raycasts, Best is one raycast and a capsule cast per foot.")]
+		[Tooltip(
+			"The raycasting quality. Fastest is a single raycast per foot, Simple is three raycasts, Best is one raycast and a capsule cast per foot.")]
 		public Quality quality = Quality.Best;
 
 		private bool initiated;
@@ -365,18 +384,12 @@ namespace RootMotion.FinalIK
 
 		public bool rootGrounded
 		{
-			get
-			{
-				return rootHit.distance < maxStep * 2f;
-			}
+			get { return rootHit.distance < maxStep * 2f; }
 		}
 
 		public Vector3 up
 		{
-			get
-			{
-				return (!useRootRotation) ? Vector3.up : root.up;
-			}
+			get { return (!useRootRotation) ? Vector3.up : root.up; }
 		}
 
 		private bool useRootRotation
@@ -387,10 +400,12 @@ namespace RootMotion.FinalIK
 				{
 					return false;
 				}
+
 				if (root.up == Vector3.up)
 				{
 					return false;
 				}
+
 				return true;
 			}
 		}
@@ -406,14 +421,17 @@ namespace RootMotion.FinalIK
 			{
 				return hitInfo;
 			}
+
 			if (quality != Quality.Best)
 			{
 				Physics.Raycast(root.position + vector * maxStep, -vector, out hitInfo, maxStep * num, layers);
 			}
 			else
 			{
-				Physics.SphereCast(root.position + vector * maxStep, rootSphereCastRadius, -up, out hitInfo, maxStep * num, layers);
+				Physics.SphereCast(root.position + vector * maxStep, rootSphereCastRadius, -up, out hitInfo,
+					maxStep * num, layers);
 			}
+
 			return hitInfo;
 		}
 
@@ -424,21 +442,25 @@ namespace RootMotion.FinalIK
 				errorMessage = "Root transform is null. Can't initiate Grounding.";
 				return false;
 			}
+
 			if (legs == null)
 			{
 				errorMessage = "Grounding legs is null. Can't initiate Grounding.";
 				return false;
 			}
+
 			if (pelvis == null)
 			{
 				errorMessage = "Grounding pelvis is null. Can't initiate Grounding.";
 				return false;
 			}
+
 			if (legs.Length == 0)
 			{
 				errorMessage = "Grounding has 0 legs. Can't initiate Grounding.";
 				return false;
 			}
+
 			return true;
 		}
 
@@ -451,10 +473,12 @@ namespace RootMotion.FinalIK
 			{
 				legs = new Leg[feet.Length];
 			}
+
 			if (legs.Length != feet.Length)
 			{
 				legs = new Leg[feet.Length];
 			}
+
 			for (int i = 0; i < feet.Length; i++)
 			{
 				if (legs[i] == null)
@@ -462,10 +486,12 @@ namespace RootMotion.FinalIK
 					legs[i] = new Leg();
 				}
 			}
+
 			if (pelvis == null)
 			{
 				pelvis = new Pelvis();
 			}
+
 			string errorMessage = string.Empty;
 			if (!IsValid(ref errorMessage))
 			{
@@ -477,6 +503,7 @@ namespace RootMotion.FinalIK
 				{
 					legs[j].Initiate(this, feet[j]);
 				}
+
 				pelvis.Initiate(this);
 				initiated = true;
 			}
@@ -488,10 +515,12 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			if ((int)layers == 0)
 			{
 				LogWarning("Grounding layers are set to nothing. Please add a ground layer.");
 			}
+
 			maxStep = Mathf.Clamp(maxStep, 0f, maxStep);
 			footRadius = Mathf.Clamp(footRadius, 0.0001f, maxStep);
 			pelvisDamper = Mathf.Clamp(pelvisDamper, 0f, 1f);
@@ -511,15 +540,18 @@ namespace RootMotion.FinalIK
 				{
 					num = leg.IKOffset;
 				}
+
 				if (leg.IKOffset < num2)
 				{
 					num2 = leg.IKOffset;
 				}
+
 				if (leg.isGrounded)
 				{
 					isGrounded = true;
 				}
 			}
+
 			pelvis.Process((0f - num) * lowerPelvisWeight, (0f - num2) * liftPelvisWeight, isGrounded);
 		}
 
@@ -529,6 +561,7 @@ namespace RootMotion.FinalIK
 			{
 				return Vector3.up;
 			}
+
 			Vector3 vector = up;
 			Vector3 vector2 = vector;
 			for (int i = 0; i < legs.Length; i++)
@@ -540,6 +573,7 @@ namespace RootMotion.FinalIK
 				Quaternion quaternion = Quaternion.FromToRotation(tangent, vector3);
 				vector2 = quaternion * vector2;
 			}
+
 			return vector2;
 		}
 
@@ -567,6 +601,7 @@ namespace RootMotion.FinalIK
 			{
 				return (Quaternion.Inverse(root.rotation) * (p1 - p2)).y;
 			}
+
 			return p1.y - p2.y;
 		}
 
@@ -579,6 +614,7 @@ namespace RootMotion.FinalIK
 				Vector3.OrthoNormalize(ref normal, ref tangent);
 				return Vector3.Project(v, tangent);
 			}
+
 			v.y = 0f;
 			return v;
 		}

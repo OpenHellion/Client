@@ -89,6 +89,7 @@ public class AnimationHelper : MonoBehaviour
 		{
 			return;
 		}
+
 		foreach (SoundEffect soundEffect in SoundEffects)
 		{
 			if (soundEffect != null && (!(ev.stringParameter == "DontPlayIfPlaying") || !soundEffect.IsPlaying))

@@ -18,12 +18,14 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using UnityEngine;
-using ZeroGravity;
 using System;
-using OpenHellion.UI;
 using System.Collections;
 using OpenHellion.Social;
+using OpenHellion.UI;
+using UnityEditor;
 using UnityEngine.SceneManagement;
+using ZeroGravity;
+using ZeroGravity.UI;
 
 namespace OpenHellion
 {
@@ -38,9 +40,8 @@ namespace OpenHellion
 			PreloadWithCopy
 		}
 
-		[SerializeField] private StartupGUI _StartupGUI;
-		[SerializeField] private SceneLoader _SceneLoader;
-		[SerializeField] private NakamaClient _NakamaClient;
+		[SerializeField] private SceneLoader _sceneLoader;
+		[SerializeField] private NakamaClient _nakamaClient;
 
 		public static SceneLoadTypeValue SceneLoadType = SceneLoadTypeValue.PreloadWithCopy;
 
@@ -60,7 +61,39 @@ namespace OpenHellion
 				}
 			}
 
-			_NakamaClient.OnNakamaError.AddListener(HandleNakamaError);
+			if (Properties.GetProperty("save_default_localization_file", defaultValue: false))
+			{
+				Localization.SaveToFile("localization_default.txt");
+			}
+
+			string customLocalisationFile = Properties.GetProperty("custom_localization_file", string.Empty);
+			if (Localization.LocalizationFiles.TryGetValue(Settings.Instance.SettingsData.GameSettings.LanguageIndex,
+				    out var value))
+			{
+				try
+				{
+					Localization.ImportFromString(Resources.Load<TextAsset>(value).text);
+				}
+				catch
+				{
+					Localization.RevertToDefault();
+				}
+			}
+			else if (customLocalisationFile != string.Empty)
+			{
+				Localization.ImportFromFile(customLocalisationFile);
+			}
+			else
+			{
+				Localization.RevertToDefault();
+			}
+
+			_nakamaClient.OnNakamaError.AddListener(HandleNakamaError);
+		}
+
+		private void OnDestroy()
+		{
+			_nakamaClient.OnNakamaError.RemoveListener(HandleNakamaError);
 		}
 
 		private void Start()
@@ -71,12 +104,13 @@ namespace OpenHellion
 			if (SystemInfo.systemMemorySize < 4000 || SystemInfo.processorFrequency < 2000)
 			{
 				Dbg.Error("System has invalid specifications. Exiting...");
-				_StartupGUI.ShowErrorMessage(Localization.SystemError, Localization.InvalidSystemSpesifications, Application.Quit);
+				GlobalGUI.ShowErrorMessage(Localization.SystemError, Localization.InvalidSystemSpesifications,
+					Application.Quit);
 				HiResTime.Stop();
 			}
 			else
 			{
-				_SceneLoader.InitializeScenes();
+				_sceneLoader.InitializeScenes();
 				StartCoroutine(CheckStartGame());
 			}
 		}
@@ -84,13 +118,13 @@ namespace OpenHellion
 		// Start game when we are done preloading and we have authenticated with Nakama.
 		private IEnumerator CheckStartGame()
 		{
-			yield return new WaitWhile(() => _SceneLoader.IsPreloading || !_NakamaClient.HasAuthenticated);
-			SceneManager.LoadScene("Client", LoadSceneMode.Single);
+			yield return new WaitWhile(() => SceneLoader.IsPreloading || !_nakamaClient.HasAuthenticated);
+			SceneManager.LoadScene(1, LoadSceneMode.Single);
 		}
 
 		private void HandleNakamaError(string text, Action action)
 		{
-			_StartupGUI.ShowErrorMessage(Localization.SystemError, text, action);
+			GlobalGUI.ShowErrorMessage(Localization.SystemError, text, action);
 		}
 	}
 }

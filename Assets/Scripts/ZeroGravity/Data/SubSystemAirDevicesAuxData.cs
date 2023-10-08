@@ -6,10 +6,7 @@ namespace ZeroGravity.Data
 
 		public override SystemAuxDataType AuxDataType
 		{
-			get
-			{
-				return SystemAuxDataType.AirDevice;
-			}
+			get { return SystemAuxDataType.AirDevice; }
 		}
 	}
 }

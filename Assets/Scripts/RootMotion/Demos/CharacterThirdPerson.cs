@@ -27,15 +27,13 @@ namespace RootMotion.Demos
 			public float yVelocity;
 		}
 
-		[Header("References")]
-		public CharacterAnimationBase characterAnimation;
+		[Header("References")] public CharacterAnimationBase characterAnimation;
 
 		public UserControlThirdPerson userControl;
 
 		public CameraController cam;
 
-		[Header("Movement")]
-		public MoveMode moveMode;
+		[Header("Movement")] public MoveMode moveMode;
 
 		public bool smoothPhysics = true;
 
@@ -51,15 +49,13 @@ namespace RootMotion.Demos
 
 		public float velocityToGroundTangentWeight;
 
-		[Header("Rotation")]
-		public bool lookInCameraDirection;
+		[Header("Rotation")] public bool lookInCameraDirection;
 
 		public float turnSpeed = 5f;
 
 		public float stationaryTurnSpeedMlp = 1f;
 
-		[Header("Jumping and Falling")]
-		public float airSpeed = 6f;
+		[Header("Jumping and Falling")] public float airSpeed = 6f;
 
 		public float airControl = 2f;
 
@@ -67,8 +63,7 @@ namespace RootMotion.Demos
 
 		public float jumpRepeatDelayTime;
 
-		[Header("Wall Running")]
-		[SerializeField]
+		[Header("Wall Running")] [SerializeField]
 		private LayerMask wallRunLayers;
 
 		public float wallRunMaxLength = 1f;
@@ -83,8 +78,7 @@ namespace RootMotion.Demos
 
 		public float wallRunWeightSpeed = 5f;
 
-		[Header("Crouching")]
-		public float crouchCapsuleScaleMlp = 0.6f;
+		[Header("Crouching")] public float crouchCapsuleScaleMlp = 0.6f;
 
 		public AnimState animState = default(AnimState);
 
@@ -138,6 +132,7 @@ namespace RootMotion.Demos
 			{
 				animator = characterAnimation.GetComponent<Animator>();
 			}
+
 			wallNormal = Vector3.up;
 			onGround = true;
 			animState.onGround = true;
@@ -165,6 +160,7 @@ namespace RootMotion.Demos
 				smoothPhysics = false;
 				characterAnimation.smoothFollow = false;
 			}
+
 			r.interpolation = (smoothPhysics ? RigidbodyInterpolation.Interpolate : RigidbodyInterpolation.None);
 			characterAnimation.smoothFollow = smoothPhysics;
 			MoveFixed(fixedDeltaPosition);
@@ -181,6 +177,7 @@ namespace RootMotion.Demos
 			{
 				ZeroFriction();
 			}
+
 			if (onGround)
 			{
 				animState.jump = Jump();
@@ -189,6 +186,7 @@ namespace RootMotion.Demos
 			{
 				r.AddForce(Physics.gravity * gravityMultiplier - Physics.gravity);
 			}
+
 			ScaleCapsule((!userControl.state.crouch) ? 1f : crouchCapsuleScaleMlp);
 			fixedFrame = true;
 		}
@@ -230,13 +228,18 @@ namespace RootMotion.Demos
 			}
 			else
 			{
-				vector = Vector3.Lerp(b: new Vector3(userControl.state.move.x * airSpeed, 0f, userControl.state.move.z * airSpeed), a: r.velocity, t: Time.deltaTime * airControl);
+				vector = Vector3.Lerp(
+					b: new Vector3(userControl.state.move.x * airSpeed, 0f, userControl.state.move.z * airSpeed),
+					a: r.velocity, t: Time.deltaTime * airControl);
 			}
+
 			if (onGround && Time.time > jumpEndTime)
 			{
 				r.velocity -= base.transform.up * stickyForce * Time.deltaTime;
 			}
-			vector.y = Mathf.Clamp(r.velocity.y, r.velocity.y, (!onGround) ? r.velocity.y : maxVerticalVelocityOnGround);
+
+			vector.y = Mathf.Clamp(r.velocity.y, r.velocity.y,
+				(!onGround) ? r.velocity.y : maxVerticalVelocityOnGround);
 			r.velocity = vector;
 			float b3 = (onGround ? GetSlopeDamper(-deltaPosition / Time.deltaTime, normal) : 1f);
 			forwardMlp = Mathf.Lerp(forwardMlp, b3, Time.deltaTime * 5f);
@@ -249,16 +252,21 @@ namespace RootMotion.Demos
 			{
 				wallRunEndTime = Time.time;
 			}
+
 			if (Time.time < wallRunEndTime + 0.5f)
 			{
 				flag = false;
 			}
+
 			wallRunWeight = Mathf.MoveTowards(wallRunWeight, (!flag) ? 0f : 1f, Time.deltaTime * wallRunWeightSpeed);
 			if (wallRunWeight <= 0f && lastWallRunWeight > 0f)
 			{
-				base.transform.rotation = Quaternion.LookRotation(new Vector3(base.transform.forward.x, 0f, base.transform.forward.z), Vector3.up);
+				base.transform.rotation =
+					Quaternion.LookRotation(new Vector3(base.transform.forward.x, 0f, base.transform.forward.z),
+						Vector3.up);
 				wallNormal = Vector3.up;
 			}
+
 			lastWallRunWeight = wallRunWeight;
 			if (!(wallRunWeight <= 0f))
 			{
@@ -266,17 +274,21 @@ namespace RootMotion.Demos
 				{
 					r.velocity = new Vector3(r.velocity.x, 0f, r.velocity.z);
 				}
+
 				Vector3 forward = base.transform.forward;
 				forward.y = 0f;
 				RaycastHit hitInfo = default(RaycastHit);
 				hitInfo.normal = Vector3.up;
-				Physics.Raycast((!onGround) ? capsule.bounds.center : base.transform.position, forward, out hitInfo, 3f, wallRunLayers);
+				Physics.Raycast((!onGround) ? capsule.bounds.center : base.transform.position, forward, out hitInfo, 3f,
+					wallRunLayers);
 				wallNormal = Vector3.Lerp(wallNormal, hitInfo.normal, Time.deltaTime * wallRunRotationSpeed);
-				wallNormal = Vector3.RotateTowards(Vector3.up, wallNormal, wallRunMaxRotationAngle * ((float)Math.PI / 180f), 0f);
+				wallNormal = Vector3.RotateTowards(Vector3.up, wallNormal,
+					wallRunMaxRotationAngle * ((float)Math.PI / 180f), 0f);
 				Vector3 tangent = base.transform.forward;
 				Vector3 vector = wallNormal;
 				Vector3.OrthoNormalize(ref vector, ref tangent);
-				base.transform.rotation = Quaternion.Slerp(Quaternion.LookRotation(forward, Vector3.up), Quaternion.LookRotation(tangent, wallNormal), wallRunWeight);
+				base.transform.rotation = Quaternion.Slerp(Quaternion.LookRotation(forward, Vector3.up),
+					Quaternion.LookRotation(tangent, wallNormal), wallRunWeight);
 			}
 		}
 
@@ -286,18 +298,22 @@ namespace RootMotion.Demos
 			{
 				return false;
 			}
+
 			if (Time.time > jumpEndTime - 0.1f + wallRunMaxLength)
 			{
 				return false;
 			}
+
 			if (r.velocity.y < wallRunMinVelocityY)
 			{
 				return false;
 			}
+
 			if (userControl.state.move.magnitude < wallRunMinMoveMag)
 			{
 				return false;
 			}
+
 			return true;
 		}
 
@@ -305,16 +321,22 @@ namespace RootMotion.Demos
 		{
 			switch (moveMode)
 			{
-			case MoveMode.Directional:
-				moveDirection = Vector3.SmoothDamp(moveDirection, new Vector3(0f, 0f, userControl.state.move.magnitude), ref moveDirectionVelocity, smoothAccelerationTime);
-				moveDirection = Vector3.MoveTowards(moveDirection, new Vector3(0f, 0f, userControl.state.move.magnitude), Time.deltaTime * linearAccelerationSpeed);
-				return moveDirection * forwardMlp;
-			case MoveMode.Strafe:
-				moveDirection = Vector3.SmoothDamp(moveDirection, userControl.state.move, ref moveDirectionVelocity, smoothAccelerationTime);
-				moveDirection = Vector3.MoveTowards(moveDirection, userControl.state.move, Time.deltaTime * linearAccelerationSpeed);
-				return base.transform.InverseTransformDirection(moveDirection);
-			default:
-				return Vector3.zero;
+				case MoveMode.Directional:
+					moveDirection = Vector3.SmoothDamp(moveDirection,
+						new Vector3(0f, 0f, userControl.state.move.magnitude), ref moveDirectionVelocity,
+						smoothAccelerationTime);
+					moveDirection = Vector3.MoveTowards(moveDirection,
+						new Vector3(0f, 0f, userControl.state.move.magnitude),
+						Time.deltaTime * linearAccelerationSpeed);
+					return moveDirection * forwardMlp;
+				case MoveMode.Strafe:
+					moveDirection = Vector3.SmoothDamp(moveDirection, userControl.state.move, ref moveDirectionVelocity,
+						smoothAccelerationTime);
+					moveDirection = Vector3.MoveTowards(moveDirection, userControl.state.move,
+						Time.deltaTime * linearAccelerationSpeed);
+					return base.transform.InverseTransformDirection(moveDirection);
+				default:
+					return Vector3.zero;
 			}
 		}
 
@@ -324,12 +346,15 @@ namespace RootMotion.Demos
 			{
 				base.transform.rotation = Quaternion.Euler(platformAngularVelocity) * base.transform.rotation;
 			}
+
 			float num = GetAngleFromForward(GetForwardDirection());
 			if (userControl.state.move == Vector3.zero)
 			{
 				num *= (1.01f - Mathf.Abs(num) / 180f) * stationaryTurnSpeedMlp;
 			}
-			RigidbodyRotateAround(characterAnimation.GetPivotPoint(), base.transform.up, num * Time.deltaTime * turnSpeed);
+
+			RigidbodyRotateAround(characterAnimation.GetPivotPoint(), base.transform.up,
+				num * Time.deltaTime * turnSpeed);
 		}
 
 		private Vector3 GetForwardDirection()
@@ -337,20 +362,22 @@ namespace RootMotion.Demos
 			bool flag = userControl.state.move != Vector3.zero;
 			switch (moveMode)
 			{
-			case MoveMode.Directional:
-				if (flag)
-				{
-					return userControl.state.move;
-				}
-				return (!lookInCameraDirection) ? base.transform.forward : (userControl.state.lookPos - r.position);
-			case MoveMode.Strafe:
-				if (flag)
-				{
-					return userControl.state.lookPos - r.position;
-				}
-				return (!lookInCameraDirection) ? base.transform.forward : (userControl.state.lookPos - r.position);
-			default:
-				return Vector3.zero;
+				case MoveMode.Directional:
+					if (flag)
+					{
+						return userControl.state.move;
+					}
+
+					return (!lookInCameraDirection) ? base.transform.forward : (userControl.state.lookPos - r.position);
+				case MoveMode.Strafe:
+					if (flag)
+					{
+						return userControl.state.lookPos - r.position;
+					}
+
+					return (!lookInCameraDirection) ? base.transform.forward : (userControl.state.lookPos - r.position);
+				default:
+					return Vector3.zero;
 			}
 		}
 
@@ -360,18 +387,22 @@ namespace RootMotion.Demos
 			{
 				return false;
 			}
+
 			if (userControl.state.crouch)
 			{
 				return false;
 			}
+
 			if (!characterAnimation.animationGrounded)
 			{
 				return false;
 			}
+
 			if (Time.time < lastAirTime + jumpRepeatDelayTime)
 			{
 				return false;
 			}
+
 			onGround = false;
 			jumpEndTime = Time.time + 0.1f;
 			Vector3 velocity = userControl.state.move * airSpeed;
@@ -404,9 +435,11 @@ namespace RootMotion.Demos
 						b = hit.rigidbody.GetPointVelocity(hit.point);
 						platformAngularVelocity = Vector3.Project(hit.rigidbody.angularVelocity, base.transform.up);
 					}
+
 					onGround = true;
 				}
 			}
+
 			platformVelocity = Vector3.Lerp(platformVelocity, b, Time.deltaTime * platformFriction);
 			stickyForce = num;
 			if (!onGround)

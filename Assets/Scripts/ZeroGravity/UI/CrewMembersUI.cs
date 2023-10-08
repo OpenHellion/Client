@@ -14,10 +14,7 @@ namespace ZeroGravity.UI
 
 		public AuthorizedPerson Player
 		{
-			get
-			{
-				return player;
-			}
+			get { return player; }
 			set
 			{
 				player = value;

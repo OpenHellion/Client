@@ -42,12 +42,15 @@ namespace ZeroGravity.Effects
 			{
 				CubemapCamera = GetComponent<Camera>();
 			}
-			cubeMapTextureDocking = new RenderTexture(DockingPortSettings.Size, DockingPortSettings.Size, DockingPortSettings.Depth);
+
+			cubeMapTextureDocking = new RenderTexture(DockingPortSettings.Size, DockingPortSettings.Size,
+				DockingPortSettings.Depth);
 			cubeMapTextureDocking.dimension = TextureDimension.Cube;
 			cubeMapTextureDocking.hideFlags = HideFlags.HideAndDontSave;
 			cubeMapTextureDocking.autoGenerateMips = true;
 			CubemapCamera.RenderToCubemap(cubeMapTextureDocking);
-			cubeMapTextureReflection = new RenderTexture(ReflectionProbeSettings.Size, ReflectionProbeSettings.Size, ReflectionProbeSettings.Depth);
+			cubeMapTextureReflection = new RenderTexture(ReflectionProbeSettings.Size, ReflectionProbeSettings.Size,
+				ReflectionProbeSettings.Depth);
 			cubeMapTextureReflection.dimension = TextureDimension.Cube;
 			cubeMapTextureReflection.hideFlags = HideFlags.HideAndDontSave;
 			cubeMapTextureReflection.autoGenerateMips = true;
@@ -69,6 +72,7 @@ namespace ZeroGravity.Effects
 					updateTimerReflectionProbe = 0f;
 				}
 			}
+
 			if (DockingPorts.Count > 0)
 			{
 				updateTimerDockingPort += Time.deltaTime;

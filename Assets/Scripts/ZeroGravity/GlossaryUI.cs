@@ -12,31 +12,10 @@ namespace ZeroGravity
 {
 	public class GlossaryUI : MonoBehaviour
 	{
-		[CompilerGenerated]
-		private sealed class _003CAwake_003Ec__AnonStorey0
-		{
-			internal GlossaryElementUI elementUi;
-
-			internal bool _003C_003Em__0(DynamicObjectData m)
-			{
-				return m.CompoundType.Equals((elementUi.Element as GlossaryElementEquipment).CompoundType);
-			}
-		}
-
-		[CompilerGenerated]
-		private sealed class _003CAwake_003Ec__AnonStorey1
-		{
-			internal ItemCategory cat;
-
-			internal bool _003C_003Em__0(KeyValuePair<AbstractGlossaryElement, GlossaryElementUI> m)
-			{
-				return m.Value.SubCategory == cat;
-			}
-		}
-
 		private List<AbstractGlossaryElement> allElements = new List<AbstractGlossaryElement>();
 
-		public Dictionary<AbstractGlossaryElement, GlossaryElementUI> AllElements = new Dictionary<AbstractGlossaryElement, GlossaryElementUI>();
+		public Dictionary<AbstractGlossaryElement, GlossaryElementUI> AllElements =
+			new Dictionary<AbstractGlossaryElement, GlossaryElementUI>();
 
 		public GameObject ElementUI;
 
@@ -74,56 +53,47 @@ namespace ZeroGravity
 
 		public Text Tier04;
 
-		[CompilerGenerated]
-		private static Func<GlossaryElementUI, ItemCategory> _003C_003Ef__am_0024cache0;
-
 		private void Awake()
 		{
 			allElements = Resources.LoadAll<AbstractGlossaryElement>("GlossaryElements").ToList();
 			foreach (AbstractGlossaryElement allElement in allElements)
 			{
-				_003CAwake_003Ec__AnonStorey0 _003CAwake_003Ec__AnonStorey = new _003CAwake_003Ec__AnonStorey0();
-				GameObject gameObject = UnityEngine.Object.Instantiate(ElementUI, ElementsHolder);
+				GameObject gameObject = Instantiate(ElementUI, ElementsHolder);
 				gameObject.transform.localScale = Vector3.one;
-				_003CAwake_003Ec__AnonStorey.elementUi = gameObject.GetComponent<GlossaryElementUI>();
-				_003CAwake_003Ec__AnonStorey.elementUi.Screen = this;
-				_003CAwake_003Ec__AnonStorey.elementUi.Element = allElement;
-				_003CAwake_003Ec__AnonStorey.elementUi.SetIcon();
-				AllElements.Add(allElement, _003CAwake_003Ec__AnonStorey.elementUi);
-				if (_003CAwake_003Ec__AnonStorey.elementUi.Element.Category == GlossaryCategory.Items)
+				GlossaryElementUI elementUi = gameObject.GetComponent<GlossaryElementUI>();
+				elementUi.Screen = this;
+				elementUi.Element = allElement;
+				elementUi.SetIcon();
+				AllElements.Add(allElement, elementUi);
+				if (elementUi.Element.Category == GlossaryCategory.Items)
 				{
-					DynamicObjectData dynamicObjectData = StaticData.DynamicObjectsDataList.Values.FirstOrDefault(_003CAwake_003Ec__AnonStorey._003C_003Em__0);
+					DynamicObjectData dynamicObjectData =
+						StaticData.DynamicObjectsDataList.Values.FirstOrDefault((DynamicObjectData m) =>
+							m.CompoundType.Equals((elementUi.Element as GlossaryElementEquipment).CompoundType));
 					if (dynamicObjectData != null)
 					{
-						_003CAwake_003Ec__AnonStorey.elementUi.SubCategory = dynamicObjectData.DefaultAuxData.Category;
+						elementUi.SubCategory = dynamicObjectData.DefaultAuxData.Category;
 					}
 				}
 			}
-			Dictionary<AbstractGlossaryElement, GlossaryElementUI>.ValueCollection values = AllElements.Values;
-			if (_003C_003Ef__am_0024cache0 == null)
+
+			foreach (ItemCategory cat in AllElements.Values.Select((GlossaryElementUI m) => m.SubCategory).Distinct())
 			{
-				_003C_003Ef__am_0024cache0 = _003CAwake_003Em__0;
-			}
-			using (IEnumerator<ItemCategory> enumerator2 = values.Select(_003C_003Ef__am_0024cache0).Distinct().GetEnumerator())
-			{
-				while (enumerator2.MoveNext())
+				GameObject gameObject2 = Instantiate(ElementsGroup, EquipmentHolder);
+				gameObject2.transform.localScale = Vector3.one;
+				GlossaryEquipmentGroup component = gameObject2.GetComponent<GlossaryEquipmentGroup>();
+				component.Name.text = cat.ToLocalizedString();
+				foreach (KeyValuePair<AbstractGlossaryElement, GlossaryElementUI> item in AllElements.Where(
+					         (KeyValuePair<AbstractGlossaryElement, GlossaryElementUI> m) =>
+						         m.Value.SubCategory == cat))
 				{
-					_003CAwake_003Ec__AnonStorey1 _003CAwake_003Ec__AnonStorey2 = new _003CAwake_003Ec__AnonStorey1();
-					_003CAwake_003Ec__AnonStorey2.cat = enumerator2.Current;
-					GameObject gameObject2 = UnityEngine.Object.Instantiate(ElementsGroup, EquipmentHolder);
-					gameObject2.transform.localScale = Vector3.one;
-					GlossaryEquipmentGroup component = gameObject2.GetComponent<GlossaryEquipmentGroup>();
-					component.Name.text = _003CAwake_003Ec__AnonStorey2.cat.ToLocalizedString();
-					foreach (KeyValuePair<AbstractGlossaryElement, GlossaryElementUI> item in AllElements.Where(_003CAwake_003Ec__AnonStorey2._003C_003Em__0))
+					if (item.Value.Element.Category == GlossaryCategory.Items)
 					{
-						if (item.Value.Element.Category == GlossaryCategory.Items)
-						{
-							item.Value.gameObject.transform.SetParent(component.Holder);
-						}
-						else
-						{
-							item.Value.gameObject.transform.SetParent(ElementsHolder);
-						}
+						item.Value.gameObject.transform.SetParent(component.Holder);
+					}
+					else
+					{
+						item.Value.gameObject.transform.SetParent(ElementsHolder);
 					}
 				}
 			}
@@ -147,26 +117,27 @@ namespace ZeroGravity
 		{
 			foreach (GameObject option in Options)
 			{
-				option.SetActive(false);
+				option.SetActive(value: false);
 			}
-			Options[scr - 1].SetActive(true);
+
+			Options[scr - 1].SetActive(value: true);
 			switch (scr)
 			{
-			case 1:
-				ShowGroup(GlossaryCategory.Items);
-				break;
-			case 2:
-				ShowGroup(GlossaryCategory.Systems);
-				break;
-			case 3:
-				ShowGroup(GlossaryCategory.Modules);
-				break;
-			case 4:
-				ShowGroup(GlossaryCategory.Story);
-				break;
-			case 5:
-				ShowGroup(GlossaryCategory.Resources);
-				break;
+				case 1:
+					ShowGroup(GlossaryCategory.Items);
+					break;
+				case 2:
+					ShowGroup(GlossaryCategory.Systems);
+					break;
+				case 3:
+					ShowGroup(GlossaryCategory.Modules);
+					break;
+				case 4:
+					ShowGroup(GlossaryCategory.Story);
+					break;
+				case 5:
+					ShowGroup(GlossaryCategory.Resources);
+					break;
 			}
 		}
 
@@ -178,6 +149,7 @@ namespace ZeroGravity
 			{
 				allElement.Value.gameObject.Activate(allElement.Value.Element.Category == cat);
 			}
+
 			SelectElement();
 		}
 
@@ -197,8 +169,9 @@ namespace ZeroGravity
 				else
 				{
 					Description.text = Current.Element.Description;
-					Tiers.Activate(false);
+					Tiers.Activate(value: false);
 				}
+
 				if (Current.Element.Image != null)
 				{
 					Image.sprite = Current.Element.Image;
@@ -208,6 +181,7 @@ namespace ZeroGravity
 					Image.sprite = DefaultImage;
 				}
 			}
+
 			CurrentHolder.Activate(Current != null);
 		}
 
@@ -216,16 +190,17 @@ namespace ZeroGravity
 			string value = string.Empty;
 			switch (itemType)
 			{
-			case ItemType.GenericItem:
-				Localization.GenericItemsDescriptions.TryGetValue(subType, out value);
-				break;
-			case ItemType.MachineryPart:
-				Localization.MachineryPartsDescriptions.TryGetValue(partType, out value);
-				break;
-			default:
-				Localization.ItemsDescriptions.TryGetValue(itemType, out value);
-				break;
+				case ItemType.GenericItem:
+					Localization.GenericItemsDescriptions.TryGetValue(subType, out value);
+					break;
+				case ItemType.MachineryPart:
+					Localization.MachineryPartsDescriptions.TryGetValue(partType, out value);
+					break;
+				default:
+					Localization.ItemsDescriptions.TryGetValue(itemType, out value);
+					break;
 			}
+
 			return value ?? string.Empty;
 		}
 
@@ -246,12 +221,6 @@ namespace ZeroGravity
 		{
 			SelectCategory((int)AllElements[ele].Element.Category);
 			SelectElement(AllElements[ele]);
-		}
-
-		[CompilerGenerated]
-		private static ItemCategory _003CAwake_003Em__0(GlossaryElementUI m)
-		{
-			return m.SubCategory;
 		}
 	}
 }

@@ -11,22 +11,13 @@ namespace ZeroGravity.LevelDesign
 
 		public override Item Item
 		{
-			get
-			{
-				return base.Item;
-			}
-			protected set
-			{
-				base.Item = value;
-			}
+			get { return base.Item; }
+			protected set { base.Item = value; }
 		}
 
 		public override string InteractionTip
 		{
-			get
-			{
-				return Localization.CargoAttachPoint;
-			}
+			get { return Localization.CargoAttachPoint; }
 		}
 
 		public override BaseAttachPointData GetData()
@@ -54,6 +45,7 @@ namespace ZeroGravity.LevelDesign
 					}
 				};
 			}
+
 			base.Awake();
 		}
 

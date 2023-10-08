@@ -38,10 +38,12 @@ namespace ZeroGravity.UI
 					InnerDoorImage.color = OrangeColor;
 				}
 			}
+
 			if (!(OutterDoor != null))
 			{
 				return;
 			}
+
 			if (OutterDoor.IsOpen)
 			{
 				if (OuterDoorImage.color != RedColor)

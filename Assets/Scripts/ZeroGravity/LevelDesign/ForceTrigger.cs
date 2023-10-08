@@ -13,58 +13,37 @@ namespace ZeroGravity.LevelDesign
 
 		public override bool ExclusivePlayerLocking
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public override bool CameraMovementAllowed
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public override bool IsInteractable
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public override bool IsNearTrigger
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public override PlayerHandsCheckType PlayerHandsCheck
 		{
-			get
-			{
-				return PlayerHandsCheckType.DontCheck;
-			}
+			get { return PlayerHandsCheckType.DontCheck; }
 		}
 
 		public override List<ItemType> PlayerHandsItemType
 		{
-			get
-			{
-				return null;
-			}
+			get { return null; }
 		}
 
 		public override SceneTriggerType TriggerType
 		{
-			get
-			{
-				return SceneTriggerType.HurtTrigger;
-			}
+			get { return SceneTriggerType.HurtTrigger; }
 		}
 
 		private new void OnTriggerEnter(Collider coli)
@@ -73,11 +52,13 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
+
 			if (coli.gameObject == MyPlayer.Instance.gameObject)
 			{
 				MyPlayer.Instance.rigidBody.AddForce(base.transform.forward * ForceIntensity, ForceMode.VelocityChange);
 				return;
 			}
+
 			DynamicObject componentInParent = coli.GetComponentInParent<DynamicObject>();
 			if (componentInParent != null && componentInParent.Master && !componentInParent.IsAttached)
 			{
@@ -85,7 +66,10 @@ namespace ZeroGravity.LevelDesign
 				{
 					componentInParent.ToggleKinematic(false);
 				}
-				componentInParent.rigidBody.velocity = Vector3.ProjectOnPlane(componentInParent.rigidBody.velocity, base.transform.forward) + base.transform.forward * ForceIntensity;
+
+				componentInParent.rigidBody.velocity =
+					Vector3.ProjectOnPlane(componentInParent.rigidBody.velocity, base.transform.forward) +
+					base.transform.forward * ForceIntensity;
 			}
 		}
 
@@ -95,11 +79,13 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
+
 			if (coli.gameObject == MyPlayer.Instance.gameObject)
 			{
 				MyPlayer.Instance.rigidBody.AddForce(base.transform.forward * ForceIntensity, ForceMode.VelocityChange);
 				return;
 			}
+
 			DynamicObject componentInParent = coli.GetComponentInParent<DynamicObject>();
 			if (componentInParent != null && componentInParent.Master && !componentInParent.IsAttached)
 			{
@@ -107,7 +93,10 @@ namespace ZeroGravity.LevelDesign
 				{
 					componentInParent.ToggleKinematic(false);
 				}
-				componentInParent.rigidBody.velocity = Vector3.ProjectOnPlane(componentInParent.rigidBody.velocity, base.transform.forward) + base.transform.forward * ForceIntensity;
+
+				componentInParent.rigidBody.velocity =
+					Vector3.ProjectOnPlane(componentInParent.rigidBody.velocity, base.transform.forward) +
+					base.transform.forward * ForceIntensity;
 			}
 		}
 	}

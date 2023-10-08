@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using ZeroGravity.UI;
+using OpenHellion.UI;
 
 public class News : MonoBehaviour
 {
@@ -59,6 +59,7 @@ public class News : MonoBehaviour
 			MonoBehaviour.print("Error downloading: " + con.error);
 			yield break;
 		}
+
 		string separator = "<br>";
 		string[] res = Regex.Split(con.downloadHandler.text, separator);
 		HeadingText.text = res[1].ToUpper();
@@ -70,10 +71,12 @@ public class News : MonoBehaviour
 		UnityWebRequest img = UnityWebRequestTexture.GetTexture(imageUrl);
 		yield return img.SendWebRequest();
 
-		if (img.result != UnityWebRequest.Result.Success) {
+		if (img.result != UnityWebRequest.Result.Success)
+		{
 			Dbg.Log(img.error);
 		}
-		else {
+		else
+		{
 			tex = DownloadHandlerTexture.GetContent(img);
 			Image.texture = tex;
 		}

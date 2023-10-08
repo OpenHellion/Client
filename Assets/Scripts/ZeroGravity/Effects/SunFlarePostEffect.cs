@@ -6,32 +6,26 @@ namespace ZeroGravity.Effects
 	[ExecuteInEditMode]
 	public class SunFlarePostEffect : MonoBehaviour
 	{
-		[SerializeField]
-		private Material material;
+		[SerializeField] private Material material;
 
-		[SerializeField]
-		private Vector3 sunPosition;
+		[SerializeField] private Vector3 sunPosition;
 
-		[SerializeField]
-		private float lerpStrengthNormal = 10f;
+		[SerializeField] private float lerpStrengthNormal = 10f;
 
-		[SerializeField]
-		private float lerpStrengthPlanet = 0.4f;
+		[SerializeField] private float lerpStrengthPlanet = 0.4f;
 
-		[SerializeField]
-		private float strengthNormal = 1f;
+		[SerializeField] private float strengthNormal = 1f;
 
-		[SerializeField]
-		private float strengthPlanet = 1f;
+		[SerializeField] private float strengthPlanet = 1f;
 
 		private bool isVisibleNormal;
 
 		private bool isVisiblePlanet;
 
-		[SerializeField]
-		private float fovValue;
+		[SerializeField] private float fovValue;
 
-		public void SetSunFlare(Vector3 sunScreenPosition, float fovValue, bool isSunVisibleNormal, bool isSunVisiblePlanet, bool forceVisibility)
+		public void SetSunFlare(Vector3 sunScreenPosition, float fovValue, bool isSunVisibleNormal,
+			bool isSunVisiblePlanet, bool forceVisibility)
 		{
 			sunPosition = sunScreenPosition;
 			isVisibleNormal = isSunVisibleNormal;
@@ -54,6 +48,7 @@ namespace ZeroGravity.Effects
 			{
 				strengthNormal = Mathf.Clamp01(strengthNormal - Time.deltaTime * lerpStrengthNormal);
 			}
+
 			if (isVisiblePlanet && strengthPlanet < 1f)
 			{
 				strengthPlanet = Mathf.Clamp01(strengthPlanet + Time.deltaTime * lerpStrengthPlanet);

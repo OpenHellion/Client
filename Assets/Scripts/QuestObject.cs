@@ -13,7 +13,8 @@ public class QuestObject : ScriptableObject
 	{
 		public List<QuestTaskObject> TasksInBatch = new List<QuestTaskObject>();
 
-		[FormerlySerializedAs("BatchDependency"), Tooltip("Shoud any or all tasks have to be completed for the batch to finish?")]
+		[FormerlySerializedAs("BatchDependency"),
+		 Tooltip("Shoud any or all tasks have to be completed for the batch to finish?")]
 		public QuestTriggerDependencyTpe RequireTasks = QuestTriggerDependencyTpe.All;
 	}
 

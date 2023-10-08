@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using OpenHellion;
 using OpenHellion.IO;
+using OpenHellion.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -120,17 +122,20 @@ namespace ZeroGravity.UI
 				},
 				new ControlItem
 				{
-					Name = Localization.Jump.ToUpper() + " / <color='#A0D3F8'>" + Localization.Up.ToUpper() + "</color>",
+					Name = Localization.Jump.ToUpper() + " / <color='#A0D3F8'>" + Localization.Up.ToUpper() +
+					       "</color>",
 					Action = InputManager.ConfigAction.Jump
 				},
 				new ControlItem
 				{
-					Name = Localization.Crouch.ToUpper() + " / <color='#A0D3F8'>" + Localization.Down.ToUpper() + "</color>",
+					Name = Localization.Crouch.ToUpper() + " / <color='#A0D3F8'>" + Localization.Down.ToUpper() +
+					       "</color>",
 					Action = InputManager.ConfigAction.Crouch
 				},
 				new ControlItem
 				{
-					Name = Localization.Sprint.ToUpper() + " / <color='#A0D3F8'>" + Localization.Grab.ToUpper() + "</color> / " + Localization.Stabilization.ToUpper(),
+					Name = Localization.Sprint.ToUpper() + " / <color='#A0D3F8'>" + Localization.Grab.ToUpper() +
+					       "</color> / " + Localization.Stabilization.ToUpper(),
 					Action = InputManager.ConfigAction.Sprint
 				},
 				new ControlItem
@@ -144,7 +149,8 @@ namespace ZeroGravity.UI
 			{
 				new ControlItem
 				{
-					Name = Localization.Inventory.ToUpper() + " / <color='#A0D3F8'>" + Localization.ExitPanel.ToUpper() + "</color>",
+					Name = Localization.Inventory.ToUpper() + " / <color='#A0D3F8'>" +
+					       Localization.ExitPanel.ToUpper() + "</color>",
 					Action = InputManager.ConfigAction.Inventory
 				},
 				new ControlItem
@@ -164,7 +170,8 @@ namespace ZeroGravity.UI
 				},
 				new ControlItem
 				{
-					Name = Localization.EquipItem.ToUpper() + " / <color='#A0D3F8'>" + Localization.Reload.ToUpper() + "</color> / " + Localization.ChangeDockingPort.ToUpper(),
+					Name = Localization.EquipItem.ToUpper() + " / <color='#A0D3F8'>" + Localization.Reload.ToUpper() +
+					       "</color> / " + Localization.ChangeDockingPort.ToUpper(),
 					Action = InputManager.ConfigAction.Equip
 				},
 				new ControlItem
@@ -308,6 +315,7 @@ namespace ZeroGravity.UI
 			{
 				Destroy(allElement);
 			}
+
 			_allElements.Clear();
 			InstantiateKeyboardControls();
 		}
@@ -329,22 +337,27 @@ namespace ZeroGravity.UI
 			{
 				InstantiateControlPref(movementControl, MovementHolder);
 			}
+
 			foreach (ControlItem actionControl in ActionControls)
 			{
 				InstantiateControlPref(actionControl, ActionHolder);
 			}
+
 			foreach (ControlItem shipControl in ShipControls)
 			{
 				InstantiateControlPref(shipControl, ShipHolder);
 			}
+
 			foreach (ControlItem suitControl in SuitControls)
 			{
 				InstantiateControlPref(suitControl, SuitHolder);
 			}
+
 			foreach (ControlItem communicationControl in CommunicationControls)
 			{
 				InstantiateControlPref(communicationControl, CommsHolder);
 			}
+
 			foreach (ControlItem quickAction in QuickActions)
 			{
 				InstantiateControlPref(quickAction, QuickHolder);
@@ -376,7 +389,8 @@ namespace ZeroGravity.UI
 			controlPref.transform.name = controlName.Name;
 		}
 
-		private void SaveControlForRevert(InputAction actions, bool isPositive, bool isAlt, KeyCode oldKey, ControlItem controlItemVal, bool isPositiveR, bool isAltR)
+		private void SaveControlForRevert(InputAction actions, bool isPositive, bool isAlt, KeyCode oldKey,
+			ControlItem controlItemVal, bool isPositiveR, bool isAltR)
 		{
 			_actionsOld = actions;
 			_isPositiveOld = isPositive;
@@ -389,7 +403,7 @@ namespace ZeroGravity.UI
 
 		public void DuplicateControlsYes()
 		{
-			GameMenu.DisableGameMenu = false;
+			PauseMenu.DisableGameMenu = false;
 		}
 
 		public void DuplicateControlsNo()
@@ -435,6 +449,7 @@ namespace ZeroGravity.UI
 					}
 				}*/
 			}
+
 			foreach (ButtonListItem button in buttonList)
 			{
 				if (button.ControlItem == _controlItemValRev)
@@ -460,15 +475,18 @@ namespace ZeroGravity.UI
 					}
 				}
 			}
-			GameMenu.DisableGameMenu = false;
+
+			PauseMenu.DisableGameMenu = false;
 		}
 
-		public void OnKeyChange(KeyCode key, string AxisName, bool changePositive, bool changeAlt, ControlItem controlItemVal)
+		public void OnKeyChange(KeyCode key, string AxisName, bool changePositive, bool changeAlt,
+			ControlItem controlItemVal)
 		{
 			if (key == KeyCode.Escape)
 			{
 				return;
 			}
+
 			/*foreach (InputAction action in InputController.Instance.InputActions.actionMaps[0].actions)
 			{
 				if (action.bindings[0].Positive == key)
@@ -499,11 +517,14 @@ namespace ZeroGravity.UI
 				buttonListItem.ButtonText.text = string.Empty;
 				if (buttonListItem.ControlItem.Name != controlItemVal.Name)
 				{
-					GameMenu.DisableGameMenu = true;
-					Client.Instance.ShowConfirmMessageBox(Localization.DuplicatedControl, string.Format(Localization.DuplicateControlMessage, buttonListItem.ControlItem.Name), Localization.Yes, Localization.No, DuplicateControlsYes, DuplicateControlsNo);
+					PauseMenu.DisableGameMenu = true;
+					GlobalGUI.ShowConfirmMessageBox(Localization.DuplicatedControl,
+						string.Format(Localization.DuplicateControlMessage, buttonListItem.ControlItem.Name),
+						Localization.Yes, Localization.No, DuplicateControlsYes, DuplicateControlsNo);
 					return;
 				}
 			}
+
 			if (!CheckIfEmpty())
 			{
 				Settings.Instance.SaveSettings(Settings.SettingsType.Controls);
@@ -520,6 +541,7 @@ namespace ZeroGravity.UI
 					list.Add(button);
 				}
 			}
+
 			if (list.Count > 0)
 			{
 				string text = string.Empty;
@@ -527,9 +549,11 @@ namespace ZeroGravity.UI
 				{
 					text = text + "- " + item.ControlItem.Name + "\n";
 				}
-				Client.Instance.ShowMessageBox(Localization.PleaseAssignAllControls, text);
+
+				GlobalGUI.ShowMessageBox(Localization.PleaseAssignAllControls, text);
 				return true;
 			}
+
 			return false;
 		}
 	}

@@ -37,7 +37,7 @@ namespace Photon.Voice
 
     /// <summary>
     /// Voice client interact with other clients on network via IVoiceTransport.
-    /// </summary>        
+    /// </summary>
     public class VoiceClient : IDisposable
     {
         internal IVoiceTransport transport;
@@ -64,7 +64,7 @@ namespace Photon.Voice
         /// <summary>Do not log warning when duplicate info received.</summary>
         public bool SuppressInfoDuplicateWarning { get; set; }
 
-        /// <summary>Remote voice info event delegate.</summary>        
+        /// <summary>Remote voice info event delegate.</summary>
         public delegate void RemoteVoiceInfoDelegate(int channelId, int playerId, byte voiceId, VoiceInfo voiceInfo, ref RemoteVoiceOptions options);
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Photon.Voice
             this.logger.LogInfo("[PV] FrameBuffer stats Disposer: " + dc + " - " + dd + " = " + (dc - dd));
             this.logger.LogInfo("[PV] FrameBuffer stats Pinned: " + pp + " - " + pu + " = " + (pp - pu));
         }
-        
+
         public void SetRemoteVoiceDelayFrames(Codec codec, int delayFrames)
         {
             remoteVoiceDelayFrames[codec] = delayFrames;
@@ -287,9 +287,9 @@ namespace Photon.Voice
                     case AudioSampleType.Short:
                         encoder = Platform.CreateDefaultAudioEncoder<short>(logger, voiceInfo);
                         break;
-                }    
+                }
             }
-                
+
             if (source is IAudioPusher<float>)
             {
                 if (sampleType == AudioSampleType.Short)
@@ -297,7 +297,7 @@ namespace Photon.Voice
                     logger.LogInfo("[PV] Creating local voice with source samples type conversion from IAudioPusher float to short.");
                     var localVoice = CreateLocalVoiceAudio<short>(voiceInfo, source, encoder, channelId);
                     // we can safely reuse the same buffer in callbacks from native code
-                    // 
+                    //
                     var bufferFactory = new FactoryReusableArray<float>(0);
                     ((IAudioPusher<float>)source).SetCallback(buf => {
                         var shortBuf = localVoice.BufferFactory.New(buf.Length);
@@ -320,7 +320,7 @@ namespace Photon.Voice
                     logger.LogInfo("[PV] Creating local voice with source samples type conversion from IAudioPusher short to float.");
                     var localVoice = CreateLocalVoiceAudio<float>(voiceInfo, source, encoder, channelId);
                     // we can safely reuse the same buffer in callbacks from native code
-                    // 
+                    //
                     var bufferFactory = new FactoryReusableArray<short>(0);
                     ((IAudioPusher<short>)source).SetCallback(buf =>
                     {
@@ -565,7 +565,7 @@ namespace Photon.Voice
                 }
             }
         }
-        
+
 		public void onJoinChannel(int channel)
         {
             sendChannelVoicesInfo(channel, 0);// my join, broadcast
@@ -605,7 +605,7 @@ namespace Photon.Voice
             {
                 var voiceStr = " p#" + this.playerStr(playerId) + " v#" + voiceId + " ch#" + channelStr(channelId);
                 this.logger.LogInfo("[PV] " + voiceStr + " Info received: " + info.ToString() + " ev=" + eventNumber);
-                
+
                 var logPrefix = "[PV] Remote " + info.Codec + voiceStr;
                 RemoteVoiceOptions options = new RemoteVoiceOptions(logger, logPrefix, info);
                 if (this.OnRemoteVoiceInfoAction != null)

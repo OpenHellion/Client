@@ -20,58 +20,49 @@ namespace ZeroGravity.Math
 			{
 				switch (index)
 				{
-				case 0:
-					return X;
-				case 1:
-					return Y;
-				case 2:
-					return Z;
-				case 3:
-					return W;
-				default:
-					throw new IndexOutOfRangeException("Invalid Quaternion index!");
+					case 0:
+						return X;
+					case 1:
+						return Y;
+					case 2:
+						return Z;
+					case 3:
+						return W;
+					default:
+						throw new IndexOutOfRangeException("Invalid Quaternion index!");
 				}
 			}
 			set
 			{
 				switch (index)
 				{
-				case 0:
-					X = value;
-					break;
-				case 1:
-					Y = value;
-					break;
-				case 2:
-					Z = value;
-					break;
-				case 3:
-					W = value;
-					break;
-				default:
-					throw new IndexOutOfRangeException("Invalid Quaternion index!");
+					case 0:
+						X = value;
+						break;
+					case 1:
+						Y = value;
+						break;
+					case 2:
+						Z = value;
+						break;
+					case 3:
+						W = value;
+						break;
+					default:
+						throw new IndexOutOfRangeException("Invalid Quaternion index!");
 				}
 			}
 		}
 
 		public static QuaternionD Identity
 		{
-			get
-			{
-				return new QuaternionD(0.0, 0.0, 0.0, 1.0);
-			}
+			get { return new QuaternionD(0.0, 0.0, 0.0, 1.0); }
 		}
 
 		public Vector3D EulerAngles
 		{
-			get
-			{
-				return Internal_ToEulerRad(this) * (180.0 / System.Math.PI);
-			}
-			set
-			{
-				this = Internal_FromEulerRad(value * (System.Math.PI / 180.0));
-			}
+			get { return Internal_ToEulerRad(this) * (180.0 / System.Math.PI); }
+			set { this = Internal_FromEulerRad(value * (System.Math.PI / 180.0)); }
 		}
 
 		public QuaternionD(double x, double y, double z, double w)
@@ -84,7 +75,10 @@ namespace ZeroGravity.Math
 
 		public static QuaternionD operator *(QuaternionD lhs, QuaternionD rhs)
 		{
-			return new QuaternionD(lhs.W * rhs.X + lhs.X * rhs.W + lhs.Y * rhs.Z - lhs.Z * rhs.Y, lhs.W * rhs.Y + lhs.Y * rhs.W + lhs.Z * rhs.X - lhs.X * rhs.Z, lhs.W * rhs.Z + lhs.Z * rhs.W + lhs.X * rhs.Y - lhs.Y * rhs.X, lhs.W * rhs.W - lhs.X * rhs.X - lhs.Y * rhs.Y - lhs.Z * rhs.Z);
+			return new QuaternionD(lhs.W * rhs.X + lhs.X * rhs.W + lhs.Y * rhs.Z - lhs.Z * rhs.Y,
+				lhs.W * rhs.Y + lhs.Y * rhs.W + lhs.Z * rhs.X - lhs.X * rhs.Z,
+				lhs.W * rhs.Z + lhs.Z * rhs.W + lhs.X * rhs.Y - lhs.Y * rhs.X,
+				lhs.W * rhs.W - lhs.X * rhs.X - lhs.Y * rhs.Y - lhs.Z * rhs.Z);
 		}
 
 		public static Vector3D operator *(QuaternionD rotation, Vector3D point)
@@ -217,6 +211,7 @@ namespace ZeroGravity.Math
 			{
 				return to;
 			}
+
 			double t = System.Math.Min(1.0, maxDegreesDelta / num);
 			return SlerpUnclamped(from, to, t);
 		}
@@ -235,7 +230,8 @@ namespace ZeroGravity.Math
 
 		public string ToString(string format)
 		{
-			return string.Format("({0}, {1}, {2}, {3})", X.ToString(format), Y.ToString(format), Z.ToString(format), W.ToString(format));
+			return string.Format("({0}, {1}, {2}, {3})", X.ToString(format), Y.ToString(format), Z.ToString(format),
+				W.ToString(format));
 		}
 
 		public static double Angle(QuaternionD a, QuaternionD b)
@@ -283,11 +279,13 @@ namespace ZeroGravity.Math
 			{
 				return false;
 			}
+
 			QuaternionD quaternionD = (QuaternionD)other;
 			if (X.Equals(quaternionD.X) && Y.Equals(quaternionD.Y) && Z.Equals(quaternionD.Z))
 			{
 				return W.Equals(quaternionD.W);
 			}
+
 			return false;
 		}
 
@@ -371,14 +369,16 @@ namespace ZeroGravity.Math
 			}
 			else
 			{
-				value.Set(num, System.Math.Atan2(array[0, 2], array[2, 2]), System.Math.Atan2(array[1, 0], array[1, 1]));
+				value.Set(num, System.Math.Atan2(array[0, 2], array[2, 2]),
+					System.Math.Atan2(array[1, 0], array[1, 1]));
 			}
 		}
 
 		private static void INTERNAL_CALL_Inverse(ref QuaternionD rotation, out QuaternionD value)
 		{
 			value = rotation;
-			double num = rotation.X * rotation.X + rotation.Y * rotation.Y + rotation.Z * rotation.Z + rotation.W * rotation.W;
+			double num = rotation.X * rotation.X + rotation.Y * rotation.Y + rotation.Z * rotation.Z +
+			             rotation.W * rotation.W;
 			if (num > 1E-06)
 			{
 				double num2 = 1.0 / num;
@@ -442,17 +442,20 @@ namespace ZeroGravity.Math
 			}
 		}
 
-		private static void INTERNAL_CALL_FromToRotation(ref Vector3D fromDirection, ref Vector3D toDirection, out QuaternionD value)
+		private static void INTERNAL_CALL_FromToRotation(ref Vector3D fromDirection, ref Vector3D toDirection,
+			out QuaternionD value)
 		{
 			value = RotateTowards(LookRotation(fromDirection), LookRotation(toDirection), double.MaxValue);
 		}
 
-		private static void INTERNAL_CALL_Slerp(ref QuaternionD from, ref QuaternionD to, double t, out QuaternionD value)
+		private static void INTERNAL_CALL_Slerp(ref QuaternionD from, ref QuaternionD to, double t,
+			out QuaternionD value)
 		{
 			INTERNAL_CALL_SlerpUnclamped(ref from, ref to, MathHelper.Clamp(t, 0.0, 1.0), out value);
 		}
 
-		private static void INTERNAL_CALL_SlerpUnclamped(ref QuaternionD from, ref QuaternionD to, double t, out QuaternionD value)
+		private static void INTERNAL_CALL_SlerpUnclamped(ref QuaternionD from, ref QuaternionD to, double t,
+			out QuaternionD value)
 		{
 			double num = from.X * to.X + from.Y * to.Y + from.Z * to.Z + from.W * to.W;
 			bool flag = false;
@@ -461,6 +464,7 @@ namespace ZeroGravity.Math
 				flag = true;
 				num = 0.0 - num;
 			}
+
 			double num2;
 			double num3;
 			if (num > 0.999999)
@@ -475,18 +479,21 @@ namespace ZeroGravity.Math
 				num2 = System.Math.Sin((1.0 - t) * num4) * num5;
 				num3 = ((!flag) ? (System.Math.Sin(t * num4) * num5) : ((0.0 - System.Math.Sin(t * num4)) * num5));
 			}
+
 			value.X = num2 * from.X + num3 * to.X;
 			value.Y = num2 * from.Y + num3 * to.Y;
 			value.Z = num2 * from.Z + num3 * to.Z;
 			value.W = num2 * from.W + num3 * to.W;
 		}
 
-		private static void INTERNAL_CALL_Lerp(ref QuaternionD from, ref QuaternionD to, double t, out QuaternionD value)
+		private static void INTERNAL_CALL_Lerp(ref QuaternionD from, ref QuaternionD to, double t,
+			out QuaternionD value)
 		{
 			INTERNAL_CALL_LerpUnclamped(ref from, ref to, MathHelper.Clamp(t, 0.0, 1.0), out value);
 		}
 
-		private static void INTERNAL_CALL_LerpUnclamped(ref QuaternionD from, ref QuaternionD to, double t, out QuaternionD value)
+		private static void INTERNAL_CALL_LerpUnclamped(ref QuaternionD from, ref QuaternionD to, double t,
+			out QuaternionD value)
 		{
 			double num = 1.0 - t;
 			double num2 = from.X * to.X + from.Y * to.Y + from.Z * to.Z + from.W * to.W;
@@ -504,7 +511,10 @@ namespace ZeroGravity.Math
 				value.Z = num * from.Z - t * to.Z;
 				value.W = num * from.W - t * to.W;
 			}
-			double num3 = 1.0 / System.Math.Sqrt(value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W);
+
+			double num3 = 1.0 /
+			              System.Math.Sqrt(
+				              value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W);
 			value.X *= num3;
 			value.Y *= num3;
 			value.Z *= num3;

@@ -12,8 +12,7 @@ namespace ZeroGravity.UI
 {
 	public class AirlockUI : MonoBehaviour
 	{
-		[Title("AIRLOCK UI")]
-		public AirLockControls MyAirlock;
+		[Title("AIRLOCK UI")] public AirLockControls MyAirlock;
 
 		public GameObject MainScreen;
 
@@ -47,11 +46,9 @@ namespace ZeroGravity.UI
 
 		public Button DepressurizeButton;
 
-		[SerializeField]
-		private Sprite OpenDoorSprite;
+		[SerializeField] private Sprite OpenDoorSprite;
 
-		[SerializeField]
-		private Sprite CloseDoorSprite;
+		[SerializeField] private Sprite CloseDoorSprite;
 
 		public GameObject StopAction;
 
@@ -94,11 +91,18 @@ namespace ZeroGravity.UI
 			{
 				currentPressure = MyAirlock.Room.AirPressure;
 			}
+
 			currentPressure = MathHelper.Clamp(currentPressure, 0f, 1f);
 			PressureValue.text = currentPressure.ToString("F1");
 			AirlockPressureFiller.fillAmount = currentPressure;
-			PressurizeButton.interactable = MyAirlock.Room.AirPressureChangeRate == 0f && MyAirlock.Room.AirPressure < MyAirlock.pressurizeTarget && !MyAirlock.InnerDoor.IsOpen && !MyAirlock.OuterDoor.IsOpen && CurrentAirTank >= MyAirlock.pressurizeTarget;
-			DepressurizeButton.interactable = MyAirlock.Room.AirPressureChangeRate == 0f && MyAirlock.Room.AirPressure > MyAirlock.depressurizeTarget && !MyAirlock.InnerDoor.IsOpen && !MyAirlock.OuterDoor.IsOpen && CurrentAirTank != MaxAirTank;
+			PressurizeButton.interactable = MyAirlock.Room.AirPressureChangeRate == 0f &&
+			                                MyAirlock.Room.AirPressure < MyAirlock.pressurizeTarget &&
+			                                !MyAirlock.InnerDoor.IsOpen && !MyAirlock.OuterDoor.IsOpen &&
+			                                CurrentAirTank >= MyAirlock.pressurizeTarget;
+			DepressurizeButton.interactable = MyAirlock.Room.AirPressureChangeRate == 0f &&
+			                                  MyAirlock.Room.AirPressure > MyAirlock.depressurizeTarget &&
+			                                  !MyAirlock.InnerDoor.IsOpen && !MyAirlock.OuterDoor.IsOpen &&
+			                                  CurrentAirTank != MaxAirTank;
 			StopAction.SetActive(MyAirlock.Room.PressurizationStatus != RoomPressurizationStatus.None);
 			if (!MyAirlock.InnerDoor.IsOpen)
 			{
@@ -108,10 +112,12 @@ namespace ZeroGravity.UI
 			}
 			else
 			{
-				InnerDoorButton.GetComponent<Image>().color = new Color(1f, 1f, 1f, System.Math.Abs(Time.time % 2f - 1f));
+				InnerDoorButton.GetComponent<Image>().color =
+					new Color(1f, 1f, 1f, System.Math.Abs(Time.time % 2f - 1f));
 				InnerDoorButton.GetComponent<Image>().sprite = CloseDoorSprite;
 				InnerDoorText.text = Localization.CloseDoor.ToUpper();
 			}
+
 			if (!MyAirlock.OuterDoor.IsOpen)
 			{
 				OuterDoorButton.GetComponent<Image>().color = Colors.White;
@@ -120,7 +126,8 @@ namespace ZeroGravity.UI
 			}
 			else
 			{
-				OuterDoorButton.GetComponent<Image>().color = new Color(1f, 1f, 1f, System.Math.Abs(Time.time % 2f - 1f));
+				OuterDoorButton.GetComponent<Image>().color =
+					new Color(1f, 1f, 1f, System.Math.Abs(Time.time % 2f - 1f));
 				OuterDoorButton.GetComponent<Image>().sprite = CloseDoorSprite;
 				OuterDoorText.text = Localization.CloseDoor.ToUpper();
 			}
@@ -132,10 +139,12 @@ namespace ZeroGravity.UI
 			{
 				InnerDoorControl();
 			}
+
 			if (MyAirlock.OuterDoor.IsOpen)
 			{
 				OutterDoorControl();
 			}
+
 			MyAirlock.Room.ChangeAirPressure(MyAirlock.depressurizeTarget);
 			MyAirlock.lastCommandTime = Time.time;
 		}
@@ -146,10 +155,12 @@ namespace ZeroGravity.UI
 			{
 				InnerDoorControl();
 			}
+
 			if (MyAirlock.OuterDoor.IsOpen)
 			{
 				OutterDoorControl();
 			}
+
 			MyAirlock.Room.ChangeAirPressure(MyAirlock.pressurizeTarget);
 			MyAirlock.lastCommandTime = Time.time;
 		}
@@ -166,12 +177,12 @@ namespace ZeroGravity.UI
 				}
 				else
 				{
-					MyAirlock.InnerDoorExecuter.ChangeState(MyAirlock.InnerDoorOpenState);
+					MyAirlock.InnerDoorExecutor.ChangeState(MyAirlock.InnerDoorOpenState);
 				}
 			}
 			else
 			{
-				MyAirlock.InnerDoorExecuter.ChangeState(MyAirlock.InnerDoorClosedState);
+				MyAirlock.InnerDoorExecutor.ChangeState(MyAirlock.InnerDoorClosedState);
 			}
 		}
 
@@ -187,12 +198,12 @@ namespace ZeroGravity.UI
 				}
 				else
 				{
-					MyAirlock.OuterDoorExecuter.ChangeState(MyAirlock.OuterDoorOpenState);
+					MyAirlock.OuterDoorExecutor.ChangeState(MyAirlock.OuterDoorOpenState);
 				}
 			}
 			else
 			{
-				MyAirlock.OuterDoorExecuter.ChangeState(MyAirlock.OuterDoorClosedState);
+				MyAirlock.OuterDoorExecutor.ChangeState(MyAirlock.OuterDoorClosedState);
 			}
 		}
 
@@ -200,12 +211,13 @@ namespace ZeroGravity.UI
 		{
 			if (forceOpen == 1)
 			{
-				MyAirlock.InnerDoorExecuter.ChangeState(MyAirlock.InnerDoorForceOpen);
+				MyAirlock.InnerDoorExecutor.ChangeState(MyAirlock.InnerDoorForceOpen);
 			}
 			else if (forceOpen == 2)
 			{
-				MyAirlock.OuterDoorExecuter.ChangeState(MyAirlock.OuterDoorForceOpen);
+				MyAirlock.OuterDoorExecutor.ChangeState(MyAirlock.OuterDoorForceOpen);
 			}
+
 			AlertBox.SetActive(value: false);
 			MainScreen.SetActive(value: true);
 			forceOpen = 0;
@@ -228,6 +240,7 @@ namespace ZeroGravity.UI
 			{
 				return;
 			}
+
 			float num = 0f;
 			float num2 = 0f;
 			foreach (ResourceContainer airTank in AirTanks)
@@ -235,6 +248,7 @@ namespace ZeroGravity.UI
 				num += airTank.Capacity;
 				num2 += airTank.Quantity;
 			}
+
 			CurrentAirTank = num2;
 			MaxAirTank = num;
 			AirTankFiller.fillAmount = CurrentAirTank / MaxAirTank;
@@ -243,12 +257,14 @@ namespace ZeroGravity.UI
 			if (CurrentAirTank == 0f)
 			{
 				AirTankValue.color = Colors.Red;
-				TankStatus.text = Localization.AirTank.ToUpper() + " " + Localization.Empty.ToUpper() + " - <color=#AE1515>" + Localization.UnableToPressurize.ToUpper() + "</color>";
+				TankStatus.text = Localization.AirTank.ToUpper() + " " + Localization.Empty.ToUpper() +
+				                  " - <color=#AE1515>" + Localization.UnableToPressurize.ToUpper() + "</color>";
 			}
 			else if (CurrentAirTank == MaxAirTank)
 			{
 				AirTankValue.color = Colors.Green;
-				TankStatus.text = Localization.AirTank.ToUpper() + " " + Localization.Full.ToUpper() + " - <color=#AE1515>" + Localization.UnableToDepressurize.ToUpper() + "</color>";
+				TankStatus.text = Localization.AirTank.ToUpper() + " " + Localization.Full.ToUpper() +
+				                  " - <color=#AE1515>" + Localization.UnableToDepressurize.ToUpper() + "</color>";
 			}
 			else
 			{
@@ -284,11 +300,13 @@ namespace ZeroGravity.UI
 			{
 				AllVessels.Add(allDockedVessel);
 			}
+
 			foreach (SpaceObjectVessel allVessel in AllVessels)
 			{
-				foreach (ResourceContainer item in from m in allVessel.GeometryRoot.GetComponentsInChildren<ResourceContainer>()
-					where m.DistributionSystemType == DistributionSystemType.Air
-					select m)
+				foreach (ResourceContainer item in from m in allVessel.GeometryRoot
+					         .GetComponentsInChildren<ResourceContainer>()
+				         where m.DistributionSystemType == DistributionSystemType.Air
+				         select m)
 				{
 					AirTanks.Add(item);
 				}

@@ -12,25 +12,18 @@ namespace ZeroGravity.ShipComponents
 {
 	public abstract class SubSystem : VesselSystem
 	{
-		[Space(5f)]
-		public float OperationRate = 1f;
+		[Space(5f)] public float OperationRate = 1f;
 
 		public bool AutoTuneOperationRate;
 
-		[Space(5f)]
-		[SerializeField]
-		[FormerlySerializedAs("triggerAnimtion")]
+		[Space(5f)] [SerializeField] [FormerlySerializedAs("triggerAnimtion")]
 		protected SceneTriggerAnimation triggerAnimation;
 
-		[Space(5f)]
-		public SystemSpawnSettings[] SpawnSettings = new SystemSpawnSettings[0];
+		[Space(5f)] public SystemSpawnSettings[] SpawnSettings = new SystemSpawnSettings[0];
 
-		[Space(5f)]
-		[Multiline]
-		public string DebugInfo;
+		[Space(5f)] [Multiline] public string DebugInfo;
 
-		[NonSerialized]
-		public float InputFactorStandby = 1f;
+		[NonSerialized] public float InputFactorStandby = 1f;
 
 		public abstract SubSystemType Type { get; }
 
@@ -57,16 +50,21 @@ namespace ZeroGravity.ShipComponents
 				{
 					return 0f;
 				}
-				num = ResourceRequirements.Where((ResourceRequirement m) => m.ResourceType == resourceType).Sum((ResourceRequirement m) => (SecondaryStatus != SystemSecondaryStatus.Idle) ? m.Nominal : m.Standby);
+
+				num = ResourceRequirements.Where((ResourceRequirement m) => m.ResourceType == resourceType).Sum(
+					(ResourceRequirement m) => (SecondaryStatus != SystemSecondaryStatus.Idle) ? m.Nominal : m.Standby);
 			}
 			else
 			{
-				num = ResourceRequirements.Where((ResourceRequirement m) => m.ResourceType == resourceType).Sum((ResourceRequirement m) => (!working.Value) ? m.Standby : m.Nominal);
+				num = ResourceRequirements.Where((ResourceRequirement m) => m.ResourceType == resourceType)
+					.Sum((ResourceRequirement m) => (!working.Value) ? m.Standby : m.Nominal);
 			}
+
 			if (resourceType == DistributionSystemType.Power)
 			{
 				return num * PowerInputFactor;
 			}
+
 			return num * InputFactor;
 		}
 
@@ -83,7 +81,9 @@ namespace ZeroGravity.ShipComponents
 			SubSystemDetails subSystemDetails = new SubSystemDetails
 			{
 				InSceneID = base.InSceneID,
-				Status = ((!isSwitchedOn.HasValue) ? Status : ((!isSwitchedOn.Value) ? SystemStatus.Offline : SystemStatus.Online)),
+				Status = ((!isSwitchedOn.HasValue)
+					? Status
+					: ((!isSwitchedOn.Value) ? SystemStatus.Offline : SystemStatus.Online)),
 				AuxDetails = GetAuxDetails()
 			};
 			return subSystemDetails;
@@ -91,20 +91,18 @@ namespace ZeroGravity.ShipComponents
 
 		public void SendDetails()
 		{
-			if (Client.IsGameBuild)
-			{
-				SpaceObjectVessel parentVessel = _ParentVessel;
-				SubSystemDetails details = GetDetails();
-				parentVessel.ChangeStats(null, null, null, null, details);
-			}
+			SpaceObjectVessel parentVessel = _ParentVessel;
+			SubSystemDetails details = GetDetails();
+			parentVessel.ChangeStats(null, null, null, null, details);
 		}
 
-		public virtual bool IsEventFinished()
+		public bool IsEventFinished()
 		{
 			if (triggerAnimation != null)
 			{
 				return triggerAnimation.IsEventFinished;
 			}
+
 			return true;
 		}
 
@@ -113,7 +111,8 @@ namespace ZeroGravity.ShipComponents
 			_ParentVessel = vessel;
 		}
 
-		public virtual void SetDetails(SystemStatus status, SystemSecondaryStatus secondaryStatus, float operationRate, bool instant = false)
+		public virtual void SetDetails(SystemStatus status, SystemSecondaryStatus secondaryStatus, float operationRate,
+			bool instant = false)
 		{
 			Status = status;
 			SecondaryStatus = secondaryStatus;
@@ -142,16 +141,9 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (Status == SystemStatus.Offline || Status == SystemStatus.Cooldown)
 			{
-				if (Client.IsGameBuild)
-				{
-					SpaceObjectVessel parentVessel = _ParentVessel;
-					SubSystemDetails details = GetDetails(true);
-					parentVessel.ChangeStats(null, null, null, null, details);
-				}
-				else
-				{
-					SetDetails(SystemStatus.Online, SystemSecondaryStatus.None, OperationRate);
-				}
+				SpaceObjectVessel parentVessel = _ParentVessel;
+				SubSystemDetails details = GetDetails(true);
+				parentVessel.ChangeStats(null, null, null, null, details);
 			}
 		}
 
@@ -159,35 +151,17 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (Status == SystemStatus.Online || Status == SystemStatus.Powerup)
 			{
-				if (Client.IsGameBuild)
-				{
-					SpaceObjectVessel parentVessel = _ParentVessel;
-					SubSystemDetails details = GetDetails(false);
-					parentVessel.ChangeStats(null, null, null, null, details);
-				}
-				else
-				{
-					SetDetails(SystemStatus.Offline, SystemSecondaryStatus.None, OperationRate);
-				}
+				SpaceObjectVessel parentVessel = _ParentVessel;
+				SubSystemDetails details = GetDetails(false);
+				parentVessel.ChangeStats(null, null, null, null, details);
 			}
 		}
 
 		public override void Toggle()
 		{
-			if (Client.IsGameBuild)
-			{
-				SpaceObjectVessel parentVessel = _ParentVessel;
-				SubSystemDetails details = GetDetails(!IsSwitchedOn());
-				parentVessel.ChangeStats(null, null, null, null, details);
-			}
-			else if (IsSwitchedOn())
-			{
-				SwitchOff();
-			}
-			else
-			{
-				SwitchOn();
-			}
+			SpaceObjectVessel parentVessel = _ParentVessel;
+			SubSystemDetails details = GetDetails(!IsSwitchedOn());
+			parentVessel.ChangeStats(null, null, null, null, details);
 		}
 
 		public virtual SubSystemData GetData()
@@ -203,6 +177,7 @@ namespace ZeroGravity.ShipComponents
 					}
 				}
 			}
+
 			List<int> list = new List<int>();
 			if (MachineryPartSlots != null)
 			{
@@ -212,6 +187,7 @@ namespace ZeroGravity.ShipComponents
 					list.Add(sceneMachineryPartSlot.InSceneID);
 				}
 			}
+
 			List<int> list2 = new List<int>();
 			if (ResourceContainers != null)
 			{
@@ -221,6 +197,7 @@ namespace ZeroGravity.ShipComponents
 					list2.Add(resourceContainer2.InSceneID);
 				}
 			}
+
 			SubSystemData subSystemData = new SubSystemData
 			{
 				InSceneID = InSceneID,
@@ -248,14 +225,17 @@ namespace ZeroGravity.ShipComponents
 			{
 				return 0f;
 			}
+
 			ResourceRequirement[] resourceRequirements = ResourceRequirements;
 			foreach (ResourceRequirement resourceRequirement in resourceRequirements)
 			{
 				if (resourceRequirement.ResourceType == resourceType)
 				{
-					return resourceRequirement.Nominal * OperationRate * InputFactor + resourceRequirement.Standby * InputFactorStandby;
+					return resourceRequirement.Nominal * OperationRate * InputFactor +
+					       resourceRequirement.Standby * InputFactorStandby;
 				}
 			}
+
 			return 0f;
 		}
 	}

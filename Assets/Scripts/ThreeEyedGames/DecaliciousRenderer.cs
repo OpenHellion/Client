@@ -7,8 +7,7 @@ namespace ThreeEyedGames
 	[ExecuteInEditMode]
 	public class DecaliciousRenderer : MonoBehaviour
 	{
-		[HideInInspector]
-		public bool UseInstancing = true;
+		[HideInInspector] public bool UseInstancing = true;
 
 		protected CommandBuffer _bufferDeferred;
 
@@ -84,11 +83,13 @@ namespace ThreeEyedGames
 				GetComponent<Camera>().RemoveCommandBuffer(CameraEvent.BeforeReflections, _bufferDeferred);
 				_bufferDeferred = null;
 			}
+
 			if (_bufferUnlit != null)
 			{
 				GetComponent<Camera>().RemoveCommandBuffer(CameraEvent.BeforeImageEffectsOpaque, _bufferUnlit);
 				_bufferUnlit = null;
 			}
+
 			if (_bufferLimitTo != null)
 			{
 				GetComponent<Camera>().RemoveCommandBuffer(CameraEvent.AfterGBuffer, _bufferLimitTo);
@@ -102,6 +103,7 @@ namespace ThreeEyedGames
 			{
 				UseInstancing = false;
 			}
+
 			if (_albedoRenderTarget == null || _camera.allowHDR != _camLastKnownHDR)
 			{
 				_camLastKnownHDR = _camera.allowHDR;
@@ -111,6 +113,7 @@ namespace ThreeEyedGames
 					(!_camLastKnownHDR) ? BuiltinRenderTextureType.GBuffer3 : BuiltinRenderTextureType.CameraTarget
 				};
 			}
+
 			CreateBuffer(ref _bufferDeferred, _camera, "Decalicious - Deferred", CameraEvent.BeforeReflections);
 			CreateBuffer(ref _bufferUnlit, _camera, "Decalicious - Unlit", CameraEvent.BeforeImageEffectsOpaque);
 			CreateBuffer(ref _bufferLimitTo, _camera, "Decalicious - Limit To Game Objects", CameraEvent.AfterGBuffer);
@@ -121,16 +124,19 @@ namespace ThreeEyedGames
 			DrawDeferredDecals_NormSpecSmooth(_camera);
 			_bufferUnlit.Clear();
 			DrawUnlitDecals(_camera);
-			SortedDictionary<int, Dictionary<Material, HashSet<Decalicious>>>.Enumerator enumerator = _deferredDecals.GetEnumerator();
+			SortedDictionary<int, Dictionary<Material, HashSet<Decalicious>>>.Enumerator enumerator =
+				_deferredDecals.GetEnumerator();
 			while (enumerator.MoveNext())
 			{
 				enumerator.Current.Value.Clear();
 			}
+
 			enumerator = _unlitDecals.GetEnumerator();
 			while (enumerator.MoveNext())
 			{
 				enumerator.Current.Value.Clear();
 			}
+
 			_limitToGameObjects.Clear();
 		}
 
@@ -140,10 +146,12 @@ namespace ThreeEyedGames
 			{
 				return;
 			}
+
 			if (_materialLimitToGameObjects == null)
 			{
 				_materialLimitToGameObjects = new Material(Shader.Find("Hidden/Decalicious Game Object ID"));
 			}
+
 			int num = Shader.PropertyToID("_DecaliciousLimitToGameObject");
 			_bufferLimitTo.GetTemporaryRT(num, -1, -1, 0, FilterMode.Point, RenderTextureFormat.RFloat);
 			_bufferLimitTo.SetRenderTarget(num, BuiltinRenderTextureType.CameraTarget);
@@ -158,17 +166,20 @@ namespace ThreeEyedGames
 				{
 					_decalComponent.Clear();
 					limitToMeshRenderer.GetComponents(_decalComponent);
-					if (_decalComponent.Count == 0 && GeometryUtility.TestPlanesAABB(planes, limitToMeshRenderer.bounds))
+					if (_decalComponent.Count == 0 &&
+					    GeometryUtility.TestPlanesAABB(planes, limitToMeshRenderer.bounds))
 					{
 						_meshFilterComponent.Clear();
 						limitToMeshRenderer.GetComponents(_meshFilterComponent);
 						if (_meshFilterComponent.Count == 1)
 						{
 							MeshFilter meshFilter = _meshFilterComponent[0];
-							_bufferLimitTo.DrawMesh(meshFilter.sharedMesh, limitToMeshRenderer.transform.localToWorldMatrix, _materialLimitToGameObjects);
+							_bufferLimitTo.DrawMesh(meshFilter.sharedMesh,
+								limitToMeshRenderer.transform.localToWorldMatrix, _materialLimitToGameObjects);
 						}
 					}
 				}
+
 				_limitToSkinnedMeshRenderers.Clear();
 				limitToGameObject.GetComponentsInChildren(_limitToSkinnedMeshRenderers);
 				foreach (SkinnedMeshRenderer limitToSkinnedMeshRenderer in _limitToSkinnedMeshRenderers)
@@ -186,6 +197,7 @@ namespace ThreeEyedGames
 				_avCoeff[i].z = probe[i, 2];
 				_avCoeff[i].w = probe[i, 0] - probe[i, 6];
 			}
+
 			for (int j = 0; j < 3; j++)
 			{
 				_avCoeff[j + 3].x = probe[j, 4];
@@ -193,6 +205,7 @@ namespace ThreeEyedGames
 				_avCoeff[j + 3].z = 3f * probe[j, 6];
 				_avCoeff[j + 3].w = probe[j, 7];
 			}
+
 			_avCoeff[6].x = probe[0, 8];
 			_avCoeff[6].y = probe[1, 8];
 			_avCoeff[6].z = probe[2, 8];
@@ -212,11 +225,14 @@ namespace ThreeEyedGames
 			{
 				return;
 			}
+
 			_bufferDeferred.SetRenderTarget(_albedoRenderTarget, BuiltinRenderTextureType.CameraTarget);
-			SortedDictionary<int, Dictionary<Material, HashSet<Decalicious>>>.Enumerator enumerator = _deferredDecals.GetEnumerator();
+			SortedDictionary<int, Dictionary<Material, HashSet<Decalicious>>>.Enumerator enumerator =
+				_deferredDecals.GetEnumerator();
 			while (enumerator.MoveNext())
 			{
-				Dictionary<Material, HashSet<Decalicious>>.Enumerator enumerator2 = enumerator.Current.Value.GetEnumerator();
+				Dictionary<Material, HashSet<Decalicious>>.Enumerator enumerator2 =
+					enumerator.Current.Value.GetEnumerator();
 				while (enumerator2.MoveNext())
 				{
 					Material key = enumerator2.Current.Key;
@@ -231,6 +247,7 @@ namespace ThreeEyedGames
 						{
 							continue;
 						}
+
 						if (UseInstancing && !current.UseLightProbes)
 						{
 							_matrices[num] = current.transform.localToWorldMatrix;
@@ -243,7 +260,8 @@ namespace ThreeEyedGames
 								_instancedBlock.SetFloatArray("_MaskMultiplier", _fadeValues);
 								_instancedBlock.SetFloatArray("_LimitTo", _limitToValues);
 								SetLightProbeOnBlock(RenderSettings.ambientProbe, _instancedBlock);
-								_bufferDeferred.DrawMeshInstanced(_cubeMesh, 0, key, 0, _matrices, num, _instancedBlock);
+								_bufferDeferred.DrawMeshInstanced(_cubeMesh, 0, key, 0, _matrices, num,
+									_instancedBlock);
 								num = 0;
 							}
 						}
@@ -251,16 +269,21 @@ namespace ThreeEyedGames
 						{
 							_directBlock.Clear();
 							_directBlock.SetFloat("_MaskMultiplier", current.Fade);
-							_directBlock.SetFloat("_LimitTo", (!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
+							_directBlock.SetFloat("_LimitTo",
+								(!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
 							if (current.UseLightProbes)
 							{
 								SphericalHarmonicsL2 probe;
-								LightProbes.GetInterpolatedProbe(current.transform.position, current.GetComponent<MeshRenderer>(), out probe);
+								LightProbes.GetInterpolatedProbe(current.transform.position,
+									current.GetComponent<MeshRenderer>(), out probe);
 								SetLightProbeOnBlock(probe, _directBlock);
 							}
-							_bufferDeferred.DrawMesh(_cubeMesh, current.transform.localToWorldMatrix, key, 0, 0, _directBlock);
+
+							_bufferDeferred.DrawMesh(_cubeMesh, current.transform.localToWorldMatrix, key, 0, 0,
+								_directBlock);
 						}
 					}
+
 					if (UseInstancing && num > 0)
 					{
 						_instancedBlock.Clear();
@@ -279,14 +302,17 @@ namespace ThreeEyedGames
 			{
 				return;
 			}
+
 			int num = Shader.PropertyToID("_CameraGBufferTexture1Copy");
 			_bufferDeferred.GetTemporaryRT(num, -1, -1, 0, FilterMode.Bilinear, RenderTextureFormat.ARGB32);
 			int num2 = Shader.PropertyToID("_CameraGBufferTexture2Copy");
 			_bufferDeferred.GetTemporaryRT(num2, -1, -1, 0, FilterMode.Bilinear, RenderTextureFormat.ARGB32);
-			SortedDictionary<int, Dictionary<Material, HashSet<Decalicious>>>.Enumerator enumerator = _deferredDecals.GetEnumerator();
+			SortedDictionary<int, Dictionary<Material, HashSet<Decalicious>>>.Enumerator enumerator =
+				_deferredDecals.GetEnumerator();
 			while (enumerator.MoveNext())
 			{
-				Dictionary<Material, HashSet<Decalicious>>.Enumerator enumerator2 = enumerator.Current.Value.GetEnumerator();
+				Dictionary<Material, HashSet<Decalicious>>.Enumerator enumerator2 =
+					enumerator.Current.Value.GetEnumerator();
 				while (enumerator2.MoveNext())
 				{
 					Material key = enumerator2.Current.Key;
@@ -300,6 +326,7 @@ namespace ThreeEyedGames
 						{
 							continue;
 						}
+
 						if (current.HighQualityBlending)
 						{
 							_bufferDeferred.Blit(BuiltinRenderTextureType.GBuffer1, num);
@@ -307,8 +334,10 @@ namespace ThreeEyedGames
 							_bufferDeferred.SetRenderTarget(_normalRenderTarget, BuiltinRenderTextureType.CameraTarget);
 							_instancedBlock.Clear();
 							_instancedBlock.SetFloat("_MaskMultiplier", current.Fade);
-							_instancedBlock.SetFloat("_LimitTo", (!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
-							_bufferDeferred.DrawMesh(_cubeMesh, current.transform.localToWorldMatrix, key, 0, 1, _instancedBlock);
+							_instancedBlock.SetFloat("_LimitTo",
+								(!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
+							_bufferDeferred.DrawMesh(_cubeMesh, current.transform.localToWorldMatrix, key, 0, 1,
+								_instancedBlock);
 						}
 						else if (UseInstancing)
 						{
@@ -320,11 +349,13 @@ namespace ThreeEyedGames
 							{
 								_bufferDeferred.Blit(BuiltinRenderTextureType.GBuffer1, num);
 								_bufferDeferred.Blit(BuiltinRenderTextureType.GBuffer2, num2);
-								_bufferDeferred.SetRenderTarget(_normalRenderTarget, BuiltinRenderTextureType.CameraTarget);
+								_bufferDeferred.SetRenderTarget(_normalRenderTarget,
+									BuiltinRenderTextureType.CameraTarget);
 								_instancedBlock.Clear();
 								_instancedBlock.SetFloatArray("_MaskMultiplier", _fadeValues);
 								_instancedBlock.SetFloatArray("_LimitTo", _limitToValues);
-								_bufferDeferred.DrawMeshInstanced(_cubeMesh, 0, key, 1, _matrices, num3, _instancedBlock);
+								_bufferDeferred.DrawMeshInstanced(_cubeMesh, 0, key, 1, _matrices, num3,
+									_instancedBlock);
 								num3 = 0;
 							}
 						}
@@ -335,14 +366,18 @@ namespace ThreeEyedGames
 								_bufferDeferred.Blit(BuiltinRenderTextureType.GBuffer1, num);
 								_bufferDeferred.Blit(BuiltinRenderTextureType.GBuffer2, num2);
 							}
+
 							_bufferDeferred.SetRenderTarget(_normalRenderTarget, BuiltinRenderTextureType.CameraTarget);
 							_instancedBlock.Clear();
 							_instancedBlock.SetFloat("_MaskMultiplier", current.Fade);
-							_instancedBlock.SetFloat("_LimitTo", (!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
-							_bufferDeferred.DrawMesh(_cubeMesh, current.transform.localToWorldMatrix, key, 0, 1, _instancedBlock);
+							_instancedBlock.SetFloat("_LimitTo",
+								(!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
+							_bufferDeferred.DrawMesh(_cubeMesh, current.transform.localToWorldMatrix, key, 0, 1,
+								_instancedBlock);
 							num3++;
 						}
 					}
+
 					if (UseInstancing && num3 > 0)
 					{
 						_bufferDeferred.Blit(BuiltinRenderTextureType.GBuffer1, num);
@@ -363,11 +398,14 @@ namespace ThreeEyedGames
 			{
 				return;
 			}
+
 			_bufferUnlit.SetRenderTarget(BuiltinRenderTextureType.CameraTarget);
-			SortedDictionary<int, Dictionary<Material, HashSet<Decalicious>>>.Enumerator enumerator = _unlitDecals.GetEnumerator();
+			SortedDictionary<int, Dictionary<Material, HashSet<Decalicious>>>.Enumerator enumerator =
+				_unlitDecals.GetEnumerator();
 			while (enumerator.MoveNext())
 			{
-				Dictionary<Material, HashSet<Decalicious>>.Enumerator enumerator2 = enumerator.Current.Value.GetEnumerator();
+				Dictionary<Material, HashSet<Decalicious>>.Enumerator enumerator2 =
+					enumerator.Current.Value.GetEnumerator();
 				while (enumerator2.MoveNext())
 				{
 					Material key = enumerator2.Current.Key;
@@ -381,6 +419,7 @@ namespace ThreeEyedGames
 						{
 							continue;
 						}
+
 						if (UseInstancing)
 						{
 							_matrices[num] = current.transform.localToWorldMatrix;
@@ -400,10 +439,13 @@ namespace ThreeEyedGames
 						{
 							_instancedBlock.Clear();
 							_instancedBlock.SetFloat("_MaskMultiplier", current.Fade);
-							_instancedBlock.SetFloat("_LimitTo", (!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
-							_bufferUnlit.DrawMesh(_cubeMesh, current.transform.localToWorldMatrix, key, 0, 0, _instancedBlock);
+							_instancedBlock.SetFloat("_LimitTo",
+								(!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
+							_bufferUnlit.DrawMesh(_cubeMesh, current.transform.localToWorldMatrix, key, 0, 0,
+								_instancedBlock);
 						}
 					}
+
 					if (UseInstancing && num > 0)
 					{
 						_instancedBlock.Clear();
@@ -421,6 +463,7 @@ namespace ThreeEyedGames
 			{
 				return;
 			}
+
 			CommandBuffer[] commandBuffers = cam.GetCommandBuffers(evt);
 			foreach (CommandBuffer commandBuffer in commandBuffers)
 			{
@@ -430,6 +473,7 @@ namespace ThreeEyedGames
 					break;
 				}
 			}
+
 			if (buffer == null)
 			{
 				buffer = new CommandBuffer();
@@ -444,14 +488,15 @@ namespace ThreeEyedGames
 			{
 				_limitToGameObjects.Add(limitTo);
 			}
+
 			switch (decal.RenderMode)
 			{
-			case Decalicious.DecalRenderMode.Deferred:
-				AddDeferred(decal);
-				break;
-			case Decalicious.DecalRenderMode.Unlit:
-				AddUnlit(decal);
-				break;
+				case Decalicious.DecalRenderMode.Deferred:
+					AddDeferred(decal);
+					break;
+				case Decalicious.DecalRenderMode.Unlit:
+					AddUnlit(decal);
+					break;
 			}
 		}
 
@@ -461,6 +506,7 @@ namespace ThreeEyedGames
 			{
 				_deferredDecals.Add(decal.RenderOrder, new Dictionary<Material, HashSet<Decalicious>>());
 			}
+
 			Dictionary<Material, HashSet<Decalicious>> dictionary = _deferredDecals[decal.RenderOrder];
 			if (!dictionary.ContainsKey(decal.Material))
 			{
@@ -478,6 +524,7 @@ namespace ThreeEyedGames
 			{
 				_unlitDecals.Add(decal.RenderOrder, new Dictionary<Material, HashSet<Decalicious>>());
 			}
+
 			Dictionary<Material, HashSet<Decalicious>> dictionary = _unlitDecals[decal.RenderOrder];
 			if (!dictionary.ContainsKey(decal.Material))
 			{

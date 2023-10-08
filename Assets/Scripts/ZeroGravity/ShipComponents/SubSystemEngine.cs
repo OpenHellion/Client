@@ -6,8 +6,7 @@ namespace ZeroGravity.ShipComponents
 {
 	public class SubSystemEngine : SubSystem, IPowerConsumer
 	{
-		[SerializeField]
-		private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[2]
+		[SerializeField] private ResourceRequirement[] _ResourceRequirements = new ResourceRequirement[2]
 		{
 			new ResourceRequirement
 			{
@@ -27,26 +26,17 @@ namespace ZeroGravity.ShipComponents
 
 		public override SubSystemType Type
 		{
-			get
-			{
-				return SubSystemType.Engine;
-			}
+			get { return SubSystemType.Engine; }
 		}
 
 		public override ResourceRequirement[] ResourceRequirements
 		{
-			get
-			{
-				return _ResourceRequirements;
-			}
+			get { return _ResourceRequirements; }
 		}
 
 		public bool ThrustActive
 		{
-			get
-			{
-				return Status == SystemStatus.Online && OperationRate > 0f;
-			}
+			get { return Status == SystemStatus.Online && OperationRate > 0f; }
 		}
 
 		public override SystemAuxData GetAuxData()

@@ -54,6 +54,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					continue;
 				}
+
 				string[] array = delegateObject.ScriptFunctionName.Split('/');
 				MonoBehaviour monoBehaviour = null;
 				MonoBehaviour[] components = delegateObject.Object.GetComponents<MonoBehaviour>();
@@ -65,35 +66,48 @@ namespace ZeroGravity.LevelDesign
 						break;
 					}
 				}
-				MethodInfo method = monoBehaviour.GetType().GetMethod(array[1], BindingFlags.Instance | BindingFlags.Public);
+
+				MethodInfo method = monoBehaviour.GetType()
+					.GetMethod(array[1], BindingFlags.Instance | BindingFlags.Public);
 				if (method != null)
 				{
 					if (method.ReturnType == typeof(bool))
 					{
-						delegateObject.DelegateBool = (DelegateFuncBool)Delegate.CreateDelegate(typeof(DelegateFuncBool), monoBehaviour, method);
+						delegateObject.DelegateBool =
+							(DelegateFuncBool)Delegate.CreateDelegate(typeof(DelegateFuncBool), monoBehaviour, method);
 					}
 					else if (method.ReturnType == typeof(int))
 					{
-						delegateObject.DelegateInt = (DelegateFuncInt)Delegate.CreateDelegate(typeof(DelegateFuncInt), monoBehaviour, method);
+						delegateObject.DelegateInt =
+							(DelegateFuncInt)Delegate.CreateDelegate(typeof(DelegateFuncInt), monoBehaviour, method);
 					}
 					else if (method.ReturnType == typeof(string))
 					{
-						delegateObject.DelegateString = (DelegateFuncString)Delegate.CreateDelegate(typeof(DelegateFuncString), monoBehaviour, method);
+						delegateObject.DelegateString =
+							(DelegateFuncString)Delegate.CreateDelegate(typeof(DelegateFuncString), monoBehaviour,
+								method);
 					}
+
 					continue;
 				}
-				PropertyInfo property = monoBehaviour.GetType().GetProperty(array[1], BindingFlags.Instance | BindingFlags.Public);
+
+				PropertyInfo property = monoBehaviour.GetType()
+					.GetProperty(array[1], BindingFlags.Instance | BindingFlags.Public);
 				if (property.PropertyType == typeof(bool))
 				{
-					delegateObject.DelegateBool = (DelegateFuncBool)Delegate.CreateDelegate(typeof(DelegateFuncBool), monoBehaviour, property.GetGetMethod());
+					delegateObject.DelegateBool = (DelegateFuncBool)Delegate.CreateDelegate(typeof(DelegateFuncBool),
+						monoBehaviour, property.GetGetMethod());
 				}
 				else if (property.PropertyType == typeof(int))
 				{
-					delegateObject.DelegateInt = (DelegateFuncInt)Delegate.CreateDelegate(typeof(DelegateFuncInt), monoBehaviour, property.GetGetMethod());
+					delegateObject.DelegateInt = (DelegateFuncInt)Delegate.CreateDelegate(typeof(DelegateFuncInt),
+						monoBehaviour, property.GetGetMethod());
 				}
 				else if (property.PropertyType == typeof(string))
 				{
-					delegateObject.DelegateString = (DelegateFuncString)Delegate.CreateDelegate(typeof(DelegateFuncString), monoBehaviour, property.GetGetMethod());
+					delegateObject.DelegateString =
+						(DelegateFuncString)Delegate.CreateDelegate(typeof(DelegateFuncString), monoBehaviour,
+							property.GetGetMethod());
 				}
 			}
 		}
@@ -104,6 +118,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return true;
 			}
+
 			bool flag = true;
 			bool flag2 = true;
 			for (int i = 0; i < DelegateObjects.Count; i++)
@@ -111,24 +126,30 @@ namespace ZeroGravity.LevelDesign
 				flag2 = true;
 				if (DelegateObjects[i].DelegateBool != null)
 				{
-					if ((DelegateObjects[i].DelegateBool.GetInvocationList()[0] as DelegateFuncBool)() != DelegateObjects[i].ValueBool)
+					if ((DelegateObjects[i].DelegateBool.GetInvocationList()[0] as DelegateFuncBool)() !=
+					    DelegateObjects[i].ValueBool)
 					{
 						flag2 = false;
 					}
 				}
 				else if (DelegateObjects[i].DelegateInt != null)
 				{
-					if ((DelegateObjects[i].DelegateInt.GetInvocationList()[0] as DelegateFuncInt)() != DelegateObjects[i].ValueInt)
+					if ((DelegateObjects[i].DelegateInt.GetInvocationList()[0] as DelegateFuncInt)() !=
+					    DelegateObjects[i].ValueInt)
 					{
 						flag2 = false;
 					}
 				}
-				else if (DelegateObjects[i].DelegateString != null && (DelegateObjects[i].DelegateString.GetInvocationList()[0] as DelegateFuncString)() != DelegateObjects[i].ValueString)
+				else if (DelegateObjects[i].DelegateString != null &&
+				         (DelegateObjects[i].DelegateString.GetInvocationList()[0] as DelegateFuncString)() !=
+				         DelegateObjects[i].ValueString)
 				{
 					flag2 = false;
 				}
+
 				flag = ((i != 0) ? ((DelegateObjects[i].Operation != 0) ? (flag || flag2) : (flag && flag2)) : flag2);
 			}
+
 			return flag;
 		}
 	}

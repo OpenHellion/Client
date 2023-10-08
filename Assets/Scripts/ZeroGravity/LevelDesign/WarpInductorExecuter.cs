@@ -4,14 +4,11 @@ namespace ZeroGravity.LevelDesign
 {
 	public class WarpInductorExecuter : MonoBehaviour
 	{
-		[SerializeField]
-		private SceneTriggerExecuter warpInductor;
+		[SerializeField] private SceneTriggerExecutor warpInductor;
 
-		[SerializeField]
-		private string warpInductorOpenState = "Open";
+		[SerializeField] private string warpInductorOpenState = "Open";
 
-		[SerializeField]
-		private string warpInductorCloseState = "Close";
+		[SerializeField] private string warpInductorCloseState = "Close";
 
 		public void ToggleInductor(bool isActive, bool isInstant)
 		{
@@ -19,6 +16,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
+
 			if (isActive && !warpInductorOpenState.IsNullOrEmpty())
 			{
 				if (isInstant)

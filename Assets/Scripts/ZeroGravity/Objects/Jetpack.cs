@@ -17,8 +17,7 @@ namespace ZeroGravity.Objects
 
 			public List<NozzleDirection> directions;
 
-			[HideInInspector]
-			public GameObject nozzle;
+			[HideInInspector] public GameObject nozzle;
 
 			public void ToggleNozzle(bool activate)
 			{
@@ -53,8 +52,7 @@ namespace ZeroGravity.Objects
 
 		private Helmet helmet;
 
-		[HideInInspector]
-		public sbyte[] NozzleDir = new sbyte[4];
+		[HideInInspector] public sbyte[] NozzleDir = new sbyte[4];
 
 		public CargoCompartment OxygenCompartment;
 
@@ -72,8 +70,7 @@ namespace ZeroGravity.Objects
 
 		public SoundEffect MyJetpackSounds;
 
-		[SerializeField]
-		private List<Nozzle> nozzles;
+		[SerializeField] private List<Nozzle> nozzles;
 
 		public Image FuelFillerImage;
 
@@ -87,72 +84,55 @@ namespace ZeroGravity.Objects
 		{
 			get
 			{
-				return (PropellantCompartment.Resources == null || PropellantCompartment.Resources.Count <= 0) ? 0f : PropellantCompartment.Resources[0].Quantity;
+				return (PropellantCompartment.Resources == null || PropellantCompartment.Resources.Count <= 0)
+					? 0f
+					: PropellantCompartment.Resources[0].Quantity;
 			}
 		}
 
 		public float MaxFuel
 		{
-			get
-			{
-				return PropellantCompartment.Capacity;
-			}
+			get { return PropellantCompartment.Capacity; }
 		}
 
 		public float CurrentOxygen
 		{
 			get
 			{
-				return (OxygenCompartment.Resources == null || OxygenCompartment.Resources.Count <= 0) ? 0f : OxygenCompartment.Resources[0].Quantity;
+				return (OxygenCompartment.Resources == null || OxygenCompartment.Resources.Count <= 0)
+					? 0f
+					: OxygenCompartment.Resources[0].Quantity;
 			}
 		}
 
 		public float MaxOxygen
 		{
-			get
-			{
-				return OxygenCompartment.Capacity;
-			}
+			get { return OxygenCompartment.Capacity; }
 		}
 
 		public float PropFuel
 		{
-			get
-			{
-				return CurrentFuel / MaxFuel;
-			}
+			get { return CurrentFuel / MaxFuel; }
 		}
 
 		public float PropOxygen
 		{
-			get
-			{
-				return CurrentOxygen / MaxOxygen;
-			}
+			get { return CurrentOxygen / MaxOxygen; }
 		}
 
 		public List<ICargoCompartment> Compartments
 		{
-			get
-			{
-				return _Compartments;
-			}
+			get { return _Compartments; }
 		}
 
 		public new string Name
 		{
-			get
-			{
-				return base.Name;
-			}
+			get { return base.Name; }
 		}
 
 		public Helmet Helmet
 		{
-			get
-			{
-				return helmet;
-			}
+			get { return helmet; }
 			set
 			{
 				helmet = value;
@@ -166,26 +146,17 @@ namespace ZeroGravity.Objects
 
 		public override bool IsInvetoryEquipable
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public override EquipType EquipTo
 		{
-			get
-			{
-				return EquipType.EquipInventory;
-			}
+			get { return EquipType.EquipInventory; }
 		}
 
 		public SpaceObjectVessel ParentVessel
 		{
-			get
-			{
-				return null;
-			}
+			get { return null; }
 		}
 
 		protected override void Awake()
@@ -228,6 +199,7 @@ namespace ZeroGravity.Objects
 					soundEffect.Play(9);
 					NozzleDir[2] = 0;
 				}
+
 				if (direction.z <= -0.01f)
 				{
 					soundEffect.Play(2);
@@ -237,6 +209,7 @@ namespace ZeroGravity.Objects
 				{
 					soundEffect.Play(8);
 				}
+
 				if (direction.x >= 0.01f)
 				{
 					soundEffect.Play(0);
@@ -247,6 +220,7 @@ namespace ZeroGravity.Objects
 					soundEffect.Play(6);
 					NozzleDir[0] = 0;
 				}
+
 				if (direction.x <= -0.01f)
 				{
 					soundEffect.Play(1);
@@ -256,6 +230,7 @@ namespace ZeroGravity.Objects
 				{
 					soundEffect.Play(7);
 				}
+
 				if (direction.y >= 0.01f)
 				{
 					soundEffect.Play(5);
@@ -266,6 +241,7 @@ namespace ZeroGravity.Objects
 					soundEffect.Play(11);
 					NozzleDir[1] = 0;
 				}
+
 				if (direction.y <= -0.01f)
 				{
 					soundEffect.Play(4);
@@ -275,6 +251,7 @@ namespace ZeroGravity.Objects
 				{
 					soundEffect.Play(10);
 				}
+
 				if (direction.w >= 0.01f)
 				{
 					soundEffect.Play(12);
@@ -285,6 +262,7 @@ namespace ZeroGravity.Objects
 					soundEffect.Play(14);
 					NozzleDir[3] = 0;
 				}
+
 				if (direction.w <= -0.01f)
 				{
 					soundEffect.Play(13);
@@ -295,6 +273,7 @@ namespace ZeroGravity.Objects
 					soundEffect.Play(15);
 				}
 			}
+
 			foreach (Nozzle nozzle in nozzles)
 			{
 				if (direction.z >= 0.01f && nozzle.directions.Contains(NozzleDirection.Forward))
@@ -347,11 +326,14 @@ namespace ZeroGravity.Objects
 		public override void Special()
 		{
 			InventorySlot inventorySlot = MyPlayer.Instance.Inventory.FindEmptyOutfitSlot(this, true);
-			if (inventorySlot == null || !MyPlayer.Instance.Inventory.AddToInventory(this, inventorySlot, MyPlayer.Instance.Inventory.HandsSlot))
+			if (inventorySlot == null ||
+			    !MyPlayer.Instance.Inventory.AddToInventory(this, inventorySlot, MyPlayer.Instance.Inventory.HandsSlot))
 			{
 				string empty = string.Empty;
-				empty = ((!(MyPlayer.Instance.Inventory.Outfit == null)) ? Localization.AlreadyEquipped.ToUpper() : Localization.EquipSuitFirst.ToUpper());
-				Client.Instance.CanvasManager.ShowInteractionCanvasMessage(empty);
+				empty = ((!(MyPlayer.Instance.Inventory.Outfit == null))
+					? Localization.AlreadyEquipped.ToUpper()
+					: Localization.EquipSuitFirst.ToUpper());
+				World.InGameGUI.ShowInteractionCanvasMessage(empty);
 			}
 		}
 
@@ -367,6 +349,7 @@ namespace ZeroGravity.Objects
 				{
 					return;
 				}
+
 				MyPlayer myPlayer = pl as MyPlayer;
 				if (type == EquipTo)
 				{
@@ -376,6 +359,7 @@ namespace ZeroGravity.Objects
 						Helmet = myPlayer.CurrentHelmet;
 						Helmet.Jetpack = this;
 					}
+
 					myPlayer.FpsController.RefreshMaxAngularVelocity();
 
 					MyPlayer.Instance.CheckEquipmentAchievement();
@@ -391,6 +375,7 @@ namespace ZeroGravity.Objects
 						Helmet.HudUI.UpdateUI();
 						Helmet = null;
 					}
+
 					StartNozzles(Vector4.zero);
 					myPlayer.FpsController.RefreshMaxAngularVelocity();
 				}
@@ -405,32 +390,40 @@ namespace ZeroGravity.Objects
 			{
 				_Compartments = new List<ICargoCompartment> { OxygenCompartment, PropellantCompartment };
 			}
+
 			PropellantCompartment.Capacity = jetpackStats.PropellantCapacity;
 			PropellantCompartment.Resources = new List<CargoResourceData>();
 			if (jetpackStats.Propellant != null)
 			{
 				PropellantCompartment.Resources.Add(jetpackStats.Propellant);
 			}
+
 			OxygenCompartment.Capacity = jetpackStats.OxygenCapacity;
 			OxygenCompartment.Resources = new List<CargoResourceData>();
 			if (jetpackStats.Oxygen != null)
 			{
 				OxygenCompartment.Resources.Add(jetpackStats.Oxygen);
 			}
-			if (base.AttachPoint != null && MyPlayer.Instance.IsLockedToTrigger && MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
+
+			if (base.AttachPoint != null && MyPlayer.Instance.IsLockedToTrigger &&
+			    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
 			{
-				SceneTriggerCargoPanel sceneTriggerCargoPanel = MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel;
+				SceneTriggerCargoPanel sceneTriggerCargoPanel =
+					MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel;
 				sceneTriggerCargoPanel.CargoPanel.CreateAttachItemUI();
 			}
+
 			if (Helmet != null)
 			{
 				Helmet.HudUI.UpdateUI();
 			}
+
 			if (CurrentFuel <= float.Epsilon)
 			{
 				IsActive = false;
 				StopNozzles();
 			}
+
 			UpdateUI();
 		}
 
@@ -455,10 +448,12 @@ namespace ZeroGravity.Objects
 			{
 				return true;
 			}
+
 			if (mySlot.SlotType == InventorySlot.Type.Equip && nextSlot.Item != null)
 			{
 				return true;
 			}
+
 			return false;
 		}
 	}

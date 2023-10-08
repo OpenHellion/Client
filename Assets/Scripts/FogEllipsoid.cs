@@ -13,22 +13,17 @@ public class FogEllipsoid : MonoBehaviour
 
 	public float m_Density = 1f;
 
-	[MinValue(0f)]
-	public float m_Radius = 1f;
+	[MinValue(0f)] public float m_Radius = 1f;
 
-	[MinValue(0f)]
-	public float m_Stretch = 2f;
+	[MinValue(0f)] public float m_Stretch = 2f;
 
-	[Range(0f, 1f)]
-	public float m_Feather = 0.7f;
+	[Range(0f, 1f)] public float m_Feather = 0.7f;
 
-	[Range(0f, 1f)]
-	public float m_NoiseAmount;
+	[Range(0f, 1f)] public float m_NoiseAmount;
 
 	public float m_NoiseSpeed = 1f;
 
-	[MinValue(0f)]
-	public float m_NoiseScale = 1f;
+	[MinValue(0f)] public float m_NoiseScale = 1f;
 
 	private bool m_AddedToLightManager;
 

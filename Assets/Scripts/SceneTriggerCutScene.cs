@@ -1,4 +1,4 @@
-using ZeroGravity;
+using OpenHellion;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Objects;
 
@@ -12,12 +12,13 @@ public class SceneTriggerCutScene : SceneTrigger
 		{
 			return false;
 		}
+
 		PlayCutScene();
 		return true;
 	}
 
 	public void PlayCutScene()
 	{
-		Client.Instance.CanvasManager.CanvasUI.QuestCutScene.PlayCutScene(CutScene);
+		World.InGameGUI.QuestCutScene.PlayCutScene(CutScene);
 	}
 }

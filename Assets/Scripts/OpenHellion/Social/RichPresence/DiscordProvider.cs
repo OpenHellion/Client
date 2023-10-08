@@ -17,12 +17,14 @@
 
 using System;
 using System.Collections.Generic;
-using UnityEngine;
-using ZeroGravity.Objects;
-using ZeroGravity;
+using OpenHellion;
 using Discord;
-using OpenHellion.Net.Message;
 using OpenHellion.IO;
+using OpenHellion.Net.Message;
+using OpenHellion.UI;
+using ZeroGravity;
+using ZeroGravity.Network;
+using ZeroGravity.Objects;
 
 namespace OpenHellion.Social.RichPresence
 {
@@ -55,7 +57,11 @@ namespace OpenHellion.Social.RichPresence
 			{ 19L, "Ia" }
 		};
 
-		private static readonly List<string> Descriptions = new() { "Building a huuuuuge station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job", "Repairing a hull breach" };
+		private static readonly List<string> Descriptions = new()
+		{
+			"Building a huuuuuge station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job",
+			"Repairing a hull breach"
+		};
 
 		private const long ClientId = 349114016968474626L;
 		private const uint OptionalSteamId = 588210;
@@ -79,10 +85,7 @@ namespace OpenHellion.Social.RichPresence
 				return false;
 			}
 
-			_discord.SetLogHook(LogLevel.Debug, (level, message) =>
-			{
-				Dbg.Log("Log[{0}] {1}", level, message);
-			});
+			_discord.SetLogHook(LogLevel.Debug, (level, message) => { Dbg.Log("Log[{0}] {1}", level, message); });
 
 			_activityManager = _discord.GetActivityManager();
 
@@ -116,12 +119,12 @@ namespace OpenHellion.Social.RichPresence
 		}
 
 		// When we are joining a game.
+		// TODO: Add invites.
 		private void JoinCallback(string secret)
 		{
 			try
 			{
 				InviteMessage inviteMessage = JsonSerialiser.Deserialize<InviteMessage>(secret);
-				Client.Instance.ProcessInvitation(inviteMessage);
 			}
 			catch (Exception ex)
 			{
@@ -133,10 +136,7 @@ namespace OpenHellion.Social.RichPresence
 		private void InviteCallback(ActivityActionType Type, ref User user, ref Activity activity2)
 		{
 			// TODO: Make this safer.
-			_activityManager.AcceptInvite(user.Id, result =>
-			{
-				Dbg.Log("AcceptInvite {0}", result);
-			});
+			_activityManager.AcceptInvite(user.Id, result => { Dbg.Log("AcceptInvite {0}", result); });
 		}
 
 		// When we get an ask to join request from another user.
@@ -183,23 +183,11 @@ namespace OpenHellion.Social.RichPresence
 		{
 			try
 			{
-				if (Client.Instance is not null && Client.Instance.SinglePlayerMode)
+				if (MyPlayer.Instance is not null && MyPlayer.Instance.PlayerReady)
 				{
-					_activity.State = "Playing single player game";
-					_activity.Details = "Having so much fun.";
-					_activity.Assets.LargeImage = "cover";
-					_activity.Assets.LargeText = string.Empty;
-					_activity.Assets.SmallImage = string.Empty;
-					_activity.Assets.SmallText = string.Empty;
-					_activity.Secrets.Join = string.Empty;
-					_activity.Party.Size.CurrentSize = 0;
-					_activity.Party.Size.MaxSize = 0;
-					_activity.Party.Id = string.Empty;
-				}
-				else if (MyPlayer.Instance is not null && MyPlayer.Instance.PlayerReady)
-				{
-					_activity.Secrets.Join = Client.Instance.GetInviteString(null);
-					_activity.Assets.LargeText = Localization.InGameDescription + ": " + Client.LastConnectedServer.Name;
+					_activity.Secrets.Join = Globals.GetInviteString(null);
+					_activity.Assets.LargeText =
+						Localization.InGameDescription + ": " + MainMenuGUI.LastConnectedServer.Name;
 					_activity.Details = Descriptions[UnityEngine.Random.Range(0, Descriptions.Count - 1)];
 					ArtificialBody artificialBody = MyPlayer.Instance.Parent as ArtificialBody;
 					if (artificialBody is not null && artificialBody.ParentCelesitalBody != null)
@@ -228,11 +216,12 @@ namespace OpenHellion.Social.RichPresence
 							_activity.State = Localization.OrbitingNear + " " + value.ToUpper();
 						}
 					}
-					_activity.Assets.SmallImage = Client.Instance.CurrentGender.ToLocalizedString().ToLower();
+
+					_activity.Assets.SmallImage = Gender.Male.ToLocalizedString().ToLower();
 					_activity.Assets.SmallText = MyPlayer.Instance.PlayerName;
-					_activity.Party.Size.CurrentSize = Client.LastConnectedServer.CurrentPlayers + 1;
-					_activity.Party.Size.MaxSize = Client.LastConnectedServer.MaxPlayers;
-					_activity.Party.Id = Client.LastConnectedServer.Hash.ToString();
+					_activity.Party.Size.CurrentSize = MainMenuGUI.LastConnectedServer.CurrentPlayers + 1;
+					_activity.Party.Size.MaxSize = MainMenuGUI.LastConnectedServer.MaxPlayers;
+					_activity.Party.Id = MainMenuGUI.LastConnectedServer.Hash.ToString();
 				}
 				else
 				{
@@ -248,7 +237,7 @@ namespace OpenHellion.Social.RichPresence
 					_activity.Party.Id = string.Empty;
 				}
 
-				_activityManager.UpdateActivity(_activity, result => {});
+				_activityManager.UpdateActivity(_activity, result => { });
 			}
 			catch (Exception ex)
 			{
@@ -286,20 +275,21 @@ namespace OpenHellion.Social.RichPresence
 
 			_activity.Secrets.Join = secret;
 			_activity.Secrets.Spectate = secret;
-			_activityManager.UpdateActivity(_activity, result => {});
+			_activityManager.UpdateActivity(_activity, result => { });
 
 			// Read the id without the prefix.
-			_activityManager.SendInvite(long.Parse(id[1..]), ActivityActionType.Join, "You have been invited to play Hellion!", result =>
-			{
-				if (result == Result.Ok)
+			_activityManager.SendInvite(long.Parse(id[1..]), ActivityActionType.Join,
+				"You have been invited to play Hellion!", result =>
 				{
-					Dbg.Log("Invite sent.");
-				}
-				else
-				{
-					Dbg.Log("Invite failed.", result);
-				}
-			});
+					if (result == Result.Ok)
+					{
+						Dbg.Log("Invite sent.");
+					}
+					else
+					{
+						Dbg.Log("Invite failed.", result);
+					}
+				});
 		}
 	}
 }

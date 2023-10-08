@@ -36,7 +36,11 @@ public class MB_TextureCombinerRenderTexture
 
 	private MB3_TextureCombiner combiner;
 
-	public Texture2D DoRenderAtlas(GameObject gameObject, int width, int height, int padding, Rect[] rss, List<MB3_TextureCombiner.MB_TexSet> textureSetss, int indexOfTexSetToRenders, ShaderTextureProperty texPropertyname, TextureBlender resultMaterialTextureBlender, bool isNormalMap, bool fixOutOfBoundsUVs, bool considerNonTextureProperties, MB3_TextureCombiner texCombiner, MB2_LogLevel LOG_LEV)
+	public Texture2D DoRenderAtlas(GameObject gameObject, int width, int height, int padding, Rect[] rss,
+		List<MB3_TextureCombiner.MB_TexSet> textureSetss, int indexOfTexSetToRenders,
+		ShaderTextureProperty texPropertyname, TextureBlender resultMaterialTextureBlender, bool isNormalMap,
+		bool fixOutOfBoundsUVs, bool considerNonTextureProperties, MB3_TextureCombiner texCombiner,
+		MB2_LogLevel LOG_LEV)
 	{
 		LOG_LEVEL = LOG_LEV;
 		textureSets = textureSetss;
@@ -48,12 +52,15 @@ public class MB_TextureCombinerRenderTexture
 		_resultMaterialTextureBlender = resultMaterialTextureBlender;
 		combiner = texCombiner;
 		rs = rss;
-		Shader shader = ((!_isNormalMap) ? Shader.Find("MeshBaker/AlbedoShader") : Shader.Find("MeshBaker/NormalMapShader"));
+		Shader shader = ((!_isNormalMap)
+			? Shader.Find("MeshBaker/AlbedoShader")
+			: Shader.Find("MeshBaker/NormalMapShader"));
 		if (shader == null)
 		{
 			UnityEngine.Debug.LogError("Could not find shader for RenderTexture. Try reimporting mesh baker");
 			return null;
 		}
+
 		mat = new Material(shader);
 		_destinationTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32);
 		_destinationTexture.filterMode = FilterMode.Point;
@@ -69,8 +76,10 @@ public class MB_TextureCombinerRenderTexture
 		_doRenderAtlas = true;
 		if (LOG_LEVEL >= MB2_LogLevel.debug)
 		{
-			UnityEngine.Debug.Log(string.Format("Begin Camera.Render destTex w={0} h={1} camPos={2}", width, height, component.localPosition));
+			UnityEngine.Debug.Log(string.Format("Begin Camera.Render destTex w={0} h={1} camPos={2}", width, height,
+				component.localPosition));
 		}
+
 		myCamera.Render();
 		_doRenderAtlas = false;
 		MB_Utility.Destroy(mat);
@@ -79,6 +88,7 @@ public class MB_TextureCombinerRenderTexture
 		{
 			UnityEngine.Debug.Log("Finished Camera.Render ");
 		}
+
 		Texture2D result = targTex;
 		targTex = null;
 		return result;
@@ -90,29 +100,41 @@ public class MB_TextureCombinerRenderTexture
 		{
 			return;
 		}
+
 		Stopwatch stopwatch = new Stopwatch();
 		stopwatch.Start();
 		for (int i = 0; i < rs.Length; i++)
 		{
-			MB3_TextureCombiner.MeshBakerMaterialTexture meshBakerMaterialTexture = textureSets[i].ts[indexOfTexSetToRender];
+			MB3_TextureCombiner.MeshBakerMaterialTexture meshBakerMaterialTexture =
+				textureSets[i].ts[indexOfTexSetToRender];
 			if (LOG_LEVEL >= MB2_LogLevel.trace && meshBakerMaterialTexture.t != null)
 			{
-				UnityEngine.Debug.Log(string.Concat("Added ", meshBakerMaterialTexture.t, " to atlas w=", meshBakerMaterialTexture.t.width, " h=", meshBakerMaterialTexture.t.height, " offset=", meshBakerMaterialTexture.matTilingRect.min, " scale=", meshBakerMaterialTexture.matTilingRect.size, " rect=", rs[i], " padding=", _padding));
+				UnityEngine.Debug.Log(string.Concat("Added ", meshBakerMaterialTexture.t, " to atlas w=",
+					meshBakerMaterialTexture.t.width, " h=", meshBakerMaterialTexture.t.height, " offset=",
+					meshBakerMaterialTexture.matTilingRect.min, " scale=", meshBakerMaterialTexture.matTilingRect.size,
+					" rect=", rs[i], " padding=", _padding));
 				_printTexture(meshBakerMaterialTexture.t);
 			}
-			CopyScaledAndTiledToAtlas(textureSets[i], meshBakerMaterialTexture, textureSets[i].obUVoffset, textureSets[i].obUVscale, rs[i], _texPropertyName, _resultMaterialTextureBlender);
+
+			CopyScaledAndTiledToAtlas(textureSets[i], meshBakerMaterialTexture, textureSets[i].obUVoffset,
+				textureSets[i].obUVscale, rs[i], _texPropertyName, _resultMaterialTextureBlender);
 		}
+
 		stopwatch.Stop();
 		stopwatch.Start();
 		if (LOG_LEVEL >= MB2_LogLevel.debug)
 		{
-			UnityEngine.Debug.Log("Total time for Graphics.DrawTexture calls " + stopwatch.ElapsedMilliseconds.ToString("f5"));
+			UnityEngine.Debug.Log("Total time for Graphics.DrawTexture calls " +
+			                      stopwatch.ElapsedMilliseconds.ToString("f5"));
 		}
+
 		if (LOG_LEVEL >= MB2_LogLevel.debug)
 		{
 			UnityEngine.Debug.Log("Copying RenderTexture to Texture2D.");
 		}
-		Texture2D texture2D = new Texture2D(_destinationTexture.width, _destinationTexture.height, TextureFormat.ARGB32, true);
+
+		Texture2D texture2D = new Texture2D(_destinationTexture.width, _destinationTexture.height, TextureFormat.ARGB32,
+			true);
 		int num = _destinationTexture.width / 512;
 		int num2 = _destinationTexture.height / 512;
 		if (num == 0 || num2 == 0)
@@ -121,6 +143,7 @@ public class MB_TextureCombinerRenderTexture
 			{
 				UnityEngine.Debug.Log("Copying all in one shot");
 			}
+
 			RenderTexture.active = _destinationTexture;
 			texture2D.ReadPixels(new Rect(0f, 0f, _destinationTexture.width, _destinationTexture.height), 0, 0, true);
 			RenderTexture.active = null;
@@ -131,6 +154,7 @@ public class MB_TextureCombinerRenderTexture
 			{
 				UnityEngine.Debug.Log("OpenGL copying blocks");
 			}
+
 			for (int j = 0; j < num; j++)
 			{
 				for (int k = 0; k < num2; k++)
@@ -147,23 +171,27 @@ public class MB_TextureCombinerRenderTexture
 			{
 				UnityEngine.Debug.Log("Not OpenGL copying blocks");
 			}
+
 			for (int l = 0; l < num; l++)
 			{
 				for (int m = 0; m < num2; m++)
 				{
 					RenderTexture.active = _destinationTexture;
-					texture2D.ReadPixels(new Rect(l * 512, _destinationTexture.height - 512 - m * 512, 512f, 512f), l * 512, m * 512, true);
+					texture2D.ReadPixels(new Rect(l * 512, _destinationTexture.height - 512 - m * 512, 512f, 512f),
+						l * 512, m * 512, true);
 					RenderTexture.active = null;
 				}
 			}
 		}
+
 		texture2D.Apply();
 		myCamera.targetTexture = null;
 		RenderTexture.active = null;
 		targTex = texture2D;
 		if (LOG_LEVEL >= MB2_LogLevel.debug)
 		{
-			UnityEngine.Debug.Log("Total time to copy RenderTexture to Texture2D " + stopwatch.ElapsedMilliseconds.ToString("f5"));
+			UnityEngine.Debug.Log("Total time to copy RenderTexture to Texture2D " +
+			                      stopwatch.ElapsedMilliseconds.ToString("f5"));
 		}
 	}
 
@@ -187,7 +215,9 @@ public class MB_TextureCombinerRenderTexture
 		return graphicsDeviceVersion.StartsWith("OpenGL");
 	}
 
-	private void CopyScaledAndTiledToAtlas(MB3_TextureCombiner.MB_TexSet texSet, MB3_TextureCombiner.MeshBakerMaterialTexture source, Vector2 obUVoffset, Vector2 obUVscale, Rect rec, ShaderTextureProperty texturePropertyName, TextureBlender resultMatTexBlender)
+	private void CopyScaledAndTiledToAtlas(MB3_TextureCombiner.MB_TexSet texSet,
+		MB3_TextureCombiner.MeshBakerMaterialTexture source, Vector2 obUVoffset, Vector2 obUVscale, Rect rec,
+		ShaderTextureProperty texturePropertyName, TextureBlender resultMatTexBlender)
 	{
 		Rect rect = rec;
 		if (resultMatTexBlender != null)
@@ -198,10 +228,12 @@ public class MB_TextureCombinerRenderTexture
 		{
 			myCamera.backgroundColor = MB3_TextureCombiner.GetColorIfNoTexture(texturePropertyName);
 		}
+
 		if (source.t == null)
 		{
 			source.t = combiner._createTemporaryTexture(16, 16, TextureFormat.ARGB32, true);
 		}
+
 		rect.y = 1f - (rect.y + rect.height);
 		rect.x *= _destinationTexture.width;
 		rect.y *= _destinationTexture.height;
@@ -223,6 +255,7 @@ public class MB_TextureCombinerRenderTexture
 				UnityEngine.Debug.Log("Fixing out of bounds UVs for tex " + source.t);
 			}
 		}
+
 		Texture2D t = source.t;
 		TextureWrapMode wrapMode = t.wrapMode;
 		if (r.width == 1f && r.height == 1f && r.x == 0f && r.y == 0f)
@@ -233,10 +266,13 @@ public class MB_TextureCombinerRenderTexture
 		{
 			t.wrapMode = TextureWrapMode.Repeat;
 		}
+
 		if (LOG_LEVEL >= MB2_LogLevel.trace)
 		{
-			UnityEngine.Debug.Log(string.Concat("DrawTexture tex=", t.name, " destRect=", rect, " srcRect=", r, " Mat=", mat));
+			UnityEngine.Debug.Log(string.Concat("DrawTexture tex=", t.name, " destRect=", rect, " srcRect=", r, " Mat=",
+				mat));
 		}
+
 		Rect sourceRect = default(Rect);
 		sourceRect.x = r.x;
 		sourceRect.y = r.y + 1f - 1f / (float)t.height;
@@ -320,6 +356,7 @@ public class MB_TextureCombinerRenderTexture
 		{
 			UnityEngine.Debug.Log("Not printing texture too large.");
 		}
+
 		try
 		{
 			Color32[] pixels = t.GetPixels32();
@@ -330,8 +367,10 @@ public class MB_TextureCombinerRenderTexture
 				{
 					text = string.Concat(text, pixels[i * t.width + j], ", ");
 				}
+
 				text += "\n";
 			}
+
 			UnityEngine.Debug.Log(text);
 		}
 		catch (Exception ex)

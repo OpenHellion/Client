@@ -6,26 +6,18 @@ namespace ZeroGravity.Objects
 {
 	public class Magazine : Item
 	{
-		[SerializeField]
-		private int bulletCount;
+		[SerializeField] private int bulletCount;
 
-		[SerializeField]
-		private int maxBulletCount;
+		[SerializeField] private int maxBulletCount;
 
 		public override float Quantity
 		{
-			get
-			{
-				return bulletCount;
-			}
+			get { return bulletCount; }
 		}
 
 		public override float MaxQuantity
 		{
-			get
-			{
-				return maxBulletCount;
-			}
+			get { return maxBulletCount; }
 		}
 
 		public override void ChangeQuantity(float amount)
@@ -52,6 +44,7 @@ namespace ZeroGravity.Objects
 			{
 				num = fromMag.bulletCount;
 			}
+
 			toMag.bulletCount += num;
 			fromMag.bulletCount -= num;
 			DynamicObject dynamicObj = fromMag.DynamicObj;
@@ -71,6 +64,7 @@ namespace ZeroGravity.Objects
 				SplitMagazines(this, toMag);
 				return true;
 			}
+
 			return false;
 		}
 

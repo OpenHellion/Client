@@ -22,8 +22,10 @@ namespace ZeroGravity.CharacterMovement
 				{
 					component.AnimInteraction_NoneExit();
 				}
+
 				return;
 			}
+
 			OtherPlayer component2 = animator.transform.parent.gameObject.GetComponent<OtherPlayer>();
 			if (component2 != null)
 			{
@@ -59,8 +61,10 @@ namespace ZeroGravity.CharacterMovement
 				{
 					component.AnimInteraction_NoneEnter();
 				}
+
 				return;
 			}
+
 			OtherPlayer component2 = animator.transform.parent.gameObject.GetComponent<OtherPlayer>();
 			if (component2 != null)
 			{

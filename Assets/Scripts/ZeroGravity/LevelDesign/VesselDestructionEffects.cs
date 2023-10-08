@@ -30,6 +30,7 @@ namespace ZeroGravity.LevelDesign
 					explosionEffect.Play();
 				}
 			}
+
 			isActive = true;
 		}
 
@@ -39,6 +40,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return;
 			}
+
 			bool flag = true;
 			foreach (ParticleSystem explosionEffect in ExplosionEffects)
 			{
@@ -47,6 +49,7 @@ namespace ZeroGravity.LevelDesign
 					flag = false;
 				}
 			}
+
 			if (flag)
 			{
 				isActive = false;

@@ -7,6 +7,5 @@ public class QuestCutSceneCharacter : ScriptableObject
 
 	public Sprite CharacterImage;
 
-	[Multiline]
-	public string CharacterInfo;
+	[Multiline] public string CharacterInfo;
 }

@@ -23,11 +23,9 @@ namespace RootMotion.FinalIK
 
 		public Transform bone3;
 
-		[Range(0f, 1f)]
-		public float maintainRotationWeight;
+		[Range(0f, 1f)] public float maintainRotationWeight;
 
-		[Range(0f, 1f)]
-		public float weight = 1f;
+		[Range(0f, 1f)] public float weight = 1f;
 
 		private BoneMap boneMapParent = new BoneMap();
 
@@ -52,18 +50,22 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			if (!BoneIsValid(bone1, solver, ref message))
 			{
 				return false;
 			}
+
 			if (!BoneIsValid(bone2, solver, ref message))
 			{
 				return false;
 			}
+
 			if (!BoneIsValid(bone3, solver, ref message))
 			{
 				return false;
 			}
+
 			return true;
 		}
 
@@ -71,25 +73,32 @@ namespace RootMotion.FinalIK
 		{
 			switch (boneMap)
 			{
-			case BoneMapType.Parent:
-				if (parentBone == null)
-				{
-					Warning.Log("This limb does not have a parent (shoulder) bone", bone1);
-				}
-				return boneMapParent;
-			case BoneMapType.Bone1:
-				return boneMap1;
-			case BoneMapType.Bone2:
-				return boneMap2;
-			default:
-				return boneMap3;
+				case BoneMapType.Parent:
+					if (parentBone == null)
+					{
+						Warning.Log("This limb does not have a parent (shoulder) bone", bone1);
+					}
+
+					return boneMapParent;
+				case BoneMapType.Bone1:
+					return boneMap1;
+				case BoneMapType.Bone2:
+					return boneMap2;
+				default:
+					return boneMap3;
 			}
 		}
 
 		public void SetLimbOrientation(Vector3 upper, Vector3 lower)
 		{
-			boneMap1.defaultLocalTargetRotation = Quaternion.Inverse(Quaternion.Inverse(bone1.rotation) * Quaternion.LookRotation(bone2.position - bone1.position, bone1.rotation * -upper));
-			boneMap2.defaultLocalTargetRotation = Quaternion.Inverse(Quaternion.Inverse(bone2.rotation) * Quaternion.LookRotation(bone3.position - bone2.position, bone2.rotation * -lower));
+			boneMap1.defaultLocalTargetRotation = Quaternion.Inverse(Quaternion.Inverse(bone1.rotation) *
+			                                                         Quaternion.LookRotation(
+				                                                         bone2.position - bone1.position,
+				                                                         bone1.rotation * -upper));
+			boneMap2.defaultLocalTargetRotation = Quaternion.Inverse(Quaternion.Inverse(bone2.rotation) *
+			                                                         Quaternion.LookRotation(
+				                                                         bone3.position - bone2.position,
+				                                                         bone2.rotation * -lower));
 		}
 
 		public void SetBones(Transform bone1, Transform bone2, Transform bone3, Transform parentBone = null)
@@ -106,6 +115,7 @@ namespace RootMotion.FinalIK
 			{
 				boneMapParent.StoreDefaultLocalState();
 			}
+
 			boneMap1.StoreDefaultLocalState();
 			boneMap2.StoreDefaultLocalState();
 			boneMap3.StoreDefaultLocalState();
@@ -117,6 +127,7 @@ namespace RootMotion.FinalIK
 			{
 				boneMapParent.FixTransform(false);
 			}
+
 			boneMap1.FixTransform(true);
 			boneMap2.FixTransform(false);
 			boneMap3.FixTransform(false);
@@ -128,22 +139,27 @@ namespace RootMotion.FinalIK
 			{
 				boneMapParent = new BoneMap();
 			}
+
 			if (boneMap1 == null)
 			{
 				boneMap1 = new BoneMap();
 			}
+
 			if (boneMap2 == null)
 			{
 				boneMap2 = new BoneMap();
 			}
+
 			if (boneMap3 == null)
 			{
 				boneMap3 = new BoneMap();
 			}
+
 			if (parentBone != null)
 			{
 				boneMapParent.Initiate(parentBone, solver);
 			}
+
 			boneMap1.Initiate(bone1, solver);
 			boneMap2.Initiate(bone2, solver);
 			boneMap3.Initiate(bone3, solver);
@@ -171,6 +187,7 @@ namespace RootMotion.FinalIK
 				{
 					boneMapParent.Swing(solver.GetNode(boneMap1.chainIndex, boneMap1.nodeIndex).solverPosition, weight);
 				}
+
 				boneMap1.RotateToPlane(solver, weight);
 				boneMap2.RotateToPlane(solver, weight);
 				boneMap3.RotateToMaintain(maintainRotationWeight * weight * solver.IKPositionWeight);

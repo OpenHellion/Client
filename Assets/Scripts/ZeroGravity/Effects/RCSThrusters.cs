@@ -6,11 +6,9 @@ namespace ZeroGravity.Effects
 {
 	public class RCSThrusters : MonoBehaviour
 	{
-		[SerializeField]
-		private Vector3 moveVector = Vector3.zero;
+		[SerializeField] private Vector3 moveVector = Vector3.zero;
 
-		[SerializeField]
-		private Vector3 rotateVector = Vector3.zero;
+		[SerializeField] private Vector3 rotateVector = Vector3.zero;
 
 		public Transform CenterOfMass;
 
@@ -20,7 +18,8 @@ namespace ZeroGravity.Effects
 
 		public List<ParticleSystem> ParticleThrusters = new List<ParticleSystem>();
 
-		[Tooltip("Sound effect objects need to be properly oriented so the right sound will trigger. Point the UP direction of the object as it is the thruster.")]
+		[Tooltip(
+			"Sound effect objects need to be properly oriented so the right sound will trigger. Point the UP direction of the object as it is the thruster.")]
 		public List<SoundEffect> SoundEffects = new List<SoundEffect>();
 
 		private float moveEpsilon = 1E-06f;
@@ -29,34 +28,27 @@ namespace ZeroGravity.Effects
 
 		public bool IsOn
 		{
-			get
-			{
-				return base.gameObject.activeInHierarchy;
-			}
-			set
-			{
-				base.gameObject.SetActive(value);
-			}
+			get { return base.gameObject.activeInHierarchy; }
+			set { base.gameObject.SetActive(value); }
 		}
 
 		private void Awake()
 		{
-			if (!Client.IsGameBuild)
-			{
-				return;
-			}
 			if (CenterOfMass == null)
 			{
 				CenterOfMass = base.transform;
 			}
+
 			if (MoveCamera == null)
 			{
 				MoveCamera = Camera.main;
 			}
+
 			if (MoveCamera == null && MyPlayer.Instance != null)
 			{
 				MoveCamera = MyPlayer.Instance.FpsController.MainCamera;
 			}
+
 			ExhaustScript[] componentsInChildren = GetComponentsInChildren<ExhaustScript>(true);
 			foreach (ExhaustScript exhaustScript in componentsInChildren)
 			{
@@ -87,7 +79,20 @@ namespace ZeroGravity.Effects
 		{
 			foreach (ExhaustScript thruster in Thrusters)
 			{
-				if ((moveVector.IsNotEpsilonZero() && (double)Vector3.Dot(moveVector, Quaternion.Inverse(CenterOfMass.rotation) * thruster.transform.rotation * Vector3.up) < -0.7) || (rotateVector.x.IsNotEpsilonZero() && (double)Vector3.Dot(Quaternion.AngleAxis(90f * rotateVector.x, CenterOfMass.right) * (CenterOfMass.position - thruster.transform.position), thruster.transform.up) > 0.7) || (rotateVector.y.IsNotEpsilonZero() && (double)Vector3.Dot(Quaternion.AngleAxis(90f * rotateVector.y, CenterOfMass.up) * (CenterOfMass.position - thruster.transform.position), thruster.transform.up) > 0.7) || (rotateVector.z.IsNotEpsilonZero() && (double)Vector3.Dot(Quaternion.AngleAxis(90f * rotateVector.z, CenterOfMass.forward) * (CenterOfMass.position - thruster.transform.position), thruster.transform.up) > 0.7))
+				if ((moveVector.IsNotEpsilonZero() && (double)Vector3.Dot(moveVector,
+					    Quaternion.Inverse(CenterOfMass.rotation) * thruster.transform.rotation * Vector3.up) < -0.7) ||
+				    (rotateVector.x.IsNotEpsilonZero() &&
+				     (double)Vector3.Dot(
+					     Quaternion.AngleAxis(90f * rotateVector.x, CenterOfMass.right) *
+					     (CenterOfMass.position - thruster.transform.position), thruster.transform.up) > 0.7) ||
+				    (rotateVector.y.IsNotEpsilonZero() &&
+				     (double)Vector3.Dot(
+					     Quaternion.AngleAxis(90f * rotateVector.y, CenterOfMass.up) *
+					     (CenterOfMass.position - thruster.transform.position), thruster.transform.up) > 0.7) ||
+				    (rotateVector.z.IsNotEpsilonZero() &&
+				     (double)Vector3.Dot(
+					     Quaternion.AngleAxis(90f * rotateVector.z, CenterOfMass.forward) *
+					     (CenterOfMass.position - thruster.transform.position), thruster.transform.up) > 0.7))
 				{
 					thruster.gameObject.SetActive(true);
 				}
@@ -96,9 +101,26 @@ namespace ZeroGravity.Effects
 					thruster.gameObject.SetActive(false);
 				}
 			}
+
 			foreach (ParticleSystem particleThruster in ParticleThrusters)
 			{
-				if ((moveVector.IsNotEpsilonZero() && (double)Vector3.Dot(moveVector, Quaternion.Inverse(CenterOfMass.rotation) * particleThruster.transform.rotation * Vector3.forward) < -0.7) || (rotateVector.x.IsNotEpsilonZero() && (double)Vector3.Dot(Quaternion.AngleAxis(90f * rotateVector.x, CenterOfMass.right) * (CenterOfMass.position - particleThruster.transform.position), particleThruster.transform.forward) > 0.7) || (rotateVector.y.IsNotEpsilonZero() && (double)Vector3.Dot(Quaternion.AngleAxis(90f * rotateVector.y, CenterOfMass.up) * (CenterOfMass.position - particleThruster.transform.position), particleThruster.transform.forward) > 0.7) || (rotateVector.z.IsNotEpsilonZero() && (double)Vector3.Dot(Quaternion.AngleAxis(90f * rotateVector.z, CenterOfMass.forward) * (CenterOfMass.position - particleThruster.transform.position), particleThruster.transform.forward) > 0.7))
+				if ((moveVector.IsNotEpsilonZero() && (double)Vector3.Dot(moveVector,
+					    Quaternion.Inverse(CenterOfMass.rotation) * particleThruster.transform.rotation *
+					    Vector3.forward) < -0.7) ||
+				    (rotateVector.x.IsNotEpsilonZero() && (double)Vector3.Dot(
+					    Quaternion.AngleAxis(90f * rotateVector.x, CenterOfMass.right) *
+					    (CenterOfMass.position - particleThruster.transform.position),
+					    particleThruster.transform.forward) > 0.7) ||
+				    (rotateVector.y.IsNotEpsilonZero() && (double)Vector3.Dot(
+					    Quaternion.AngleAxis(90f * rotateVector.y, CenterOfMass.up) *
+					    (CenterOfMass.position - particleThruster.transform.position),
+					    particleThruster.transform.forward) > 0.7) || (rotateVector.z.IsNotEpsilonZero() &&
+					                                                   (double)Vector3.Dot(
+						                                                   Quaternion.AngleAxis(90f * rotateVector.z,
+							                                                   CenterOfMass.forward) *
+						                                                   (CenterOfMass.position -
+						                                                    particleThruster.transform.position),
+						                                                   particleThruster.transform.forward) > 0.7))
 				{
 					particleThruster.Play();
 				}
@@ -107,6 +129,7 @@ namespace ZeroGravity.Effects
 					particleThruster.Stop();
 				}
 			}
+
 			foreach (SoundEffect soundEffect in SoundEffects)
 			{
 				if (moveVector.IsNotEpsilonZero() || rotateVector.IsNotEpsilonZero())

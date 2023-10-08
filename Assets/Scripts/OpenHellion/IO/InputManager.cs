@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ZeroGravity.UI;
 
 namespace OpenHellion.IO
 {
@@ -53,49 +55,37 @@ namespace OpenHellion.IO
 			Quick4
 		}
 
-		private static float m_MouseSensitivity;
-		public static float SavedSensitivity
-		{
-			get
-			{
-				return m_MouseSensitivity;
-			}
-			set
-			{
-				m_MouseSensitivity = value;
-				RealSensitivity = value;
-			}
-		}
-
-		public static float RealSensitivity = SavedSensitivity;
+		public static float RealSensitivity = Settings.Instance.SettingsData.ControlsSettings.MouseSensitivity;
 
 		public InputActionAsset InputActions;
 
 		public const string ActionMapName = "Main";
 
-		private static InputManager s_instance;
+		private static InputManager _instance;
+
 		public static InputManager Instance
 		{
 			get
 			{
-				if (s_instance == null)
+				if (_instance == null)
 				{
 					Dbg.Error("Tried to get input manager before it has been initialised.");
 				}
 
-				return s_instance;
+				return _instance;
 			}
 		}
 
 		public void Awake()
 		{
-			if (s_instance != null)
+			if (_instance != null)
 			{
 				Destroy(this);
 				Dbg.Error("Input manager already exists.");
 				return;
 			}
-			s_instance = this;
+
+			_instance = this;
 
 #if UNITY_EDITOR
 			if (InputActions != null)
@@ -141,7 +131,8 @@ namespace OpenHellion.IO
 
 			// Get saved controls.
 			InputActionMap settingsControls = InputActionMap.FromJson(actionMap)[0];
-			InputActionMap defaultControls = InputActionAsset.FromJson(Resources.Load("Data/ControlsDefault").ToString()).actionMaps[0];
+			InputActionMap defaultControls =
+				InputActionAsset.FromJson(Resources.Load("Data/ControlsDefault").ToString()).actionMaps[0];
 
 			// If settings exist, proceed.
 			if (File.Exists(Path.Combine(Application.persistentDataPath, "Settings.json")))
@@ -155,6 +146,7 @@ namespace OpenHellion.IO
 					{
 						settingsControlsNames.Add(action.name);
 					}
+
 					foreach (InputAction action in defaultControls.actions)
 					{
 						defaultControlsNames.Add(action.name);
@@ -241,6 +233,7 @@ namespace OpenHellion.IO
 				{
 					return binding.ToDisplayString();
 				}
+
 				if (getNegative && binding.name == "negative")
 				{
 					return binding.ToDisplayString();

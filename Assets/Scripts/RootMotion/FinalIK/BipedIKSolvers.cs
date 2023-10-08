@@ -34,6 +34,7 @@ namespace RootMotion.FinalIK
 				{
 					_limbs = new IKSolverLimb[4] { leftFoot, rightFoot, leftHand, rightHand };
 				}
+
 				return _limbs;
 			}
 		}
@@ -46,6 +47,7 @@ namespace RootMotion.FinalIK
 				{
 					_ikSolvers = new IKSolver[7] { leftFoot, rightFoot, leftHand, rightHand, spine, lookAt, aim };
 				}
+
 				return _ikSolvers;
 			}
 		}
@@ -53,7 +55,8 @@ namespace RootMotion.FinalIK
 		public void AssignReferences(BipedReferences references)
 		{
 			leftHand.SetChain(references.leftUpperArm, references.leftForearm, references.leftHand, references.root);
-			rightHand.SetChain(references.rightUpperArm, references.rightForearm, references.rightHand, references.root);
+			rightHand.SetChain(references.rightUpperArm, references.rightForearm, references.rightHand,
+				references.root);
 			leftFoot.SetChain(references.leftThigh, references.leftCalf, references.leftFoot, references.root);
 			rightFoot.SetChain(references.rightThigh, references.rightCalf, references.rightFoot, references.root);
 			spine.SetChain(references.spine, references.root);

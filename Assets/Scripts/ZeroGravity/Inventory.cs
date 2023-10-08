@@ -20,6 +20,8 @@ namespace ZeroGravity
 
 		private InventorySlot m_handsSlot;
 
+		public Action OnOutfitChanged;
+
 		public SpaceObject Parent
 		{
 			get
@@ -28,6 +30,7 @@ namespace ZeroGravity
 				{
 					return m_parentPlayer;
 				}
+
 				return m_parentCorpse;
 			}
 		}
@@ -61,7 +64,10 @@ namespace ZeroGravity
 			{
 				m_myPlayer = parent as MyPlayer;
 			}
-			m_handsSlot = InventorySlot.CreateHandsSlot(m_animHelper.GetBone(AnimatorHelper.HumanBones.RightInteractBone).gameObject, this);
+
+			m_handsSlot =
+				InventorySlot.CreateHandsSlot(
+					m_animHelper.GetBone(AnimatorHelper.HumanBones.RightInteractBone).gameObject, this);
 			m_outfitSlot = InventorySlot.CreateOutfitSlot(Parent.gameObject, this);
 		}
 
@@ -71,7 +77,9 @@ namespace ZeroGravity
 			m_parentPlayer = null;
 			m_parentCorpse = parent;
 			m_myPlayer = null;
-			m_handsSlot = InventorySlot.CreateHandsSlot(m_animHelper.GetBone(AnimatorHelper.HumanBones.RightInteractBone).gameObject, this);
+			m_handsSlot =
+				InventorySlot.CreateHandsSlot(
+					m_animHelper.GetBone(AnimatorHelper.HumanBones.RightInteractBone).gameObject, this);
 			m_outfitSlot = InventorySlot.CreateOutfitSlot(Parent.gameObject, this);
 		}
 
@@ -87,16 +95,17 @@ namespace ZeroGravity
 		{
 			switch (id)
 			{
-			case -1:
-				return m_handsSlot;
-			case -2:
-				return m_outfitSlot;
-			default:
-				if (Outfit != null)
-				{
-					return Outfit.GetSlotByID(id);
-				}
-				return null;
+				case -1:
+					return m_handsSlot;
+				case -2:
+					return m_outfitSlot;
+				default:
+					if (Outfit != null)
+					{
+						return Outfit.GetSlotByID(id);
+					}
+
+					return null;
 			}
 		}
 
@@ -108,8 +117,10 @@ namespace ZeroGravity
 			Dictionary<short, InventorySlot> dictionary2 = dictionary;
 			if (Outfit != null)
 			{
-				return dictionary2.Union(Outfit.InventorySlots).ToDictionary((KeyValuePair<short, InventorySlot> k) => k.Key, (KeyValuePair<short, InventorySlot> v) => v.Value);
+				return dictionary2.Union(Outfit.InventorySlots).ToDictionary(
+					(KeyValuePair<short, InventorySlot> k) => k.Key, (KeyValuePair<short, InventorySlot> v) => v.Value);
 			}
+
 			return dictionary2;
 		}
 
@@ -117,7 +128,8 @@ namespace ZeroGravity
 		{
 			return (from m in GetAllSlots()
 				where m.Value.SlotGroup == @group
-				select m).ToDictionary((KeyValuePair<short, InventorySlot> k) => k.Key, (KeyValuePair<short, InventorySlot> v) => v.Value);
+				select m).ToDictionary((KeyValuePair<short, InventorySlot> k) => k.Key,
+				(KeyValuePair<short, InventorySlot> v) => v.Value);
 		}
 
 		public void SetOutfit(Outfit outfit)
@@ -129,6 +141,7 @@ namespace ZeroGravity
 					value.SetInventory(null);
 				}
 			}
+
 			Outfit = outfit;
 			if (Outfit != null)
 			{
@@ -137,20 +150,22 @@ namespace ZeroGravity
 					value2.SetInventory(this);
 				}
 			}
+
 			if (m_myPlayer != null)
 			{
 				m_myPlayer.CurrentOutfit = Outfit;
 			}
+
 			m_outfitSlot.SetItem(outfit, sendMessage: false);
-			m_handsSlot.SetAttachPoint(ItemType.None, m_animHelper.GetBone(AnimatorHelper.HumanBones.RightInteractBone).gameObject, hideAttachedObject: false);
+			m_handsSlot.SetAttachPoint(ItemType.None,
+				m_animHelper.GetBone(AnimatorHelper.HumanBones.RightInteractBone).gameObject,
+				hideAttachedObject: false);
 			if (m_parentPlayer != null)
 			{
 				m_parentPlayer.RefreshTargetingPoints();
 			}
-			if (Client.Instance.CanvasManager.InventoryUI.gameObject.activeInHierarchy)
-			{
-				Client.Instance.CanvasManager.InventoryUI.UpdateArmorAndHealth();
-			}
+
+			OnOutfitChanged();
 		}
 
 		public InventorySlot FindEmptyOutfitSlot(Item item, bool museBeEquip = false)
@@ -159,13 +174,16 @@ namespace ZeroGravity
 			{
 				return null;
 			}
+
 			foreach (InventorySlot value in Outfit.InventorySlots.Values)
 			{
-				if (value.Item == null && (!museBeEquip || value.SlotType == InventorySlot.Type.Equip) && value.CanFitItem(item))
+				if (value.Item == null && (!museBeEquip || value.SlotType == InventorySlot.Type.Equip) &&
+				    value.CanFitItem(item))
 				{
 					return value;
 				}
 			}
+
 			return null;
 		}
 
@@ -175,6 +193,7 @@ namespace ZeroGravity
 			{
 				return false;
 			}
+
 			item.RequestDrop();
 			if (oldSlot != null)
 			{
@@ -187,6 +206,7 @@ namespace ZeroGravity
 					oldSlot.SetItem(null);
 				}
 			}
+
 			return true;
 		}
 
@@ -209,6 +229,7 @@ namespace ZeroGravity
 				oldSlot.SetItem(item);
 				return true;
 			}
+
 			return AddToInventory(item, newSlot, oldSlot);
 		}
 
@@ -218,10 +239,12 @@ namespace ZeroGravity
 			{
 				return true;
 			}
+
 			if (!AddToInventory(item, null, oldSlot))
 			{
 				return false;
 			}
+
 			return true;
 		}
 
@@ -231,15 +254,18 @@ namespace ZeroGravity
 			{
 				return true;
 			}
+
 			item.DynamicObj.CheckNearbyObjects();
 			if (newSlot == null)
 			{
 				newSlot = FindEmptyOutfitSlot(item);
 			}
+
 			if (newSlot == null || !newSlot.CanFitItem(item))
 			{
 				return false;
 			}
+
 			if (newSlot.SlotType == InventorySlot.Type.Hands)
 			{
 				if (newSlot.Item != null)
@@ -260,6 +286,7 @@ namespace ZeroGravity
 						DropItem(newSlot.Item, newSlot);
 					}
 				}
+
 				newSlot.SetItem(item);
 			}
 			else
@@ -275,8 +302,10 @@ namespace ZeroGravity
 						AddToInventoryOrDrop(newSlot.Item, newSlot);
 					}
 				}
+
 				newSlot.SetItem(item);
 			}
+
 			return true;
 		}
 
@@ -297,12 +326,14 @@ namespace ZeroGravity
 		{
 			if (m_myPlayer != null)
 			{
-				m_myPlayer.animHelper.OverrideItemAnimations(item.fpsAnimations, item.Type, item.NeedsFullAnimOverride, item);
+				m_myPlayer.animHelper.OverrideItemAnimations(item.fpsAnimations, item.Type, item.NeedsFullAnimOverride,
+					item);
 				m_myPlayer.ItemAddedToHands(item);
 			}
 			else if (Parent is OtherPlayer)
 			{
-				(Parent as OtherPlayer).tpsController.animHelper.OverrideItemAnimations(item.tpsAnimations, item.Type, item.NeedsFullAnimOverride, item);
+				(Parent as OtherPlayer).tpsController.animHelper.OverrideItemAnimations(item.tpsAnimations, item.Type,
+					item.NeedsFullAnimOverride, item);
 			}
 		}
 

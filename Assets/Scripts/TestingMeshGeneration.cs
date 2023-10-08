@@ -25,6 +25,7 @@ public class TestingMeshGeneration : MonoBehaviour
 		for (int i = 0; i < 4; i++)
 		{
 		}
+
 		float x = base.transform.position.x;
 		float y = base.transform.position.y;
 		float z = base.transform.position.z;

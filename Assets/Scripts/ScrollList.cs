@@ -48,20 +48,30 @@ public class ScrollList : MonoBehaviour
 		foreach (GameObject item in listGO)
 		{
 			Color color = item.GetComponent<Image>().color;
-			float a = (color.a = Curve.Evaluate((0f - (ListContent.localPosition.y + item.transform.localPosition.y) + item.GetComponent<RectTransform>().rect.height / 2f) / ScrollView.GetComponent<RectTransform>().rect.height));
+			float a = (color.a =
+				Curve.Evaluate(
+					(0f - (ListContent.localPosition.y + item.transform.localPosition.y) +
+					 item.GetComponent<RectTransform>().rect.height / 2f) /
+					ScrollView.GetComponent<RectTransform>().rect.height));
 			item.GetComponent<Image>().color = color;
 			Text component = item.transform.Find("Text").GetComponent<Text>();
 			Color color2 = component.color;
 			color2.a = a;
 			component.color = color2;
-			float num2 = Mathf.Lerp(MinHeight, MaxHeight, Curve.Evaluate((0f - (ListContent.localPosition.y + item.transform.localPosition.y) + item.GetComponent<RectTransform>().rect.height / 2f) / ScrollView.GetComponent<RectTransform>().rect.height));
+			float num2 = Mathf.Lerp(MinHeight, MaxHeight,
+				Curve.Evaluate(
+					(0f - (ListContent.localPosition.y + item.transform.localPosition.y) +
+					 item.GetComponent<RectTransform>().rect.height / 2f) /
+					ScrollView.GetComponent<RectTransform>().rect.height));
 			item.GetComponent<LayoutElement>().minHeight = num2;
 			if ((double)num2 >= (double)MaxHeight * 0.99)
 			{
 				TrenutniIndex = num;
 			}
+
 			num++;
 		}
+
 		if (Keyboard.current.spaceKey.isPressed)
 		{
 			GoToMember(MemberToGoTo);
@@ -126,6 +136,7 @@ public class ScrollList : MonoBehaviour
 		{
 			float test2 = (float)listCount / 2f - 1f;
 		}
+
 		if (goUp)
 		{
 			if (TrenutniIndex <= AddToTop)
@@ -147,6 +158,7 @@ public class ScrollList : MonoBehaviour
 		{
 			target2 = ListContent.localPosition.y;
 		}
+
 		float elapsedTime = 0f;
 		Vector3 oldVal = ListContent.localPosition;
 		while (ListContent.localPosition.y != target2)
@@ -156,11 +168,13 @@ public class ScrollList : MonoBehaviour
 			ListContent.localPosition = new Vector3(oldVal.x, tmp, oldVal.z);
 			yield return new WaitForEndOfFrame();
 		}
+
 		CoorutineActive = false;
 		if (didMove)
 		{
 			ScrollListMove();
 		}
+
 		yield return null;
 	}
 
@@ -170,6 +184,7 @@ public class ScrollList : MonoBehaviour
 		{
 			Object.Destroy(item);
 		}
+
 		listGO.Clear();
 	}
 }

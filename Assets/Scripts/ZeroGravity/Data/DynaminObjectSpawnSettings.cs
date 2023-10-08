@@ -22,7 +22,8 @@ namespace ZeroGravity.Data
 		[Tooltip("-1 - don't randomize health, \n0-1 - maximum health boundary (0-100% from Max Health HP)")]
 		public float MaxHealth = -1f;
 
-		[Tooltip("Valid for machinery parts only.\n0 - don't wear at all, \n0-1 - reduced wear rate, \n>1 - increased wear rate")]
+		[Tooltip(
+			"Valid for machinery parts only.\n0 - don't wear at all, \n0-1 - reduced wear rate, \n>1 - increased wear rate")]
 		public float WearMultiplier = 1f;
 	}
 }

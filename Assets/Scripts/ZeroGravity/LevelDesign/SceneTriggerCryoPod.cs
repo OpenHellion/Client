@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
@@ -8,93 +7,23 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneTriggerCryoPod : BaseSceneTrigger
 	{
-		[SerializeField]
-		private bool _cancelExecuterAtSameTime;
-
-		[SerializeField]
-		private bool _isExteriorTrigger;
-
 		public SceneSpawnPoint SpawnPoint;
 
-		public override bool ExclusivePlayerLocking
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool ExclusivePlayerLocking => true;
 
-		public override SceneTriggerType TriggerType
-		{
-			get
-			{
-				return SceneTriggerType.CryoPodPanel;
-			}
-		}
+		public override SceneTriggerType TriggerType => SceneTriggerType.CryoPodPanel;
 
-		public override PlayerHandsCheckType PlayerHandsCheck
-		{
-			get
-			{
-				return PlayerHandsCheckType.DontCheck;
-			}
-		}
+		public override PlayerHandsCheckType PlayerHandsCheck => PlayerHandsCheckType.DontCheck;
 
-		public override List<ItemType> PlayerHandsItemType
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public override List<ItemType> PlayerHandsItemType => null;
 
-		public override bool IsNearTrigger
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool IsNearTrigger => true;
 
-		public override bool IsInteractable
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool IsInteractable => true;
 
-		public bool CancelExecuterAtSameTime
-		{
-			get
-			{
-				return _cancelExecuterAtSameTime;
-			}
-		}
+		public override bool CameraMovementAllowed => false;
 
-		public bool IsExteriorTrigger
-		{
-			get
-			{
-				return _isExteriorTrigger;
-			}
-		}
-
-		public override bool CameraMovementAllowed
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		public CryoPodUI MyCryoPod
-		{
-			get
-			{
-				return Client.Instance.InGamePanels.Cryo;
-			}
-		}
+		private CryoPodUI MyCryoPod => World.InWorldPanels.Cryo;
 
 		public override bool Interact(MyPlayer player, bool interactWithOverlappingTriggers = true)
 		{
@@ -102,6 +31,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return false;
 			}
+
 			MyCryoPod.SpawnPoint = SpawnPoint;
 			if (player.CurrentActiveItem != null)
 			{
@@ -114,6 +44,7 @@ namespace ZeroGravity.LevelDesign
 					return false;
 				}
 			}
+
 			player.AttachToPanel(this);
 			MyCryoPod.ToggleCanvas(true);
 			return true;

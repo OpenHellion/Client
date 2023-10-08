@@ -24,23 +24,17 @@ namespace RootMotion.FinalIK
 			[Tooltip("Which axes to limit the offset on?")]
 			public bool z;
 
-			[Tooltip("The limits")]
-			public float minX;
+			[Tooltip("The limits")] public float minX;
 
-			[Tooltip("The limits")]
-			public float maxX;
+			[Tooltip("The limits")] public float maxX;
 
-			[Tooltip("The limits")]
-			public float minY;
+			[Tooltip("The limits")] public float minY;
 
-			[Tooltip("The limits")]
-			public float maxY;
+			[Tooltip("The limits")] public float maxY;
 
-			[Tooltip("The limits")]
-			public float minZ;
+			[Tooltip("The limits")] public float minZ;
 
-			[Tooltip("The limits")]
-			public float maxZ;
+			[Tooltip("The limits")] public float maxZ;
 
 			public void Apply(IKEffector e, Quaternion rootRotation)
 			{
@@ -51,10 +45,12 @@ namespace RootMotion.FinalIK
 					{
 						vector.x = Mathf.Clamp(vector.x, minX, maxX);
 					}
+
 					if (y)
 					{
 						vector.y = Mathf.Clamp(vector.y, minY, maxY);
 					}
+
 					if (z)
 					{
 						vector.z = Mathf.Clamp(vector.z, minZ, maxZ);
@@ -66,15 +62,18 @@ namespace RootMotion.FinalIK
 					{
 						vector.x = SpringAxis(vector.x, minX, maxX);
 					}
+
 					if (y)
 					{
 						vector.y = SpringAxis(vector.y, minY, maxY);
 					}
+
 					if (z)
 					{
 						vector.z = SpringAxis(vector.z, minZ, maxZ);
 					}
 				}
+
 				e.positionOffset = rootRotation * vector;
 			}
 
@@ -84,10 +83,12 @@ namespace RootMotion.FinalIK
 				{
 					return value;
 				}
+
 				if (value < min)
 				{
 					return Spring(value, min, true);
 				}
+
 				return Spring(value, max, false);
 			}
 
@@ -99,25 +100,21 @@ namespace RootMotion.FinalIK
 				{
 					return value + Mathf.Clamp(0f - num2, 0f, 0f - num);
 				}
+
 				return value - Mathf.Clamp(num2, 0f, num);
 			}
 		}
 
-		[Tooltip("The master weight")]
-		public float weight = 1f;
+		[Tooltip("The master weight")] public float weight = 1f;
 
-		[Tooltip("Reference to the FBBIK component")]
-		[SerializeField]
+		[Tooltip("Reference to the FBBIK component")] [SerializeField]
 		protected FullBodyBipedIK ik;
 
 		private float lastTime;
 
 		protected float deltaTime
 		{
-			get
-			{
-				return Time.time - lastTime;
-			}
+			get { return Time.time - lastTime; }
 		}
 
 		protected abstract void OnModifyOffset();
@@ -133,8 +130,11 @@ namespace RootMotion.FinalIK
 			{
 				yield return null;
 			}
+
 			IKSolverFullBodyBiped solver = ik.solver;
-			solver.OnPreUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPreUpdate, new IKSolver.UpdateDelegate(ModifyOffset));
+			solver.OnPreUpdate =
+				(IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPreUpdate,
+					new IKSolver.UpdateDelegate(ModifyOffset));
 			lastTime = Time.time;
 		}
 
@@ -161,7 +161,9 @@ namespace RootMotion.FinalIK
 			if (ik != null)
 			{
 				IKSolverFullBodyBiped solver = ik.solver;
-				solver.OnPreUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(solver.OnPreUpdate, new IKSolver.UpdateDelegate(ModifyOffset));
+				solver.OnPreUpdate =
+					(IKSolver.UpdateDelegate)Delegate.Remove(solver.OnPreUpdate,
+						new IKSolver.UpdateDelegate(ModifyOffset));
 			}
 		}
 	}

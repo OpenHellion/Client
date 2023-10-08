@@ -14,6 +14,7 @@ public class MB2_TestShowHide : MonoBehaviour
 			mb.ApplyShowHide();
 			Debug.Log("should have disappeared");
 		}
+
 		if (Time.frameCount == 200)
 		{
 			mb.ShowHide(objs, null);

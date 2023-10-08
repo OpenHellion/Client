@@ -36,6 +36,7 @@ namespace ZeroGravity.UI
 					colorLerp = 1;
 				}
 			}
+
 			ZeroCells.color = color;
 			HexaRed.color = color;
 		}

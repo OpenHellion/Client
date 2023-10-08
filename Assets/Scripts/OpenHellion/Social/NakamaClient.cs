@@ -39,12 +39,13 @@ namespace OpenHellion.Social
 	{
 		[Tooltip("Called when Nakama requires authentication.")]
 		public UnityEvent OnRequireAuthentication;
+
 		public UnityEvent<string, Action> OnNakamaError;
 		public Action<String, String> OnChatMessageReceived;
 
 		public bool HasAuthenticated { get; private set; }
 
-		private Nakama.Client _client;
+		private Client _client;
 
 		private ISession _session;
 
@@ -58,7 +59,9 @@ namespace OpenHellion.Social
 		private const int NakamaPort = 7350;
 
 		private readonly CancellationTokenSource _cancelToken = new();
-		private TaskCompletionSource<MatchState> _matchStateReceivedCompletionSource;
+		private TaskCompletionSource<MatchInfo> _matchStateReceivedCompletionSource;
+
+		public string NakamaIdCached { get; private set; }
 
 		private void Awake()
 		{
@@ -72,7 +75,7 @@ namespace OpenHellion.Social
 			{
 				Dbg.Log("Connecting to Nakama...");
 
-				_client = new Nakama.Client("http", NakamaHost, NakamaPort, "defaultkey")
+				_client = new Client("http", NakamaHost, NakamaPort, "defaultkey")
 				{
 					Timeout = 3,
 					Logger = new HellionNakamaLogger(),
@@ -98,6 +101,7 @@ namespace OpenHellion.Social
 					try
 					{
 						_session = await _client.SessionRefreshAsync(_session, canceller: _cancelToken.Token);
+						NakamaIdCached = await GetUserId();
 						HasAuthenticated = true;
 					}
 					catch (ApiResponseException)
@@ -127,13 +131,15 @@ namespace OpenHellion.Social
 		{
 			try
 			{
-				_session = await _client.AuthenticateEmailAsync(email, password, create: false, canceller: _cancelToken.Token);
+				_session = await _client.AuthenticateEmailAsync(email, password, create: false,
+					canceller: _cancelToken.Token);
 
 				PlayerPrefs.SetString("authToken", _session.AuthToken);
 				PlayerPrefs.SetString("refreshToken", _session.RefreshToken);
 
 				Dbg.Log("Successfully authenticated.");
 				HasAuthenticated = true;
+				NakamaIdCached = await GetUserId();
 				return true;
 			}
 			catch (ApiResponseException ex)
@@ -171,12 +177,14 @@ namespace OpenHellion.Social
 		{
 			try
 			{
-				_session = await _client.AuthenticateEmailAsync(email, password, username, canceller: _cancelToken.Token);
+				_session = await _client.AuthenticateEmailAsync(email, password, username,
+					canceller: _cancelToken.Token);
 
 				PlayerPrefs.SetString("authToken", _session.AuthToken);
 				PlayerPrefs.SetString("refreshToken", _session.RefreshToken);
 
-				await _client.UpdateAccountAsync(_session, username, displayName, null, CultureInfo.CurrentCulture.Name, RegionInfo.CurrentRegion.EnglishName,
+				await _client.UpdateAccountAsync(_session, username, displayName, null, CultureInfo.CurrentCulture.Name,
+					RegionInfo.CurrentRegion.EnglishName,
 					TimeZoneInfo.Local.StandardName, canceller: _cancelToken.Token);
 
 				Dbg.Log("Account successfully created.");
@@ -221,6 +229,7 @@ namespace OpenHellion.Social
 				Dbg.Error("Nakama disconnected when doing task");
 				OnNakamaError.Invoke(Localization.NoNakamaConnection, Application.Quit);
 			}
+
 			return null;
 		}
 
@@ -241,6 +250,7 @@ namespace OpenHellion.Social
 				Dbg.Error("Nakama disconnected when doing task");
 				OnNakamaError.Invoke(Localization.NoNakamaConnection, Application.Quit);
 			}
+
 			return null;
 		}
 
@@ -261,6 +271,7 @@ namespace OpenHellion.Social
 				Dbg.Error("Nakama disconnected when doing task");
 				SceneManager.LoadScene(0);
 			}
+
 			return null;
 		}
 
@@ -281,27 +292,22 @@ namespace OpenHellion.Social
 				OnNakamaError.Invoke(Localization.NoNakamaConnection, Application.Quit);
 			}
 
-			_socket.ReceivedChannelMessage += message =>
-			{
-				OnChatMessageReceived(message.Username, message.Content);
-			};
+			_socket.ReceivedChannelMessage += message => { OnChatMessageReceived(message.Username, message.Content); };
 
-			_socket.ReceivedError += exception =>
-			{
-				OnNakamaError.Invoke(exception.Message, null);
-			};
+			_socket.ReceivedError += exception => { OnNakamaError.Invoke(exception.Message, null); };
 
 			_socket.ReceivedMatchState += matchState =>
 			{
 				_matchStateReceivedCompletionSource = new();
-				var result = JsonSerialiser.Deserialize<MatchState>(Encoding.UTF8.GetString(matchState.State));
+				var result = JsonSerialiser.Deserialize<MatchInfo>(Encoding.UTF8.GetString(matchState.State));
 				if (result is not null)
 				{
 					_matchStateReceivedCompletionSource.SetResult(result);
 				}
 				else
 				{
-					_matchStateReceivedCompletionSource.SetException(new Exception("Failed to deserialise match state."));
+					_matchStateReceivedCompletionSource.SetException(
+						new Exception("Failed to deserialise match state."));
 				}
 			};
 		}
@@ -315,7 +321,8 @@ namespace OpenHellion.Social
 		{
 			try
 			{
-				IApiRpc response = await _socket.RpcAsync("client_find_match", JsonSerialiser.Serialize(request, JsonSerialiser.Formatting.None));
+				IApiRpc response = await _socket.RpcAsync("client_find_match",
+					JsonSerialiser.Serialize(request, JsonSerialiser.Formatting.None));
 				var result = JsonSerialiser.Deserialize<FindMatchesResponse>(response.Payload);
 
 				return result.MatchesId;
@@ -408,7 +415,6 @@ namespace OpenHellion.Social
 			try
 			{
 				await _socket.WriteChatMessageAsync(_chatChannel, chatText);
-
 			}
 			catch (TaskCanceledException)
 			{

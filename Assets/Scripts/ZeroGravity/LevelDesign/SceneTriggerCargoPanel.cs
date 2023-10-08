@@ -8,91 +8,62 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneTriggerCargoPanel : BaseSceneTrigger
 	{
-		[SerializeField]
-		private bool _cancelExecuterAtSameTime;
+		[SerializeField] private bool _cancelExecuterAtSameTime;
 
-		[SerializeField]
-		private bool _isExteriorTrigger;
+		[SerializeField] private bool _isExteriorTrigger;
 
 		private CargoPanel cargoPanel;
 
 		public override bool ExclusivePlayerLocking
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public override SceneTriggerType TriggerType
 		{
-			get
-			{
-				return SceneTriggerType.CargoPanel;
-			}
+			get { return SceneTriggerType.CargoPanel; }
 		}
 
 		public override PlayerHandsCheckType PlayerHandsCheck
 		{
-			get
-			{
-				return PlayerHandsCheckType.StoreItemInHands;
-			}
+			get { return PlayerHandsCheckType.StoreItemInHands; }
 		}
 
 		public override List<ItemType> PlayerHandsItemType
 		{
-			get
-			{
-				return null;
-			}
+			get { return null; }
 		}
 
 		public override bool IsNearTrigger
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public override bool IsInteractable
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public bool CancelExecuterAtSameTime
 		{
-			get
-			{
-				return _cancelExecuterAtSameTime;
-			}
+			get { return _cancelExecuterAtSameTime; }
 		}
 
 		public bool IsExteriorTrigger
 		{
-			get
-			{
-				return _isExteriorTrigger;
-			}
+			get { return _isExteriorTrigger; }
 		}
 
 		public override bool CameraMovementAllowed
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public CargoPanel CargoPanel
 		{
 			get
 			{
-				cargoPanel = Client.Instance.InGamePanels.Cargo;
+				cargoPanel = World.InWorldPanels.Cargo;
 				return cargoPanel;
 			}
 		}
@@ -103,10 +74,12 @@ namespace ZeroGravity.LevelDesign
 			{
 				return false;
 			}
+
 			if (interactWithOverlappingTriggers)
 			{
 				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
 			}
+
 			CargoPanel.AttachPoint = base.transform.parent.GetComponentInChildren<SceneResourcesTransferPoint>();
 			player.AttachToPanel(this);
 			CargoPanel.OnInteract();

@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OpenHellion;
 using OpenHellion.IO;
 using OpenHellion.Net;
+using OpenHellion.UI;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;
@@ -77,11 +79,9 @@ namespace ZeroGravity.Objects
 
 		public List<ItemType> ReloadWithTypes;
 
-		[Title("General")]
-		public string Name = string.Empty;
+		[Title("General")] public string Name = string.Empty;
 
-		[HideInInspector]
-		public string ToolTip = string.Empty;
+		[HideInInspector] public string ToolTip = string.Empty;
 
 		public bool CanGoDirectlyToInventory = true;
 
@@ -91,9 +91,7 @@ namespace ZeroGravity.Objects
 
 		private IItemSlot _Slot;
 
-		[SerializeField]
-		[Range(1f, 4f)]
-		private int _Tier = 1;
+		[SerializeField] [Range(1f, 4f)] private int _Tier = 1;
 
 		public float[] TierMultipliers;
 
@@ -107,12 +105,9 @@ namespace ZeroGravity.Objects
 
 		public ItemIngredientLists[] Ingredients;
 
-		[SerializeField]
-		[Space(10f)]
-		public string ShaderProperty = "_Mat1Color1";
+		[SerializeField] [Space(10f)] public string ShaderProperty = "_Mat1Color1";
 
-		[HideInInspector]
-		public DynamicObject DynamicObj;
+		[HideInInspector] public DynamicObject DynamicObj;
 
 		public float PassiveSpeedMultiplier = 1f;
 
@@ -138,53 +133,38 @@ namespace ZeroGravity.Objects
 
 		public float MeleeRange;
 
-		[Title("ITEM DESTRUCTION")]
-		public bool DestructAt0HP;
+		[Title("ITEM DESTRUCTION")] public bool DestructAt0HP;
 
-		[FormerlySerializedAs("BlastRadius")]
-		public float ExplosionRadius;
+		[FormerlySerializedAs("BlastRadius")] public float ExplosionRadius;
 
-		[FormerlySerializedAs("Damage")]
-		public float ExplosionDamage;
+		[FormerlySerializedAs("Damage")] public float ExplosionDamage;
 
-		[FormerlySerializedAs("DamageType")]
-		public TypeOfDamage ExplosionDamageType;
+		[FormerlySerializedAs("DamageType")] public TypeOfDamage ExplosionDamageType;
 
-		[FormerlySerializedAs("BlastImpulse")]
-		public float ExplosionImpulse;
+		[FormerlySerializedAs("BlastImpulse")] public float ExplosionImpulse;
 
-		[FormerlySerializedAs("Effects")]
-		public ParticleSystem ExplosionEffects;
+		[FormerlySerializedAs("Effects")] public ParticleSystem ExplosionEffects;
 
 		public SoundEffect ExplosionSound;
 
-		[Space(10f)]
-		public Transform ikTargetingPoint;
+		[Space(10f)] public Transform ikTargetingPoint;
 
-		[SerializeField]
-		private float _MaxHealth = 100f;
+		[SerializeField] private float _MaxHealth = 100f;
 
-		[SerializeField]
-		private float _Health = 100f;
+		[SerializeField] private float _Health = 100f;
 
-		[SerializeField]
-		private float _Armor;
+		[SerializeField] private float _Armor;
 
-		[SerializeField]
-		private bool _Damageable;
+		[SerializeField] private bool _Damageable;
 
-		[SerializeField]
-		private bool _Expendable;
+		[SerializeField] private bool _Expendable;
 
-		[SerializeField]
-		private bool _Repairable;
+		[SerializeField] private bool _Repairable;
 
-		[SerializeField]
-		[Tooltip("HP per second")]
+		[SerializeField] [Tooltip("HP per second")]
 		private float _UsageWear;
 
-		[Space(10f)]
-		public Renderer HealthIndicator;
+		[Space(10f)] public Renderer HealthIndicator;
 
 		public int MaterialIndex;
 
@@ -202,11 +182,9 @@ namespace ZeroGravity.Objects
 
 		public AnimationCurve HealthIndicatorCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
-		[Range(0f, 1f)]
-		public float TestHealthPercentage = 1f;
+		[Range(0f, 1f)] public float TestHealthPercentage = 1f;
 
-		[Title("SOUND")]
-		public SoundEffect ThrowSound;
+		[Title("SOUND")] public SoundEffect ThrowSound;
 
 		public SoundEffect PickupSound;
 
@@ -216,14 +194,11 @@ namespace ZeroGravity.Objects
 
 		private Vector3? sendThrowForce;
 
-		[Title("ANIMATIONS")]
-		public ItemAnimations ItemAnimations;
+		[Title("ANIMATIONS")] public ItemAnimations ItemAnimations;
 
-		[HideInInspector]
-		public ItemAnimations.FPSAnimations fpsAnimations;
+		[HideInInspector] public ItemAnimations.FPSAnimations fpsAnimations;
 
-		[HideInInspector]
-		public ItemAnimations.TPSAnimations tpsAnimations;
+		[HideInInspector] public ItemAnimations.TPSAnimations tpsAnimations;
 
 		private float prevQuantity;
 
@@ -231,19 +206,23 @@ namespace ZeroGravity.Objects
 
 		private int explosionRaycastMask;
 
+		protected static World World;
+
 		public Sprite Icon
 		{
 			get
 			{
 				if (this is GenericItem)
 				{
-					return Client.Instance.SpriteManager.GetSprite((this as GenericItem).SubType);
+					return SpriteManager.Instance.GetSprite((this as GenericItem).SubType);
 				}
+
 				if (this is MachineryPart)
 				{
-					return Client.Instance.SpriteManager.GetSprite((this as MachineryPart).PartType);
+					return SpriteManager.Instance.GetSprite((this as MachineryPart).PartType);
 				}
-				return Client.Instance.SpriteManager.GetSprite(Type);
+
+				return SpriteManager.Instance.GetSprite(Type);
 			}
 		}
 
@@ -253,10 +232,7 @@ namespace ZeroGravity.Objects
 
 		public IItemSlot Slot
 		{
-			get
-			{
-				return _Slot;
-			}
+			get { return _Slot; }
 			set
 			{
 				UpdateUI();
@@ -267,10 +243,7 @@ namespace ZeroGravity.Objects
 
 		public int Tier
 		{
-			get
-			{
-				return _Tier;
-			}
+			get { return _Tier; }
 			set
 			{
 				_Tier = value;
@@ -286,6 +259,7 @@ namespace ZeroGravity.Objects
 				{
 					return 1f;
 				}
+
 				return AuxValues[Tier - 1];
 			}
 		}
@@ -298,6 +272,7 @@ namespace ZeroGravity.Objects
 				{
 					return 1f;
 				}
+
 				return TierMultipliers[Tier - 1];
 			}
 		}
@@ -308,26 +283,14 @@ namespace ZeroGravity.Objects
 
 		public BaseSceneAttachPoint AttachPoint
 		{
-			get
-			{
-				return (!(_Slot is BaseSceneAttachPoint)) ? null : (_Slot as BaseSceneAttachPoint);
-			}
-			private set
-			{
-				Slot = value;
-			}
+			get { return (!(_Slot is BaseSceneAttachPoint)) ? null : (_Slot as BaseSceneAttachPoint); }
+			private set { Slot = value; }
 		}
 
 		public InventorySlot InvSlot
 		{
-			get
-			{
-				return (!(_Slot is InventorySlot)) ? null : (_Slot as InventorySlot);
-			}
-			private set
-			{
-				Slot = value;
-			}
+			get { return (!(_Slot is InventorySlot)) ? null : (_Slot as InventorySlot); }
+			private set { Slot = value; }
 		}
 
 		public short InvSlotID => (short)((InvSlot == null) ? (-1111) : InvSlot.SlotID);
@@ -340,38 +303,20 @@ namespace ZeroGravity.Objects
 
 		public float MaxHealth
 		{
-			get
-			{
-				return _MaxHealth;
-			}
-			set
-			{
-				_MaxHealth = ((!(value < 0f)) ? value : 0f);
-			}
+			get { return _MaxHealth; }
+			set { _MaxHealth = ((!(value < 0f)) ? value : 0f); }
 		}
 
 		public float Health
 		{
-			get
-			{
-				return _Health;
-			}
-			set
-			{
-				_Health = ((value > MaxHealth) ? MaxHealth : ((!(value < 0f)) ? value : 0f));
-			}
+			get { return _Health; }
+			set { _Health = ((value > MaxHealth) ? MaxHealth : ((!(value < 0f)) ? value : 0f)); }
 		}
 
 		public float Armor
 		{
-			get
-			{
-				return _Armor;
-			}
-			set
-			{
-				_Armor = ((!(value < 0f)) ? value : 0f);
-			}
+			get { return _Armor; }
+			set { _Armor = ((!(value < 0f)) ? value : 0f); }
 		}
 
 		public bool Damageable => _Damageable;
@@ -382,14 +327,8 @@ namespace ZeroGravity.Objects
 
 		public float UsageWear
 		{
-			get
-			{
-				return _UsageWear;
-			}
-			set
-			{
-				_UsageWear = ((!(value < 0f)) ? value : 0f);
-			}
+			get { return _UsageWear; }
+			set { _UsageWear = ((!(value < 0f)) ? value : 0f); }
 		}
 
 		public string TypeName
@@ -400,10 +339,12 @@ namespace ZeroGravity.Objects
 				{
 					return (this as GenericItem).SubType.ToString();
 				}
+
 				if (this is MachineryPart)
 				{
 					return (this as MachineryPart).PartType.ToString();
 				}
+
 				return Type.ToString();
 			}
 		}
@@ -422,6 +363,7 @@ namespace ZeroGravity.Objects
 					itemCompoundType.Tier = Tier;
 					return itemCompoundType;
 				}
+
 				if (Type == ItemType.MachineryPart)
 				{
 					itemCompoundType = new ItemCompoundType();
@@ -431,6 +373,7 @@ namespace ZeroGravity.Objects
 					itemCompoundType.Tier = Tier;
 					return itemCompoundType;
 				}
+
 				itemCompoundType = new ItemCompoundType();
 				itemCompoundType.Type = Type;
 				itemCompoundType.SubType = GenericItemSubType.None;
@@ -449,7 +392,8 @@ namespace ZeroGravity.Objects
 					(_Slot as BaseSceneAttachPoint).UI.UpdateSlot();
 				}
 			}
-			else if (_Slot is InventorySlot && (Slot as InventorySlot).Parent is MyPlayer && Client.Instance.CanvasManager.PlayerOverview.Inventory.gameObject.activeInHierarchy)
+			else if (_Slot is InventorySlot && (Slot as InventorySlot).Parent is MyPlayer &&
+			         World.InGameGUI.PlayerOverview.Inventory.gameObject.activeInHierarchy)
 			{
 				(_Slot as InventorySlot).UI.UpdateSlot();
 			}
@@ -457,15 +401,20 @@ namespace ZeroGravity.Objects
 
 		protected virtual void Awake()
 		{
+			World ??= GameObject.Find("/World").GetComponent<World>();
+
 			Slots = GetComponentsInChildren<ItemSlot>().ToDictionary((ItemSlot k) => k.ID, (ItemSlot v) => v);
 			foreach (ItemSlot value in Slots.Values)
 			{
 				value.Parent = DynamicObj;
 			}
+
 			if (this is IBatteryConsumer)
 			{
-				(this as IBatteryConsumer).BatterySlot = Slots.FirstOrDefault((KeyValuePair<short, ItemSlot> m) => m.Value.ItemTypes.Contains(ItemType.AltairHandDrillBattery)).Value;
+				(this as IBatteryConsumer).BatterySlot = Slots.FirstOrDefault((KeyValuePair<short, ItemSlot> m) =>
+					m.Value.ItemTypes.Contains(ItemType.AltairHandDrillBattery)).Value;
 			}
+
 			DynamicObj = GetComponent<DynamicObject>();
 			if (Type == ItemType.MachineryPart)
 			{
@@ -488,6 +437,7 @@ namespace ZeroGravity.Objects
 					ToolTip = Name;
 				}
 			}
+
 			if (ItemAnimations != null)
 			{
 				tpsAnimations = ItemAnimations.TPS;
@@ -497,7 +447,10 @@ namespace ZeroGravity.Objects
 
 		protected virtual void Start()
 		{
-			explosionRaycastMask = (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("DynamicObject")) | (1 << LayerMask.NameToLayer("Player")) | (1 << LayerMask.NameToLayer("RepairTriggers"));
+			explosionRaycastMask = (1 << LayerMask.NameToLayer("Default")) |
+			                       (1 << LayerMask.NameToLayer("DynamicObject")) |
+			                       (1 << LayerMask.NameToLayer("Player")) |
+			                       (1 << LayerMask.NameToLayer("RepairTriggers"));
 		}
 
 		public virtual void AttachToObject(InventorySlot slot, bool sendAttachMessage)
@@ -505,20 +458,24 @@ namespace ZeroGravity.Objects
 			InventorySlot.AttachData attachPoint = slot.GetAttachPoint(this);
 			if (attachPoint != null)
 			{
-				AttachToObjectImpl(slot.Parent, attachPoint.Point.transform, slot, null, attachPoint.HideAttachedObject, sendAttachMessage);
+				AttachToObjectImpl(slot.Parent, attachPoint.Point.transform, slot, null, attachPoint.HideAttachedObject,
+					sendAttachMessage);
 				return;
 			}
+
 			Dbg.Error("Cannot attach item to slot because there is no attach point for it", base.name, slot.SlotID);
 		}
 
 		public virtual void AttachToObject(BaseSceneAttachPoint attachPoint, bool hideObject, bool sendAttachMessage)
 		{
-			AttachToObjectImpl(attachPoint.ParentVessel, attachPoint.GetAttachPointTransform(this), null, attachPoint, hideObject, sendAttachMessage);
+			AttachToObjectImpl(attachPoint.ParentVessel, attachPoint.GetAttachPointTransform(this), null, attachPoint,
+				hideObject, sendAttachMessage);
 		}
 
 		public virtual void AttachToObject(ItemSlot slot, bool sendAttachMessage)
 		{
-			AttachToObjectImpl(slot.Parent, slot.ItemPlacement, slot, null, slot.ItemPlacement == slot.transform, sendAttachMessage);
+			AttachToObjectImpl(slot.Parent, slot.ItemPlacement, slot, null, slot.ItemPlacement == slot.transform,
+				sendAttachMessage);
 		}
 
 		public virtual void AttachToObject(SpaceObject obj, bool sendAttachMessage)
@@ -528,10 +485,12 @@ namespace ZeroGravity.Objects
 				AttachToObjectImpl(obj, null, null, null, hideObject: false, sendAttachMessage);
 				return;
 			}
+
 			Dbg.Error("Cannot attach item to object", base.name, GUID, obj, obj.GUID);
 		}
 
-		public virtual void AttachToBone(Player pl, AnimatorHelper.HumanBones bone, bool resetTransform = true, bool hide = false)
+		public virtual void AttachToBone(Player pl, AnimatorHelper.HumanBones bone, bool resetTransform = true,
+			bool hide = false)
 		{
 			OnAttach(isAttached: true, isOnPlayer: true);
 			DynamicObj.transform.parent = pl.AnimHelper.GetBone(bone);
@@ -548,7 +507,8 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		protected virtual void AttachToObjectImpl(SpaceObject obj, Transform attachToTrans, IItemSlot slot, BaseSceneAttachPoint attachPoint, bool hideObject, bool sendAttachMessage)
+		protected virtual void AttachToObjectImpl(SpaceObject obj, Transform attachToTrans, IItemSlot slot,
+			BaseSceneAttachPoint attachPoint, bool hideObject, bool sendAttachMessage)
 		{
 			bool flag = DynamicObj.Parent is Player && (DynamicObj.Parent as Player).Inventory.ItemInHands == this;
 			Task task = new Task(delegate
@@ -557,14 +517,16 @@ namespace ZeroGravity.Objects
 				bool flag2 = attachToTrans != null;
 				if (DynamicObj.Parent is Pivot && DynamicObj.Parent != obj)
 				{
-					Client.Instance.SolarSystem.RemoveArtificialBody(DynamicObj.Parent as Pivot);
+					World.SolarSystem.RemoveArtificialBody(DynamicObj.Parent as Pivot);
 					UnityEngine.Object.Destroy(DynamicObj.Parent.gameObject);
 				}
+
 				if (AttachPoint != null && AttachPoint != attachPoint)
 				{
 					AttachPoint.DetachItem(this);
 					AttachPoint = null;
 				}
+
 				if (DynamicObj.Parent is Player && (attachPoint != null || !flag2))
 				{
 					Player player = DynamicObj.Parent as Player;
@@ -572,13 +534,16 @@ namespace ZeroGravity.Objects
 					{
 						player.Inventory.RemoveItemFromHands(resetStance: true);
 					}
+
 					ChangeEquip(EquipType.None, player);
 				}
+
 				if (InvSlot != null && InvSlot != slot)
 				{
 					if (InvSlot.Item == this)
 					{
-						if (InvSlot.Inventory != null && InvSlot.Inventory.Parent is Player && InvSlot.SlotType == InventorySlot.Type.Hands)
+						if (InvSlot.Inventory != null && InvSlot.Inventory.Parent is Player &&
+						    InvSlot.SlotType == InventorySlot.Type.Hands)
 						{
 							InvSlot.Inventory.RemoveItemFromHands(resetStance: true);
 						}
@@ -587,20 +552,25 @@ namespace ZeroGravity.Objects
 							InvSlot.SetItem(null);
 						}
 					}
+
 					InvSlot = null;
 				}
+
 				if (attachPoint != null)
 				{
 					AttachPoint = attachPoint;
 				}
+
 				if (slot != null)
 				{
 					if (slot is InventorySlot)
 					{
 						InvSlot = slot as InventorySlot;
-						if ((slot as InventorySlot).Inventory != null && (slot as InventorySlot).Inventory.Parent is SpaceObjectTransferable)
+						if ((slot as InventorySlot).Inventory != null &&
+						    (slot as InventorySlot).Inventory.Parent is SpaceObjectTransferable)
 						{
-							SpaceObjectTransferable spaceObjectTransferable = (slot as InventorySlot).Inventory.Parent as SpaceObjectTransferable;
+							SpaceObjectTransferable spaceObjectTransferable =
+								(slot as InventorySlot).Inventory.Parent as SpaceObjectTransferable;
 						}
 					}
 					else if (slot is ItemSlot)
@@ -608,17 +578,20 @@ namespace ZeroGravity.Objects
 						(slot as ItemSlot).FitItem(this);
 					}
 				}
+
 				SpaceObject parent = DynamicObj.Parent;
 				DynamicObj.Parent = obj;
 				DynamicObj.ResetRoomTriggers();
 				DynamicObj.ToggleKinematic(flag2 || parent is OtherPlayer);
 				DynamicObj.ToggleActive(!hideObject);
 				DynamicObj.ToggleTriggerColliders(DynamicObj.Parent is Corpse);
-				DynamicObj.ToggleEnabled(!flag2 || AttachPoint != null || DynamicObj.Parent is Corpse, toggleColliders: true);
+				DynamicObj.ToggleEnabled(!flag2 || AttachPoint != null || DynamicObj.Parent is Corpse,
+					toggleColliders: true);
 				if (!flag2)
 				{
 					DynamicObj.CheckRoomTrigger(null);
 				}
+
 				if (InvSlot != null && InvSlot.SlotType == InventorySlot.Type.Hands)
 				{
 					InvSlot.Inventory.ItemAddedToHands(this);
@@ -627,6 +600,7 @@ namespace ZeroGravity.Objects
 						PickupSound.Play();
 					}
 				}
+
 				try
 				{
 					if (AttachPoint != null)
@@ -638,9 +612,11 @@ namespace ZeroGravity.Objects
 				{
 					Dbg.Error("Item attach point exception", ex.Message, ex.StackTrace);
 				}
+
 				if (DynamicObj.Parent is DynamicObject)
 				{
 				}
+
 				if (flag2)
 				{
 					base.transform.SetParent(attachToTrans);
@@ -664,14 +640,19 @@ namespace ZeroGravity.Objects
 						Dbg.Error("Dynamic object cannot be attached to DynamicObjectRoot");
 					}
 				}
-				Client.Instance.CanvasManager.CanvasUI.HelmetHud.HandsSlotUpdate();
-				if (slot2 != null && slot2 is BaseSceneAttachPoint && Slot != null && Slot.Parent.GetComponentInParent<MyPlayer>() != null)
+
+				World.InGameGUI.HelmetHud.HandsSlotUpdate();
+				if (slot2 != null && slot2 is BaseSceneAttachPoint && Slot != null &&
+				    Slot.Parent.GetComponentInParent<MyPlayer>() != null)
 				{
-					SceneQuestTrigger.OnTrigger((slot2 as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.DetachItem);
+					SceneQuestTrigger.OnTrigger((slot2 as BaseSceneAttachPoint).gameObject,
+						SceneQuestTriggerEvent.DetachItem);
 				}
-				else if (slot2 != null && slot2.Parent.GetComponentInParent<MyPlayer>() != null && Slot != null && Slot is BaseSceneAttachPoint)
+				else if (slot2 != null && slot2.Parent.GetComponentInParent<MyPlayer>() != null && Slot != null &&
+				         Slot is BaseSceneAttachPoint)
 				{
-					SceneQuestTrigger.OnTrigger((Slot as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.AttachItem);
+					SceneQuestTrigger.OnTrigger((Slot as BaseSceneAttachPoint).gameObject,
+						SceneQuestTriggerEvent.AttachItem);
 				}
 			});
 			if (flag && slot == null && attachPoint == null && DynamicObj.Parent is MyPlayer)
@@ -682,6 +663,7 @@ namespace ZeroGravity.Objects
 			{
 				task.RunSynchronously();
 			}
+
 			if (sendAttachMessage)
 			{
 				DynamicObj.SendStatsMessage(new DynamicObjectAttachData
@@ -690,10 +672,12 @@ namespace ZeroGravity.Objects
 					ParentGUID = DynamicObj.Parent.GUID,
 					ParentType = DynamicObj.Parent.Type,
 					InventorySlotID = InvSlotID,
-					APDetails = ((!(AttachPoint == null)) ? new AttachPointDetails
-					{
-						InSceneID = AttachPoint.InSceneID
-					} : null),
+					APDetails = ((!(AttachPoint == null))
+						? new AttachPointDetails
+						{
+							InSceneID = AttachPoint.InSceneID
+						}
+						: null),
 					LocalPosition = ((!DynamicObj.IsAttached) ? base.transform.localPosition.ToArray() : null),
 					LocalRotation = ((!DynamicObj.IsAttached) ? base.transform.localPosition.ToArray() : null),
 					Velocity = ((!sendVelocity.HasValue) ? null : sendVelocity.Value.ToArray()),
@@ -708,27 +692,37 @@ namespace ZeroGravity.Objects
 
 		public bool AreAttachDataSame(DynamicObjectAttachData data)
 		{
-			SpaceObject spaceObject = ((Slot is InventorySlot && InvSlot.Outfit != null) ? InvSlot.Outfit.DynamicObj.Parent : ((!(Slot is ItemSlot)) ? DynamicObj.Parent : Slot.Parent));
-			return spaceObject.Type == data.ParentType && spaceObject.GUID == data.ParentGUID && Slot is ItemSlot && (Slot as ItemSlot).ID == data.ItemSlotID && DynamicObj.IsAttached == data.IsAttached && InvSlotID == data.InventorySlotID && ((AttachPoint == null && data.APDetails == null) || (AttachPoint != null && data.APDetails != null && AttachPoint.InSceneID == data.APDetails.InSceneID));
+			SpaceObject spaceObject = ((Slot is InventorySlot && InvSlot.Outfit != null)
+				? InvSlot.Outfit.DynamicObj.Parent
+				: ((!(Slot is ItemSlot)) ? DynamicObj.Parent : Slot.Parent));
+			return spaceObject.Type == data.ParentType && spaceObject.GUID == data.ParentGUID && Slot is ItemSlot &&
+			       (Slot as ItemSlot).ID == data.ItemSlotID && DynamicObj.IsAttached == data.IsAttached &&
+			       InvSlotID == data.InventorySlotID && ((AttachPoint == null && data.APDetails == null) ||
+			                                             (AttachPoint != null && data.APDetails != null &&
+			                                              AttachPoint.InSceneID == data.APDetails.InSceneID));
 		}
 
 		public void ProcessAttachData(DynamicObjectAttachData data, SpaceObject prevParent = null)
 		{
-			SpaceObject @object = Client.Instance.GetObject(data.ParentGUID, data.ParentType);
+			SpaceObject @object = World.GetObject(data.ParentGUID, data.ParentType);
 			if (@object == null)
 			{
-				Dbg.Error("Could not find space object to attach item to.", base.name, data.ParentGUID, data.ParentType);
+				Dbg.Error("Could not find space object to attach item to.", base.name, data.ParentGUID,
+					data.ParentType);
 				return;
 			}
+
 			if (@object is OtherPlayer)
 			{
 				DynamicObj.Master = false;
 				DynamicObj.ToggleKinematic(value: true);
 			}
+
 			if (Slot != null && Slot is ItemSlot && Slot.Item == this)
 			{
 				(Slot as ItemSlot).RemoveItem();
 			}
+
 			if (this is Outfit && (InvSlotID != data.InventorySlotID || DynamicObj.Parent != @object))
 			{
 				if (data.InventorySlotID == -2)
@@ -745,15 +739,18 @@ namespace ZeroGravity.Objects
 					{
 						(@object as Corpse).EquipOutfit(this as Outfit);
 					}
+
 					return;
 				}
+
 				if (InvSlotID == -2)
 				{
 					if (DynamicObj.Parent is MyPlayer)
 					{
 						(this as Outfit).TakeOffOutfit(MyPlayer.Instance, sendToServer: false);
 					}
-					else if (DynamicObj.Parent is OtherPlayer && (DynamicObj.Parent as OtherPlayer).Inventory.Outfit == this)
+					else if (DynamicObj.Parent is OtherPlayer &&
+					         (DynamicObj.Parent as OtherPlayer).Inventory.Outfit == this)
 					{
 						(DynamicObj.Parent as OtherPlayer).TakeOffOutfit();
 					}
@@ -763,6 +760,7 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
+
 			if (data.InventorySlotID != -1111 && data.InventorySlotID != -2)
 			{
 				InventorySlot inventorySlot = null;
@@ -778,30 +776,37 @@ namespace ZeroGravity.Objects
 				{
 					inventorySlot = (@object as Corpse).Inventory.GetSlotByID(data.InventorySlotID);
 				}
+
 				if (inventorySlot != null)
 				{
 					inventorySlot.SetItem(this, sendMessage: false);
 					return;
 				}
 			}
+
 			if (data.APDetails != null && @object is SpaceObjectVessel)
 			{
-				BaseSceneAttachPoint structureObject = (@object as SpaceObjectVessel).GetStructureObject<BaseSceneAttachPoint>(data.APDetails.InSceneID);
+				BaseSceneAttachPoint structureObject =
+					(@object as SpaceObjectVessel).GetStructureObject<BaseSceneAttachPoint>(data.APDetails.InSceneID);
 				if (structureObject != null)
 				{
 					AttachToObject(structureObject, hideObject: false, sendAttachMessage: false);
 					return;
 				}
 			}
+
 			if (@object is DynamicObject && (@object as DynamicObject).Item != null)
 			{
-				if ((@object as DynamicObject).Item.Slots.Count > 0 && (@object as DynamicObject).Item.Slots.TryGetValue(data.ItemSlotID, out var value))
+				if ((@object as DynamicObject).Item.Slots.Count > 0 &&
+				    (@object as DynamicObject).Item.Slots.TryGetValue(data.ItemSlotID, out var value))
 				{
 					AttachToObject(value, sendAttachMessage: false);
 				}
+
 				(@object as DynamicObject).Item.UpdateUI();
 				return;
 			}
+
 			AttachToObject(@object, sendAttachMessage: false);
 			bool myPlayerIsParent = DynamicObj.Parent is MyPlayer;
 			Task task = new Task(delegate
@@ -814,29 +819,37 @@ namespace ZeroGravity.Objects
 						{
 							base.transform.localPosition = data.LocalPosition.ToVector3();
 						}
+
 						if (data.LocalRotation != null)
 						{
 							base.transform.localRotation = data.LocalRotation.ToQuaternion();
 						}
 					}
+
 					if (DynamicObj.Master)
 					{
 						if (data.Velocity != null)
 						{
 							DynamicObj.rigidBody.velocity = data.Velocity.ToVector3();
 						}
+
 						if (data.Torque != null)
 						{
 							AddTorque(data.Torque.ToVector3(), ForceMode.Impulse);
 						}
+
 						if (data.ThrowForce != null)
 						{
 							Vector3 vector = data.ThrowForce.ToVector3();
-							if ((MyPlayer.Instance.CurrentRoomTrigger == null || !MyPlayer.Instance.CurrentRoomTrigger.UseGravity || MyPlayer.Instance.CurrentRoomTrigger.GravityForce == Vector3.zero) && prevParent == MyPlayer.Instance)
+							if ((MyPlayer.Instance.CurrentRoomTrigger == null ||
+							     !MyPlayer.Instance.CurrentRoomTrigger.UseGravity ||
+							     MyPlayer.Instance.CurrentRoomTrigger.GravityForce == Vector3.zero) &&
+							    prevParent == MyPlayer.Instance)
 							{
 								float num = MyPlayer.Instance.rigidBody.mass + DynamicObj.Mass;
 								AddForce(vector * (MyPlayer.Instance.rigidBody.mass / num), ForceMode.VelocityChange);
-								MyPlayer.Instance.rigidBody.AddForce(-vector * (DynamicObj.Mass / num), ForceMode.VelocityChange);
+								MyPlayer.Instance.rigidBody.AddForce(-vector * (DynamicObj.Mass / num),
+									ForceMode.VelocityChange);
 							}
 							else
 							{
@@ -844,6 +857,7 @@ namespace ZeroGravity.Objects
 							}
 						}
 					}
+
 					if (ThrowSound != null)
 					{
 						ThrowSound.Play();
@@ -912,14 +926,17 @@ namespace ZeroGravity.Objects
 			{
 				Tier = dos.Tier.Value;
 			}
+
 			if (dos.Armor.HasValue)
 			{
 				Armor = dos.Armor.Value;
 			}
+
 			if (dos.MaxHealth.HasValue)
 			{
 				MaxHealth = dos.MaxHealth.Value;
 			}
+
 			if (dos.Health.HasValue)
 			{
 				Health = dos.Health.Value;
@@ -928,15 +945,21 @@ namespace ZeroGravity.Objects
 					Explode();
 				}
 			}
+
 			if (dos.Damages != null)
 			{
 				TakeDamage(dos.Damages);
 			}
-			if (Slot == MyPlayer.Instance.Inventory?.HandsSlot || (DynamicObj.Parent is DynamicObject && (DynamicObj.Parent as DynamicObject).Item.Slot == MyPlayer.Instance.Inventory.HandsSlot))
+
+			if (Slot == MyPlayer.Instance.Inventory?.HandsSlot || (DynamicObj.Parent is DynamicObject &&
+			                                                       (DynamicObj.Parent as DynamicObject).Item.Slot ==
+			                                                       MyPlayer.Instance.Inventory.HandsSlot))
 			{
-				Client.Instance.CanvasManager.CanvasUI.HelmetHud.HandsSlotUpdate();
+				World.InGameGUI.HelmetHud.HandsSlotUpdate();
 			}
-			if (Slot is BaseSceneAttachPoint && MyPlayer.Instance.IsLockedToTrigger && MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
+
+			if (Slot is BaseSceneAttachPoint && MyPlayer.Instance.IsLockedToTrigger &&
+			    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
 			{
 				StartCoroutine(CheckQuantityCoroutine());
 			}
@@ -947,11 +970,13 @@ namespace ZeroGravity.Objects
 			yield return null;
 			if (Quantity < prevQuantity)
 			{
-				SceneQuestTrigger.OnTrigger((Slot as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.DecreaseQuantity);
+				SceneQuestTrigger.OnTrigger((Slot as BaseSceneAttachPoint).gameObject,
+					SceneQuestTriggerEvent.DecreaseQuantity);
 			}
 			else if (Quantity > prevQuantity)
 			{
-				SceneQuestTrigger.OnTrigger((Slot as BaseSceneAttachPoint).gameObject, SceneQuestTriggerEvent.IncreaseQuantity);
+				SceneQuestTrigger.OnTrigger((Slot as BaseSceneAttachPoint).gameObject,
+					SceneQuestTriggerEvent.IncreaseQuantity);
 			}
 		}
 
@@ -973,6 +998,7 @@ namespace ZeroGravity.Objects
 			{
 				list.Add(itemSlot.GetData());
 			}
+
 			DynamicObjectAuxData dynamicObjectAuxData = Activator.CreateInstance(typeof(T)) as DynamicObjectAuxData;
 			dynamicObjectAuxData.Category = Category;
 			dynamicObjectAuxData.ItemType = Type;
@@ -1014,6 +1040,7 @@ namespace ZeroGravity.Objects
 			{
 				itemIngredientsData2.Name = Type.ToString();
 			}
+
 			itemIngredientsData2.IngredientsTiers = new Dictionary<int, ItemIngredientsTierData>();
 			for (int i = 0; i < Ingredients.Length; i++)
 			{
@@ -1025,21 +1052,26 @@ namespace ZeroGravity.Objects
 				if (itemIngredientLists.Recycle.Length > 0)
 				{
 					itemIngredientsTierData2.Recycle = new Dictionary<ResourceType, float>();
-					foreach (ItemIngredient item in itemIngredientLists.Recycle.Where((ItemIngredient m) => m.Quantity > 0f && m.ResourceType != ResourceType.None))
+					foreach (ItemIngredient item in itemIngredientLists.Recycle.Where((ItemIngredient m) =>
+						         m.Quantity > 0f && m.ResourceType != ResourceType.None))
 					{
 						itemIngredientsTierData2.Recycle[item.ResourceType] = item.Quantity;
 					}
 				}
+
 				if (itemIngredientLists.Craft.Length > 0)
 				{
 					itemIngredientsTierData2.Craft = new Dictionary<ResourceType, float>();
-					foreach (ItemIngredient item2 in itemIngredientLists.Craft.Where((ItemIngredient m) => m.Quantity > 0f && m.ResourceType != ResourceType.None))
+					foreach (ItemIngredient item2 in itemIngredientLists.Craft.Where((ItemIngredient m) =>
+						         m.Quantity > 0f && m.ResourceType != ResourceType.None))
 					{
 						itemIngredientsTierData2.Craft[item2.ResourceType] = item2.Quantity;
 					}
 				}
+
 				itemIngredientsData2.IngredientsTiers[i + 1] = itemIngredientsTierData2;
 			}
+
 			return itemIngredientsData2;
 		}
 
@@ -1057,11 +1089,13 @@ namespace ZeroGravity.Objects
 		{
 		}
 
-		public virtual void ReloadStepComplete(Player pl, AnimatorHelper.ReloadStepType reloadStepType, ref Item currentReloadItem, ref Item newReloadItem)
+		public virtual void ReloadStepComplete(Player pl, AnimatorHelper.ReloadStepType reloadStepType,
+			ref Item currentReloadItem, ref Item newReloadItem)
 		{
 		}
 
-		public virtual void TriggerItemAnimation(AnimatorHelper.ReloadType rType, string triggerName, string blendTreeParamName)
+		public virtual void TriggerItemAnimation(AnimatorHelper.ReloadType rType, string triggerName,
+			string blendTreeParamName)
 		{
 		}
 
@@ -1077,21 +1111,26 @@ namespace ZeroGravity.Objects
 
 		public void DropThrow(Vector3 dropPosition, Vector3 velocity, Vector3 throwForce)
 		{
-			if (!(DynamicObj.Parent is MyPlayer) && (!(DynamicObj.Parent is DynamicObject) || !(DynamicObj.Parent.Parent is MyPlayer)))
+			if (!(DynamicObj.Parent is MyPlayer) &&
+			    (!(DynamicObj.Parent is DynamicObject) || !(DynamicObj.Parent.Parent is MyPlayer)))
 			{
-				Dbg.Error("Cannot drop/throw item if parent is not player", DynamicObj, DynamicObj.Parent, DynamicObj.Parent.Parent);
+				Dbg.Error("Cannot drop/throw item if parent is not player", DynamicObj, DynamicObj.Parent,
+					DynamicObj.Parent.Parent);
 				return;
 			}
+
 			base.transform.position = dropPosition;
 			ResetRoomTriggers();
 			ToggleTriggersEnabled(value: true);
-			Vector3 vector = new Vector3(UnityEngine.Random.Range(0.001f, 0.01f), UnityEngine.Random.Range(0.001f, 0.01f), UnityEngine.Random.Range(0.001f, 0.01f));
+			Vector3 vector = new Vector3(UnityEngine.Random.Range(0.001f, 0.01f),
+				UnityEngine.Random.Range(0.001f, 0.01f), UnityEngine.Random.Range(0.001f, 0.01f));
 			sendVelocity = velocity;
 			sendTorque = vector;
 			if (throwForce.IsNotEpsilonZero())
 			{
 				sendThrowForce = throwForce;
 			}
+
 			base.transform.localRotation = Quaternion.identity;
 			if (MyPlayer.Instance.Parent is Pivot)
 			{
@@ -1101,12 +1140,14 @@ namespace ZeroGravity.Objects
 			{
 				AttachToObject(MyPlayer.Instance.Parent, sendAttachMessage: true);
 			}
+
 			AddForce(velocity, ForceMode.VelocityChange);
 			AddTorque(vector, ForceMode.Impulse);
 			if (throwForce.IsNotEpsilonZero())
 			{
 				AddForce(throwForce, ForceMode.Impulse);
 			}
+
 			if (ThrowSound != null)
 			{
 				ThrowSound.Play();
@@ -1115,7 +1156,7 @@ namespace ZeroGravity.Objects
 
 		public virtual void SetPositionOfActiveEffect()
 		{
-			if (DynamicObj.Parent is MyPlayer && Client.IsGameBuild && TipOfItem != null && MyPlayer.Instance.CurrentActiveItem == this)
+			if (DynamicObj.Parent is MyPlayer && TipOfItem != null && MyPlayer.Instance.CurrentActiveItem == this)
 			{
 				MyPlayer.Instance.MuzzleFlashTransform.position = TipOfItem.position;
 				MyPlayer.Instance.MuzzleFlashTransform.rotation = TipOfItem.rotation;
@@ -1127,25 +1168,36 @@ namespace ZeroGravity.Objects
 			if (DynamicObj.Parent is MyPlayer)
 			{
 				MyPlayer myPlayer = DynamicObj.Parent as MyPlayer;
-				if (type == ItemAnimationType.Equip && destinationSlot != null && destinationSlot.SlotType == InventorySlot.Type.Equip)
+				if (type == ItemAnimationType.Equip && destinationSlot != null &&
+				    destinationSlot.SlotType == InventorySlot.Type.Equip)
 				{
 					myPlayer.Inventory.SetAnimationItem(this, InvSlot, destinationSlot, isDrop);
 					myPlayer.animHelper.SetParameterTrigger(AnimatorHelper.Triggers.EquipItem);
 					myPlayer.FpsController.IsEquippingAnimationTriggered = true;
-					myPlayer.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, AnimatorHelper.EquipOrDeEquip.Equip);
+					myPlayer.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null,
+						null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+						null, null, null, null, null, null, null, null, null, null, null,
+						AnimatorHelper.EquipOrDeEquip.Equip);
 					AnimatorHelper animHelper = myPlayer.animHelper;
 					ItemType? equipItemId = Type;
-					animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, equipItemId);
+					animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null,
+						null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+						null, null, null, null, null, null, null, null, equipItemId);
 				}
 				else if (type == ItemAnimationType.Unequip)
 				{
 					myPlayer.Inventory.SetAnimationItem(this, InvSlot, destinationSlot, isDrop);
 					myPlayer.animHelper.SetParameterTrigger(AnimatorHelper.Triggers.EquipItem);
 					myPlayer.FpsController.IsEquippingAnimationTriggered = true;
-					myPlayer.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, AnimatorHelper.EquipOrDeEquip.DeEquip);
+					myPlayer.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null,
+						null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+						null, null, null, null, null, null, null, null, null, null, null,
+						AnimatorHelper.EquipOrDeEquip.DeEquip);
 					AnimatorHelper animHelper2 = myPlayer.animHelper;
 					ItemType? equipItemId = Type;
-					animHelper2.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, equipItemId);
+					animHelper2.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null,
+						null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+						null, null, null, null, null, null, null, null, equipItemId);
 				}
 			}
 		}
@@ -1156,10 +1208,14 @@ namespace ZeroGravity.Objects
 
 		public virtual void AttackWithItem()
 		{
-			SpaceObject spaceObject = ((!(MyPlayer.Instance.Parent is SpaceObjectVessel)) ? MyPlayer.Instance.Parent : (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel);
+			SpaceObject spaceObject = ((!(MyPlayer.Instance.Parent is SpaceObjectVessel))
+				? MyPlayer.Instance.Parent
+				: (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel);
 			ShotData shotData = new ShotData();
-			shotData.Position = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) * MyPlayer.Instance.FpsController.MainCamera.transform.position).ToArray();
-			shotData.Orientation = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) * MyPlayer.Instance.FpsController.MainCamera.transform.forward.normalized).ToArray();
+			shotData.Position = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) *
+			                     MyPlayer.Instance.FpsController.MainCamera.transform.position).ToArray();
+			shotData.Orientation = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) *
+			                        MyPlayer.Instance.FpsController.MainCamera.transform.forward.normalized).ToArray();
 			shotData.parentGUID = spaceObject.GUID;
 			shotData.parentType = spaceObject.Type;
 			shotData.Range = MeleeRange;
@@ -1194,12 +1250,14 @@ namespace ZeroGravity.Objects
 					num2 = Mathf.Lerp(MidHealthIntensity, FullHealthIntensity, (num - 0.5f) * 2f);
 					color = Color.Lerp(MidHealthColor, FullHealthColor, (num - 0.5f) * 2f);
 				}
+
 				Material material = HealthIndicator.materials[MaterialIndex];
 				if (material.shader.name.StartsWith("Standard"))
 				{
 					material.SetColor("_EmissionColor", color * num2);
 					return;
 				}
+
 				material.SetFloat("_EmissionAmount", num2);
 				material.SetColor("_EmColor", color);
 			}
@@ -1215,6 +1273,7 @@ namespace ZeroGravity.Objects
 				{
 					value = TierColors[Tier - 1];
 				}
+
 				List<Renderer> list = (from m in GetComponentsInChildren<Renderer>(includeInactive: true)
 					where m.GetComponentInParent<Item>() == this
 					select m).ToList();
@@ -1222,29 +1281,42 @@ namespace ZeroGravity.Objects
 				{
 					if (DynamicObj.Parent is MyPlayer && MyPlayer.Instance.CurrentOutfit == this)
 					{
-						list.AddRange((from m in MyPlayer.Instance.Outfit.GetComponentsInChildren<Renderer>(includeInactive: true)
-							where m.GetComponentInParent<Item>() == null
-							select m).ToList());
-						list.AddRange((from m in MyPlayer.Instance.CurrentOutfit.FoldedOutfitTrans.GetComponentsInChildren<Renderer>(includeInactive: true)
-							where m.GetComponentInParent<Item>() == null
-							select m).ToList());
-						list.AddRange((from m in MyPlayer.Instance.CurrentOutfit.OutfitTrans.GetComponentsInChildren<Renderer>(includeInactive: true)
-							where m.GetComponentInParent<Item>() == null
-							select m).ToList());
+						list.AddRange(
+							(from m in MyPlayer.Instance.Outfit.GetComponentsInChildren<Renderer>(includeInactive: true)
+								where m.GetComponentInParent<Item>() == null
+								select m).ToList());
+						list.AddRange(
+							(from m in MyPlayer.Instance.CurrentOutfit.FoldedOutfitTrans
+									.GetComponentsInChildren<Renderer>(includeInactive: true)
+								where m.GetComponentInParent<Item>() == null
+								select m).ToList());
+						list.AddRange(
+							(from m in MyPlayer.Instance.CurrentOutfit.OutfitTrans.GetComponentsInChildren<Renderer>(
+									includeInactive: true)
+								where m.GetComponentInParent<Item>() == null
+								select m).ToList());
 					}
-					else if (DynamicObj.Parent is OtherPlayer && (DynamicObj.Parent as OtherPlayer).tpsController.CurrentOutfit == this)
+					else if (DynamicObj.Parent is OtherPlayer &&
+					         (DynamicObj.Parent as OtherPlayer).tpsController.CurrentOutfit == this)
 					{
-						list.AddRange((from m in (DynamicObj.Parent as OtherPlayer).tpsController.Outfit.GetComponentsInChildren<Renderer>(includeInactive: true)
-							where m.GetComponentInParent<Item>() == null
-							select m).ToList());
-						list.AddRange((from m in (DynamicObj.Parent as OtherPlayer).tpsController.CurrentOutfit.FoldedOutfitTrans.GetComponentsInChildren<Renderer>(includeInactive: true)
-							where m.GetComponentInParent<Item>() == null
-							select m).ToList());
-						list.AddRange((from m in (DynamicObj.Parent as OtherPlayer).tpsController.CurrentOutfit.OutfitTrans.GetComponentsInChildren<Renderer>(includeInactive: true)
-							where m.GetComponentInParent<Item>() == null
-							select m).ToList());
+						list.AddRange(
+							(from m in (DynamicObj.Parent as OtherPlayer).tpsController.Outfit
+									.GetComponentsInChildren<Renderer>(includeInactive: true)
+								where m.GetComponentInParent<Item>() == null
+								select m).ToList());
+						list.AddRange(
+							(from m in (DynamicObj.Parent as OtherPlayer).tpsController.CurrentOutfit.FoldedOutfitTrans
+									.GetComponentsInChildren<Renderer>(includeInactive: true)
+								where m.GetComponentInParent<Item>() == null
+								select m).ToList());
+						list.AddRange(
+							(from m in (DynamicObj.Parent as OtherPlayer).tpsController.CurrentOutfit.OutfitTrans
+									.GetComponentsInChildren<Renderer>(includeInactive: true)
+								where m.GetComponentInParent<Item>() == null
+								select m).ToList());
 					}
 				}
+
 				foreach (Renderer item in list.Distinct())
 				{
 					Material material = item.material;
@@ -1258,11 +1330,13 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
+
 			int? num2 = ((TierGameObjects != null) ? new int?(TierGameObjects.Length) : null);
 			if (!num2.HasValue || num2.GetValueOrDefault() <= 0)
 			{
 				return;
 			}
+
 			for (int i = 0; i < TierGameObjects.Length; i++)
 			{
 				GameObject gameObject = TierGameObjects[i];
@@ -1291,24 +1365,36 @@ namespace ZeroGravity.Objects
 			{
 				return GetRecycleResources(item.Type, (item as GenericItem).SubType, MachineryPartType.None, item.Tier);
 			}
+
 			if (item is MachineryPart)
 			{
-				return GetRecycleResources(item.Type, GenericItemSubType.None, (item as MachineryPart).PartType, item.Tier);
+				return GetRecycleResources(item.Type, GenericItemSubType.None, (item as MachineryPart).PartType,
+					item.Tier);
 			}
+
 			return GetRecycleResources(item.Type, GenericItemSubType.None, MachineryPartType.None, item.Tier);
 		}
 
-		public static Dictionary<ResourceType, float> GetRecycleResources(ItemType itemType, GenericItemSubType subType, MachineryPartType partType, int tier)
+		public static Dictionary<ResourceType, float> GetRecycleResources(ItemType itemType, GenericItemSubType subType,
+			MachineryPartType partType, int tier)
 		{
-			ItemIngredientsData itemIngredientsData = Client.Instance.ItemsIngredients.FirstOrDefault((ItemIngredientsData m) => m.Type == itemType && m.SubType == subType && m.PartType == partType);
+			ItemIngredientsData itemIngredientsData = World.ItemsIngredients.FirstOrDefault(
+				(ItemIngredientsData m) => m.Type == itemType && m.SubType == subType && m.PartType == partType);
 			if (itemIngredientsData != null)
 			{
-				KeyValuePair<int, ItemIngredientsTierData>? keyValuePair = itemIngredientsData.IngredientsTiers.OrderBy((KeyValuePair<int, ItemIngredientsTierData> m) => m.Key).Reverse().FirstOrDefault((KeyValuePair<int, ItemIngredientsTierData> m) => m.Key <= tier);
-				if (keyValuePair.HasValue && keyValuePair.Value.Value.Recycle != null && keyValuePair.Value.Value.Recycle.Count > 0)
+				KeyValuePair<int, ItemIngredientsTierData>? keyValuePair = itemIngredientsData.IngredientsTiers
+					.OrderBy((KeyValuePair<int, ItemIngredientsTierData> m) => m.Key).Reverse()
+					.FirstOrDefault((KeyValuePair<int, ItemIngredientsTierData> m) => m.Key <= tier);
+				if (keyValuePair.HasValue && keyValuePair.Value.Value.Recycle != null &&
+				    keyValuePair.Value.Value.Recycle.Count > 0)
 				{
-					return keyValuePair.Value.Value.Recycle.Where((KeyValuePair<ResourceType, float> m) => m.Key != 0 && m.Value > 0f).ToDictionary((KeyValuePair<ResourceType, float> k) => k.Key, (KeyValuePair<ResourceType, float> v) => v.Value);
+					return keyValuePair.Value.Value.Recycle
+						.Where((KeyValuePair<ResourceType, float> m) => m.Key != 0 && m.Value > 0f)
+						.ToDictionary((KeyValuePair<ResourceType, float> k) => k.Key,
+							(KeyValuePair<ResourceType, float> v) => v.Value);
 				}
 			}
+
 			return null;
 		}
 
@@ -1322,23 +1408,34 @@ namespace ZeroGravity.Objects
 			return GetCraftingResources(item.Type, item.SubType, item.PartType, item.Tier);
 		}
 
-		public static Dictionary<ResourceType, float> GetCraftingResources(ItemType itemType, GenericItemSubType subType, MachineryPartType partType, int tier)
+		public static Dictionary<ResourceType, float> GetCraftingResources(ItemType itemType,
+			GenericItemSubType subType, MachineryPartType partType, int tier)
 		{
-			ItemIngredientsData itemIngredientsData = Client.Instance.ItemsIngredients.FirstOrDefault((ItemIngredientsData m) => m.Type == itemType && m.SubType == subType && m.PartType == partType);
+			ItemIngredientsData itemIngredientsData = World.ItemsIngredients.FirstOrDefault(
+				(ItemIngredientsData m) => m.Type == itemType && m.SubType == subType && m.PartType == partType);
 			if (itemIngredientsData != null)
 			{
-				KeyValuePair<int, ItemIngredientsTierData>? keyValuePair = itemIngredientsData.IngredientsTiers.OrderBy((KeyValuePair<int, ItemIngredientsTierData> m) => m.Key).Reverse().FirstOrDefault((KeyValuePair<int, ItemIngredientsTierData> m) => m.Key <= tier);
-				if (keyValuePair.HasValue && keyValuePair.Value.Value.Craft != null && keyValuePair.Value.Value.Craft.Count > 0)
+				KeyValuePair<int, ItemIngredientsTierData>? keyValuePair = itemIngredientsData.IngredientsTiers
+					.OrderBy((KeyValuePair<int, ItemIngredientsTierData> m) => m.Key).Reverse()
+					.FirstOrDefault((KeyValuePair<int, ItemIngredientsTierData> m) => m.Key <= tier);
+				if (keyValuePair.HasValue && keyValuePair.Value.Value.Craft != null &&
+				    keyValuePair.Value.Value.Craft.Count > 0)
 				{
-					return keyValuePair.Value.Value.Craft.Where((KeyValuePair<ResourceType, float> m) => m.Key != 0 && m.Value > 0f).ToDictionary((KeyValuePair<ResourceType, float> k) => k.Key, (KeyValuePair<ResourceType, float> v) => v.Value);
+					return keyValuePair.Value.Value.Craft
+						.Where((KeyValuePair<ResourceType, float> m) => m.Key != 0 && m.Value > 0f)
+						.ToDictionary((KeyValuePair<ResourceType, float> k) => k.Key,
+							(KeyValuePair<ResourceType, float> v) => v.Value);
 				}
 			}
+
 			return null;
 		}
 
 		public static List<ItemIngredientsData> GetCraftableItems()
 		{
-			return Client.Instance.ItemsIngredients.Where((ItemIngredientsData m) => m.IngredientsTiers != null && m.IngredientsTiers.Count((KeyValuePair<int, ItemIngredientsTierData> n) => n.Value.Recycle != null && n.Value.Recycle.Count > 0) > 0).ToList();
+			return World.ItemsIngredients.Where((ItemIngredientsData m) =>
+				m.IngredientsTiers != null && m.IngredientsTiers.Count((KeyValuePair<int, ItemIngredientsTierData> n) =>
+					n.Value.Recycle != null && n.Value.Recycle.Count > 0) > 0).ToList();
 		}
 
 		public static string GetName(ItemCompoundType item)
@@ -1346,28 +1443,32 @@ namespace ZeroGravity.Objects
 			return GetName(item.Type, item.SubType, item.PartType);
 		}
 
-		public static string GetName(ItemType itemType, GenericItemSubType subType, MachineryPartType partType, bool localized = true)
+		public static string GetName(ItemType itemType, GenericItemSubType subType, MachineryPartType partType,
+			bool localized = true)
 		{
 			switch (itemType)
 			{
-			case ItemType.GenericItem:
-				if (localized)
-				{
-					return subType.ToLocalizedString();
-				}
-				return subType.ToString();
-			case ItemType.MachineryPart:
-				if (localized)
-				{
-					return partType.ToLocalizedString();
-				}
-				return partType.ToString();
-			default:
-				if (localized)
-				{
-					return itemType.ToLocalizedString();
-				}
-				return itemType.ToString();
+				case ItemType.GenericItem:
+					if (localized)
+					{
+						return subType.ToLocalizedString();
+					}
+
+					return subType.ToString();
+				case ItemType.MachineryPart:
+					if (localized)
+					{
+						return partType.ToLocalizedString();
+					}
+
+					return partType.ToString();
+				default:
+					if (localized)
+					{
+						return itemType.ToLocalizedString();
+					}
+
+					return itemType.ToString();
 			}
 		}
 
@@ -1386,16 +1487,17 @@ namespace ZeroGravity.Objects
 			string value = string.Empty;
 			switch (itemType)
 			{
-			case ItemType.GenericItem:
-				Localization.GenericItemsDescriptions.TryGetValue(subType, out value);
-				break;
-			case ItemType.MachineryPart:
-				Localization.MachineryPartsDescriptions.TryGetValue(partType, out value);
-				break;
-			default:
-				Localization.ItemsDescriptions.TryGetValue(itemType, out value);
-				break;
+				case ItemType.GenericItem:
+					Localization.GenericItemsDescriptions.TryGetValue(subType, out value);
+					break;
+				case ItemType.MachineryPart:
+					Localization.MachineryPartsDescriptions.TryGetValue(partType, out value);
+					break;
+				default:
+					Localization.ItemsDescriptions.TryGetValue(itemType, out value);
+					break;
 			}
+
 			return value ?? string.Empty;
 		}
 
@@ -1403,19 +1505,28 @@ namespace ZeroGravity.Objects
 		{
 			if (Slot is BaseSceneAttachPoint && (Slot as BaseSceneAttachPoint).SceneQuestTriggers != null)
 			{
-				SceneQuestTrigger sceneQuestTrigger = (Slot as BaseSceneAttachPoint).SceneQuestTriggers.FirstOrDefault((SceneQuestTrigger m) => m.TriggerEvent == SceneQuestTriggerEvent.DetachItem);
-				if (sceneQuestTrigger != null && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Active && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Completed)
+				SceneQuestTrigger sceneQuestTrigger =
+					(Slot as BaseSceneAttachPoint).SceneQuestTriggers.FirstOrDefault((SceneQuestTrigger m) =>
+						m.TriggerEvent == SceneQuestTriggerEvent.DetachItem);
+				if (sceneQuestTrigger != null && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Active &&
+				    sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Completed)
 				{
 					return;
 				}
 			}
+
 			InventorySlot inventorySlot = null;
 			InventorySlot slotByID = MyPlayer.Instance.Inventory.GetSlotByID(-2);
-			inventorySlot = ((!(this is Outfit) || slotByID == null || !(slotByID.Item == null) || !(MyPlayer.Instance.Inventory.HandsSlot.Item == null)) ? MyPlayer.Instance.Inventory.FindEmptyOutfitSlot(this) : slotByID);
+			inventorySlot =
+				((!(this is Outfit) || slotByID == null || !(slotByID.Item == null) ||
+				  !(MyPlayer.Instance.Inventory.HandsSlot.Item == null))
+					? MyPlayer.Instance.Inventory.FindEmptyOutfitSlot(this)
+					: slotByID);
 			if (MyPlayer.Instance.Inventory.HandsSlot.Item == null && (handsFirst || inventorySlot == null))
 			{
 				inventorySlot = MyPlayer.Instance.Inventory.HandsSlot;
 			}
+
 			if (inventorySlot != null)
 			{
 				DynamicObj.SendAttachMessage(MyPlayer.Instance, inventorySlot);
@@ -1430,16 +1541,27 @@ namespace ZeroGravity.Objects
 		{
 			if (Slot is BaseSceneAttachPoint && (Slot as BaseSceneAttachPoint).SceneQuestTriggers != null)
 			{
-				SceneQuestTrigger sceneQuestTrigger = (Slot as BaseSceneAttachPoint).SceneQuestTriggers.FirstOrDefault((SceneQuestTrigger m) => m.TriggerEvent == SceneQuestTriggerEvent.DetachItem);
-				if (sceneQuestTrigger != null && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Active && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Completed)
+				SceneQuestTrigger sceneQuestTrigger =
+					(Slot as BaseSceneAttachPoint).SceneQuestTriggers.FirstOrDefault((SceneQuestTrigger m) =>
+						m.TriggerEvent == SceneQuestTriggerEvent.DetachItem);
+				if (sceneQuestTrigger != null && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Active &&
+				    sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Completed)
 				{
 					return;
 				}
 			}
-			Vector3 value = MyPlayer.Instance.transform.parent.InverseTransformPoint(MyPlayer.Instance.FpsController.MainCamera.transform.position + MyPlayer.Instance.FpsController.MainCamera.transform.forward);
-			Vector3 vector = MyPlayer.Instance.FpsController.CameraForward * MathHelper.ProportionalValue(throwStrength, 0f, Client.DROP_MAX_TIME, 0f, Client.DROP_MAX_FORCE);
-			Vector3 value2 = ((!(vector == Vector3.zero)) ? new Vector3(UnityEngine.Random.Range(-0.1f, 0.1f), UnityEngine.Random.Range(-0.1f, 0.1f), UnityEngine.Random.Range(-0.1f, 0.1f)) : Vector3.zero);
-			DynamicObj.SendAttachMessage(MyPlayer.Instance.Parent, null, value, Quaternion.identity, vector, value2, MyPlayer.Instance.rigidBody.velocity);
+
+			Vector3 value = MyPlayer.Instance.transform.parent.InverseTransformPoint(
+				MyPlayer.Instance.FpsController.MainCamera.transform.position +
+				MyPlayer.Instance.FpsController.MainCamera.transform.forward);
+			Vector3 vector = MyPlayer.Instance.FpsController.CameraForward * MathHelper.ProportionalValue(throwStrength,
+				0f, World.DROP_MAX_TIME, 0f, World.DROP_MAX_FORCE);
+			Vector3 value2 = ((!(vector == Vector3.zero))
+				? new Vector3(UnityEngine.Random.Range(-0.1f, 0.1f), UnityEngine.Random.Range(-0.1f, 0.1f),
+					UnityEngine.Random.Range(-0.1f, 0.1f))
+				: Vector3.zero);
+			DynamicObj.SendAttachMessage(MyPlayer.Instance.Parent, null, value, Quaternion.identity, vector, value2,
+				MyPlayer.Instance.rigidBody.velocity);
 			if (DynamicObj.Parent is MyPlayer)
 			{
 				MyPlayer.Instance.AnimHelper.SetParameterTrigger(AnimatorHelper.Triggers.Drop);
@@ -1448,25 +1570,33 @@ namespace ZeroGravity.Objects
 
 		public void RequestAttach(IItemSlot slot)
 		{
-			if (slot is InventorySlot && (slot as InventorySlot).SlotType == InventorySlot.Type.Hands && (slot as InventorySlot).Inventory.Parent is MyPlayer)
+			if (slot is InventorySlot && (slot as InventorySlot).SlotType == InventorySlot.Type.Hands &&
+			    (slot as InventorySlot).Inventory.Parent is MyPlayer)
 			{
 				((slot as InventorySlot).Inventory.Parent as MyPlayer).ChangeStance(MyPlayer.PlayerStance.Passive, 1f);
 			}
+
 			if (Slot is BaseSceneAttachPoint && (Slot as BaseSceneAttachPoint).SceneQuestTriggers != null)
 			{
-				SceneQuestTrigger sceneQuestTrigger = (Slot as BaseSceneAttachPoint).SceneQuestTriggers.FirstOrDefault((SceneQuestTrigger m) => m.TriggerEvent == SceneQuestTriggerEvent.DetachItem);
-				if (sceneQuestTrigger != null && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Active && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Completed)
+				SceneQuestTrigger sceneQuestTrigger =
+					(Slot as BaseSceneAttachPoint).SceneQuestTriggers.FirstOrDefault((SceneQuestTrigger m) =>
+						m.TriggerEvent == SceneQuestTriggerEvent.DetachItem);
+				if (sceneQuestTrigger != null && sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Active &&
+				    sceneQuestTrigger.QuestTrigger.Status != QuestStatus.Completed)
 				{
 					return;
 				}
 			}
+
 			Item swapItem = slot.Item;
 			IItemSlot slot2 = Slot;
 			if (slot.Item != null && slot2 != null)
 			{
 				if (!slot2.CanFitItem(swapItem) && slot2.Parent is DynamicObject)
 				{
-					ItemSlot itemSlot = (slot2.Parent as DynamicObject).Item.Slots.Values.FirstOrDefault((ItemSlot m) => m.CanFitItem(swapItem));
+					ItemSlot itemSlot =
+						(slot2.Parent as DynamicObject).Item.Slots.Values.FirstOrDefault((ItemSlot m) =>
+							m.CanFitItem(swapItem));
 					if (itemSlot == null)
 					{
 						if (MyPlayer.Instance.Inventory.CanAddToInventory(swapItem))
@@ -1484,7 +1614,7 @@ namespace ZeroGravity.Objects
 					swapItem.DynamicObj.SendAttachMessage(slot2.Parent, slot2);
 				}
 			}
-			else if (swapItem != null && slot2 == null)
+			else if (swapItem is not null && slot2 == null)
 			{
 				if (MyPlayer.Instance.Inventory.CanAddToInventory(swapItem))
 				{
@@ -1495,6 +1625,7 @@ namespace ZeroGravity.Objects
 					swapItem.RequestDrop();
 				}
 			}
+
 			DynamicObj.SendAttachMessage(slot.Parent, slot);
 		}
 
@@ -1563,6 +1694,7 @@ namespace ZeroGravity.Objects
 			{
 				return false;
 			}
+
 			HashSet<long> hashSet = new HashSet<long>();
 			HashSet<VesselObjectID> hashSet2 = new HashSet<VesselObjectID>();
 			if (ExplosionRadius > 0f)
@@ -1576,66 +1708,75 @@ namespace ZeroGravity.Objects
 						CheckRepairPoints(hashSet2, colliderOverlaped);
 					}
 				}
+
 				if (DynamicObj.Parent is SpaceObjectVessel)
 				{
 					foreach (VesselRepairPoint item in from m in (DynamicObj.Parent as SpaceObjectVessel).RepairPoints
-						where (base.transform.position - m.Value.transform.position).magnitude <= ExplosionRadius
-						orderby (base.transform.position - m.Value.transform.position).magnitude
-						select m into kvp
-						select kvp.Value)
+					         where (base.transform.position - m.Value.transform.position).magnitude <= ExplosionRadius
+					         orderby (base.transform.position - m.Value.transform.position).magnitude
+					         select m
+					         into kvp
+					         select kvp.Value)
 					{
 						hashSet2.Add(new VesselObjectID(item.ParentVessel.GUID, item.InSceneID));
 					}
 				}
 			}
+
 			NetworkController.Instance.SendToGameServer(new ExplosionMessage
 			{
 				AffectedGUIDs = hashSet.ToArray(),
 				ItemGUID = GUID,
 				RepairPointIDs = hashSet2.ToArray()
 			});
-			if (ExplosionEffects != null)
+			if (ExplosionEffects is not null)
 			{
 				ExplosionEffects.Play();
 				ExplosionEffects.transform.parent = null;
 			}
-			if (ExplosionSound != null)
+
+			if (ExplosionSound is not null)
 			{
 				ExplosionSound.Play();
 			}
-			base.gameObject.Activate(value: false);
+
+			gameObject.Activate(value: false);
 			exploded = true;
 			if (Slot != null)
 			{
-				if (Slot is BaseSceneAttachPoint)
+				if (Slot is BaseSceneAttachPoint attachPoint)
 				{
-					(Slot as BaseSceneAttachPoint).DetachItem(this);
+					attachPoint.DetachItem(this);
 				}
-				else if (Slot is InventorySlot)
+				else if (Slot is InventorySlot inventorySlot)
 				{
-					(Slot as InventorySlot).SetItem(null);
-					if ((Slot as InventorySlot).SlotGroup == InventorySlot.Group.Hands)
+					inventorySlot.SetItem(null);
+					if (inventorySlot.SlotGroup == InventorySlot.Group.Hands)
 					{
-						(Slot as InventorySlot).Inventory.ExitCombatStance();
+						inventorySlot.Inventory.ExitCombatStance();
 					}
 				}
-				else if (Slot is ItemSlot)
+				else if (Slot is ItemSlot itemSlot)
 				{
-					(Slot as ItemSlot).RemoveItem();
+					itemSlot.RemoveItem();
 				}
 			}
+
 			return true;
 		}
 
 		private bool CheckDamageables(HashSet<long> hitGUIDs, Collider colliderOverlaped)
 		{
 			Item componentInParent = colliderOverlaped.GetComponentInParent<Item>();
-			if (componentInParent != null && componentInParent != this && (componentInParent.AttachPoint == null || componentInParent.Damageable))
+			if (componentInParent is not null && componentInParent != this &&
+			    (componentInParent.AttachPoint is null || componentInParent.Damageable))
 			{
 				foreach (Vector3 target in GetTargets(colliderOverlaped.transform.position, 0.1f))
 				{
 					Debug.DrawRay(base.transform.position, target - base.transform.position, Color.green, 100f);
-					RaycastHit[] array = (from m in Physics.RaycastAll(base.transform.position, target - base.transform.position, ExplosionRadius, explosionRaycastMask, QueryTriggerInteraction.Collide)
+					RaycastHit[] array = (from m in Physics.RaycastAll(base.transform.position,
+							target - base.transform.position, ExplosionRadius, explosionRaycastMask,
+							QueryTriggerInteraction.Collide)
 						orderby m.distance
 						select m).ToArray();
 					RaycastHit[] array2 = array;
@@ -1649,10 +1790,14 @@ namespace ZeroGravity.Objects
 							{
 								hitGUIDs.Add(componentInParent.GUID);
 							}
+
 							Vector3 vector = base.transform.position - target;
-							colliderOverlaped.GetComponentInParent<DynamicObject>().AddForce(vector.normalized * (1f - ExplosionRadius / vector.magnitude) * ExplosionImpulse, ForceMode.Impulse);
+							colliderOverlaped.GetComponentInParent<DynamicObject>().AddForce(
+								vector.normalized * (1f - ExplosionRadius / vector.magnitude) * ExplosionImpulse,
+								ForceMode.Impulse);
 							return true;
 						}
+
 						if (!raycastHit.collider.isTrigger)
 						{
 							break;
@@ -1660,6 +1805,7 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
+
 			return false;
 		}
 
@@ -1672,7 +1818,9 @@ namespace ZeroGravity.Objects
 				TargetingPoint[] array = componentsInChildren;
 				foreach (TargetingPoint targetingPoint in array)
 				{
-					RaycastHit[] array2 = (from m in Physics.RaycastAll(base.transform.position, targetingPoint.transform.position - base.transform.position, ExplosionRadius, explosionRaycastMask, QueryTriggerInteraction.Collide)
+					RaycastHit[] array2 = (from m in Physics.RaycastAll(base.transform.position,
+							targetingPoint.transform.position - base.transform.position, ExplosionRadius,
+							explosionRaycastMask, QueryTriggerInteraction.Collide)
 						orderby m.distance
 						select m).ToArray();
 					RaycastHit[] array3 = array2;
@@ -1682,17 +1830,26 @@ namespace ZeroGravity.Objects
 						if (raycastHit.collider.GetComponentInParent<Player>() != null)
 						{
 							hitGUIDs.Add(componentInParent.GUID);
-							if (componentInParent is MyPlayer && ExplosionDamageType == TypeOfDamage.Impact && !MyPlayer.Instance.IsLockedToTrigger)
+							if (componentInParent is MyPlayer && ExplosionDamageType == TypeOfDamage.Impact &&
+							    !MyPlayer.Instance.IsLockedToTrigger)
 							{
-								if (!MyPlayer.Instance.FpsController.IsZeroG && !MyPlayer.Instance.FpsController.HasTumbled && (!InputManager.GetButton(InputManager.ConfigAction.Sprint) || !MyPlayer.Instance.FpsController.IsGrounded))
+								if (!MyPlayer.Instance.FpsController.IsZeroG &&
+								    !MyPlayer.Instance.FpsController.HasTumbled &&
+								    (!InputManager.GetButton(InputManager.ConfigAction.Sprint) ||
+								     !MyPlayer.Instance.FpsController.IsGrounded))
 								{
 									MyPlayer.Instance.FpsController.Tumble();
 								}
+
 								Vector3 vector = base.transform.position - MyPlayer.Instance.transform.position;
-								MyPlayer.Instance.FpsController.AddForce(vector.normalized * (1f - ExplosionRadius / vector.magnitude) * ExplosionImpulse, ForceMode.Impulse);
+								MyPlayer.Instance.FpsController.AddForce(
+									vector.normalized * (1f - ExplosionRadius / vector.magnitude) * ExplosionImpulse,
+									ForceMode.Impulse);
 							}
+
 							return true;
 						}
+
 						if (!raycastHit.collider.isTrigger)
 						{
 							break;
@@ -1700,6 +1857,7 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
+
 			return false;
 		}
 
@@ -1710,9 +1868,12 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			foreach (Vector3 target in GetTargets(colliderOverlaped.transform.position, 0.35f))
 			{
-				RaycastHit[] array = (from m in Physics.RaycastAll(base.transform.position, target - base.transform.position, ExplosionRadius, explosionRaycastMask, QueryTriggerInteraction.Collide)
+				RaycastHit[] array = (from m in Physics.RaycastAll(base.transform.position,
+						target - base.transform.position, ExplosionRadius, explosionRaycastMask,
+						QueryTriggerInteraction.Collide)
 					orderby m.distance
 					select m).ToArray();
 				RaycastHit[] array2 = array;
@@ -1734,7 +1895,8 @@ namespace ZeroGravity.Objects
 		private List<Vector3> GetTargets(Vector3 targetPos, float radius)
 		{
 			List<Vector3> list = new List<Vector3>();
-			Quaternion quaternion = Quaternion.FromToRotation(Vector3.forward, (targetPos - base.transform.position).normalized);
+			Quaternion quaternion =
+				Quaternion.FromToRotation(Vector3.forward, (targetPos - base.transform.position).normalized);
 			Quaternion quaternion2 = Quaternion.Euler(0f, 0f, MathHelper.RandomRange(0, 90));
 			list.Add(targetPos);
 			list.Add(targetPos + quaternion * quaternion2 * new Vector3(radius, radius, 0f));

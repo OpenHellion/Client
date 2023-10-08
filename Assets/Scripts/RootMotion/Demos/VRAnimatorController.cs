@@ -5,15 +5,13 @@ namespace RootMotion.Demos
 	[RequireComponent(typeof(Animator))]
 	public class VRAnimatorController : MonoBehaviour
 	{
-		[Header("Component References")]
-		public VRSetup oculusSetup;
+		[Header("Component References")] public VRSetup oculusSetup;
 
 		public Transform characterController;
 
 		public Transform cam;
 
-		[Header("Main Properties")]
-		[Tooltip("Offset of the VR camera")]
+		[Header("Main Properties")] [Tooltip("Offset of the VR camera")]
 		public Vector3 cameraOffset;
 
 		[Tooltip("How long to accelerate to target velocity using SmoothDamp?")]
@@ -66,21 +64,25 @@ namespace RootMotion.Demos
 				{
 					fixFeet.weight = 1f;
 				}
+
 				velocity = Vector3.zero;
 				animator.SetFloat("Right", 0f);
 				animator.SetFloat("Forward", 0f);
 				return;
 			}
+
 			RotateCharacter(cam.forward, maxViewAngle, cameraPivot);
 			Vector3 velocityTarget = GetVelocityTarget();
 			velocity = Vector3.MoveTowards(velocity, velocityTarget, Time.deltaTime * linearAcceleration);
 			velocity = Vector3.SmoothDamp(velocity, velocityTarget, ref velocityC, smoothAccelerationTime);
-			base.transform.position = new Vector3(characterController.position.x, base.transform.position.y, characterController.position.z);
+			base.transform.position = new Vector3(characterController.position.x, base.transform.position.y,
+				characterController.position.z);
 			if (fixFeet != null)
 			{
 				float target = ((!(velocity == Vector3.zero)) ? 0f : 1f);
 				fixFeet.weight = Mathf.MoveTowards(fixFeet.weight, target, Time.deltaTime * 3f);
 			}
+
 			animator.SetFloat("Right", velocity.x);
 			animator.SetFloat("Forward", velocity.z);
 		}
@@ -99,6 +101,7 @@ namespace RootMotion.Demos
 			{
 				return;
 			}
+
 			Quaternion rotation = ((!(fix != null)) ? Quaternion.identity : fix.rotation);
 			if (maxAngle <= 0f)
 			{
@@ -107,8 +110,10 @@ namespace RootMotion.Demos
 				{
 					fix.rotation = rotation;
 				}
+
 				return;
 			}
+
 			Vector3 vector = characterController.InverseTransformDirection(forward);
 			float num = Mathf.Atan2(vector.x, vector.z) * 57.29578f;
 			if (Mathf.Abs(num) > Mathf.Abs(maxAngle))
@@ -118,8 +123,11 @@ namespace RootMotion.Demos
 				{
 					angle = num + maxAngle;
 				}
-				characterController.rotation = Quaternion.AngleAxis(angle, characterController.up) * characterController.rotation;
+
+				characterController.rotation =
+					Quaternion.AngleAxis(angle, characterController.up) * characterController.rotation;
 			}
+
 			if (fix != null)
 			{
 				fix.rotation = rotation;

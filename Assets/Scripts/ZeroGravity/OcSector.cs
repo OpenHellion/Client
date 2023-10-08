@@ -8,22 +8,20 @@ namespace ZeroGravity
 	{
 		public List<OcSector> Neighbors;
 
-		public bool IsConnectedToExterior;
-
 		public List<GameObject> GroupsToHide;
 
-		private bool isActive;
+		private bool _isActive;
 
-		private List<Renderer> renderers = new List<Renderer>();
+		private readonly List<Renderer> _renderers = new List<Renderer>();
 
 		private void Awake()
 		{
-			EventSystem.AddListener(EventSystem.InternalEventType.OcExteriorStatus, OcExteriorStatusListener);
 			foreach (GameObject item in GroupsToHide)
 			{
-				renderers.AddRange(item.GetComponentsInChildren<Renderer>(true));
+				_renderers.AddRange(item.GetComponentsInChildren<Renderer>(true));
 			}
-			foreach (Renderer renderer in renderers)
+
+			foreach (Renderer renderer in _renderers)
 			{
 				renderer.enabled = false;
 			}
@@ -33,13 +31,15 @@ namespace ZeroGravity
 		{
 			if (!isVisible.HasValue)
 			{
-				isVisible = !isActive;
+				isVisible = !_isActive;
 			}
-			foreach (Renderer renderer in renderers)
+
+			foreach (Renderer renderer in _renderers)
 			{
 				renderer.enabled = isVisible.Value;
 			}
-			isActive = isVisible.HasValue;
+
+			_isActive = isVisible.HasValue;
 		}
 
 		private void ToggleAll(bool isVisible)
@@ -48,6 +48,7 @@ namespace ZeroGravity
 			{
 				neighbor.ToggleVisibility(isVisible);
 			}
+
 			ToggleVisibility(isVisible);
 		}
 
@@ -60,16 +61,6 @@ namespace ZeroGravity
 					neighbor.ToggleVisibility(isVisible);
 				}
 			}
-		}
-
-		public void OcExteriorStatusListener(EventSystem.InternalEventData data)
-		{
-			ToggleVisibility(IsConnectedToExterior && (bool)data.Objects[0]);
-		}
-
-		private void OnDestroy()
-		{
-			EventSystem.RemoveListener(EventSystem.InternalEventType.ShowMessageBox, OcExteriorStatusListener);
 		}
 	}
 }

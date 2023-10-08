@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using OpenHellion;
 using UnityEngine;
 using ZeroGravity.Math;
 using ZeroGravity.Network;
@@ -13,25 +14,25 @@ namespace ZeroGravity.CharacterMovement
 
 		public volatile bool UpdateMovementPosition = true;
 
-		private float freeLookUpPos;
+		private float _freeLookUpPos;
 
-		private float freeLookRightPos;
+		private float _freeLookRightPos;
 
-		private float mouseLookUpPos;
+		private float _mouseLookUpPos;
 
-		private float ikLookPos;
+		private float _ikLookPos;
 
-		private float targetFreeLookUpPos;
+		private float _targetFreeLookUpPos;
 
-		private float targetFreeLookRightPos;
+		private float _targetFreeLookRightPos;
 
-		private float targetMouseLookUpPos;
+		private float _targetMouseLookUpPos;
 
-		private float targetIkLookPos;
+		private float _targetIkLookPos;
 
-		private string playerName;
+		private string _playerName;
 
-		private bool isMouseLook;
+		private bool _isMouseLook;
 
 		public Animator TPSAnimator;
 
@@ -41,7 +42,7 @@ namespace ZeroGravity.CharacterMovement
 
 		private Transform playerNameTransform;
 
-		private Vector3 velocity = Vector3.zero;
+		private Vector3 _velocity = Vector3.zero;
 
 		public Transform Outfit;
 
@@ -53,14 +54,13 @@ namespace ZeroGravity.CharacterMovement
 
 		public float LerpPositionRate = 1f;
 
-		[SerializeField]
-		private Vector3 posSyncStart = Vector3.zero;
+		[SerializeField] private Vector3 posSyncStart = Vector3.zero;
 
-		private Vector3 posSyncEnd = Vector3.zero;
+		private Vector3 _posSyncEnd = Vector3.zero;
 
-		private Quaternion rotationSyncStart = Quaternion.identity;
+		private Quaternion _rotationSyncStart = Quaternion.identity;
 
-		private Quaternion rotationSyncEnd = Quaternion.identity;
+		private Quaternion _rotationSyncEnd = Quaternion.identity;
 
 		private float syncTime;
 
@@ -82,28 +82,23 @@ namespace ZeroGravity.CharacterMovement
 
 		public RagdollHelper RagdollComponent;
 
-		[SerializeField]
-		public AnimatorHelper animHelper;
+		[SerializeField] public AnimatorHelper animHelper;
 
 		private Transform myPlayerCameraTransform;
 
 		public Transform targetHelperParent;
 
-		[SerializeField]
-		public Transform hips;
+		[SerializeField] public Transform hips;
 
-		[SerializeField]
-		public Transform spine2;
+		[SerializeField] public Transform spine2;
 
 		public OtherPlayer player;
 
 		private bool isZeroG;
 
-		[SerializeField]
-		private CapsuleCollider collider1G;
+		[SerializeField] private CapsuleCollider collider1G;
 
-		[SerializeField]
-		private SphereCollider collider0G;
+		[SerializeField] private SphereCollider collider0G;
 
 		public SoundEffect ImpactSounds;
 
@@ -129,14 +124,11 @@ namespace ZeroGravity.CharacterMovement
 
 		public string PlayerName
 		{
-			get
-			{
-				return playerName;
-			}
+			get { return _playerName; }
 			set
 			{
 				base.transform.Find("Name").GetComponent<TextMesh>().text = value;
-				playerName = value;
+				_playerName = value;
 			}
 		}
 
@@ -160,14 +152,15 @@ namespace ZeroGravity.CharacterMovement
 			maxDownAngle = MyPlayer.Instance.FpsController.CameraMaxDownAngle;
 			maxRightAngle = MyPlayer.Instance.FpsController.CameraMaxRightAngle;
 			posSyncStart = base.transform.localPosition;
-			posSyncEnd = base.transform.localPosition;
-			rotationSyncStart = base.transform.localRotation;
-			rotationSyncEnd = base.transform.localRotation;
+			_posSyncEnd = base.transform.localPosition;
+			_rotationSyncStart = base.transform.localRotation;
+			_rotationSyncEnd = base.transform.localRotation;
 			myPlayerCameraTransform = MyPlayer.Instance.FpsController.MainCamera.transform;
 			if (player == null)
 			{
 				player = GetComponent<OtherPlayer>();
 			}
+
 			player.AttachDynamicObjectsOnPlayer();
 		}
 
@@ -185,14 +178,19 @@ namespace ZeroGravity.CharacterMovement
 			{
 				return;
 			}
+
 			foreach (KeyValuePair<AnimatorHelper.HumanBones, Transform> bone in animHelper.GetBones())
 			{
 				if (ragdollTargetData.ContainsKey((byte)bone.Key))
 				{
-					bone.Value.localPosition = Vector3.Lerp(ragdollStartData[(byte)bone.Key].Position.ToVector3(), ragdollTargetData[(byte)bone.Key].Position.ToVector3(), lerpRagdollTimer * 10f);
-					bone.Value.localRotation = Quaternion.Lerp(ragdollStartData[(byte)bone.Key].LocalRotation.ToQuaternion(), ragdollTargetData[(byte)bone.Key].LocalRotation.ToQuaternion(), lerpRagdollTimer * 10f);
+					bone.Value.localPosition = Vector3.Lerp(ragdollStartData[(byte)bone.Key].Position.ToVector3(),
+						ragdollTargetData[(byte)bone.Key].Position.ToVector3(), lerpRagdollTimer * 10f);
+					bone.Value.localRotation =
+						Quaternion.Lerp(ragdollStartData[(byte)bone.Key].LocalRotation.ToQuaternion(),
+							ragdollTargetData[(byte)bone.Key].LocalRotation.ToQuaternion(), lerpRagdollTimer * 10f);
 				}
 			}
+
 			lerpRagdollTimer += Time.deltaTime;
 			if (lerpRagdollTimer >= 1f)
 			{
@@ -206,20 +204,26 @@ namespace ZeroGravity.CharacterMovement
 		{
 			UpdateAnimator();
 			UpdateRagdollData();
-			ikLookPos = MathHelper.LerpValue(ikLookPos, targetMouseLookUpPos, Time.deltaTime * LerpMouseLookUpAnimationRate);
-			targetHelperParent.transform.localRotation = Quaternion.Euler(new Vector3(0f - ikLookPos, targetHelperParent.transform.localRotation.eulerAngles.y, targetHelperParent.transform.localRotation.eulerAngles.z));
+			_ikLookPos = MathHelper.LerpValue(_ikLookPos, _targetMouseLookUpPos,
+				Time.deltaTime * LerpMouseLookUpAnimationRate);
+			targetHelperParent.transform.localRotation = Quaternion.Euler(new Vector3(0f - _ikLookPos,
+				targetHelperParent.transform.localRotation.eulerAngles.y,
+				targetHelperParent.transform.localRotation.eulerAngles.z));
 			if (MyPlayer.Instance.ShowGUIElements)
 			{
 				if (!playerNameTransform.gameObject.activeInHierarchy)
 				{
 					playerNameTransform.gameObject.SetActive(true);
 				}
-				playerNameTransform.rotation = Quaternion.LookRotation(playerNameTransform.position - myPlayerCameraTransform.position, myPlayerCameraTransform.up);
+
+				playerNameTransform.rotation = Quaternion.LookRotation(
+					playerNameTransform.position - myPlayerCameraTransform.position, myPlayerCameraTransform.up);
 			}
 			else if (playerNameTransform.gameObject.activeInHierarchy)
 			{
 				playerNameTransform.gameObject.SetActive(false);
 			}
+
 			player.UpdateMovement();
 		}
 
@@ -239,12 +243,15 @@ namespace ZeroGravity.CharacterMovement
 				animHelper.UpdateTPSAnimatorConstant();
 				if (!(TPSAnimator == null))
 				{
-					freeLookUpPos = MathHelper.LerpValue(freeLookUpPos, targetFreeLookUpPos, Time.deltaTime * LerpFreeLookUpAnimationRate);
-					freeLookRightPos = MathHelper.LerpValue(freeLookRightPos, targetFreeLookRightPos, Time.deltaTime * LerpFreeLookRightAnimationRate);
-					mouseLookUpPos = MathHelper.LerpValue(mouseLookUpPos, targetMouseLookUpPos / 85f, Time.deltaTime * LerpMouseLookUpAnimationRate);
-					TPSAnimator.SetFloat("FreeLookUp", freeLookUpPos);
-					TPSAnimator.SetFloat("FreeLookRight", freeLookRightPos);
-					TPSAnimator.SetFloat("MouseLookUp", mouseLookUpPos);
+					_freeLookUpPos = MathHelper.LerpValue(_freeLookUpPos, _targetFreeLookUpPos,
+						Time.deltaTime * LerpFreeLookUpAnimationRate);
+					_freeLookRightPos = MathHelper.LerpValue(_freeLookRightPos, _targetFreeLookRightPos,
+						Time.deltaTime * LerpFreeLookRightAnimationRate);
+					_mouseLookUpPos = MathHelper.LerpValue(_mouseLookUpPos, _targetMouseLookUpPos / 85f,
+						Time.deltaTime * LerpMouseLookUpAnimationRate);
+					TPSAnimator.SetFloat("FreeLookUp", _freeLookUpPos);
+					TPSAnimator.SetFloat("FreeLookRight", _freeLookRightPos);
+					TPSAnimator.SetFloat("MouseLookUp", _mouseLookUpPos);
 				}
 			}
 		}
@@ -256,7 +263,7 @@ namespace ZeroGravity.CharacterMovement
 
 		private void CalculateTurning()
 		{
-			float num = rotationSyncStart.eulerAngles.y - base.transform.localRotation.eulerAngles.y;
+			float num = _rotationSyncStart.eulerAngles.y - base.transform.localRotation.eulerAngles.y;
 			string text = ((!animHelper.animationData.IsZeroG) ? "TurningDirection" : "HorizontalRollDirection");
 			if (Mathf.Abs(num) > 0.45f)
 			{
@@ -264,20 +271,24 @@ namespace ZeroGravity.CharacterMovement
 				{
 					TPSAnimator.SetBool("Turning", true);
 				}
+
 				if (num < -5f)
 				{
 					TPSAnimator.SetInteger(text, -1);
 					return;
 				}
+
 				if (num > 5f)
 				{
 					TPSAnimator.SetInteger(text, 1);
 					return;
 				}
+
 				if (!animHelper.animationData.IsZeroG)
 				{
 					TPSAnimator.SetBool("Turning", false);
 				}
+
 				TPSAnimator.SetInteger(text, 0);
 			}
 			else
@@ -286,6 +297,7 @@ namespace ZeroGravity.CharacterMovement
 				{
 					TPSAnimator.SetBool("Turning", false);
 				}
+
 				TPSAnimator.SetInteger(text, 0);
 			}
 		}
@@ -300,22 +312,25 @@ namespace ZeroGravity.CharacterMovement
 			{
 				return;
 			}
+
 			Vector3 value = cmm.Gravity.ToVector3();
 			isZeroG = !value.IsNotEpsilonZero();
-			if (cmm.ImpactVelocity.HasValue && isZeroG && cmm.ImpactVelocity.Value > 0.4f && Time.realtimeSinceStartup - lastImpactTime > 0.3f)
+			if (cmm.ImpactVelocity.HasValue && isZeroG && cmm.ImpactVelocity.Value > 0.4f &&
+			    Time.realtimeSinceStartup - lastImpactTime > 0.3f)
 			{
 				lastImpactTime = Time.realtimeSinceStartup;
 				PlayImpactSound(cmm.ImpactVelocity.Value);
 			}
+
 			CharacterTransformData transformData = cmm.TransformData;
 			animHelper.ParseData(cmm.AnimationData);
-			syncTime = 0f;
 
 			syncLastTime = Time.realtimeSinceStartup;
 			if (syncLastTime < lastInstantPositionSetTime)
 			{
 				return;
 			}
+
 			if (transformData.PlatformRelativePos != null && player.OnPlatform != null)
 			{
 				SetTargetPositionAndRotation(null, transformData.LocalRotation.ToQuaternion());
@@ -328,11 +343,13 @@ namespace ZeroGravity.CharacterMovement
 			{
 				SetTargetPositionAndRotation(null, transformData.LocalRotation.ToQuaternion(), true);
 			}
-			player.SetMovementData(transformData.LocalPosition.ToVector3(), transformData.LocalRotation.ToQuaternion(), transformData.LocalVelocity.ToVector3(), transformData.Timestamp);
+
+			player.SetMovementData(transformData.LocalPosition.ToVector3(), transformData.LocalRotation.ToQuaternion(),
+				transformData.LocalVelocity.ToVector3(), transformData.Timestamp);
 			player.SetGravity(cmm.Gravity.ToVector3());
-			targetMouseLookUpPos = transformData.MouseLook;
-			targetFreeLookUpPos = transformData.FreeLookX;
-			targetFreeLookRightPos = transformData.FreeLookY;
+			_targetMouseLookUpPos = transformData.MouseLook;
+			_targetFreeLookUpPos = transformData.FreeLookX;
+			_targetFreeLookRightPos = transformData.FreeLookY;
 			if (cmm.RagdollData != null)
 			{
 				animHelper.ToggleMainAnimator(false);
@@ -342,11 +359,13 @@ namespace ZeroGravity.CharacterMovement
 			{
 				animHelper.ToggleMainAnimator(true);
 			}
+
 			if (cmm != null && player.CurrentJetpack != null)
 			{
 				if (cmm.JetpackDirection != null)
 				{
-					player.CurrentJetpack.StartNozzles(new Vector4(cmm.JetpackDirection[0], cmm.JetpackDirection[1], cmm.JetpackDirection[2], cmm.JetpackDirection[3]));
+					player.CurrentJetpack.StartNozzles(new Vector4(cmm.JetpackDirection[0], cmm.JetpackDirection[1],
+						cmm.JetpackDirection[2], cmm.JetpackDirection[3]));
 				}
 				else if (!player.Gravity.IsEpsilonEqual(Vector3.zero))
 				{
@@ -376,33 +395,39 @@ namespace ZeroGravity.CharacterMovement
 
 		private void CalculateIdleAnimation()
 		{
-			if (inPlayerColliders && velocity.magnitude < 0.45f)
+			if (inPlayerColliders && _velocity.magnitude < 0.45f)
 			{
 				RaycastHit hitInfo;
-				if (Physics.Raycast(base.transform.position, base.transform.forward, out hitInfo, 0.8f, Client.DefaultLayerMask))
+				if (Physics.Raycast(base.transform.position, base.transform.forward, out hitInfo, 0.8f,
+					    World.DefaultLayerMask))
 				{
 					Debug.DrawRay(base.transform.position, base.transform.forward * 0.8f, Color.blue);
 					handsAnimState = MyPlayer.HandAnimationStates.Forward;
 				}
-				else if (Physics.Raycast(base.transform.position, -base.transform.forward, out hitInfo, 0.8f, Client.DefaultLayerMask))
+				else if (Physics.Raycast(base.transform.position, -base.transform.forward, out hitInfo, 0.8f,
+					         World.DefaultLayerMask))
 				{
 					Debug.DrawRay(base.transform.position, -base.transform.forward * 0.8f, Color.red);
 					handsAnimState = MyPlayer.HandAnimationStates.Back;
 				}
-				else if (Physics.Raycast(base.transform.position, base.transform.up, out hitInfo, 0.9f, Client.DefaultLayerMask))
+				else if (Physics.Raycast(base.transform.position, base.transform.up, out hitInfo, 0.9f,
+					         World.DefaultLayerMask))
 				{
 					handsAnimState = MyPlayer.HandAnimationStates.Top;
 				}
-				else if (Physics.Raycast(base.transform.position, -base.transform.up, out hitInfo, 0.9f, Client.DefaultLayerMask))
+				else if (Physics.Raycast(base.transform.position, -base.transform.up, out hitInfo, 0.9f,
+					         World.DefaultLayerMask))
 				{
 					handsAnimState = MyPlayer.HandAnimationStates.Bottom;
 				}
-				else if (Physics.Raycast(base.transform.position, base.transform.right, out hitInfo, 0.9f, Client.DefaultLayerMask))
+				else if (Physics.Raycast(base.transform.position, base.transform.right, out hitInfo, 0.9f,
+					         World.DefaultLayerMask))
 				{
 					Debug.DrawRay(base.transform.position, base.transform.right * 0.8f, Color.green);
 					handsAnimState = MyPlayer.HandAnimationStates.Right;
 				}
-				else if (Physics.Raycast(base.transform.position, -base.transform.right, out hitInfo, 0.9f, Client.DefaultLayerMask))
+				else if (Physics.Raycast(base.transform.position, -base.transform.right, out hitInfo, 0.9f,
+					         World.DefaultLayerMask))
 				{
 					Debug.DrawRay(base.transform.position, -base.transform.right * 0.8f, Color.yellow);
 					handsAnimState = MyPlayer.HandAnimationStates.Left;
@@ -416,6 +441,7 @@ namespace ZeroGravity.CharacterMovement
 			{
 				handsAnimState = MyPlayer.HandAnimationStates.Clear;
 			}
+
 			TPSAnimator.SetBool("CanTouchWall", handsAnimState != MyPlayer.HandAnimationStates.Clear);
 			TPSAnimator.SetInteger("ZeroGHandState", (int)handsAnimState);
 		}
@@ -429,19 +455,22 @@ namespace ZeroGravity.CharacterMovement
 		{
 			if (enabled)
 			{
-				RagdollComponent.ToggleRagdoll(enabled, corpse, velocity);
+				RagdollComponent.ToggleRagdoll(enabled, corpse, _velocity);
 				player.AnimHelper.aimIKController.ToggleIK(false, true);
 				return;
 			}
+
 			RaycastHit hitInfo;
 			if (animHelper.animationData.IsZeroG)
 			{
 				base.transform.position = TPSAnimator.GetBoneTransform(HumanBodyBones.Hips).position;
 			}
-			else if (Physics.Raycast(TPSAnimator.GetBoneTransform(HumanBodyBones.Hips).position, player.GravityDirection, out hitInfo, 2f, Client.DefaultLayerMask))
+			else if (Physics.Raycast(TPSAnimator.GetBoneTransform(HumanBodyBones.Hips).position,
+				         player.GravityDirection, out hitInfo, 2f, World.DefaultLayerMask))
 			{
 				base.transform.position = hitInfo.point - player.GravityDirection * 1.34f;
 			}
+
 			RagdollComponent.ToggleRagdoll(enabled, null);
 		}
 
@@ -458,17 +487,19 @@ namespace ZeroGravity.CharacterMovement
 			{
 				base.transform.localPosition += position.Value;
 				posSyncStart += position.Value;
-				posSyncEnd += position.Value;
+				_posSyncEnd += position.Value;
 			}
+
 			if (rotation.HasValue)
 			{
 				base.transform.localRotation *= rotation.Value;
-				rotationSyncStart *= rotation.Value;
-				rotationSyncEnd *= rotation.Value;
+				_rotationSyncStart *= rotation.Value;
+				_rotationSyncEnd *= rotation.Value;
 			}
 		}
 
-		public void SetTargetPositionAndRotation(Vector3? localPosition, Quaternion? localRotation, bool instant = false)
+		public void SetTargetPositionAndRotation(Vector3? localPosition, Quaternion? localRotation,
+			bool instant = false)
 		{
 			if (instant && (localPosition.HasValue || localRotation.HasValue))
 			{
@@ -483,11 +514,14 @@ namespace ZeroGravity.CharacterMovement
 			translateLerpHelper = 0f;
 			while (translateLerpHelper < 1f)
 			{
-				base.transform.position = Vector3.Lerp(startingPosition, position.position, Mathf.SmoothStep(0f, 1f, translateLerpHelper));
-				base.transform.rotation = Quaternion.Lerp(startingRotation, position.rotation, Mathf.SmoothStep(0f, 1f, translateLerpHelper));
+				base.transform.position = Vector3.Lerp(startingPosition, position.position,
+					Mathf.SmoothStep(0f, 1f, translateLerpHelper));
+				base.transform.rotation = Quaternion.Lerp(startingRotation, position.rotation,
+					Mathf.SmoothStep(0f, 1f, translateLerpHelper));
 				translateLerpHelper += Time.deltaTime;
 				yield return new WaitForEndOfFrame();
 			}
+
 			base.transform.position = position.position;
 			base.transform.rotation = position.rotation;
 			actionToCall();

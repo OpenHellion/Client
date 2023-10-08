@@ -42,26 +42,19 @@ namespace ZeroGravity.ShipComponents
 			}
 		}
 
-		[Space(5f)]
-		public float OutputRate = 1f;
+		[Space(5f)] public float OutputRate = 1f;
 
-		[NonSerialized]
-		public float Output;
+		[NonSerialized] public float Output;
 
-		[NonSerialized]
-		public float MaxOutput;
+		[NonSerialized] public float MaxOutput;
 
 		public float NominalOutput;
 
-		[SerializeField]
-		protected SceneTriggerAnimation triggerAnimtion;
+		[SerializeField] protected SceneTriggerAnimation triggerAnimtion;
 
-		[Space(5f)]
-		[Multiline]
-		public string DebugInfo;
+		[Space(5f)] [Multiline] public string DebugInfo;
 
-		[NonSerialized]
-		public float InputFactorStandby = 1f;
+		[NonSerialized] public float InputFactorStandby = 1f;
 
 		public SystemSpawnSettings[] SpawnSettings = new SystemSpawnSettings[0];
 
@@ -71,10 +64,7 @@ namespace ZeroGravity.ShipComponents
 
 		public override VesselComponentType ComponentType
 		{
-			get
-			{
-				return VesselComponentType.Generator;
-			}
+			get { return VesselComponentType.Generator; }
 		}
 
 		public float GetPowerConsumption(bool? working = null)
@@ -89,7 +79,8 @@ namespace ZeroGravity.ShipComponents
 
 		public float GetResourceRequirement(DistributionSystemType resourceType, bool? working = null)
 		{
-			_003CGetResourceRequirement_003Ec__AnonStorey0 _003CGetResourceRequirement_003Ec__AnonStorey = new _003CGetResourceRequirement_003Ec__AnonStorey0();
+			_003CGetResourceRequirement_003Ec__AnonStorey0 _003CGetResourceRequirement_003Ec__AnonStorey =
+				new _003CGetResourceRequirement_003Ec__AnonStorey0();
 			_003CGetResourceRequirement_003Ec__AnonStorey.resourceType = resourceType;
 			_003CGetResourceRequirement_003Ec__AnonStorey.working = working;
 			_003CGetResourceRequirement_003Ec__AnonStorey._0024this = this;
@@ -100,16 +91,23 @@ namespace ZeroGravity.ShipComponents
 				{
 					return 0f;
 				}
-				num = ResourceRequirements.Where(_003CGetResourceRequirement_003Ec__AnonStorey._003C_003Em__0).Sum((Func<ResourceRequirement, float>)_003CGetResourceRequirement_003Ec__AnonStorey._003C_003Em__1);
+
+				num = ResourceRequirements.Where(_003CGetResourceRequirement_003Ec__AnonStorey._003C_003Em__0)
+					.Sum((Func<ResourceRequirement, float>)_003CGetResourceRequirement_003Ec__AnonStorey
+						._003C_003Em__1);
 			}
 			else
 			{
-				num = ResourceRequirements.Where(_003CGetResourceRequirement_003Ec__AnonStorey._003C_003Em__2).Sum((Func<ResourceRequirement, float>)_003CGetResourceRequirement_003Ec__AnonStorey._003C_003Em__3);
+				num = ResourceRequirements.Where(_003CGetResourceRequirement_003Ec__AnonStorey._003C_003Em__2)
+					.Sum((Func<ResourceRequirement, float>)_003CGetResourceRequirement_003Ec__AnonStorey
+						._003C_003Em__3);
 			}
+
 			if (_003CGetResourceRequirement_003Ec__AnonStorey.resourceType == DistributionSystemType.Power)
 			{
 				return num * PowerInputFactor;
 			}
+
 			return num * InputFactor;
 		}
 
@@ -125,7 +123,9 @@ namespace ZeroGravity.ShipComponents
 		{
 			GeneratorDetails generatorDetails = new GeneratorDetails();
 			generatorDetails.InSceneID = base.InSceneID;
-			generatorDetails.Status = ((!isSwitchedOn.HasValue) ? Status : ((!isSwitchedOn.Value) ? SystemStatus.Offline : SystemStatus.Online));
+			generatorDetails.Status = ((!isSwitchedOn.HasValue)
+				? Status
+				: ((!isSwitchedOn.Value) ? SystemStatus.Offline : SystemStatus.Online));
 			generatorDetails.OutputRate = OutputRate;
 			return generatorDetails;
 		}
@@ -136,6 +136,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				return triggerAnimtion.IsEventFinished;
 			}
+
 			return true;
 		}
 
@@ -168,6 +169,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				SetAuxDetails(details.AuxDetails);
 			}
+
 			DebugInfo = details.DebugInfo;
 			if (triggerAnimtion != null)
 			{
@@ -181,48 +183,23 @@ namespace ZeroGravity.ShipComponents
 
 		public override void SwitchOn()
 		{
-			if (Client.IsGameBuild)
-			{
-				SpaceObjectVessel parentVessel = _ParentVessel;
-				GeneratorDetails details = getDetails(true);
-				parentVessel.ChangeStats(null, null, null, null, null, details);
-			}
-			else
-			{
-				SetDetails(SystemStatus.Online, SystemSecondaryStatus.None);
-			}
+			SpaceObjectVessel parentVessel = _ParentVessel;
+			GeneratorDetails details = getDetails(true);
+			parentVessel.ChangeStats(null, null, null, null, null, details);
 		}
 
 		public override void SwitchOff()
 		{
-			if (Client.IsGameBuild)
-			{
-				SpaceObjectVessel parentVessel = _ParentVessel;
-				GeneratorDetails details = getDetails(false);
-				parentVessel.ChangeStats(null, null, null, null, null, details);
-			}
-			else
-			{
-				SetDetails(SystemStatus.Offline, SystemSecondaryStatus.None);
-			}
+			SpaceObjectVessel parentVessel = _ParentVessel;
+			GeneratorDetails details = getDetails(false);
+			parentVessel.ChangeStats(null, null, null, null, null, details);
 		}
 
 		public override void Toggle()
 		{
-			if (Client.IsGameBuild)
-			{
-				SpaceObjectVessel parentVessel = _ParentVessel;
-				GeneratorDetails details = getDetails(!IsSwitchedOn());
-				parentVessel.ChangeStats(null, null, null, null, null, details);
-			}
-			else if (IsSwitchedOn())
-			{
-				SwitchOff();
-			}
-			else
-			{
-				SwitchOn();
-			}
+			SpaceObjectVessel parentVessel = _ParentVessel;
+			GeneratorDetails details = getDetails(!IsSwitchedOn());
+			parentVessel.ChangeStats(null, null, null, null, null, details);
 		}
 
 		public virtual GeneratorData GetData()
@@ -245,6 +222,7 @@ namespace ZeroGravity.ShipComponents
 					}
 				}
 			}
+
 			List<int> list = new List<int>();
 			if (MachineryPartSlots != null)
 			{
@@ -255,9 +233,11 @@ namespace ZeroGravity.ShipComponents
 					{
 						throw new Exception("Machinery part slot not set");
 					}
+
 					list.Add(sceneMachineryPartSlot.InSceneID);
 				}
 			}
+
 			List<int> list2 = new List<int>();
 			if (ResourceContainers != null)
 			{
@@ -267,6 +247,7 @@ namespace ZeroGravity.ShipComponents
 					list2.Add(resourceContainer2.InSceneID);
 				}
 			}
+
 			GeneratorData generatorData = new GeneratorData();
 			generatorData.InSceneID = base.InSceneID;
 			generatorData.Type = Type;
@@ -293,14 +274,17 @@ namespace ZeroGravity.ShipComponents
 			{
 				return 0f;
 			}
+
 			ResourceRequirement[] resourceRequirements = ResourceRequirements;
 			foreach (ResourceRequirement resourceRequirement in resourceRequirements)
 			{
 				if (resourceRequirement.ResourceType == resourceType)
 				{
-					return resourceRequirement.Nominal * OutputRate * InputFactor + resourceRequirement.Standby * InputFactorStandby;
+					return resourceRequirement.Nominal * OutputRate * InputFactor +
+					       resourceRequirement.Standby * InputFactorStandby;
 				}
 			}
+
 			return 0f;
 		}
 	}

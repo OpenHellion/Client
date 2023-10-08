@@ -45,6 +45,7 @@ namespace RootMotion.Demos
 				movePosition = -movePosition;
 				targetPosition += movePosition;
 			}
+
 			r.MoveRotation(Quaternion.RotateTowards(r.rotation, targetRotation, rotationSpeed * Time.deltaTime));
 		}
 

@@ -25,7 +25,6 @@ namespace ZeroGravity.LevelDesign
 		NameTag = 25,
 		HurtTrigger = 26,
 		CraftingPanel = 27,
-		MessageTerminal = 28,
 		TextLogTerminal = 29,
 		General = 100
 	}

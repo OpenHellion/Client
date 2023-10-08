@@ -5,25 +5,18 @@ namespace RootMotion.Demos
 	[RequireComponent(typeof(AnimatorController3rdPerson))]
 	public class CharacterController3rdPerson : MonoBehaviour
 	{
-		[SerializeField]
-		private CameraController cam;
+		[SerializeField] private CameraController cam;
 
 		private AnimatorController3rdPerson animatorController;
 
 		private static Vector3 inputVector
 		{
-			get
-			{
-				return new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-			}
+			get { return new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")); }
 		}
 
 		private static Vector3 inputVectorRaw
 		{
-			get
-			{
-				return new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
-			}
+			get { return new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")); }
 		}
 
 		private void Start()

@@ -86,31 +86,37 @@ namespace ZeroGravity.UI
 				yearApplyChange = false;
 				yearField.text = CurrentDate.Year.ToString();
 			}
+
 			if (monthField.text != CurrentDate.Month.ToString())
 			{
 				monthApplyChange = false;
 				monthField.text = CurrentDate.Month.ToString();
 			}
+
 			if (dayField.text != CurrentDate.Day.ToString())
 			{
 				dayApplyChange = false;
 				dayField.text = CurrentDate.Day.ToString();
 			}
+
 			if (hourField.text != CurrentDate.Hour.ToString())
 			{
 				hourApplyChange = false;
 				hourField.text = CurrentDate.Hour.ToString();
 			}
+
 			if (minField.text != CurrentDate.Minute.ToString())
 			{
 				minApplyChange = false;
 				minField.text = CurrentDate.Minute.ToString();
 			}
+
 			if (secField.text != CurrentDate.Second.ToString())
 			{
 				secApplyChange = false;
 				secField.text = CurrentDate.Second.ToString();
 			}
+
 			if (OnChangeDate != null)
 			{
 				OnChangeDate(CurrentDate);
@@ -126,6 +132,7 @@ namespace ZeroGravity.UI
 					yearApplyChange = true;
 					return;
 				}
+
 				int result = CurrentDate.Year;
 				if (int.TryParse(yearField.text, out result))
 				{
@@ -135,6 +142,7 @@ namespace ZeroGravity.UI
 			catch (ArgumentOutOfRangeException)
 			{
 			}
+
 			UpdateFields();
 		}
 
@@ -147,6 +155,7 @@ namespace ZeroGravity.UI
 					monthApplyChange = true;
 					return;
 				}
+
 				int result = CurrentDate.Month;
 				if (int.TryParse(monthField.text, out result))
 				{
@@ -156,6 +165,7 @@ namespace ZeroGravity.UI
 			catch (ArgumentOutOfRangeException)
 			{
 			}
+
 			UpdateFields();
 		}
 
@@ -168,6 +178,7 @@ namespace ZeroGravity.UI
 					dayApplyChange = true;
 					return;
 				}
+
 				int result = CurrentDate.Day;
 				if (int.TryParse(dayField.text, out result))
 				{
@@ -177,6 +188,7 @@ namespace ZeroGravity.UI
 			catch (ArgumentOutOfRangeException)
 			{
 			}
+
 			UpdateFields();
 		}
 
@@ -189,6 +201,7 @@ namespace ZeroGravity.UI
 					hourApplyChange = true;
 					return;
 				}
+
 				int result = CurrentDate.Hour;
 				if (int.TryParse(hourField.text, out result))
 				{
@@ -198,6 +211,7 @@ namespace ZeroGravity.UI
 			catch (ArgumentOutOfRangeException)
 			{
 			}
+
 			UpdateFields();
 		}
 
@@ -210,6 +224,7 @@ namespace ZeroGravity.UI
 					minApplyChange = true;
 					return;
 				}
+
 				int result = CurrentDate.Minute;
 				if (int.TryParse(minField.text, out result))
 				{
@@ -219,6 +234,7 @@ namespace ZeroGravity.UI
 			catch (ArgumentOutOfRangeException)
 			{
 			}
+
 			UpdateFields();
 		}
 
@@ -231,6 +247,7 @@ namespace ZeroGravity.UI
 					secApplyChange = true;
 					return;
 				}
+
 				int result = CurrentDate.Second;
 				if (int.TryParse(secField.text, out result))
 				{
@@ -240,6 +257,7 @@ namespace ZeroGravity.UI
 			catch (ArgumentOutOfRangeException)
 			{
 			}
+
 			UpdateFields();
 		}
 	}

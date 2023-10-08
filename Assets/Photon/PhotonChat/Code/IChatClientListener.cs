@@ -103,7 +103,7 @@ namespace Photon.Chat
 
 
         #if CHAT_EXTENDED
-        
+
         /// <summary>
         /// Properties of a public channel has been changed
         /// </summary>
@@ -131,7 +131,7 @@ namespace Photon.Chat
         /// <param name="error">The text message of the error info</param>
         /// <param name="data">Optional error data</param>
         void OnErrorInfo(string channel, string error, object data);
-        
+
         #endif
 
 

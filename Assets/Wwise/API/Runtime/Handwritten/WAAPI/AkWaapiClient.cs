@@ -5,9 +5,9 @@ The content of this file may not be used without valid licenses to the
 AUDIOKINETIC Wwise Technology.
 Note that the use of the game engine is subject to the Unity(R) Terms of
 Service at https://unity3d.com/legal/terms-of-service
- 
+
 License Usage
- 
+
 Licensees holding valid licenses to the AUDIOKINETIC Wwise Technology may use
 this file in accordance with the end user license agreement provided with the
 software or, alternatively, in accordance with the terms contained
@@ -54,7 +54,7 @@ internal class AkWaapiClient
 	{
 		if (wamp == null)
 			throw new Wamp.WampNotConnectedException("WAMP connection is not established");
-		
+
 		await wamp.Close(timeout);
 
 		wamp.Disconnected -= Wamp_Disconnected;

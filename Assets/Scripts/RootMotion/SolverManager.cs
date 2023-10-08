@@ -4,10 +4,12 @@ namespace RootMotion
 {
 	public class SolverManager : MonoBehaviour
 	{
-		[Tooltip("If zero, will update the solver in every LateUpdate(). Use this for chains that are animated. If > 0, will be used as updating frequency so that the solver will reach its target in the same time on all machines.")]
+		[Tooltip(
+			"If zero, will update the solver in every LateUpdate(). Use this for chains that are animated. If > 0, will be used as updating frequency so that the solver will reach its target in the same time on all machines.")]
 		public float timeStep;
 
-		[Tooltip("If true, will fix all the Transforms used by the solver to their initial state in each Update. This prevents potential problems with unanimated bones and animator culling with a small cost of performance. Not recommended for CCD and FABRIK solvers.")]
+		[Tooltip(
+			"If true, will fix all the Transforms used by the solver to their initial state in each Update. This prevents potential problems with unanimated bones and animator culling with a small cost of performance. Not recommended for CCD and FABRIK solvers.")]
 		public bool fixTransforms = true;
 
 		private float lastTime;
@@ -30,20 +32,19 @@ namespace RootMotion
 				{
 					return animator.updateMode == AnimatorUpdateMode.AnimatePhysics;
 				}
+
 				if (legacy != null)
 				{
 					return legacy.animatePhysics;
 				}
+
 				return false;
 			}
 		}
 
 		private bool isAnimated
 		{
-			get
-			{
-				return animator != null || legacy != null;
-			}
+			get { return animator != null || legacy != null; }
 		}
 
 		public void Disable()
@@ -101,6 +102,7 @@ namespace RootMotion
 			{
 				return;
 			}
+
 			animator = t.GetComponent<Animator>();
 			legacy = t.GetComponent<Animation>();
 			if (!isAnimated)
@@ -109,10 +111,12 @@ namespace RootMotion
 				{
 					animator = t.GetComponentInChildren<Animator>();
 				}
+
 				if (legacy == null && findInChildren)
 				{
 					legacy = t.GetComponentInChildren<Animation>();
 				}
+
 				if (!isAnimated && t.parent != null)
 				{
 					FindAnimatorRecursive(t.parent, false);
@@ -126,6 +130,7 @@ namespace RootMotion
 			{
 				skipSolverUpdate = false;
 			}
+
 			updateFrame = true;
 			if (animatePhysics && fixTransforms)
 			{
@@ -139,10 +144,12 @@ namespace RootMotion
 			{
 				return;
 			}
+
 			if (!animatePhysics)
 			{
 				updateFrame = true;
 			}
+
 			if (updateFrame)
 			{
 				updateFrame = false;

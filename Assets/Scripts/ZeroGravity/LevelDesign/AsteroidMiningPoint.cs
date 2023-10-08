@@ -10,14 +10,11 @@ namespace ZeroGravity.LevelDesign
 {
 	public class AsteroidMiningPoint : MonoBehaviour, ISceneObject
 	{
-		[SerializeField]
-		private int _InSceneID;
+		[SerializeField] private int _InSceneID;
 
-		[SerializeField]
-		private float size = 1f;
+		[SerializeField] private float size = 1f;
 
-		[NonSerialized]
-		public SpaceObjectVessel ParentVessel;
+		[NonSerialized] public SpaceObjectVessel ParentVessel;
 
 		public ResourceType ResourceType;
 
@@ -33,14 +30,8 @@ namespace ZeroGravity.LevelDesign
 
 		public int InSceneID
 		{
-			get
-			{
-				return _InSceneID;
-			}
-			set
-			{
-				_InSceneID = value;
-			}
+			get { return _InSceneID; }
+			set { _InSceneID = value; }
 		}
 
 		public void SetDetails(AsteroidMiningPointDetails ampd)
@@ -50,17 +41,20 @@ namespace ZeroGravity.LevelDesign
 				UnityEngine.Object.Destroy(base.gameObject);
 				return;
 			}
+
 			if (ResourceType != ampd.ResourceType)
 			{
 				ResourceType = ampd.ResourceType;
 				MiningPointVisual.SetMaterials(ResourceType);
 			}
+
 			MaxQuantity = ampd.MaxQuantity;
 			HurtTrigger[] componentsInChildren = GetComponentsInChildren<HurtTrigger>(true);
 			foreach (HurtTrigger hurtTrigger in componentsInChildren)
 			{
 				hurtTrigger.Damage *= ParentVessel.Orbit.Parent.CelestialBody.AsteroidGasBurstDmgMultiplier;
 			}
+
 			SetValues(ampd.Quantity, null);
 		}
 
@@ -81,7 +75,8 @@ namespace ZeroGravity.LevelDesign
 		private void MiningPointStatsMessageListener(NetworkData data)
 		{
 			MiningPointStatsMessage miningPointStatsMessage = data as MiningPointStatsMessage;
-			if (miningPointStatsMessage.ID.VesselGUID == ParentVessel.GUID && miningPointStatsMessage.ID.InSceneID == InSceneID)
+			if (miningPointStatsMessage.ID.VesselGUID == ParentVessel.GUID &&
+			    miningPointStatsMessage.ID.InSceneID == InSceneID)
 			{
 				SetValues(miningPointStatsMessage.Quantity, miningPointStatsMessage.GasBurst);
 			}
@@ -99,8 +94,10 @@ namespace ZeroGravity.LevelDesign
 						PlayableDirector.time = (1f - Quantity / MaxQuantity) * 1.6666f;
 						PlayableDirector.Evaluate();
 					}
+
 					MiningPointVisual.MiningPointLight.intensity = Quantity / MaxQuantity * 0.5f;
 				}
+
 				if (gasBurst.HasValue && gasBurst.Value && GasBurst != null)
 				{
 					GasBurst.gameObject.SetActive(true);

@@ -24,23 +24,17 @@ namespace ZeroGravity.Objects
 
 		public Inventory Inventory;
 
-		[SerializeField]
-		private RagdollHelper ragdollComponent;
+		[SerializeField] private RagdollHelper ragdollComponent;
 
-		[SerializeField]
-		private AnimatorHelper animHelper;
+		[SerializeField] private AnimatorHelper animHelper;
 
-		[SerializeField]
-		private SkinnedMeshRenderer headSkin;
+		[SerializeField] private SkinnedMeshRenderer headSkin;
 
-		[SerializeField]
-		private Transform outfitTransform;
+		[SerializeField] private Transform outfitTransform;
 
-		[SerializeField]
-		private Transform basicOutfitHolder;
+		[SerializeField] private Transform basicOutfitHolder;
 
-		[SerializeField]
-		private Transform centerOfMass;
+		[SerializeField] private Transform centerOfMass;
 
 		private Collider takeoverTrigger;
 
@@ -74,10 +68,7 @@ namespace ZeroGravity.Objects
 
 		public override SpaceObject Parent
 		{
-			get
-			{
-				return base.Parent;
-			}
+			get { return base.Parent; }
 			set
 			{
 				base.Parent = value;
@@ -93,7 +84,11 @@ namespace ZeroGravity.Objects
 
 		public static Corpse SpawnCorpse(Corpse template)
 		{
-			GameObject gameObject = ((template.Gender != 0) ? (UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpseFemale"), new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject) : (UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpse"), new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject));
+			GameObject gameObject = ((template.Gender != 0)
+				? (UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpseFemale"),
+					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject)
+				: (UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpse"),
+					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject));
 			gameObject.SetActive(value: false);
 			Corpse component = gameObject.GetComponent<Corpse>();
 			component.Gender = template.Gender;
@@ -102,7 +97,7 @@ namespace ZeroGravity.Objects
 			component.InitializeInventory();
 			component.ReconnectAllBones();
 			component.gameObject.name = "Corpse_" + component.GUID;
-			Client.Instance.AddCorpse(component.GUID, component);
+			World.AddCorpse(component.GUID, component);
 			component.Parent = template.Parent;
 			component.transform.position = template.transform.position;
 			component.transform.rotation = template.transform.rotation;
@@ -113,6 +108,7 @@ namespace ZeroGravity.Objects
 					component.corpseParts[(byte)bone.Key].Trans.rotation = bone.Value.rotation;
 				}
 			}
+
 			component.SetKinematic(toggle: false);
 			gameObject.SetActive(value: true);
 			component.ragdollComponent.ToggleRagdoll(enabled: true, component);
@@ -121,17 +117,24 @@ namespace ZeroGravity.Objects
 
 		public static Corpse SpawnCorpse(CorpseDetails details, OtherPlayer playerThatDied)
 		{
-			if (Client.Instance.GetCorpse(details.GUID) != null)
+			if (World.GetCorpse(details.GUID) != null)
 			{
 				return null;
 			}
-			SpaceObject @object = Client.Instance.GetObject(details.ParentGUID, details.ParentType);
+
+			SpaceObject @object = World.GetObject(details.ParentGUID, details.ParentType);
 			if (@object == null)
 			{
-				Dbg.Error("Cannot spawn corpse because there is no corpse parent", details.GUID, details.ParentGUID, details.ParentType);
+				Dbg.Error("Cannot spawn corpse because there is no corpse parent", details.GUID, details.ParentGUID,
+					details.ParentType);
 				return null;
 			}
-			GameObject gameObject = ((details.Gender != 0) ? (UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpseFemale"), new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject) : (UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpse"), new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject));
+
+			GameObject gameObject = ((details.Gender != 0)
+				? (UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpseFemale"),
+					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject)
+				: (UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpse"),
+					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject));
 			gameObject.SetActive(value: false);
 			Corpse component = gameObject.GetComponent<Corpse>();
 			component.Gender = details.Gender;
@@ -140,14 +143,16 @@ namespace ZeroGravity.Objects
 			component.InitializeInventory();
 			component.ReconnectAllBones();
 			component.gameObject.name = "Corpse_" + component.GUID;
-			Client.Instance.AddCorpse(component.GUID, component);
+			World.AddCorpse(component.GUID, component);
 			if (details.DynamicObjectData != null && details.DynamicObjectData.Count > 0)
 			{
-				DynamicObjectDetails dynamicObjectDetails = details.DynamicObjectData.Find((DynamicObjectDetails x) => x.AttachData.IsAttached && x.AttachData.InventorySlotID == -2);
+				DynamicObjectDetails dynamicObjectDetails = details.DynamicObjectData.Find((DynamicObjectDetails x) =>
+					x.AttachData.IsAttached && x.AttachData.InventorySlotID == -2);
 				if (dynamicObjectDetails != null)
 				{
 					DynamicObject.SpawnDynamicObject(dynamicObjectDetails, component);
 				}
+
 				foreach (DynamicObjectDetails dynamicObjectDatum in details.DynamicObjectData)
 				{
 					if (dynamicObjectDatum != dynamicObjectDetails)
@@ -156,6 +161,7 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
+
 			component.Parent = @object;
 			component.transform.localPosition = details.LocalPosition.ToVector3();
 			component.transform.localRotation = details.LocalRotation.ToQuaternion();
@@ -164,14 +170,17 @@ namespace ZeroGravity.Objects
 				component.CopyPositionFromPlayer(playerThatDied);
 				component.SetGravity(playerThatDied.Gravity);
 			}
+
 			component.SetKinematic(toggle: false);
 			gameObject.SetActive(value: true);
 			component.ragdollComponent.ToggleRagdoll(enabled: true, component);
 			if (component.Inventory.ItemInHands != null)
 			{
 				Vector3 value = component.transform.parent.InverseTransformPoint(component.transform.position);
-				component.Inventory.ItemInHands.DynamicObj.SendAttachMessage(MyPlayer.Instance.Parent, null, value, Quaternion.identity, Vector3.zero, Vector3.zero, MyPlayer.Instance.rigidBody.velocity);
+				component.Inventory.ItemInHands.DynamicObj.SendAttachMessage(MyPlayer.Instance.Parent, null, value,
+					Quaternion.identity, Vector3.zero, Vector3.zero, MyPlayer.Instance.rigidBody.velocity);
 			}
+
 			return component;
 		}
 
@@ -193,7 +202,7 @@ namespace ZeroGravity.Objects
 
 		private void FixedUpdate()
 		{
-			if (Client.IsGameBuild && !IsDestroying && !IsKinematic && sendMovementTime + SendMovementInterval <= Time.fixedTime)
+			if (!IsDestroying && !IsKinematic && sendMovementTime + SendMovementInterval <= Time.fixedTime)
 			{
 				sendMovementTime = Time.fixedTime;
 				SendMovementMessage();
@@ -224,6 +233,7 @@ namespace ZeroGravity.Objects
 				});
 				corpsePart.Trans.hasChanged = false;
 			}
+
 			NetworkController.Instance.SendToGameServer(corpseMovementMessage2);
 		}
 
@@ -261,6 +271,7 @@ namespace ZeroGravity.Objects
 					{
 						hipsKey = (byte)bone.Key;
 					}
+
 					component.enabled = true;
 					component.CorpseObject = this;
 					rigidbody = bone.Value.GetComponent<Rigidbody>();
@@ -269,30 +280,37 @@ namespace ZeroGravity.Objects
 						Dbg.Error("Missing rigidbody on ragdoll colliders", component.name, base.GUID);
 						return;
 					}
+
 					rigidbody.useGravity = false;
 					rigidbody.isKinematic = true;
 					Collider component2 = bone.Value.gameObject.GetComponent<Collider>();
 					component2.isTrigger = false;
 				}
+
 				corpseParts.Add((byte)bone.Key, new CorpsePart
 				{
 					RBody = rigidbody,
 					Trans = bone.Value.transform
 				});
 			}
+
 			DynamicObject[] componentsInChildren = GetComponentsInChildren<DynamicObject>(includeInactive: true);
 			foreach (DynamicObject dynamicObject in componentsInChildren)
 			{
 				dynamicObject.ToggleKinematic(value: true);
 				dynamicObject.ToggleEnabled(isEnabled: true, toggleColliders: true);
 			}
+
 			if (Gender == Gender.Female)
 			{
-				GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/Hairs/Female/Hair1")) as GameObject;
+				GameObject gameObject =
+					UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/Hairs/Female/Hair1")) as
+						GameObject;
 				gameObject.transform.parent = animHelper.GetBone(AnimatorHelper.HumanBones.Head);
 				gameObject.transform.localPosition = Vector3.zero;
 				gameObject.transform.localScale = Vector3.one;
 			}
+
 			SetKinematic(toggle: true);
 		}
 
@@ -311,10 +329,12 @@ namespace ZeroGravity.Objects
 		{
 			if (CurrentOutfit != null)
 			{
-				CurrentOutfit.SetOutfitParent(outfitTransform.GetChildren(), CurrentOutfit.OutfitTrans, activateGeometry: false);
+				CurrentOutfit.SetOutfitParent(outfitTransform.GetChildren(), CurrentOutfit.OutfitTrans,
+					activateGeometry: false);
 				CurrentOutfit.FoldedOutfitTrans.gameObject.SetActive(value: true);
 				return;
 			}
+
 			foreach (Transform child in outfitTransform.GetChildren())
 			{
 				child.parent = basicOutfitHolder;
@@ -329,7 +349,8 @@ namespace ZeroGravity.Objects
 				child.parent = parentTransform;
 				child.localScale = Vector3.one;
 				child.localPosition = Vector3.zero;
-				child.localRotation = Quaternion.Euler((!(child.name == "Root")) ? Vector3.zero : new Vector3(0f, 90f, -90f));
+				child.localRotation =
+					Quaternion.Euler((!(child.name == "Root")) ? Vector3.zero : new Vector3(0f, 90f, -90f));
 				child.gameObject.SetActive(activeGeometry);
 			}
 		}
@@ -361,6 +382,7 @@ namespace ZeroGravity.Objects
 			{
 				array[i] = bone.FindChildByName(headSkin.bones[i].name);
 			}
+
 			headSkin.bones = array;
 		}
 
@@ -424,11 +446,8 @@ namespace ZeroGravity.Objects
 		protected override void OnDestroy()
 		{
 			base.OnDestroy();
-			if (Client.IsGameBuild)
-			{
-				Disconnect();
-				Client.Instance.RemoveCorpse(base.GUID);
-			}
+			Disconnect();
+			World.RemoveCorpse(GUID);
 		}
 
 		public void ProcessMoveCorpseObectMessage(CorpseMovementMessage mm)
@@ -448,6 +467,7 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			if (corpseStatsMessage.DestroyCorpse)
 			{
 				UnityEngine.Object.Destroy(base.gameObject);
@@ -457,23 +477,28 @@ namespace ZeroGravity.Objects
 				ArtificialBody artificialBody = Parent as ArtificialBody;
 				if (artificialBody == null)
 				{
-					Dbg.Error("Corpse exited vessel but we don't know from where.", base.GUID, Parent, corpseStatsMessage.ParentType, corpseStatsMessage.ParentGUID);
+					Dbg.Error("Corpse exited vessel but we don't know from where.", base.GUID, Parent,
+						corpseStatsMessage.ParentType, corpseStatsMessage.ParentGUID);
 				}
 				else
 				{
-					Pivot pivot = Client.Instance.SolarSystem.GetArtificialBody(base.GUID) as Pivot;
+					Pivot pivot = World.SolarSystem.GetArtificialBody(base.GUID) as Pivot;
 					if (pivot == null)
 					{
-						pivot = Pivot.Create(SpaceObjectType.CorpsePivot, base.GUID, artificialBody, isMainObject: false);
+						pivot = Pivot.Create(SpaceObjectType.CorpsePivot, base.GUID, artificialBody,
+							isMainObject: false);
 					}
+
 					Parent = pivot;
 				}
 			}
-			else if (Parent is Pivot && (corpseStatsMessage.ParentType == SpaceObjectType.Ship || corpseStatsMessage.ParentType == SpaceObjectType.Station || corpseStatsMessage.ParentType == SpaceObjectType.Asteroid))
+			else if (Parent is Pivot && (corpseStatsMessage.ParentType == SpaceObjectType.Ship ||
+			                             corpseStatsMessage.ParentType == SpaceObjectType.Station ||
+			                             corpseStatsMessage.ParentType == SpaceObjectType.Asteroid))
 			{
-				Client.Instance.SolarSystem.RemoveArtificialBody(Parent as Pivot);
+				World.SolarSystem.RemoveArtificialBody(Parent as Pivot);
 				UnityEngine.Object.Destroy(Parent.gameObject);
-				Parent = Client.Instance.GetVessel(corpseStatsMessage.ParentGUID);
+				Parent = World.GetVessel(corpseStatsMessage.ParentGUID);
 				TransitionTrigger.ResetTriggers();
 			}
 		}
@@ -484,12 +509,16 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
+
 			foreach (KeyValuePair<byte, CorpsePart> corpsePart in corpseParts)
 			{
 				if (corpsePart.Value.RBody != null)
 				{
-					corpsePart.Value.RBody.AddForce(new Vector3(UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f)), ForceMode.Impulse);
-					corpsePart.Value.RBody.AddTorque(new Vector3(UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f)));
+					corpsePart.Value.RBody.AddForce(
+						new Vector3(UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f),
+							UnityEngine.Random.Range(0.001f, 0.05f)), ForceMode.Impulse);
+					corpsePart.Value.RBody.AddTorque(new Vector3(UnityEngine.Random.Range(0.001f, 0.05f),
+						UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f)));
 				}
 			}
 		}
@@ -511,9 +540,10 @@ namespace ZeroGravity.Objects
 			{
 				if (Parent is Pivot && Parent != vessel)
 				{
-					Client.Instance.SolarSystem.RemoveArtificialBody(Parent as Pivot);
+					World.SolarSystem.RemoveArtificialBody(Parent as Pivot);
 					UnityEngine.Object.Destroy(Parent.gameObject);
 				}
+
 				Parent = vessel;
 				SendStatsMessage();
 			}
@@ -523,14 +553,17 @@ namespace ZeroGravity.Objects
 		{
 			if (!IsKinematic)
 			{
-				ArtificialBody artificialBody = ((!(Parent is SpaceObjectVessel)) ? (Parent as ArtificialBody) : (Parent as SpaceObjectVessel).MainVessel);
+				ArtificialBody artificialBody = ((!(Parent is SpaceObjectVessel))
+					? (Parent as ArtificialBody)
+					: (Parent as SpaceObjectVessel).MainVessel);
 				if (artificialBody == null)
 				{
 					Dbg.Error("Corpse cannot exit vessel, cannot find parents artificial body", base.name, base.GUID);
 				}
 				else
 				{
-					Pivot pivot = (Pivot)(Parent = Pivot.Create(SpaceObjectType.CorpsePivot, base.GUID, artificialBody, isMainObject: false));
+					Pivot pivot = (Pivot)(Parent = Pivot.Create(SpaceObjectType.CorpsePivot, base.GUID, artificialBody,
+						isMainObject: false));
 					SendStatsMessage();
 				}
 			}
@@ -551,15 +584,18 @@ namespace ZeroGravity.Objects
 						}
 					}
 				}
+
 				if (Inventory.HandsSlot != null && Inventory.HandsSlot.Item != null)
 				{
 					list.Add(Inventory.HandsSlot.Item);
 				}
 			}
+
 			if (list.Count == 0)
 			{
 				return null;
 			}
+
 			return list;
 		}
 
@@ -573,7 +609,8 @@ namespace ZeroGravity.Objects
 			float num = Time.time - movementReceivedTime;
 			if (!IsKinematic)
 			{
-				if (RigidBody.velocity.IsEpsilonEqual(Vector3.zero, 0.1f) && RigidBody.angularVelocity.IsEpsilonEqual(Vector3.zero, 0.5f))
+				if (RigidBody.velocity.IsEpsilonEqual(Vector3.zero, 0.1f) &&
+				    RigidBody.angularVelocity.IsEpsilonEqual(Vector3.zero, 0.5f))
 				{
 					velocityCheckTimer += Time.deltaTime;
 					if (velocityCheckTimer > 1f)
@@ -589,8 +626,10 @@ namespace ZeroGravity.Objects
 			}
 			else if (movementReceivedTime > 0f && num < 1f)
 			{
-				base.transform.localPosition = Vector3.Lerp(base.transform.localPosition, movementTargetLocalPosition, Mathf.Pow(num, 0.5f));
-				base.transform.localRotation = Quaternion.Slerp(base.transform.localRotation, movementTargetLocalRotation, Mathf.Pow(num, 0.5f));
+				base.transform.localPosition = Vector3.Lerp(base.transform.localPosition, movementTargetLocalPosition,
+					Mathf.Pow(num, 0.5f));
+				base.transform.localRotation = Quaternion.Slerp(base.transform.localRotation,
+					movementTargetLocalRotation, Mathf.Pow(num, 0.5f));
 			}
 			else if (num > 1f && num - Time.deltaTime <= 1f)
 			{
@@ -598,6 +637,7 @@ namespace ZeroGravity.Objects
 				RigidBody.velocity = movementVelocity;
 				RigidBody.angularVelocity = movementAngularVelocity;
 			}
+
 			takeoverTimer += Time.deltaTime;
 		}
 
@@ -617,8 +657,10 @@ namespace ZeroGravity.Objects
 				{
 					GameObject.Destroy(takeoverTrigger);
 				}
+
 				velocityCheckTimer = 0f;
 			}
+
 			RigidBody.isKinematic = value;
 		}
 
@@ -635,23 +677,28 @@ namespace ZeroGravity.Objects
 		{
 			switch (id)
 			{
-			case -1:
-				return Inventory.HandsSlot;
-			case -2:
-				return Inventory.OutfitSlot;
-			default:
-				if (CurrentOutfit != null)
-				{
-					return CurrentOutfit.GetSlotByID(id);
-				}
-				return null;
+				case -1:
+					return Inventory.HandsSlot;
+				case -2:
+					return Inventory.OutfitSlot;
+				default:
+					if (CurrentOutfit != null)
+					{
+						return CurrentOutfit.GetSlotByID(id);
+					}
+
+					return null;
 			}
 		}
 
 		public Dictionary<short, InventorySlot> GetAllSlots()
 		{
-			InventorySlot inventorySlot = CurrentOutfit.InventorySlots.Values.FirstOrDefault((InventorySlot m) => m.SlotGroup == InventorySlot.Group.Jetpack);
-			InventorySlot inventorySlot2 = CurrentOutfit.InventorySlots.Values.FirstOrDefault((InventorySlot m) => m.SlotGroup == InventorySlot.Group.Helmet);
+			InventorySlot inventorySlot =
+				CurrentOutfit.InventorySlots.Values.FirstOrDefault((InventorySlot m) =>
+					m.SlotGroup == InventorySlot.Group.Jetpack);
+			InventorySlot inventorySlot2 =
+				CurrentOutfit.InventorySlots.Values.FirstOrDefault((InventorySlot m) =>
+					m.SlotGroup == InventorySlot.Group.Helmet);
 			Dictionary<short, InventorySlot> dictionary = new Dictionary<short, InventorySlot>();
 			dictionary.Add(-1, Inventory.HandsSlot);
 			dictionary.Add(-2, Inventory.OutfitSlot);
@@ -664,7 +711,8 @@ namespace ZeroGravity.Objects
 		{
 			return (from m in GetAllSlots()
 				where m.Value.SlotGroup == @group
-				select m).ToDictionary((KeyValuePair<short, InventorySlot> k) => k.Key, (KeyValuePair<short, InventorySlot> v) => v.Value);
+				select m).ToDictionary((KeyValuePair<short, InventorySlot> k) => k.Key,
+				(KeyValuePair<short, InventorySlot> v) => v.Value);
 		}
 	}
 }

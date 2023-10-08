@@ -7,16 +7,11 @@ namespace ZeroGravity.Objects
 	{
 		private int _BulletCount;
 
-		[Title("UI")]
-		[SerializeField]
-		private Text AmmoCount;
+		[Title("UI")] [SerializeField] private Text AmmoCount;
 
 		public int BulletCount
 		{
-			get
-			{
-				return _BulletCount;
-			}
+			get { return _BulletCount; }
 			set
 			{
 				_BulletCount = value;

@@ -115,7 +115,7 @@ namespace Photon.Realtime
         public string GetResults()
         {
             StringBuilder sb = new StringBuilder();
-            
+
             sb.AppendFormat("Region Pinging Result: {0}\n", this.BestRegion.ToString());
             foreach (RegionPinger region in this.pingerList)
             {
@@ -145,7 +145,7 @@ namespace Photon.Realtime
                 //Debug.LogError("The region arrays from Name Server are not ok. Must be non-null and same length. " + (regions == null) + " " + (servers == null) + "\n" + opGetRegions.ToStringFull());
                 return;
             }
-            
+
             this.bestRegionCache = null;
             this.EnabledRegions = new List<Region>(regions.Length);
 
@@ -247,7 +247,7 @@ namespace Photon.Realtime
             // let's check only the preferred region to detect if it's still "good enough"
             this.previousPing = prevBestRegionPing;
 
-            
+
             Region preferred = this.EnabledRegions.Find(r => r.Code.Equals(prevBestRegionCode));
             RegionPinger singlePinger = new RegionPinger(preferred, this.OnPreferredRegionPinged);
 

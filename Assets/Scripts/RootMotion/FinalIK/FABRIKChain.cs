@@ -8,11 +8,9 @@ namespace RootMotion.FinalIK
 	{
 		public FABRIK ik;
 
-		[Range(0f, 1f)]
-		public float pull = 1f;
+		[Range(0f, 1f)] public float pull = 1f;
 
-		[Range(0f, 1f)]
-		public float pin = 1f;
+		[Range(0f, 1f)] public float pin = 1f;
 
 		public int[] children = new int[0];
 
@@ -23,10 +21,12 @@ namespace RootMotion.FinalIK
 				message = "IK unassigned in FABRIKChain.";
 				return false;
 			}
+
 			if (!ik.solver.IsValid(ref message))
 			{
 				return false;
 			}
+
 			return true;
 		}
 
@@ -41,6 +41,7 @@ namespace RootMotion.FinalIK
 			{
 				chain[children[i]].Stage1(chain);
 			}
+
 			if (children.Length == 0)
 			{
 				ik.solver.SolveForward(ik.solver.GetIKPosition());
@@ -67,19 +68,23 @@ namespace RootMotion.FinalIK
 			{
 				return iKPosition;
 			}
+
 			float num = 0f;
 			for (int i = 0; i < children.Length; i++)
 			{
 				num += chain[children[i]].pull;
 			}
+
 			if (num <= 0f)
 			{
 				return iKPosition;
 			}
+
 			if (num < 1f)
 			{
 				num = 1f;
 			}
+
 			Vector3 vector = iKPosition;
 			for (int j = 0; j < children.Length; j++)
 			{
@@ -87,10 +92,12 @@ namespace RootMotion.FinalIK
 				float num2 = chain[children[j]].pull / num;
 				vector += vector2 * num2;
 			}
+
 			if (pin <= 0f)
 			{
 				return vector;
 			}
+
 			return vector + (iKPosition - vector) * pin;
 		}
 	}

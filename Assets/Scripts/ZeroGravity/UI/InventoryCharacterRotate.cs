@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 
 namespace ZeroGravity.UI
 {
-	public class InventoryCharacterRotate : MonoBehaviour, IDragHandler, IPointerEnterHandler, IPointerExitHandler, IEventSystemHandler
+	public class InventoryCharacterRotate : MonoBehaviour, IDragHandler, IPointerEnterHandler, IPointerExitHandler,
+		IEventSystemHandler
 	{
 		private const float RotSpeed = 5f;
 

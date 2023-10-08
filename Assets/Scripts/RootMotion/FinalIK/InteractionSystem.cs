@@ -9,9 +9,11 @@ namespace RootMotion.FinalIK
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/Interaction System/Interaction System")]
 	public class InteractionSystem : MonoBehaviour
 	{
-		public delegate void InteractionDelegate(FullBodyBipedEffector effectorType, InteractionObject interactionObject);
+		public delegate void InteractionDelegate(FullBodyBipedEffector effectorType,
+			InteractionObject interactionObject);
 
-		public delegate void InteractionEventDelegate(FullBodyBipedEffector effectorType, InteractionObject interactionObject, InteractionObject.InteractionEvent interactionEvent);
+		public delegate void InteractionEventDelegate(FullBodyBipedEffector effectorType,
+			InteractionObject interactionObject, InteractionObject.InteractionEvent interactionEvent);
 
 		[Tooltip("If not empty, only the targets with the specified tag will be used by this Interaction System.")]
 		public string targetTag = string.Empty;
@@ -22,7 +24,8 @@ namespace RootMotion.FinalIK
 		[Tooltip("The master speed for all interactions.")]
 		public float speed = 1f;
 
-		[Tooltip("If > 0, lerps all the FBBIK channels used by the Interaction System back to their default or initial values when not in interaction.")]
+		[Tooltip(
+			"If > 0, lerps all the FBBIK channels used by the Interaction System back to their default or initial values when not in interaction.")]
 		public float resetToDefaultsSpeed = 1f;
 
 		[Header("Triggering")]
@@ -30,11 +33,13 @@ namespace RootMotion.FinalIK
 		[FormerlySerializedAs("collider")]
 		public Collider characterCollider;
 
-		[Tooltip("Will be used by Interaction Triggers that need the camera's position. Assign the first person view character camera.")]
+		[Tooltip(
+			"Will be used by Interaction Triggers that need the camera's position. Assign the first person view character camera.")]
 		[FormerlySerializedAs("camera")]
 		public Transform FPSCamera;
 
-		[Tooltip("The layers that will be raycasted from the camera (along camera.forward). All InteractionTrigger look at target colliders should be included.")]
+		[Tooltip(
+			"The layers that will be raycasted from the camera (along camera.forward). All InteractionTrigger look at target colliders should be included.")]
 		public LayerMask camRaycastLayers;
 
 		[Tooltip("Max distance of raycasting from the camera.")]
@@ -58,9 +63,7 @@ namespace RootMotion.FinalIK
 
 		public RaycastHit raycastHit;
 
-		[Space(10f)]
-		[Tooltip("Reference to the FBBIK component.")]
-		[SerializeField]
+		[Space(10f)] [Tooltip("Reference to the FBBIK component.")] [SerializeField]
 		private FullBodyBipedIK fullBody;
 
 		[Tooltip("Handles looking at the interactions.")]
@@ -93,6 +96,7 @@ namespace RootMotion.FinalIK
 				{
 					return false;
 				}
+
 				for (int i = 0; i < interactionEffectors.Length; i++)
 				{
 					if (interactionEffectors[i].inInteraction && !interactionEffectors[i].isPaused)
@@ -100,16 +104,14 @@ namespace RootMotion.FinalIK
 						return true;
 					}
 				}
+
 				return false;
 			}
 		}
 
 		public FullBodyBipedIK ik
 		{
-			get
-			{
-				return fullBody;
-			}
+			get { return fullBody; }
 		}
 
 		public List<InteractionTrigger> triggersInRange { get; private set; }
@@ -129,13 +131,15 @@ namespace RootMotion.FinalIK
 		[ContextMenu("TUTORIAL VIDEO (PART 3: ANIMATION)")]
 		private void OpenTutorial3()
 		{
-			Application.OpenURL("https://www.youtube.com/watch?v=sQfB2RcT1T4&index=14&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6");
+			Application.OpenURL(
+				"https://www.youtube.com/watch?v=sQfB2RcT1T4&index=14&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6");
 		}
 
 		[ContextMenu("TUTORIAL VIDEO (PART 4: TRIGGERS)")]
 		private void OpenTutorial4()
 		{
-			Application.OpenURL("https://www.youtube.com/watch?v=-TDZpNjt2mk&index=15&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6");
+			Application.OpenURL(
+				"https://www.youtube.com/watch?v=-TDZpNjt2mk&index=15&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6");
 		}
 
 		[ContextMenu("Support Group")]
@@ -147,7 +151,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Asset Store Thread")]
 		private void ASThread()
 		{
-			Application.OpenURL("http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
+			Application.OpenURL(
+				"http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
 		}
 
 		public bool IsInInteraction(FullBodyBipedEffector effectorType)
@@ -156,6 +161,7 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			for (int i = 0; i < interactionEffectors.Length; i++)
 			{
 				if (interactionEffectors[i].effectorType == effectorType)
@@ -163,6 +169,7 @@ namespace RootMotion.FinalIK
 					return interactionEffectors[i].inInteraction && !interactionEffectors[i].isPaused;
 				}
 			}
+
 			return false;
 		}
 
@@ -172,6 +179,7 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			for (int i = 0; i < interactionEffectors.Length; i++)
 			{
 				if (interactionEffectors[i].effectorType == effectorType)
@@ -179,6 +187,7 @@ namespace RootMotion.FinalIK
 					return interactionEffectors[i].inInteraction && interactionEffectors[i].isPaused;
 				}
 			}
+
 			return false;
 		}
 
@@ -188,6 +197,7 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			for (int i = 0; i < interactionEffectors.Length; i++)
 			{
 				if (interactionEffectors[i].inInteraction && interactionEffectors[i].isPaused)
@@ -195,6 +205,7 @@ namespace RootMotion.FinalIK
 					return true;
 				}
 			}
+
 			return false;
 		}
 
@@ -204,12 +215,14 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			for (int i = 0; i < interactionEffectors.Length; i++)
 			{
 				if (!interactionEffectors[i].isPaused)
 				{
 					continue;
 				}
+
 				for (int j = 0; j < interactionEffectors.Length; j++)
 				{
 					if (j != i && interactionEffectors[j].inInteraction && !interactionEffectors[j].isPaused)
@@ -218,19 +231,23 @@ namespace RootMotion.FinalIK
 					}
 				}
 			}
+
 			return true;
 		}
 
-		public bool StartInteraction(FullBodyBipedEffector effectorType, InteractionObject interactionObject, bool interrupt)
+		public bool StartInteraction(FullBodyBipedEffector effectorType, InteractionObject interactionObject,
+			bool interrupt)
 		{
 			if (!IsValid(true))
 			{
 				return false;
 			}
+
 			if (interactionObject == null)
 			{
 				return false;
 			}
+
 			for (int i = 0; i < interactionEffectors.Length; i++)
 			{
 				if (interactionEffectors[i].effectorType == effectorType)
@@ -238,6 +255,7 @@ namespace RootMotion.FinalIK
 					return interactionEffectors[i].Start(interactionObject, targetTag, fadeInTime, interrupt);
 				}
 			}
+
 			return false;
 		}
 
@@ -247,6 +265,7 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			for (int i = 0; i < interactionEffectors.Length; i++)
 			{
 				if (interactionEffectors[i].effectorType == effectorType)
@@ -254,6 +273,7 @@ namespace RootMotion.FinalIK
 					return interactionEffectors[i].Pause();
 				}
 			}
+
 			return false;
 		}
 
@@ -263,6 +283,7 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			for (int i = 0; i < interactionEffectors.Length; i++)
 			{
 				if (interactionEffectors[i].effectorType == effectorType)
@@ -270,6 +291,7 @@ namespace RootMotion.FinalIK
 					return interactionEffectors[i].Resume();
 				}
 			}
+
 			return false;
 		}
 
@@ -279,6 +301,7 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			for (int i = 0; i < interactionEffectors.Length; i++)
 			{
 				if (interactionEffectors[i].effectorType == effectorType)
@@ -286,6 +309,7 @@ namespace RootMotion.FinalIK
 					return interactionEffectors[i].Stop();
 				}
 			}
+
 			return false;
 		}
 
@@ -325,6 +349,7 @@ namespace RootMotion.FinalIK
 			{
 				return null;
 			}
+
 			for (int i = 0; i < interactionEffectors.Length; i++)
 			{
 				if (interactionEffectors[i].effectorType == effectorType)
@@ -332,6 +357,7 @@ namespace RootMotion.FinalIK
 					return interactionEffectors[i].interactionObject;
 				}
 			}
+
 			return null;
 		}
 
@@ -341,6 +367,7 @@ namespace RootMotion.FinalIK
 			{
 				return 0f;
 			}
+
 			for (int i = 0; i < interactionEffectors.Length; i++)
 			{
 				if (interactionEffectors[i].effectorType == effectorType)
@@ -348,6 +375,7 @@ namespace RootMotion.FinalIK
 					return interactionEffectors[i].progress;
 				}
 			}
+
 			return 0f;
 		}
 
@@ -357,6 +385,7 @@ namespace RootMotion.FinalIK
 			{
 				return 0f;
 			}
+
 			float num = 1f;
 			for (int i = 0; i < interactionEffectors.Length; i++)
 			{
@@ -369,6 +398,7 @@ namespace RootMotion.FinalIK
 					}
 				}
 			}
+
 			return num;
 		}
 
@@ -378,22 +408,26 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			if (!TriggerIndexIsValid(index))
 			{
 				return false;
 			}
+
 			bool result = true;
 			InteractionTrigger.Range range = triggersInRange[index].ranges[bestRangeIndexes[index]];
 			for (int i = 0; i < range.interactions.Length; i++)
 			{
 				for (int j = 0; j < range.interactions[i].effectors.Length; j++)
 				{
-					if (!StartInteraction(range.interactions[i].effectors[j], range.interactions[i].interactionObject, interrupt))
+					if (!StartInteraction(range.interactions[i].effectors[j], range.interactions[i].interactionObject,
+						    interrupt))
 					{
 						result = false;
 					}
 				}
 			}
+
 			return result;
 		}
 
@@ -403,10 +437,12 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			if (!TriggerIndexIsValid(index))
 			{
 				return false;
 			}
+
 			for (int i = 0; i < triggersInRange[index].ranges.Length; i++)
 			{
 				InteractionTrigger.Range range = triggersInRange[index].ranges[i];
@@ -420,6 +456,7 @@ namespace RootMotion.FinalIK
 						}
 					}
 				}
+
 				for (int l = 0; l < range.interactions.Length; l++)
 				{
 					for (int m = 0; m < range.interactions[l].effectors.Length; m++)
@@ -428,6 +465,7 @@ namespace RootMotion.FinalIK
 						{
 							continue;
 						}
+
 						for (int n = 0; n < range.interactions[l].effectors.Length; n++)
 						{
 							if (n != m && !IsPaused(range.interactions[l].effectors[n]))
@@ -438,6 +476,7 @@ namespace RootMotion.FinalIK
 					}
 				}
 			}
+
 			return true;
 		}
 
@@ -447,11 +486,13 @@ namespace RootMotion.FinalIK
 			{
 				return null;
 			}
+
 			if (index < 0 || index >= bestRangeIndexes.Count)
 			{
 				Warning.Log("Index out of range.", base.transform);
 				return null;
 			}
+
 			return triggersInRange[index].ranges[bestRangeIndexes[index]];
 		}
 
@@ -461,14 +502,17 @@ namespace RootMotion.FinalIK
 			{
 				return -1;
 			}
+
 			if (triggersInRange.Count == 0)
 			{
 				return -1;
 			}
+
 			if (triggersInRange.Count == 1)
 			{
 				return 0;
 			}
+
 			int result = -1;
 			float num = float.PositiveInfinity;
 			for (int i = 0; i < triggersInRange.Count; i++)
@@ -483,6 +527,7 @@ namespace RootMotion.FinalIK
 					}
 				}
 			}
+
 			return result;
 		}
 
@@ -492,24 +537,34 @@ namespace RootMotion.FinalIK
 			{
 				fullBody = GetComponent<FullBodyBipedIK>();
 			}
+
 			if (fullBody == null)
 			{
 				Warning.Log("InteractionSystem can not find a FullBodyBipedIK component", base.transform);
 				return;
 			}
+
 			IKSolverFullBodyBiped solver = fullBody.solver;
-			solver.OnPreUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPreUpdate, new IKSolver.UpdateDelegate(OnPreFBBIK));
+			solver.OnPreUpdate =
+				(IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPreUpdate, new IKSolver.UpdateDelegate(OnPreFBBIK));
 			IKSolverFullBodyBiped solver2 = fullBody.solver;
-			solver2.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(solver2.OnPostUpdate, new IKSolver.UpdateDelegate(OnPostFBBIK));
-			OnInteractionStart = (InteractionDelegate)Delegate.Combine(OnInteractionStart, new InteractionDelegate(LookAtInteraction));
-			OnInteractionPause = (InteractionDelegate)Delegate.Combine(OnInteractionPause, new InteractionDelegate(InteractionPause));
-			OnInteractionResume = (InteractionDelegate)Delegate.Combine(OnInteractionResume, new InteractionDelegate(InteractionResume));
-			OnInteractionStop = (InteractionDelegate)Delegate.Combine(OnInteractionStop, new InteractionDelegate(InteractionStop));
+			solver2.OnPostUpdate =
+				(IKSolver.UpdateDelegate)Delegate.Combine(solver2.OnPostUpdate,
+					new IKSolver.UpdateDelegate(OnPostFBBIK));
+			OnInteractionStart =
+				(InteractionDelegate)Delegate.Combine(OnInteractionStart, new InteractionDelegate(LookAtInteraction));
+			OnInteractionPause =
+				(InteractionDelegate)Delegate.Combine(OnInteractionPause, new InteractionDelegate(InteractionPause));
+			OnInteractionResume =
+				(InteractionDelegate)Delegate.Combine(OnInteractionResume, new InteractionDelegate(InteractionResume));
+			OnInteractionStop =
+				(InteractionDelegate)Delegate.Combine(OnInteractionStop, new InteractionDelegate(InteractionStop));
 			InteractionEffector[] array = interactionEffectors;
 			foreach (InteractionEffector interactionEffector in array)
 			{
 				interactionEffector.Initiate(this);
 			}
+
 			triggersInRange = new List<InteractionTrigger>();
 			c = GetComponent<Collider>();
 			UpdateTriggerEventBroadcasting();
@@ -564,21 +619,25 @@ namespace RootMotion.FinalIK
 			{
 				return false;
 			}
+
 			if (index < 0 || index >= inContact.Count)
 			{
 				Warning.Log("Index out of range.", base.transform);
 				return false;
 			}
+
 			if (inContact[index] == null)
 			{
 				Warning.Log("The InteractionTrigger in the list 'inContact' has been destroyed", base.transform);
 				return false;
 			}
+
 			bestRangeIndex = inContact[index].GetBestRangeIndex(base.transform, FPSCamera, raycastHit);
 			if (bestRangeIndex == -1)
 			{
 				return false;
 			}
+
 			return true;
 		}
 
@@ -590,6 +649,7 @@ namespace RootMotion.FinalIK
 				{
 					fullBody = GetComponent<FullBodyBipedIK>();
 				}
+
 				if (characterCollider == null)
 				{
 					characterCollider = GetComponent<Collider>();
@@ -603,6 +663,7 @@ namespace RootMotion.FinalIK
 			{
 				return;
 			}
+
 			UpdateTriggerEventBroadcasting();
 			Raycasting();
 			triggersInRange.Clear();
@@ -610,12 +671,14 @@ namespace RootMotion.FinalIK
 			for (int i = 0; i < inContact.Count; i++)
 			{
 				int bestRangeIndex = -1;
-				if (inContact[i] != null && inContact[i].gameObject.activeInHierarchy && inContact[i].enabled && ContactIsInRange(i, out bestRangeIndex))
+				if (inContact[i] != null && inContact[i].gameObject.activeInHierarchy && inContact[i].enabled &&
+				    ContactIsInRange(i, out bestRangeIndex))
 				{
 					triggersInRange.Add(inContact[i]);
 					bestRangeIndexes.Add(bestRangeIndex);
 				}
 			}
+
 			lookAt.Update();
 		}
 
@@ -623,7 +686,8 @@ namespace RootMotion.FinalIK
 		{
 			if ((int)camRaycastLayers != -1 && !(FPSCamera == null))
 			{
-				Physics.Raycast(FPSCamera.position, FPSCamera.forward, out raycastHit, camRaycastDistance, camRaycastLayers);
+				Physics.Raycast(FPSCamera.position, FPSCamera.forward, out raycastHit, camRaycastDistance,
+					camRaycastLayers);
 			}
 		}
 
@@ -633,13 +697,16 @@ namespace RootMotion.FinalIK
 			{
 				characterCollider = c;
 			}
+
 			if (characterCollider != null && characterCollider != c)
 			{
 				if (characterCollider.GetComponent<TriggerEventBroadcaster>() == null)
 				{
-					TriggerEventBroadcaster triggerEventBroadcaster = characterCollider.gameObject.AddComponent<TriggerEventBroadcaster>();
+					TriggerEventBroadcaster triggerEventBroadcaster =
+						characterCollider.gameObject.AddComponent<TriggerEventBroadcaster>();
 					triggerEventBroadcaster.target = base.gameObject;
 				}
+
 				if (lastCollider != null && lastCollider != c && lastCollider != characterCollider)
 				{
 					TriggerEventBroadcaster component = lastCollider.GetComponent<TriggerEventBroadcaster>();
@@ -649,6 +716,7 @@ namespace RootMotion.FinalIK
 					}
 				}
 			}
+
 			lastCollider = characterCollider;
 		}
 
@@ -660,6 +728,7 @@ namespace RootMotion.FinalIK
 				{
 					interactionEffectors[i].Update(base.transform, speed);
 				}
+
 				for (int j = 0; j < interactionEffectors.Length; j++)
 				{
 					interactionEffectors[j].ResetToDefaults(resetToDefaultsSpeed * speed);
@@ -683,6 +752,7 @@ namespace RootMotion.FinalIK
 				{
 					interactionEffectors[i].OnPostFBBIK();
 				}
+
 				lookAt.SolveHead();
 			}
 		}
@@ -692,13 +762,22 @@ namespace RootMotion.FinalIK
 			if (!(fullBody == null))
 			{
 				IKSolverFullBodyBiped solver = fullBody.solver;
-				solver.OnPreUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(solver.OnPreUpdate, new IKSolver.UpdateDelegate(OnPreFBBIK));
+				solver.OnPreUpdate =
+					(IKSolver.UpdateDelegate)Delegate.Remove(solver.OnPreUpdate,
+						new IKSolver.UpdateDelegate(OnPreFBBIK));
 				IKSolverFullBodyBiped solver2 = fullBody.solver;
-				solver2.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(solver2.OnPostUpdate, new IKSolver.UpdateDelegate(OnPostFBBIK));
-				OnInteractionStart = (InteractionDelegate)Delegate.Remove(OnInteractionStart, new InteractionDelegate(LookAtInteraction));
-				OnInteractionPause = (InteractionDelegate)Delegate.Remove(OnInteractionPause, new InteractionDelegate(InteractionPause));
-				OnInteractionResume = (InteractionDelegate)Delegate.Remove(OnInteractionResume, new InteractionDelegate(InteractionResume));
-				OnInteractionStop = (InteractionDelegate)Delegate.Remove(OnInteractionStop, new InteractionDelegate(InteractionStop));
+				solver2.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Remove(solver2.OnPostUpdate,
+					new IKSolver.UpdateDelegate(OnPostFBBIK));
+				OnInteractionStart =
+					(InteractionDelegate)Delegate.Remove(OnInteractionStart,
+						new InteractionDelegate(LookAtInteraction));
+				OnInteractionPause =
+					(InteractionDelegate)Delegate.Remove(OnInteractionPause, new InteractionDelegate(InteractionPause));
+				OnInteractionResume =
+					(InteractionDelegate)Delegate.Remove(OnInteractionResume,
+						new InteractionDelegate(InteractionResume));
+				OnInteractionStop =
+					(InteractionDelegate)Delegate.Remove(OnInteractionStop, new InteractionDelegate(InteractionStop));
 			}
 		}
 
@@ -710,16 +789,20 @@ namespace RootMotion.FinalIK
 				{
 					Warning.Log("FBBIK is null. Will not update the InteractionSystem", base.transform);
 				}
+
 				return false;
 			}
+
 			if (!initiated)
 			{
 				if (log)
 				{
 					Warning.Log("The InteractionSystem has not been initiated yet.", base.transform);
 				}
+
 				return false;
 			}
+
 			return true;
 		}
 
@@ -730,11 +813,13 @@ namespace RootMotion.FinalIK
 				Warning.Log("Index out of range.", base.transform);
 				return false;
 			}
+
 			if (triggersInRange[index] == null)
 			{
 				Warning.Log("The InteractionTrigger in the list 'inContact' has been destroyed", base.transform);
 				return false;
 			}
+
 			return true;
 		}
 
@@ -747,7 +832,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Scrpt Reference")]
 		private void OpenScriptReference()
 		{
-			Application.OpenURL("http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_interaction_system.html");
+			Application.OpenURL(
+				"http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_interaction_system.html");
 		}
 	}
 }

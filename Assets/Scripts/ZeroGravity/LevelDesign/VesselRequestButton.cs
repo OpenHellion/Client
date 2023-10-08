@@ -20,6 +20,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				return false;
 			}
+
 			CallShip();
 			return true;
 		}
@@ -29,7 +30,8 @@ namespace ZeroGravity.LevelDesign
 			parentBody = GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
 			if (parentBody != null)
 			{
-				Client.Instance.SendVesselRequest(parentBody, ArriveTime, RescueShipType, SceneTagObject.TagsToString(RescueShipTags));
+				World.SendVesselRequest(parentBody, ArriveTime, RescueShipType,
+					SceneTagObject.TagsToString(RescueShipTags));
 			}
 		}
 	}

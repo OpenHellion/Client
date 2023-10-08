@@ -15,14 +15,18 @@ public class SceneLightmapper : MonoBehaviour
 			{
 				continue;
 			}
+
 			Material[] materials = renderer.renderer.materials;
 			foreach (Material material in materials)
 			{
-				if (material.shader.name == "ZeroGravity/Surface/StandardLightMap" && renderer.LightmapIndex == LightmapTextureList.Count - 1)
+				if (material.shader.name == "ZeroGravity/Surface/StandardLightMap" &&
+				    renderer.LightmapIndex == LightmapTextureList.Count - 1)
 				{
 					material.SetTexture("_Lightmap", LightmapTextureList[renderer.LightmapIndex]);
-					material.SetTextureScale("_Lightmap", new Vector2(renderer.LightmapParameters.x, renderer.LightmapParameters.y));
-					material.SetTextureOffset("_Lightmap", new Vector2(renderer.LightmapParameters.z, renderer.LightmapParameters.w));
+					material.SetTextureScale("_Lightmap",
+						new Vector2(renderer.LightmapParameters.x, renderer.LightmapParameters.y));
+					material.SetTextureOffset("_Lightmap",
+						new Vector2(renderer.LightmapParameters.z, renderer.LightmapParameters.w));
 				}
 			}
 		}

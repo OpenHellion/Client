@@ -22,11 +22,9 @@ namespace ZeroGravity.Objects
 
 		public float Range;
 
-		[SerializeField]
-		public Vector2 SpecialRecoil;
+		[SerializeField] public Vector2 SpecialRecoil;
 
-		[SerializeField]
-		public Vector2 NormalRecoil;
+		[SerializeField] public Vector2 NormalRecoil;
 
 		public float RotationPerShot;
 

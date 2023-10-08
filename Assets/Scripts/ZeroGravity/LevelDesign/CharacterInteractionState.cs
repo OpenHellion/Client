@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace ZeroGravity.LevelDesign
 {
@@ -22,7 +23,7 @@ namespace ZeroGravity.LevelDesign
 
 		public bool SetColliderToKinematic;
 
-		[HideInInspector]
-		public SceneTriggerExecuter Executer;
+		[FormerlySerializedAs("Executer")] [HideInInspector]
+		public SceneTriggerExecutor Executor;
 	}
 }

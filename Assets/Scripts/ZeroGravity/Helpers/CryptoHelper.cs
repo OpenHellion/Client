@@ -80,6 +80,7 @@ namespace ZeroGravity.Helpers
 			{
 				throw new Exception("Exchange public keys error.");
 			}
+
 			bytes = readBytes(stream, (int)value);
 			return Encoding.UTF8.GetString(bytes);
 		}
@@ -92,6 +93,7 @@ namespace ZeroGravity.Helpers
 			{
 				throw new Exception("Read request error.");
 			}
+
 			value = readBytes(stream, (int)num);
 			byte[] key = DecryptRSA(privateKey, value);
 			value = readBytes(stream, 4);
@@ -100,6 +102,7 @@ namespace ZeroGravity.Helpers
 			{
 				throw new Exception("Read request error.");
 			}
+
 			value = readBytes(stream, (int)num);
 			byte[] iv = DecryptRSA(privateKey, value);
 			value = readBytes(stream, 4);
@@ -108,6 +111,7 @@ namespace ZeroGravity.Helpers
 			{
 				throw new Exception("Read request error.");
 			}
+
 			value = readBytes(stream, (int)num);
 			return DecryptRijndael(value, key, iv);
 		}
@@ -120,6 +124,7 @@ namespace ZeroGravity.Helpers
 			{
 				throw new Exception("Read main server response error.");
 			}
+
 			value = readBytes(stream, (int)num);
 			byte[] key = DecryptRSA(privateKey, value);
 			value = readBytes(stream, 4);
@@ -128,6 +133,7 @@ namespace ZeroGravity.Helpers
 			{
 				throw new Exception("Read main server response error.");
 			}
+
 			value = readBytes(stream, (int)num);
 			byte[] iv = DecryptRSA(privateKey, value);
 			value = readBytes(stream, 4);
@@ -136,6 +142,7 @@ namespace ZeroGravity.Helpers
 			{
 				throw new Exception("Read main server response error.");
 			}
+
 			value = readBytes(stream, (int)num);
 			return DecryptRijndael(value, key, iv);
 		}
@@ -196,9 +203,10 @@ namespace ZeroGravity.Helpers
 				{
 					throw new Exception("Error reading stream.");
 				}
+
 				num += num2;
-			}
-			while (num < size);
+			} while (num < size);
+
 			return array;
 		}
 	}

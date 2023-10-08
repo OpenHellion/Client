@@ -12,25 +12,16 @@ public class EffectPrefabs : ScriptableObject
 
 	public BulletImpact BulletHitMetal
 	{
-		get
-		{
-			return BulletHitsMetal[Random.Range(0, BulletHitsMetal.Count)];
-		}
+		get { return BulletHitsMetal[Random.Range(0, BulletHitsMetal.Count)]; }
 	}
 
 	public BulletImpact BulletHitFlesh
 	{
-		get
-		{
-			return BulletHitsFlesh[Random.Range(0, BulletHitsFlesh.Count)];
-		}
+		get { return BulletHitsFlesh[Random.Range(0, BulletHitsFlesh.Count)]; }
 	}
 
 	public BulletImpact BulletHitObject
 	{
-		get
-		{
-			return BulletHitsObject[Random.Range(0, BulletHitsObject.Count)];
-		}
+		get { return BulletHitsObject[Random.Range(0, BulletHitsObject.Count)]; }
 	}
 }

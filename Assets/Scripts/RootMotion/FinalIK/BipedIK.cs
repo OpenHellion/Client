@@ -19,7 +19,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Scrpt Reference")]
 		private void OpenScriptReference()
 		{
-			Application.OpenURL("http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_biped_i_k.html");
+			Application.OpenURL(
+				"http://www.root-motion.com/finalikdox/html/class_root_motion_1_1_final_i_k_1_1_biped_i_k.html");
 		}
 
 		[ContextMenu("Support Group")]
@@ -31,7 +32,8 @@ namespace RootMotion.FinalIK
 		[ContextMenu("Asset Store Thread")]
 		private void ASThread()
 		{
-			Application.OpenURL("http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
+			Application.OpenURL(
+				"http://forum.unity3d.com/threads/final-ik-full-body-ik-aim-look-at-fabrik-ccd-ik-1-0-released.222685/");
 		}
 
 		public float GetIKPositionWeight(AvatarIKGoal goal)
@@ -74,9 +76,11 @@ namespace RootMotion.FinalIK
 			return GetGoalIK(goal).GetIKRotation();
 		}
 
-		public void SetLookAtWeight(float weight, float bodyWeight, float headWeight, float eyesWeight, float clampWeight, float clampWeightHead, float clampWeightEyes)
+		public void SetLookAtWeight(float weight, float bodyWeight, float headWeight, float eyesWeight,
+			float clampWeight, float clampWeightHead, float clampWeightEyes)
 		{
-			solvers.lookAt.SetLookAtWeight(weight, bodyWeight, headWeight, eyesWeight, clampWeight, clampWeightHead, clampWeightEyes);
+			solvers.lookAt.SetLookAtWeight(weight, bodyWeight, headWeight, eyesWeight, clampWeight, clampWeightHead,
+				clampWeightEyes);
 		}
 
 		public void SetLookAtPosition(Vector3 lookAtPosition)
@@ -98,16 +102,16 @@ namespace RootMotion.FinalIK
 		{
 			switch (goal)
 			{
-			case AvatarIKGoal.LeftFoot:
-				return solvers.leftFoot;
-			case AvatarIKGoal.RightFoot:
-				return solvers.rightFoot;
-			case AvatarIKGoal.LeftHand:
-				return solvers.leftHand;
-			case AvatarIKGoal.RightHand:
-				return solvers.rightHand;
-			default:
-				return null;
+				case AvatarIKGoal.LeftFoot:
+					return solvers.leftFoot;
+				case AvatarIKGoal.RightFoot:
+					return solvers.rightFoot;
+				case AvatarIKGoal.LeftHand:
+					return solvers.leftHand;
+				case AvatarIKGoal.RightHand:
+					return solvers.rightHand;
+				default:
+					return null;
 			}
 		}
 
@@ -131,6 +135,7 @@ namespace RootMotion.FinalIK
 				iKSolverLimb.bendModifier = IKSolverLimb.BendModifier.Animation;
 				iKSolverLimb.bendModifierWeight = 1f;
 			}
+
 			solvers.leftHand.maintainRotationWeight = 0f;
 			solvers.rightHand.maintainRotationWeight = 0f;
 			solvers.spine.SetIKPositionWeight(0f);
@@ -160,11 +165,13 @@ namespace RootMotion.FinalIK
 				Warning.Log(errorMessage, references.root);
 				return;
 			}
+
 			solvers.AssignReferences(references);
 			if (solvers.spine.bones.Length > 1)
 			{
 				solvers.spine.Initiate(base.transform);
 			}
+
 			solvers.lookAt.Initiate(base.transform);
 			solvers.aim.Initiate(base.transform);
 			IKSolverLimb[] limbs = solvers.limbs;
@@ -172,6 +179,7 @@ namespace RootMotion.FinalIK
 			{
 				iKSolverLimb.Initiate(base.transform);
 			}
+
 			solvers.pelvis.Initiate(references.pelvis);
 		}
 
@@ -182,11 +190,13 @@ namespace RootMotion.FinalIK
 				solvers.limbs[i].MaintainBend();
 				solvers.limbs[i].MaintainRotation();
 			}
+
 			solvers.pelvis.Update();
 			if (solvers.spine.bones.Length > 1)
 			{
 				solvers.spine.Update();
 			}
+
 			solvers.aim.Update();
 			solvers.lookAt.Update();
 			for (int j = 0; j < solvers.limbs.Length; j++)

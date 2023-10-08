@@ -5,11 +5,9 @@ namespace RootMotion.Demos
 {
 	public class HitReactionTrigger : MonoBehaviour
 	{
-		[SerializeField]
-		private HitReaction hitReaction;
+		[SerializeField] private HitReaction hitReaction;
 
-		[SerializeField]
-		private float hitForce = 1f;
+		[SerializeField] private float hitForce = 1f;
 
 		private string colliderName;
 
