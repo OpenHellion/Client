@@ -101,7 +101,7 @@ public class GlassPostEffect : MonoBehaviour
 				LowerVisor += 5f * Time.deltaTime;
 			}
 
-			AkSoundEngine.SetRTPCValue(SoundManager.Instance.HelmetOn, LowerVisor);
+			AkSoundEngine.SetRTPCValue(SoundManager.HelmetOn, LowerVisor);
 			yield return new WaitForEndOfFrame();
 		}
 
@@ -114,6 +114,6 @@ public class GlassPostEffect : MonoBehaviour
 			LowerVisor = 1f;
 		}
 
-		AkSoundEngine.SetRTPCValue(SoundManager.Instance.HelmetOn, LowerVisor);
+		AkSoundEngine.SetRTPCValue(SoundManager.HelmetOn, LowerVisor);
 	}
 }

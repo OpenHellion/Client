@@ -142,7 +142,7 @@ namespace ZeroGravity.Objects
 		private void Update()
 		{
 			if (active && Type == ItemType.FireExtinguisher && FuelCompartment.Resources[0].Quantity > float.Epsilon &&
-			    MyPlayer.Instance.FpsController.IsZeroG && !InputManager.GetButton(InputManager.ConfigAction.Sprint))
+			    MyPlayer.Instance.FpsController.IsZeroG && !ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Sprint))
 			{
 				MyPlayer.Instance.FpsController.AddForce(
 					-(MyPlayer.Instance.FpsController.MainCamera.transform.rotation * Vector3.forward).normalized *
@@ -171,7 +171,7 @@ namespace ZeroGravity.Objects
 				    componentInParent.MaxHealth - componentInParent.Health > float.Epsilon &&
 				    FuelCompartment.Resources[0].Quantity > float.Epsilon)
 				{
-					NetworkController.Instance.SendToGameServer(new RepairItemMessage
+					NetworkController.SendToGameServer(new RepairItemMessage
 					{
 						GUID = componentInParent.GUID
 					});
@@ -190,7 +190,7 @@ namespace ZeroGravity.Objects
 				                                                               componentInParent2
 					                                                               .SecondaryDamageActive)))
 				{
-					NetworkController.Instance.SendToGameServer(new RepairVesselMessage
+					NetworkController.SendToGameServer(new RepairVesselMessage
 					{
 						ID = new VesselObjectID(componentInParent2.ParentVessel.GUID, componentInParent2.InSceneID)
 					});
@@ -201,7 +201,7 @@ namespace ZeroGravity.Objects
 
 			if (!flag && Type == ItemType.FireExtinguisher && FuelCompartment.Resources[0].Quantity > float.Epsilon)
 			{
-				NetworkController.Instance.SendToGameServer(new RepairItemMessage
+				NetworkController.SendToGameServer(new RepairItemMessage
 				{
 					GUID = -1L
 				});

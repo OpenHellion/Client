@@ -44,7 +44,7 @@ namespace ZeroGravity.CharacterMovement
 		{
 			if (transferableObj == null)
 			{
-				Dbg.Error("Transition trigger transferable object not set", base.name);
+				Debug.LogError("Transition trigger transferable object not set " + base.name);
 			}
 		}
 
@@ -181,7 +181,7 @@ namespace ZeroGravity.CharacterMovement
 						}
 						else
 						{
-							Dbg.Error("How did this happen, player exited room trigger and its parent is not vessel");
+							Debug.LogError("How did this happen, player exited room trigger and its parent is not vessel");
 						}
 					}
 

@@ -132,7 +132,7 @@ namespace ZeroGravity
 
 		public void SubmitText()
 		{
-			NetworkController.Instance.SendToGameServer(new ConsoleMessage
+			NetworkController.SendToGameServer(new ConsoleMessage
 			{
 				Text = Input.text
 			});
@@ -193,7 +193,7 @@ namespace ZeroGravity
 
 		public void Spawn(string itemToSpawn)
 		{
-			NetworkController.Instance.SendToGameServer(new ConsoleMessage
+			NetworkController.SendToGameServer(new ConsoleMessage
 			{
 				Text = "spawn " + itemToSpawn
 			});
@@ -201,7 +201,7 @@ namespace ZeroGravity
 
 		public void Action(string actionToDo)
 		{
-			NetworkController.Instance.SendToGameServer(new ConsoleMessage
+			NetworkController.SendToGameServer(new ConsoleMessage
 			{
 				Text = actionToDo
 			});
@@ -211,7 +211,7 @@ namespace ZeroGravity
 		{
 			string empty = string.Empty;
 			empty = ((!GodMode.isOn) ? "0" : "1");
-			NetworkController.Instance.SendToGameServer(new ConsoleMessage
+			NetworkController.SendToGameServer(new ConsoleMessage
 			{
 				Text = "god " + empty
 			});

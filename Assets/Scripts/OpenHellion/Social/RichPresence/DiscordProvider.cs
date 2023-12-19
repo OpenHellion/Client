@@ -22,6 +22,7 @@ using Discord;
 using OpenHellion.IO;
 using OpenHellion.Net.Message;
 using OpenHellion.UI;
+using UnityEngine;
 using ZeroGravity;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
@@ -85,7 +86,7 @@ namespace OpenHellion.Social.RichPresence
 				return false;
 			}
 
-			_discord.SetLogHook(LogLevel.Debug, (level, message) => { Dbg.Log("Log[{0}] {1}", level, message); });
+			_discord.SetLogHook(LogLevel.Debug, (level, message) => { Debug.LogFormat("Log[{0}] {1}", level, message); });
 
 			_activityManager = _discord.GetActivityManager();
 
@@ -101,7 +102,7 @@ namespace OpenHellion.Social.RichPresence
 
 			_userManager = _discord.GetUserManager();
 
-			Dbg.Log("Discord API initialised.");
+			Debug.Log("Discord API initialised.");
 
 			_discord.RunCallbacks();
 
@@ -128,7 +129,7 @@ namespace OpenHellion.Social.RichPresence
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error(ex.Message, ex.StackTrace);
+				Debug.LogException(ex);
 			}
 		}
 
@@ -136,13 +137,13 @@ namespace OpenHellion.Social.RichPresence
 		private void InviteCallback(ActivityActionType Type, ref User user, ref Activity activity2)
 		{
 			// TODO: Make this safer.
-			_activityManager.AcceptInvite(user.Id, result => { Dbg.Log("AcceptInvite {0}", result); });
+			_activityManager.AcceptInvite(user.Id, result => { Debug.LogFormat("AcceptInvite {0}", result); });
 		}
 
 		// When we get an ask to join request from another user.
 		private void JoinRequestCallback(ref User user)
 		{
-			Dbg.Log(string.Format("Discord: Join request {0}#{1}: {2}", user.Username, user.Discriminator, user.Id));
+			Debug.Log(string.Format("Discord: Join request {0}#{1}: {2}", user.Username, user.Discriminator, user.Id));
 			_joinUser = user;
 
 			RequestRespondYes();
@@ -150,7 +151,7 @@ namespace OpenHellion.Social.RichPresence
 
 		private void RequestRespondYes()
 		{
-			Dbg.Log("Discord: Responding yes to Ask to Join request");
+			Debug.Log("Discord: Responding yes to Ask to Join request");
 			_activityManager.SendRequestReply(_joinUser.Id, ActivityJoinRequestReply.Yes, res =>
 			{
 				if (res == Result.Ok)
@@ -162,7 +163,7 @@ namespace OpenHellion.Social.RichPresence
 
 		private void RequestRespondNo()
 		{
-			Dbg.Log("Discord: Responding no to Ask to Join request");
+			Debug.Log("Discord: Responding no to Ask to Join request");
 			_activityManager.SendRequestReply(_joinUser.Id, ActivityJoinRequestReply.No, res =>
 			{
 				if (res == Result.Ok)
@@ -174,7 +175,7 @@ namespace OpenHellion.Social.RichPresence
 
 		void IRichPresenceProvider.Destroy()
 		{
-			Dbg.Log("Discord: Shutdown");
+			Debug.Log("Discord: Shutdown");
 			_discord?.Dispose();
 		}
 
@@ -186,8 +187,7 @@ namespace OpenHellion.Social.RichPresence
 				if (MyPlayer.Instance is not null && MyPlayer.Instance.PlayerReady)
 				{
 					_activity.Secrets.Join = Globals.GetInviteString(null);
-					_activity.Assets.LargeText =
-						Localization.InGameDescription + ": " + MainMenuGUI.LastConnectedServer.Name;
+					_activity.Assets.LargeText = Localization.InGameDescription;
 					_activity.Details = Descriptions[UnityEngine.Random.Range(0, Descriptions.Count - 1)];
 					ArtificialBody artificialBody = MyPlayer.Instance.Parent as ArtificialBody;
 					if (artificialBody is not null && artificialBody.ParentCelesitalBody != null)
@@ -219,9 +219,7 @@ namespace OpenHellion.Social.RichPresence
 
 					_activity.Assets.SmallImage = Gender.Male.ToLocalizedString().ToLower();
 					_activity.Assets.SmallText = MyPlayer.Instance.PlayerName;
-					_activity.Party.Size.CurrentSize = MainMenuGUI.LastConnectedServer.CurrentPlayers + 1;
-					_activity.Party.Size.MaxSize = MainMenuGUI.LastConnectedServer.MaxPlayers;
-					_activity.Party.Id = MainMenuGUI.LastConnectedServer.Hash.ToString();
+					_activity.Party.Id = string.Empty;
 				}
 				else
 				{
@@ -241,7 +239,7 @@ namespace OpenHellion.Social.RichPresence
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error(ex.Message, ex.StackTrace);
+				Debug.LogException(ex);
 			}
 		}
 
@@ -255,7 +253,7 @@ namespace OpenHellion.Social.RichPresence
 			}
 			catch (ResultException ex)
 			{
-				Dbg.Error("Error when getting discord user.", ex);
+				Debug.LogError("Error when getting discord user." + ex.Message);
 				return null;
 			}
 
@@ -271,7 +269,7 @@ namespace OpenHellion.Social.RichPresence
 				return;
 			}
 
-			Dbg.Log("Inviting user through Discord.");
+			Debug.Log("Inviting user through Discord.");
 
 			_activity.Secrets.Join = secret;
 			_activity.Secrets.Spectate = secret;
@@ -283,11 +281,11 @@ namespace OpenHellion.Social.RichPresence
 				{
 					if (result == Result.Ok)
 					{
-						Dbg.Log("Invite sent.");
+						Debug.Log("Invite sent.");
 					}
 					else
 					{
-						Dbg.Log("Invite failed.", result);
+						Debug.Log("Invite failed." + result);
 					}
 				});
 		}

@@ -1,5 +1,6 @@
 using System.Linq;
 using OpenHellion;
+using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
@@ -56,7 +57,7 @@ namespace ZeroGravity.Objects
 					return Localization.GetLocalizedField(TaskObject.NameTag, useDefault: true);
 				}
 
-				Dbg.Error("Quest trigger has missing TaskObject (Quest ID: " + Quest.ID + ", QuestTriggerID: " + ID);
+				Debug.LogError("Quest trigger has missing TaskObject (Quest ID: " + Quest.ID + ", QuestTriggerID: " + ID);
 				return string.Empty;
 			}
 		}
@@ -70,7 +71,7 @@ namespace ZeroGravity.Objects
 					return Localization.GetLocalizedField(TaskObject.DescriptionTag, useDefault: true);
 				}
 
-				Dbg.Error("Quest trigger has missing TaskObject (Quest ID: " + Quest.ID + ", QuestTriggerID: " + ID);
+				Debug.LogError("Quest trigger has missing TaskObject (Quest ID: " + Quest.ID + ", QuestTriggerID: " + ID);
 				return string.Empty;
 			}
 		}

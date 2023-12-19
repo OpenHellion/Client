@@ -49,10 +49,7 @@ namespace OpenHellion
 	/// <seealso cref="MyPlayer"/>
 	public class World : MonoBehaviour
 	{
-		[Title("Config")] public bool ExperimentalBuild;
-
-		[Multiline(2)] public string ExperimentalText;
-
+		[Title("Config")]
 		public float RCS_THRUST_SENSITIVITY = 0.5f;
 
 		public float RCS_ROTATION_SENSITIVITY = 5f;
@@ -79,8 +76,7 @@ namespace OpenHellion
 
 		public Texture2D DefaultCursor;
 
-		[Title("Object references")] public GameObject ExperimentalGameObject;
-
+		[Title("Object references")]
 		public SolarSystem SolarSystem;
 
 		public GameObject SolarSystemRoot;
@@ -161,8 +157,6 @@ namespace OpenHellion
 
 		public InGameGUI InGameGUI;
 
-		public NakamaClient Nakama;
-
 		public SceneLoader SceneLoader { get; private set; }
 
 		public static int DefaultLayerMask => 1 << LayerMask.NameToLayer("Default");
@@ -225,21 +219,6 @@ namespace OpenHellion
 
 		private void Start()
 		{
-			if (ExperimentalGameObject != null)
-			{
-				if (ExperimentalBuild)
-				{
-					ExperimentalGameObject.SetActive(value: true);
-					ExperimentalGameObject.GetComponentInChildren<Text>().text =
-						ExperimentalText.Trim() + " " + Application.version;
-					RichPresenceManager.SetAchievement(AchievementID.other_testing_squad_member);
-				}
-				else
-				{
-					ExperimentalGameObject.SetActive(value: false);
-				}
-			}
-
 			InWorldPanels.LocalizePanels();
 
 			EventSystem.AddListener(typeof(KillPlayerMessage), KillPlayerMessageListener);
@@ -257,10 +236,7 @@ namespace OpenHellion
 			EventSystem.AddListener(EventSystem.InternalEventType.ConnectionFailed, ConnectionFailedListener);
 			EventSystem.AddListener(typeof(PlayerSpawnResponse), PlayerSpawnResponseListener);
 
-			if (Settings.Instance != null)
-			{
-				Settings.Instance.LoadSettings(Settings.SettingsType.Game);
-			}
+			Settings.LoadSettings(Settings.SettingsType.Game);
 		}
 
 		private void DynamicObjectsInfoMessageListener(NetworkData data)
@@ -308,7 +284,7 @@ namespace OpenHellion
 				}
 				catch (Exception ex)
 				{
-					Dbg.Error(ex.Message, ex.StackTrace);
+					Debug.LogException(ex);
 				}
 			}
 
@@ -367,7 +343,7 @@ namespace OpenHellion
 			if (!LogoutRequestSent)
 			{
 				LogoutRequestSent = true;
-				NetworkController.Instance.SendToGameServer(new LogOutRequest());
+				NetworkController.SendToGameServer(new LogOutRequest());
 			}
 		}
 
@@ -376,7 +352,7 @@ namespace OpenHellion
 			LogOutResponse logOutResponse = data as LogOutResponse;
 			if (logOutResponse is null || logOutResponse.Response == ResponseResult.Error)
 			{
-				Dbg.Error("Failed to log out properly");
+				Debug.LogError("Failed to log out properly");
 			}
 
 			NetworkController.Instance.Disconnect();
@@ -436,7 +412,7 @@ namespace OpenHellion
 
 		public void ConnectionFailedListener(EventSystem.InternalEventData data)
 		{
-			Dbg.Error("Connection to server failed.", data.Objects);
+			Debug.LogError("Connection to server failed." + data.Objects);
 			OpenMainScreen();
 		}
 
@@ -453,7 +429,6 @@ namespace OpenHellion
 			EventSystem.RemoveListener(EventSystem.InternalEventType.ReconnectAuto, ReconnectAutoListener);
 			EventSystem.RemoveListener(EventSystem.InternalEventType.ConnectionFailed, ConnectionFailedListener);
 			EventSystem.RemoveListener(typeof(PlayerSpawnResponse), PlayerSpawnResponseListener);
-			Localization.RevertToDefault();
 		}
 
 		public void OnApplicationFocus(bool focusStatus)
@@ -660,9 +635,9 @@ namespace OpenHellion
 			return null;
 		}
 
-		public void SendVesselRequest(SpaceObjectVessel obj, float time, GameScenes.SceneID sceneID, string tag)
+		public void SendVesselRequest(SpaceObjectVessel obj, float time, GameScenes.SceneId sceneID, string tag)
 		{
-			NetworkController.Instance.SendToGameServer(new VesselRequest
+			NetworkController.SendToGameServer(new VesselRequest
 			{
 				GUID = obj.GUID,
 				Time = time,
@@ -673,7 +648,7 @@ namespace OpenHellion
 
 		public void SendDistressCall(ArtificialBody body, bool isDistressActive)
 		{
-			NetworkController.Instance.SendToGameServer(new DistressCallRequest
+			NetworkController.SendToGameServer(new DistressCallRequest
 			{
 				GUID = body.GUID,
 				IsDistressActive = isDistressActive
@@ -699,7 +674,7 @@ namespace OpenHellion
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error("PlayersOnServerResponseListener", ex.Message, ex.StackTrace);
+				Debug.LogException(ex);
 			}
 		}
 
@@ -720,7 +695,7 @@ namespace OpenHellion
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error("ConsoleMessageListener", ex.Message, ex.StackTrace);
+				Debug.LogException(ex);
 			}
 		}
 
@@ -1017,7 +992,7 @@ namespace OpenHellion
 				panelWidth);
 			float y = Mathf.Clamp(
 				trans.localPosition.y + Mouse.current.delta.y.ReadValue() * Globals.Instance.MouseSpeedOnPanels *
-				(!Settings.Instance.SettingsData.ControlsSettings.InvertMouse ? 1 : (-1)), 0f, panelHeight);
+				(!Settings.SettingsData.ControlsSettings.InvertMouse ? 1 : (-1)), 0f, panelHeight);
 			trans.localPosition = new Vector3(x, y, trans.localPosition.z);
 		}
 
@@ -1029,7 +1004,7 @@ namespace OpenHellion
 					DeleteCharacterRequest deleteCharacterRequest = new DeleteCharacterRequest
 					{
 						ServerId = gs.Id,
-						PlayerId = Nakama.NakamaIdCached
+						PlayerId = NakamaClient.NakamaIdCached
 					};
 
 					NetworkController.SendTcp(deleteCharacterRequest, gs.IpAddress, gs.StatusPort, false, true)
@@ -1037,12 +1012,12 @@ namespace OpenHellion
 				});
 		}
 
-		public void LatencyTestMessage()
+		public async void LatencyTestMessage()
 		{
 			_lastLatencyMessageTime = Time.realtimeSinceStartup;
 
-			//int latency = await NetworkController.LatencyTest(LastConnectedServer.IpAddress, (int) LastConnectedServer.StatusPort);
-			//_latencyMs = latency;
+			int latency = await NetworkController.LatencyTest(MainMenuGUI.LastConnectedServer.IpAddress, MainMenuGUI.LastConnectedServer.StatusPort);
+			_latencyMs = latency;
 
 			if (MyPlayer.Instance.IsAlive)
 			{
@@ -1141,7 +1116,7 @@ namespace OpenHellion
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error("Reconnecting after connection drop failed with exception: ", ex);
+				Debug.LogError("Reconnecting after connection drop failed with exception: " + ex.Message);
 				OpenMainScreen();
 			}
 		}
@@ -1165,17 +1140,17 @@ namespace OpenHellion
 			{
 				PlayerSpawnRequest playerSpawnRequest = new PlayerSpawnRequest
 				{
-					SpawPointParentID = 0L
+					SpawnPointParentId = 0L
 				};
-				NetworkController.Instance.SendToGameServer(playerSpawnRequest);
+				NetworkController.SendToGameServer(playerSpawnRequest);
 			}
 			else if (invitedToServerSpawnPointId != null)
 			{
 				PlayerSpawnRequest playerSpawnRequest2 = new PlayerSpawnRequest
 				{
-					SpawPointParentID = invitedToServerSpawnPointId.VesselGUID
+					SpawnPointParentId = invitedToServerSpawnPointId.VesselGUID
 				};
-				NetworkController.Instance.SendToGameServer(playerSpawnRequest2);
+				NetworkController.SendToGameServer(playerSpawnRequest2);
 				invitedToServerSpawnPointId = null;
 			}
 			else
@@ -1234,7 +1209,7 @@ namespace OpenHellion
 					}
 
 					MyPlayer.Instance.Parent = GetVessel(s.ParentID);
-					Dbg.Log("Starting main scene load, Ship");
+					Debug.Log("Starting main scene load, Ship");
 					StartCoroutine(LoadMainScenesCoroutine(s, ship, s.VesselObjects));
 				}
 				else if (s.ParentType == SpaceObjectType.Asteroid)
@@ -1242,7 +1217,7 @@ namespace OpenHellion
 					Asteroid asteroid = Asteroid.Create(s.ParentTransform, s.VesselData, isMainObject: true);
 					asteroid.gameObject.SetActive(value: true);
 					MyPlayer.Instance.Parent = asteroid;
-					Dbg.Log("Starting main scene load, Asteroid");
+					Debug.Log("Starting main scene load, Asteroid");
 					StartCoroutine(LoadMainScenesCoroutine(s, asteroid));
 				}
 				else if (s.ParentType == SpaceObjectType.PlayerPivot)
@@ -1254,7 +1229,7 @@ namespace OpenHellion
 				else
 				{
 					SceneManager.LoadScene(1);
-					Dbg.Error("Unknown player parent", s.ParentType, s.ParentID);
+					Debug.LogErrorFormat("Unknown player parent {0}, with id {1}", s.ParentType, s.ParentID);
 					GlobalGUI.ShowMessageBox(Localization.SpawnErrorTitle, Localization.SpawnErrorMessage);
 					MainMenuGUI.CanChooseSpawn = true;
 				}

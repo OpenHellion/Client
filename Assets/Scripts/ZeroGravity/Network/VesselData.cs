@@ -16,7 +16,7 @@ namespace ZeroGravity.Network
 
 		public long SpawnRuleID;
 
-		public GameScenes.SceneID SceneID;
+		public GameScenes.SceneId SceneID;
 
 		public float[] CollidersCenterOffset;
 

@@ -41,23 +41,21 @@ namespace OpenHellion.Social.RichPresence
 		[AOT.MonoPInvokeCallback(typeof(SteamAPIWarningMessageHook_t))]
 		protected static void SteamAPIDebugTextHook(int nSeverity, System.Text.StringBuilder pchDebugText)
 		{
-			Dbg.Warning(pchDebugText);
+			Debug.LogWarning(pchDebugText);
 		}
 
 		bool IRichPresenceProvider.Initialise()
 		{
 			if (!Packsize.Test())
 			{
-				Dbg.Error(
-					"[Steamworks.NET] Packsize Test returned false, the wrong version of Steamworks.NET is being run in this platform.",
-					this);
+				Debug.LogError(
+					"[Steamworks.NET] Packsize Test returned false, the wrong version of Steamworks.NET is being run in this platform.");
 			}
 
 			if (!DllCheck.Test())
 			{
-				Dbg.Error(
-					"[Steamworks.NET] DllCheck Test returned false, One or more of the Steamworks binaries seems to be the wrong version.",
-					this);
+				Debug.LogError(
+					"[Steamworks.NET] DllCheck Test returned false, One or more of the Steamworks binaries seems to be the wrong version.");
 			}
 
 			// https://partner.steamgames.com/doc/sdk/api#initialization_and_shutdown
@@ -65,7 +63,7 @@ namespace OpenHellion.Social.RichPresence
 
 			if (success)
 			{
-				Dbg.Log("Steam: API initialised.");
+				Debug.Log("Steam: API initialised.");
 			}
 
 			return success;
@@ -96,7 +94,7 @@ namespace OpenHellion.Social.RichPresence
 		// Thus it is not recommended to perform any Steamworks work in other OnDestroy functions as the order of execution can not be garenteed upon Shutdown. Prefer OnDisable().
 		void IRichPresenceProvider.Destroy()
 		{
-			Dbg.Log("Steam: Shutdown");
+			Debug.Log("Steam: Shutdown");
 			SteamAPI.Shutdown();
 		}
 
@@ -172,7 +170,7 @@ namespace OpenHellion.Social.RichPresence
 				return;
 			}
 
-			Dbg.Log("Inviting user through Steam.");
+			Debug.Log("Inviting user through Steam.");
 
 			// Read the id without the prefix.
 			SteamFriends.InviteUserToGame(new CSteamID(ulong.Parse(id[1..])), secret);

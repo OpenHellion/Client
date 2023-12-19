@@ -24,7 +24,7 @@ namespace ZeroGravity.Data
 
 			public bool? DockingControlsDisabled;
 
-			public GameScenes.SceneID SceneID
+			public GameScenes.SceneId SceneID
 			{
 				get { return NameGenerator.GetSceneID(StructureType); }
 			}

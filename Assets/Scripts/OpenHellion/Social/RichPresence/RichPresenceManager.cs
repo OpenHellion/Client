@@ -51,7 +51,7 @@ namespace OpenHellion.Social.RichPresence
 			if (_instance is not null)
 			{
 				Destroy(gameObject, 0f);
-				Dbg.Error("Tried to create new ProviderManager, but there already exists another manager.");
+				Debug.LogError("Tried to create new ProviderManager, but there already exists another manager.");
 			}
 
 			_instance = this;

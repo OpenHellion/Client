@@ -12,7 +12,7 @@ namespace ZeroGravity.LevelDesign
 
 		public List<SceneTagObject> RescueShipTags;
 
-		public GameScenes.SceneID RescueShipType = GameScenes.SceneID.AltCorp_Shuttle_CECA;
+		public GameScenes.SceneId RescueShipType = GameScenes.SceneId.AltCorp_Shuttle_CECA;
 
 		public override bool Interact(MyPlayer player, bool interactWithOverlappingTriggers = true)
 		{

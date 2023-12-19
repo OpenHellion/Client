@@ -12,7 +12,7 @@ namespace ZeroGravity.Data
 
 		public string Tags;
 
-		public List<SceneTriggerExecuterStateData> States;
+		public List<SceneTriggerExecutorStateData> States;
 
 		public List<SceneTriggerProximityData> ProximityTriggers;
 	}

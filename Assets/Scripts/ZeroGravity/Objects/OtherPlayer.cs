@@ -416,7 +416,7 @@ namespace ZeroGravity.Objects
 
 			if (genderItem == null)
 			{
-				Dbg.Error("AAAAAAAAAAAAAA, trece lice dzenderica prsla");
+				Debug.LogError("AAAAAAAAAAAAAA, trece lice dzenderica prsla");
 				return null;
 			}
 
@@ -542,14 +542,14 @@ namespace ZeroGravity.Objects
 					otherPlayer.tpsController = otherPlayer.transform.GetComponent<OtherCharacterController>();
 				}
 
-				sceneSpawnPoint.Executor.SetExecuterDetails(new SceneTriggerExecutorDetails
+				sceneSpawnPoint.Executor.SetExecutorDetails(new SceneTriggerExecutorDetails
 				{
 					PlayerThatActivated = otherPlayer.GUID,
 					InSceneID = sceneSpawnPoint.Executor.InSceneID,
 					IsImmediate = true,
 					IsFail = false,
 					CurrentStateID = sceneSpawnPoint.Executor.CurrentStateID,
-					NewStateID = sceneSpawnPoint.Executor.GetStateID(sceneSpawnPoint.ExecuterState)
+					NewStateID = sceneSpawnPoint.Executor.GetStateID(sceneSpawnPoint.ExecutorState)
 				}, isInstant: false, null, checkCurrentState: false);
 			}
 

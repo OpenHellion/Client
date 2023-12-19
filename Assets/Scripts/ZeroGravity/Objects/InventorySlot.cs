@@ -76,7 +76,7 @@ namespace ZeroGravity.Objects
 
 		public short SlotID { get; private set; }
 
-		public InputManager.ConfigAction? ShortcutKey { get; private set; }
+		public ControlsSubsystem.ConfigAction? ShortcutKey { get; private set; }
 
 		public bool MustBeEmptyToRemoveOutfit => mustBeEmptyToRemoveOutfit;
 
@@ -124,7 +124,7 @@ namespace ZeroGravity.Objects
 		}
 
 		public InventorySlot(Outfit outfit, short slotID, Type type, Size size, Group group,
-			InputManager.ConfigAction? shortKey, int cycleIndex, bool mustBeEmptyToRemove, Item item,
+			ControlsSubsystem.ConfigAction? shortKey, int cycleIndex, bool mustBeEmptyToRemove, Item item,
 			List<AttachData> points, Inventory inv)
 		{
 			SlotID = slotID;
@@ -143,7 +143,7 @@ namespace ZeroGravity.Objects
 				}
 				else
 				{
-					Dbg.Warning(
+					Debug.LogWarning(
 						"Inventory slot has same item type in multiple attach points, ommited other attach points");
 				}
 			}
@@ -191,7 +191,7 @@ namespace ZeroGravity.Objects
 					item.ChangeEquip(type, slotInventory.Parent as Player);
 				}
 
-				InventoryCharacterPreview.instance.RefreshPreviewCharacter(Inventory);
+				InventoryCharacterPreview.Instance.RefreshPreviewCharacter(Inventory);
 				return;
 			}
 

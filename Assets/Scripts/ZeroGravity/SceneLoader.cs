@@ -80,7 +80,7 @@ namespace ZeroGravity
 		{
 			if (InitialisingSceneManager.SceneLoadType != InitialisingSceneManager.SceneLoadTypeValue.PreloadWithCopy)
 			{
-				Dbg.Log("Skipping preloading.");
+				Debug.Log("Skipping preloading.");
 				_StartupGUI.ClosePreloading();
 				IsPreloading = false;
 				return;
@@ -99,7 +99,7 @@ namespace ZeroGravity
 
 				// Do the loading.
 				StartCoroutine(PreLoadScenesCoroutine());
-				Dbg.Log("Started preloading...");
+				Debug.Log("Started preloading...");
 				return;
 			}
 
@@ -158,22 +158,22 @@ namespace ZeroGravity
 
 			_StartupGUI.ClosePreloading();
 			IsPreloading = false;
-			Dbg.Log("Done preloading.");
+			Debug.Log("Done preloading.");
 		}
 
-		public void LoadScenesWithIDs(List<GameScenes.SceneID> sceneIDs)
+		public void LoadScenesWithIDs(List<GameScenes.SceneId> sceneIDs)
 		{
 			StartCoroutine(PreLoadScenesWithIDsCoroutine(sceneIDs));
 		}
 
-		private IEnumerator PreLoadScenesWithIDsCoroutine(List<GameScenes.SceneID> sceneIDs)
+		private IEnumerator PreLoadScenesWithIDsCoroutine(List<GameScenes.SceneId> sceneIDs)
 		{
 			if (sceneIDs == null || sceneIDs.Count == 0)
 			{
 				yield break;
 			}
 
-			foreach (GameScenes.SceneID sceneID in sceneIDs)
+			foreach (GameScenes.SceneId sceneID in sceneIDs)
 			{
 				KeyValuePair<long, string> kv2 =
 					_structureScenes.FirstOrDefault((KeyValuePair<long, string> m) => m.Key == (long)sceneID);
@@ -207,7 +207,7 @@ namespace ZeroGravity
 				return sceneItem.RootObject;
 			}
 
-			Dbg.Error("Cannot find loaded scene of type", type, "with guid", guid);
+			Debug.LogErrorFormat("Cannot find loaded scene of type {0} with guid {1}", type, guid);
 			return null;
 		}
 

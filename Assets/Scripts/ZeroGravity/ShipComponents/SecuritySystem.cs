@@ -4,6 +4,7 @@ using System.Linq;
 using Nakama;
 using OpenHellion;
 using OpenHellion.Net;
+using OpenHellion.Social;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -42,7 +43,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (_parentShip is not null && !newName.IsNullOrEmpty())
 			{
-				NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
+				NetworkController.SendToGameServer(new VesselSecurityRequest
 				{
 					VesselGUID = _parentShip.GUID,
 					VesselName = newName
@@ -58,7 +59,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void AddPerson(AuthorizedPerson player, AuthorizedPersonRank newRank)
 		{
-			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
+			NetworkController.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = _parentShip.GUID,
 				AddPlayerId = player.PlayerId,
@@ -69,7 +70,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void RemovePerson(AuthorizedPerson player)
 		{
-			NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
+			NetworkController.SendToGameServer(new VesselSecurityRequest
 			{
 				VesselGUID = _parentShip.GUID,
 				RemovePlayerId = player.PlayerId
@@ -82,7 +83,7 @@ namespace ZeroGravity.ShipComponents
 			if (MyPlayer.Instance.CurrentActiveItem is not null &&
 			    ItemTypeRange.IsHackingTool(MyPlayer.Instance.CurrentActiveItem.Type))
 			{
-				NetworkController.Instance.SendToGameServer(new VesselSecurityRequest
+				NetworkController.SendToGameServer(new VesselSecurityRequest
 				{
 					VesselGUID = _parentShip.GUID,
 					HackPanel = true
@@ -97,7 +98,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				List<AuthorizedPerson> list = new List<AuthorizedPerson>();
 
-				IApiFriend[] nakamaFriends = await _world.Nakama.GetFriends();
+				IApiFriend[] nakamaFriends = await NakamaClient.GetFriends();
 				foreach (IApiFriend friend in nakamaFriends)
 				{
 					// If friend is online, and not already authorised.
@@ -119,7 +120,7 @@ namespace ZeroGravity.ShipComponents
 
 			if (getPlayerFromServer)
 			{
-				NetworkController.Instance.SendToGameServer(new PlayersOnServerRequest
+				NetworkController.SendToGameServer(new PlayersOnServerRequest
 				{
 					SecuritySystemID = new VesselObjectID
 					{

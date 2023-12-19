@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 using OpenHellion.UI;
+using UnityEditor;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -13,11 +13,9 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
 using ZeroGravity.UI;
-using Debug = System.Diagnostics.Debug;
 
 namespace ZeroGravity
 {
-	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 	public static class Localization
 	{
 		public enum StandardInteractionTip
@@ -51,8 +49,6 @@ namespace ZeroGravity
 		}
 
 		public static Dictionary<int, string> LocalizationFiles;
-
-		private static string defaultValues;
 
 		public static string[] PreloadText;
 
@@ -156,8 +152,6 @@ namespace ZeroGravity
 
 		public static string ConnectingToGame;
 
-		public static string Connect;
-
 		public static string Play;
 
 		public static string Options;
@@ -167,10 +161,6 @@ namespace ZeroGravity
 		public static string Apply;
 
 		public static string Disclaimer;
-
-		public static string Welcome;
-
-		public static string Understand;
 
 		public static string ReadMore;
 
@@ -206,17 +196,11 @@ namespace ZeroGravity
 
 		public static string ChromaticAberration;
 
-		public static string Community;
-
 		public static string Confirm;
 
 		public static string Controls;
 
 		public static string CreateCharacter;
-
-		public static string CurrentServer;
-
-		public static string PleaseSelectServer;
 
 		public static string Default;
 
@@ -224,15 +208,9 @@ namespace ZeroGravity
 
 		public static string EnterCustomBoxName;
 
-		public static string EnterPassword;
-
 		public static string Exit;
 
 		public static string EyeAdaptation;
-
-		public static string F1ForHelp;
-
-		public static string Favorites;
 
 		public static string FullScreen;
 
@@ -258,35 +236,17 @@ namespace ZeroGravity
 
 		public static string Logout;
 
-		public static string MainMenu;
-
 		public static string MasterVolume;
 
 		public static string MotionBlur;
 
-		public static string Official;
-
-		public static string Ping;
-
-		public static string Players;
-
-		public static string PreAplha;
-
 		public static string Quality;
-
-		public static string Refresh;
 
 		public static string Resolution;
 
 		public static string Respawn;
 
 		public static string Resume;
-
-		public static string Save;
-
-		public static string Search;
-
-		public static string ServerBrowser;
 
 		public static string Server;
 
@@ -306,25 +266,17 @@ namespace ZeroGravity
 
 		public static string Username;
 
-		public static string VSync;
-
 		public static string Video;
 
 		public static string VoiceVolume;
-
-		public static string LanguageSettings;
 
 		public static string ChooseLanguage;
 
 		public static string ReportServer;
 
-		public static string ServerSettings;
-
 		public static string PlayerSettings;
 
 		public static string GlobalSettings;
-
-		public static string Multiplayer;
 
 		public static string JoinDiscord;
 
@@ -344,13 +296,9 @@ namespace ZeroGravity
 
 		public static string Female;
 
-		public static string ChooseSpawnPoint;
-
 		public static string ChooseStartingPoint;
 
 		public static string Continue;
-
-		public static string FreshStart;
 
 		public static string LatencyProblems;
 
@@ -364,10 +312,6 @@ namespace ZeroGravity
 
 		public static string SendReport;
 
-		public static string ReportSent;
-
-		public static string ReportFailed;
-
 		public static string FreshStartConfrimTitle;
 
 		public static string FreshStartConfrimText;
@@ -379,10 +323,6 @@ namespace ZeroGravity
 		public static string Left;
 
 		public static string Right;
-
-		public static string LeanRight;
-
-		public static string LeanLeft;
 
 		public static string RotationClockwise;
 
@@ -406,31 +346,17 @@ namespace ZeroGravity
 
 		public static string ExitPanel;
 
-		public static string PrimaryMouseButton;
-
-		public static string SecondaryMouseButton;
-
-		public static string ThirdMouseButton;
-
 		public static string DropThrow;
 
 		public static string InteractTakeInHands;
 
 		public static string EquipItem;
 
-		public static string ItemOptions;
-
 		public static string Reload;
 
 		public static string ChangeStance;
 
 		public static string Stabilization;
-
-		public static string LeftMouse;
-
-		public static string RightMouse;
-
-		public static string MiddleMouse;
 
 		public static string ToggleVisor;
 
@@ -442,8 +368,6 @@ namespace ZeroGravity
 
 		public static string MatchVelocity;
 
-		public static string WarpDrive;
-
 		public static string TargetUp;
 
 		public static string TargetDown;
@@ -453,9 +377,6 @@ namespace ZeroGravity
 		public static string FilterRight;
 
 		public static string ChangeDockingPort;
-
-		public static string LightsToggle;
-
 		public static string Free;
 
 		public static string InProgress;
@@ -482,8 +403,6 @@ namespace ZeroGravity
 
 		public static string VersionError;
 
-		public static string VersionErrorMessage;
-
 		public static string AreYouSureLogout;
 
 		public static string AreYouSureExitGame;
@@ -491,8 +410,6 @@ namespace ZeroGravity
 		public static string AreYouSureDeleteCharacter;
 
 		public static string AreYouSureRespawn;
-
-		public static string AreYouSureLoad;
 
 		public static string AreYouSureYouWantToSave;
 
@@ -530,8 +447,6 @@ namespace ZeroGravity
 
 		public static string EngineThrustDown;
 
-		public static string InventoryFull;
-
 		public static string Melee;
 
 		public static string Chat;
@@ -542,15 +457,9 @@ namespace ZeroGravity
 
 		public static string HoldToEquip;
 
-		public static string PressToWarp;
-
 		public static string Talk;
 
 		public static string Active;
-
-		public static string Standby;
-
-		public static string Malfunction;
 
 		public static string Missing;
 
@@ -564,11 +473,7 @@ namespace ZeroGravity
 
 		public static string SaveGameSettings;
 
-		public static string SaveQualitySettings;
-
 		public static string UnnamedVessel;
-
-		public static string Reverse;
 
 		public static string Quick1;
 
@@ -594,19 +499,9 @@ namespace ZeroGravity
 
 		public static string RemoveOrbit;
 
-		public static string SelectedMapObject;
-
 		public static string WarpTo;
 
-		public static string CustomOrbit;
-
 		public static string FtlManeuver;
-
-		public static string Warp1;
-
-		public static string Warp2;
-
-		public static string Warp3;
 
 		public static string CellsSelected;
 
@@ -722,19 +617,11 @@ namespace ZeroGravity
 
 		public static string Crafting;
 
-		public static string ReifineAmount;
-
-		public static string VentAmount;
-
-		public static string TransferArmount;
-
 		public static string ActiveSystems;
 
 		public static string NothingConnectedToSlot;
 
 		public static string NoOtherCargoAvailable;
-
-		public static string NoRafineryAvailable;
 
 		public static string Propellant;
 
@@ -780,17 +667,7 @@ namespace ZeroGravity
 
 		public static string FTLOffline;
 
-		public static string FTLReady;
-
-		public static string FTLMalfunction;
-
 		public static string ToManyDockedVessels;
-
-		public static string ManeuverEnds;
-
-		public static string ManeuverInterrupted;
-
-		public static string ConfirmManeuver;
 
 		public static string ManeuverInitiated;
 
@@ -799,8 +676,6 @@ namespace ZeroGravity
 		public static string PowerOutput;
 
 		public static string SystemParts;
-
-		public static string Optimal;
 
 		public static string FusionReactor;
 
@@ -902,35 +777,15 @@ namespace ZeroGravity
 
 		public static string Capacity;
 
-		public static string ExtPressure;
-
 		public static string Jetpack;
 
-		public static string SuitPower;
-
-		public static string JetpackOffline;
-
-		public static string OxygenLow;
-
-		public static string PressToOpenJournal;
-
-		public static string PressToToggleRcs;
-
-		public static string PressToToggleFlashlight;
-
 		public static string PressToToggleTargeting;
-
-		public static string OpenJournalForMoreDetails;
-
-		public static string NewQuestAvailable;
 
 		public static string HelmetRadar;
 
 		public static string HelmetOnSpeed;
 
 		public static string HelmetOffSpeed;
-
-		public static string CurrentVessel;
 
 		public static string Selection;
 
@@ -1041,14 +896,6 @@ namespace ZeroGravity
 		public static string System;
 
 		public static string AutomatedDistress;
-
-		public static string RescueShipWillArriveIn;
-
-		public static string RescueShipEnRoute;
-
-		public static string AnotherShipInRange;
-
-		public static string RescueShipArrived;
 
 		public static string AltairRifle;
 
@@ -1242,7 +1089,7 @@ namespace ZeroGravity
 
 		public static string FriedElectronics;
 
-		public static string DamagedTransmiter;
+		public static string DamagedTransmitter;
 
 		public static string RupturedInsulation;
 
@@ -1355,8 +1202,6 @@ namespace ZeroGravity
 		public static string AirFilterUnitDescription;
 
 		public static string PlasmaAcceleratorDescription;
-
-		public static string HighEnergyLaserDescription;
 
 		public static string SingularityCellDetonatorDescription;
 
@@ -1520,8 +1365,6 @@ namespace ZeroGravity
 
 		public static string UnauthorizedAccess;
 
-		public static string Attached;
-
 		public static string TransferResources;
 
 		public static string BaseConsumption;
@@ -1529,8 +1372,6 @@ namespace ZeroGravity
 		public static string Canister;
 
 		public static string Generator;
-
-		public static string RequiredResources;
 
 		public static string Jettison;
 
@@ -1591,8 +1432,6 @@ namespace ZeroGravity
 		public static string FilteringRate;
 
 		public static string DragResourcesForCrafting;
-
-		public static string JoinHellionOnDiscord;
 
 		public static string AirLockcontrols;
 
@@ -1660,10 +1499,6 @@ namespace ZeroGravity
 
 		public static string CargoFull;
 
-		public static string SaveGame;
-
-		public static string LoadGame;
-
 		public static string Console;
 
 		public static string Items;
@@ -1699,8 +1534,6 @@ namespace ZeroGravity
 		public static string Utility;
 
 		public static string Tool;
-
-		public static string ResearchRequired;
 
 		public static string AllTiersUnlocked;
 
@@ -1762,99 +1595,9 @@ namespace ZeroGravity
 
 		public static string PullToUndock;
 
-		public static string CapacitorTitle;
-
-		public static string PowerOutputTitle;
-
-		public static string PowerConsumptionTitle;
-
-		public static string ChangeRateTitle;
-
-		public static string AirTankTitle;
-
-		public static string ServoMotorTitle;
-
-		public static string ResourceInjectorTitle;
-
-		public static string CarbonFilterTitle;
-
-		public static string CatalystTitle;
-
-		public static string CapacitorTooltip;
-
-		public static string SunExposureTitle;
-
-		public static string ChangeRateOxygenTitle;
-
-		public static string ChangeRateNitorgenTitle;
-
-		public static string HeliumChangeRateTitle;
-
-		public static string SunExposureRateTitle;
-
-		public static string PowerOutputTooltip;
-
-		public static string PowerConsumptionTooltip;
-
-		public static string ChangeRateTooltip;
-
-		public static string AirTankTooltip;
-
-		public static string VesselsOutputTooltip;
-
-		public static string SelectedVesselTooltip;
-
-		public static string ServoMotorTooltip;
-
-		public static string ResourceInjectorTooltip;
-
-		public static string CarbonFilterTooltip;
-
-		public static string CatalystTooltip;
-
-		public static string SunExposureTooltip;
-
-		public static string ManeuverTimeTitle;
-
-		public static string ManeuverTimeTooltip;
-
-		public static string WarpPowerTitle;
-
-		public static string WarpPowerTooltip;
-
-		public static string WarpCellsTitle;
-
-		public static string WarpCellsTooltip;
-
-		public static string DockedVesselsTitle;
-
-		public static string DockedVesselsTooltip;
-
-		public static string ScanButtonTitle;
-
-		public static string ScanButtonTooltip;
-
-		public static string VesselPowerTitle;
-
-		public static string VesselPowerTooltip;
-
-		public static string RentYourOwnServer;
-
 		public static string VesselPowerOffline;
 
-		public static string DoorOpenWarningTitle;
-
-		public static string DoorOpenWarningTooltip;
-
 		public static string Warning;
-
-		public static string ChangeRateOxygenTooltip;
-
-		public static string ChangeRateNitrogenTooltip;
-
-		public static string HeliumChangeRateTootlip;
-
-		public static string SunExposureRateTootlip;
 
 		public static string InGameDescription;
 
@@ -1864,15 +1607,13 @@ namespace ZeroGravity
 
 		public static string FloatingFreelyNear;
 
-		public static string TeleportingFromDiscord;
-
 		public static string GravityInfluenceRadius;
 
 		public static string Radius;
 
-		public static string MultipleObjects;
+		public static string ObjectCluster;
 
-		public static string ObjectsInGroup;
+		public static string ObjectsInCluster;
 
 		public static string DefaultMapAsteroidDescription;
 
@@ -1932,10 +1673,6 @@ namespace ZeroGravity
 
 		public static string Error;
 
-		public static string RemoveOutfitTooltip;
-
-		public static string Load;
-
 		public static string LootAll;
 
 		public static string Journal;
@@ -1946,21 +1683,13 @@ namespace ZeroGravity
 
 		public static string NoLogAvailable;
 
-		public static string ToggleTracking;
-
-		public static string Tracking;
-
 		public static string ProximityLoot;
 
 		public static string Drop;
 
 		public static string Loot;
 
-		public static string TakeAll;
-
 		public static string ShowContainerSlots;
-
-		public static string NoMagazine;
 
 		public static string FireMode;
 
@@ -1968,25 +1697,9 @@ namespace ZeroGravity
 
 		public static string SingleFireMode;
 
-		public static string FireType;
-
-		public static string ArmorPiercingFireType;
-
-		public static string FragmentationFireType;
-
-		public static string IncediaryFireType;
-
-		public static string NormalFireType;
-
 		public static string PleaseAssignAllControls;
 
-		public static string DataPrivacySettings;
-
-		public static string Edit;
-
 		public static string ServerInfo;
-
-		public static string ExternalBrowserPage;
 
 		public static string Refill;
 
@@ -2020,12 +1733,6 @@ namespace ZeroGravity
 
 		public static string ToBeContinued;
 
-		public static string WrongSavegameVersion;
-
-		public static string Battery;
-
-		public static string BatteryMissing;
-
 		public static string OutOfRange;
 
 		public static string NotScannable;
@@ -2041,8 +1748,6 @@ namespace ZeroGravity
 		public static string Unknown;
 
 		public static string Armor;
-
-		public static string UsesLeft;
 
 		public static string UnknownObject;
 
@@ -2076,61 +1781,21 @@ namespace ZeroGravity
 
 		public static string RadarSignature;
 
-		public static string SpawnMiningDescription;
-
-		public static string SpawnFreeRoamDescription;
-
-		public static string SpawnPremadeStationDescription;
-
-		public static string SpawnDoomedDescription;
-
 		public static string FreeRoamSteropes;
-
-		public static string FreeRoamSteropesDescription;
 
 		public static string MiningSteropes;
 
-		public static string MiningSteropesDescription;
-
 		public static string SteropesNearRandomStation;
-
-		public static string SteropesNearRandomStationDescription;
 
 		public static string SteropesNearDoomedOutpost;
 
-		public static string SteropesNearDoomedOutpostDescription;
-
 		public static string MiningArges;
-
-		public static string MiningArgesDescription;
 
 		public static string FreeRoamArges;
 
-		public static string FreeRoamArgesDescription;
-
-		public static string PressForInventory;
-
-		public static string PressForLights;
-
-		public static string RotationControls;
-
 		public static string HoldToStabilize;
 
-		public static string UseResourceCanister;
-
-		public static string AssignOnCryo;
-
-		public static string DragItemToHands;
-
-		public static string WelderTooltip;
-
-		public static string PressForNavigation;
-
 		public static string AvailableQuests;
-
-		public static string QuestActivated;
-
-		public static string QuestUpdated;
 
 		public static string QuestCompleted;
 
@@ -2156,6 +1821,8 @@ namespace ZeroGravity
 
 		public static string NoServerConnection;
 
+		public static string SessionExpired;
+
 		public static string AccountNotFound;
 
 		public static string AccountAlreadyExists;
@@ -2168,7 +1835,9 @@ namespace ZeroGravity
 
 		public static Dictionary<Enum, string> Enums;
 
-		public static Dictionary<string, string> CanvasManagerLocalization;
+		public static Dictionary<string, string> MainMenuLocalisation;
+
+		public static Dictionary<string, string> InGameGUILocalisation;
 
 		public static Dictionary<string, string> PanelsLocalization;
 
@@ -2186,1162 +1855,32 @@ namespace ZeroGravity
 		{
 			LocalizationFiles = new Dictionary<int, string>
 			{
-				{ 1, "Data/localization_Serbian" },
-				{ 2, "Data/localization_ChineseSimplified" },
-				{ 3, "Data/localization_French" },
-				{ 4, "Data/localization_Italian" },
-				{ 5, "Data/localization_Portuguese" },
-				{ 6, "Data/localization_Russian" },
-				{ 7, "Data/localization_Spanish" },
-				{ 8, "Data/localization_Turkish" },
-				{ 9, "Data/localization_Czech" },
-				{ 10, "Data/localization_Danish" },
-				{ 11, "Data/localization_Dutch" },
-				{ 12, "Data/localization_Finnish" },
-				{ 13, "Data/localization_German" },
-				{ 14, "Data/localization_Greek" },
-				{ 15, "Data/localization_Hungarian" },
-				{ 16, "Data/localization_Japanese" },
-				{ 17, "Data/localization_Norwegian" },
-				{ 18, "Data/localization_Polish" },
-				{ 19, "Data/localization_PortugueseBrazilian" },
-				{ 20, "Data/localization_Romanian" },
-				{ 21, "Data/localization_Slovak" },
-				{ 22, "Data/localization_Slovenian" },
-				{ 23, "Data/localization_Swedish" },
-				{ 24, "Data/localization_Ukrainian" }
+				{ 0, "Localisation/en-US" },
+				{ 1, "Localisation/sr-RS" },
+				{ 2, "Localisation/ch-CN" },
+				{ 3, "Localisation/fr-FR" },
+				{ 4, "Localisation/it-IT" },
+				{ 5, "Localisation/pt-pt" },
+				{ 6, "Localisation/ru-RU" },
+				{ 7, "Localisation/es-ES" },
+				{ 8, "Localisation/tr-TR" },
+				{ 9, "Localisation/cs-CZ" },
+				{ 10, "Localisation/da-DK" },
+				{ 11, "Localisation/nl-NL" },
+				{ 12, "Localisation/fi-FI" },
+				{ 13, "Localisation/de-DE" },
+				{ 14, "Localisation/el-GR" },
+				{ 15, "Localisation/hu-HU" },
+				{ 16, "Localisation/ja-JP" },
+				{ 17, "Localisation/nb-NO" },
+				{ 18, "Localisation/pl-PL" },
+				{ 19, "Localisation/pt-BR" },
+				{ 20, "Localisation/ro-RO" },
+				{ 21, "Localisation/sk-SK" },
+				{ 22, "Localisation/sl-SL" },
+				{ 23, "Localisation/sv-SE" },
+				{ 24, "Localisation/uk-UA" }
 			};
-			Preload01 = "<color=#BEC070>Basics:</color> Cryopod serves as your re-spawn point.";
-			Preload02 =
-				"<color=#BEC070>Basics:</color> Your character stays in game after you log out. Logout from a cryopod to keep your character safe.";
-			Preload03 =
-				"<color=#BEC070>Basics:</color> Always equip the suit first then the jetpack and then the helmet.";
-			Preload04 = "<color=#BEC070>Basics:</color> Never leave your station without a loaded jetpack.";
-			Preload05 = "<color=#BEC070>Basics:</color> Welder can be used to repair any damage to ships and stations.";
-			Preload06 =
-				"<color=#BEC070>Basics:</color> Pressure difference causes decompression, knocking you down or sucking you into space.";
-			Preload07 = "<color=#BEC070>Basics:</color> You can suffocate in your suit if you run out of oxygen.";
-			Preload08 =
-				"<color=#BEC070>Basics:</color> Staying inside a debris field will cause damage to your stations and ships.";
-			Preload09 =
-				"<color=#BEC070>Basics:</color> Damage can cause different hazards like fire, breach and system malfunctions.";
-			Preload10 = "<color=#BEC070>Basics:</color> Fire needs oxygen. Decompressing a room will put it out.";
-			Preload11 = "<color=#BEC070>Basics:</color> Use parts to enhance your ship/station's systems.";
-			Preload12 = "<color=#BEC070>Basics:</color> Solar panel base output depends on distance from the sun.";
-			Preload13 = "<color=#BEC070>Basics:</color> Fusion Reactor requires a supply of Helium-3 to work.";
-			Preload14 =
-				"<color=#BEC070>Basics:</color> Servomotors reduce power consumption of any system they are attached to.";
-			Preload15 =
-				"<color=#BEC070>Basics:</color> Resource injectors reduce resource consumption of any system they are attached to.";
-			Preload16 =
-				"<color=#BEC070>Basics:</color> Catalysts greatly improve the power output of reactors and solar panels.";
-			Preload17 = "<color=#BEC070>Basics:</color> Core Containment increases maximum capacitor storage.";
-			Preload18 =
-				"<color=#BEC070>Basics:</color> Salvage from derelicts can be refined into crafting components.";
-			Preload19 = "<color=#BEC070>Basics:</color> When piloting press [R] to change radar range.";
-			Preload20 = "<color=#f0f0f0>Zero-G:</color> press [J] to activate jetpack.";
-			Preload21 = "<color=#f0f0f0>Zero-G:</color> use [Q] and [E] to rotate.";
-			Preload22 =
-				"<color=#f0f0f0>Zero-G:</color> hold [SHIFT] to stabilize rotation and grab onto nearby walls to avoid decompression.";
-			Preload23 =
-				"<color=#f0f0f0>Zero-G:</color> watch your acceleration and lateral speed indicators and mind the inertia.";
-			Preload24 =
-				"<color=#f0f0f0>Zero-G:</color> when docking, use [R] to cycle docking ports of your current vessel.";
-			Preload25 =
-				"<color=#f0f0f0>Zero-G:</color> when docking, use [UP/DOWN] to cycle targets, [LEFT/RIGHT] to change target ports.";
-			Preload26 = "<color=#f0f0f0>Zero-G:</color> collisions are deadly, avoid bumping into other space objects.";
-			Preload27 = "<color=#f0f0f0>Zero-G:</color> moving in the vacuum of space is impossible without a jetpack.";
-			Preload28 =
-				"<color=#D0815B>Base-Building:</color> Command Module adds a security interface to your station.";
-			Preload29 =
-				"<color=#D0815B>Base-Building:</color> Security interface lets you control who can access your base.";
-			Preload30 =
-				"<color=#D0815B>Base-Building:</color> Cargo Bay refinery can be used to refine a large quantity of resources at once.";
-			Preload31 =
-				"<color=#D0815B>Base-Building:</color> Adding a Fabricator to your station will let you craft items.";
-			Preload32 =
-				"<color=#D0815B>Base-Building:</color> Power Supply Module (PSM) provides a massive power production boost to your station.";
-			Preload33 =
-				"<color=#D0815B>Base-Building:</color> Airlocks let you avoid decompression when going from station into space.";
-			Preload34 = "<color=#D0815B>Base-Building:</color> Airlock requires a working Life Support System.";
-			Preload35 =
-				"<color=#D0815B>Base-Building:</color> Refinery and Fabricator drain a lot of power. Ensure your power supply is adequate before activating them.";
-			Preload36 =
-				"<color=#D05D5B>Combat:</color> Turrets are deadly but have limited range. Use cover and grenades when fighting them.";
-			Preload37 = "<color=#D05D5B>Combat:</color> EMP grenades will disable a Turret and let you pick it up.";
-			Preload38 =
-				"<color=#D05D5B>Combat:</color> Hacking tools can be used to open locked doors and reset authorized security panels.";
-			Preload39 =
-				"<color=#D05D5B>Combat:</color> Deploying a Turret in a station without a security interface will make it hostile.";
-			Preload40 =
-				"<color=#D05D5B>Combat:</color> Only 'authorized personnel' can pass through locked doors and access system panels.";
-			Preload41 =
-				"<color=#74A1CA>Navigation:</color> Upgrading Warp Drive with a better Singularity Cell Detonator will unlock faster warp.";
-			Preload42 =
-				"<color=#74A1CA>Navigation:</color> Creating a custom orbit allows you to warp to any point in space.";
-			Preload43 =
-				"<color=#74A1CA>Navigation:</color> Moving your station to a higher orbit will hide it from other players.";
-			Preload44 =
-				"<color=#74A1CA>Navigation:</color> Warp Drive drains power directly from the capacitor. Ensure you have enough power stored before attempting warp.";
-			Preload45 =
-				"<color=#74A1CA>Navigation:</color> Propulsion includes RCS for short distance travel, Engine for quick bursts of acceleration and Warp Drive for crossing vast interplanetary distances.";
-			Preload46 =
-				"<color=#74A1CA>Navigation:</color> Explore former military zones for Command Modules, abandoned ships and propulsion upgrades.";
-			Preload47 =
-				"<color=#74A1CA>Navigation:</color> Former industrial zones often contain industrial modules, raw resources and power supply upgrades.";
-			Preload48 =
-				"<color=#74A1CA>Navigation:</color> Former civilian zones are an excellent source of medical supplies and Life Support upgrades.";
-			ConnectingToMain = "Connecting to main server";
-			ConnectingToGame = "Connecting to game server";
-			Connect = "Connect";
-			Play = "Start game";
-			Options = "Options";
-			Quit = "Quit";
-			Apply = "Apply";
-			Disclaimer =
-				"This is the Alpha version of the game. It represents the basic vision behind this dark world. As the player base grows, we expect Hellion to evolve beyond these initial confines and become a true space survival that we can all enjoy. One of the cornerstones of this idea is an open and honest communication between developers and community. We are looking forward to your feedback as we believe that each and every one of you can add something to this project.\n\nSo grab your space suit, put on the helmet and dive into the void with us.\nHellion awaits!\n\nDo not hesitate to report any problems, bugs or other issues you may have while playing Hellion and make sure to contact us.\n\nZero Gravity Team";
-			Welcome = "Welcome to Hellion";
-			Understand = "I understand";
-			ReadMore = "Read more";
-			LatestNews = "Latest news";
-			AdvancedVideoSettings = "Advanced video settings";
-			MouseSettings = "Mouse settings";
-			KeyboardSettings = "Keyboard settings";
-			AltKey = "AltKey";
-			AmbientOcclusion = "Ambient occlusion";
-			AntiAliasing = "Anti-aliasing";
-			Audio = "Audio";
-			AutoStabilization = "Auto-stabilization";
-			Back = "Back";
-			BasicVideoSettings = "Basic video settings";
-			BasicAudioSettings = "Basic audio settings";
-			Bloom = "Bloom";
-			Cancel = "Cancel";
-			Character = "Character";
-			ChromaticAberration = "Chromatic aberration";
-			Community = "Community";
-			Confirm = "Confirm";
-			Controls = "Controls";
-			CreateCharacter = "Create character";
-			CurrentServer = "Current server";
-			PleaseSelectServer = "Please select server";
-			Default = "Default";
-			EADisclaimer = "Early Access Build";
-			EnterCustomBoxName = "Enter custom box name";
-			EnterPassword = "Enter password";
-			Exit = "Exit";
-			EyeAdaptation = "Eye adaptation";
-			F1ForHelp = "Press F1 for help";
-			Favorites = "Favorites";
-			FullScreen = "Fullscreen";
-			Full = "Full";
-			GameSettings = "Game settings";
-			GeneralSettings = "General settings";
-			Glossary = "Glossary";
-			HeadBobStrength = "Head bob strength";
-			HideTips = "Hide tips";
-			HideTutorial = "Hide tutorial";
-			Interact = "Interact";
-			Key = "Key";
-			Loading = "Loading";
-			Logout = "Logout";
-			MainMenu = "Main menu";
-			MasterVolume = "Master volume";
-			MotionBlur = "Motion blur";
-			Official = "Official";
-			Ping = "Ping";
-			Players = "Players";
-			PreAplha = "Pre-Alpha";
-			Quality = "Quality";
-			Refresh = "Refresh";
-			Resolution = "Resolution";
-			Respawn = "Respawn";
-			Resume = "Resume";
-			Save = "Save";
-			Search = "Search";
-			ServerBrowser = "Server browser";
-			Server = "Server";
-			Settings = "Settings";
-			Shadows = "Shadows";
-			ShipSettings = "Ship settings";
-			ShowCrosshair = "Show crosshair";
-			TextureQuality = "Texture quality";
-			Throwing = "Throwing";
-			Use = "Use";
-			Username = "Username";
-			VSync = "VSync";
-			Video = "Video";
-			VoiceVolume = "Voice volume";
-			LanguageSettings = "Language settings";
-			ChooseLanguage = "Choose language";
-			ReportServer = "Report server";
-			ServerSettings = "Server settings";
-			PlayerSettings = "Player settings";
-			GlobalSettings = "Global settings";
-			Multiplayer = "Multiplayer";
-			JoinDiscord = "Join discord";
-			Movement = "Movement";
-			Actions = "Actions";
-			Ship = "Ship";
-			Suit = "Suit";
-			Communications = "Communications";
-			QuickActions = "Quick actions";
-			Male = "Male";
-			Female = "Female";
-			ChooseSpawnPoint = "Choose spawn point";
-			ChooseStartingPoint = "Choose starting point";
-			Continue = "Continue";
-			FreshStart = "Fresh start";
-			LatencyProblems = "Latency problems";
-			Rubberbanding = "Rubberbanding";
-			ServerStuck = "Server stuck on loading";
-			DisconnectedFromServer = "Disconnected from the server for no reason";
-			Other = "Other";
-			SendReport = "Send report";
-			ReportSent = "Report sent, thanks for your feedback";
-			ReportFailed = "Report sending failed, please try again later";
-			FreshStartConfrimTitle = "Fresh Start Confirm";
-			FreshStartConfrimText = "Are you sure you want to start a new game, current progress will be lost";
-			Forward = "Forward";
-			Backward = "Backwards";
-			Left = "Left";
-			Right = "Right";
-			LeanRight = "Lean Right";
-			LeanLeft = "Lean Left";
-			RotationClockwise = "Rotation Clockwise";
-			RotationAnticlockwise = "Rotation Counter Clockwise";
-			Jump = "Jump";
-			Crouch = "Crouch";
-			Sprint = "Sprint";
-			Up = "Up";
-			Down = "Down";
-			Grab = "Grab";
-			FreeLook = "Free Look";
-			Inventory = "Inventory";
-			ExitPanel = "Exit Screen";
-			PrimaryMouseButton = "Primary Mouse Button";
-			SecondaryMouseButton = "Secondary Mouse Button";
-			ThirdMouseButton = "Third Mouse Button";
-			DropThrow = "Drop / <color='#A0D3F8'>Hold To Throw</color>";
-			InteractTakeInHands = "Interact / <color='#A0D3F8'>Hold To Take Item In Hands</color>";
-			EquipItem = "Hold To Equip";
-			ItemOptions = "Hold + Scroll For Item Options";
-			Reload = "Reload";
-			ChangeStance = "Change Stance";
-			Stabilization = "Stabilization";
-			LeftMouse = "Left Mouse Button";
-			RightMouse = "Right Mouse Button";
-			MiddleMouse = "Middle Mouse Button";
-			ToggleVisor = "Toggle Visor";
-			ToggleLights = "Toggle Lights";
-			ToggleJetpack = "Toggle Jetpack";
-			MatchVelocityControl = "Match velocity with target";
-			MatchVelocity = "Match Target Velocity available press [M]";
-			WarpDrive = "Warp Drive";
-			TargetUp = "Cycle Targets Up";
-			TargetDown = "Cycle Targets Down";
-			FilterLeft = "Cycle Filters Left";
-			FilterRight = "Cycle Filters Right";
-			ChangeDockingPort = "Change Docking Port";
-			LightsToggle = "Toggle Helmet Light";
-			Free = "Free";
-			InProgress = "In progress";
-			ExitGame = "Exit Game";
-			Game = "Game";
-			ConnectionError = "Connection Error";
-			SystemError = "System Error";
-			Disabled = "Disabled";
-			InvalidSystemSpesifications =
-				"This computer has invalid system specifications. You need at least 4 gigabytes of RAM and a processor with at least a 2 GHz clock speed.";
-			ConnectionToGameBroken = "Connection to the game server has been lost.";
-			DeleteCharacter = "Delete character";
-			DuplicatedControl = "Duplicated Control";
-			DuplicateControlMessage = "This key is already in use for the {0} action, do you want to overwrite it ?";
-			VersionError = "Wrong client version";
-			VersionErrorMessage = "Please update your client";
-			AreYouSureLogout = "Are you sure you want to logout?";
-			AreYouSureExitGame = "Are you sure you want to exit?";
-			AreYouSureDeleteCharacter =
-				"Are you sure you want to delete this character?\nAll active quests progress will be lost!";
-			AreYouSureRespawn = "Confirming this option will kill your character!\nAre you sure you want to respawn?";
-			AreYouSureLoad =
-				"Confirming this option will delete all current progress! \n Are you sure you want to load game?";
-			AreYouSureYouWantToSave = "Settings have been updated! \n Do you want to save changes?";
-			TryAgainLater = "Try again later";
-			SpawnErrorTitle = "Spawn error";
-			SpawnErrorMessage = "Unable to spawn on selected point, please select a different spawn point";
-			InvertMouse = "Invert Mouse";
-			InvertMouseWhileDriving = "Invert Mouse While Driving";
-			Sensitivity = "Sensitivity";
-			ResetControls = "Reset Controls";
-			ResetControlsMessage = "This action will reset controls to default values.";
-			ClientVersion = "Version: {0}";
-			Yes = "Yes";
-			No = "No";
-			Selected = "Selected";
-			DistressSignal = "Distress Signals";
-			ArrivalTime = "Time to Arrival";
-			EngineToggle = "Engine ON/OFF";
-			EngineThrustUp = "Engine Thrust Up";
-			EngineThrustDown = "Engine Thrust Down";
-			InventoryFull = "Full";
-			Melee = "Melee";
-			Chat = "Chat";
-			HoldToLoot = "Hold [{0}] to loot";
-			PressToInteract = "'{0}' to interact";
-			HoldToEquip = "Hold [{0}] to equip";
-			PressToWarp = "Press '{0}' To Activate";
-			Talk = "Voice Activation";
-			Active = "Active";
-			Standby = "Standby";
-			Malfunction = "Malfunction";
-			Missing = "Missing";
-			Ready = "Ready";
-			Radio = "Radio";
-			Scanning = "Scanning";
-			All = "All";
-			SaveGameSettings = "Are you sure you want to save game settings?";
-			SaveQualitySettings = "Changing quality settings will take some time, please confirm changes?";
-			UnnamedVessel = "Unnamed vessel";
-			Reverse = "Reverse";
-			Quick1 = "Piloting / Primary";
-			Quick2 = "Navigation / Secondary";
-			Quick3 = "Docking / Grenades";
-			Quick4 = "Lights / Consumables";
-			Name = "Name";
-			InfoScreen = "Info screen";
-			Scan = "Scan";
-			ZoomOut = "Zoom out";
-			MyShip = "My ship";
-			HomeStation = "Home station";
-			AddCustomOrbit = "Add custom orbit";
-			RemoveOrbit = "Remove orbit";
-			SelectedMapObject = "Selected map object";
-			WarpTo = "Warp to";
-			CustomOrbit = "Custom orbit";
-			FtlManeuver = "FTL maneuver";
-			Warp1 = "Warp 1";
-			Warp2 = "Warp 2";
-			Warp3 = "Warp 3";
-			CellsSelected = "Cells selected";
-			WarpDistance = "Warp distance";
-			PowerConsumption = "Power consumption";
-			ManeuverStatus = "Maneuver status";
-			ManeuverTimeAdjustment = "Maneuver time adjustment";
-			ActivationTime = "Time to Activation";
-			InitializeNavigation = "Initialize";
-			AuthorizedVessels = "Authorized vessels";
-			UnstableOrbit = "Unstable Orbit";
-			Inclination = "Inclination";
-			ArgumentOfPeriapsis = "Argument of periapsis";
-			LongitudeOfAscendingNode = "Longitude of ascending node";
-			Periapsis = "Periapsis";
-			Apoapsis = "Apoapsis";
-			PositionOnOrbit = "Position on orbit";
-			OrbitalPeriod = "Orbital period";
-			Stage = "Stage";
-			WarpSettings = "Warp settings";
-			SelectManeuver = "Please select maneuver";
-			SignalAmplification = "Signal amplification";
-			Signature = "Signature";
-			Register = "Register";
-			Unregister = "Unregister";
-			SetAsPoint = "Set spawn point";
-			InviteFriend = "Invite friend";
-			Authorized = "Authorized";
-			Locked = "Locked";
-			Unlocked = "Unlocked";
-			Registered = "Registered";
-			CryoChamber = "Cryo chamber";
-			InvitePending = "Invite pending";
-			InviteSent = "Invite sent";
-			RegisterToAccess = "Register to access cryopod controls";
-			SpawnPointNotSet = "Spawn point not set";
-			SpawnPointSet = "Spawn point set";
-			SelectFriend = "Select a friend to invite";
-			ActionRequired = "Action required";
-			AreYouSureCryo = "Are you sure you want to designate this chamber as your spawn point?";
-			DangerCryo = "Your previous spawn will be replaced!";
-			EnvironmentalMonitor = "Environmental monitor";
-			UnbreathableAtmosphere = "Unbreathable atmosphere";
-			Gravity = "Gravity";
-			Bar = "Bar";
-			AirQuality = "Air quality";
-			AirFiltering = "Air filtering";
-			PressureRegulation = "Pressure regulation";
-			RePressurize = "Pressurize";
-			Depressurize = "Depressurize";
-			Pressure = "Pressure";
-			InnerDoor = "Inner door";
-			OuterDoor = "Outer door";
-			AirTank = "Air tank";
-			WarningArilock = "Opening both doors risks violent decompression";
-			Raw = "Raw";
-			Refined = "Refined";
-			Refine = "Refine";
-			Crafting = "Crafting";
-			ReifineAmount = "Refine Amount";
-			VentAmount = "Vent Amount";
-			TransferArmount = "Transfer Amount";
-			ActiveSystems = "Active systems";
-			NothingConnectedToSlot = "Nothing connected to slot";
-			NoOtherCargoAvailable = "No other cargo available";
-			NoRafineryAvailable = "No refinery available";
-			Propellant = "Fuel";
-			Unload = "Unload";
-			Vent = "Vent";
-			VentDescription = "Drag item to box to vent it";
-			Cargo = "Cargo";
-			Refining = "Refining";
-			Slot = "Slot";
-			CargoHeading = "Cargo interaction panel";
-			EnergyConsumption = "Energy consumption";
-			ProcessingTime = "Processing time";
-			Empty = "Empty";
-			CraftingTime = "Crafting time";
-			CancelCrafting = "Cancel crafting";
-			CancelCraftingDescription = "Are you sure you want to cancel current crafting process?";
-			CancelCraftingWarning = "You will lose all resources used in current process!";
-			AccelerationHigh = "Speed too high";
-			AccelerationLow = "Speed too low";
-			CourseImpossible = "Course impossible";
-			FTLCapacity = "Capacitor: Insufficient power";
-			FTLCellFuel = "FTL Drive: Insufficient fuel in cells";
-			FTLManeuverIndex = "FTL Drive: Maneuver not selected";
-			FTLOffline = "FTL Drive: offline";
-			FTLReady = "FTL Drive: ready";
-			FTLMalfunction = "FTL Drive: malfunction";
-			ToManyDockedVessels = "To many docked vessels";
-			ManeuverEnds = "Maneuver ends in";
-			ManeuverInterrupted = "Maneuver interrupted";
-			ConfirmManeuver = "Confirm maneuver execution";
-			ManeuverInitiated = "Maneuver initiated";
-			AlignShip = "Please align your ship with maneuver direction";
-			PowerOutput = "Power output";
-			SystemParts = "System parts";
-			Optimal = "Optimal";
-			FusionReactor = "Fusion reactor";
-			DeuteriumTank = "Helium-3 tank";
-			SolarPanels = "Solar panels";
-			Capacitor = "Capacitor";
-			Consumption = "Consumption";
-			PowerSupplyScreen = "Power supply screen";
-			LifeSupportPanelLabel = "Life support panel";
-			LifeSupportSystem = "Life support system";
-			NoAirGenerator = "No air generator available";
-			NoAirFilter = "No air filter available";
-			AirGenerator = "Air generator";
-			OxygenTank = "Oxygen tank";
-			NitrogenTank = "Nitrogen tank";
-			AirFilter = "Air filter";
-			TurnOn = "Turn on";
-			TurnOff = "Turn off";
-			Airlock = "Airlock";
-			SecurityTerminal = "Security terminal";
-			Claim = "Claim";
-			AddCrewMember = "Add crew member";
-			ShipCrew = "Ship crew";
-			AuthorizedPersonnelList = "Authorized personnel list";
-			CommandingOfficer = "Commanding officer";
-			Crew = "Crew";
-			Resign = "Resign";
-			EnterCustomShipName = "Enter custom ship name";
-			AreYouSureResign = "Are you sure you wan to resign, crew member will become commanding officer!";
-			Promote = "Promote";
-			Remove = "Remove";
-			AreYouSurePromote = "By promoting this crew member you will resign you commanding officer position!";
-			RefuelingStation = "Refueling station";
-			RCS = "RCS";
-			Engine = "Engine";
-			RechargeStation = "Power Recharge station";
-			LowFuel = "Low fuel";
-			NoFuel = "No fuel";
-			Distance = "Distance";
-			ControlChangeDockingPort = "Press {0} to change port";
-			Module = "Module";
-			AvailbaleDockingPorts = "Available docking ports";
-			RCSFuelLevel = "RCS Fuel level";
-			ModulesInRange = "Modules in range";
-			AvailableModules = "Available modules";
-			TargetedModule = "Targeted module";
-			AvailablePorts = "Available ports";
-			DirectionalSpeed = "Directional Speed";
-			Power = "Power";
-			Fuel = "Fuel";
-			Oxygen = "Oxygen";
-			Capacity = "Capacity";
-			ExtPressure = "Ext. pressure";
-			Jetpack = "Jetpack";
-			SuitPower = "Suit power";
-			JetpackOffline = "Jetpack RCS offline";
-			OxygenLow = "Oxygen low";
-			PressToOpenJournal = "Press [O] to activate journal screen";
-			PressToToggleRcs = "Press [J] to toggle RCS";
-			PressToToggleFlashlight = "Press [L] to toggle flashlight";
-			PressToToggleTargeting = "Press [{0}] to toggle targeting";
-			OpenJournalForMoreDetails = "Press [O] to open Journal Screen for more details";
-			NewQuestAvailable = "New Quest Available, press [O] to open journal";
-			HelmetRadar = "Helmet Radar Toggle";
-			HelmetOnSpeed = "DIR.";
-			HelmetOffSpeed = "LAT.";
-			CurrentVessel = "Current vessel";
-			Selection = "Selection";
-			Offline = "Offline";
-			Online = "Online";
-			Cooldown = "Cooldown";
-			Powerup = "Powerup";
-			None = "None";
-			Air = "Air";
-			Ice = "Ice";
-			Regolith = "Regolith";
-			DryIce = "Dry ice";
-			Nitrates = "Nitrates";
-			Hydrogen = "Hydrogen";
-			Helium3 = "Helium-3";
-			Nitro = "Nitro";
-			Nitrogen = "Nitrogen";
-			CarbonFibers = "Carbon fibers";
-			Alloys = "Alloys";
-			Circuits = "Circuits";
-			Reserved = "Reserved";
-			Tut_Undefined = "Undefined";
-			Tut_1AdditionalInfo = "Use [F] to interact with objects.";
-			Tut_1 = "Your cryosleep is over now. Welcome to Hellion!";
-			Tut_2 = "Pick up the suit, it will be your INVENTORY.\nPress [TAB] to access it.";
-			Tut_3 = "Equip Helmet and Jetpack.\nPress [H] to raise/lower Helmet Visor and save suit oxygen.";
-			Tut_4 =
-				"Use [W,A,S,D] and Mouse to move in zero gravity.\nPress [SPACE] to move up.\nPress [LCTRL] to move down.\nHold [LSHIFT] to grab.\nPress [Q] and [E] to roll.";
-			Tut_5 = "Make sure your suit is equipped and lower your visor before exiting the station.";
-			Tut_6 =
-				"Manually override outer door by pulling the lever.\nHold [LSHIFT] to grab onto nearby wall and avoid decompression.";
-			Tut_7 = "Access the module's Docking Panel to begin docking procedure.";
-			CanisterIsEmpty = "Canister is empty";
-			ResourcesAreAlreadyFull = "Resources are already full";
-			CODNone = "You have died";
-			CODPressure = "You have died from decompression";
-			CODFrost = "You froze to death";
-			CODHeat = "You got fried";
-			CODImpact = "You have died from impact";
-			CODShot = "You have been shot";
-			CODSuffocate = "You suffocated";
-			CODSuicide = "You killed yourself";
-			CODShipwrecked = "Your ship crashed";
-			CODShredded = "You've been shredded";
-			CODExplosion = "You've died in explosion";
-			CODSpaceExposure = "You've died due to space exposure";
-			CODVesselDacay = "Your ship has been destroyed due to structural decay";
-			CODVesselGrenadeExplosion = "Your ship has been destroyed by hand grenade explosion";
-			CODVesselProximityExplosion = "Your ship has been destroyed by nearby vessel explosion";
-			CODVesselSmallDebrisHit = "Your ship has been destroyed by debris field";
-			CODVesselLargeDebrisHit = "Your ship has been destroyed by large debris fragment";
-			CODVesselSelfDestruct = "Your ship self destructed";
-			PressAnyKeyToContinue = "(Press any key to continue)";
-			WeaponModKey = "Switch firing mode";
-			System = "System";
-			AutomatedDistress = "Automated distress";
-			RescueShipWillArriveIn = "Rescue Ship will arrive in:";
-			RescueShipEnRoute = "Rescue Ship En Route. Time to arrival:";
-			AnotherShipInRange = "Unable to call Rescue Ship. Another Ship in range.";
-			RescueShipArrived = "Rescue Ship Arrived!";
-			AltairRifle = "B-45 Compound -Mod.06";
-			MilitaryAssaultRifle = "V22 Broadsword - 8.20";
-			MilitarySniperRifle = "R15 Lance - 12.5/Helix";
-			MilitaryHandGun01 = "S22 Rapier - 8.15";
-			MilitaryHandGun02 = "H115 Glaive - 8.15";
-			AltairRifleAmmo = "Mod.06-S";
-			MilitaryAssaultRifleAmmo = "8.20-S";
-			MilitarySniperRifleAmmo = "12.5/Helix";
-			MilitaryHandGunAmmo01 = "8.15-S";
-			AltairPressurisedSuit = "AC Mk9 - Pressure Suit";
-			AltairEVASuit = "AC Proteus-h - EVA suit";
-			AltairPressurisedHelmet = "AC Mk9 - Helmet";
-			AltairEVAHelmet = "AC Proteus-h - Helmet";
-			AltairPressurisedJetpack = "AC Mk9 - Jetpack";
-			AltairEVAJetpack = "AC Proteus-h - Jetpack";
-			MachineryPart = "Machinery part";
-			AltairHandDrill = "AC - G5p Drilling System";
-			AltairHandDrillBattery = "AC - Battery Pack";
-			AltairHandDrillCanister = "AltCorp Raw Resource Canister";
-			AltairResourceContainer = "AltCorp Small Resource Container";
-			AltairRefinedCanister = "AltCorp Refined Resource Canister";
-			AltairCrowbar = "Crowbar";
-			AltairGlowStick = "Glow stick";
-			AltairMedpackSmall = "Small stimpack";
-			AltairMedpackBig = "Advanced stimpack";
-			AltairDisposableHackingTool = "Disposable Hacking Tool";
-			AltairHandheldAsteroidScanningTool = "AC - ASAT Scanner";
-			LogItem = "Log file";
-			GenericItem = "Generic item";
-			APGrenade = "Flail AP Grenade";
-			EMPGrenade = "Swordbreaker EMP Grenade";
-			PortableTurret = "SDS 'Trident' AP sentry-gun";
-			RepairTool = "Welding Tool";
-			SoeSuit = "Sons of Earth Mk9 - Pressure Suit";
-			SoeHelmet = "Sons of Earth Mk9 - Helmet";
-			SoeJetpack = "Sons of Earth Mk9 - Jetpack";
-			AegisAssaultRifle = "Aegis assault rifle";
-			AltairRifleDescription =
-				"A compact AltCorp carbine that combines good stopping power and decent rate of fire with exceptional accuracy.\n\nSingle: Dmg - 20, RPM - 150\nAuto: Dmg - 18, RPM - 300\n";
-			MilitaryAssaultRifleDescription =
-				"SDS assault rifle designed to provide reliable firepower in any situation.\n\nAuto: Dmg - 21, RPM - 600\n";
-			MilitarySniperRifleDescription =
-				"Magnetic version of the old anti-materiel rifle, the SDS ‘Lance’ is capable of delivering lethal force at any range with pinpoint accuracy.\n\nSingle: Dmg - 75, RPM - 36\n";
-			MilitaryHandGun01Description =
-				"Small and compact, SDS ‘Rapier’ provides lethal firepower ideal for close quarters, making it perfect for peacekeeping duties.\n\nSingle: Dmg - 16, RPM - 180\nAuto: Dmg - 14, RPM - 480\n";
-			MilitaryHandGun02Description =
-				"Heaviest hitter of all conventional weapons, SDS ‘Glaive’ is the most powerful sidearm available to Expedition personnel.\n\nSingle: Dmg - 28, RPM - 110\n";
-			AltairRifleAmmoDescription = "6mm rifle ammo\n\n";
-			MilitaryAssaultRifleAmmoDescription = "8mm rifle ammo\n\n";
-			MilitarySniperRifleAmmoDescription = "12mm sniper ammo\n\n";
-			MilitaryHandGunAmmo01Description = "8mm pistol ammo\n\n";
-			AltairPressurisedSuitDescription =
-				"Standard Altair Corporation multi-purpose pressure suit.\n\nBallistic Protection - 4\n";
-			AltairEVASuitDescription =
-				"Reinforced pressure suit, designed for prolonged EVA sessions and modified for use in Hellion system.\n";
-			AltairPressurisedHelmetDescription =
-				"Battery powered HUD and communications interface for the AltCorp Mk9 Pressure suit.\n";
-			AltairEVAHelmetDescription =
-				"Battery powered HUD and communications interface for the 'Proteus-h' EVA suit.\n";
-			AltairPressurisedJetpackDescription =
-				"Oxygen supply and zero-g maneuvering system designed for the AltCorp Mk9 Pressure suit.\n";
-			AltairEVAJetpackDescription =
-				"Oxygen supply and zero-g maneuvering system designed for the 'Proteus-h' EVA suit.\n";
-			MachineryPartDescription = "Standard machinery part";
-			AltairHandDrillDescription =
-				"AltCorp 5th generation portable Drilling System designed for zero-g mining operations.\n\n";
-			AltairHandDrillBatteryDescription = "Standard AltCorp battery pack.\n";
-			AltairHandDrillCanisterDescription =
-				"Standard AltCorp raw resource container. Compatible with the G5p Drilling System.\n";
-			AltairResourceContainerDescription = "Small canister for emergency Jetpack refueling.\n";
-			AltairRefinedCanisterDescription = "Standard AltCorp refined resource container.\n";
-			AltairCrowbarDescription = "A simple and effective tool. Made out of high quality alloy steel.";
-			AltairGlowStickDescription = "A self-contained, temporary light source";
-			AltairMedpackSmallDescription = "Standard medical stimpack\n\nRecovery - 10HP/s\nDuration - 3s";
-			AltairMedpackBigDescription = "Military grade stimpack\n\nRecovery - 15HP/s\nDuration - 4s";
-			AltairDisposableHackingToolDescription =
-				"Overrides access restrictions.\n\nA makeshift hacking device built to overload security systems. Crude but effective.\n";
-			AltairHandheldAsteroidScanningToolDescription =
-				"Asteroid scanning device.\n\nAltCorp Asteroid Survey Assist Tool. Used to determine asteroid composition.\n";
-			LogItemDescription = "Portable data storage device";
-			GenericItemDescription = "Nothing to see here, move along...";
-			APGrenadeDescription =
-				"Standard issue SDS anti-personnel frag grenade.\n\nFuse time - 5s\nBlast Radius - 6m\nDmg - 103\n";
-			EMPGrenadeDescription =
-				"SDS electromagnetic pulse grenade designed to disable high-end weapon systems without affecting personnel.\n\nFuse time - 5s\nBlast Radius - 10m\n";
-			PortableTurretDescription =
-				"Automated sentry.\n\nFully automated SDS anti-personnel weapon that works as part of the station’s security system.\n";
-			SoeSuitDescription =
-				"Mk9 Pressure Suit worn by Sons of Earth and customised for combat. Offers added ammo slots over storage capacity.\n\nBallistic Protection - 4\n";
-			SoeHelmetDescription =
-				"Mk9 helmet worn by Sons of Earth. Heavily modified and adorned with their logos and symbols.\n";
-			SoeJetpackDescription =
-				"Mk9 Jetpack worn by Sons of Earth. Features improved oxygen and fuel capacity compared to the standard version.\n";
-			AegisAssaultRifleDescription =
-				"Custom version of the V-22 'Broadsword' assault rifle. Reserved exclusively for members of the AEGIS task force.\n\nAuto: Dmg - 25, RPM - 500\n";
-			Flag = "AltCorp Flag";
-			BasketBall = "Basketball";
-			BookHolder = "Book holder";
-			Hoop = "Hoop";
-			LavaLamp = "Lava lamp";
-			PlantRing = "Verdant Aureole";
-			PlantZikaLeaf = "Zika Leaf";
-			PlantCanister = "Sapphire Light";
-			Poster = "Poster";
-			PosterBethyr = "Big Blue poster";
-			PosterBurner = "Live at Burner poster";
-			PosterEverest = "Everest station poster";
-			PosterHellion = "Welcome to Hellion Poster";
-			PosterTurret = "S.D.S. Trident poster";
-			PosterCrewQuarters = "Stellar Resorts poster";
-			PosterSonsOfEarth = "Sons of Earth poster";
-			TeslaBall = "Tesla ball";
-			Picture = "Picture";
-			AltCorp_Cup = "AltCorp cup";
-			CoffeeMachine = "Coffee machine";
-			BrokenArmature = "Broken armature";
-			ShatteredPlating = "Shattered plating";
-			FriedElectronics = "Fried electronics";
-			DamagedTransmiter = "Damaged transmitter";
-			RupturedInsulation = "Ruptured insulation";
-			BurnedPDU = "Burned PDU";
-			DiamondCore = "Detachable G5p Drill Bit";
-			FlagDescription = "Traditional flag of the Altair Corporation's Engineering Corps";
-			BasketBallDescription = "For some quality zero-g slam dunks";
-			BookHolderDescription = "A rather disturbing book holder. Just looking at it makes you feel uneasy";
-			HoopDescription = "Basketball Hoop\nNear indestructible and zero-g friendly";
-			LavaLampDescription = "Lava lamp\nA perfect night light solution for your quarters";
-			PlantRingDescription = "Decorative plant ring.\n Sealed against vacuum exposure";
-			PlantZikaLeafDescription =
-				"A rare strain of the bio-phosphorescent Zika Leaf plant.\nSealed against vacuum exposure";
-			PlantCanisterDescription = "Decorative bio-phosphorescent plant.\nSealed against vacuum exposure.";
-			PosterDescription = "Promotional poster";
-			TeslaBallDescription = "A small decorative lamp with a built in power source.";
-			PictureDescription = "A genuine work of art";
-			AltCorp_CupDescription = "Nothing like a warm cup of that special blend.";
-			CoffeeMachineDescription = "Do not use in zero gravity conditions";
-			ScrapDescription = "Recyclable. Otherwise useless.";
-			DiamondCoreDescription =
-				"A replaceable diamond core drill bit specifically designed for the G5p Drilling System\n";
-			Fuse = "Fuse";
-			ServoMotor = "Servo motor";
-			SolarPanel = "Solar panel";
-			ExternalAirVent = "External air vent";
-			AirProcessingController = "Air processing controller";
-			CarbonFilters = "Carbon filters";
-			AirFilterUnit = "Air filter unit";
-			PressureRegulator = "Pressure regulator";
-			RadarSignalAmplifier = "Radar signal amplifier";
-			CoreContainmentFieldGenerator = "Core containment field generator";
-			ResourceInjector = "Resource injector";
-			ThermonuclearCatalyst = "Catalyst";
-			ExternalDeuteriumExhaust = "External Helium-3 exhaust";
-			PowerCollector = "Power collector";
-			PowerDiffuser = "Power diffuser";
-			GrapheneNanotubes = "Graphene nanotubes";
-			PowerDisipator = "Power dissipator";
-			NaniteCore = "Civilian nanite core";
-			EmShieldGenerator = "EM shield generator";
-			HighEnergyLaser = "High energy laser";
-			RcsThrusters = "RCS Thrusters";
-			SingularityCellDetonator = "Singularity cell detonator";
-			WarpFieldGenerator = "Warp field generator";
-			HighEnergyConverter = "High energy converter";
-			SingularityContainmentField = "Singularity containment field";
-			WarpInductor = "Warp inductor";
-			WarpCell = "Warp cell";
-			EMFieldController = "EM Field controller";
-			MilitaryNaniteCore = "Military nanite core";
-			ThermonuclearCatalystDescription = "Increases system power output";
-			ResourceInjectorDescription = "Reduces system resource consumption";
-			CoreContainmentFieldGeneratorDescription = "Increases capacitor's maximum storage";
-			EMFieldControllerDescription = "Reduces power consumption";
-			ServoMotorDescription = "Reduces system power consumption";
-			AirProcessingControllerDescription = "O2 CONSUMPTION of AIR FILTER\nPOWERUP TIME of AIR FILTER";
-			CarbonFiltersDescription = "Eliminates O2 consumption";
-			AirFilterUnitDescription = "MAX AIR FILTERING of LS NODE";
-			PlasmaAcceleratorDescription = "Increases maximum thrust";
-			HighEnergyLaserDescription = "ACCELERATION SPEED of MAIN ENGINE";
-			SingularityCellDetonatorDescription = "Expands warp options";
-			WarpCellDescription = "Standardized warp core cell container, compatible with all Expedition systems";
-			PressureRegulatorDescription = "MAX AIR OUTPUT of LS NODE";
-			NaniteCoreDescription =
-				"Enhances vessel armor\nCompatible with all Nanite Diffuser Systems.\n\nMultipurpose civilian nanite core designed for prolonged exposure in low risk areas.\nExceptional durability at the cost of protection.\n";
-			MilitaryNaniteCoreDescription =
-				"Enhances vessel armor\nCompatible with all Nanite Diffuser Systems.\n\nMilitary grade nanite core designed for search and rescue operations in high risk areas.\nImproved protection at the cost of durability.\n";
-			EngineStatus = "Engine status";
-			ENG = "ENG";
-			FTL = "FTL";
-			Contacts = "Contacts";
-			RadarRange = "Radar range";
-			Matched = "Velocity matched with";
-			ClusterOfVessels = "Cluster of vessels";
-			Available = "Available";
-			ETA = "ETA";
-			DrivingTips = "Driving tips";
-			Stabilize = "Stabilize";
-			PilotingNotActive = "Piloting not active";
-			CloseDoor = "Close door";
-			OpenDoor = "Open door";
-			AreYouSureAirlock = "Are you sure you want to open door by force?";
-			DangerAirlock = "It's not safe to open door, there is difference in pressure!";
-			Stop = "Stop";
-			RemoveOutfit = "Remove outfit";
-			AirOutput = "Air output";
-			ChangeShipName = "Change ship name";
-			Temperature = "Temperature";
-			VesselStatus = "Hull integrity";
-			GravityFail = "Gravity fail";
-			Defective = "Defective";
-			Breach = "Breach";
-			Fire = "Fire";
-			FireHazard = "Fire hazard";
-			GravityMalfunction = "Gravity Malfunction";
-			Failure = "Failure";
-			Hull = "Hull";
-			RepairPointMessageRoom = "{0} detected (location: {1})";
-			RepairPointMessageVesselRoom = "{0} detected (vessel: {1}, location: {2})";
-			Light = "Light";
-			EmergencyLight = "Emergency light";
-			Fabricator = "Fabricator";
-			Refinery = "Refinery";
-			Systems = "Systems";
-			Health = "Health";
-			FuelLevels = "Fuel levels";
-			FireExtinguisherDescription = "Device used to extinguish or control small fires";
-			FireExtingusher = "Fire extinguisher";
-			NoItemAttachedToCargo = "No item attached to cargo";
-			NoRefineryAvailable = "No refinery available";
-			AmountToTransfer = "Amount to transfer";
-			AllVessels = "All vessels";
-			AttachPoint = "Attach point";
-			AirlockPressure = "Airlock pressure";
-			DoorControl = "Door control";
-			DistressCallActive = "Distress call active";
-			Disconnected = "Disconnected";
-			UnavailableFromInGameMenu = "Changeable only from main menu";
-			CheckRcsUtilityAccess = "Check rcs utility access";
-			SelfDestruct = "Self destruct";
-			Activate = "Activate";
-			ConnectingToInvite = "Connecting to invite";
-			ShutDown = "Shut down";
-			Deploy = "Deploy";
-			Retract = "Retract";
-			AreYouSureSelfDestruct = "Are you sure you want to activate self destruction?";
-			ChangeShipEmblem = "Change ship emblem";
-			RefiningTime = "Refining time";
-			InDebrisField = "In debris field";
-			CapacitorsTotal = "Capacitors total";
-			Tier = "Tier";
-			Output = "Output";
-			ResourcesConsumption = "Resources consumption";
-			PowerCapacity = "Power capacity";
-			PowerUpTime = "Power up time";
-			CoolDownTime = "Cool down time";
-			InsertPartToImprove = "Insert part to improve";
-			NoLifeSupportConnected = "No life support system connected";
-			NoPowerSupplyConnected = "No power supply system connected";
-			TotalOutput = "Total output";
-			TotalConsumption = "Total consumption";
-			TotalCapacity = "Total capacity";
-			UnauthorizedAccess = "Unauthorized access";
-			Attached = "Attached";
-			TransferResources = "Transfer resources";
-			BaseConsumption = "Base consumption";
-			Canister = "Canister";
-			Generator = "Generator";
-			RequiredResources = "Required resources";
-			Jettison = "Jettison";
-			InsertItem = "Insert item";
-			From = "From";
-			To = "To";
-			Craft = "Craft";
-			Danger = "Danger!";
-			ChooseAnItemToCraft = "Choose an item to craft";
-			RemoveItem = "Remove item";
-			ChooseAnItem = "Choose an item";
-			NotEnoughResources = "Not enough resources";
-			NoPower = "No power";
-			RecyclingOutput = "Recycling output";
-			VolumetricLighting = "Volumetric lighting";
-			NoAirTankAvailable = "No air tank available";
-			UnableToDepressurize = "Unable to depressurize";
-			UnableToPressurize = "Unable to pressurize";
-			AirCapacity = "Air capacity";
-			ConnectedLifeSupportSystems = "Connected life support systems";
-			ConnectedPowerSupplySystems = "Connected power supply systems";
-			ConnectedVessels = "Connected vessels";
-			SunExposure = "Sun exposure";
-			ConnectedCargos = "Connected cargos";
-			VesselSystems = "Vessel systems";
-			NoFabricatorAvailable = "No fabricator available";
-			TransferFrom = "Transfer from";
-			TransferTo = "Transfer to";
-			NoSunExposure = "No sun exposure";
-			ModuleVolume = "Module volume";
-			FilteringRate = "Filtering rate";
-			DragResourcesForCrafting = "Drag resources for crafting";
-			JoinHellionOnDiscord = "Join hellion \non discord";
-			AirLockcontrols = "Airlock controls";
-			LifeSupportInfo =
-				"Maintains breathable conditions on ships and stations by generating air to increase room pressure and by filtering existing air to improve air quality. It consists of Air Generator sub-system, Air Tank and Air Filter sub-system.";
-			AirGeneratorDescription =
-				"Air generator consumes <color=#ACAE15>power</color>, <color=#0DC2CC>oxygen</color> and <color=#28C066>nitrogen</color> to generate air for air tank.";
-			AirFilterDescription =
-				"Air filter consumes <color=#ACAE15>power</color>, <color=#0DC2CC>oxygen</color> or carbon filter to replenish air quality.";
-			AirTankDescription =
-				"Air tank serves as <color=#0DC2CC>air</color> storage for pressurizing and depressurizing rooms.";
-			VolumeDescription = "Maximum air volume of room";
-			PressurizeDescription = "Pressurize from air tank";
-			DepressurizeDescription = "Depressurize to air tank";
-			VentActionDescription = "Vents air to outer space";
-			PowerSupplySystem = "Power supply system";
-			PowerSupplyInfo =
-				"System is in charge of generating power for ships and stations. Its main components are Solar panels, Fusion Reactor and a Capacitor.";
-			CapacitorDescription =
-				"Capacitor acts as a battery and stores any excess <color=#ACAE15>power</color> that your ship/station is not using and allows operation of systems with extreme <color=#EA4141>power requirements</color>.";
-			SolarPanelDescription =
-				"Solar Panels utilize sunlight to generate <color=#ACAE15>power</color>. Their efficiency depends on the distance from the <color=#FF9C5C>sun</color>.";
-			FusionReactorDescription = "Fusion Reactor consumes <color=#88498B>Helium-3</color> to generate power.";
-			CurrentVesselConsumtion = "Current vessel consumption";
-			ConnectedVesselDescription =
-				"Docked vessel list shows all docked ships and modules along with their current <color=#EA4141>power consumption</color> values. All vessels have a base or minimum <color=#EA4141>power requirement</color> before any of their systems can be activated.";
-			ToggleBaseConsumption = "Toggle base consumption";
-			Ammo = "Ammo";
-			Suits = "Suits";
-			Rifles = "Rifles";
-			Handguns = "Handguns";
-			Grenades = "Grenades";
-			Helmets = "Helmets";
-			ToggleGravity = "Toggle artificial gravity";
-			AirTankNotConnected = "Air tank not connected";
-			ExitCryo = "Exit cryopod";
-			EnterCryo = "Enter cryopod";
-			RecyclerSlot = "Recycler slot";
-			ResearchSlot = "Research slot";
-			Piloting = "Pilot Ship";
-			ServerRestartIn = "Server restart in";
-			EngineNotAvailable = "Engine not available";
-			CargoFull = "Cargo full";
-			SaveGame = "Quick save";
-			LoadGame = "Quick load";
-			Console = "Console";
-			Items = "Items";
-			Modules = "Modules";
-			CommandList = "Command list";
-			Medpack = "Medpack";
-			SmallItems = "Small Items";
-			MediumItems = "Medium Items";
-			LargeItems = "Large Items";
-			BasketballHoop = "Basketball Hoop";
-			AmbienceVolume = "Ambience volume";
-			Consumable = "Consumable";
-			Hands = "Hands";
-			Helmet = "Helmet";
-			Outfit = "Outfit";
-			Primary = "Primary";
-			Secondary = "Secondary";
-			Utility = "Utility";
-			Tool = "Tool";
-			ResearchRequired = "Research required";
-			AllTiersUnlocked = "All tiers unlocked";
-			FurtherResearchRequired = "Further research required to unlock all tiers";
-			Radiation = "Radiation";
-			SystemFailiure = "System failure";
-			Researching = "Researching";
-			Recycling = "Recycling";
-			Weapons = "Weapons";
-			Tools = "Tools";
-			Parts = "Parts";
-			Medical = "Medical";
-			General = "General";
-			Magazines = "Magazines";
-			Containers = "Containers";
-			CellConsumption = "Cell consumption";
-			ZeroGravityMovement = "Zero gravity movement tips";
-			Rotation = "Rotation";
-			SlotFor = "Slot for";
-			MultipleItems = "Multiple items";
-			CargoAttachPoint = "Cargo attach point for canister, jetpack, welding tool or fire extinguisher";
-			PowerRechargeStation = "Power recharge station for rifle, battery or jetpack";
-			DockingPanel = "Docking panel controls";
-			CryoPanel = "Cryo chamber panel controls";
-			CargoPanel = "Cargo panel controls";
-			LifeSupportPanel = "Life support panel controls";
-			PowerSupplyPanel = "Power supply panel controls";
-			AirlockPanel = "Airlock panel controls";
-			NavigationPanel = "Navigation panel";
-			DockingPortController = "Docking port controller";
-			HackingDescription = "Use hacking tool to open door";
-			PullToUndock = "Pull to undock";
-			CapacitorTitle = Capacitor;
-			PowerOutputTitle = PowerOutput;
-			PowerConsumptionTitle = PowerConsumption;
-			ChangeRateTitle = Capacitor;
-			AirTankTitle = AirTank;
-			ServoMotorTitle = ServoMotor;
-			ResourceInjectorTitle = ResourceInjector;
-			CarbonFilterTitle = CarbonFilters;
-			CatalystTitle = ThermonuclearCatalyst;
-			CapacitorTooltip = CapacitorDescription;
-			SunExposureTitle = SunExposure;
-			ChangeRateOxygenTitle = Oxygen;
-			ChangeRateNitorgenTitle = Nitrogen;
-			HeliumChangeRateTitle = Helium3;
-			SunExposureRateTitle = SunExposure;
-			PowerOutputTooltip = "Current output of power";
-			PowerConsumptionTooltip = "Current consumption of power";
-			ChangeRateTooltip = "Charge rate";
-			AirTankTooltip = AirTankDescription;
-			VesselsOutputTooltip = "Connected vessels";
-			SelectedVesselTooltip = "Selected vessel";
-			ServoMotorTooltip = "Reduces power consumption";
-			ResourceInjectorTooltip = "Reduces oxygen, nitrogen and helium-3 consumption";
-			CarbonFilterTooltip = "Reduces oxygen consumption to 0";
-			CatalystTooltip = "Increases power output";
-			SunExposureTooltip = "It affects output based on distance from the sun.";
-			ManeuverTimeTitle = "Maneuver time";
-			ManeuverTimeTooltip = "Adjust maneuver time";
-			WarpPowerTitle = "Power for warp";
-			WarpPowerTooltip = "Store enough power for warp drive";
-			WarpCellsTitle = "Warp cells";
-			WarpCellsTooltip = "Get enough fuel in warp cells for warp drive";
-			DockedVesselsTitle = "Docked vessels";
-			DockedVesselsTooltip = "Do not exceed maximum number of docked vessels in order to warp";
-			ScanButtonTitle = "Scan action";
-			ScanButtonTooltip = "Scan objects around your vessel";
-			VesselPowerTitle = "Vessel power";
-			VesselPowerTooltip = "Turn on vessel power";
-			RentYourOwnServer = "Rent your own server";
-			VesselPowerOffline = "Vessel power offline";
-			DoorOpenWarningTitle = "Warning door open";
-			DoorOpenWarningTooltip = "Can't pressurize while outer door is open";
-			Warning = "Warning";
-			ChangeRateOxygenTooltip = "Oxygen consumption rate";
-			ChangeRateNitrogenTooltip = "Nitrogen consumption rate";
-			HeliumChangeRateTootlip = "Helium-3 consumption rate";
-			SunExposureRateTootlip = "Sun exposure efficiency";
-			InGameDescription = "Playing on server";
-			OrbitingNear = "Orbiting near";
-			WarpingNear = "Warping near";
-			FloatingFreelyNear = "Floating freely near";
-			TeleportingFromDiscord = "Teleporting from Discord";
-			GravityInfluenceRadius = "Gravity Influence Radius";
-			Radius = "Radius";
-			MultipleObjects = "Multiple objects";
-			ObjectsInGroup = "Objects in group";
-			DefaultMapAsteroidDescription = "Visit Asteroid to mine resources.";
-			DefauldMapCelestialDescription = "Add Custom Orbit to visit this planet.";
-			CustomOrbitDescription = "Use MANIPULATORS to edit the orbit, or enter COORDINATES manually.";
-			AltCorp_Shuttle_SARA = "Arges MkII";
-			AltCorp_Shuttle_CECA = "Steropes";
-			AltCorp_CorridorModule = "Corridor I";
-			AltCorp_CorridorIntersectionModule = "Corridor T";
-			AltCorp_Corridor45TurnModule = "Corridor L";
-			AltCorp_Corridor45TurnRightModule = "Corridor L";
-			AltCorp_CorridorVertical = "Corridor S";
-			ALtCorp_PowerSupply_Module = "Power Supply Module";
-			AltCorp_LifeSupportModule = "Life Support Module";
-			AltCorp_Cargo_Module = "Cargo Module";
-			AltCorp_Command_Module = "Command Module";
-			AltCorp_StartingModule = "Hibernation Module";
-			AltCorp_AirLock = "Airlock Module";
-			AltCorp_DockableContainer = "Industrial Container";
-			AltCorp_CrewQuarters_Module = "Crew Quarters Module";
-			AltCorp_SolarPowerModule = "Solar Power Module";
-			AltCorp_FabricatorModule = "Fabricator Module";
-			SmallOutpost = "Small outpost";
-			MediumOutpost = "Medium outpost";
-			LargeOutpost = "Large outpost";
-			SmallStation = "Small station";
-			MediumStation = "Medium station";
-			LargeStation = "Large station";
-			AlreadyEquipped = "Already equipped";
-			EquipSuitFirst = "Equip suit first";
-			Error = "Error";
-			RemoveOutfitTooltip = "You must remove helmet and jetpack first";
-			Load = "Load";
-			LootAll = "Loot all";
-			Journal = "Journal";
-			Blueprints = "Blueprints";
-			NoSuitEquipped = "No suit equipped";
-			NoLogAvailable = "No log available";
-			ToggleTracking = "ToggleTracking";
-			Tracking = "Tracking";
-			ProximityLoot = "Proximity loot";
-			Drop = "Drop";
-			Loot = "Loot";
-			TakeAll = "Take all";
-			ShowContainerSlots = "Show container slots";
-			NoMagazine = "No magazine";
-			FireMode = "Fire mode";
-			AutoFireMode = "Auto";
-			SingleFireMode = "Single";
-			FireType = "Fire type";
-			ArmorPiercingFireType = "Armor piercing";
-			FragmentationFireType = "Fragmentation";
-			IncediaryFireType = "Incediary";
-			NormalFireType = "Normal";
-			PleaseAssignAllControls = "Please assign all controls";
-			DataPrivacySettings = "Data privacy settings";
-			Edit = "Edit";
-			ServerInfo = "Server info";
-			ExternalBrowserPage = "This will open an external browser page";
-			Refill = "Refill";
-			Roll = "Roll";
-			HideTipsFromMenu = "You can hide tips from settings menu";
-			ChangeTargetPort = "Change target port";
-			ChangeTarget = "Change target";
-			ToggleEngine = "Toggle engine";
-			MatchTargetsVelocity = "Match target velocity";
-			CollisionWarning = "Collision warning";
-			OffSpeedAssistant = "Toggle off speed assistance";
-			ChangeRadarRange = "Change radar range";
-			OffTarget = "Off target";
-			NoTargetModulesInRange = "Unauthorized access to target modules or out of range";
-			CreateCharacterLore =
-				"The industrialists behind the Expedition project, the Altair Corporation was one of the largest groups involved in the colonization of Hellion second only to UN Government. It was responsible for the production of majority of resources as well as orbital construction from shipyards and refineries to large habitats.\n\nLike the company itself, their equipment is exceptionally robust and flexible. Their ships are among the most versatile in Hellion and can usually fit any role from mining and exploration to military applications. If you want something built safe and reliable, you can\ufffdt go wrong with Alt-Corp!";
-			RcsCancelManeuver = "Using RCS thrusters will cancel warp maneuver!";
-			QuestTerminalHint = "Check quest terminal for new available quests";
-			ToBeContinued = "To be continued";
-			WrongSavegameVersion = "Wrong savegame version";
-			Battery = "Battery";
-			BatteryMissing = "Battery missing";
-			OutOfRange = "Out of range";
-			NotScannable = "Not scannable object";
-			ScanningRange = "Scanning range";
-			Low = "Low";
-			Medium = "Medium";
-			High = "High";
-			Unknown = "Unknown";
-			Armor = "Armor";
-			UsesLeft = "Uses left";
-			UnknownObject = "Unknown object";
-			Equipment = "Equipment";
-			ResourcesLabel = "Resources";
-			Networking = "Networking";
-			Sent = "Sent";
-			Received = "Received";
-			Reset = "Reset";
-			TowingDisabled = "Towing disabled";
-			NoDockedVessels = "No docked vessels";
-			WarpSignature = "Warp signature";
-			WarpSignatureDescription = "Warp signature detected. Further investigation required.";
-			UnidentifiedObject = "Unidentified object";
-			UnidentifiedObjectDescription = "Unidentified object detected. Further investigation required.";
-			NoPart = "No part";
-			PossibleContacts = "Possible contacts";
-			RadarSignature = "Radar signature";
-			SpawnMiningDescription = "Start with a ship and basic equipment close to a random ore rich asteroid";
-			SpawnFreeRoamDescription = "Start with a ship and basic equipment on a random stable orbit";
-			SpawnPremadeStationDescription = "Start with a ship and basic equipment close to a random pre-made station";
-			SpawnDoomedDescription =
-				"Start with a ship and basic equipment on a collision orbit close to a Doomed outpost";
-			FreeRoamSteropes = "New free roam Steropes";
-			FreeRoamSteropesDescription = SpawnFreeRoamDescription;
-			MiningSteropes = "New mining Steropes";
-			MiningSteropesDescription = SpawnMiningDescription;
-			SteropesNearRandomStation = "New Steropes near random station";
-			SteropesNearRandomStationDescription = SpawnPremadeStationDescription;
-			SteropesNearDoomedOutpost = "New Steropes near doomed outpost";
-			SteropesNearDoomedOutpostDescription = SpawnDoomedDescription;
-			MiningArges = "New mining Arges";
-			MiningArgesDescription = SpawnMiningDescription;
-			FreeRoamArges = "New free roam Arges";
-			FreeRoamArgesDescription = SpawnFreeRoamDescription;
-			PressForInventory = "Press [TAB] to access inventory";
-			PressForLights = "Press [L] to toggle lights";
-			RotationControls = "In zero-g use [Q] and [E] to rotate";
-			HoldToStabilize = "Hold [SHIFT] to stabilize rotation and grab onto nearby walls";
-			UseResourceCanister =
-				"Place Resource Canister into hands and press [LMB] to refill your Jetpack with Oxygen";
-			AssignOnCryo = "Assign on cryopod to make it your default spawn point";
-			DragItemToHands = "Press [TAB] and drag item to hands slot in order to use it";
-			WelderTooltip = "Welder can be used to fix both internal and external hull damage";
-			PressForNavigation = "Press [2] to activate navigation screen";
-			AvailableQuests = "Available quests";
-			QuestActivated = "Quest activated";
-			QuestUpdated = "Quest updated";
-			QuestCompleted = "Quest completed";
-			QuestFailed = "Quest failed";
-			Objectives = "Objectives";
-			QuestLog = "Quest log";
-			SystemNothing = "I have to say nothing";
-			SystemUnstable = "Outpost - {0}, {1}, unstable orbit, collision in {2}";
-			SystemShipCalled = "Ship is already called.";
-			SystemShipInRange = "Ship is already in range.";
-			SystemShipArrive = "Ship will arrive in {0}";
-			SystemServerRestart = "Server will restart in {0} {1}";
-			NoNakamaConnection = "Encountered error when trying to connect to server. Check your internet connection.";
-			NoServerConnection = "Server refused connection. Please try again later.";
-			AccountNotFound = "Account with this email or username doesn't exist.";
-			AccountAlreadyExists = "Account with this email or username already exists.";
-			InvalidEmail = "Email is invalid. Should be written as example@mail.com";
-			InvalidUsername =
-				"Username is invalid. Valid characters are letters (a-z), numbers (0-9), full stops (.), and underscores (_).";
-			ConsentToDataStorage = "You need to give consent to storing data before you can create an account";
-			defaultValues = GetJsonString();
-			Initialize();
-			ControlsRebinder.Initialize();
 		}
 
 		private static void Initialize()
@@ -3398,7 +1937,7 @@ namespace ZeroGravity
 				{ GenericItemSubType.BrokenArmature, ScrapDescription },
 				{ GenericItemSubType.ShatteredPlating, ScrapDescription },
 				{ GenericItemSubType.FriedElectronics, ScrapDescription },
-				{ GenericItemSubType.DamagedTransmiter, ScrapDescription },
+				{ GenericItemSubType.DamagedTransmitter, ScrapDescription },
 				{ GenericItemSubType.RupturedInsulation, ScrapDescription },
 				{ GenericItemSubType.BurnedPDU, ScrapDescription },
 				{ GenericItemSubType.DiamondCoreDrillBit, DiamondCoreDescription }
@@ -3627,7 +2166,7 @@ namespace ZeroGravity
 				{ GenericItemSubType.BrokenArmature, BrokenArmature },
 				{ GenericItemSubType.ShatteredPlating, ShatteredPlating },
 				{ GenericItemSubType.FriedElectronics, FriedElectronics },
-				{ GenericItemSubType.DamagedTransmiter, DamagedTransmiter },
+				{ GenericItemSubType.DamagedTransmitter, DamagedTransmitter },
 				{ GenericItemSubType.RupturedInsulation, RupturedInsulation },
 				{ GenericItemSubType.BurnedPDU, BurnedPDU },
 				{ GenericItemSubType.DiamondCoreDrillBit, DiamondCore },
@@ -3727,23 +2266,23 @@ namespace ZeroGravity
 				{ ManeuverCourse.FeasibilityErrorType.FtlManeuverIndex, FTLManeuverIndex },
 				{ ManeuverCourse.FeasibilityErrorType.FtlOnline, FTLOffline },
 				{ ManeuverCourse.FeasibilityErrorType.ToManyDockedVessels, ToManyDockedVessels },
-				{ GameScenes.SceneID.AltCorp_Shuttle_SARA, AltCorp_Shuttle_SARA },
-				{ GameScenes.SceneID.AltCorp_Shuttle_CECA, AltCorp_Shuttle_CECA },
-				{ GameScenes.SceneID.AltCorp_CorridorModule, AltCorp_CorridorModule },
-				{ GameScenes.SceneID.AltCorp_CorridorIntersectionModule, AltCorp_CorridorIntersectionModule },
-				{ GameScenes.SceneID.AltCorp_Corridor45TurnModule, AltCorp_Corridor45TurnModule },
-				{ GameScenes.SceneID.AltCorp_Corridor45TurnRightModule, AltCorp_Corridor45TurnRightModule },
-				{ GameScenes.SceneID.AltCorp_CorridorVertical, AltCorp_CorridorVertical },
-				{ GameScenes.SceneID.ALtCorp_PowerSupply_Module, ALtCorp_PowerSupply_Module },
-				{ GameScenes.SceneID.AltCorp_LifeSupportModule, AltCorp_LifeSupportModule },
-				{ GameScenes.SceneID.AltCorp_Cargo_Module, AltCorp_Cargo_Module },
-				{ GameScenes.SceneID.AltCorp_Command_Module, AltCorp_Command_Module },
-				{ GameScenes.SceneID.AltCorp_StartingModule, AltCorp_StartingModule },
-				{ GameScenes.SceneID.AltCorp_AirLock, AltCorp_AirLock },
-				{ GameScenes.SceneID.AltCorp_DockableContainer, AltCorp_DockableContainer },
-				{ GameScenes.SceneID.AltCorp_CrewQuarters_Module, AltCorp_CrewQuarters_Module },
-				{ GameScenes.SceneID.AltCorp_SolarPowerModule, AltCorp_SolarPowerModule },
-				{ GameScenes.SceneID.AltCorp_FabricatorModule, AltCorp_FabricatorModule },
+				{ GameScenes.SceneId.AltCorp_Shuttle_SARA, AltCorp_Shuttle_SARA },
+				{ GameScenes.SceneId.AltCorp_Shuttle_CECA, AltCorp_Shuttle_CECA },
+				{ GameScenes.SceneId.AltCorp_CorridorModule, AltCorp_CorridorModule },
+				{ GameScenes.SceneId.AltCorp_CorridorIntersectionModule, AltCorp_CorridorIntersectionModule },
+				{ GameScenes.SceneId.AltCorp_Corridor45TurnModule, AltCorp_Corridor45TurnModule },
+				{ GameScenes.SceneId.AltCorp_Corridor45TurnRightModule, AltCorp_Corridor45TurnRightModule },
+				{ GameScenes.SceneId.AltCorp_CorridorVertical, AltCorp_CorridorVertical },
+				{ GameScenes.SceneId.ALtCorp_PowerSupply_Module, ALtCorp_PowerSupply_Module },
+				{ GameScenes.SceneId.AltCorp_LifeSupportModule, AltCorp_LifeSupportModule },
+				{ GameScenes.SceneId.AltCorp_Cargo_Module, AltCorp_Cargo_Module },
+				{ GameScenes.SceneId.AltCorp_Command_Module, AltCorp_Command_Module },
+				{ GameScenes.SceneId.AltCorp_StartingModule, AltCorp_StartingModule },
+				{ GameScenes.SceneId.AltCorp_AirLock, AltCorp_AirLock },
+				{ GameScenes.SceneId.AltCorp_DockableContainer, AltCorp_DockableContainer },
+				{ GameScenes.SceneId.AltCorp_CrewQuarters_Module, AltCorp_CrewQuarters_Module },
+				{ GameScenes.SceneId.AltCorp_SolarPowerModule, AltCorp_SolarPowerModule },
+				{ GameScenes.SceneId.AltCorp_FabricatorModule, AltCorp_FabricatorModule },
 				{ WeaponMod.FireMode.Auto, AutoFireMode },
 				{ WeaponMod.FireMode.Single, SingleFireMode },
 				{ InventorySlot.Group.Ammo, Ammo },
@@ -3758,11 +2297,31 @@ namespace ZeroGravity
 				{ InventorySlot.Group.Utility, Utility }
 			};
 
-			CanvasManagerLocalization = new Dictionary<string, string>
+			MainMenuLocalisation = new Dictionary<string, string>
 			{
-				{ "MultiplayerText", Multiplayer.ToUpper() },
 				{ "NameText", Name.ToUpper() },
 				{ "JoinDiscordText", JoinDiscord.ToUpper() },
+				{ "BackText", Back.ToUpper() },
+				{ "CancelText", Cancel.ToUpper() },
+				{ "CharacterText", Character.ToUpper() },
+				{ "ChooseStartingPointText", ChooseStartingPoint.ToUpper() },
+				{ "ConfirmText", Confirm.ToUpper() },
+				{ "CreateCharacterText", CreateCharacter.ToUpper() },
+				{ "DisclaimerText", Disclaimer },
+				{ "KeyText", Key },
+				{ "PlayText", Play.ToUpper() },
+				{ "QuitText", Quit.ToUpper() },
+				{ "SettingsText", Settings.ToUpper() },
+				{ "PressAnyKeyText", PressAnyKeyToContinue.ToUpper() },
+				{ "ReadMoreText", ReadMore.ToUpper() },
+				{ "LatestNewsText", LatestNews.ToUpper() },
+				{ "DisconnectedText", Disconnected.ToUpper() },
+				{ "ConnectionErrorText", ConnectionError.ToUpper() },
+				{ "ConnectingToInviteText", ConnectingToInvite.ToUpper() },
+			};
+
+			InGameGUILocalisation = new Dictionary<string, string>
+			{
 				{ "ActionsText", Actions.ToUpper() },
 				{ "MovementText", Movement.ToUpper() },
 				{ "ShipText", Ship.ToUpper() },
@@ -3776,31 +2335,18 @@ namespace ZeroGravity
 				{ "AntiAliasingText", AntiAliasing.ToUpper() },
 				{ "AudioText", Audio.ToUpper() },
 				{ "AutoStabilizationText", AutoStabilization.ToUpper() },
-				{ "BackText", Back.ToUpper() },
 				{ "BasicVideoSettingsText", BasicVideoSettings.ToUpper() },
 				{ "BasicAudioSettingsText", BasicAudioSettings.ToUpper() },
 				{ "BloomText", Bloom.ToUpper() },
-				{ "CancelText", Cancel.ToUpper() },
-				{ "CharacterText", Character.ToUpper() },
-				{ "ChooseStartingPointText", ChooseStartingPoint.ToUpper() },
 				{ "ChromaticAberrationText", ChromaticAberration.ToUpper() },
-				{ "CommunityText", Community.ToUpper() },
 				{ "ConfirmText", Confirm.ToUpper() },
 				{ "ControlsText", Controls.ToUpper() },
-				{ "CreateCharacterText", CreateCharacter.ToUpper() },
-				{ "CurrentServerText", CurrentServer.ToUpper() },
 				{ "DefaultText", Default.ToUpper() },
-				{ "DisclaimerText", Disclaimer },
 				{ "EADisclaimerText", EADisclaimer },
 				{ "EnterCustomBoxNameText", EnterCustomBoxName.ToUpper() },
-				{ "EnterPasswordText", EnterPassword.ToUpper() },
 				{ "ExitText", Exit.ToUpper() },
 				{ "EyeAdaptationText", EyeAdaptation.ToUpper() },
-				{ "F1ForHelpText", F1ForHelp.ToUpper() },
-				{ "FavoritesText", Favorites.ToUpper() },
-				{ "FreshStartText", FreshStart },
 				{ "FullscreenText", FullScreen.ToUpper() },
-				{ "FullText", Full },
 				{ "GameSettingsText", GameSettings.ToUpper() },
 				{ "GeneralSettingsText", GeneralSettings.ToUpper() },
 				{ "GlossaryText", Glossary.ToUpper() },
@@ -3808,29 +2354,15 @@ namespace ZeroGravity
 				{ "HideTipsText", HideTips.ToUpper() },
 				{ "HideTutorialText", HideTutorial.ToUpper() },
 				{ "InteractText", Interact },
-				{ "KeyText", Key },
 				{ "LoadingText", Loading.ToUpper() },
-				{ "LogoutText", Logout.ToUpper() },
-				{ "MainMenuText", MainMenu.ToUpper() },
 				{ "MasterVolumeText", MasterVolume.ToUpper() },
 				{ "MotionBlurText", MotionBlur.ToUpper() },
-				{ "OfficialText", Official.ToUpper() },
 				{ "OptionsText", Options.ToUpper() },
-				{ "PingText", Ping.ToUpper() },
-				{ "PlayText", Play.ToUpper() },
-				{ "PlayersText", Players.ToUpper() },
-				{ "PreAplhaText", PreAplha },
 				{ "QualityText", Quality.ToUpper() },
-				{ "QuitText", Quit.ToUpper() },
-				{ "RefreshText", Refresh.ToUpper() },
 				{ "ResolutionText", Resolution.ToUpper() },
 				{ "RespawnText", Respawn.ToUpper() },
 				{ "ResumeText", Resume.ToUpper() },
-				{ "SaveText", Save.ToUpper() },
-				{ "SearchText", Search.ToUpper() },
-				{ "ServerBrowserText", ServerBrowser.ToUpper() },
 				{ "ServerText", Server.ToUpper() },
-				{ "SettingsText", Settings.ToUpper() },
 				{ "ShadowsText", Shadows.ToUpper() },
 				{ "ShipSettingsText", ShipSettings.ToUpper() },
 				{ "ShowCrosshairText", ShowCrosshair.ToUpper() },
@@ -3840,50 +2372,29 @@ namespace ZeroGravity
 				{ "SensitivityText", Sensitivity.ToUpper() },
 				{ "InvertMouseWhileDrivingText", InvertMouseWhileDriving.ToUpper() },
 				{ "InvertMouseText", InvertMouse.ToUpper() },
-				{ "UnderstandText", Understand.ToUpper() },
 				{ "UseText", Use },
 				{ "UsernameText", Username },
-				{ "VSyncText", VSync },
 				{ "VideoText", Video.ToUpper() },
 				{ "VoiceVolumeText", VoiceVolume.ToUpper() },
-				{ "WelcomeText", Welcome.ToUpper() },
 				{ "PressAnyKeyText", PressAnyKeyToContinue.ToUpper() },
 				{ "KeyboardSettingsText", KeyboardSettings.ToUpper() },
-				{ "LanguageSettingsText", LanguageSettings.ToUpper() },
 				{ "ChooseLanguageText", ChooseLanguage.ToUpper() },
 				{ "ReportServerText", ReportServer.ToUpper() },
 				{ "OtherText", Other.ToUpper() },
 				{ "SendReportText", SendReport.ToUpper() },
-				{ "DeleteCharacterText", DeleteCharacter.ToUpper() },
 				{ "ReportText", ReportServer.ToUpper() },
-				{ "ConnectText", Connect.ToUpper() },
-				{ "ReadMoreText", ReadMore.ToUpper() },
-				{ "LatestNewsText", LatestNews.ToUpper() },
-				{ "ServerSettingsText", ServerSettings.ToUpper() },
 				{ "PlayerSettingsText", PlayerSettings.ToUpper() },
 				{ "GlobalSettingsText", GlobalSettings.ToUpper() },
-				{ "DisconectedText", Disconnected.ToUpper() },
-				{ "ConnectionErrorText", ConnectionError.ToUpper() },
-				{ "SystemErrorText", SystemError.ToUpper() },
 				{ "UnavailableFromInGameMenuText", UnavailableFromInGameMenu.ToUpper() },
-				{ "ConnectingToInviteText", ConnectingToInvite.ToUpper() },
 				{ "RecyclingOutputText", RecyclingOutput.ToUpper() },
 				{ "VolumetricLightingText", VolumetricLighting.ToUpper() },
-				{ "JoinHellionOnDiscordText", JoinHellionOnDiscord.ToUpper() },
 				{ "ServerRestartInText", ServerRestartIn.ToUpper() },
-				{ "RentYourOwnServerText", RentYourOwnServer.ToUpper() },
-				{ "SaveGameText", SaveGame.ToUpper() },
-				{ "LoadGameText", LoadGame.ToUpper() },
 				{ "ConsoleText", Console.ToUpper() },
 				{ "ItemsText", Items.ToUpper() },
 				{ "ModulesText", Modules.ToUpper() },
 				{ "CommandListText", CommandList.ToUpper() },
-				{ "LoadText", Load.ToUpper() },
-				{ "DataPrivacySettingsText", DataPrivacySettings.ToUpper() },
-				{ "EditText", Edit.ToUpper() },
 				{ "ServerInfoText", ServerInfo.ToUpper() },
 				{ "AmbienceVolumeText", AmbienceVolume.ToUpper() },
-				{ "ExternalBrowserPageText", ExternalBrowserPage.ToUpper() },
 				{ "RollText", Roll.ToUpper() },
 				{ "HideTipsFromMenuText", HideTipsFromMenu.ToUpper() },
 				{ "CreateCharacterLoreText", CreateCharacterLore },
@@ -3896,19 +2407,12 @@ namespace ZeroGravity
 				{ "NoJetpackText", Jetpack.ToUpper() + " " + Missing.ToUpper() },
 				{ "WarningText", Warning.ToUpper() },
 				{ "PressureText", Pressure.ToUpper() },
-				{ "SuitPowerText", SuitPower.ToUpper() },
-				{ "StabilizationText", Stabilization.ToUpper() },
 				{ "LateralText", HelmetOffSpeed.ToUpper() },
 				{ "DirectionalText", HelmetOnSpeed.ToUpper() },
-				{ "JetpackOfflineText", JetpackOffline.ToUpper() },
-				{ "OxygenLowText", OxygenLow.ToUpper() },
-				{ "SelectionText", Selection.ToUpper() },
 				{ "ZeroGravityMovementText", ZeroGravityMovement.ToUpper() },
 				{ "UpText", Up.ToUpper() },
 				{ "DownText", Down.ToUpper() },
 				{ "GrabStabilizeText", Grab.ToUpper() + " / " + Stabilization.ToUpper() },
-				{ "BatteryMissingText", BatteryMissing.ToUpper() },
-				{ "LootAllText", LootAll.ToUpper() },
 				{ "InventoryText", Inventory.ToUpper() },
 				{ "JournalText", Journal.ToUpper() },
 				{ "BlueprintsText", Blueprints.ToUpper() },
@@ -3917,10 +2421,8 @@ namespace ZeroGravity
 				{ "ToolsText", Tools.ToUpper() },
 				{ "UtilityText", Utility.ToUpper() },
 				{ "SuitsText", Suits.ToUpper() },
-				{ "MediacalText", Medical.ToUpper() },
 				{ "PartsText", Parts.ToUpper() },
 				{ "ContainersText", Containers.ToUpper() },
-				{ "ToggleTrackingText", ToggleTracking.ToUpper() },
 				{ "NoSuitEquippedText", NoSuitEquipped.ToUpper() },
 				{ "DropText", Drop.ToUpper() },
 				{ "RemoveOutfitText", RemoveOutfit.ToUpper() },
@@ -3931,7 +2433,8 @@ namespace ZeroGravity
 				{ "QuestTerminalHintText", QuestTerminalHint.ToUpper() },
 				{ "ToBeContinuedText", ToBeContinued.ToUpper() },
 				{ "EquipmentText", Equipment.ToUpper() },
-				{ "ResourcesText", ResourcesLabel.ToUpper() }
+				{ "ResourcesText", ResourcesLabel.ToUpper() },
+				{ "MedicalText", Medical.ToUpper() }
 			};
 
 			PanelsLocalization = new Dictionary<string, string>
@@ -3971,7 +2474,7 @@ namespace ZeroGravity
 				{ "CapacitorDescriptionText", CapacitorDescription },
 				{ "SolarPanelDescriptionText", SolarPanelDescription },
 				{ "FusionReactorDescriptionText", FusionReactorDescription },
-				{ "CurrentVesselConsumtionText", CurrentVesselConsumtion },
+				{ "CurrentVesselConsumptionText", CurrentVesselConsumtion },
 				{ "ConnectedVesselDescriptionText", ConnectedVesselDescription },
 				{ "ToggleBaseConsumptionText", ToggleBaseConsumption },
 				{ "LifeSupportPanelText", LifeSupportPanelLabel.ToUpper() },
@@ -4019,7 +2522,6 @@ namespace ZeroGravity
 				{ "NoSlotConnectionText", NothingConnectedToSlot.ToUpper() },
 				{ "OxygenText", Oxygen.ToUpper() },
 				{ "PropellantText", Propellant.ToUpper() },
-				{ "NoRafineryText", NoRafineryAvailable.ToUpper() },
 				{ "EnergyConsumptionText", EnergyConsumption.ToUpper() },
 				{ "ProcessingTimeText", ProcessingTime.ToUpper() },
 				{ "RefineText", Refine.ToUpper() },
@@ -4088,8 +2590,8 @@ namespace ZeroGravity
 				{ "DepressurizeDescriptionText", DepressurizeDescription.ToUpper() },
 				{ "VentActionDescriptionText", VentActionDescription.ToUpper() },
 				{ "HoldToStabilizeText", HoldToStabilize.ToUpper() },
-				{ "ObjectsInClusterText", ObjectsInGroup.ToUpper() },
-				{ "ObjectClusterText", MultipleObjects.ToUpper() },
+				{ "ObjectsInClusterText", ObjectsInCluster.ToUpper() },
+				{ "ObjectClusterText", ObjectCluster.ToUpper() },
 				{ "AddCustomOrbitText", AddCustomOrbit.ToUpper() },
 				{ "RemoveCustomOrbitText", RemoveOrbit.ToUpper() },
 				{ "WarpToObjectText", WarpTo.ToUpper() },
@@ -4110,7 +2612,7 @@ namespace ZeroGravity
 				{ "ActivationTimeText", ActivationTime.ToUpper() },
 				{ "ArrivalTimeText", ArrivalTime.ToUpper() },
 				{ "InitializeText", InitializeNavigation.ToUpper() },
-				{ "ClusterText", MultipleObjects.ToUpper() },
+				{ "ClusterText", ObjectCluster.ToUpper() },
 				{ "RcsCancelManeuverText", RcsCancelManeuver },
 				{ "UnstableOrbitText", UnstableOrbit.ToUpper() },
 				{ "ArgumentOfPeriapsisText", ArgumentOfPeriapsis.ToUpper() },
@@ -4192,18 +2694,6 @@ namespace ZeroGravity
 			};
 		}
 
-		public static void RevertToDefault()
-		{
-			try
-			{
-				ImportFromString(defaultValues);
-			}
-			catch (Exception ex)
-			{
-				Dbg.Error("Localization revert failed", ex.Message);
-			}
-		}
-
 		public static void ImportFromFile(string fileName)
 		{
 			try
@@ -4212,7 +2702,7 @@ namespace ZeroGravity
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error("Localization import failed", ex.Message);
+				Debug.LogError("Localization import failed " + ex.Message);
 			}
 		}
 
@@ -4225,7 +2715,7 @@ namespace ZeroGravity
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error("Localization import failed", ex.Message);
+				Debug.LogError("Localization import failed " + ex.Message);
 			}
 		}
 
@@ -4264,9 +2754,10 @@ namespace ZeroGravity
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error("Localization import failed", ex.Message);
+				Debug.LogError("Localization import failed " + ex.Message);
 			}
 		}
+
 
 		public static void SaveToFile(string fileName)
 		{
@@ -4276,7 +2767,7 @@ namespace ZeroGravity
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error("Localization save failed", ex.Message);
+				Debug.LogError("Localization import failed " + ex.Message);
 			}
 		}
 
@@ -4320,7 +2811,7 @@ namespace ZeroGravity
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error("Localization to string failed", ex.Message);
+				Debug.LogError("Localization import failed " + ex.Message);
 			}
 
 			return null;
@@ -4334,7 +2825,7 @@ namespace ZeroGravity
 			}
 			catch
 			{
-				return (!useDefault) ? null : fieldName;
+				return !useDefault ? null : fieldName;
 			}
 		}
 	}

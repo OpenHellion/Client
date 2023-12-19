@@ -9,7 +9,7 @@ using ZeroGravity.Objects;
 
 public class InventoryCharacterPreview : MonoBehaviour
 {
-	public static InventoryCharacterPreview instance;
+	public static InventoryCharacterPreview Instance;
 	public Transform CharacterTransform;
 	public Transform HandSlotTransform;
 	public GameObject ItemInHands;
@@ -34,9 +34,9 @@ public class InventoryCharacterPreview : MonoBehaviour
 
 	private void Awake()
 	{
-		if (instance == null)
+		if (Instance == null)
 		{
-			instance = this;
+			Instance = this;
 		}
 
 		animOverride = new AnimatorOverrideController();

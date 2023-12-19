@@ -12,34 +12,29 @@ namespace OpenHellion.IO
 			Indented = 1
 		}
 
-		private static readonly AuxDataJsonConverter s_auxConverter = new AuxDataJsonConverter();
+		private static readonly AuxDataJsonConverter AuxConverter = new();
 
-		private static readonly AttachPointDataJsonConverter
-			s_attachPointConverter = new AttachPointDataJsonConverter();
+		private static readonly AttachPointDataJsonConverter AttachPointConverter = new();
 
 		public static T LoadPersistent<T>(string filename)
 		{
 			return JsonConvert.DeserializeObject<T>(
-				File.ReadAllText(Path.Combine(Application.persistentDataPath, filename)),
-				new JsonConverter[2] { s_auxConverter, s_attachPointConverter });
+				File.ReadAllText(Path.Combine(Application.persistentDataPath, filename)), AuxConverter, AttachPointConverter);
 		}
 
 		public static T LoadResource<T>(string resourcePath)
 		{
-			return JsonConvert.DeserializeObject<T>(Resources.Load(resourcePath).ToString(),
-				new JsonConverter[2] { s_auxConverter, s_attachPointConverter });
+			return JsonConvert.DeserializeObject<T>(Resources.Load(resourcePath).ToString(), AuxConverter, AttachPointConverter);
 		}
 
 		public static T LoadDataPath<T>(string filePath)
 		{
-			return JsonConvert.DeserializeObject<T>(File.ReadAllText(Path.Combine(Application.dataPath, filePath)),
-				new JsonConverter[2] { s_auxConverter, s_attachPointConverter });
+			return JsonConvert.DeserializeObject<T>(File.ReadAllText(Path.Combine(Application.dataPath, filePath)), AuxConverter, AttachPointConverter);
 		}
 
 		public static T Load<T>(string filePath)
 		{
-			return JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath),
-				new JsonConverter[2] { s_auxConverter, s_attachPointConverter });
+			return JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath), AuxConverter, AttachPointConverter);
 		}
 
 		public static string Serialize(object obj, Formatting format = Formatting.Indented)
@@ -49,8 +44,7 @@ namespace OpenHellion.IO
 
 		public static T Deserialize<T>(string jsonString)
 		{
-			return JsonConvert.DeserializeObject<T>(jsonString,
-				new JsonConverter[2] { s_auxConverter, s_attachPointConverter });
+			return JsonConvert.DeserializeObject<T>(jsonString, AuxConverter, AttachPointConverter);
 		}
 
 		public static void SerializePersistent(object obj, string fileName, Formatting format = Formatting.Indented)

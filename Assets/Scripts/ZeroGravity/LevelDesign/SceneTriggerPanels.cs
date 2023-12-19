@@ -10,15 +10,12 @@ namespace ZeroGravity.LevelDesign
 	{
 		[SerializeField] private VesselSystem _baseVesselSystem;
 
-		public override bool ExclusivePlayerLocking
-		{
-			get { return false; }
-		}
+		public override bool ExclusivePlayerLocking => false;
 
 		public VesselSystem BaseVesselSystem
 		{
-			get { return _baseVesselSystem; }
-			set { _baseVesselSystem = value; }
+			get => _baseVesselSystem;
+			set => _baseVesselSystem = value;
 		}
 
 		protected override void Start()
@@ -43,7 +40,7 @@ namespace ZeroGravity.LevelDesign
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error(ex.Message, ex.StackTrace);
+				Debug.LogException(ex);
 			}
 		}
 	}

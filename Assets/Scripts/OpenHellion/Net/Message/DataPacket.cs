@@ -20,7 +20,7 @@ using OpenHellion.IO;
 namespace OpenHellion.Net.Message
 {
 	/// <summary>
-	/// 	Object that can be sent and recieved by the main server API.
+	/// 	Object that can be sent and received by the main server API.
 	/// </summary>
 	public class DataPacket
 	{

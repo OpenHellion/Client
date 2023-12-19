@@ -107,10 +107,7 @@ namespace ZeroGravity.Objects
 
 			if (TransitionTrigger == null)
 			{
-				Dbg.Error("Transition trigger not set for dynamic object", base.name, base.gameObject.scene,
-					(!(GetComponentInParent<GeometryRoot>() != null))
-						? null
-						: GetComponentInParent<GeometryRoot>().gameObject);
+				Debug.LogError("Transition trigger not set for dynamic object" + base.name + base.gameObject.scene);
 			}
 
 			base.gameObject.SetLayerRecursively(LayerMask.NameToLayer("DynamicObject"), "FirstPerson", "Triggers");
@@ -142,7 +139,7 @@ namespace ZeroGravity.Objects
 					dynamicObjectStatsMessage.Info.Stats = statsData;
 				}
 
-				NetworkController.Instance.SendToGameServer(dynamicObjectStatsMessage);
+				NetworkController.SendToGameServer(dynamicObjectStatsMessage);
 			}
 		}
 
@@ -209,8 +206,8 @@ namespace ZeroGravity.Objects
 				ArtificialBody parent = GetParent<ArtificialBody>();
 				if (parent == null)
 				{
-					Dbg.Error("Dynamic object exited vessel but we don't know from where.", base.GUID, Parent,
-						dosm.AttachData.ParentType, dosm.AttachData.ParentGUID);
+					Debug.LogError("Dynamic object exited vessel but we don't know from where. " + base.GUID + Parent +
+						dosm.AttachData.ParentType + dosm.AttachData.ParentGUID);
 					return;
 				}
 
@@ -295,13 +292,13 @@ namespace ZeroGravity.Objects
 			{
 				if (!(Parent is Pivot))
 				{
-					Dbg.Error("Entered vessel but we don't know from where.", base.GUID, Parent,
-						dosm.AttachData.ParentType, dosm.AttachData.ParentGUID);
+					Debug.LogError("Entered vessel but we don't know from where." + base.GUID + Parent +
+						dosm.AttachData.ParentType + dosm.AttachData.ParentGUID);
 					return;
 				}
 
 				World.SolarSystem.RemoveArtificialBody(Parent as Pivot);
-				UnityEngine.Object.Destroy(Parent.gameObject);
+				Destroy(Parent.gameObject);
 				Parent = World.GetVessel(dosm.AttachData.ParentGUID);
 				if (Item != null)
 				{
@@ -351,7 +348,7 @@ namespace ZeroGravity.Objects
 			dynamicObectMovementMessage.ImpactVelocity = ImpactVelocity;
 			dynamicObectMovementMessage.Timestamp = Time.fixedTime;
 			DynamicObectMovementMessage data = dynamicObectMovementMessage;
-			NetworkController.Instance.SendToGameServer(data);
+			NetworkController.SendToGameServer(data);
 			ImpactVelocity = 0f;
 			base.transform.hasChanged = false;
 		}
@@ -623,8 +620,8 @@ namespace ZeroGravity.Objects
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error(ex);
-				Dbg.Error("Could not find dynamic object with GUID {}, path {}", details.GUID, data.PrefabPath);
+				Debug.LogError(ex);
+				Debug.LogErrorFormat("Could not find dynamic object with GUID {0}, path {1}", details.GUID, data.PrefabPath);
 				return dynamicObject;
 			}
 		}
@@ -668,7 +665,7 @@ namespace ZeroGravity.Objects
 					: (Parent as SpaceObjectVessel).MainVessel);
 				if (artificialBody == null)
 				{
-					Dbg.Error("Cannot exit vessel, cannot find parents artificial body", base.name, base.GUID);
+					Debug.LogErrorFormat("Cannot exit vessel, cannot find parents artificial body {0}, {1}", base.name, base.GUID);
 					return;
 				}
 
@@ -691,11 +688,11 @@ namespace ZeroGravity.Objects
 		{
 			if (IsAttached)
 			{
-				Dbg.Error("Attached object changed parent", Parent.GUID, Parent.Type, vessel.GUID, vessel.Type);
+				Debug.LogErrorFormat("Attached object changed parent {0}, {1}, {2}, {3}", Parent.GUID, Parent.Type, vessel.GUID, vessel.Type);
 			}
 
 			Parent = vessel;
-			base.transform.parent = vessel.TransferableObjectsRoot.transform;
+			transform.parent = vessel.TransferableObjectsRoot.transform;
 			SendStatsMessage(new DynamicObjectAttachData
 			{
 				ParentGUID = vessel.GUID,

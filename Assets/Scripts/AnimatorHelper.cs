@@ -362,7 +362,7 @@ public class AnimatorHelper : MonoBehaviour
 
 	[SerializeField] private Animator animBob;
 
-	[SerializeField] public Task DropTask;
+	public Task DropTask;
 
 	public Task AfterDropTask;
 
@@ -593,12 +593,12 @@ public class AnimatorHelper : MonoBehaviour
 		if (_player is MyPlayer && (animMain.layerCount > Enum.GetNames(typeof(AnimatorLayers_FPS)).Length ||
 		                            animMain.layerCount < Enum.GetNames(typeof(AnimatorLayers_FPS)).Length))
 		{
-			Dbg.Error("FPS animator layer enum is out of date (layerCount != EnumCount)");
+			Debug.LogError("FPS animator layer enum is out of date (layerCount != EnumCount)");
 		}
 		else if ((_player is OtherPlayer && animMain.layerCount > Enum.GetNames(typeof(AnimatorLayers_TPS)).Length) ||
 		         animMain.layerCount < Enum.GetNames(typeof(AnimatorLayers_TPS)).Length)
 		{
-			Dbg.Error("TPS animator layer enum is out of date (layerCount != EnumCount)");
+			Debug.LogError("TPS animator layer enum is out of date (layerCount != EnumCount)");
 		}
 	}
 

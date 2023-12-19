@@ -7,6 +7,6 @@ namespace ZeroGravity.Network
 	{
 		public SpawnSetupType SpawnSetupType;
 
-		public long SpawPointParentID;
+		public long SpawnPointParentId;
 	}
 }

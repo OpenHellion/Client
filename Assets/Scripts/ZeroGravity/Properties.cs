@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
+using UnityEngine;
 
 namespace ZeroGravity
 {
@@ -146,7 +147,7 @@ namespace ZeroGravity
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error("PROPERTY SAVE ERROR:", ex.Message);
+				Debug.LogException(ex);
 			}
 		}
 	}

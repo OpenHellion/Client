@@ -13,15 +13,9 @@ namespace ZeroGravity.LevelDesign
 
 		public Text RechargeStationText;
 
-		public bool IsInUse
-		{
-			get { return isInUse; }
-		}
+		public bool IsInUse => isInUse;
 
-		public override string InteractionTip
-		{
-			get { return Localization.PowerRechargeStation; }
-		}
+		public override string InteractionTip => Localization.PowerRechargeStation;
 
 		public override BaseAttachPointData GetData()
 		{

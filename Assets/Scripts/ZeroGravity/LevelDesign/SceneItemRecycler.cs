@@ -39,7 +39,7 @@ namespace ZeroGravity.LevelDesign
 
 		public bool Idle
 		{
-			get { return _Idle; }
+			get => _Idle;
 			set
 			{
 				_Idle = value;
@@ -49,8 +49,8 @@ namespace ZeroGravity.LevelDesign
 
 		public VesselSystem BaseVesselSystem
 		{
-			get { return _BaseVesselSystem; }
-			set { _BaseVesselSystem = value; }
+			get => _BaseVesselSystem;
+			set => _BaseVesselSystem = value;
 		}
 
 		public override BaseAttachPointData GetData()
@@ -91,7 +91,7 @@ namespace ZeroGravity.LevelDesign
 			yield return new WaitForSeconds(RecycleDelay);
 			if (BaseVesselSystem.Status == SystemStatus.Online && !(Item == null))
 			{
-				NetworkController.Instance.SendToGameServer(new RecycleItemMessage
+				NetworkController.SendToGameServer(new RecycleItemMessage
 				{
 					ID = new VesselObjectID(ParentVessel.GUID, base.InSceneID),
 					GUID = Item.GUID,
@@ -176,7 +176,7 @@ namespace ZeroGravity.LevelDesign
 			}
 
 			RecyclerUI.ShowResults(item);
-			NetworkController.Instance.SendToGameServer(new RecycleItemMessage
+			NetworkController.SendToGameServer(new RecycleItemMessage
 			{
 				ID = new VesselObjectID(ParentVessel.GUID, base.InSceneID),
 				GUID = item.GUID

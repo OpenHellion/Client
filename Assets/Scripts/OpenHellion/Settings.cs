@@ -1,14 +1,18 @@
+using System;
 using System.IO;
 using OpenHellion.Data;
 using OpenHellion.IO;
+using OpenHellion.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using ZeroGravity.UI;
-using AudioSettings = ZeroGravity.UI.AudioSettings;
 
 namespace OpenHellion
 {
-	public class Settings : MonoBehaviour
+	/// <summary>
+	///		The settings class handles the underlying code and data required for changing the settings in-game.
+	/// </summary>
+	public static class Settings
 	{
 		public enum SettingsType
 		{
@@ -19,28 +23,15 @@ namespace OpenHellion
 			All = 4
 		}
 
-		public SettingsData SettingsData = new SettingsData();
+		public static SettingsData SettingsData = new SettingsData();
 
-		public GameSettings GameComponent;
+		public static ControlsRebinder ControlsRebind;
 
-		public VideoSettings VideoComponent;
+		internal static bool RestartOnSave;
 
-		public AudioSettings AudioComponent;
+		public static Action OnSaveAction;
 
-		public ControlsSettings ControlsComponent;
-
-		private static Settings _instance;
-
-		internal bool RestartOnSave;
-
-		public static Settings Instance => _instance;
-
-		private void Start()
-		{
-			_instance = this;
-		}
-
-		public void LoadSettings(SettingsType type)
+		public static void LoadSettings(SettingsType type)
 		{
 			if (File.Exists(Path.Combine(Application.persistentDataPath, "Settings.json")))
 			{
@@ -61,26 +52,39 @@ namespace OpenHellion
 
 				if (SettingsData.SettingsVersion != Globals.SettingsVersion)
 				{
-					GameComponent.SetDefault();
-					AudioComponent.SetDefault();
-					ControlsComponent.SetDefault();
-					VideoComponent.SetDefault();
-					SettingsData.SettingsVersion = Globals.SettingsVersion;
-					SaveSettings(SettingsType.All);
+					SaveDefaultSettingsJson();
 					return;
 				}
 
 				if (type == SettingsType.All)
 				{
-					VideoComponent.Load(SettingsData.VideoSettings);
-					GameComponent.Load(SettingsData.GameSettings);
-					AudioComponent.Load(SettingsData.AudioSettings);
-					ControlsComponent.Load(SettingsData.ControlsSettings);
+					GlobalGUI.SetGameSettings(SettingsData.GameSettings);
+					GlobalGUI.SetControlsSettings(SettingsData.ControlsSettings);
+					GlobalGUI.SetVideoSettings(SettingsData.VideoSettings);
+					GlobalGUI.SetAudioSettings(SettingsData.AudioSettings);
+
+					ControlsSubsystem.RealSensitivity = SettingsData.ControlsSettings.MouseSensitivity;
+					QualitySettings.SetQualityLevel(SettingsData.VideoSettings.QualityIndex, applyExpensiveChanges: true);
+					QualitySettings.masterTextureLimit = SettingsData.VideoSettings.TextureIndex;
+					QualitySettings.shadows = (ShadowQuality)SettingsData.VideoSettings.ShadowIndex;
+					var resolution = Screen.resolutions[SettingsData.VideoSettings.ResolutionIndex];
+					Screen.SetResolution(resolution.width, resolution.height, SettingsData.VideoSettings.Fullscreen);
+					AkSoundEngine.SetRTPCValue(SoundManager.MasterVolume, SettingsData.AudioSettings.Volume);
+					AkSoundEngine.SetRTPCValue(SoundManager.AmbienceVolume, SettingsData.AudioSettings.AmbienceVolume);
+					AudioListener.volume = SettingsData.AudioSettings.VoiceVolume / 100f;
+
+					GlobalGUI.UpdatePostEffects(SettingsData.VideoSettings);
 				}
 
 				if (type == SettingsType.Controls)
 				{
-					ControlsComponent.Load(SettingsData.ControlsSettings);
+					GlobalGUI.SetControlsSettings(SettingsData.ControlsSettings);
+				}
+
+				if (File.Exists(Path.Combine(Application.persistentDataPath, "Controls.json")))
+				{
+					ControlsSubsystem.LoadSavedConfig(File.ReadAllText(Path.Combine(Application.persistentDataPath,
+						"Controls.json")));
 				}
 			}
 			else
@@ -89,27 +93,42 @@ namespace OpenHellion
 			}
 		}
 
-		public void SaveSettings(SettingsType type)
+		public static void SaveSettings(SettingsType type)
 		{
 			if (type == SettingsType.All)
 			{
-				GameComponent.SaveGameSettigns();
-				SettingsData.GameSettings = GameComponent.GameSettingsData;
-				VideoComponent.SaveVideoSettings();
-				SettingsData.VideoSettings = VideoComponent.VideoData;
-				AudioComponent.SaveAudioSettings();
-				SettingsData.AudioSettings = AudioComponent.AudioData;
-				ControlsComponent.SaveControlsSettings();
-				SettingsData.ControlsSettings = ControlsComponent.ControlsData;
+				SettingsData.GameSettings = GlobalGUI.GetGameSettings();
+				SettingsData.ControlsSettings = GlobalGUI.GetControlsSettings();
+				SettingsData.VideoSettings = GlobalGUI.GetVideoSettings();
+				SettingsData.AudioSettings = GlobalGUI.GetAudioSettings();
 				SettingsData.SettingsVersion = Globals.SettingsVersion;
+
+				ControlsSubsystem.RealSensitivity = SettingsData.ControlsSettings.MouseSensitivity;
+				QualitySettings.SetQualityLevel(SettingsData.VideoSettings.QualityIndex, applyExpensiveChanges: true);
+				QualitySettings.masterTextureLimit = SettingsData.VideoSettings.TextureIndex;
+				QualitySettings.shadows = (ShadowQuality)SettingsData.VideoSettings.ShadowIndex;
+				var resolution = Screen.resolutions[SettingsData.VideoSettings.ResolutionIndex];
+				Screen.SetResolution(resolution.width, resolution.height, SettingsData.VideoSettings.Fullscreen);
+				AkSoundEngine.SetRTPCValue(SoundManager.MasterVolume, SettingsData.AudioSettings.Volume);
+				AkSoundEngine.SetRTPCValue(SoundManager.AmbienceVolume, SettingsData.AudioSettings.AmbienceVolume);
+				AudioListener.volume = SettingsData.AudioSettings.VoiceVolume / 100f;
+
+				GlobalGUI.UpdatePostEffects(SettingsData.VideoSettings);
 			}
 
 			if (type == SettingsType.Controls)
 			{
-				ControlsComponent.SaveControlsSettings();
-				SettingsData.ControlsSettings = ControlsComponent.ControlsData;
+				SettingsData.ControlsSettings = GlobalGUI.GetControlsSettings();
 				SettingsData.SettingsVersion = Globals.SettingsVersion;
 			}
+
+			if (ControlsRebind != null && !ControlsRebind.CheckIfEmpty())
+			{
+				File.WriteAllText(Path.Combine(Application.persistentDataPath, "Controls.json"),
+					ControlsSubsystem.InputActions.FindActionMap(ControlsSubsystem.ActionMapName).ToJson());
+			}
+
+			OnSaveAction?.Invoke();
 
 			JsonSerialiser.SerializePersistent(SettingsData, "Settings.json");
 			if (RestartOnSave)
@@ -119,23 +138,9 @@ namespace OpenHellion
 			}
 		}
 
-		public void DefaultSettings(SettingsType type)
+		private static void SaveDefaultSettingsJson()
 		{
-			if (type == SettingsType.Controls)
-			{
-				ControlsComponent.SetDefault();
-				SettingsData.ControlsSettings = ControlsComponent.ControlsData;
-			}
-
-			JsonSerialiser.SerializePersistent(SettingsData, "Settings.json");
-		}
-
-		private void SaveDefaultSettingsJson()
-		{
-			ControlsComponent.SetDefault();
-			VideoComponent.SetDefault();
-			AudioComponent.SetDefault();
-			GameComponent.SetDefault();
+			GlobalGUI.ResetSettings();
 			SaveSettings(SettingsType.All);
 		}
 	}

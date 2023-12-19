@@ -21,40 +21,19 @@ namespace ZeroGravity.LevelDesign
 
 		private float prevMessageTime;
 
-		public override bool ExclusivePlayerLocking
-		{
-			get { return false; }
-		}
+		public override bool ExclusivePlayerLocking => false;
 
-		public override bool CameraMovementAllowed
-		{
-			get { return false; }
-		}
+		public override bool CameraMovementAllowed => false;
 
-		public override bool IsInteractable
-		{
-			get { return false; }
-		}
+		public override bool IsInteractable => false;
 
-		public override bool IsNearTrigger
-		{
-			get { return true; }
-		}
+		public override bool IsNearTrigger => true;
 
-		public override PlayerHandsCheckType PlayerHandsCheck
-		{
-			get { return PlayerHandsCheckType.DontCheck; }
-		}
+		public override PlayerHandsCheckType PlayerHandsCheck => PlayerHandsCheckType.DontCheck;
 
-		public override List<ItemType> PlayerHandsItemType
-		{
-			get { return null; }
-		}
+		public override List<ItemType> PlayerHandsItemType => null;
 
-		public override SceneTriggerType TriggerType
-		{
-			get { return SceneTriggerType.HurtTrigger; }
-		}
+		public override SceneTriggerType TriggerType => SceneTriggerType.HurtTrigger;
 
 		private void FixedUpdate()
 		{
@@ -110,7 +89,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (!(duration <= float.Epsilon))
 			{
-				NetworkController.Instance.SendToGameServer(new HurtPlayerMessage
+				NetworkController.SendToGameServer(new HurtPlayerMessage
 				{
 					Damage = new PlayerDamage
 					{

@@ -10,9 +10,9 @@ namespace ZeroGravity.LevelDesign
 	{
 		[FormerlySerializedAs("Executer")] public SceneTriggerExecutor Executor;
 
-		public string ExecuterInteractAction;
+		[FormerlySerializedAs("ExecuterInteractAction")] public string ExecutorInteractAction;
 
-		public string ExecuterCancelAction;
+		[FormerlySerializedAs("ExecuterCancelAction")] public string ExecutorCancelAction;
 
 		public override bool ExclusivePlayerLocking => true;
 
@@ -54,9 +54,9 @@ namespace ZeroGravity.LevelDesign
 				return false;
 			}
 
-			if (Executor != null && !ExecuterInteractAction.IsNullOrEmpty())
+			if (Executor != null && !ExecutorInteractAction.IsNullOrEmpty())
 			{
-				Executor.ChangeState(ExecuterInteractAction);
+				Executor.ChangeState(ExecutorInteractAction);
 			}
 
 			if (interactWithOverlappingTriggers)
@@ -72,9 +72,9 @@ namespace ZeroGravity.LevelDesign
 		public override void CancelInteract(MyPlayer player)
 		{
 			base.CancelInteract(player);
-			if (Executor != null && !ExecuterCancelAction.IsNullOrEmpty())
+			if (Executor != null && !ExecutorCancelAction.IsNullOrEmpty())
 			{
-				Executor.ChangeState(ExecuterCancelAction);
+				Executor.ChangeState(ExecutorCancelAction);
 			}
 
 			MyDockingPanel.OnDetach();

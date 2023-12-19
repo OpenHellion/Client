@@ -143,7 +143,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			RCSPanel.SetActive(_parentShip.RCS != null);
 			ControlsForChangingPort.text = string.Format(Localization.ControlChangeDockingPort,
-				GetControlName(InputManager.ConfigAction.Equip)).ToUpper();
+				GetControlName(ControlsSubsystem.ConfigAction.Equip)).ToUpper();
 		}
 
 		private void Update()
@@ -159,7 +159,7 @@ namespace ZeroGravity.ShipComponents
 				ReloadRadarElements();
 			}
 
-			if (InputManager.GetButtonDown(InputManager.ConfigAction.Equip))
+			if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Equip))
 			{
 				TargetDockingPort = null;
 				_changeTargetedModulePort = true;
@@ -199,8 +199,8 @@ namespace ZeroGravity.ShipComponents
 				ChangeTargetedPort();
 			}
 
-			bool buttonDown = InputManager.GetButtonDown(InputManager.ConfigAction.TargetUp);
-			bool buttonDown2 = InputManager.GetButtonDown(InputManager.ConfigAction.TargetDown);
+			bool buttonDown = ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.TargetUp);
+			bool buttonDown2 = ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.TargetDown);
 			if (_targetedModulePorts.Count > 0 && (buttonDown || buttonDown2))
 			{
 				_targetedModulePorts[_currentTargetedModulePortIndex].UI.IsSelected = false;
@@ -512,7 +512,7 @@ namespace ZeroGravity.ShipComponents
 			_changeTargetedModulePort = true;
 			MakeMyDockingPorts();
 			ReloadRadarElements();
-			DockingTips.Activate(Settings.Instance.SettingsData.GameSettings.ShowTips);
+			DockingTips.Activate(Settings.SettingsData.GameSettings.ShowTips);
 			MakeTargetModulePorts();
 			gameObject.SetActive(value: true);
 		}
@@ -521,7 +521,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			_dockingPorts.Clear();
 			if (MyPlayer.Instance.Parent is SpaceObjectVessel &&
-			    (MyPlayer.Instance.Parent as SpaceObjectVessel).SceneID == GameScenes.SceneID.AltCorp_Shuttle_CECA &&
+			    (MyPlayer.Instance.Parent as SpaceObjectVessel).SceneID == GameScenes.SceneId.AltCorp_Shuttle_CECA &&
 			    MyPlayer.Instance.ShipControlMode == ShipControlMode.Docking)
 			{
 				foreach (SceneDockingPort value in _parentShip.MainVessel.DockingPorts.Values)
@@ -814,9 +814,9 @@ namespace ZeroGravity.ShipComponents
 			return dockingPanelUIItem;
 		}
 
-		public string GetControlName(InputManager.ConfigAction axName)
+		public string GetControlName(ControlsSubsystem.ConfigAction axName)
 		{
-			return InputManager.GetAxisKeyName(axName);
+			return ControlsSubsystem.GetAxisKeyName(axName);
 		}
 
 		public void UpdateDockingPorts()

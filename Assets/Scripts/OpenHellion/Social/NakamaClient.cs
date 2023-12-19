@@ -24,56 +24,47 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Nakama.TinyJson;
+using OpenHellion.Data;
 using OpenHellion.IO;
 using OpenHellion.Net;
 using OpenHellion.Social.NakamaRpc;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using ZeroGravity;
+using ZeroGravity.Network;
 using ZeroGravity.UI;
 
 namespace OpenHellion.Social
 {
-	public class NakamaClient : MonoBehaviour
+	public static class NakamaClient
 	{
-		[Tooltip("Called when Nakama requires authentication.")]
-		public UnityEvent OnRequireAuthentication;
+		public static Action OnRequireAuthentication;
+		public static Action<string, Action> OnNakamaError;
+		public static Action<string, string> OnChatMessageReceived;
 
-		public UnityEvent<string, Action> OnNakamaError;
-		public Action<String, String> OnChatMessageReceived;
+		public static bool HasAuthenticated { get; private set; }
 
-		public bool HasAuthenticated { get; private set; }
+		private static Client _client;
 
-		private Client _client;
+		private static ISession _session;
 
-		private ISession _session;
+		private static ISocket _socket;
 
-		private ISocket _socket;
-
-		private IMatch _match;
-
-		private IChannel _chatChannel;
+		private static IChannel _chatChannel;
 
 		private const string NakamaHost = "127.0.0.1";
 		private const int NakamaPort = 7350;
 
-		private readonly CancellationTokenSource _cancelToken = new();
-		private TaskCompletionSource<MatchInfo> _matchStateReceivedCompletionSource;
+		private static readonly CancellationTokenSource CancelToken = new();
 
-		public string NakamaIdCached { get; private set; }
+		public static string NakamaIdCached { get; private set; }
 
-		private void Awake()
-		{
-			HasAuthenticated = false;
-			DontDestroyOnLoad(this);
-		}
-
-		private async void Start()
+		public static async void Initialise()
 		{
 			try
 			{
-				Dbg.Log("Connecting to Nakama...");
+				Debug.Log("Connecting to Nakama...");
 
 				_client = new Client("http", NakamaHost, NakamaPort, "defaultkey")
 				{
@@ -83,7 +74,7 @@ namespace OpenHellion.Social
 				};
 
 
-				Dbg.Log("Creating/restoring Nakama session.");
+				Debug.Log("Creating/restoring Nakama session.");
 
 				var authToken = PlayerPrefs.GetString("authToken", null);
 				var refreshToken = PlayerPrefs.GetString("refreshToken", null);
@@ -100,13 +91,18 @@ namespace OpenHellion.Social
 				{
 					try
 					{
-						_session = await _client.SessionRefreshAsync(_session, canceller: _cancelToken.Token);
+						_session = await _client.SessionRefreshAsync(_session, canceller: CancelToken.Token);
 						NakamaIdCached = await GetUserId();
 						HasAuthenticated = true;
+						Globals.Instance.OnHellionQuit += CancelToken.Cancel;
 					}
-					catch (ApiResponseException)
+					catch (ApiResponseException ex)
 					{
-						Dbg.Log("Nakama session can no longer be refreshed. Must reauthenticate!");
+						if (ex.StatusCode is 401)
+						{
+							//OnNakamaError.Invoke(Localization.SessionExpired, null);
+							Debug.Log("Nakama session can no longer be refreshed. Must reauthenticate!");
+						}
 
 						OnRequireAuthentication.Invoke();
 						HasAuthenticated = false;
@@ -115,8 +111,8 @@ namespace OpenHellion.Social
 			}
 			catch (TaskCanceledException)
 			{
-				Dbg.Error("Could not connect to Nakama server.");
-				OnNakamaError.Invoke(Localization.NoNakamaConnection, Application.Quit);
+				Debug.LogError("Could not connect to Nakama server.");
+				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
 			}
 		}
 
@@ -127,24 +123,24 @@ namespace OpenHellion.Social
 		/// <param name="email">The user's email.</param>
 		/// <param name="password">The user's password.</param>
 		/// <returns>If we successfully authenticated.</returns>
-		public async Task<bool> Authenticate(string email, string password)
+		public static async Task<bool> Authenticate(string email, string password)
 		{
 			try
 			{
 				_session = await _client.AuthenticateEmailAsync(email, password, create: false,
-					canceller: _cancelToken.Token);
+					canceller: CancelToken.Token);
 
 				PlayerPrefs.SetString("authToken", _session.AuthToken);
 				PlayerPrefs.SetString("refreshToken", _session.RefreshToken);
 
-				Dbg.Log("Successfully authenticated.");
+				Debug.Log("Successfully authenticated.");
 				HasAuthenticated = true;
 				NakamaIdCached = await GetUserId();
 				return true;
 			}
 			catch (ApiResponseException ex)
 			{
-				Dbg.Error($"Error authenticating user: {ex.StatusCode}:{ex.Message}");
+				Debug.LogError($"Error authenticating user: {ex.StatusCode}: {ex.Message}");
 
 				// Error code for non-existent account.
 				if (ex.StatusCode is 404)
@@ -158,8 +154,8 @@ namespace OpenHellion.Social
 			}
 			catch (TaskCanceledException)
 			{
-				Dbg.Error("Nakama disconnected when doing task");
-				OnNakamaError.Invoke(Localization.NoNakamaConnection, Application.Quit);
+				Debug.LogError("Nakama disconnected when doing task");
+				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
 				return false;
 			}
 		}
@@ -173,21 +169,21 @@ namespace OpenHellion.Social
 		/// <param name="username">The user's username.</param>
 		/// <param name="displayName">The user's display name.</param>
 		/// <returns>If we successfully created an account.</returns>
-		public async Task<bool> CreateAccount(string email, string password, string username, string displayName)
+		public static async Task<bool> CreateAccount(string email, string password, string username, string displayName)
 		{
 			try
 			{
 				_session = await _client.AuthenticateEmailAsync(email, password, username,
-					canceller: _cancelToken.Token);
+					canceller: CancelToken.Token);
 
 				PlayerPrefs.SetString("authToken", _session.AuthToken);
 				PlayerPrefs.SetString("refreshToken", _session.RefreshToken);
 
-				await _client.UpdateAccountAsync(_session, username, displayName, null, CultureInfo.CurrentCulture.Name,
+				await _client.UpdateAccountAsync(_session, username, displayName, null, CultureInfo.CurrentCulture.TwoLetterISOLanguageName,
 					RegionInfo.CurrentRegion.EnglishName,
-					TimeZoneInfo.Local.StandardName, canceller: _cancelToken.Token);
+					TimeZoneInfo.Local.StandardName, canceller: CancelToken.Token);
 
-				Dbg.Log("Account successfully created.");
+				Debug.Log("Account successfully created.");
 				HasAuthenticated = true;
 				return true;
 			}
@@ -200,14 +196,14 @@ namespace OpenHellion.Social
 					return false;
 				}
 
-				Dbg.Error($"Error creating user: {ex.StatusCode}:{ex.Message}");
+				Debug.LogError($"Error creating user: {ex.StatusCode}:{ex.Message}");
 				OnNakamaError.Invoke(Localization.NoNakamaConnection, null);
 				return false;
 			}
 			catch (TaskCanceledException)
 			{
-				Dbg.Error("Nakama disconnected when doing task");
-				OnNakamaError.Invoke(Localization.NoNakamaConnection, Application.Quit);
+				Debug.LogError("Nakama disconnected when doing task");
+				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
 				return false;
 			}
 		}
@@ -217,17 +213,17 @@ namespace OpenHellion.Social
 		///		A session must be created before we call this method.
 		/// </summary>
 		/// <returns>Out user id.</returns>
-		public async Task<String> GetUserId()
+		public static async Task<String> GetUserId()
 		{
 			try
 			{
-				var account = await _client.GetAccountAsync(_session, canceller: _cancelToken.Token);
+				var account = await _client.GetAccountAsync(_session, canceller: CancelToken.Token);
 				return account.User.Id;
 			}
 			catch (TaskCanceledException)
 			{
-				Dbg.Error("Nakama disconnected when doing task");
-				OnNakamaError.Invoke(Localization.NoNakamaConnection, Application.Quit);
+				Debug.LogError("Nakama disconnected when doing task");
+				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
 			}
 
 			return null;
@@ -238,17 +234,17 @@ namespace OpenHellion.Social
 		///		A session must be created before we call this method.
 		/// </summary>
 		/// <returns>Our display name on Nakama.</returns>
-		public async Task<String> GetDisplayName()
+		public static async Task<String> GetDisplayName()
 		{
 			try
 			{
-				var account = await _client.GetAccountAsync(_session, canceller: _cancelToken.Token);
+				var account = await _client.GetAccountAsync(_session, canceller: CancelToken.Token);
 				return account.User.DisplayName;
 			}
 			catch (TaskCanceledException)
 			{
-				Dbg.Error("Nakama disconnected when doing task");
-				OnNakamaError.Invoke(Localization.NoNakamaConnection, Application.Quit);
+				Debug.LogError("Nakama disconnected when doing task");
+				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
 			}
 
 			return null;
@@ -259,16 +255,16 @@ namespace OpenHellion.Social
 		///		A session must be created before we call this method.
 		/// </summary>
 		/// <returns>A list of nakama friends.</returns>
-		public async Task<IApiFriend[]> GetFriends()
+		public static async Task<IApiFriend[]> GetFriends()
 		{
 			try
 			{
-				var friends = await _client.ListFriendsAsync(_session, 0, 0, "", canceller: _cancelToken.Token);
+				var friends = await _client.ListFriendsAsync(_session, 0, 0, "", canceller: CancelToken.Token);
 				return friends.Friends.ToArray();
 			}
 			catch (TaskCanceledException)
 			{
-				Dbg.Error("Nakama disconnected when doing task");
+				Debug.LogError("Nakama disconnected when doing task");
 				SceneManager.LoadScene(0);
 			}
 
@@ -279,37 +275,24 @@ namespace OpenHellion.Social
 		///		Creates a socket and makes us appear as online. Makes us be able to communicate with the main server. Also initialises callbacks.<br/>
 		///		A session must be created before we call this method.
 		/// </summary>
-		public async Task CreateSocket()
+		public static async Task CreateSocket()
 		{
 			try
 			{
 				_socket = _client.NewSocket();
-				await _socket.ConnectAsync(_session, true, 30, CultureInfo.CurrentCulture.Name);
+				await _socket.ConnectAsync(_session, true, 30, CultureInfo.CurrentCulture.TwoLetterISOLanguageName);
 			}
 			catch (TaskCanceledException)
 			{
-				Dbg.Error("Nakama disconnected when doing task");
-				OnNakamaError.Invoke(Localization.NoNakamaConnection, Application.Quit);
+				Debug.LogError("Nakama disconnected when doing task");
+				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
 			}
 
 			_socket.ReceivedChannelMessage += message => { OnChatMessageReceived(message.Username, message.Content); };
 
 			_socket.ReceivedError += exception => { OnNakamaError.Invoke(exception.Message, null); };
 
-			_socket.ReceivedMatchState += matchState =>
-			{
-				_matchStateReceivedCompletionSource = new();
-				var result = JsonSerialiser.Deserialize<MatchInfo>(Encoding.UTF8.GetString(matchState.State));
-				if (result is not null)
-				{
-					_matchStateReceivedCompletionSource.SetResult(result);
-				}
-				else
-				{
-					_matchStateReceivedCompletionSource.SetException(
-						new Exception("Failed to deserialise match state."));
-				}
-			};
+			Globals.Instance.OnHellionQuit += () => _socket?.CloseAsync();
 		}
 
 		/// <summary>
@@ -317,7 +300,7 @@ namespace OpenHellion.Social
 		///		<see cref="CreateSocket"/> must be called before this method.
 		/// </summary>
 		/// <returns>Returns an array of match ids, which we can use to display a set of match options.</returns>
-		public async Task<string[]> FindMatches(FindMatchesRequest request)
+		public static async Task<string[]> FindMatches(FindMatchesRequest request)
 		{
 			try
 			{
@@ -329,8 +312,8 @@ namespace OpenHellion.Social
 			}
 			catch (TaskCanceledException)
 			{
-				Dbg.Error("Nakama disconnected when doing task");
-				OnNakamaError.Invoke(Localization.NoNakamaConnection, Application.Quit);
+				Debug.LogError("Nakama disconnected when doing task");
+				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
 			}
 
 			return null;
@@ -342,30 +325,137 @@ namespace OpenHellion.Social
 		/// </summary>
 		/// <param name="matchId">The id of the match to join.</param>
 		/// <returns>The connection information of the server to connect to.</returns>
-		public async Task<ServerData> JoinMatch(string matchId)
+		public static async Task<ServerData> GetMatchConnectionInfo(string matchId)
 		{
 			try
 			{
-				_match = await _socket.JoinMatchAsync(matchId);
-
-				var result = await _matchStateReceivedCompletionSource.Task;
+				var response = await _socket.RpcAsync("client_get_match_info", matchId);
+				var result = JsonSerialiser.Deserialize<MatchInfo>(response.Payload);
 
 				return new ServerData()
 				{
-					Id = result.Id,
+					Id = matchId,
+					Location = result.Location,
 					IpAddress = result.Ip,
 					GamePort = result.GamePort,
 					StatusPort = result.StatusPort,
-					CurrentPlayers = _match.Size
 				};
 			}
 			catch (TaskCanceledException)
 			{
-				Dbg.Error("Nakama disconnected when doing task");
-				OnNakamaError.Invoke(Localization.NoNakamaConnection, Application.Quit);
+				Debug.LogError("Nakama disconnected when doing task");
+				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
 			}
 
 			return null;
+		}
+
+		/// <summary>
+		///		Update the <see cref="CharacterData"/> stored by Nakama.
+		/// </summary>
+		/// <param name="data">The character data to upload.</param>
+		public static async void UpdateCharacterData(CharacterData data)
+		{
+			try
+			{
+				await _client.WriteStorageObjectsAsync(_session, new IApiWriteStorageObject[]
+				{
+					new WriteStorageObject
+					{
+						Collection = "player_data",
+						Key = "character_data",
+						Value = JsonSerialiser.Serialize(data),
+						PermissionRead = 1,
+						PermissionWrite = 1
+					}
+				});
+			}
+			catch (ApiResponseException ex)
+			{
+				Debug.LogException(ex);
+				OnNakamaError.Invoke(Localization.Error + ex.StatusCode, null);
+			}
+			catch (TaskCanceledException)
+			{
+				Debug.LogError("Nakama disconnected when doing task");
+				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
+			}
+		}
+
+		/// <summary>
+		///		Get the <see cref="CharacterData"/> stored in the cloud.
+		/// </summary>
+		/// <returns>A <see cref="CharacterData"/> object. Null if none is found.</returns>
+		/// <exception cref="Exception">Fails if this user has several characters or if the format is wrong.</exception>
+		public static async Task<CharacterData> GetCharacterData()
+		{
+			try
+			{
+				var response = await _client.ReadStorageObjectsAsync(_session, new IApiReadStorageObjectId[]{new StorageObjectId
+				{
+					Collection = "player_data",
+					Key = "character_data",
+					UserId = await GetUserId()
+				}});
+
+				if (!response.Objects.Any())
+				{
+					return null;
+				}
+
+				if (response.Objects.ToArray().Length > 1)
+				{
+					throw new Exception("Received response with invalid length.");
+				}
+
+				var result = JsonSerialiser.Deserialize<CharacterData>(response.Objects.First().Value);
+
+				if (result == null)
+				{
+					throw new Exception("Failed to deserialise storage data into CharacterData");
+				}
+
+				return result;
+			}
+			catch (TaskCanceledException)
+			{
+				Debug.LogError("Nakama disconnected when doing task");
+				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		///		Update the <see cref="VesselObjectID"/> stored by Nakama.
+		/// </summary>
+		/// <param name="data">The character data to upload.</param>
+		public static async void UpdateSpawnPointData(VesselObjectID data)
+		{
+			try
+			{
+				await _client.WriteStorageObjectsAsync(_session, new IApiWriteStorageObject[]
+				{
+					new WriteStorageObject
+					{
+						Collection = "player_data",
+						Key = "character_data",
+						Value = JsonSerialiser.Serialize(data),
+						PermissionRead = 1,
+						PermissionWrite = 1
+					}
+				});
+			}
+			catch (ApiResponseException ex)
+			{
+				Debug.LogException(ex);
+				OnNakamaError.Invoke(Localization.Error + ex.StatusCode, null);
+			}
+			catch (TaskCanceledException)
+			{
+				Debug.LogError("Nakama disconnected when doing task");
+				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
+			}
 		}
 
 		/// <summary>
@@ -373,7 +463,7 @@ namespace OpenHellion.Social
 		///		<see cref="CreateSocket"/> must be called before this method.
 		/// </summary>
 		/// <param name="chatState">The type of chat we are looking for.</param>
-		public async Task<bool> JoinChatRoom(Chat.ChatState chatState)
+		public static async Task<bool> JoinChatRoom(Chat.ChatState chatState)
 		{
 			string id;
 			ChannelType channelType;
@@ -381,7 +471,7 @@ namespace OpenHellion.Social
 			switch (chatState)
 			{
 				case Chat.ChatState.Global:
-					id = _match.Id;
+					id = "global";
 					channelType = ChannelType.Group;
 					break;
 				// TODO: Implement this.
@@ -397,8 +487,8 @@ namespace OpenHellion.Social
 			}
 			catch (TaskCanceledException)
 			{
-				Dbg.Error("Nakama disconnected when doing task");
-				OnNakamaError.Invoke(Localization.NoNakamaConnection, Application.Quit);
+				Debug.LogError("Nakama disconnected when doing task");
+				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
 				return false;
 			}
 
@@ -410,7 +500,7 @@ namespace OpenHellion.Social
 		///		<see cref="JoinChatRoom"/> must be called before this.
 		/// </summary>
 		/// <param name="chatText">The text we want to send.</param>
-		public async void SendChat(string chatText)
+		public static async void SendChat(string chatText)
 		{
 			try
 			{
@@ -418,21 +508,21 @@ namespace OpenHellion.Social
 			}
 			catch (TaskCanceledException)
 			{
-				Dbg.Error("Nakama disconnected when doing task");
-				OnNakamaError.Invoke(Localization.NoNakamaConnection, Application.Quit);
+				Debug.LogError("Nakama disconnected when doing task");
+				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
 			}
 		}
 
-		public async void LogOut()
+		public static async void LogOut()
 		{
 			await _client.SessionLogoutAsync(_session);
 			_socket?.CloseAsync();
 		}
 
-		private void OnApplicationQuit()
+		private static void NakamaConnectionTerminated()
 		{
-			_cancelToken.Cancel();
-			_socket?.CloseAsync();
+			Debug.Log("Nakama connection failed unexpectedly. Returning to initialising screen...");
+			Globals.ExitGame();
 		}
 	}
 }

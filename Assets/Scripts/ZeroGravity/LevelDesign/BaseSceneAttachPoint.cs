@@ -95,7 +95,7 @@ namespace ZeroGravity.LevelDesign
 
 		public virtual Item Item
 		{
-			get { return _item; }
+			get => _item;
 			protected set
 			{
 				if (_item != value)
@@ -302,7 +302,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (Item != null && Item != item)
 			{
-				Dbg.Warning("Cannot attach two items on same attach point", Item, item, base.name);
+				Debug.LogWarningFormat("Cannot attach two items on same attach point {0} and {1}. Original item name {2}.", Item, item, base.name);
 			}
 			else
 			{
@@ -315,7 +315,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (Item != item || Item == null)
 			{
-				Dbg.Warning("Cannot detach item from this slot", Item, item, name);
+				Debug.LogWarningFormat("Cannot detach item from this slot {0} and {1}. Name {2}.", Item, item, name);
 			}
 			else
 			{

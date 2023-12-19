@@ -1,6 +1,121 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/HellionStyle.uss?fileID=7433441132597879392&amp;guid=688b8c618fe8d98429bb44208d7b3fd0&amp;type=3#HellionStyle" />
-    <ui:VisualElement style="justify-content: center; align-items: center; width: 100%; height: 100%; position: absolute; display: flex;">
+    <ui:VisualElement name="SettingsScreen" style="width: 100%; height: 100%; position: absolute; justify-content: flex-start; align-items: center; background-color: rgba(0, 0, 0, 0.96); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 30px; padding-right: 30px; padding-bottom: 30px; padding-left: 30px;">
+        <ui:VisualElement style="background-image: url(&apos;project://database/Assets/Generic/Texture2D/hellionLogo.png?fileID=21300000&amp;guid=20a95a8955fdbb54e939df9610b109b1&amp;type=3#hellionLogo&apos;); width: 569px; margin-bottom: 15px; height: 106px; min-height: 106px;" />
+        <ui:VisualElement name="Navbar" style="flex-direction: row; justify-content: space-between; align-items: center; height: auto; flex-wrap: nowrap; width: 850px; margin-bottom: 10px; min-height: auto;">
+            <ui:Button text="Game settings" display-tooltip-when-elided="true" name="Game" class="hellion-button" />
+            <ui:Button text="Controls" display-tooltip-when-elided="true" name="Controls" class="hellion-button" />
+            <ui:Button text="Video settings" display-tooltip-when-elided="true" name="Video" class="hellion-button" />
+            <ui:Button text="Audio settings" display-tooltip-when-elided="true" name="Audio" class="hellion-button" />
+        </ui:VisualElement>
+        <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="GameSettings" style="width: 770px; height: 700px;">
+            <ui:VisualElement name="GeneralSettings" class="settings-header">
+                <ui:Label text="GENERAL SETTINGS" display-tooltip-when-elided="true" class="main-menu-header" />
+            </ui:VisualElement>
+            <ui:VisualElement name="HeadBob" class="setting-element">
+                <ui:Label text="HEAD BOB STRENGTH" display-tooltip-when-elided="true" class="settings-element-label" />
+                <ui:Slider picking-mode="Ignore" binding-path="_headBob" high-value="100" style="width: 385px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="HideChat" class="setting-element">
+                <ui:Label text="DISABLE CHAT" display-tooltip-when-elided="true" class="settings-element-label" />
+                <ui:VisualElement style="height: 22px; align-items: flex-start; flex-direction: column; justify-content: center; flex-wrap: nowrap; width: 385px;">
+                    <ui:Toggle binding-path="_disableChat" style="top: 8px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="HideTips" class="setting-element">
+                <ui:Label text="HIDE TIPS" display-tooltip-when-elided="true" class="settings-element-label" />
+                <ui:VisualElement style="height: 22px; align-items: flex-start; flex-direction: column; justify-content: center; flex-wrap: nowrap; width: 385px;">
+                    <ui:Toggle binding-path="_hideTips" style="top: 8px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="ShowCrosshair" class="setting-element">
+                <ui:Label text="SHOW CROSSHAIR" display-tooltip-when-elided="true" class="settings-element-label" />
+                <ui:VisualElement style="height: 22px; align-items: flex-start; flex-direction: column; justify-content: center; flex-wrap: nowrap; width: 385px;">
+                    <ui:Toggle binding-path="_showCrosshair" style="top: 8px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="ShipSettings" class="settings-header">
+                <ui:Label text="SHIP SETTINGS" display-tooltip-when-elided="true" class="main-menu-header" />
+            </ui:VisualElement>
+            <ui:VisualElement name="AutoStablisation" class="setting-element">
+                <ui:Label text="AUTO STABILISATION" display-tooltip-when-elided="true" class="settings-element-label" />
+                <ui:VisualElement style="height: 22px; align-items: flex-start; flex-direction: column; justify-content: center; flex-wrap: nowrap; width: 385px;">
+                    <ui:Toggle binding-path="_autoStabilisation" style="top: 8px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="GlobalSettings" class="settings-header">
+                <ui:Label text="GLOBAL SETTINGS" display-tooltip-when-elided="true" class="main-menu-header" />
+            </ui:VisualElement>
+            <ui:VisualElement name="ChooseLanguage" class="setting-element">
+                <ui:Label text="CHOOSE LANGUAGE" display-tooltip-when-elided="true" class="settings-element-label" />
+                <ui:DropdownField index="-1" choices="English,Srpski,汉语/漢語,Français,Italiano,Português,Русский,Español,Türkçe,Český,Dansk,Dutch,Suomi,Deutsch,Ελληνικά,Magyar nyelv,日本語,Norsk,Polski,Português do Brasil,Limba română,Slovenský jazyk,Slovenski jezik,Svenska,Українська мова" binding-path="_languageIndex" style="width: 385px;" />
+            </ui:VisualElement>
+        </ui:ScrollView>
+        <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="ControlsSettings" style="width: 770px; height: 700px;">
+            <ui:VisualElement name="MouseSettings" class="settings-header">
+                <ui:Label text="MOUSE SETTINGS" display-tooltip-when-elided="true" class="main-menu-header" />
+            </ui:VisualElement>
+            <ui:VisualElement name="MouseSensitivity" class="setting-element">
+                <ui:Label text="MOUSE SENSITIVITY" display-tooltip-when-elided="true" class="settings-element-label" />
+                <ui:Slider picking-mode="Ignore" low-value="1" high-value="10" binding-path="_mouseSensitivity" style="width: 385px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="InvertMouse" class="setting-element">
+                <ui:Label text="INVERT MOUSE" display-tooltip-when-elided="true" class="settings-element-label" />
+                <ui:VisualElement style="height: 22px; align-items: flex-start; flex-direction: column; justify-content: center; flex-wrap: nowrap; width: 385px;">
+                    <ui:Toggle binding-path="_invertMouse" style="top: 8px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="InvertMouseWhileDriving" class="setting-element">
+                <ui:Label text="INVERT WHILE DRIVING" display-tooltip-when-elided="true" class="settings-element-label" />
+                <ui:VisualElement style="height: 22px; align-items: flex-start; flex-direction: column; justify-content: center; flex-wrap: nowrap; width: 385px;">
+                    <ui:Toggle binding-path="_invertMouseWhileDriving" style="top: 8px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="KeyboardSettings" class="setting-element">
+                <ui:Label text="KEYBOARD SETTINGS" display-tooltip-when-elided="true" class="main-menu-header" />
+                <ui:VisualElement style="width: 385px;">
+                    <ui:Button text="DEFAULT" display-tooltip-when-elided="true" class="hellion-button" style="width: 200px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:ScrollView>
+        <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="VideoSettings" style="width: 770px; height: 700px;">
+            <ui:VisualElement name="BasicVideoSettings" class="settings-header">
+                <ui:Label text="BASIC VIDEO SETTINGS" display-tooltip-when-elided="true" class="main-menu-header" />
+            </ui:VisualElement>
+            <ui:VisualElement name="FullscreenOptions" class="setting-element">
+                <ui:Label text="FULLSCREEN" display-tooltip-when-elided="true" binding-path="_fullScreen" class="settings-element-label" />
+                <ui:VisualElement style="height: 22px; align-items: flex-start; flex-direction: column; justify-content: center; flex-wrap: nowrap; width: 385px;">
+                    <ui:Toggle style="top: 8px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="Resolution" class="setting-element">
+                <ui:Label text="RESOLUTION" display-tooltip-when-elided="true" class="settings-element-label" />
+                <ui:DropdownField choices="banan, tiss" binding-path="_resolutionIndex" style="width: 385px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Quality" class="setting-element">
+                <ui:Label text="OVERALL QUALITY" display-tooltip-when-elided="true" class="settings-element-label" />
+                <ui:DropdownField choices="banan, tiss" binding-path="_qualityIndex" style="width: 385px;" />
+            </ui:VisualElement>
+        </ui:ScrollView>
+        <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="AudioSettings" style="width: 770px; height: 700px;">
+            <ui:VisualElement name="BasicAudioSettings" class="settings-header">
+                <ui:Label text="BASIC AUDIO SETTINGS" display-tooltip-when-elided="true" class="main-menu-header" />
+            </ui:VisualElement>
+        </ui:ScrollView>
+    </ui:VisualElement>
+    <ui:VisualElement name="LoadingScreen" style="width: 100%; height: 100%; position: absolute; justify-content: center; align-items: center; background-color: rgb(12, 12, 12);">
+        <ui:Label text="Label" display-tooltip-when-elided="true" name="Description" style="font-size: 26px; -unity-font: resource(&apos;Fonts/MainMenuRegular&apos;); -unity-text-align: middle-right; white-space: normal; color: rgb(255, 255, 255); height: 50px; width: 888px; bottom: 50px; position: absolute; right: 114px;" />
+        <ui:VisualElement style="background-image: url(&apos;project://database/Assets/Generic/Texture2D/trackingQuest64.png?fileID=2800000&amp;guid=eec0fccfe0589e943bf75e1562e34856&amp;type=3#trackingQuest64&apos;); width: 50px; height: 50px; position: absolute; bottom: 50px; right: 50px; background-color: rgba(0, 0, 0, 0);" />
+        <ui:Label text="aaaaaa" display-tooltip-when-elided="true" name="LoadingTips" style="font-size: 28px; -unity-font: resource(&apos;Fonts/MainMenuRegular&apos;); -unity-text-align: middle-center; white-space: normal; color: rgb(255, 255, 255); width: 1200px; height: 120px;" />
+    </ui:VisualElement>
+    <ui:VisualElement picking-mode="Ignore" style="justify-content: center; align-items: center; width: 100%; height: 100%; position: absolute; background-color: rgba(0, 0, 0, 0);">
+        <ui:VisualElement name="MessageBox" style="background-color: rgba(0, 0, 0, 0.8); width: 600px; height: 337px; padding-left: 1%; padding-right: 1%; padding-top: 2%; padding-bottom: 2%; position: absolute;">
+            <ui:Label text="Label" name="MessageTitle" class="main-menu-header" style="margin-bottom: 2%;" />
+            <ui:Label text="New text" name="MessageDescription" style="font-size: 20px; -unity-text-align: middle-center; color: rgb(255, 255, 255); -unity-font: resource(&apos;Fonts/MainMenuRegular&apos;); white-space: normal; height: 70%;" />
+            <ui:VisualElement style="align-items: center; justify-content: center; position: absolute; bottom: 10%; left: 0; right: 0;">
+                <ui:Button text="OK" display-tooltip-when-elided="true" name="MessageClose" class="hellion-button" />
+            </ui:VisualElement>
+        </ui:VisualElement>
         <ui:VisualElement name="ErrorBox" style="background-color: rgba(0, 0, 0, 0.8); width: 40%; height: 40%; padding-left: 1%; padding-right: 1%; padding-top: 2%; padding-bottom: 2%; position: absolute;">
             <ui:Label text="Label" name="ErrorTitle" class="main-menu-header" style="margin-bottom: 2%;" />
             <ui:Label text="Error text here" name="ErrorDescription" style="font-size: 20px; -unity-text-align: middle-center; color: rgb(255, 255, 255); -unity-font: resource(&apos;Fonts/MainMenuRegular&apos;); white-space: normal; height: 70%;" />
@@ -8,10 +123,13 @@
                 <ui:Button text="OK" display-tooltip-when-elided="true" name="ErrorBoxClose" class="hellion-button" />
             </ui:VisualElement>
         </ui:VisualElement>
-    </ui:VisualElement>
-    <ui:VisualElement name="LoadingScreen" style="width: 100%; height: 100%; position: absolute; justify-content: center; align-items: center; background-color: rgb(12, 12, 12);">
-        <ui:Label text="Label" display-tooltip-when-elided="true" name="Description" style="font-size: 26px; -unity-font: resource(&apos;Fonts/MainMenuRegular&apos;); -unity-text-align: middle-right; white-space: normal; color: rgb(255, 255, 255); height: 50px; width: 888px; bottom: 50px; position: absolute; right: 114px;" />
-        <ui:VisualElement style="background-image: url(&apos;project://database/Assets/Generic/Texture2D/trackingQuest64.png?fileID=2800000&amp;guid=eec0fccfe0589e943bf75e1562e34856&amp;type=3#trackingQuest64&apos;); width: 50px; height: 50px; position: absolute; bottom: 50px; right: 50px; background-color: rgba(0, 0, 0, 0);" />
-        <ui:Label text="aaaaaa" display-tooltip-when-elided="true" name="LoadingTips" style="font-size: 28px; -unity-font: resource(&apos;Fonts/MainMenuRegular&apos;); -unity-text-align: middle-center; white-space: normal; color: rgb(255, 255, 255); width: 1200px; height: 120px;" />
+        <ui:VisualElement name="ConfirmMessageBox" style="position: absolute; width: 600px; height: 337px; background-color: rgba(2, 2, 2, 0.94);">
+            <ui:Label text="New Text" name="ConfirmTitle" class="main-menu-header" style="margin-bottom: 2%;" />
+            <ui:Label text="New text" name="ConfirmDescription" style="font-size: 20px; -unity-text-align: middle-center; color: rgb(255, 255, 255); -unity-font: resource(&apos;Fonts/MainMenuRegular&apos;); white-space: normal; height: 70%;" />
+            <ui:VisualElement style="align-items: center; justify-content: space-between; position: absolute; bottom: 10%; left: 0; right: 0; flex-direction: row; margin-right: 10px; margin-left: 10px;">
+                <ui:Button text="Yes" display-tooltip-when-elided="true" name="ConfirmYes" enable-rich-text="true" class="hellion-button" />
+                <ui:Button text="No" display-tooltip-when-elided="true" name="ConfirmNo" class="hellion-button" />
+            </ui:VisualElement>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

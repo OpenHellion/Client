@@ -455,7 +455,7 @@ namespace ZeroGravity.CharacterMovement
 				update1GMovement();
 			}
 
-			if (InputManager.GetButton(InputManager.ConfigAction.Sprint))
+			if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Sprint))
 			{
 				canGrabWall = Physics.OverlapSphere(centerOfMass.position, 0.8f, collisionLayerMask,
 					QueryTriggerInteraction.Ignore).Length > 0;
@@ -600,7 +600,7 @@ namespace ZeroGravity.CharacterMovement
 
 		private void Calculate1GMovementData()
 		{
-			if (InputManager.GetButton(InputManager.ConfigAction.Sprint) && !IsCrouch && animatorHelper.CanRun)
+			if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Sprint) && !IsCrouch && animatorHelper.CanRun)
 			{
 				if (lastMovementState != MovementState.Run)
 				{
@@ -614,7 +614,7 @@ namespace ZeroGravity.CharacterMovement
 				lastMovementState = MovementState.Run;
 				myPlayer.HealthSounds.Switch("WalkRun", "Run");
 			}
-			else if (InputManager.GetButton(InputManager.ConfigAction.Crouch))
+			else if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Crouch))
 			{
 				if (lastMovementState != MovementState.Crouch)
 				{
@@ -643,8 +643,8 @@ namespace ZeroGravity.CharacterMovement
 				myPlayer.HealthSounds.Switch("WalkRun", "Walk");
 			}
 
-			movementAxis.Forward = InputManager.GetAxisRaw(InputManager.ConfigAction.Forward);
-			movementAxis.Right = InputManager.GetAxisRaw(InputManager.ConfigAction.Right);
+			movementAxis.Forward = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Forward);
+			movementAxis.Right = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Right);
 			movementAxis.Forward *= stanceSpeedMultiplier;
 			movementAxis.Right *= stanceSpeedMultiplier;
 			if (movementAxis.Forward != 0f && movementAxis.Right != 0f)
@@ -708,7 +708,7 @@ namespace ZeroGravity.CharacterMovement
 				null, null, null, null, null, null, null, null, null, flag, null, null, null, null, null, null, null,
 				null, num);
 			if (isMovementEnabled && crouchLerpHelper.IsEpsilonEqual(1f, 0.001f) && isGrounded &&
-			    InputManager.GetButtonDown(InputManager.ConfigAction.Jump))
+			    ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Jump))
 			{
 				_doJump = true;
 			}
@@ -719,7 +719,7 @@ namespace ZeroGravity.CharacterMovement
 			cameraController.SetLeanRightAxis(0f);
 			if (isOnLadder)
 			{
-				float axisRaw = InputManager.GetAxisRaw(InputManager.ConfigAction.Forward);
+				float axisRaw = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Forward);
 				base.transform.Translate(base.transform.up * (axisRaw * ladderVelocity * Time.fixedDeltaTime),
 					Space.World);
 				AnimatorHelper animHelper = myPlayer.animHelper;
@@ -840,7 +840,7 @@ namespace ZeroGravity.CharacterMovement
 
 				bool? isMoving = rigidBody.velocity.magnitude > float.Epsilon;
 				animatorHelper.SetParameter(null, isMoving);
-				if (InputManager.GetButton(InputManager.ConfigAction.Crouch))
+				if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Crouch))
 				{
 					lastMovementState = MovementState.Crouch;
 				}
@@ -921,7 +921,7 @@ namespace ZeroGravity.CharacterMovement
 					animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null,
 						velocityRight, ladderDirection);
 					if (_slopeJumpTimer > 1f && isGrounded &&
-					    InputManager.GetButtonDown(InputManager.ConfigAction.Jump))
+					    ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Jump))
 					{
 						float num2 = Mathf.Sqrt(2f * jumpHeightMax * myPlayer.Gravity.magnitude);
 						rigidBody.AddForce(base.transform.up * num2, ForceMode.VelocityChange);
@@ -935,8 +935,8 @@ namespace ZeroGravity.CharacterMovement
 			}
 			else if (isMovementEnabled)
 			{
-				float axisRaw2 = InputManager.GetAxisRaw(InputManager.ConfigAction.Forward);
-				float axisRaw3 = InputManager.GetAxisRaw(InputManager.ConfigAction.Right);
+				float axisRaw2 = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Forward);
+				float axisRaw3 = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Right);
 				if (axisRaw2 != 0f && Vector3.Project(rigidBody.velocity, base.transform.forward).sqrMagnitude <
 				    ((!(movementAxis.Forward > 0f))
 					    ? (airSpeeds.BackwardVelocity * airSpeeds.BackwardVelocity)
@@ -996,16 +996,16 @@ namespace ZeroGravity.CharacterMovement
 		private void Calculate0GMovementData()
 		{
 			// Get normal input.
-			movementAxis.Forward = InputManager.GetAxis(InputManager.ConfigAction.Forward);
-			movementAxis.Right = InputManager.GetAxis(InputManager.ConfigAction.Right);
-			movementAxis.LeanRight = InputManager.GetAxis(InputManager.ConfigAction.Lean);
+			movementAxis.Forward = ControlsSubsystem.GetAxis(ControlsSubsystem.ConfigAction.Forward);
+			movementAxis.Right = ControlsSubsystem.GetAxis(ControlsSubsystem.ConfigAction.Right);
+			movementAxis.LeanRight = ControlsSubsystem.GetAxis(ControlsSubsystem.ConfigAction.Lean);
 
 			// Get vertical input.
-			if (InputManager.GetButton(InputManager.ConfigAction.Jump))
+			if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Jump))
 			{
 				movementAxis.Up = Mathf.Min(movementAxis.Up + Time.fixedDeltaTime * 4f, 1f);
 			}
-			else if (InputManager.GetButton(InputManager.ConfigAction.Crouch))
+			else if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Crouch))
 			{
 				movementAxis.Up = Mathf.Max(movementAxis.Up - Time.fixedDeltaTime * 4f, -1f);
 			}
@@ -1103,7 +1103,7 @@ namespace ZeroGravity.CharacterMovement
 		{
 			if (isOnLadder)
 			{
-				float axisRaw = InputManager.GetAxisRaw(InputManager.ConfigAction.Forward);
+				float axisRaw = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Forward);
 				base.transform.Translate(base.transform.up * (axisRaw * ladderVelocity * Time.fixedDeltaTime),
 					Space.World);
 				AnimatorHelper animHelper = myPlayer.animHelper;
@@ -1132,7 +1132,7 @@ namespace ZeroGravity.CharacterMovement
 
 				Calculate0GMovementData();
 				cameraController.SetLeanRightAxis(0f - movementAxis.LeanRight);
-				bool hasToStabilise = InputManager.GetButton(InputManager.ConfigAction.Sprint) ||
+				bool hasToStabilise = ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Sprint) ||
 				                      (myPlayer.IsUsingItemInHands &&
 				                       myPlayer.Inventory.CheckIfItemInHandsIsType<HandDrill>());
 				if (hasToStabilise && canGrabWall && NearbyVessel != null &&

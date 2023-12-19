@@ -10,7 +10,7 @@ namespace ZeroGravity.Network
 
 		public float Time;
 
-		public GameScenes.SceneID RescueShipSceneID;
+		public GameScenes.SceneId RescueShipSceneID;
 
 		public string RescueShipTag;
 	}

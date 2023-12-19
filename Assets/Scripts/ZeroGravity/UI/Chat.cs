@@ -53,21 +53,19 @@ namespace ZeroGravity.UI
 
 		[FormerlySerializedAs("_worldState")] [SerializeField] private World _world;
 
-		[SerializeField] private NakamaClient _nakamaClient;
-
 		private void Start()
 		{
-			_nakamaClient.OnChatMessageReceived += ReceiveMessage;
+			NakamaClient.OnChatMessageReceived += ReceiveMessage;
 		}
 
 		private void Update()
 		{
-			if (!Settings.Instance.SettingsData.GameSettings.DisableChat)
+			if (!Settings.SettingsData.GameSettings.DisableChat)
 			{
-				if (InputManager.GetButtonDown(InputManager.ConfigAction.Chat) && !ChatInputBox.activeInHierarchy &&
+				if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Chat) && !ChatInputBox.activeInHierarchy &&
 				    !_world.InGameGUI.Console.gameObject.activeInHierarchy &&
 				    !_world.InGameGUI.IsInputFieldIsActive && !_world.InGameGUI.OverlayCanvasIsOn &&
-				    !InputManager.GetButton(InputManager.ConfigAction.Drop))
+				    !ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Drop))
 				{
 					ShowChat(true);
 				}
@@ -101,7 +99,7 @@ namespace ZeroGravity.UI
 
 		private void OnDestroy()
 		{
-			_nakamaClient.OnChatMessageReceived -= ReceiveMessage;
+			NakamaClient.OnChatMessageReceived -= ReceiveMessage;
 		}
 
 		public void CreateSystemMessage(SystemMessagesTypes type, object[] param)
@@ -195,7 +193,7 @@ namespace ZeroGravity.UI
 				TextChatMessage textChatMessage = new TextChatMessage();
 				textChatMessage.MessageText = messageText;
 				textChatMessage.Local = true;
-				NetworkController.Instance.SendToGameServer(textChatMessage);
+				NetworkController.SendToGameServer(textChatMessage);
 			}
 			else
 			{
@@ -207,7 +205,7 @@ namespace ZeroGravity.UI
 		{
 			if (show)
 			{
-				InputManager.ResetInputAxis();
+				ControlsSubsystem.ResetInputAxis();
 				yield return new WaitForSeconds(0.2f);
 			}
 
@@ -225,7 +223,7 @@ namespace ZeroGravity.UI
 		// Shows or hides the chat box.
 		private void ShowChat(bool show)
 		{
-			if (Settings.Instance.SettingsData.GameSettings.DisableChat)
+			if (Settings.SettingsData.GameSettings.DisableChat)
 			{
 				return;
 			}
@@ -271,7 +269,7 @@ namespace ZeroGravity.UI
 			}
 			else if (ChatInput.text.Equals("/g", StringComparison.OrdinalIgnoreCase))
 			{
-				if (await _nakamaClient.JoinChatRoom(ChatState.Global))
+				if (await NakamaClient.JoinChatRoom(ChatState.Global))
 				{
 					_chatState = ChatState.Global;
 					ChatInput.text = string.Empty;
@@ -279,12 +277,12 @@ namespace ZeroGravity.UI
 				}
 				else
 				{
-					Dbg.Error("Setting chat mode to party failed.");
+					Debug.LogError("Setting chat mode to party failed.");
 				}
 			}
 			else if (ChatInput.text.Equals("/p", StringComparison.OrdinalIgnoreCase))
 			{
-				if (await _nakamaClient.JoinChatRoom(ChatState.Party))
+				if (await NakamaClient.JoinChatRoom(ChatState.Party))
 				{
 					_chatState = ChatState.Party;
 					ChatInput.text = string.Empty;
@@ -292,7 +290,7 @@ namespace ZeroGravity.UI
 				}
 				else
 				{
-					Dbg.Error("Setting chat mode to party failed.");
+					Debug.LogError("Setting chat mode to party failed.");
 				}
 			}
 

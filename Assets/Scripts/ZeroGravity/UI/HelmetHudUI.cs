@@ -181,14 +181,14 @@ namespace ZeroGravity.UI
 		private void Start()
 		{
 			ToggleTargetingInfo.text = string.Format(Localization.PressToToggleTargeting.ToUpper(),
-				InputManager.GetAxisKeyName(InputManager.ConfigAction.HelmetRadar));
+				ControlsSubsystem.GetAxisKeyName(ControlsSubsystem.ConfigAction.HelmetRadar));
 			UpdateQuickSlots();
 		}
 
 		private void Update()
 		{
 			if (Radar.CanRadarWork && Radar.AllTargets.Count > 0 &&
-			    InputManager.GetButtonDown(InputManager.ConfigAction.HelmetRadar))
+			    ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.HelmetRadar))
 			{
 				Radar.ToggleTargeting(!Radar.IsActive);
 			}
@@ -341,7 +341,7 @@ namespace ZeroGravity.UI
 
 			if (MyPlayer.Instance.FpsController.IsJetpackOn)
 			{
-				StabilityOn.Activate(InputManager.GetButton(InputManager.ConfigAction.Sprint));
+				StabilityOn.Activate(ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Sprint));
 			}
 			else if (StabilityOn.activeInHierarchy)
 			{
@@ -366,7 +366,7 @@ namespace ZeroGravity.UI
 			OxygenFiller.fillAmount = CurrentHelmet.Oxygen;
 			OxygenWarning.Activate(CurrentHelmet.Oxygen < 0.21f);
 			LightsOn.Activate(CurrentHelmet.LightOn);
-			if (Settings.Instance.SettingsData.GameSettings.ShowTips)
+			if (Settings.SettingsData.GameSettings.ShowTips)
 			{
 				ZeroGravityTips.Activate(MyPlayer.Instance.FpsController.IsZeroG);
 			}

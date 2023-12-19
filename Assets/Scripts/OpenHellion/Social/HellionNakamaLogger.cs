@@ -17,8 +17,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using System;
-using Nakama;
+using UnityEngine;
+using ILogger = Nakama.ILogger;
 
 namespace OpenHellion.Social
 {
@@ -29,22 +29,22 @@ namespace OpenHellion.Social
 	{
 		public void DebugFormat(string format, params object[] args)
 		{
-			Dbg.Log(String.Format(format, args));
+			Debug.LogFormat(format, args);
 		}
 
 		public void ErrorFormat(string format, params object[] args)
 		{
-			Dbg.Error(String.Format(format, args));
+			Debug.LogErrorFormat(format, args);
 		}
 
 		public void InfoFormat(string format, params object[] args)
 		{
-			Dbg.Info(String.Format(format, args));
+			Debug.LogFormat(format, args);
 		}
 
 		public void WarnFormat(string format, params object[] args)
 		{
-			Dbg.Warning(String.Format(format, args));
+			Debug.LogWarningFormat(format, args);
 		}
 	}
 }

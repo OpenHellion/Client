@@ -84,11 +84,11 @@ namespace ZeroGravity.Objects
 
 		public static Corpse SpawnCorpse(Corpse template)
 		{
-			GameObject gameObject = ((template.Gender != 0)
-				? (UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpseFemale"),
-					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject)
-				: (UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpse"),
-					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject));
+			GameObject gameObject = template.Gender != 0
+				? UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpseFemale"),
+					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject
+				: UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpse"),
+					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject;
 			gameObject.SetActive(value: false);
 			Corpse component = gameObject.GetComponent<Corpse>();
 			component.Gender = template.Gender;
@@ -122,21 +122,20 @@ namespace ZeroGravity.Objects
 				return null;
 			}
 
-			SpaceObject @object = World.GetObject(details.ParentGUID, details.ParentType);
-			if (@object == null)
+			SpaceObject spaceObject = World.GetObject(details.ParentGUID, details.ParentType);
+			if (spaceObject == null)
 			{
-				Dbg.Error("Cannot spawn corpse because there is no corpse parent", details.GUID, details.ParentGUID,
-					details.ParentType);
+				Debug.LogError("Cannot spawn corpse because there is no corpse parent" + details.GUID + details.ParentGUID + details.ParentType);
 				return null;
 			}
 
-			GameObject gameObject = ((details.Gender != 0)
-				? (UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpseFemale"),
-					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject)
-				: (UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpse"),
-					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject));
-			gameObject.SetActive(value: false);
-			Corpse component = gameObject.GetComponent<Corpse>();
+			GameObject corpseObj = details.Gender == 0
+				? Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpse"),
+					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject
+				: Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpseFemale"),
+					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject;
+			corpseObj.SetActive(value: false);
+			Corpse component = corpseObj.GetComponent<Corpse>();
 			component.Gender = details.Gender;
 			component.GUID = details.GUID;
 			component.animHelper.CreateRig();
@@ -162,7 +161,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			component.Parent = @object;
+			component.Parent = spaceObject;
 			component.transform.localPosition = details.LocalPosition.ToVector3();
 			component.transform.localRotation = details.LocalRotation.ToQuaternion();
 			if (playerThatDied != null)
@@ -172,7 +171,7 @@ namespace ZeroGravity.Objects
 			}
 
 			component.SetKinematic(toggle: false);
-			gameObject.SetActive(value: true);
+			corpseObj.SetActive(value: true);
 			component.ragdollComponent.ToggleRagdoll(enabled: true, component);
 			if (component.Inventory.ItemInHands != null)
 			{
@@ -234,7 +233,7 @@ namespace ZeroGravity.Objects
 				corpsePart.Trans.hasChanged = false;
 			}
 
-			NetworkController.Instance.SendToGameServer(corpseMovementMessage2);
+			NetworkController.SendToGameServer(corpseMovementMessage2);
 		}
 
 		public void CopyPositionFromPlayer(OtherPlayer player)
@@ -277,7 +276,7 @@ namespace ZeroGravity.Objects
 					rigidbody = bone.Value.GetComponent<Rigidbody>();
 					if (rigidbody == null)
 					{
-						Dbg.Error("Missing rigidbody on ragdoll colliders", component.name, base.GUID);
+						Debug.LogError("Missing rigidbody on ragdoll colliders" + component.name + base.GUID);
 						return;
 					}
 
@@ -350,7 +349,7 @@ namespace ZeroGravity.Objects
 				child.localScale = Vector3.one;
 				child.localPosition = Vector3.zero;
 				child.localRotation =
-					Quaternion.Euler((!(child.name == "Root")) ? Vector3.zero : new Vector3(0f, 90f, -90f));
+					Quaternion.Euler(!(child.name == "Root") ? Vector3.zero : new Vector3(0f, 90f, -90f));
 				child.gameObject.SetActive(activeGeometry);
 			}
 		}
@@ -407,7 +406,7 @@ namespace ZeroGravity.Objects
 			corpseStatsMessage.LocalPosition = base.transform.localPosition.ToArray();
 			corpseStatsMessage.LocalRotation = base.transform.localRotation.ToArray();
 			CorpseStatsMessage data = corpseStatsMessage;
-			NetworkController.Instance.SendToGameServer(data);
+			NetworkController.SendToGameServer(data);
 		}
 
 		public InventorySlot GetInventorySlot(short attachedToID)
@@ -477,8 +476,8 @@ namespace ZeroGravity.Objects
 				ArtificialBody artificialBody = Parent as ArtificialBody;
 				if (artificialBody == null)
 				{
-					Dbg.Error("Corpse exited vessel but we don't know from where.", base.GUID, Parent,
-						corpseStatsMessage.ParentType, corpseStatsMessage.ParentGUID);
+					Debug.LogError("Corpse exited vessel but we don't know from where." + base.GUID + Parent +
+						corpseStatsMessage.ParentType + corpseStatsMessage.ParentGUID);
 				}
 				else
 				{
@@ -553,12 +552,12 @@ namespace ZeroGravity.Objects
 		{
 			if (!IsKinematic)
 			{
-				ArtificialBody artificialBody = ((!(Parent is SpaceObjectVessel))
-					? (Parent as ArtificialBody)
-					: (Parent as SpaceObjectVessel).MainVessel);
+				ArtificialBody artificialBody = !(Parent is SpaceObjectVessel)
+					? Parent as ArtificialBody
+					: (Parent as SpaceObjectVessel).MainVessel;
 				if (artificialBody == null)
 				{
-					Dbg.Error("Corpse cannot exit vessel, cannot find parents artificial body", base.name, base.GUID);
+					Debug.LogError("Corpse cannot exit vessel, cannot find parents artificial body" + base.name + base.GUID);
 				}
 				else
 				{

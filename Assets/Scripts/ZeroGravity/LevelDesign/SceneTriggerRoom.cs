@@ -108,8 +108,8 @@ namespace ZeroGravity.LevelDesign
 
 		public int InSceneID
 		{
-			get { return _inSceneID; }
-			set { _inSceneID = value; }
+			get => _inSceneID;
+			set => _inSceneID = value;
 		}
 
 		public override bool IsInteractable => false;
@@ -126,19 +126,19 @@ namespace ZeroGravity.LevelDesign
 
 		public bool UseGravity
 		{
-			get { return !GravityMalfunction && _UseGravity; }
-			set { _UseGravity = value; }
+			get => !GravityMalfunction && _UseGravity;
+			set => _UseGravity = value;
 		}
 
 		public float AirQuality
 		{
-			get { return _AirQuality; }
-			set { _AirQuality = value; }
+			get => _AirQuality;
+			set => _AirQuality = value;
 		}
 
 		public float AirPressure
 		{
-			get { return _AirPressure; }
+			get => _AirPressure;
 			set
 			{
 				_AirPressure = value;
@@ -325,7 +325,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void ChangeAirPressure(float pressure)
 		{
-			NetworkController.Instance.SendToGameServer(new RoomPressureMessage
+			NetworkController.SendToGameServer(new RoomPressureMessage
 			{
 				ID = new VesselObjectID(ParentVessel.GUID, InSceneID),
 				TargetPressure = pressure
@@ -334,7 +334,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void ChangeAirPressure(SceneTriggerRoom room)
 		{
-			NetworkController.Instance.SendToGameServer(new RoomPressureMessage
+			NetworkController.SendToGameServer(new RoomPressureMessage
 			{
 				ID = new VesselObjectID(ParentVessel.GUID, InSceneID),
 				TargetRoomID = ((!(room == null)) ? new VesselObjectID(room.ParentVessel.GUID, room.InSceneID) : null)

@@ -41,10 +41,6 @@ namespace ZeroGravity.UI
 
 		public GameObject ReportServerButton;
 
-		public Text ServerNameText;
-
-		public Text ServerDescriptionText;
-
 		public GameObject ServerRestart;
 
 		public Text ServerRestartTime;
@@ -96,7 +92,7 @@ namespace ZeroGravity.UI
 				}
 				else
 				{
-					SettingsMenu(false);
+					GlobalGUI.CloseSettingsScreen();
 				}
 			}
 		}
@@ -109,16 +105,14 @@ namespace ZeroGravity.UI
 			{
 				ServerInfoScreen.SetActive(false);
 				InGameMenuScreen.SetActive(true);
-				ServerNameText.text = Localization.Multiplayer;
-				ServerDescriptionText.text = MainMenuGUI.LastConnectedServer.Description;
 				ReportServerButton.SetActive(true);
-				LogoutMainMenu.text = (true) ? Localization.Logout.ToUpper() : Localization.MainMenu.ToUpper();
+				LogoutMainMenu.text = Localization.Logout.ToUpper();
 			}
 		}
 
 		public void SettingsMenu(bool isUp)
 		{
-			if (!isUp && Settings.Instance.ControlsComponent.ControlsRebind.CheckIfEmpty())
+			if (!isUp && Settings.ControlsRebind.CheckIfEmpty())
 			{
 				return;
 			}
@@ -128,14 +122,14 @@ namespace ZeroGravity.UI
 			if (isUp)
 			{
 				ActionOnButton(0);
-				_oldSettings = JsonSerialiser.Serialize(GetComponent<Settings>().SettingsData);
+				_oldSettings = JsonSerialiser.Serialize(Settings.SettingsData);
 
 				gameMenuUp = false;
 				MainMenu(false);
 				return;
 			}
 
-			_newSettings = JsonSerialiser.Serialize(GetComponent<Settings>().SettingsData);
+			_newSettings = JsonSerialiser.Serialize(Settings.SettingsData);
 			if (_oldSettings != _newSettings)
 			{
 				GlobalGUI.ShowConfirmMessageBox(Localization.Settings, Localization.AreYouSureYouWantToSave,
@@ -239,24 +233,23 @@ namespace ZeroGravity.UI
 			MainMenu(!gameMenuUp);
 		}
 
-		public void ControlsResetToDefaultYes()
-		{
-			InputManager.LoadDefaultConfig();
-			Settings.Instance.SaveSettings(Settings.SettingsType.Controls);
-		}
-
-		public void ControlsResetToDefault()
+		private void ResetKeybindings()
 		{
 			GlobalGUI.ShowConfirmMessageBox(Localization.ResetControls, Localization.ResetControlsMessage,
-				Localization.Yes, Localization.No, ControlsResetToDefaultYes);
+				Localization.Yes, Localization.No,
+				() =>
+				{
+					ControlsSubsystem.Reset();
+					Settings.SaveSettings(Settings.SettingsType.Controls);
+				});
 		}
 
-		public void SaveSettingsButton()
+		private void SaveSettingsButton()
 		{
-			if (!Settings.Instance.ControlsComponent.ControlsRebind.CheckIfEmpty())
+			if (!Settings.ControlsRebind.CheckIfEmpty())
 			{
-				string text = JsonSerialiser.Serialize(GetComponent<Settings>().SettingsData);
-				if (!(text == _oldSettings))
+				string text = JsonSerialiser.Serialize(Settings.SettingsData);
+				if (text != _oldSettings)
 				{
 					GlobalGUI.ShowConfirmMessageBox(Localization.SaveGameSettings, Localization.AreYouSureYouWantToSave,
 						Localization.Yes, Localization.No, ConfirmSave, DiscardChanges);
@@ -264,15 +257,15 @@ namespace ZeroGravity.UI
 			}
 		}
 
-		public void ConfirmSave()
+		private void ConfirmSave()
 		{
-			Settings.Instance.SaveSettings(Settings.SettingsType.All);
-			_oldSettings = JsonSerialiser.Serialize(GetComponent<Settings>().SettingsData);
+			Settings.SaveSettings(Settings.SettingsType.All);
+			_oldSettings = JsonSerialiser.Serialize(Settings.SettingsData);
 		}
 
-		public void DiscardChanges()
+		private void DiscardChanges()
 		{
-			Settings.Instance.LoadSettings(Settings.SettingsType.All);
+			Settings.LoadSettings(Settings.SettingsType.All);
 		}
 
 		public void ServerInfoButton()

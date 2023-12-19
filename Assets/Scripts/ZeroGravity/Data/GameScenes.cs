@@ -4,7 +4,7 @@ namespace ZeroGravity.Data
 {
 	public static class GameScenes
 	{
-		public enum SceneID
+		public enum SceneId
 		{
 			SolarSystemSetup = -3,
 			ItemScene = -2,
@@ -75,295 +75,295 @@ namespace ZeroGravity.Data
 
 			public const int RefiningStationsTo = 9;
 
-			public static bool IsDerelict(SceneID sceneId)
+			public static bool IsDerelict(SceneId sceneId)
 			{
-				return sceneId == SceneID.Generic_Debris_JuncRoom001 || sceneId == SceneID.Generic_Debris_JuncRoom002 ||
-				       sceneId == SceneID.Generic_Debris_Corridor001 || sceneId == SceneID.Generic_Debris_Corridor002;
+				return sceneId == SceneId.Generic_Debris_JuncRoom001 || sceneId == SceneId.Generic_Debris_JuncRoom002 ||
+				       sceneId == SceneId.Generic_Debris_Corridor001 || sceneId == SceneId.Generic_Debris_Corridor002;
 			}
 
-			public static bool IsShip(SceneID sceneId)
+			public static bool IsShip(SceneId sceneId)
 			{
-				return sceneId == SceneID.AltCorp_Shuttle_SARA || sceneId == SceneID.AltCorp_Ship_Tamara ||
-				       sceneId == SceneID.Slavica || sceneId == SceneID.AltCorp_Shuttle_CECA;
+				return sceneId == SceneId.AltCorp_Shuttle_SARA || sceneId == SceneId.AltCorp_Ship_Tamara ||
+				       sceneId == SceneId.Slavica || sceneId == SceneId.AltCorp_Shuttle_CECA;
 			}
 
-			public static bool IsAsteroid(SceneID sceneId)
+			public static bool IsAsteroid(SceneId sceneId)
 			{
-				return sceneId >= SceneID.Asteroid01;
+				return sceneId >= SceneId.Asteroid01;
 			}
 
-			public static bool IsModule(SceneID sceneId)
+			public static bool IsModule(SceneId sceneId)
 			{
 				return !IsShip(sceneId) && !IsDerelict(sceneId) && !IsAsteroid(sceneId);
 			}
 
-			public static bool IsVessel(SceneID sceneId)
+			public static bool IsVessel(SceneId sceneId)
 			{
 				return IsShip(sceneId) || IsModule(sceneId);
 			}
 		}
 
-		public static Dictionary<string, SceneID> Scenes = new Dictionary<string, SceneID>
+		public static Dictionary<string, SceneId> Scenes = new Dictionary<string, SceneId>
 		{
 			{
 				"Assets/Scene/SolarSystemSetup.unity",
-				SceneID.SolarSystemSetup
+				SceneId.SolarSystemSetup
 			},
 			{
 				"Assets/Scene/ItemScene.unity",
-				SceneID.ItemScene
+				SceneId.ItemScene
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_CorridorModule/AltCorp_CorridorModule.unity",
-				SceneID.AltCorp_CorridorModule
+				SceneId.AltCorp_CorridorModule
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_CorridorIntersectionModule/AltCorp_CorridorIntersectionModule.unity",
-				SceneID.AltCorp_CorridorIntersectionModule
+				SceneId.AltCorp_CorridorIntersectionModule
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/Altcorp_Corridor45TurnModule/AltCorp_Corridor45TurnModule.unity",
-				SceneID.AltCorp_Corridor45TurnModule
+				SceneId.AltCorp_Corridor45TurnModule
 			},
 			{
 				"Assets/Scene/Environment/Ship/AltCorp_Shuttle_SARA/AltCorp_Shuttle_SARA.unity",
-				SceneID.AltCorp_Shuttle_SARA
+				SceneId.AltCorp_Shuttle_SARA
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/ALtCorp_PowerSupply_Module/ALtCorp_PowerSupply_Module.unity",
-				SceneID.ALtCorp_PowerSupply_Module
+				SceneId.ALtCorp_PowerSupply_Module
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_LifeSupportModule/AltCorp_LifeSupportModule.unity",
-				SceneID.AltCorp_LifeSupportModule
+				SceneId.AltCorp_LifeSupportModule
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_Cargo_Module/AltCorp_Cargo_Module.unity",
-				SceneID.AltCorp_Cargo_Module
+				SceneId.AltCorp_Cargo_Module
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_CorridorVertical/AltCorp_CorridorVertical.unity",
-				SceneID.AltCorp_CorridorVertical
+				SceneId.AltCorp_CorridorVertical
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_Command_Module/AltCorp_Command_Module.unity",
-				SceneID.AltCorp_Command_Module
+				SceneId.AltCorp_Command_Module
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_Corridor45TurnRightModule/AltCorp_Corridor45TurnRightModule.unity",
-				SceneID.AltCorp_Corridor45TurnRightModule
+				SceneId.AltCorp_Corridor45TurnRightModule
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_StartingModule/AltCorp_StartingModule.unity",
-				SceneID.AltCorp_StartingModule
+				SceneId.AltCorp_StartingModule
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Module_JuncRoom001/Generic_Debris_Module_JuncRoom001.unity",
-				SceneID.Generic_Debris_JuncRoom001
+				SceneId.Generic_Debris_JuncRoom001
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Module_JuncRoom002/Generic_Debris_Module_JuncRoom002.unity",
-				SceneID.Generic_Debris_JuncRoom002
+				SceneId.Generic_Debris_JuncRoom002
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Module_Corridor001/Generic_Debris_Module_Corridor001.unity",
-				SceneID.Generic_Debris_Corridor001
+				SceneId.Generic_Debris_Corridor001
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Module_Corridor002/Generic_Debris_Module_Corridor002.unity",
-				SceneID.Generic_Debris_Corridor002
+				SceneId.Generic_Debris_Corridor002
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_Airlock_Module/AltCorp_Airlock_Module.unity",
-				SceneID.AltCorp_AirLock
+				SceneId.AltCorp_AirLock
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_DockableContainer/AltCorp_DockableContainer.unity",
-				SceneID.AltCorp_DockableContainer
+				SceneId.AltCorp_DockableContainer
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Outpost001/Generic_Debris_Outpost001.unity",
-				SceneID.Generic_Debris_Outpost001
+				SceneId.Generic_Debris_Outpost001
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_CrewQuarters_Module/AltCorp_CrewQuarters_Module.unity",
-				SceneID.AltCorp_CrewQuarters_Module
+				SceneId.AltCorp_CrewQuarters_Module
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Spawn1/Generic_Debris_Spawn1.unity",
-				SceneID.Generic_Debris_Spawn1
+				SceneId.Generic_Debris_Spawn1
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Spawn2/Generic_Debris_Spawn2.unity",
-				SceneID.Generic_Debris_Spawn2
+				SceneId.Generic_Debris_Spawn2
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/Generic/Generic_Debris_Spawn3/Generic_Debris_Spawn3.unity",
-				SceneID.Generic_Debris_Spawn3
+				SceneId.Generic_Debris_Spawn3
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_SolarPowerModule/AltCorp_SolarPowerModule.unity",
-				SceneID.AltCorp_SolarPowerModule
+				SceneId.AltCorp_SolarPowerModule
 			},
 			{
 				"Assets/Scene/Environment/Ship/AltCorp_Shuttle_CECA/AltCorp_Shuttle_CECA.unity",
-				SceneID.AltCorp_Shuttle_CECA
+				SceneId.AltCorp_Shuttle_CECA
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_FabricatorModule/AltCorp_FabricatorModule.unity",
-				SceneID.AltCorp_FabricatorModule
+				SceneId.AltCorp_FabricatorModule
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp/AltCorp_PatchModule/AltCorp_PatchModule.unity",
-				SceneID.AltCorp_PatchModule
+				SceneId.AltCorp_PatchModule
 			},
 			{
 				"Assets/Scene/Environment/Other/SOE/SOE_Location002/SOE_Location002.unity",
-				SceneID.SOE_Location002
+				SceneId.SOE_Location002
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp_V02/AltCorp_Secure_Module/AltCorp_Secure_Module.unity",
-				SceneID.AltCorp_Secure_Module
+				SceneId.AltCorp_Secure_Module
 			},
 			{
 				"Assets/Scene/Environment/Ship/AltCorp_Shuttle_CECA/AltCorp_Destroyed_Shuttle_CECA.unity",
-				SceneID.AltCorp_Destroyed_Shuttle_CECA
+				SceneId.AltCorp_Destroyed_Shuttle_CECA
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp_V02/AltCorp_CorridorIntersection_Module/AltCorp_CorridorIntersection_MKII.unity",
-				SceneID.AltCorp_CorridorIntersection_MKII
+				SceneId.AltCorp_CorridorIntersection_MKII
 			},
 			{
 				"Assets/Scene/Environment/Station/Module/AltCorp_V02/AltCorp_Corridor_Module/AlrCorp_Corridor_MKII.unity",
-				SceneID.AlrCorp_Corridor_MKII
+				SceneId.AlrCorp_Corridor_MKII
 			},
 			{
 				"Assets/Test/FlatShipTest.unity",
-				SceneID.FlatShipTest
+				SceneId.FlatShipTest
 			},
 			{
 				"Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid01/Asteroid01.unity",
-				SceneID.Asteroid01
+				SceneId.Asteroid01
 			},
 			{
 				"Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid02/Asteroid02.unity",
-				SceneID.Asteroid02
+				SceneId.Asteroid02
 			},
 			{
 				"Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid03/Asteroid03.unity",
-				SceneID.Asteroid03
+				SceneId.Asteroid03
 			},
 			{
 				"Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid04/Asteroid04.unity",
-				SceneID.Asteroid04
+				SceneId.Asteroid04
 			},
 			{
 				"Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid05/Asteroid05.unity",
-				SceneID.Asteroid05
+				SceneId.Asteroid05
 			},
 			{
 				"Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid06/Asteroid06.unity",
-				SceneID.Asteroid06
+				SceneId.Asteroid06
 			},
 			{
 				"Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid07/Asteroid07.unity",
-				SceneID.Asteroid07
+				SceneId.Asteroid07
 			},
 			{
 				"Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid08/Asteroid08.unity",
-				SceneID.Asteroid08
+				SceneId.Asteroid08
 			}
 		};
 
-		private static Dictionary<SceneID, string> shortVesselClassNames = new Dictionary<SceneID, string>
+		private static Dictionary<SceneId, string> shortVesselClassNames = new Dictionary<SceneId, string>
 		{
 			{
-				SceneID.AltCorp_LifeSupportModule,
+				SceneId.AltCorp_LifeSupportModule,
 				"LSM"
 			},
 			{
-				SceneID.ALtCorp_PowerSupply_Module,
+				SceneId.ALtCorp_PowerSupply_Module,
 				"PSM"
 			},
 			{
-				SceneID.AltCorp_AirLock,
+				SceneId.AltCorp_AirLock,
 				"AM"
 			},
 			{
-				SceneID.AltCorp_Cargo_Module,
+				SceneId.AltCorp_Cargo_Module,
 				"CBM"
 			},
 			{
-				SceneID.AltCorp_Command_Module,
+				SceneId.AltCorp_Command_Module,
 				"CM"
 			},
 			{
-				SceneID.AltCorp_DockableContainer,
+				SceneId.AltCorp_DockableContainer,
 				"IC"
 			},
 			{
-				SceneID.AltCorp_CorridorIntersectionModule,
+				SceneId.AltCorp_CorridorIntersectionModule,
 				"CTM"
 			},
 			{
-				SceneID.AltCorp_Corridor45TurnModule,
+				SceneId.AltCorp_Corridor45TurnModule,
 				"CLM"
 			},
 			{
-				SceneID.AltCorp_Corridor45TurnRightModule,
+				SceneId.AltCorp_Corridor45TurnRightModule,
 				"CRM"
 			},
 			{
-				SceneID.AltCorp_CorridorVertical,
+				SceneId.AltCorp_CorridorVertical,
 				"CSM"
 			},
 			{
-				SceneID.AltCorp_CorridorModule,
+				SceneId.AltCorp_CorridorModule,
 				"CIM"
 			},
 			{
-				SceneID.AltCorp_StartingModule,
+				SceneId.AltCorp_StartingModule,
 				"OUTP"
 			},
 			{
-				SceneID.AltCorp_Shuttle_SARA,
+				SceneId.AltCorp_Shuttle_SARA,
 				"ARG"
 			},
 			{
-				SceneID.AltCorp_CrewQuarters_Module,
+				SceneId.AltCorp_CrewQuarters_Module,
 				"CQM"
 			},
 			{
-				SceneID.AltCorp_SolarPowerModule,
+				SceneId.AltCorp_SolarPowerModule,
 				"SPM"
 			},
 			{
-				SceneID.AltCorp_FabricatorModule,
+				SceneId.AltCorp_FabricatorModule,
 				"FM"
 			},
 			{
-				SceneID.AltCorp_Shuttle_CECA,
+				SceneId.AltCorp_Shuttle_CECA,
 				"STE"
 			},
 			{
-				SceneID.AltCorp_PatchModule,
+				SceneId.AltCorp_PatchModule,
 				"PM"
 			},
 			{
-				SceneID.AltCorp_Secure_Module,
+				SceneId.AltCorp_Secure_Module,
 				"SCM"
 			},
 			{
-				SceneID.AltCorp_CorridorIntersection_MKII,
+				SceneId.AltCorp_CorridorIntersection_MKII,
 				"CTM2"
 			},
 			{
-				SceneID.AlrCorp_Corridor_MKII,
+				SceneId.AlrCorp_Corridor_MKII,
 				"CIM2"
 			}
 		};
 
-		public static string GetShortVesselClassName(SceneID sceneID)
+		public static string GetShortVesselClassName(SceneId sceneID)
 		{
 			try
 			{

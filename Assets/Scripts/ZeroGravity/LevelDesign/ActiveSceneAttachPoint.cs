@@ -11,7 +11,7 @@ namespace ZeroGravity.LevelDesign
 
 		public override Item Item
 		{
-			get { return base.Item; }
+			get => base.Item;
 			protected set
 			{
 				if (Item != value && Item != null && Item is IVesselSystemAccessory && BaseVesselSystem != null)
@@ -31,8 +31,8 @@ namespace ZeroGravity.LevelDesign
 
 		public VesselSystem BaseVesselSystem
 		{
-			get { return _BaseVesselSystem; }
-			set { _BaseVesselSystem = value; }
+			get => _BaseVesselSystem;
+			set => _BaseVesselSystem = value;
 		}
 
 		protected override void Start()

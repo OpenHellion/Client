@@ -22,8 +22,8 @@ namespace ZeroGravity.LevelDesign
 
 		public int InSceneID
 		{
-			get { return _inSceneID; }
-			set { _inSceneID = value; }
+			get => _inSceneID;
+			set => _inSceneID = value;
 		}
 
 		public void ToggleObjects(bool showEnabled)

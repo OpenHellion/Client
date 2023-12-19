@@ -1,36 +1,24 @@
-using UnityEngine;
-
-public class SoundManager : MonoBehaviour
+public static class SoundManager
 {
-	public static SoundManager Instance;
+	public const string MasterVolume = "MasterVolume";
 
-	public string MasterVolume;
+	public const string AmbienceVolume = "AmbienceVolume";
 
-	public string AmbienceVolume;
+	public const string EffectsVolume = "EffectsVolume";
 
-	public string EffectsVolume;
+	public const string HelmetOn = "HelmetOn";
 
-	public string HelmetOn;
+	public const string ImpactVelocity = "ImpactVelocity";
 
-	public string ImpactVelocity;
+	public const string Pressure = "Pressure";
 
-	public string Pressure;
+	public const string Health = "AmbienceVolume";
 
-	public string Health;
+	public const string RepairPointIntensity = "RepairPointIntensity";
 
-	public string RepairPointIntensity;
+	public const string InGameVolume = "InGameVolume";
 
-	public string InGameVolume;
+	public const string SpaceAmbience = "Space_ambience";
 
-	public string SpaceAmbience;
-
-	public string SpaceEnvironment;
-
-	private void Awake()
-	{
-		if (Instance == null)
-		{
-			Instance = this;
-		}
-	}
+	public const string SpaceEnvironment = "None";
 }

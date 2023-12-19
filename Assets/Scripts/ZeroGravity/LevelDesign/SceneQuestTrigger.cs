@@ -103,7 +103,7 @@ namespace ZeroGravity.LevelDesign
 			}
 			else
 			{
-				Dbg.Error("Scene Quest Trigger " + gameObject.name + " has no Task assigned!");
+				Debug.LogError("Scene Quest Trigger " + gameObject.name + " has no Task assigned!");
 			}
 		}
 
@@ -144,14 +144,14 @@ namespace ZeroGravity.LevelDesign
 				return;
 			}
 
-			NetworkController.Instance.SendToGameServer(new QuestTriggerMessage
+			NetworkController.SendToGameServer(new QuestTriggerMessage
 			{
 				QuestID = QuestID,
 				TriggerID = QuestTriggerID
 			});
 			foreach (QuestTaskObject item in AdditionalTasksToComplete)
 			{
-				NetworkController.Instance.SendToGameServer(new QuestTriggerMessage
+				NetworkController.SendToGameServer(new QuestTriggerMessage
 				{
 					QuestID = item.QuestID,
 					TriggerID = item.QuestTriggerID

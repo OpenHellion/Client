@@ -463,7 +463,7 @@ namespace ZeroGravity.Objects
 				return;
 			}
 
-			Dbg.Error("Cannot attach item to slot because there is no attach point for it", base.name, slot.SlotID);
+			Debug.LogErrorFormat("Cannot attach item to slot because there is no attach point for it {0}, id {1}", base.name, slot.SlotID);
 		}
 
 		public virtual void AttachToObject(BaseSceneAttachPoint attachPoint, bool hideObject, bool sendAttachMessage)
@@ -486,7 +486,7 @@ namespace ZeroGravity.Objects
 				return;
 			}
 
-			Dbg.Error("Cannot attach item to object", base.name, GUID, obj, obj.GUID);
+			Debug.LogErrorFormat("Cannot attach item to object, {0}, {1}, {2}, {3},", base.name, GUID, obj, obj.GUID);
 		}
 
 		public virtual void AttachToBone(Player pl, AnimatorHelper.HumanBones bone, bool resetTransform = true,
@@ -610,7 +610,7 @@ namespace ZeroGravity.Objects
 				}
 				catch (Exception ex)
 				{
-					Dbg.Error("Item attach point exception", ex.Message, ex.StackTrace);
+					Debug.LogException(ex);
 				}
 
 				if (DynamicObj.Parent is DynamicObject)
@@ -637,7 +637,7 @@ namespace ZeroGravity.Objects
 					}
 					else
 					{
-						Dbg.Error("Dynamic object cannot be attached to DynamicObjectRoot");
+						Debug.LogError("Dynamic object cannot be attached to DynamicObjectRoot");
 					}
 				}
 
@@ -707,7 +707,7 @@ namespace ZeroGravity.Objects
 			SpaceObject @object = World.GetObject(data.ParentGUID, data.ParentType);
 			if (@object == null)
 			{
-				Dbg.Error("Could not find space object to attach item to.", base.name, data.ParentGUID,
+				Debug.LogErrorFormat("Could not find space object to attach item to. {0}, {1}, {2}", base.name, data.ParentGUID,
 					data.ParentType);
 				return;
 			}
@@ -1114,7 +1114,7 @@ namespace ZeroGravity.Objects
 			if (!(DynamicObj.Parent is MyPlayer) &&
 			    (!(DynamicObj.Parent is DynamicObject) || !(DynamicObj.Parent.Parent is MyPlayer)))
 			{
-				Dbg.Error("Cannot drop/throw item if parent is not player", DynamicObj, DynamicObj.Parent,
+				Debug.LogErrorFormat("Cannot drop/throw item if parent is not player {0}, {1}, {2}", DynamicObj, DynamicObj.Parent,
 					DynamicObj.Parent.Parent);
 				return;
 			}
@@ -1723,7 +1723,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			NetworkController.Instance.SendToGameServer(new ExplosionMessage
+			NetworkController.SendToGameServer(new ExplosionMessage
 			{
 				AffectedGUIDs = hashSet.ToArray(),
 				ItemGUID = GUID,
@@ -1835,7 +1835,7 @@ namespace ZeroGravity.Objects
 							{
 								if (!MyPlayer.Instance.FpsController.IsZeroG &&
 								    !MyPlayer.Instance.FpsController.HasTumbled &&
-								    (!InputManager.GetButton(InputManager.ConfigAction.Sprint) ||
+								    (!ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Sprint) ||
 								     !MyPlayer.Instance.FpsController.IsGrounded))
 								{
 									MyPlayer.Instance.FpsController.Tumble();

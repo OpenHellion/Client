@@ -3,7 +3,6 @@ using Nakama;
 using OpenHellion;
 using OpenHellion.Net;
 using OpenHellion.Social;
-using OpenHellion.Social.RichPresence;
 using ThreeEyedGames;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -39,9 +38,7 @@ namespace ZeroGravity.LevelDesign
 
 		[FormerlySerializedAs("Executer")] public SceneTriggerExecutor Executor;
 
-		public string ExecuterState;
-
-		public string ExecuterOccupiedStates;
+		[FormerlySerializedAs("ExecuterState")] public string ExecutorState;
 
 		[HideInInspector] public SpaceObjectVessel ParentVessel;
 
@@ -55,8 +52,8 @@ namespace ZeroGravity.LevelDesign
 
 		public int InSceneID
 		{
-			get { return _inSceneID; }
-			set { _inSceneID = value; }
+			get => _inSceneID;
+			set => _inSceneID = value;
 		}
 
 		public long PlayerGUID { get; private set; }
@@ -159,7 +156,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (ParentVessel == null)
 			{
-				Dbg.Error("LockSpawnPoint, Spawn point vessel is NULL", base.name, InSceneID);
+				Debug.LogError("LockSpawnPoint, Spawn point vessel is NULL " + base.name + InSceneID);
 			}
 			else if (SpawnType != 0 && State != SpawnPointState.Locked && State != SpawnPointState.Authorized)
 			{
@@ -179,7 +176,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (ParentVessel == null)
 			{
-				Dbg.Error("UnlockSpawnPoint, Spawn point vessel is NULL", base.name, InSceneID);
+				Debug.LogError("UnlockSpawnPoint, Spawn point vessel is NULL" + base.name + InSceneID);
 			}
 			else if (SpawnType != 0 && State != 0 && State != SpawnPointState.Authorized &&
 			         PlayerGUID == MyPlayer.Instance.GUID)
@@ -200,7 +197,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (ParentVessel == null)
 			{
-				Dbg.Error("AuthorizeToSpawnPoint, Spawn point vessel is NULL", base.name, InSceneID);
+				Debug.LogError("AuthorizeToSpawnPoint, Spawn point vessel is NULL" + base.name + InSceneID);
 			}
 			else if (SpawnType != 0 && State != SpawnPointState.Authorized)
 			{
@@ -221,7 +218,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (ParentVessel == null)
 			{
-				Dbg.Error("HackSpawnPoint, Spawn point vessel is NULL", base.name, InSceneID);
+				Debug.LogError("HackSpawnPoint, Spawn point vessel is NULL" + base.name + InSceneID);
 			}
 			else if (SpawnType != 0 && State != 0 && State != SpawnPointState.Authorized &&
 			         PlayerGUID != MyPlayer.Instance.GUID)
@@ -243,7 +240,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (ParentVessel is null)
 			{
-				Dbg.Error("InvitePlayer, Spawn point vessel is NULL", base.name, InSceneID);
+				Debug.LogError("InvitePlayer, Spawn point vessel is NULL" + base.name + InSceneID);
 			}
 			else
 			{
@@ -298,7 +295,7 @@ namespace ZeroGravity.LevelDesign
 				List<PlayerInviteData> list = new List<PlayerInviteData>();
 
 				// Loop through each friend and add them to the list.
-				IApiFriend[] nakamaFriends = await _world.Nakama.GetFriends();
+				IApiFriend[] nakamaFriends = await NakamaClient.GetFriends();
 				foreach (IApiFriend friend in nakamaFriends)
 				{
 					// If friend is online.
@@ -319,7 +316,7 @@ namespace ZeroGravity.LevelDesign
 
 			if (getPlayerFromServer)
 			{
-				NetworkController.Instance.SendToGameServer(new PlayersOnServerRequest
+				NetworkController.SendToGameServer(new PlayersOnServerRequest
 				{
 					SpawnPointID = new VesselObjectID
 					{
@@ -343,7 +340,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				foreach (PlayerOnServerData item in data.PlayersOnServer)
 				{
-					if (item.PlayerId != await _world.Nakama.GetUserId())
+					if (item.PlayerId != await NakamaClient.GetUserId())
 					{
 						list.Add(new PlayerInviteData
 						{

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OpenHellion;
 using OpenHellion.Social.RichPresence;
+using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 
@@ -34,7 +35,7 @@ namespace ZeroGravity.Objects
 					return Localization.GetLocalizedField(QuestObject.Name, useDefault: true);
 				}
 
-				Dbg.Error("Quest has missing QuestObject (Quest ID: " + ID);
+				Debug.LogError("Quest has missing QuestObject (Quest ID: " + ID);
 				return string.Empty;
 			}
 		}
@@ -48,7 +49,7 @@ namespace ZeroGravity.Objects
 					return Localization.GetLocalizedField(QuestObject.Description, useDefault: true);
 				}
 
-				Dbg.Error("Quest has missing QuestObject (Quest ID: " + ID);
+				Debug.LogError("Quest has missing QuestObject (Quest ID: " + ID);
 				return string.Empty;
 			}
 		}

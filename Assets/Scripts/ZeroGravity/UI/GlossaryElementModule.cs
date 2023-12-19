@@ -6,7 +6,7 @@ namespace ZeroGravity.UI
 	[CreateAssetMenu(fileName = "GlossaryElementModule", menuName = "Glossary/Glossary Element Module")]
 	public class GlossaryElementModule : AbstractGlossaryElement
 	{
-		public GameScenes.SceneID Module;
+		public GameScenes.SceneId Module;
 
 		public override GlossaryCategory Category
 		{

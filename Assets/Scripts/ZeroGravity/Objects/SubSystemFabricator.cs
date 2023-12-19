@@ -132,7 +132,7 @@ namespace ZeroGravity.Objects
 
 		public void FabricateItem(ItemType type, GenericItemSubType subType, MachineryPartType partType, int tier)
 		{
-			NetworkController.Instance.SendToGameServer(new FabricateItemMessage
+			NetworkController.SendToGameServer(new FabricateItemMessage
 			{
 				ID = new VesselObjectID(base.ParentVessel.GUID, base.InSceneID),
 				ItemType = new ItemCompoundType
@@ -147,7 +147,7 @@ namespace ZeroGravity.Objects
 
 		public void CancelFabrication(bool currentItemOnly = false)
 		{
-			NetworkController.Instance.SendToGameServer(new CancelFabricationMessage
+			NetworkController.SendToGameServer(new CancelFabricationMessage
 			{
 				ID = new VesselObjectID(base.ParentVessel.GUID, base.InSceneID),
 				CurrentItemOnly = currentItemOnly

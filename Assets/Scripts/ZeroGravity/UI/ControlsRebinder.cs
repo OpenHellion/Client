@@ -90,58 +90,58 @@ namespace ZeroGravity.UI
 				new ControlItem
 				{
 					Name = Localization.Forward.ToUpper(),
-					Action = InputManager.ConfigAction.Forward
+					Action = ControlsSubsystem.ConfigAction.Forward
 				},
 				new ControlItem
 				{
 					Name = Localization.Backward.ToUpper(),
-					Action = InputManager.ConfigAction.Forward,
+					Action = ControlsSubsystem.ConfigAction.Forward,
 					IsPositive = false
 				},
 				new ControlItem
 				{
 					Name = Localization.Right.ToUpper(),
-					Action = InputManager.ConfigAction.Right
+					Action = ControlsSubsystem.ConfigAction.Right
 				},
 				new ControlItem
 				{
 					Name = Localization.Left.ToUpper(),
-					Action = InputManager.ConfigAction.Right,
+					Action = ControlsSubsystem.ConfigAction.Right,
 					IsPositive = false
 				},
 				new ControlItem
 				{
 					Name = Localization.RotationClockwise.ToUpper(),
-					Action = InputManager.ConfigAction.Lean
+					Action = ControlsSubsystem.ConfigAction.Lean
 				},
 				new ControlItem
 				{
 					Name = Localization.RotationAnticlockwise.ToUpper(),
-					Action = InputManager.ConfigAction.Lean,
+					Action = ControlsSubsystem.ConfigAction.Lean,
 					IsPositive = false
 				},
 				new ControlItem
 				{
 					Name = Localization.Jump.ToUpper() + " / <color='#A0D3F8'>" + Localization.Up.ToUpper() +
 					       "</color>",
-					Action = InputManager.ConfigAction.Jump
+					Action = ControlsSubsystem.ConfigAction.Jump
 				},
 				new ControlItem
 				{
 					Name = Localization.Crouch.ToUpper() + " / <color='#A0D3F8'>" + Localization.Down.ToUpper() +
 					       "</color>",
-					Action = InputManager.ConfigAction.Crouch
+					Action = ControlsSubsystem.ConfigAction.Crouch
 				},
 				new ControlItem
 				{
 					Name = Localization.Sprint.ToUpper() + " / <color='#A0D3F8'>" + Localization.Grab.ToUpper() +
 					       "</color> / " + Localization.Stabilization.ToUpper(),
-					Action = InputManager.ConfigAction.Sprint
+					Action = ControlsSubsystem.ConfigAction.Sprint
 				},
 				new ControlItem
 				{
 					Name = Localization.FreeLook.ToUpper(),
-					Action = InputManager.ConfigAction.FreeLook
+					Action = ControlsSubsystem.ConfigAction.FreeLook
 				}
 			};
 
@@ -151,48 +151,48 @@ namespace ZeroGravity.UI
 				{
 					Name = Localization.Inventory.ToUpper() + " / <color='#A0D3F8'>" +
 					       Localization.ExitPanel.ToUpper() + "</color>",
-					Action = InputManager.ConfigAction.Inventory
+					Action = ControlsSubsystem.ConfigAction.Inventory
 				},
 				new ControlItem
 				{
 					Name = Localization.Journal.ToUpper(),
-					Action = InputManager.ConfigAction.Journal
+					Action = ControlsSubsystem.ConfigAction.Journal
 				},
 				new ControlItem
 				{
 					Name = Localization.InteractTakeInHands.ToUpper(),
-					Action = InputManager.ConfigAction.Interact
+					Action = ControlsSubsystem.ConfigAction.Interact
 				},
 				new ControlItem
 				{
 					Name = Localization.DropThrow.ToUpper(),
-					Action = InputManager.ConfigAction.Drop
+					Action = ControlsSubsystem.ConfigAction.Drop
 				},
 				new ControlItem
 				{
 					Name = Localization.EquipItem.ToUpper() + " / <color='#A0D3F8'>" + Localization.Reload.ToUpper() +
 					       "</color> / " + Localization.ChangeDockingPort.ToUpper(),
-					Action = InputManager.ConfigAction.Equip
+					Action = ControlsSubsystem.ConfigAction.Equip
 				},
 				new ControlItem
 				{
 					Name = Localization.ChangeStance.ToUpper(),
-					Action = InputManager.ConfigAction.ChangeStance
+					Action = ControlsSubsystem.ConfigAction.ChangeStance
 				},
 				new ControlItem
 				{
 					Name = Localization.ToggleLights.ToUpper(),
-					Action = InputManager.ConfigAction.ToggleLights
+					Action = ControlsSubsystem.ConfigAction.ToggleLights
 				},
 				new ControlItem
 				{
 					Name = Localization.WeaponModKey.ToUpper(),
-					Action = InputManager.ConfigAction.WeaponMod
+					Action = ControlsSubsystem.ConfigAction.WeaponMod
 				},
 				new ControlItem
 				{
 					Name = Localization.Melee.ToUpper(),
-					Action = InputManager.ConfigAction.Melee
+					Action = ControlsSubsystem.ConfigAction.Melee
 				}
 			};
 
@@ -201,22 +201,22 @@ namespace ZeroGravity.UI
 				new ControlItem
 				{
 					Name = Localization.EngineToggle.ToUpper(),
-					Action = InputManager.ConfigAction.EngineToggle
+					Action = ControlsSubsystem.ConfigAction.EngineToggle
 				},
 				new ControlItem
 				{
 					Name = Localization.EngineThrustUp.ToUpper(),
-					Action = InputManager.ConfigAction.ThrustUp
+					Action = ControlsSubsystem.ConfigAction.ThrustUp
 				},
 				new ControlItem
 				{
 					Name = Localization.EngineThrustDown.ToUpper(),
-					Action = InputManager.ConfigAction.ThrustDown
+					Action = ControlsSubsystem.ConfigAction.ThrustDown
 				},
 				new ControlItem
 				{
 					Name = Localization.MatchVelocityControl.ToUpper(),
-					Action = InputManager.ConfigAction.MatchVelocity
+					Action = ControlsSubsystem.ConfigAction.MatchVelocity
 				}
 			};
 
@@ -225,37 +225,37 @@ namespace ZeroGravity.UI
 				new ControlItem
 				{
 					Name = Localization.ToggleVisor.ToUpper(),
-					Action = InputManager.ConfigAction.ToggleVisor
+					Action = ControlsSubsystem.ConfigAction.ToggleVisor
 				},
 				new ControlItem
 				{
 					Name = Localization.ToggleJetpack.ToUpper(),
-					Action = InputManager.ConfigAction.ToggleJetpack
+					Action = ControlsSubsystem.ConfigAction.ToggleJetpack
 				},
 				new ControlItem
 				{
 					Name = Localization.HelmetRadar.ToUpper(),
-					Action = InputManager.ConfigAction.HelmetRadar
+					Action = ControlsSubsystem.ConfigAction.HelmetRadar
 				},
 				new ControlItem
 				{
 					Name = Localization.TargetUp.ToUpper(),
-					Action = InputManager.ConfigAction.TargetUp
+					Action = ControlsSubsystem.ConfigAction.TargetUp
 				},
 				new ControlItem
 				{
 					Name = Localization.TargetDown.ToUpper(),
-					Action = InputManager.ConfigAction.TargetDown
+					Action = ControlsSubsystem.ConfigAction.TargetDown
 				},
 				new ControlItem
 				{
 					Name = Localization.FilterLeft.ToUpper(),
-					Action = InputManager.ConfigAction.FilterLeft
+					Action = ControlsSubsystem.ConfigAction.FilterLeft
 				},
 				new ControlItem
 				{
 					Name = Localization.FilterRight.ToUpper(),
-					Action = InputManager.ConfigAction.FilterRight
+					Action = ControlsSubsystem.ConfigAction.FilterRight
 				}
 			};
 
@@ -264,17 +264,17 @@ namespace ZeroGravity.UI
 				new ControlItem
 				{
 					Name = Localization.Chat.ToUpper(),
-					Action = InputManager.ConfigAction.Chat
+					Action = ControlsSubsystem.ConfigAction.Chat
 				},
 				new ControlItem
 				{
 					Name = Localization.Talk.ToUpper(),
-					Action = InputManager.ConfigAction.Talk
+					Action = ControlsSubsystem.ConfigAction.Talk
 				},
 				new ControlItem
 				{
 					Name = Localization.Radio.ToUpper(),
-					Action = InputManager.ConfigAction.Radio
+					Action = ControlsSubsystem.ConfigAction.Radio
 				}
 			};
 
@@ -283,22 +283,22 @@ namespace ZeroGravity.UI
 				new ControlItem
 				{
 					Name = Localization.Quick1,
-					Action = InputManager.ConfigAction.Quick1
+					Action = ControlsSubsystem.ConfigAction.Quick1
 				},
 				new ControlItem
 				{
 					Name = Localization.Quick2,
-					Action = InputManager.ConfigAction.Quick2
+					Action = ControlsSubsystem.ConfigAction.Quick2
 				},
 				new ControlItem
 				{
 					Name = Localization.Quick3,
-					Action = InputManager.ConfigAction.Quick3
+					Action = ControlsSubsystem.ConfigAction.Quick3
 				},
 				new ControlItem
 				{
 					Name = Localization.Quick4,
-					Action = InputManager.ConfigAction.Quick4
+					Action = ControlsSubsystem.ConfigAction.Quick4
 				}
 			};
 		}
@@ -408,7 +408,7 @@ namespace ZeroGravity.UI
 
 		public void DuplicateControlsNo()
 		{
-			for (int i = 0; i < InputManager.Instance.InputActions.actionMaps[0].actions.Count; i++)
+			for (int i = 0; i < ControlsSubsystem.InputActions.actionMaps[0].actions.Count; i++)
 			{
 				/*if (InputController.Instance.InputActions.actionMaps[0].actions[i] == actionsRev)
 				{
@@ -527,7 +527,7 @@ namespace ZeroGravity.UI
 
 			if (!CheckIfEmpty())
 			{
-				Settings.Instance.SaveSettings(Settings.SettingsType.Controls);
+				Settings.SaveSettings(Settings.SettingsType.Controls);
 			}
 		}
 

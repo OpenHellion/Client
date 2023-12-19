@@ -405,14 +405,14 @@ namespace ZeroGravity.LevelDesign
 
 			if (_airSpeed > 100f && !MyPlayer.Instance.FpsController.IsZeroG &&
 			    !MyPlayer.Instance.FpsController.HasTumbled &&
-			    (!InputManager.GetButton(InputManager.ConfigAction.Sprint) ||
+			    (!ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Sprint) ||
 			     !MyPlayer.Instance.FpsController.IsGrounded))
 			{
 				MyPlayer.Instance.FpsController.Tumble();
 			}
 
 			float num = (!(MyPlayer.Instance.rigidBody.mass > 0f)) ? 10f : MyPlayer.Instance.rigidBody.mass;
-			if (InputManager.GetButton(InputManager.ConfigAction.Sprint) && MyPlayer.Instance.FpsController.CanGrabWall)
+			if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Sprint) && MyPlayer.Instance.FpsController.CanGrabWall)
 			{
 				num *= 100f;
 			}

@@ -20,9 +20,9 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using OpenHellion.IO;
 using OpenHellion.Social;
 using OpenHellion.UI;
-using UnityEditor;
 using UnityEngine.SceneManagement;
 using ZeroGravity;
 using ZeroGravity.UI;
@@ -41,12 +41,13 @@ namespace OpenHellion
 		}
 
 		[SerializeField] private SceneLoader _sceneLoader;
-		[SerializeField] private NakamaClient _nakamaClient;
 
 		public static SceneLoadTypeValue SceneLoadType = SceneLoadTypeValue.PreloadWithCopy;
 
 		private void Awake()
 		{
+			NakamaClient.OnNakamaError += HandleNakamaError;
+
 			// Only load simple scenes if we have little available memory, regardless of settings.
 			if (SystemInfo.systemMemorySize < 6000 || Application.isEditor)
 			{
@@ -61,13 +62,11 @@ namespace OpenHellion
 				}
 			}
 
-			if (Properties.GetProperty("save_default_localization_file", defaultValue: false))
-			{
-				Localization.SaveToFile("localization_default.txt");
-			}
+			ControlsSubsystem.Reset();
+			Settings.LoadSettings(Settings.SettingsType.All);
 
 			string customLocalisationFile = Properties.GetProperty("custom_localization_file", string.Empty);
-			if (Localization.LocalizationFiles.TryGetValue(Settings.Instance.SettingsData.GameSettings.LanguageIndex,
+			if (Localization.LocalizationFiles.TryGetValue(Settings.SettingsData.GameSettings.LanguageIndex,
 				    out var value))
 			{
 				try
@@ -76,7 +75,7 @@ namespace OpenHellion
 				}
 				catch
 				{
-					Localization.RevertToDefault();
+					Debug.LogError("Error when loading language. Could not find language.");
 				}
 			}
 			else if (customLocalisationFile != string.Empty)
@@ -85,15 +84,17 @@ namespace OpenHellion
 			}
 			else
 			{
-				Localization.RevertToDefault();
+				Debug.LogError("Error when loading language. Could not find language.");
 			}
 
-			_nakamaClient.OnNakamaError.AddListener(HandleNakamaError);
+			ControlsRebinder.Initialize();
+
+			NakamaClient.Initialise();
 		}
 
 		private void OnDestroy()
 		{
-			_nakamaClient.OnNakamaError.RemoveListener(HandleNakamaError);
+			NakamaClient.OnNakamaError -= HandleNakamaError;
 		}
 
 		private void Start()
@@ -103,7 +104,7 @@ namespace OpenHellion
 			// Set some hard limits.
 			if (SystemInfo.systemMemorySize < 4000 || SystemInfo.processorFrequency < 2000)
 			{
-				Dbg.Error("System has invalid specifications. Exiting...");
+				Debug.LogError("System has invalid specifications. Exiting...");
 				GlobalGUI.ShowErrorMessage(Localization.SystemError, Localization.InvalidSystemSpesifications,
 					Application.Quit);
 				HiResTime.Stop();
@@ -118,7 +119,7 @@ namespace OpenHellion
 		// Start game when we are done preloading and we have authenticated with Nakama.
 		private IEnumerator CheckStartGame()
 		{
-			yield return new WaitWhile(() => SceneLoader.IsPreloading || !_nakamaClient.HasAuthenticated);
+			yield return new WaitWhile(() => SceneLoader.IsPreloading || !NakamaClient.HasAuthenticated);
 			SceneManager.LoadScene(1, LoadSceneMode.Single);
 		}
 

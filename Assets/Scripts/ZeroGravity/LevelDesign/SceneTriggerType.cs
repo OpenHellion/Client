@@ -10,7 +10,7 @@ namespace ZeroGravity.LevelDesign
 		Door = 9,
 		Turret = 10,
 		EntryPoint = 11,
-		Executer = 12,
+		Executor = 12,
 		AttachPoint = 13,
 		DockingPanel = 14,
 		PowerSupplyPanel = 15,

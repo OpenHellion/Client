@@ -56,8 +56,8 @@ namespace ZeroGravity.Objects
 					}
 					else
 					{
-						World.AmbientSounds.SwitchAmbience(SoundManager.Instance.SpaceAmbience);
-						World.AmbientSounds.SetEnvironment(SoundManager.Instance.SpaceEnvironment);
+						World.AmbientSounds.SwitchAmbience(SoundManager.SpaceAmbience);
+						World.AmbientSounds.SetEnvironment(SoundManager.SpaceEnvironment);
 					}
 
 					World.InGameGUI.HelmetHud.WarningsUpdate();

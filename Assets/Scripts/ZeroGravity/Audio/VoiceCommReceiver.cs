@@ -116,7 +116,7 @@ namespace ZeroGravity.Audio
 			UpdateAudioParameters();
 			if (MyPlayer.IsAudioDebug)
 			{
-				Dbg.Log("Voice message arrived.");
+				Debug.Log("Voice message arrived.");
 			}
 		}
 
@@ -153,7 +153,7 @@ namespace ZeroGravity.Audio
 				distance = (MyPlayer.Instance.transform.position - thisPlayer.transform.position).magnitude;
 				if (MyPlayer.IsAudioDebug)
 				{
-					Dbg.Log("Voice distance " + distance);
+					Debug.Log("Voice distance " + distance);
 				}
 
 				if (distance <= maxRadioDistance)
@@ -178,7 +178,7 @@ namespace ZeroGravity.Audio
 				float? num = MyPlayer.Instance.GetDistance(thisPlayer, out bool throughBulkhead);
 				if (MyPlayer.IsAudioDebug)
 				{
-					Dbg.Log("Voice distance " + num);
+					Debug.Log("Voice distance " + num);
 				}
 
 				if (num.HasValue && num.Value <= maxAudibleDistance)

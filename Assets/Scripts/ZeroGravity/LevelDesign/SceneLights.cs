@@ -167,8 +167,8 @@ namespace ZeroGravity.LevelDesign
 
 		public VesselSystem BaseVesselSystem
 		{
-			get { return _BaseVesselSystem; }
-			set { _BaseVesselSystem = value; }
+			get => _BaseVesselSystem;
+			set => _BaseVesselSystem = value;
 		}
 
 		private void FillSwitchIndexOrder(ref List<int> list, SwitchOrder order, int randomSeed)
@@ -240,7 +240,7 @@ namespace ZeroGravity.LevelDesign
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error(ex.Message, ex.StackTrace);
+				Debug.LogException(ex);
 			}
 		}
 
@@ -293,7 +293,7 @@ namespace ZeroGravity.LevelDesign
 			catch (Exception ex)
 			{
 				doAnimationCurve = false;
-				Dbg.Error(ex.Message, ex.StackTrace);
+				Debug.LogException(ex);
 			}
 
 			foreach (SceneLightController sceneLightCotroller in SceneLightCotrollers)
@@ -386,7 +386,7 @@ namespace ZeroGravity.LevelDesign
 				catch (Exception ex)
 				{
 					doAnimationCurve = false;
-					Dbg.Error(ex.Message, ex.StackTrace);
+					Debug.LogException(ex);
 				}
 			}
 		}

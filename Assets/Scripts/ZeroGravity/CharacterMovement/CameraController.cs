@@ -199,12 +199,12 @@ namespace ZeroGravity.CharacterMovement
 			{
 				if (!_autoFreeLook || !_isFreeLook)
 				{
-					if (InputManager.GetButtonDown(InputManager.ConfigAction.FreeLook))
+					if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.FreeLook))
 					{
 						ToggleFreeLook(true);
 					}
 
-					if (InputManager.GetButtonUp(InputManager.ConfigAction.FreeLook) && _isFreeLook)
+					if (ControlsSubsystem.GetButtonUp(ControlsSubsystem.ConfigAction.FreeLook) && _isFreeLook)
 					{
 						ToggleFreeLook(false);
 					}
@@ -256,11 +256,11 @@ namespace ZeroGravity.CharacterMovement
 
 		private void GetMouseAxis()
 		{
-			_mouseRightAxis = Mouse.current.delta.x.ReadValue() * 0.1f * InputManager.RealSensitivity;
-			_mouseUpAxis = Mouse.current.delta.y.ReadValue() * 0.1f * InputManager.RealSensitivity;
-			_mouseUpAxis = Settings.Instance.SettingsData.ControlsSettings.InvertMouse
+			_mouseRightAxis = Mouse.current.delta.x.ReadValue() * 0.1f * ControlsSubsystem.RealSensitivity;
+			_mouseUpAxis = Mouse.current.delta.y.ReadValue() * 0.1f * ControlsSubsystem.RealSensitivity;
+			_mouseUpAxis = Settings.SettingsData.ControlsSettings.InvertMouse
 				? 0.1f
-				: -0.1f * Mouse.current.delta.y.ReadValue() * InputManager.RealSensitivity;
+				: -0.1f * Mouse.current.delta.y.ReadValue() * ControlsSubsystem.RealSensitivity;
 		}
 
 		private void SetAnimatorTurningVelocity()

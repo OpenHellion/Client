@@ -18,18 +18,18 @@ namespace ZeroGravity.UI
 				float axis = Mouse.current.scroll.y.ReadValue();
 				if (axis > 0f)
 				{
-					InventoryCharacterPreview.instance.ZoomCamera(0.1f);
+					InventoryCharacterPreview.Instance.ZoomCamera(0.1f);
 				}
 				else if (axis < 0f)
 				{
-					InventoryCharacterPreview.instance.ZoomCamera(-0.1f);
+					InventoryCharacterPreview.Instance.ZoomCamera(-0.1f);
 				}
 			}
 		}
 
 		public void OnDrag(PointerEventData eventData)
 		{
-			InventoryCharacterPreview.instance.RotateCharacter(Mouse.current.delta.x.ReadValue() * RotSpeed);
+			InventoryCharacterPreview.Instance.RotateCharacter(Mouse.current.delta.x.ReadValue() * RotSpeed);
 		}
 
 		public void OnPointerEnter(PointerEventData eventData)

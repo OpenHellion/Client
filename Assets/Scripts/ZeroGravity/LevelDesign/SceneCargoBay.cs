@@ -38,20 +38,11 @@ namespace ZeroGravity.LevelDesign
 
 		public CargoCompartment CargoBayResources;
 
-		public List<ICargoCompartment> Compartments
-		{
-			get { return _Compartments; }
-		}
+		public List<ICargoCompartment> Compartments => _Compartments;
 
-		public string Name
-		{
-			get { return _Name; }
-		}
+		public string Name => _Name;
 
-		public override VesselComponentType ComponentType
-		{
-			get { return VesselComponentType.CargoBay; }
-		}
+		public override VesselComponentType ComponentType => VesselComponentType.CargoBay;
 
 		private new void Start()
 		{

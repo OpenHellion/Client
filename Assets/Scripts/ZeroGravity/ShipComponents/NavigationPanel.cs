@@ -318,7 +318,7 @@ namespace ZeroGravity.ShipComponents
 			LongitudeOfAscendingNode.onEndEdit.AddListener(SetLoan);
 			PositionOnOrbit.onEndEdit.AddListener(SetOrbitPosition);
 			EventSystem.AddListener(typeof(AuthorizedVesselsResponse), AuthorizedVesselsResponseListener);
-			NetworkController.Instance.SendToGameServer(new AuthorizedVesselsRequest());
+			NetworkController.SendToGameServer(new AuthorizedVesselsRequest());
 			WarpButton.gameObject.Activate(
 				ParentVessel.SubSystems.Values.FirstOrDefault((SubSystem m) => m.Type == SubSystemType.FTL) != null);
 		}

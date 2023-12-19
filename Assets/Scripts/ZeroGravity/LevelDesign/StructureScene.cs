@@ -122,14 +122,14 @@ namespace ZeroGravity.LevelDesign
 
 		public float MaxHealth
 		{
-			get { return _MaxHealth; }
-			set { _MaxHealth = Mathf.Clamp(value, 0f, float.MaxValue); }
+			get => _MaxHealth;
+			set => _MaxHealth = Mathf.Clamp(value, 0f, float.MaxValue);
 		}
 
 		public float Health
 		{
-			get { return _Health; }
-			set { _Health = Mathf.Clamp(value, 0f, MaxHealth); }
+			get => _Health;
+			set => _Health = Mathf.Clamp(value, 0f, MaxHealth);
 		}
 
 		public bool SaveSceneData(out string error, List<StructureSceneData> structures = null,
@@ -159,7 +159,7 @@ namespace ZeroGravity.LevelDesign
 				num2 = SceneHelper.VolumeOfGameObject(HullExterior);
 				if (num2 <= 0f)
 				{
-					Dbg.Warning("Unable to calculate volume of '" + HullExterior.name + "'");
+					Debug.LogWarning("Unable to calculate volume of '" + HullExterior.name + "'");
 					HullExterior = null;
 				}
 			}

@@ -80,7 +80,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (!CheckAuthorization())
 			{
-				NetworkController.Instance.SendToGameServer(new LockToTriggerMessage
+				NetworkController.SendToGameServer(new LockToTriggerMessage
 				{
 					TriggerID = null
 				});

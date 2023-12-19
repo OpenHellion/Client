@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;
 using ZeroGravity.Objects;
+using Debug = UnityEngine.Debug;
 
 namespace ZeroGravity.LevelDesign
 {
@@ -11,74 +12,46 @@ namespace ZeroGravity.LevelDesign
 	{
 		[SerializeField] private SceneDockingPort parentPort;
 
-		private bool isLocked;
+		private bool _isLocked;
 
 		[FormerlySerializedAs("executer")] [SerializeField]
 		private SceneTriggerExecutor _executor;
 
-		[SerializeField] private string lockExecuterState;
+		[FormerlySerializedAs("lockExecuterState")] [SerializeField] private string _lockExecutorState;
 
-		[SerializeField] private string unlockExecuterState;
+		[FormerlySerializedAs("unlockExecuterState")] [SerializeField] private string _unlockExecutorState;
 
-		[SerializeField] private bool _IsNearTrigger = true;
+		[FormerlySerializedAs("_IsNearTrigger")] [SerializeField] private bool _isNearTrigger = true;
 
 		public MeshRenderer LeverLight;
 
-		[HideInInspector]
-		public SceneTriggerExecutor GetExecutor
-		{
-			get { return _executor; }
-		}
+		public SceneTriggerExecutor GetExecutor => _executor;
 
 		public bool IsLocked
 		{
-			get { return parentPort.Locked || isLocked; }
+			get => parentPort.Locked || _isLocked;
 			set
 			{
-				isLocked = value;
+				_isLocked = value;
 				OnLeverStateChange();
 			}
 		}
 
-		public override bool ExclusivePlayerLocking
-		{
-			get { return true; }
-		}
+		public override bool ExclusivePlayerLocking => true;
 
-		public override SceneTriggerType TriggerType
-		{
-			get { return SceneTriggerType.DockingPortController; }
-		}
+		public override SceneTriggerType TriggerType => SceneTriggerType.DockingPortController;
 
-		public override PlayerHandsCheckType PlayerHandsCheck
-		{
-			get { return PlayerHandsCheckType.DontCheck; }
-		}
+		public override PlayerHandsCheckType PlayerHandsCheck => PlayerHandsCheckType.DontCheck;
 
-		public override List<ItemType> PlayerHandsItemType
-		{
-			get { return null; }
-		}
+		public override List<ItemType> PlayerHandsItemType => null;
 
-		public override bool IsNearTrigger
-		{
-			get { return _IsNearTrigger; }
-		}
+		public override bool IsNearTrigger => _isNearTrigger;
 
-		public override bool IsInteractable
-		{
-			get { return true; }
-		}
+		public override bool IsInteractable => true;
 
-		private bool connected
-		{
-			get { return parentPort.DockedToPort != null; }
-		}
+		private bool connected => parentPort.DockedToPort != null;
 
-		public override bool CameraMovementAllowed
-		{
-			get { return false; }
-		}
+		public override bool CameraMovementAllowed => false;
 
 		public void OnLeverStateChange()
 		{
@@ -118,11 +91,11 @@ namespace ZeroGravity.LevelDesign
 			{
 				if (isInstant)
 				{
-					_executor.ChangeStateImmediate((!IsLocked) ? unlockExecuterState : lockExecuterState);
+					_executor.ChangeStateImmediate((!IsLocked) ? _unlockExecutorState : _lockExecutorState);
 				}
 				else
 				{
-					_executor.ChangeState((!IsLocked) ? unlockExecuterState : lockExecuterState);
+					_executor.ChangeState((!IsLocked) ? _unlockExecutorState : _lockExecutorState);
 				}
 			}
 
@@ -141,7 +114,7 @@ namespace ZeroGravity.LevelDesign
 
 			if (parentPort == null)
 			{
-				Dbg.Error("Scene docking port controller has no parent docking port", base.name);
+				Debug.LogError("Scene docking port controller has no parent docking port " + base.name);
 			}
 			else
 			{

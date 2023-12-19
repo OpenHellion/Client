@@ -21,10 +21,7 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public Item Item
-		{
-			get { return GetComponentInChildren<Item>(); }
-		}
+		public Item Item => GetComponentInChildren<Item>();
 
 		private void Awake()
 		{

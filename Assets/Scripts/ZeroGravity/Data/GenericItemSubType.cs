@@ -18,7 +18,7 @@ namespace ZeroGravity.Data
 		BrokenArmature = 14,
 		ShatteredPlating = 15,
 		FriedElectronics = 16,
-		DamagedTransmiter = 17,
+		DamagedTransmitter = 17,
 		RupturedInsulation = 18,
 		BurnedPDU = 19,
 		TransportBox = 20,

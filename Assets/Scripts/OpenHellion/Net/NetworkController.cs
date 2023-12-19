@@ -17,11 +17,7 @@ namespace OpenHellion.Net
 {
 	public class NetworkController : MonoBehaviour
 	{
-		public static CharacterData CharacterData;
-
-		public static string NameOfCurrentServer = string.Empty;
-
-		private GsConnection _gameConnection;
+		private static GsConnection _gameConnection;
 
 		private bool _getP2PPacketsThreadActive;
 
@@ -39,8 +35,6 @@ namespace OpenHellion.Net
 
 		private readonly DateTime _clientStartTime = DateTime.UtcNow.ToUniversalTime();
 
-		[Title("Diagnostics")] public int UnprocessedPackets;
-
 		private static NetworkController _instance;
 
 		public static NetworkController Instance
@@ -49,7 +43,7 @@ namespace OpenHellion.Net
 			{
 				if (_instance is null)
 				{
-					Dbg.Error("Tried to get network controller before it has been initialised.");
+					Debug.LogError("Tried to get network controller before it has been initialised.");
 				}
 
 				return _instance;
@@ -70,7 +64,7 @@ namespace OpenHellion.Net
 
 		private void FixedUpdate()
 		{
-			EventSystem.Instance.InvokeQueuedData();
+			EventSystem.InvokeQueuedData();
 
 			if (_spawnObjectsList.Count > 0)
 			{
@@ -106,7 +100,7 @@ namespace OpenHellion.Net
 			}
 
 			if (_gameConnection != null)
-				UnprocessedPackets = _gameConnection.Tick();
+				_gameConnection.Tick();
 
 			// Handle Steam P2P packets.
 			if (RichPresenceManager.HasSteam && !_getP2PPacketsThreadActive)
@@ -132,17 +126,15 @@ namespace OpenHellion.Net
 			_subscribeToObjectsList.Remove(guid);
 		}
 
-		public void ConnectToGame(ServerData serverData, string userId)
+		public static void ConnectToGame(ServerData serverData, Action onConnected)
 		{
-			CharacterData = serverData.CharacterData;
 			_gameConnection?.Disconnect();
 			_gameConnection = new GsConnection();
 
-			NameOfCurrentServer = serverData.Name;
-			_gameConnection.Connect(serverData.IpAddress, serverData.GamePort, serverData.Id, userId);
+			_gameConnection.Connect(serverData.IpAddress, serverData.GamePort, onConnected);
 		}
 
-		public void SendToGameServer(NetworkData data)
+		public static void SendToGameServer(NetworkData data)
 		{
 			_gameConnection.Send(data);
 		}
@@ -173,7 +165,7 @@ namespace OpenHellion.Net
 			{
 				if (logException)
 				{
-					Dbg.Error(ex.Message, ex.StackTrace);
+					Debug.LogException(ex);
 				}
 
 				return -1;
@@ -216,7 +208,7 @@ namespace OpenHellion.Net
 			{
 				if (logException)
 				{
-					Dbg.Error(ex.Message, ex.StackTrace);
+					Debug.LogException(ex);
 				}
 			}
 
@@ -264,7 +256,7 @@ namespace OpenHellion.Net
 					Debug.Log(networkData);
 					if (networkData is ISteamP2PMessage)
 					{
-						EventSystem.Instance.Invoke(networkData);
+						EventSystem.Invoke(networkData);
 					}
 				}
 			}
@@ -275,14 +267,16 @@ namespace OpenHellion.Net
 
 			_getP2PPacketsThreadActive = false;
 		}
-
+#if DEBUG
 		public static void LogReceivedNetworkData(Type type)
 		{
+			Debug.Log("Received data of type: " + type);
+
 			Instance._receivedLog.Enqueue(new Tuple<float, Type>(
 				(float)(DateTime.UtcNow.ToUniversalTime() - Instance._clientStartTime).TotalSeconds, type));
 			while (Instance._receivedLog.Count > MaxNetworkDataLogsSize)
 			{
-				Instance._receivedLog.TryDequeue(out var _);
+				Instance._receivedLog.TryDequeue(out _);
 			}
 		}
 
@@ -328,4 +322,5 @@ namespace OpenHellion.Net
 				select z.Item1 + ": " + z.Item2);
 		}
 	}
+#endif
 }

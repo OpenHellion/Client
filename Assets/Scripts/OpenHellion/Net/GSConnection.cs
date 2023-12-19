@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using OpenHellion.IO;
+using OpenHellion.Social;
 using UnityEngine;
 using OpenHellion.UI;
 using ZeroGravity;
@@ -40,18 +41,15 @@ namespace OpenHellion.Net
 		/// 	Establish a connection to a specified game server.<br />
 		/// 	When connection is established, a login request is sent.
 		/// </summary>
-		internal void Connect(string ip, int port, string serverId, string userId)
+		internal void Connect(string ip, int port, Action onConnected)
 		{
-			Telepathy.Log.Info = Dbg.Info;
-			Telepathy.Log.Warning = Dbg.Warning;
-			Telepathy.Log.Error = Dbg.Error;
-
-			_serverId = serverId;
-			_userId = userId;
+			Telepathy.Log.Info = Debug.Log;
+			Telepathy.Log.Warning = Debug.LogWarning;
+			Telepathy.Log.Error = Debug.LogError;
 
 			_client = new(100000)
 			{
-				OnConnected = OnConnected,
+				OnConnected = onConnected,
 				OnData = OnData,
 				OnDisconnected = OnDisconnected,
 				SendQueueLimit = 1000,
@@ -74,7 +72,7 @@ namespace OpenHellion.Net
 			if (!_client.Connected)
 			{
 				EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.OpenMainScreen));
-				Dbg.Log("Tried to send data when not connected to any server.");
+				Debug.Log("Tried to send data when not connected to any server.");
 				return;
 			}
 
@@ -90,14 +88,16 @@ namespace OpenHellion.Net
 				}
 				else
 				{
-					Dbg.Warning("Packet:", data.GetType(), "was too large to send.");
+					Debug.LogWarning("Packet: " + data.GetType() + "was too large to send.");
 				}
 
+				#if DEBUG
 				NetworkController.LogSentNetworkData(data.GetType());
+				#endif
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error("Error when sending data", ex.Message, ex.StackTrace);
+				Debug.LogException(ex);
 			}
 		}
 
@@ -109,23 +109,6 @@ namespace OpenHellion.Net
 			_client.Disconnect();
 		}
 
-		// Executed when we connect to a server.
-		private void OnConnected()
-		{
-			LogInRequest logInRequest = new LogInRequest
-			{
-				PlayerId = _userId,
-				CharacterData = NetworkController.CharacterData,
-				ServerID = _serverId,
-				ClientHash = Globals.CombinedHash
-			};
-
-			Send(logInRequest);
-
-			Dbg.Log("Established connection with server.");
-		}
-
-
 		// Handles a network package.
 		private async void OnData(ArraySegment<byte> message)
 		{
@@ -135,14 +118,16 @@ namespace OpenHellion.Net
 				NetworkData networkData = await ProtoSerialiser.Unpack(new MemoryStream(message.Array));
 				if (networkData != null)
 				{
-					EventSystem.Instance.Invoke(networkData);
+					EventSystem.Invoke(networkData);
+					#if DEBUG
 					NetworkController.LogReceivedNetworkData(networkData.GetType());
+					#endif
 				}
 			}
 			catch (Exception ex)
 			{
 				GlobalGUI.ShowErrorMessage(Localization.ConnectionError, Localization.TryAgainLater, null);
-				Dbg.Error(ex.Message, ex.StackTrace);
+				Debug.LogException(ex);
 			}
 		}
 
@@ -154,7 +139,7 @@ namespace OpenHellion.Net
 				EventSystem.Invoke(new EventSystem.InternalEventData(EventSystem.InternalEventType.OpenMainScreen));
 			}*/
 
-			Dbg.Log("Client disconnected from server.");
+			Debug.Log("Client disconnected from server.");
 		}
 	}
 }

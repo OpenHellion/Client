@@ -31,6 +31,7 @@ using UnityEngine;
 using ZeroGravity;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
+using Debug = UnityEngine.Debug;
 
 namespace OpenHellion
 {
@@ -39,19 +40,17 @@ namespace OpenHellion
 	/// </summary>
 	public class Globals : MonoBehaviour
 	{
-		public static uint NetworkDataHash = ClassHasher.GetClassHashCode(typeof(NetworkData));
+		private static readonly uint NetworkDataHash = ClassHasher.GetClassHashCode(typeof(NetworkData));
 
-		public static uint SceneDataHash = ClassHasher.GetClassHashCode(typeof(ISceneData));
+		private static readonly uint SceneDataHash = ClassHasher.GetClassHashCode(typeof(ISceneData));
 
-		public static uint CombinedHash = NetworkDataHash * SceneDataHash;
+		public static readonly uint CombinedHash = NetworkDataHash * SceneDataHash;
 
 		private float _secondsToWaitForExit = 3f;
 
 		private bool _gameExitWanted;
 
 		[NonSerialized] public Action OnHellionQuit;
-
-		public const string SpServerFileName = "HELLION_SP.exe";
 
 		public float DefaultCameraFov = 75f;
 
@@ -67,10 +66,12 @@ namespace OpenHellion
 		{
 			if (Instance is not null)
 			{
-				Dbg.Error("Two instances of GlobalFunctions found!");
+				Debug.LogError("Two instances of GlobalFunctions found!");
 				Destroy(this);
 				return;
 			}
+
+			Debug.LogFormat("Current combined hash: {0}", CombinedHash);
 
 			Instance = this;
 			DontDestroyOnLoad(gameObject);
@@ -116,7 +117,7 @@ namespace OpenHellion
 
 		private void QuitApplication()
 		{
-			OnHellionQuit();
+			OnHellionQuit?.Invoke();
 			NetworkController.Instance.Disconnect();
 			HiResTime.Stop();
 #if UNITY_EDITOR

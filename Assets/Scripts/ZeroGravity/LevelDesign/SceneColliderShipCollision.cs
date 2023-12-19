@@ -6,9 +6,6 @@ namespace ZeroGravity.LevelDesign
 	{
 		public bool AffectingCenterOfMass = true;
 
-		public SceneColliderType Type
-		{
-			get { return SceneColliderType.ShipCollision; }
-		}
+		public SceneColliderType Type => SceneColliderType.ShipCollision;
 	}
 }

@@ -154,7 +154,7 @@
     "Type": 1700,
     "SubType": 17,
     "PartType": 0,
-    "Name": "DamagedTransmiter",
+    "Name": "DamagedTransmitter",
     "IngredientsTiers": {
       "1": {
         "Recycle": {

@@ -73,7 +73,7 @@ public class News : MonoBehaviour
 
 		if (img.result != UnityWebRequest.Result.Success)
 		{
-			Dbg.Log(img.error);
+			Debug.Log(img.error);
 		}
 		else
 		{

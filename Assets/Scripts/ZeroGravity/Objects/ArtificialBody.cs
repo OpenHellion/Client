@@ -116,7 +116,7 @@ namespace ZeroGravity.Objects
 			}
 			else
 			{
-				Dbg.Error("How this happend !!! Artificial bodies should always have orbit or realtime data.");
+				Debug.LogError("How this happend !!! Artificial bodies should always have orbit or realtime data.");
 			}
 
 			artificialBody.Forward = ((trans.Forward == null) ? Vector3.forward : trans.Forward.ToVector3());
@@ -258,7 +258,7 @@ namespace ZeroGravity.Objects
 				return Asteroid.Create(trans, null, false);
 			}
 
-			Dbg.Error("Unknown artificial body type", trans.Type, trans.GUID);
+			Debug.LogError("Unknown artificial body type " + trans.Type + " " + trans.GUID);
 			return null;
 		}
 

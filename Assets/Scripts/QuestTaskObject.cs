@@ -21,7 +21,7 @@ public class QuestTaskObject : ScriptableObject
 
 	public QuestCutSceneData CutScene;
 
-	public GameScenes.SceneID SceneID = GameScenes.SceneID.None;
+	public GameScenes.SceneId SceneID = GameScenes.SceneId.None;
 
 	[HideInInspector] public uint QuestID;
 

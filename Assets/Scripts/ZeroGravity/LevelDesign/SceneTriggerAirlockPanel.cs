@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using OpenHellion;
 using UnityEngine;
+using UnityEngine.Serialization;
 using ZeroGravity.Data;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
@@ -9,7 +10,7 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneTriggerAirlockPanel : SceneTriggerPanels
 	{
-		[SerializeField] private bool _cancelExecuterAtSameTime;
+		[FormerlySerializedAs("_cancelExecuterAtSameTime")] [SerializeField] private bool _cancelExecutorAtSameTime;
 
 		[SerializeField] private bool _isExteriorTrigger;
 
@@ -17,45 +18,21 @@ namespace ZeroGravity.LevelDesign
 
 		private static World _world;
 
-		public override SceneTriggerType TriggerType
-		{
-			get { return SceneTriggerType.AirlockPanel; }
-		}
+		public override SceneTriggerType TriggerType => SceneTriggerType.AirlockPanel;
 
-		public override PlayerHandsCheckType PlayerHandsCheck
-		{
-			get { return PlayerHandsCheckType.StoreItemInHands; }
-		}
+		public override PlayerHandsCheckType PlayerHandsCheck => PlayerHandsCheckType.StoreItemInHands;
 
-		public override List<ItemType> PlayerHandsItemType
-		{
-			get { return null; }
-		}
+		public override List<ItemType> PlayerHandsItemType => null;
 
-		public override bool IsNearTrigger
-		{
-			get { return true; }
-		}
+		public override bool IsNearTrigger => true;
 
-		public override bool IsInteractable
-		{
-			get { return true; }
-		}
+		public override bool IsInteractable => true;
 
-		public bool CancelExecuterAtSameTime
-		{
-			get { return _cancelExecuterAtSameTime; }
-		}
+		public bool CancelExecutorAtSameTime => _cancelExecutorAtSameTime;
 
-		public bool IsExteriorTrigger
-		{
-			get { return _isExteriorTrigger; }
-		}
+		public bool IsExteriorTrigger => _isExteriorTrigger;
 
-		public override bool CameraMovementAllowed
-		{
-			get { return false; }
-		}
+		public override bool CameraMovementAllowed => false;
 
 		public AirLockControls MyAirLockControls
 		{

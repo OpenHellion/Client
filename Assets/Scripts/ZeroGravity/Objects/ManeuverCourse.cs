@@ -200,7 +200,7 @@ namespace ZeroGravity.Objects
 				DockingStructureError = false;
 			}
 
-			if (MyShip.SceneID == GameScenes.SceneID.AltCorp_Shuttle_SARA)
+			if (MyShip.SceneID == GameScenes.SceneId.AltCorp_Shuttle_SARA)
 			{
 				SceneDockingPort sceneDockingPort =
 					MyShip.DockingPorts.Values.FirstOrDefault((SceneDockingPort m) => m.DockingPortOrder == 1);

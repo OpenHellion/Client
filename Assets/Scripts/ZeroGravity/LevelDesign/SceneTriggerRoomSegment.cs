@@ -12,40 +12,19 @@ namespace ZeroGravity.LevelDesign
 
 		private bool isApplicationQuitting;
 
-		public override bool ExclusivePlayerLocking
-		{
-			get { return false; }
-		}
+		public override bool ExclusivePlayerLocking => false;
 
-		public override SceneTriggerType TriggerType
-		{
-			get { return SceneTriggerType.Room; }
-		}
+		public override SceneTriggerType TriggerType => SceneTriggerType.Room;
 
-		public override PlayerHandsCheckType PlayerHandsCheck
-		{
-			get { return PlayerHandsCheckType.DontCheck; }
-		}
+		public override PlayerHandsCheckType PlayerHandsCheck => PlayerHandsCheckType.DontCheck;
 
-		public override List<ItemType> PlayerHandsItemType
-		{
-			get { return null; }
-		}
+		public override List<ItemType> PlayerHandsItemType => null;
 
-		public override bool IsNearTrigger
-		{
-			get { return true; }
-		}
+		public override bool IsNearTrigger => true;
 
-		public override bool IsInteractable
-		{
-			get { return false; }
-		}
+		public override bool IsInteractable => false;
 
-		public override bool CameraMovementAllowed
-		{
-			get { return false; }
-		}
+		public override bool CameraMovementAllowed => false;
 
 		private void OnDisable()
 		{

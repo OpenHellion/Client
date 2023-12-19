@@ -165,7 +165,7 @@ public class QuestIndicators : MonoBehaviour
 			}
 			else
 			{
-				if (trigger.TaskObject.Tags.Count <= 0 || trigger.TaskObject.SceneID == GameScenes.SceneID.None)
+				if (trigger.TaskObject.Tags.Count <= 0 || trigger.TaskObject.SceneID == GameScenes.SceneId.None)
 				{
 					continue;
 				}

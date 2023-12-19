@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using OpenHellion.UI;
 using UnityEngine;
-using ZeroGravity;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
-using ZeroGravity.UI;
 
 namespace ZeroGravity.UI
 {
+	// TODO: Split this into a static class (subsystem) and a scriptable object.
 	public class SpriteManager : MonoBehaviour
 	{
 		public static SpriteManager Instance;
@@ -70,7 +69,7 @@ namespace ZeroGravity.UI
 		[Serializable]
 		public class SpaceObjects
 		{
-			public GameScenes.SceneID Key;
+			public GameScenes.SceneId Key;
 
 			public Sprite Sprite;
 		}
@@ -157,7 +156,7 @@ namespace ZeroGravity.UI
 
 		[SerializeField] private List<SpaceObjects> _SpaceObjectSprites;
 
-		[HideInInspector] public Dictionary<GameScenes.SceneID, Sprite> SpaceObjectSprites;
+		[HideInInspector] public Dictionary<GameScenes.SceneId, Sprite> SpaceObjectSprites;
 
 		[Space(30f)] public Sprite DefaultRadarObject;
 
@@ -269,7 +268,7 @@ namespace ZeroGravity.UI
 			return MainOutpostSprite;
 		}
 
-		public Sprite GetSprite(GameScenes.SceneID module)
+		public Sprite GetSprite(GameScenes.SceneId module)
 		{
 			if (SpaceObjectSprites.TryGetValue(module, out var value))
 			{

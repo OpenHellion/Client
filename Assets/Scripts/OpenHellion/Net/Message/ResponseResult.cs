@@ -21,7 +21,6 @@ namespace OpenHellion.Net.Message
 	{
 		Success = 0,
 		Error = 1,
-		ClientVersionError = 5,
-		ServerNotFound = 6
+		ClientVersionError = 5
 	}
 }

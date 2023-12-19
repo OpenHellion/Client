@@ -82,7 +82,7 @@ namespace ZeroGravity.LevelDesign
 
 		public float MaxHealth
 		{
-			get { return _MaxHealth; }
+			get => _MaxHealth;
 			set
 			{
 				if (_MaxHealth != (_MaxHealth = value))
@@ -94,7 +94,7 @@ namespace ZeroGravity.LevelDesign
 
 		public float Health
 		{
-			get { return _Health; }
+			get => _Health;
 			set
 			{
 				if (_Health - value > _MaxHealth * 0.1f)
@@ -111,8 +111,8 @@ namespace ZeroGravity.LevelDesign
 
 		public int InSceneID
 		{
-			get { return _InSceneID; }
-			set { _InSceneID = value; }
+			get => _InSceneID;
+			set => _InSceneID = value;
 		}
 
 		public float Damage => 1f - MathHelper.Clamp(Health / (MaxHealth * 0.98f), 0f, 1f);

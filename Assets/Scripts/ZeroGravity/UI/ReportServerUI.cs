@@ -59,15 +59,10 @@ namespace ZeroGravity.UI
 			}
 		}
 
-		public void ActivateBox(string nameOfServer)
+		public void ActivateBox()
 		{
-			if (nameOfServer == null)
-			{
-				nameOfServer = NetworkController.NameOfCurrentServer;
-			}
-
 			gameObject.SetActive(true);
-			ReportServerHeading.text = Localization.ReportServer + " - " + nameOfServer;
+			ReportServerHeading.text = Localization.ReportServer;
 		}
 
 		public void DeactivateBox()

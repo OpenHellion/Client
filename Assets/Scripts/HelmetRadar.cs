@@ -96,7 +96,7 @@ public class HelmetRadar : MonoBehaviour
 
 		if (!_world.IsChatOpened)
 		{
-			if (radarItems.Count > 0 && InputManager.GetButtonDown(InputManager.ConfigAction.HelmetRadar))
+			if (radarItems.Count > 0 && ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.HelmetRadar))
 			{
 				ToggleRadar();
 			}
@@ -145,7 +145,7 @@ public class HelmetRadar : MonoBehaviour
 					}
 				}
 
-				if (radarItems.Count > 0 && InputManager.GetButtonDown(InputManager.ConfigAction.TargetDown))
+				if (radarItems.Count > 0 && ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.TargetDown))
 				{
 					if (radarItems.Count - 1 >= _currTargetIndex + 1)
 					{
@@ -160,7 +160,7 @@ public class HelmetRadar : MonoBehaviour
 					_currentTarget.IsSelected = true;
 					GoToCurrentElement();
 				}
-				else if (radarItems.Count > 0 && InputManager.GetButtonDown(InputManager.ConfigAction.TargetUp))
+				else if (radarItems.Count > 0 && ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.TargetUp))
 				{
 					if (_currentTarget == null)
 					{

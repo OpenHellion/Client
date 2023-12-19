@@ -6,7 +6,7 @@ namespace ZeroGravity.UI
 	{
 		public string Name;
 
-		public InputManager.ConfigAction Action;
+		public ControlsSubsystem.ConfigAction Action;
 
 		public bool IsPositive = true;
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using ProtoBuf;
+using UnityEngine;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 
@@ -64,7 +65,7 @@ namespace OpenHellion.IO
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error("Failed to deserialize communication data", ex.Message, ex.StackTrace);
+				Debug.LogException(ex);
 			}
 
 			if (_statisticsLogUpdateTime > 0.0)
@@ -138,7 +139,7 @@ namespace OpenHellion.IO
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error("Failed to serialize communication data", ex.Message, ex.StackTrace);
+				Debug.LogException(ex);
 				return null;
 			}
 

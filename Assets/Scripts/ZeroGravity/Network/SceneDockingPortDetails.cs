@@ -22,7 +22,7 @@ namespace ZeroGravity.Network
 
 		public Dictionary<long, float[]> RelativeRotationUpdate;
 
-		public List<ExecuterMergeDetails> ExecutersMerge;
+		public List<ExecutorMergeDetails> ExecutorsMerge;
 
 		public List<PairedDoorsDetails> PairedDoors;
 

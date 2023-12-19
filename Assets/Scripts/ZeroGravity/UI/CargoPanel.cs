@@ -974,7 +974,7 @@ namespace ZeroGravity.UI
 						transferResourceMessage.FromCompartmentID = compartment.ID;
 						if (transferResourceMessage != null)
 						{
-							NetworkController.Instance.SendToGameServer(transferResourceMessage);
+							NetworkController.SendToGameServer(transferResourceMessage);
 						}
 
 						flag = true;
@@ -1025,7 +1025,7 @@ namespace ZeroGravity.UI
 									CurrentlySelectedCargoBay.Compartments[0].ID;
 								if (transferResourceMessage != null)
 								{
-									NetworkController.Instance.SendToGameServer(transferResourceMessage);
+									NetworkController.SendToGameServer(transferResourceMessage);
 								}
 
 								flag = true;
@@ -1055,7 +1055,7 @@ namespace ZeroGravity.UI
 							transferResourceMessage3.FromCompartmentID = CurrentlySelectedCargoBay.Compartments[0].ID;
 							if (transferResourceMessage3 != null)
 							{
-								NetworkController.Instance.SendToGameServer(transferResourceMessage3);
+								NetworkController.SendToGameServer(transferResourceMessage3);
 							}
 
 							flag = true;
@@ -1095,7 +1095,7 @@ namespace ZeroGravity.UI
 					transferResourceMessage.FromCompartmentID = Refinery.Compartments[0].ID;
 					if (transferResourceMessage != null)
 					{
-						NetworkController.Instance.SendToGameServer(transferResourceMessage);
+						NetworkController.SendToGameServer(transferResourceMessage);
 					}
 
 					flag = true;
@@ -1132,7 +1132,7 @@ namespace ZeroGravity.UI
 					transferResourceMessage.FromCompartmentID = Fabricator.Compartments[0].ID;
 					if (transferResourceMessage != null)
 					{
-						NetworkController.Instance.SendToGameServer(transferResourceMessage);
+						NetworkController.SendToGameServer(transferResourceMessage);
 					}
 
 					flag = true;
@@ -1303,7 +1303,7 @@ namespace ZeroGravity.UI
 
 			if (transferResourceMessage != null)
 			{
-				NetworkController.Instance.SendToGameServer(transferResourceMessage);
+				NetworkController.SendToGameServer(transferResourceMessage);
 			}
 
 			CancelTransfer();

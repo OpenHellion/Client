@@ -305,7 +305,7 @@ namespace ZeroGravity.Objects
 		{
 			if (!isShooting)
 			{
-				NetworkController.Instance.SendToGameServer(new PortableTurretShootingMessage
+				NetworkController.SendToGameServer(new PortableTurretShootingMessage
 				{
 					IsShooting = true,
 					TurretGUID = base.GUID
@@ -321,7 +321,7 @@ namespace ZeroGravity.Objects
 			{
 				isShooting = false;
 				shootingSoundPlaying = false;
-				NetworkController.Instance.SendToGameServer(new PortableTurretShootingMessage
+				NetworkController.SendToGameServer(new PortableTurretShootingMessage
 				{
 					IsShooting = false,
 					TurretGUID = base.GUID

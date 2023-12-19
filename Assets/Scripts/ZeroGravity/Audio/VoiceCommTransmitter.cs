@@ -57,13 +57,13 @@ namespace ZeroGravity.Audio
 				return;
 			}
 
-			if (InputManager.GetButtonDown(InputManager.ConfigAction.Talk) && !_talk)
+			if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Talk) && !_talk)
 			{
 				if (Microphone.devices.Length > 0)
 				{
 					if (MyPlayer.IsAudioDebug)
 					{
-						Dbg.Log("Start " + AudioListener.volume);
+						Debug.Log("Start " + AudioListener.volume);
 					}
 
 					_micDevice = Microphone.devices[0];
@@ -73,7 +73,7 @@ namespace ZeroGravity.Audio
 					_talk = true;
 				}
 			}
-			else if (InputManager.GetButtonDown(InputManager.ConfigAction.Radio) && !_talk)
+			else if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Radio) && !_talk)
 			{
 				if (Microphone.devices.Length > 0)
 				{
@@ -84,12 +84,12 @@ namespace ZeroGravity.Audio
 					_talk = true;
 				}
 			}
-			else if ((InputManager.GetButtonUp(InputManager.ConfigAction.Talk) ||
-			          InputManager.GetButtonUp(InputManager.ConfigAction.Radio)) && _talk)
+			else if ((ControlsSubsystem.GetButtonUp(ControlsSubsystem.ConfigAction.Talk) ||
+			          ControlsSubsystem.GetButtonUp(ControlsSubsystem.ConfigAction.Radio)) && _talk)
 			{
 				if (MyPlayer.IsAudioDebug)
 				{
-					Dbg.Log("Stop " + AudioListener.volume);
+					Debug.Log("Stop " + AudioListener.volume);
 				}
 
 				_inAudioClip = null;
@@ -233,7 +233,7 @@ namespace ZeroGravity.Audio
 					}
 					catch
 					{
-						Dbg.Error("Couldn't send audio packet.");
+						Debug.LogError("Couldn't send audio packet.");
 					}
 				}
 			}).Start();

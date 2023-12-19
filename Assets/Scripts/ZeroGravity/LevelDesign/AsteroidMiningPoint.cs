@@ -30,8 +30,8 @@ namespace ZeroGravity.LevelDesign
 
 		public int InSceneID
 		{
-			get { return _InSceneID; }
-			set { _InSceneID = value; }
+			get => _InSceneID;
+			set => _InSceneID = value;
 		}
 
 		public void SetDetails(AsteroidMiningPointDetails ampd)
@@ -105,7 +105,7 @@ namespace ZeroGravity.LevelDesign
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error(ex.Message, ex.StackTrace);
+				Debug.LogException(ex);
 			}
 		}
 

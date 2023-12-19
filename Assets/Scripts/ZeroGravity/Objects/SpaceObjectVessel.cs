@@ -21,7 +21,7 @@ namespace ZeroGravity.Objects
 			RoomTrigger,
 			ResourceContainer,
 			Door,
-			SceneTriggerExecuter,
+			SceneTriggerExecutor,
 			AttachPoint,
 			DockingPort,
 			SpawnPoint,
@@ -41,7 +41,7 @@ namespace ZeroGravity.Objects
 
 		public Dictionary<int, SceneDoor> Doors = new Dictionary<int, SceneDoor>();
 
-		[FormerlySerializedAs("SceneTriggerExecuters")]
+		[FormerlySerializedAs("SceneTriggerExecutors")]
 		public Dictionary<int, SceneTriggerExecutor>
 			SceneTriggerExecutors = new Dictionary<int, SceneTriggerExecutor>();
 
@@ -119,7 +119,7 @@ namespace ZeroGravity.Objects
 
 		private float rotDifferenceCheck = 1E-08f;
 
-		public GameScenes.SceneID SceneID => (VesselData == null) ? GameScenes.SceneID.None : VesselData.SceneID;
+		public GameScenes.SceneId SceneID => (VesselData == null) ? GameScenes.SceneId.None : VesselData.SceneID;
 
 		public float MaxHealth { get; protected set; }
 
@@ -142,7 +142,7 @@ namespace ZeroGravity.Objects
 		public override CelestialBody ParentCelesitalBody => base.ParentCelesitalBody;
 
 		public virtual string Name => (VesselData == null)
-			? base.name
+			? name
 			: (VesselData.VesselRegistration + " " + VesselData.VesselName);
 
 		public virtual string CustomName
@@ -190,7 +190,7 @@ namespace ZeroGravity.Objects
 				{
 					DockedVesselData dockedVesselData =
 						MainVessel.DummyDockedVessels.FirstOrDefault((DockedVesselData m) =>
-							m.Data.SceneID == GameScenes.SceneID.AltCorp_Command_Module);
+							m.Data.SceneID == GameScenes.SceneId.AltCorp_Command_Module);
 					if (dockedVesselData != null)
 					{
 						return dockedVesselData.Data;
@@ -200,7 +200,7 @@ namespace ZeroGravity.Objects
 				{
 					SpaceObjectVessel spaceObjectVessel =
 						MainVessel.AllDockedVessels.FirstOrDefault((SpaceObjectVessel m) =>
-							m.SceneID == GameScenes.SceneID.AltCorp_Command_Module);
+							m.SceneID == GameScenes.SceneId.AltCorp_Command_Module);
 					if (spaceObjectVessel != null)
 					{
 						return spaceObjectVessel.VesselData;
@@ -233,7 +233,7 @@ namespace ZeroGravity.Objects
 
 				return MainVessel.Position +
 				       Quaternion.LookRotation(MainVessel.Forward, MainVessel.Up).ToQuaternionD() *
-				       (base.transform.position - MainVessel.transform.position).ToVector3D();
+				       (transform.position - MainVessel.transform.position).ToVector3D();
 			}
 		}
 
@@ -318,14 +318,14 @@ namespace ZeroGravity.Objects
 		{
 			get
 			{
-				if (base.IsDummyObject)
+				if (IsDummyObject)
 				{
 					return DummyDockedVessels.Count > 0 && DummyDockedVessels.FirstOrDefault((DockedVesselData m) =>
-						m.Data.SceneID == GameScenes.SceneID.AltCorp_Command_Module) != null;
+						m.Data.SceneID == GameScenes.SceneId.AltCorp_Command_Module) != null;
 				}
 
 				return AllDockedVessels.Count > 0 && AllDockedVessels.FirstOrDefault((SpaceObjectVessel m) =>
-					m.SceneID == GameScenes.SceneID.AltCorp_Command_Module) != null;
+					m.SceneID == GameScenes.SceneId.AltCorp_Command_Module) != null;
 			}
 		}
 
@@ -333,19 +333,19 @@ namespace ZeroGravity.Objects
 		{
 			get
 			{
-				if (base.IsDummyObject)
+				if (IsDummyObject)
 				{
 					return DummyDockedVessels.Count > 0 && DummyDockedVessels.FirstOrDefault((DockedVesselData m) =>
-						m.Data.SceneID == GameScenes.SceneID.AltCorp_Command_Module) == null;
+						m.Data.SceneID == GameScenes.SceneId.AltCorp_Command_Module) == null;
 				}
 
 				return AllDockedVessels.Count > 0 && AllDockedVessels.FirstOrDefault((SpaceObjectVessel m) =>
-					m.SceneID == GameScenes.SceneID.AltCorp_Command_Module) == null;
+					m.SceneID == GameScenes.SceneId.AltCorp_Command_Module) == null;
 			}
 		}
 
-		public bool IsOutpostOrStation => (base.IsDummyObject && DummyDockedVessels.Count > 0) ||
-		                                  (!base.IsDummyObject && AllDockedVessels.Count > 0);
+		public bool IsOutpostOrStation => (IsDummyObject && DummyDockedVessels.Count > 0) ||
+		                                  (!IsDummyObject && AllDockedVessels.Count > 0);
 
 		public float ExposureDamage => World.GetVesselExposureDamage(MainVessel.Orbit.Position.Magnitude);
 
@@ -408,7 +408,7 @@ namespace ZeroGravity.Objects
 						return ResourceContainers[inSceneID];
 					case VesselObjectType.Door:
 						return Doors[inSceneID];
-					case VesselObjectType.SceneTriggerExecuter:
+					case VesselObjectType.SceneTriggerExecutor:
 						return SceneTriggerExecutors[inSceneID];
 					case VesselObjectType.AttachPoint:
 						return AttachPoints[inSceneID];
@@ -421,13 +421,13 @@ namespace ZeroGravity.Objects
 					case VesselObjectType.RepairPoint:
 						return RepairPoints[inSceneID];
 					default:
-						Dbg.Error("Cannot get structure object. Unsupported object type.", objectType, inSceneID);
+						Debug.LogError("Cannot get structure object. Unsupported object type." + objectType + inSceneID);
 						return null;
 				}
 			}
 			catch
 			{
-				Dbg.Error("Cannot get structure object. Object ID not found.", objectType, inSceneID);
+				Debug.LogError("Cannot get structure object. Object ID not found." + objectType + inSceneID);
 				return null;
 			}
 		}
@@ -463,7 +463,7 @@ namespace ZeroGravity.Objects
 
 				if (typeof(SceneTriggerExecutor).IsAssignableFrom(typeof(T)))
 				{
-					return (T)GetVesselObject(VesselObjectType.SceneTriggerExecuter, inSceneID);
+					return (T)GetVesselObject(VesselObjectType.SceneTriggerExecutor, inSceneID);
 				}
 
 				if (typeof(BaseSceneAttachPoint).IsAssignableFrom(typeof(T)))
@@ -495,7 +495,7 @@ namespace ZeroGravity.Objects
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error(ex.Message, ex.StackTrace);
+				Debug.LogException(ex);
 				return default(T);
 			}
 		}
@@ -647,7 +647,7 @@ namespace ZeroGravity.Objects
 			{
 				foreach (GameObject item in list)
 				{
-					UnityEngine.Object.Destroy(item);
+					Destroy(item);
 				}
 			}
 
@@ -695,7 +695,7 @@ namespace ZeroGravity.Objects
 			{
 				foreach (GameObject item in list)
 				{
-					UnityEngine.Object.Destroy(item);
+					Destroy(item);
 				}
 			}
 
@@ -742,7 +742,7 @@ namespace ZeroGravity.Objects
 			{
 				foreach (GameObject item in list)
 				{
-					UnityEngine.Object.Destroy(item);
+					Destroy(item);
 				}
 			}
 
@@ -811,8 +811,8 @@ namespace ZeroGravity.Objects
 		{
 			if (!(MyPlayer.Instance == null) && !(MyPlayer.Instance.transform == null))
 			{
-				float num = (base.transform.position - MyPlayer.Instance.transform.position).magnitude -
-				            (float)base.Radius;
+				float num = (transform.position - MyPlayer.Instance.transform.position).magnitude -
+				            (float)Radius;
 				if (num < 100f)
 				{
 					posDifferenceCheck = 1E-08f;
@@ -835,9 +835,9 @@ namespace ZeroGravity.Objects
 		protected override bool PositionAndRotationPhysicsCheck(ref Vector3? nextPos, ref Quaternion? nextRot)
 		{
 			return (nextPos.HasValue &&
-			        !nextPos.Value.IsEpsilonEqual(base.transform.localPosition, posDifferenceCheck)) ||
+			        !nextPos.Value.IsEpsilonEqual(transform.localPosition, posDifferenceCheck)) ||
 			       (nextRot.HasValue &&
-			        !nextRot.Value.IsEpsilonEqual(base.transform.localRotation, rotDifferenceCheck));
+			        !nextRot.Value.IsEpsilonEqual(transform.localRotation, rotDifferenceCheck));
 		}
 
 		public override void UpdateArtificialBodyPosition(bool updateChildren)
@@ -901,7 +901,7 @@ namespace ZeroGravity.Objects
 
 		public override void LoadGeometry()
 		{
-			base.IsDummyObject = false;
+			IsDummyObject = false;
 			if (VesselData == null || IsMainVessel)
 			{
 				RequestSpawn();
@@ -952,7 +952,7 @@ namespace ZeroGravity.Objects
 		public string GetDescription()
 		{
 			SpaceObjectVessel mainVessel = MainVessel;
-			int num = ((!base.IsDummyObject) ? mainVessel.AllDockedVessels.Count : DummyDockedVessels.Count);
+			int num = ((!IsDummyObject) ? mainVessel.AllDockedVessels.Count : DummyDockedVessels.Count);
 			if (num == 0)
 			{
 				if (GameScenes.Ranges.IsShip(mainVessel.SceneID))
@@ -1015,19 +1015,18 @@ namespace ZeroGravity.Objects
 					float num = Quaternion.Angle(quaternion, TargetRotation.Value);
 					quaternion2 = quaternion * Quaternion.Euler(RotationVec.ToVector3() * deltaTime);
 					float num2 = Quaternion.Angle(quaternion2, TargetRotation.Value);
-					quaternion2 = quaternion * Quaternion.Euler(RotationVec.ToVector3() * deltaTime *
-					                                            (1f + (float)((!(num < num2)) ? 1 : (-1)) * num /
-						                                            100f));
+					quaternion2 = quaternion * Quaternion.Euler(RotationVec.ToVector3() * (deltaTime * (1f + (!(num < num2) ? 1 : -1) * num /
+						100f)));
 				}
 
 				Forward = quaternion2 * Vector3.forward;
 				Up = quaternion2 * Vector3.up;
 				if (ShouldSetLocalTransform)
 				{
-					base.transform.rotation = Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up).Inverse() *
+					transform.rotation = Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up).Inverse() *
 					                          Quaternion.LookRotation(Forward, Up);
-					Debug.DrawRay(base.transform.position, base.transform.rotation * Vector3.forward * 50f, Color.blue);
-					Debug.DrawRay(base.transform.position,
+					Debug.DrawRay(transform.position, transform.rotation * Vector3.forward * 50f, Color.blue);
+					Debug.DrawRay(transform.position,
 						Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up).Inverse() * TargetRotation.Value *
 						Vector3.forward * 50f, Color.red);
 				}

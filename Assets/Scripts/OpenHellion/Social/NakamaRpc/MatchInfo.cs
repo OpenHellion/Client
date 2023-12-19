@@ -7,9 +7,13 @@ namespace OpenHellion.Social.NakamaRpc
 	[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
 	public class MatchInfo
 	{
-		public string Id;
+		[JsonProperty("location")]
+		public string Location;
+		[JsonProperty("ip")]
 		public string Ip;
+		[JsonProperty("gamePort")]
 		public int GamePort;
+		[JsonProperty("statusPort")]
 		public int StatusPort;
 	}
 }

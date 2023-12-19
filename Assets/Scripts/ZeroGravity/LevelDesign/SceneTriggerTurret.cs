@@ -11,55 +11,25 @@ namespace ZeroGravity.LevelDesign
 
 		[SerializeField] private bool _cancelExecuterAtSameTime;
 
-		public override bool IsNearTrigger
-		{
-			get { return false; }
-		}
+		public override bool IsNearTrigger => false;
 
-		public override SceneTriggerType TriggerType
-		{
-			get { return SceneTriggerType.Turret; }
-		}
+		public override SceneTriggerType TriggerType => SceneTriggerType.Turret;
 
-		public override PlayerHandsCheckType PlayerHandsCheck
-		{
-			get { return PlayerHandsCheckType.StoreItemInHands; }
-		}
+		public override PlayerHandsCheckType PlayerHandsCheck => PlayerHandsCheckType.StoreItemInHands;
 
-		public override bool ExclusivePlayerLocking
-		{
-			get { return false; }
-		}
+		public override bool ExclusivePlayerLocking => false;
 
-		public override List<ItemType> PlayerHandsItemType
-		{
-			get { return null; }
-		}
+		public override List<ItemType> PlayerHandsItemType => null;
 
-		public bool IsExteriorTrigger
-		{
-			get { return _isExteriorTrigger; }
-		}
+		public bool IsExteriorTrigger => _isExteriorTrigger;
 
-		public override bool IsInteractable
-		{
-			get { return true; }
-		}
+		public override bool IsInteractable => true;
 
-		public bool IsLockable
-		{
-			get { return true; }
-		}
+		public bool IsLockable => true;
 
-		public bool CancelExecuterAtSameTime
-		{
-			get { return _cancelExecuterAtSameTime; }
-		}
+		public bool CancelExecuterAtSameTime => _cancelExecuterAtSameTime;
 
-		public override bool CameraMovementAllowed
-		{
-			get { return true; }
-		}
+		public override bool CameraMovementAllowed => true;
 
 		public override bool Interact(MyPlayer player, bool interactWithOverlappingTriggers = true)
 		{

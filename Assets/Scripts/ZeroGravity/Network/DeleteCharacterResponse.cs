@@ -1,5 +1,4 @@
 using OpenHellion.Net.Message;
-using OpenHellion.Net.Message.MainServer;
 using ProtoBuf;
 
 namespace ZeroGravity.Network

@@ -7,7 +7,7 @@ public static class NameGenerator
 {
 	private static DateTime lastClearDate = DateTime.UtcNow;
 
-	private static Dictionary<GameScenes.SceneID, int> dailySpawnCount = new Dictionary<GameScenes.SceneID, int>();
+	private static Dictionary<GameScenes.SceneId, int> dailySpawnCount = new Dictionary<GameScenes.SceneId, int>();
 
 	private static List<char> monthCodes = new List<char>
 	{
@@ -15,104 +15,104 @@ public static class NameGenerator
 		'K', 'L'
 	};
 
-	private static Dictionary<GameScenes.SceneID, string> shipNaming = new Dictionary<GameScenes.SceneID, string>
+	private static Dictionary<GameScenes.SceneId, string> shipNaming = new Dictionary<GameScenes.SceneId, string>
 	{
 		{
-			GameScenes.SceneID.AltCorp_LifeSupportModule,
+			GameScenes.SceneId.AltCorp_LifeSupportModule,
 			"LSM-AC:HE3/"
 		},
 		{
-			GameScenes.SceneID.ALtCorp_PowerSupply_Module,
+			GameScenes.SceneId.ALtCorp_PowerSupply_Module,
 			"PSM-AC:HE1/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_AirLock,
+			GameScenes.SceneId.AltCorp_AirLock,
 			"AM-AC:HE1/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_Cargo_Module,
+			GameScenes.SceneId.AltCorp_Cargo_Module,
 			"CBM-AC:HE1/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_Command_Module,
+			GameScenes.SceneId.AltCorp_Command_Module,
 			"CM-AC:HE3/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_DockableContainer,
+			GameScenes.SceneId.AltCorp_DockableContainer,
 			"IC-AC:HE2/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_CorridorIntersectionModule,
+			GameScenes.SceneId.AltCorp_CorridorIntersectionModule,
 			"CTM-AC:HE1/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_Corridor45TurnModule,
+			GameScenes.SceneId.AltCorp_Corridor45TurnModule,
 			"CLM-AC:HE1/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_Corridor45TurnRightModule,
+			GameScenes.SceneId.AltCorp_Corridor45TurnRightModule,
 			"CRM-AC:HE1/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_CorridorVertical,
+			GameScenes.SceneId.AltCorp_CorridorVertical,
 			"CSM-AC:HE1/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_CorridorModule,
+			GameScenes.SceneId.AltCorp_CorridorModule,
 			"CIM-AC:HE1/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_StartingModule,
+			GameScenes.SceneId.AltCorp_StartingModule,
 			"OUTPOST "
 		},
 		{
-			GameScenes.SceneID.AltCorp_Shuttle_SARA,
+			GameScenes.SceneId.AltCorp_Shuttle_SARA,
 			"AC-ARG HE1/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_CrewQuarters_Module,
+			GameScenes.SceneId.AltCorp_CrewQuarters_Module,
 			"CQM-AC:HE1/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_SolarPowerModule,
+			GameScenes.SceneId.AltCorp_SolarPowerModule,
 			"SPM-AC:HE1/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_FabricatorModule,
+			GameScenes.SceneId.AltCorp_FabricatorModule,
 			"FM-AC:HE1/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_Shuttle_CECA,
+			GameScenes.SceneId.AltCorp_Shuttle_CECA,
 			"Steropes:HE1/"
 		},
 		{
-			GameScenes.SceneID.Generic_Debris_Spawn1,
+			GameScenes.SceneId.Generic_Debris_Spawn1,
 			"Small Debris:HE1/"
 		},
 		{
-			GameScenes.SceneID.Generic_Debris_Spawn2,
+			GameScenes.SceneId.Generic_Debris_Spawn2,
 			"Large Debris:HE1/"
 		},
 		{
-			GameScenes.SceneID.Generic_Debris_Spawn3,
+			GameScenes.SceneId.Generic_Debris_Spawn3,
 			"Medium Debris:HE1/"
 		},
 		{
-			GameScenes.SceneID.Generic_Debris_Outpost001,
+			GameScenes.SceneId.Generic_Debris_Outpost001,
 			"Doomed outpost:HE1/"
 		},
 		{
-			GameScenes.SceneID.AltCorp_PatchModule,
+			GameScenes.SceneId.AltCorp_PatchModule,
 			"Patch Module:HE1/"
 		}
 	};
 
-	private static List<GameScenes.SceneID> derelicts = new List<GameScenes.SceneID>
+	private static List<GameScenes.SceneId> derelicts = new List<GameScenes.SceneId>
 	{
-		GameScenes.SceneID.Generic_Debris_Corridor001,
-		GameScenes.SceneID.Generic_Debris_Corridor002,
-		GameScenes.SceneID.Generic_Debris_JuncRoom001,
-		GameScenes.SceneID.Generic_Debris_JuncRoom002
+		GameScenes.SceneId.Generic_Debris_Corridor001,
+		GameScenes.SceneId.Generic_Debris_Corridor002,
+		GameScenes.SceneId.Generic_Debris_JuncRoom001,
+		GameScenes.SceneId.Generic_Debris_JuncRoom002
 	};
 
 	public static string GenerateStationRegistration()
@@ -120,14 +120,14 @@ public static class NameGenerator
 		return "STATION";
 	}
 
-	public static GameScenes.SceneID GetSceneID(string text)
+	public static GameScenes.SceneId GetSceneID(string text)
 	{
-		IEnumerator enumerator = Enum.GetValues(typeof(GameScenes.SceneID)).GetEnumerator();
+		IEnumerator enumerator = Enum.GetValues(typeof(GameScenes.SceneId)).GetEnumerator();
 		try
 		{
 			while (enumerator.MoveNext())
 			{
-				GameScenes.SceneID result = (GameScenes.SceneID)enumerator.Current;
+				GameScenes.SceneId result = (GameScenes.SceneId)enumerator.Current;
 				if (result.ToString().ToLower().StartsWith(text.ToLower()))
 				{
 					return result;
@@ -143,7 +143,7 @@ public static class NameGenerator
 			}
 		}
 
-		foreach (KeyValuePair<GameScenes.SceneID, string> item in shipNaming)
+		foreach (KeyValuePair<GameScenes.SceneId, string> item in shipNaming)
 		{
 			if (item.Value.ToLower().StartsWith(text.ToLower()))
 			{
@@ -151,7 +151,7 @@ public static class NameGenerator
 			}
 		}
 
-		foreach (KeyValuePair<GameScenes.SceneID, string> item2 in shipNaming)
+		foreach (KeyValuePair<GameScenes.SceneId, string> item2 in shipNaming)
 		{
 			if (item2.Value.ToLower().Contains(text.ToLower()))
 			{
@@ -159,6 +159,6 @@ public static class NameGenerator
 			}
 		}
 
-		return GameScenes.SceneID.None;
+		return GameScenes.SceneId.None;
 	}
 }

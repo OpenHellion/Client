@@ -23,7 +23,7 @@ public class TextLogTerminal : MonoBehaviour
 	{
 		if (LogObject == null)
 		{
-			Dbg.Error("Log Object not set!");
+			Debug.LogError("Log Object not set!");
 			return;
 		}
 

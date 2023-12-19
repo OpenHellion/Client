@@ -15,15 +15,15 @@ namespace ZeroGravity.LevelDesign
 
 		[FormerlySerializedAs("Executer")] public SceneTriggerExecutor Executor;
 
-		private int executerStateID;
+		private int _executorStateID;
 
-		private List<int> executerStateIDs = new List<int>();
+		private readonly List<int> _executorStateIDs = new List<int>();
 
-		public string ExecuterStateName;
+		[FormerlySerializedAs("ExecuterStateName")] public string ExecutorStateName;
 
-		private int executerAltStateID;
+		private int _executorAltStateID;
 
-		public string ExecuterAltStateName;
+		[FormerlySerializedAs("ExecuterAltStateName")] public string ExecutorAltStateName;
 
 		[SerializeField] private bool _isNearTrigger = true;
 
@@ -35,40 +35,19 @@ namespace ZeroGravity.LevelDesign
 
 		private bool allowNextTriggerEnter = true;
 
-		public override bool ExclusivePlayerLocking
-		{
-			get { return false; }
-		}
+		public override bool ExclusivePlayerLocking => false;
 
-		public override bool IsInteractable
-		{
-			get { return !_isProximityTrigger; }
-		}
+		public override bool IsInteractable => !_isProximityTrigger;
 
-		public bool IsProximity
-		{
-			get { return _isProximityTrigger; }
-		}
+		public bool IsProximity => _isProximityTrigger;
 
-		public override bool IsNearTrigger
-		{
-			get { return _isNearTrigger; }
-		}
+		public override bool IsNearTrigger => _isNearTrigger;
 
-		public override SceneTriggerType TriggerType
-		{
-			get { return SceneTriggerType.General; }
-		}
+		public override SceneTriggerType TriggerType => SceneTriggerType.General;
 
-		public override PlayerHandsCheckType PlayerHandsCheck
-		{
-			get { return playerHandsCheck; }
-		}
+		public override PlayerHandsCheckType PlayerHandsCheck => playerHandsCheck;
 
-		public override bool CameraMovementAllowed
-		{
-			get { return false; }
-		}
+		public override bool CameraMovementAllowed => false;
 
 		public override List<ItemType> PlayerHandsItemType
 		{
@@ -100,20 +79,20 @@ namespace ZeroGravity.LevelDesign
 				return;
 			}
 
-			executerStateID = -1;
-			string[] array = ExecuterStateName.Split(';');
+			_executorStateID = -1;
+			string[] array = ExecutorStateName.Split(';');
 			foreach (string stateName in array)
 			{
 				int stateID = Executor.GetStateID(stateName);
-				if (executerStateID == -1)
+				if (_executorStateID == -1)
 				{
-					executerStateID = stateID;
+					_executorStateID = stateID;
 				}
 
-				executerStateIDs.Add(stateID);
+				_executorStateIDs.Add(stateID);
 			}
 
-			executerAltStateID = Executor.GetStateID(ExecuterAltStateName);
+			_executorAltStateID = Executor.GetStateID(ExecutorAltStateName);
 		}
 
 		public override bool Interact(MyPlayer player, bool interactWithOverlappingTriggers = true)
@@ -131,9 +110,9 @@ namespace ZeroGravity.LevelDesign
 			                         (playerHandsCheck == PlayerHandsCheckType.MustHaveItemInHands &&
 			                          player.Inventory.ItemInHands.Type == itemInHandsType)))
 			{
-				Executor.ChangeStateID((!executerStateIDs.Contains(Executor.CurrentStateID))
-					? executerStateID
-					: executerAltStateID);
+				Executor.ChangeStateID((!_executorStateIDs.Contains(Executor.CurrentStateID))
+					? _executorStateID
+					: _executorAltStateID);
 				Item itemInHands = player.Inventory.ItemInHands;
 				if (playerHandsCheck == PlayerHandsCheckType.MustHaveItemInHands && itemInHands != null &&
 				    itemInHands.Type == ItemType.AltairDisposableHackingTool)
@@ -176,7 +155,7 @@ namespace ZeroGravity.LevelDesign
 				}
 				else
 				{
-					Executor.PlayerEnterTrigger(this, component.TransferableObject as MyPlayer, executerStateID);
+					Executor.PlayerEnterTrigger(this, component.TransferableObject as MyPlayer, _executorStateID);
 				}
 			}
 		}
@@ -189,7 +168,7 @@ namespace ZeroGravity.LevelDesign
 				TransitionTriggerHelper component = coli.GetComponent<TransitionTriggerHelper>();
 				if (component != null && component.TransferableObject is MyPlayer)
 				{
-					Executor.PlayerExitTrigger(this, component.TransferableObject as MyPlayer, executerAltStateID);
+					Executor.PlayerExitTrigger(this, component.TransferableObject as MyPlayer, _executorAltStateID);
 				}
 			}
 		}

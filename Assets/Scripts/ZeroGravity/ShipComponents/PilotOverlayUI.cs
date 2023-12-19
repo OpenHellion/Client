@@ -211,7 +211,7 @@ namespace ZeroGravity.ShipComponents
 					_world.OffSpeedHelper = !_world.OffSpeedHelper;
 				}
 
-				if (InputManager.GetButtonDown(InputManager.ConfigAction.Equip) &&
+				if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Equip) &&
 				    CurrentTargetList.TargetListHolder.gameObject.activeInHierarchy)
 				{
 					if (RadarRange.Count - 1 > currentRadarRange)
@@ -250,13 +250,13 @@ namespace ZeroGravity.ShipComponents
 						}
 					}
 
-					if (AllTargets.Count > 0 && InputManager.GetButtonDown(InputManager.ConfigAction.TargetDown))
+					if (AllTargets.Count > 0 && ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.TargetDown))
 					{
 						int num3 = AllTargets.IndexOf(SelectedTarget);
 						num3 = ((AllTargets.Count - 1 > num3) ? (num3 + 1) : 0);
 						SelectedTarget = AllTargets[num3];
 					}
-					else if (AllTargets.Count > 0 && InputManager.GetButtonDown(InputManager.ConfigAction.TargetUp))
+					else if (AllTargets.Count > 0 && ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.TargetUp))
 					{
 						int num4 = AllTargets.IndexOf(SelectedTarget);
 						num4 = ((num4 - 1 < 0) ? (AllTargets.Count - 1) : (num4 - 1));
@@ -333,7 +333,7 @@ namespace ZeroGravity.ShipComponents
 				                                           FormatHelper.DistanceFormat(RadarRange[currentRadarRange]);
 			}
 
-			DrivingTips.Activate(Settings.Instance.SettingsData.GameSettings.ShowTips);
+			DrivingTips.Activate(Settings.SettingsData.GameSettings.ShowTips);
 			gameObject.SetActive(value: true);
 		}
 
@@ -693,7 +693,7 @@ namespace ZeroGravity.ShipComponents
 				color.a = num / RotationIndicator.rect.height;
 				RotationIndicatorArrow.GetComponent<Image>().color = color;
 				RotationDanger.SetActive(num / RotationIndicator.rect.height > 0.9f);
-				if (Settings.Instance.SettingsData.GameSettings.AutoStabilization && !ParentShip.IsRotationStabilized)
+				if (Settings.SettingsData.GameSettings.AutoStabilization && !ParentShip.IsRotationStabilized)
 				{
 					StabilizeRotationTimer += Time.deltaTime;
 					if (shipRotationCursor.magnitude > 5f || (double)shipRotationCursor.magnitude < 0.5 ||

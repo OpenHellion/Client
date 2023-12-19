@@ -91,7 +91,7 @@ public class DeferredDecalController : MonoBehaviour
 		{
 			if (item.material == null)
 			{
-				Dbg.Error("Decal doesn't have material set", item);
+				Debug.LogError("Decal doesn't have material set", item);
 			}
 
 			myCommandBuffer.DrawMesh(myCubeMesh, item.transform.localToWorldMatrix, item.material, 0, 0);

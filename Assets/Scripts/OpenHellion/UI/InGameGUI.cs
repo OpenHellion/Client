@@ -187,11 +187,12 @@ namespace OpenHellion.UI
 
 		public bool ConsoleIsUp => Console.gameObject.activeInHierarchy;
 
-		[FormerlySerializedAs("_worldState")] [SerializeField] private World _world;
+		[SerializeField] private World _world;
 
 		private void Awake()
 		{
-			Settings.Instance.GameComponent.OnCrosshairToggle += ToggleCrosshair;
+			Settings.OnSaveAction += () => ToggleCrosshair(Settings.SettingsData.GameSettings.ShowCrosshair);
+			ToggleCroshair(false);
 		}
 
 		private void Start()
@@ -435,7 +436,7 @@ namespace OpenHellion.UI
 
 		public void ReportServerFromMenu()
 		{
-			ReportServerBox.ActivateBox(null);
+			ReportServerBox.ActivateBox();
 		}
 
 		public void ShowInteractionCanvasMessage(string text, float hideTime = 1f)
@@ -491,16 +492,16 @@ namespace OpenHellion.UI
 			ToggleItemName(show);
 			if (!show)
 			{
-				DotCroshair.gameObject.SetActive(show);
+				DotCroshair.gameObject.SetActive(false);
 				Tooltip.SetActive(value: false);
 			}
 			else
 			{
-				DotCroshair.gameObject.SetActive(value: false);
+				DotCroshair.gameObject.SetActive(false);
 				SetTooltip(lookingAtTrigger, canLoot);
 			}
 
-			if (Settings.Instance.SettingsData.GameSettings.ShowTips && lookingAtTrigger != null &&
+			if (Settings.SettingsData.GameSettings.ShowTips && lookingAtTrigger != null &&
 			    lookingAtTrigger.Glossary != null)
 			{
 				Help.Activate(value: true);
@@ -518,16 +519,15 @@ namespace OpenHellion.UI
 				SetItemName(null);
 				Tooltip.SetActive(value: true);
 				Tooltip.GetComponentInChildren<Text>().text = string.Format(Localization.HoldToLoot,
-					InputManager.GetAxisKeyName(InputManager.ConfigAction.Interact));
+					ControlsSubsystem.GetAxisKeyName(ControlsSubsystem.ConfigAction.Interact));
 			}
-			else if (lookingAtTrigger != null && Settings.Instance.SettingsData.GameSettings.ShowTips)
+			else if (lookingAtTrigger != null && Settings.SettingsData.GameSettings.ShowTips)
 			{
 				Tooltip.SetActive(value: true);
-				if (lookingAtTrigger is BaseSceneAttachPoint &&
-				    (lookingAtTrigger as BaseSceneAttachPoint).InteractionTip != null)
+				if (lookingAtTrigger is BaseSceneAttachPoint { InteractionTip: not null } attachPoint)
 				{
 					Tooltip.GetComponentInChildren<Text>().text =
-						(lookingAtTrigger as BaseSceneAttachPoint).InteractionTip;
+						attachPoint.InteractionTip;
 				}
 				else if (lookingAtTrigger.StandardTip != 0)
 				{
@@ -551,11 +551,11 @@ namespace OpenHellion.UI
 
 		public void ToggleDefaultInteractionTip()
 		{
-			if (!DefaultInteractionTipSeen && Settings.Instance.SettingsData.GameSettings.ShowTips)
+			if (!DefaultInteractionTipSeen && Settings.SettingsData.GameSettings.ShowTips)
 			{
 				DefaultInteractionTip.GetComponentInChildren<Text>(includeInactive: true).text = string
 					.Format(Localization.PressToInteract,
-						InputManager.GetAxisKeyName(InputManager.ConfigAction.Interact)).ToUpper();
+						ControlsSubsystem.GetAxisKeyName(ControlsSubsystem.ConfigAction.Interact)).ToUpper();
 				DefaultInteractionTip.Activate(value: true);
 				DefaultInteractionTipSeen = true;
 			}
@@ -611,14 +611,14 @@ namespace OpenHellion.UI
 			}
 			else
 			{
-				TooltipEquip.SetActive(val);
+				TooltipEquip.SetActive(false);
 			}
 		}
 
 		public void UpdateTooltipKeys()
 		{
 			TooltipEquip.GetComponentInChildren<Text>(includeInactive: true).text =
-				string.Format(Localization.HoldToEquip, InputManager.GetAxisKeyName(InputManager.ConfigAction.Equip));
+				string.Format(Localization.HoldToEquip, ControlsSubsystem.GetAxisKeyName(ControlsSubsystem.ConfigAction.Equip));
 		}
 
 		public void ThrowingItemToggle(bool val)
@@ -634,21 +634,21 @@ namespace OpenHellion.UI
 
 		public void ShowTutorialUI(int tut)
 		{
-			if (Settings.Instance.SettingsData.GameSettings.ShowTutorial && !ShownTutorials.Contains(tut))
+			if (Settings.SettingsData.GameSettings.ShowTutorial && !ShownTutorials.Contains(tut))
 			{
 				string text = Localization.TutorialText[0];
-				if (Localization.TutorialText.ContainsKey(tut))
+				if (Localization.TutorialText.TryGetValue(tut, out var value))
 				{
-					text = Localization.TutorialText[tut];
+					text = value;
 					ShownTutorials.Add(tut);
 				}
 
 				if (text.Length != 0 && tut != 0)
 				{
-					GameObject gameObject = Instantiate(TutorialUIPref, TutorialUIPref.transform.parent);
-					gameObject.SetActive(value: true);
-					gameObject.transform.SetAsFirstSibling();
-					TutorialUI component = gameObject.GetComponent<TutorialUI>();
+					GameObject tutorialUIElement = Instantiate(TutorialUIPref, TutorialUIPref.transform.parent);
+					tutorialUIElement.SetActive(value: true);
+					tutorialUIElement.transform.SetAsFirstSibling();
+					TutorialUI component = tutorialUIElement.GetComponent<TutorialUI>();
 					component.MessageText.text = text;
 				}
 

@@ -2,11 +2,12 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+using UnityEngine;
 using ZeroGravity.Network;
 
 namespace OpenHellion.Net
 {
-	public class EventSystem
+	public static class EventSystem
 	{
 		public class InternalEventData
 		{
@@ -34,18 +35,18 @@ namespace OpenHellion.Net
 			ConnectionFailed = 8,
 		}
 
-		private readonly ConcurrentDictionary<Type, NetworkDataDelegate> _listeners =
+		private static readonly ConcurrentDictionary<Type, NetworkDataDelegate> Listeners =
 			new ConcurrentDictionary<Type, NetworkDataDelegate>();
 
-		private readonly ConcurrentDictionary<InternalEventType, InternalDataDelegate> _internalDataGroups =
+		private static readonly ConcurrentDictionary<InternalEventType, InternalDataDelegate> InternalDataGroups =
 			new ConcurrentDictionary<InternalEventType, InternalDataDelegate>();
 
-		private readonly ConcurrentQueue<InternalEventData> _internalBuffer = new ConcurrentQueue<InternalEventData>();
+		private static readonly ConcurrentQueue<InternalEventData> InternalBuffer = new ConcurrentQueue<InternalEventData>();
 
-		private readonly ConcurrentQueue<NetworkData> _networkBuffer = new ConcurrentQueue<NetworkData>();
+		private static readonly ConcurrentQueue<NetworkData> NetworkBuffer = new ConcurrentQueue<NetworkData>();
 
-		private static readonly Dictionary<Type, int> _avgPacketCounter = new Dictionary<Type, int>();
-		private static readonly Dictionary<Type, int> _packetCounter = new Dictionary<Type, int>();
+		private static readonly Dictionary<Type, int> AvgPacketCounter = new Dictionary<Type, int>();
+		private static readonly Dictionary<Type, int> PacketCounter = new Dictionary<Type, int>();
 
 		private static bool _dbgPacketCount = false;
 
@@ -57,24 +58,8 @@ namespace OpenHellion.Net
 				_dbgPacketCount = value;
 				if (!value)
 				{
-					_packetCounter.Clear();
+					PacketCounter.Clear();
 				}
-			}
-		}
-
-
-		private static EventSystem _instance;
-
-		internal static EventSystem Instance
-		{
-			get
-			{
-				if (_instance == null)
-				{
-					_instance = new EventSystem();
-				}
-
-				return _instance;
 			}
 		}
 
@@ -83,11 +68,11 @@ namespace OpenHellion.Net
 		/// </summary>
 		public static void AddListener(Type group, NetworkDataDelegate function)
 		{
-			var result = Instance._listeners.GetOrAdd(group, function);
+			var result = Listeners.GetOrAdd(group, function);
 
 			if (result is not null)
 			{
-				Instance._listeners[group] += function;
+				Listeners[group] += function;
 			}
 		}
 
@@ -96,11 +81,11 @@ namespace OpenHellion.Net
 		/// </summary>
 		public static void AddListener(InternalEventType group, InternalDataDelegate function)
 		{
-			var result = Instance._internalDataGroups.GetOrAdd(group, function);
+			var result = InternalDataGroups.GetOrAdd(group, function);
 
 			if (result is not null)
 			{
-				Instance._internalDataGroups[group] += function;
+				InternalDataGroups[group] += function;
 			}
 		}
 
@@ -109,7 +94,7 @@ namespace OpenHellion.Net
 		/// </summary>
 		public static void RemoveListener(Type group, NetworkDataDelegate function)
 		{
-			Instance._listeners[group] -= function;
+			Listeners[group] -= function;
 		}
 
 		/// <summary>
@@ -117,30 +102,28 @@ namespace OpenHellion.Net
 		/// </summary>
 		public static void RemoveListener(InternalEventType group, InternalDataDelegate function)
 		{
-			Instance._internalDataGroups[group] -= function;
+			InternalDataGroups[group] -= function;
 		}
 
 		/// <summary>
 		/// 	Execute corresponding code for request.
 		/// </summary>
-		internal void Invoke(NetworkData data)
+		internal static void Invoke(NetworkData data)
 		{
-			if (_listeners.ContainsKey(data.GetType()) && _listeners[data.GetType()] != null)
+			if (Listeners.ContainsKey(data.GetType()) && Listeners[data.GetType()] != null)
 			{
-				Dbg.Log("Executing event of type: " + data.GetType());
-
 				if (Thread.CurrentThread.ManagedThreadId == World.MainThreadID)
 				{
-					_listeners[data.GetType()](data);
+					Listeners[data.GetType()](data);
 				}
 				else
 				{
-					_networkBuffer.Enqueue(data);
+					NetworkBuffer.Enqueue(data);
 				}
 			}
 			else
 			{
-				Dbg.Error("Listener is not registered for data:", data.GetType(), data);
+				Debug.LogError("Listener is not registered for data:" + data.GetType() + data);
 			}
 		}
 
@@ -149,37 +132,37 @@ namespace OpenHellion.Net
 		/// </summary>
 		public static void Invoke(InternalEventData data)
 		{
-			if (Instance._internalDataGroups.ContainsKey(data.Type) && Instance._internalDataGroups[data.Type] != null)
+			if (InternalDataGroups.ContainsKey(data.Type) && InternalDataGroups[data.Type] != null)
 			{
 				if (Thread.CurrentThread.ManagedThreadId == World.MainThreadID)
 				{
-					Instance._internalDataGroups[data.Type](data);
+					InternalDataGroups[data.Type](data);
 				}
 				else
 				{
-					Instance._internalBuffer.Enqueue(data);
+					InternalBuffer.Enqueue(data);
 				}
 			}
 			else
 			{
-				Dbg.Log("Cannot invoke ", data.Type, data);
+				Debug.Log("Cannot invoke " + data.Type + data);
 			}
 		}
 
 		/// <summary>
 		/// 	Execute code for requests stored in queue.
 		/// </summary>
-		internal void InvokeQueuedData()
+		internal static void InvokeQueuedData()
 		{
-			_packetCounter.Clear();
-			while (_networkBuffer.Count > 0)
+			PacketCounter.Clear();
+			while (NetworkBuffer.Count > 0)
 			{
-				if (!_networkBuffer.TryDequeue(out NetworkData result))
+				if (!NetworkBuffer.TryDequeue(out NetworkData result))
 				{
 					continue;
 				}
 
-				if (_listeners.TryGetValue(result.GetType(), out NetworkDataDelegate value) && value != null)
+				if (Listeners.TryGetValue(result.GetType(), out NetworkDataDelegate value) && value != null)
 				{
 					value(result);
 				}
@@ -188,31 +171,31 @@ namespace OpenHellion.Net
 				{
 					if (result is DynamicObjectStatsMessage)
 					{
-						if (_avgPacketCounter.ContainsKey(result.GetType()))
+						if (AvgPacketCounter.ContainsKey(result.GetType()))
 						{
-							_avgPacketCounter[result.GetType()]++;
+							AvgPacketCounter[result.GetType()]++;
 						}
 						else
 						{
-							_avgPacketCounter.Add(result.GetType(), 1);
+							AvgPacketCounter.Add(result.GetType(), 1);
 						}
 					}
 				}
 
-				if (_packetCounter.ContainsKey(result.GetType()))
+				if (PacketCounter.ContainsKey(result.GetType()))
 				{
-					_packetCounter[result.GetType()]++;
+					PacketCounter[result.GetType()]++;
 				}
 				else
 				{
-					_packetCounter.Add(result.GetType(), 1);
+					PacketCounter.Add(result.GetType(), 1);
 				}
 			}
 
-			while (_internalBuffer.Count > 0)
+			while (InternalBuffer.Count > 0)
 			{
-				if (_internalBuffer.TryDequeue(out InternalEventData result) &&
-				    _internalDataGroups.TryGetValue(result.Type, out InternalDataDelegate value) && value != null)
+				if (InternalBuffer.TryDequeue(out InternalEventData result) &&
+				    InternalDataGroups.TryGetValue(result.Type, out InternalDataDelegate value) && value != null)
 				{
 					value(result);
 				}

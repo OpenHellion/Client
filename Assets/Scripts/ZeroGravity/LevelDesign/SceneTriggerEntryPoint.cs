@@ -5,39 +5,18 @@ namespace ZeroGravity.LevelDesign
 {
 	public class SceneTriggerEntryPoint : BaseSceneTrigger
 	{
-		public override bool ExclusivePlayerLocking
-		{
-			get { return false; }
-		}
+		public override bool ExclusivePlayerLocking => false;
 
-		public override SceneTriggerType TriggerType
-		{
-			get { return SceneTriggerType.EntryPoint; }
-		}
+		public override SceneTriggerType TriggerType => SceneTriggerType.EntryPoint;
 
-		public override PlayerHandsCheckType PlayerHandsCheck
-		{
-			get { return PlayerHandsCheckType.DontCheck; }
-		}
+		public override PlayerHandsCheckType PlayerHandsCheck => PlayerHandsCheckType.DontCheck;
 
-		public override List<ItemType> PlayerHandsItemType
-		{
-			get { return null; }
-		}
+		public override List<ItemType> PlayerHandsItemType => null;
 
-		public override bool IsNearTrigger
-		{
-			get { return true; }
-		}
+		public override bool IsNearTrigger => true;
 
-		public override bool IsInteractable
-		{
-			get { return false; }
-		}
+		public override bool IsInteractable => false;
 
-		public override bool CameraMovementAllowed
-		{
-			get { return false; }
-		}
+		public override bool CameraMovementAllowed => false;
 	}
 }

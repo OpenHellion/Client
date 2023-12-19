@@ -48,7 +48,7 @@ namespace ZeroGravity.LevelDesign
 				objectVolume = SceneHelper.VolumeOfGameObject(ExteriorObject);
 				if (objectVolume <= 0f)
 				{
-					Dbg.Warning("Unable to calculate volume of '" + ExteriorObject.name + "'");
+					Debug.LogWarning("Unable to calculate volume of '" + ExteriorObject.name + "'");
 					ExteriorObject = null;
 				}
 			}

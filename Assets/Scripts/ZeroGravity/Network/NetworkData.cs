@@ -1,5 +1,4 @@
 using OpenHellion.IO;
-using OpenHellion.Net.Message;
 using ProtoBuf;
 
 namespace ZeroGravity.Network
@@ -7,7 +6,6 @@ namespace ZeroGravity.Network
 	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 	[ProtoInclude(100, typeof(LogInRequest))]
 	[ProtoInclude(101, typeof(LogOutRequest))]
-	[ProtoInclude(102, typeof(ServerStatusRequest))]
 	[ProtoInclude(103, typeof(PlayerSpawnRequest))]
 	[ProtoInclude(104, typeof(PlayerRespawnRequest))]
 	[ProtoInclude(105, typeof(SpawnObjectsRequest))]
@@ -23,7 +21,6 @@ namespace ZeroGravity.Network
 	[ProtoInclude(115, typeof(AuthorizedVesselsRequest))]
 	[ProtoInclude(200, typeof(LogInResponse))]
 	[ProtoInclude(201, typeof(LogOutResponse))]
-	[ProtoInclude(202, typeof(ServerStatusResponse))]
 	[ProtoInclude(203, typeof(PlayerSpawnResponse))]
 	[ProtoInclude(204, typeof(PlayerRespawnResponse))]
 	[ProtoInclude(205, typeof(SpawnObjectsResponse))]
@@ -59,7 +56,6 @@ namespace ZeroGravity.Network
 	[ProtoInclude(326, typeof(RefineResourceMessage))]
 	[ProtoInclude(327, typeof(ShipCollisionMessage))]
 	[ProtoInclude(328, typeof(ResetBaseBuilding))]
-	[ProtoInclude(329, typeof(SaveGameMessage))]
 	[ProtoInclude(330, typeof(VoiceCommDataMessage))]
 	[ProtoInclude(332, typeof(ServerShutDownMessage))]
 	[ProtoInclude(333, typeof(LatencyTestMessage))]

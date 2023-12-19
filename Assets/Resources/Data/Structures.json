@@ -431,7 +431,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 1044,
         "DefaultStateID": 2,
@@ -835,8 +835,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 4,
@@ -857,7 +857,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 1049,
             "Position": [
@@ -867,7 +867,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -888,7 +888,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 27,
             "Position": [
@@ -898,7 +898,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -1662,7 +1662,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 72,
         "DefaultStateID": 2,
@@ -2182,8 +2182,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 6,
@@ -2205,7 +2205,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 94,
             "Position": [
@@ -2223,7 +2223,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 5,
@@ -2245,7 +2245,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 101,
             "Position": [
@@ -2263,7 +2263,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -2284,7 +2284,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 27,
             "Position": [
@@ -2294,7 +2294,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -2846,7 +2846,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 33,
         "DefaultStateID": 2,
@@ -3195,7 +3195,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 27,
             "Position": [
@@ -3205,7 +3205,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 4,
@@ -3226,7 +3226,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 60,
             "Position": [
@@ -3236,7 +3236,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 3,
@@ -3255,8 +3255,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -3334,27 +3334,27 @@
         "TagAction": 0,
         "Tags": "",
         "Type": 0,
-        "ExecuterID": 0,
-        "ExecuterStateID": -1,
-        "ExecuterOccupiedStateIDs": []
+        "ExecutorID": 0,
+        "ExecutorStateID": -1,
+        "ExecutorOccupiedStateIDs": []
       },
       {
         "InSceneID": 1017,
         "TagAction": 0,
         "Tags": "",
         "Type": 0,
-        "ExecuterID": 0,
-        "ExecuterStateID": -1,
-        "ExecuterOccupiedStateIDs": []
+        "ExecutorID": 0,
+        "ExecutorStateID": -1,
+        "ExecutorOccupiedStateIDs": []
       },
       {
         "InSceneID": 1018,
         "TagAction": 0,
         "Tags": "",
         "Type": 0,
-        "ExecuterID": 0,
-        "ExecuterStateID": -1,
-        "ExecuterOccupiedStateIDs": []
+        "ExecutorID": 0,
+        "ExecutorStateID": -1,
+        "ExecutorOccupiedStateIDs": []
       }
     ],
     "DynamicObjects": [
@@ -11992,7 +11992,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 1007,
         "DefaultStateID": 3,
@@ -12981,7 +12981,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 17,
             "Position": [
@@ -12991,7 +12991,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -13010,8 +13010,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [],
@@ -16977,7 +16977,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 104,
         "DefaultStateID": 2,
@@ -17713,8 +17713,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -17735,7 +17735,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 27,
             "Position": [
@@ -17745,7 +17745,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 4,
@@ -17766,7 +17766,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 113,
             "Position": [
@@ -17776,7 +17776,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -17915,9 +17915,9 @@
         "TagAction": 2,
         "Tags": "PremadeStation;KnossosTerminal;KnossosResidential",
         "Type": 1,
-        "ExecuterID": 244,
-        "ExecuterStateID": 3,
-        "ExecuterOccupiedStateIDs": [
+        "ExecutorID": 244,
+        "ExecutorStateID": 3,
+        "ExecutorOccupiedStateIDs": [
           3,
           2
         ]
@@ -17927,9 +17927,9 @@
         "TagAction": 2,
         "Tags": "PremadeStation;KnossosTerminal;KnossosResidential",
         "Type": 1,
-        "ExecuterID": 245,
-        "ExecuterStateID": 3,
-        "ExecuterOccupiedStateIDs": [
+        "ExecutorID": 245,
+        "ExecutorStateID": 3,
+        "ExecutorOccupiedStateIDs": [
           3,
           2
         ]
@@ -17939,9 +17939,9 @@
         "TagAction": 2,
         "Tags": "PremadeStation;KnossosTerminal;KnossosResidential",
         "Type": 1,
-        "ExecuterID": 246,
-        "ExecuterStateID": 3,
-        "ExecuterOccupiedStateIDs": [
+        "ExecutorID": 246,
+        "ExecutorStateID": 3,
+        "ExecutorOccupiedStateIDs": [
           3,
           2
         ]
@@ -17951,9 +17951,9 @@
         "TagAction": 2,
         "Tags": "PremadeStation;KnossosTerminal;KnossosResidential",
         "Type": 1,
-        "ExecuterID": 247,
-        "ExecuterStateID": 3,
-        "ExecuterOccupiedStateIDs": [
+        "ExecutorID": 247,
+        "ExecutorStateID": 3,
+        "ExecutorOccupiedStateIDs": [
           3,
           2
         ]
@@ -23416,7 +23416,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 94,
         "DefaultStateID": 2,
@@ -24243,8 +24243,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -24265,7 +24265,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 27,
             "Position": [
@@ -24275,7 +24275,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 4,
@@ -24296,7 +24296,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 102,
             "Position": [
@@ -24306,7 +24306,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -31338,7 +31338,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 87,
         "DefaultStateID": 2,
@@ -32318,8 +32318,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 6,
@@ -32338,8 +32338,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 14,
@@ -32358,8 +32358,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 15,
@@ -32378,8 +32378,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 16,
@@ -32398,8 +32398,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 13,
@@ -32420,7 +32420,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 27,
             "Position": [
@@ -32430,7 +32430,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 8,
@@ -32451,7 +32451,7 @@
         ],
         "DoorPairingDistance": 2.0,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 99,
             "Position": [
@@ -32461,7 +32461,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 12,
@@ -32482,7 +32482,7 @@
         ],
         "DoorPairingDistance": 2.0,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 118,
             "Position": [
@@ -32492,7 +32492,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -33140,7 +33140,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 33,
         "DefaultStateID": 2,
@@ -33506,8 +33506,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -33528,7 +33528,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 68,
             "Position": [
@@ -33538,7 +33538,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 3,
@@ -33559,7 +33559,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 87,
             "Position": [
@@ -33569,7 +33569,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [],
@@ -36892,7 +36892,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 161,
         "DefaultStateID": 1,
@@ -38120,8 +38120,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 4,
@@ -38143,7 +38143,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 90,
             "Position": [
@@ -38153,7 +38153,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -38174,7 +38174,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 27,
             "Position": [
@@ -38184,7 +38184,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 5,
@@ -38205,7 +38205,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 151,
             "Position": [
@@ -38215,7 +38215,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 6,
@@ -38237,7 +38237,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 158,
             "Position": [
@@ -38247,7 +38247,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -38806,7 +38806,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 33,
         "DefaultStateID": 2,
@@ -39174,7 +39174,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 27,
             "Position": [
@@ -39184,7 +39184,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 5,
@@ -39205,7 +39205,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 60,
             "Position": [
@@ -39215,7 +39215,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 4,
@@ -39234,8 +39234,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -39322,9 +39322,9 @@
         "TagAction": 0,
         "Tags": "",
         "Type": 1,
-        "ExecuterID": 810,
-        "ExecuterStateID": 3,
-        "ExecuterOccupiedStateIDs": [
+        "ExecutorID": 810,
+        "ExecutorStateID": 3,
+        "ExecutorOccupiedStateIDs": [
           3,
           2
         ]
@@ -39334,9 +39334,9 @@
         "TagAction": 0,
         "Tags": "",
         "Type": 1,
-        "ExecuterID": 811,
-        "ExecuterStateID": 3,
-        "ExecuterOccupiedStateIDs": [
+        "ExecutorID": 811,
+        "ExecutorStateID": 3,
+        "ExecutorOccupiedStateIDs": [
           3,
           2
         ]
@@ -44726,7 +44726,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 108,
         "DefaultStateID": 1,
@@ -45650,8 +45650,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -45672,7 +45672,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 27,
             "Position": [
@@ -45682,7 +45682,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 4,
@@ -45703,7 +45703,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 99,
             "Position": [
@@ -45713,7 +45713,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -47434,7 +47434,7 @@
     "Collision": "Generic_Debris_Module_JuncRoom001",
     "Colliders": null,
     "Doors": [],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 257,
         "DefaultStateID": 2,
@@ -47530,8 +47530,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": true,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 3,
@@ -47550,8 +47550,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": true,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -48281,7 +48281,7 @@
     "Collision": "Generic_Debris_Module_JuncRoom002",
     "Colliders": null,
     "Doors": [],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 37,
         "DefaultStateID": 2,
@@ -48434,8 +48434,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": true,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -48454,8 +48454,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": true,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -50948,7 +50948,7 @@
     "Collision": "Generic_Debris_Module_Corridor001",
     "Colliders": null,
     "Doors": [],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 64,
         "DefaultStateID": 2,
@@ -51063,8 +51063,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": true,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [],
@@ -51974,7 +51974,7 @@
     "Collision": "Generic_Debris_Module_Corridor002",
     "Colliders": null,
     "Doors": [],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 258,
         "DefaultStateID": 2,
@@ -52070,8 +52070,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": true,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 3,
@@ -52090,8 +52090,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": true,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -54753,7 +54753,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 85,
         "DefaultStateID": 1,
@@ -55139,7 +55139,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 57,
             "Position": [
@@ -55149,7 +55149,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -55170,7 +55170,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 27,
             "Position": [
@@ -55180,7 +55180,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 3,
@@ -55199,8 +55199,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -55467,7 +55467,7 @@
     "Collision": "AltCorp_DockableContainer",
     "Colliders": null,
     "Doors": [],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 33,
         "DefaultStateID": 2,
@@ -55563,8 +55563,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 1,
@@ -55583,8 +55583,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [],
@@ -59093,7 +59093,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 151,
         "DefaultStateID": 2,
@@ -60571,7 +60571,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 68,
             "Position": [
@@ -60581,7 +60581,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 3,
@@ -60602,7 +60602,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 144,
             "Position": [
@@ -60612,7 +60612,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [],
@@ -60698,9 +60698,9 @@
         "TagAction": 2,
         "Tags": "02walking;Ruins",
         "Type": 1,
-        "ExecuterID": 404,
-        "ExecuterStateID": 3,
-        "ExecuterOccupiedStateIDs": [
+        "ExecutorID": 404,
+        "ExecutorStateID": 3,
+        "ExecutorOccupiedStateIDs": [
           3,
           2
         ]
@@ -64794,7 +64794,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 413,
         "DefaultStateID": 2,
@@ -65203,8 +65203,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -65225,7 +65225,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 68,
             "Position": [
@@ -65235,7 +65235,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [],
@@ -65363,7 +65363,7 @@
     "Collision": "Generic_Debris_Spawn1",
     "Colliders": null,
     "Doors": [],
-    "SceneTriggerExecuters": [],
+    "SceneTriggerExecutors": [],
     "DockingPorts": [],
     "SpawnObjectChanceData": [],
     "CargoBay": null,
@@ -65437,7 +65437,7 @@
     "Collision": "Generic_Debris_Spawn2",
     "Colliders": null,
     "Doors": [],
-    "SceneTriggerExecuters": [],
+    "SceneTriggerExecutors": [],
     "DockingPorts": [],
     "SpawnObjectChanceData": [],
     "CargoBay": null,
@@ -65511,7 +65511,7 @@
     "Collision": "Generic_Debris_Spawn3",
     "Colliders": null,
     "Doors": [],
-    "SceneTriggerExecuters": [],
+    "SceneTriggerExecutors": [],
     "DockingPorts": [],
     "SpawnObjectChanceData": [],
     "CargoBay": null,
@@ -66873,7 +66873,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 22,
         "DefaultStateID": 2,
@@ -67353,8 +67353,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -67375,7 +67375,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 27,
             "Position": [
@@ -67385,7 +67385,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 4,
@@ -67406,7 +67406,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 98,
             "Position": [
@@ -67416,7 +67416,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -67539,9 +67539,9 @@
         "TagAction": 0,
         "Tags": "",
         "Type": 0,
-        "ExecuterID": 0,
-        "ExecuterStateID": -1,
-        "ExecuterOccupiedStateIDs": []
+        "ExecutorID": 0,
+        "ExecutorStateID": -1,
+        "ExecutorOccupiedStateIDs": []
       }
     ],
     "DynamicObjects": [
@@ -74057,7 +74057,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 1278,
         "DefaultStateID": 1,
@@ -74507,8 +74507,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [],
@@ -78576,7 +78576,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 131,
         "DefaultStateID": 3,
@@ -79001,7 +79001,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 68,
             "Position": [
@@ -79011,7 +79011,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -79030,8 +79030,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [],
@@ -79361,7 +79361,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 23,
         "DefaultStateID": 2,
@@ -79467,8 +79467,8 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [
@@ -82206,7 +82206,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 1172,
         "DefaultStateID": 2,
@@ -82350,8 +82350,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 3,
@@ -82370,8 +82370,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 4,
@@ -82390,8 +82390,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [],
@@ -90496,7 +90496,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 1521,
         "DefaultStateID": 2,
@@ -91548,8 +91548,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -91570,7 +91570,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 1475,
             "Position": [
@@ -91580,7 +91580,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 4,
@@ -91601,7 +91601,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 1481,
             "Position": [
@@ -91611,7 +91611,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 3,
@@ -91632,7 +91632,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 1487,
             "Position": [
@@ -91642,7 +91642,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 5,
@@ -91663,7 +91663,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 68,
             "Position": [
@@ -91673,7 +91673,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [],
@@ -94235,7 +94235,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 1128,
         "DefaultStateID": 1,
@@ -97866,7 +97866,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 1294,
         "DefaultStateID": 1,
@@ -98465,8 +98465,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 5,
@@ -98487,7 +98487,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 1284,
             "Position": [
@@ -98497,7 +98497,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 1,
@@ -98518,7 +98518,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 1290,
             "Position": [
@@ -98528,7 +98528,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -98549,7 +98549,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 68,
             "Position": [
@@ -98559,7 +98559,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [],
@@ -102951,7 +102951,7 @@
         ]
       }
     ],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 1303,
         "DefaultStateID": 2,
@@ -103455,7 +103455,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 1309,
             "Position": [
@@ -103465,7 +103465,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 2,
@@ -103486,7 +103486,7 @@
         ],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [
+        "MergeExecutors": [
           {
             "InSceneID": 68,
             "Position": [
@@ -103496,7 +103496,7 @@
             ]
           }
         ],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutorDistance": 1.0
       },
       {
         "InSceneID": 1,
@@ -103515,8 +103515,8 @@
         "DoorsIDs": [],
         "DoorPairingDistance": 0.5,
         "Locked": false,
-        "MergeExecuters": [],
-        "MergeExecuterDistance": 1.0
+        "MergeExecutors": [],
+        "MergeExecutorDistance": 1.0
       }
     ],
     "SpawnObjectChanceData": [],
@@ -103584,9 +103584,9 @@
         "TagAction": 0,
         "Tags": "",
         "Type": 1,
-        "ExecuterID": 1029,
-        "ExecuterStateID": 3,
-        "ExecuterOccupiedStateIDs": [
+        "ExecutorID": 1029,
+        "ExecutorStateID": 3,
+        "ExecutorOccupiedStateIDs": [
           3,
           2
         ]
@@ -103596,9 +103596,9 @@
         "TagAction": 0,
         "Tags": "",
         "Type": 1,
-        "ExecuterID": 1027,
-        "ExecuterStateID": 3,
-        "ExecuterOccupiedStateIDs": [
+        "ExecutorID": 1027,
+        "ExecutorStateID": 3,
+        "ExecutorOccupiedStateIDs": [
           3,
           2
         ]
@@ -103608,36 +103608,36 @@
         "TagAction": 0,
         "Tags": "",
         "Type": 0,
-        "ExecuterID": 0,
-        "ExecuterStateID": -1,
-        "ExecuterOccupiedStateIDs": []
+        "ExecutorID": 0,
+        "ExecutorStateID": -1,
+        "ExecutorOccupiedStateIDs": []
       },
       {
         "InSceneID": 5,
         "TagAction": 0,
         "Tags": "",
         "Type": 0,
-        "ExecuterID": 0,
-        "ExecuterStateID": -1,
-        "ExecuterOccupiedStateIDs": []
+        "ExecutorID": 0,
+        "ExecutorStateID": -1,
+        "ExecutorOccupiedStateIDs": []
       },
       {
         "InSceneID": 6,
         "TagAction": 0,
         "Tags": "",
         "Type": 0,
-        "ExecuterID": 0,
-        "ExecuterStateID": -1,
-        "ExecuterOccupiedStateIDs": []
+        "ExecutorID": 0,
+        "ExecutorStateID": -1,
+        "ExecutorOccupiedStateIDs": []
       },
       {
         "InSceneID": 3,
         "TagAction": 0,
         "Tags": "",
         "Type": 0,
-        "ExecuterID": 0,
-        "ExecuterStateID": -1,
-        "ExecuterOccupiedStateIDs": []
+        "ExecutorID": 0,
+        "ExecutorStateID": -1,
+        "ExecutorOccupiedStateIDs": []
       }
     ],
     "DynamicObjects": [
@@ -103799,7 +103799,7 @@
     "Collision": "FlatShipTest",
     "Colliders": null,
     "Doors": [],
-    "SceneTriggerExecuters": [
+    "SceneTriggerExecutors": [
       {
         "InSceneID": 1029,
         "DefaultStateID": 1,

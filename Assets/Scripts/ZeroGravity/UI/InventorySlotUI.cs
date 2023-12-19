@@ -91,7 +91,7 @@ namespace ZeroGravity.UI
 			CheckItemSlots();
 			if (Slot == InventoryUI.Inventory.HandsSlot)
 			{
-				InventoryCharacterPreview.instance.RefreshPreviewCharacter(InventoryUI.Inventory);
+				InventoryCharacterPreview.Instance.RefreshPreviewCharacter(InventoryUI.Inventory);
 			}
 		}
 

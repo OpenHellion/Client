@@ -146,7 +146,7 @@ namespace ZeroGravity
 				CheckLooting();
 				CheckProximityAttachPoints();
 				UpdateArmorAndHealth();
-				InventoryCharacterPreview.instance.ResetPosition();
+				InventoryCharacterPreview.Instance.ResetPosition();
 				this.CancelInvoke(RefreshPreviewCharacter);
 				this.Invoke(RefreshPreviewCharacter, 0.1f);
 			}
@@ -154,7 +154,7 @@ namespace ZeroGravity
 
 		private void RefreshPreviewCharacter()
 		{
-			InventoryCharacterPreview.instance.RefreshPreviewCharacter(Inventory);
+			InventoryCharacterPreview.Instance.RefreshPreviewCharacter(Inventory);
 		}
 
 		private void ClearOther()

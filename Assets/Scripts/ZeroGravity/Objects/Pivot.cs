@@ -35,7 +35,7 @@ namespace ZeroGravity.Objects
 					pivot.ChildType = SpaceObjectType.Corpse;
 					break;
 				default:
-					Dbg.Error("Unknown pivot type", pivotType);
+					Debug.LogError("Unknown pivot type " + pivotType);
 					break;
 			}
 

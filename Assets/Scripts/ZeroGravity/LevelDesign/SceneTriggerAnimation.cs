@@ -44,33 +44,17 @@ namespace ZeroGravity.LevelDesign
 
 		private AnimationState currentState = AnimationState.InactiveIdle;
 
-		public bool IsEventRunning
-		{
-			get
-			{
-				return currentState == AnimationState.Active || currentState == AnimationState.Inactive ||
-				       currentState == AnimationState.Fail;
-			}
-		}
+		public bool IsEventRunning =>
+			currentState == AnimationState.Active || currentState == AnimationState.Inactive ||
+			currentState == AnimationState.Fail;
 
-		public bool IsEventFinished
-		{
-			get
-			{
-				return currentState == AnimationState.ActiveIdle || currentState == AnimationState.InactiveIdle ||
-				       currentState == AnimationState.None;
-			}
-		}
+		public bool IsEventFinished =>
+			currentState == AnimationState.ActiveIdle || currentState == AnimationState.InactiveIdle ||
+			currentState == AnimationState.None;
 
-		public bool IsActive
-		{
-			get { return currentState == AnimationState.Active || currentState == AnimationState.ActiveIdle; }
-		}
+		public bool IsActive => currentState == AnimationState.Active || currentState == AnimationState.ActiveIdle;
 
-		public bool IsInactive
-		{
-			get { return currentState == AnimationState.Inactive || currentState == AnimationState.InactiveIdle; }
-		}
+		public bool IsInactive => currentState == AnimationState.Inactive || currentState == AnimationState.InactiveIdle;
 
 		private void Awake()
 		{
@@ -83,7 +67,7 @@ namespace ZeroGravity.LevelDesign
 			animatorOverrideController.runtimeAnimatorController = anim.runtimeAnimatorController;
 			if (animatorOverrideController.runtimeAnimatorController == null)
 			{
-				Dbg.Error("Cannot override controller", base.name);
+				Debug.LogError("Cannot override controller " + name);
 			}
 
 			if (activeEffects.ExecutingAnimation != null)
@@ -132,7 +116,7 @@ namespace ZeroGravity.LevelDesign
 			}
 			catch (Exception ex)
 			{
-				Dbg.Error(ex, ex.StackTrace, base.gameObject.name);
+				Debug.LogException(ex, gameObject);
 			}
 		}
 

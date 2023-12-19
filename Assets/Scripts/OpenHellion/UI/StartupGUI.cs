@@ -24,6 +24,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using OpenHellion.Social;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 using ZeroGravity;
 using ZeroGravity.Math;
@@ -33,11 +34,10 @@ namespace OpenHellion.UI
 	/// <summary>
 	///		Controls the graphical user interface of the startup menu. This is the preloading menu, account login and creation menu, and the starting error box.
 	/// </summary>
+	[RequireComponent(typeof(UIDocument))]
 	public class StartupGUI : MonoBehaviour
 	{
 		[SerializeField] private List<Sprite> _PreloadImages = new List<Sprite>();
-
-		[SerializeField] private NakamaClient _NakamaClient;
 
 		private VisualElement _preloadBackground;
 		private VisualElement _preloadBottom;
@@ -64,7 +64,7 @@ namespace OpenHellion.UI
 
 		private void Awake()
 		{
-			_NakamaClient.OnRequireAuthentication.AddListener(OpenAuthenticationScreen);
+			NakamaClient.OnRequireAuthentication += OpenAuthenticationScreen;
 
 			// The UXML is already instantiated by the UIDocument component
 			var uiDocument = GetComponent<UIDocument>();
@@ -114,7 +114,7 @@ namespace OpenHellion.UI
 			CloseCreateAccountScreen();
 			ClosePreloading();
 
-			_NakamaClient.OnRequireAuthentication.RemoveListener(OpenAuthenticationScreen);
+			NakamaClient.OnRequireAuthentication -= OpenAuthenticationScreen;
 		}
 
 		private void OpenAuthenticationScreen()
@@ -134,7 +134,7 @@ namespace OpenHellion.UI
 				return;
 			}
 
-			bool success = await _NakamaClient.Authenticate(email, password);
+			bool success = await NakamaClient.Authenticate(email, password);
 
 			// Clear the contents for next time.
 			_authenticationEmail.value = string.Empty;
@@ -142,7 +142,7 @@ namespace OpenHellion.UI
 
 			if (success)
 			{
-				Dbg.Log("Successfully authenticated with Nakama.");
+				Debug.Log("Successfully authenticated with Nakama.");
 				CloseAuthenticationScreen();
 			}
 		}
@@ -162,7 +162,7 @@ namespace OpenHellion.UI
 		{
 			if (!_createScreenConsent.value)
 			{
-				GlobalGUI.ShowErrorMessage(Localization.Error, Localization.ConsentToDataStorage, null);
+				GlobalGUI.ShowErrorMessage(Localization.Error, Localization.ConsentToDataStorage);
 				return;
 			}
 
@@ -183,7 +183,7 @@ namespace OpenHellion.UI
 				return;
 			}
 
-			bool success = await _NakamaClient.CreateAccount(email, password, username, displayName);
+			bool success = await NakamaClient.CreateAccount(email, password, username, displayName);
 
 
 			// Clear the contents for next time.
@@ -193,7 +193,7 @@ namespace OpenHellion.UI
 
 			if (success)
 			{
-				Dbg.Log("Successfully created a new Nakama account.");
+				Debug.Log("Successfully created a new Nakama account.");
 				CloseCreateAccountScreen();
 			}
 		}

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using OpenHellion.Net.Message;
-using OpenHellion.Net.Message.MainServer;
 using ProtoBuf;
 using ZeroGravity.Data;
 using ZeroGravity.Objects;
@@ -20,7 +19,7 @@ namespace ZeroGravity.Network
 
 		public long MainVesselID;
 
-		public List<GameScenes.SceneID> Scenes;
+		public List<GameScenes.SceneId> Scenes;
 
 		public VesselData VesselData;
 

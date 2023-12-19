@@ -195,22 +195,22 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public List<SceneTriggerExecuterStateData> GetExecuterStatesData()
+		public List<SceneTriggerExecutorStateData> GetExecuterStatesData()
 		{
-			List<SceneTriggerExecuterStateData> list = new List<SceneTriggerExecuterStateData>();
+			List<SceneTriggerExecutorStateData> list = new List<SceneTriggerExecutorStateData>();
 			if (actionStates.Count > 0)
 			{
 				foreach (StateActions actionState in actionStates)
 				{
-					list.Add(new SceneTriggerExecuterStateData
+					list.Add(new SceneTriggerExecutorStateData
 					{
 						StateID = actionState.StateID,
-						PlayerDisconnectToStateID = ((!actionState.PlayerDisconnectReturnToState.IsNullOrEmpty())
+						PlayerDisconnectToStateID = !actionState.PlayerDisconnectReturnToState.IsNullOrEmpty()
 							? GetStateID(actionState.PlayerDisconnectReturnToState)
-							: 0),
+							: 0,
 						PlayerDisconnectToStateImmediate =
-							(!actionState.PlayerDisconnectReturnToState.IsNullOrEmpty() &&
-							 actionState.PlayerDisconnectToStateImmediate)
+							!actionState.PlayerDisconnectReturnToState.IsNullOrEmpty() &&
+							actionState.PlayerDisconnectToStateImmediate
 					});
 				}
 
@@ -519,7 +519,7 @@ namespace ZeroGravity.LevelDesign
 					num++;
 					if (actionState.StateName == stateName)
 					{
-						return (actionState.StateID != 0) ? actionState.StateID : num;
+						return actionState.StateID != 0 ? actionState.StateID : num;
 					}
 				}
 			}
@@ -565,7 +565,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (newState != CurrentStateID)
 			{
-				SetExecuterDetails(new SceneTriggerExecutorDetails
+				SetExecutorDetails(new SceneTriggerExecutorDetails
 				{
 					PlayerThatActivated = 0L,
 					InSceneID = InSceneID,
@@ -618,35 +618,35 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (childExecutor != null)
 			{
-				this._childExecutor = childExecutor;
-				this._childExecutor._parentExecutor = this;
-				if (this._childExecutor.CurrentStateID != CurrentStateID)
+				_childExecutor = childExecutor;
+				_childExecutor._parentExecutor = this;
+				if (_childExecutor.CurrentStateID != CurrentStateID)
 				{
-					this._childExecutor.MergeStateID(CurrentStateID, isInstant);
+					_childExecutor.MergeStateID(CurrentStateID, isInstant);
 				}
 			}
-			else if (this._childExecutor != null)
+			else if (_childExecutor != null)
 			{
-				this._childExecutor._parentExecutor = null;
-				this._childExecutor = null;
+				_childExecutor._parentExecutor = null;
+				_childExecutor = null;
 			}
 		}
 
-		public string GetExecuterDebugString()
+		public string GetExecutorDebugString()
 		{
 			return string.Format("{6} = {0}, {1}, PEX = {2}, {3}, CH = {4}, {5}", ParentVessel.GUID, InSceneID,
-				(!(_parentExecutor != null)) ? 0 : _parentExecutor.ParentVessel.GUID,
-				(_parentExecutor != null) ? _parentExecutor.InSceneID : 0,
-				(!(_childExecutor != null)) ? 0 : _childExecutor.ParentVessel.GUID,
-				(_childExecutor != null) ? _childExecutor.InSceneID : 0, base.name);
+				!(_parentExecutor != null) ? 0 : _parentExecutor.ParentVessel.GUID,
+				_parentExecutor != null ? _parentExecutor.InSceneID : 0,
+				!(_childExecutor != null) ? 0 : _childExecutor.ParentVessel.GUID,
+				_childExecutor != null ? _childExecutor.InSceneID : 0, name);
 		}
 
-		public void SetExecuterDetails(SceneTriggerExecutorDetails details, bool isInstant = false,
+		public void SetExecutorDetails(SceneTriggerExecutorDetails details, bool isInstant = false,
 			SceneTriggerExecutor fromExecutor = null, bool checkCurrentState = true)
 		{
 			if (_parentExecutor != null && _parentExecutor != fromExecutor)
 			{
-				_parentExecutor.SetExecuterDetails(details, isInstant, this);
+				_parentExecutor.SetExecutorDetails(details, isInstant, this);
 			}
 			else
 			{
@@ -692,7 +692,7 @@ namespace ZeroGravity.LevelDesign
 
 				if (_childExecutor != null)
 				{
-					_childExecutor.SetExecuterDetails(details, isInstant, this);
+					_childExecutor.SetExecutorDetails(details, isInstant, this);
 				}
 			}
 		}

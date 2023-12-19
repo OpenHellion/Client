@@ -13,40 +13,19 @@ namespace ZeroGravity.LevelDesign
 
 		public List<Transform> DetachPoints = new List<Transform>();
 
-		public override bool ExclusivePlayerLocking
-		{
-			get { return false; }
-		}
+		public override bool ExclusivePlayerLocking => false;
 
-		public override SceneTriggerType TriggerType
-		{
-			get { return SceneTriggerType.Ladder; }
-		}
+		public override SceneTriggerType TriggerType => SceneTriggerType.Ladder;
 
-		public override PlayerHandsCheckType PlayerHandsCheck
-		{
-			get { return PlayerHandsCheckType.DontCheck; }
-		}
+		public override PlayerHandsCheckType PlayerHandsCheck => PlayerHandsCheckType.DontCheck;
 
-		public override List<ItemType> PlayerHandsItemType
-		{
-			get { return null; }
-		}
+		public override List<ItemType> PlayerHandsItemType => null;
 
-		public override bool IsNearTrigger
-		{
-			get { return true; }
-		}
+		public override bool IsNearTrigger => true;
 
-		public override bool IsInteractable
-		{
-			get { return true; }
-		}
+		public override bool IsInteractable => true;
 
-		public override bool CameraMovementAllowed
-		{
-			get { return false; }
-		}
+		public override bool CameraMovementAllowed => false;
 
 		public void LadderAttach(MyPlayer pl, bool checkGravity = true)
 		{

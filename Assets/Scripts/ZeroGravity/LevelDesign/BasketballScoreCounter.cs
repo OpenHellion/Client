@@ -10,7 +10,7 @@ namespace ZeroGravity.LevelDesign
 
 		public int Counter
 		{
-			get { return _Counter; }
+			get => _Counter;
 			set
 			{
 				_Counter = value;

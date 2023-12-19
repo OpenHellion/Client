@@ -173,7 +173,7 @@ namespace ZeroGravity.Objects
 					Generators = new List<GeneratorDetails>(),
 					RoomTriggers = new List<RoomDetails>(),
 					Doors = new List<DoorDetails>(),
-					SceneTriggerExecuters = new List<SceneTriggerExecutorDetails>(),
+					SceneTriggerExecutors = new List<SceneTriggerExecutorDetails>(),
 					DockingPorts = new List<SceneDockingPortDetails>(),
 					AttachPoints = new List<AttachPointDetails>(),
 					SpawnPoints = new List<SpawnPointStats>()
@@ -261,7 +261,7 @@ namespace ZeroGravity.Objects
 
 			if (sceneTriggerExecutor != null)
 			{
-				_shipStatsMsg.VesselObjects.SceneTriggerExecuters.Add(sceneTriggerExecutor);
+				_shipStatsMsg.VesselObjects.SceneTriggerExecutors.Add(sceneTriggerExecutor);
 				shipStatsChanged = true;
 			}
 
@@ -400,7 +400,7 @@ namespace ZeroGravity.Objects
 
 			if (shipStatsChanged)
 			{
-				NetworkController.Instance.SendToGameServer(_shipStatsMsg);
+				NetworkController.SendToGameServer(_shipStatsMsg);
 				CreateNewStatsMessage();
 			}
 
@@ -610,7 +610,7 @@ namespace ZeroGravity.Objects
 			{
 				maneuverCourseRequestData.ShipGUID = base.GUID;
 				maneuverCourseRequestData.Activate = false;
-				NetworkController.Instance.SendToGameServer(maneuverCourseRequestData);
+				NetworkController.SendToGameServer(maneuverCourseRequestData);
 			}
 		}
 
@@ -621,7 +621,7 @@ namespace ZeroGravity.Objects
 			if (maneuverCourseRequestData != null)
 			{
 				maneuverCourseRequestData.ShipGUID = base.GUID;
-				NetworkController.Instance.SendToGameServer(maneuverCourseRequestData);
+				NetworkController.SendToGameServer(maneuverCourseRequestData);
 			}
 		}
 
@@ -629,7 +629,7 @@ namespace ZeroGravity.Objects
 		{
 			if (CourseWaitingActivation > 0)
 			{
-				NetworkController.Instance.SendToGameServer(new ManeuverCourseRequest
+				NetworkController.SendToGameServer(new ManeuverCourseRequest
 				{
 					CourseGUID = CourseWaitingActivation,
 					ShipGUID = base.GUID,
@@ -922,7 +922,7 @@ namespace ZeroGravity.Objects
 					}
 					catch (Exception ex)
 					{
-						Dbg.Error("SubSystemDetails exception", base.GUID, base.SceneID.ToString(), subSystem.InSceneID,
+						Debug.LogErrorFormat("SubSystemDetails exception {0} {1} {2} {3} {4}", base.GUID, base.SceneID.ToString(), subSystem.InSceneID,
 							ex.Message, ex.StackTrace);
 					}
 				}
@@ -939,7 +939,7 @@ namespace ZeroGravity.Objects
 					}
 					catch (Exception ex2)
 					{
-						Dbg.Error("NameTagData exception", base.GUID, base.SceneID.ToString(), nameTag.InSceneID,
+						Debug.LogErrorFormat("NameTagData exception {0}, {1}, {2}, {3}, {4}", base.GUID, base.SceneID.ToString(), nameTag.InSceneID,
 							ex2.Message, ex2.StackTrace);
 					}
 				}
@@ -975,7 +975,7 @@ namespace ZeroGravity.Objects
 					}
 					catch (Exception ex3)
 					{
-						Dbg.Error("GeneratorDetails exception", base.GUID, base.SceneID.ToString(), generator.InSceneID,
+						Debug.LogErrorFormat("GeneratorDetails exception {0}, {1}, {2}, {3}, {4}", base.GUID, base.SceneID.ToString(), generator.InSceneID,
 							ex3.Message, ex3.StackTrace);
 					}
 				}
@@ -1053,7 +1053,7 @@ namespace ZeroGravity.Objects
 					}
 					catch (Exception ex4)
 					{
-						Dbg.Error("RoomDetails exception", base.GUID, base.SceneID.ToString(), roomTrigger.InSceneID,
+						Debug.LogErrorFormat("RoomDetails exception {0}, {1}, {2}, {3}, {4}", base.GUID, base.SceneID.ToString(), roomTrigger.InSceneID,
 							ex4.Message, ex4.StackTrace);
 					}
 				}
@@ -1105,7 +1105,7 @@ namespace ZeroGravity.Objects
 					}
 					catch (Exception ex5)
 					{
-						Dbg.Error("ResourceContainerDetails exception", base.GUID, base.SceneID.ToString(),
+						Debug.LogErrorFormat("ResourceContainerDetails exception {0}, {1}, {2}, {3}, {4}", base.GUID, base.SceneID.ToString(),
 							resourceContainer.InSceneID, ex5.Message, ex5.StackTrace);
 					}
 				}
@@ -1123,25 +1123,25 @@ namespace ZeroGravity.Objects
 					}
 					catch (Exception ex6)
 					{
-						Dbg.Error("DoorDetails exception", base.GUID, base.SceneID.ToString(), door.InSceneID,
+						Debug.LogErrorFormat("DoorDetails exception {0}, {1}, {2}, {3}, {4}", base.GUID, base.SceneID.ToString(), door.InSceneID,
 							ex6.Message, ex6.StackTrace);
 					}
 				}
 			}
 
-			if (shipObjects.SceneTriggerExecuters != null)
+			if (shipObjects.SceneTriggerExecutors != null)
 			{
-				foreach (SceneTriggerExecutorDetails sceneTriggerExecuter in shipObjects.SceneTriggerExecuters)
+				foreach (SceneTriggerExecutorDetails sceneTriggerExecuter in shipObjects.SceneTriggerExecutors)
 				{
 					try
 					{
 						SceneTriggerExecutor structureObject7 =
 							GetStructureObject<SceneTriggerExecutor>(sceneTriggerExecuter.InSceneID);
-						structureObject7.SetExecuterDetails(sceneTriggerExecuter, isInitialize);
+						structureObject7.SetExecutorDetails(sceneTriggerExecuter, isInitialize);
 					}
 					catch (Exception ex7)
 					{
-						Dbg.Error("SceneTriggerExecuterDetails exception", base.GUID, base.SceneID.ToString(),
+						Debug.LogErrorFormat("SceneTriggerExecuterDetails exception {0}, {1}, {2}, {3}, {4}", base.GUID, base.SceneID.ToString(),
 							sceneTriggerExecuter.InSceneID, ex7.Message, ex7.StackTrace);
 					}
 				}
@@ -1195,7 +1195,7 @@ namespace ZeroGravity.Objects
 					}
 					catch (Exception ex)
 					{
-						Dbg.Error("SceneDockingPortDetails exception", base.GUID, base.SceneID.ToString(),
+						Debug.LogErrorFormat("SceneDockingPortDetails exception {0}, {1}, {2}, {3}, {4}", base.GUID, base.SceneID.ToString(),
 							dockingPort.ID, ex.Message, ex.StackTrace);
 					}
 				}
@@ -1221,7 +1221,7 @@ namespace ZeroGravity.Objects
 				}
 				catch (Exception ex)
 				{
-					Dbg.Error("CargoBayDetails exception", base.GUID, base.SceneID.ToString(),
+					Debug.LogErrorFormat("CargoBayDetails exception {0}, {1}, {2}, {3}, {4}", base.GUID, base.SceneID.ToString(),
 						shipObjects.CargoBay.InSceneID, ex.Message, ex.StackTrace);
 				}
 			}
@@ -1252,7 +1252,7 @@ namespace ZeroGravity.Objects
 					}
 					catch (Exception ex)
 					{
-						Dbg.Error("SpawnPointStats exception", base.GUID, base.SceneID.ToString(), spawnPoint.InSceneID,
+						Debug.LogErrorFormat("SpawnPointStats exception {0}, {1}, {2}, {3}, {4}", base.GUID, base.SceneID.ToString(), spawnPoint.InSceneID,
 							ex.Message, ex.StackTrace);
 					}
 				}
@@ -1270,7 +1270,7 @@ namespace ZeroGravity.Objects
 					}
 					catch (Exception ex)
 					{
-						Dbg.Error("VesselRepairPoint exception", base.GUID, base.SceneID.ToString(),
+						Debug.LogErrorFormat("VesselRepairPoint exception {0}, {1}, {2}, {3}, {4}", base.GUID, base.SceneID.ToString(),
 							repairPoint.InSceneID, ex.Message, ex.StackTrace);
 					}
 				}
@@ -1292,7 +1292,7 @@ namespace ZeroGravity.Objects
 				}
 				catch (Exception ex)
 				{
-					Dbg.Error("Emblem exception", base.GUID, base.SceneID.ToString(), ex.Message, ex.StackTrace);
+					Debug.LogErrorFormat("Emblem exception {0}, {1}, {2}, {3}", base.GUID, base.SceneID.ToString(), ex.Message, ex.StackTrace);
 				}
 			}
 
@@ -1578,7 +1578,7 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		private IEnumerator LoadStructureScenes(GameScenes.SceneID sceneID, Transform rootTransform,
+		private IEnumerator LoadStructureScenes(GameScenes.SceneId sceneID, Transform rootTransform,
 			VesselObjects shipObjects)
 		{
 			yield return StartCoroutine(
@@ -1620,7 +1620,7 @@ namespace ZeroGravity.Objects
 			SceneHelper.FillResourceContainers(sceneRoot, ResourceContainers, shipObjects?.ResourceContainers);
 			SceneHelper.FillDoors(this, sceneRoot, Doors, shipObjects?.Doors);
 			SceneHelper.FillSceneTriggerExecutors(this, sceneRoot, SceneTriggerExecutors,
-				shipObjects?.SceneTriggerExecuters);
+				shipObjects?.SceneTriggerExecutors);
 			SceneHelper.FillSpawnWithChanceData(sceneRoot, shipObjects.SpawnWithChance);
 			SceneHelper.FillSceneDockingPorts(this, sceneRoot, DockingPorts, shipObjects?.DockingPorts);
 			SceneHelper.FillSpawnPoints(this, sceneRoot, SpawnPoints, shipObjects?.SpawnPoints);
@@ -1775,19 +1775,19 @@ namespace ZeroGravity.Objects
 
 			if (isDock)
 			{
-				if (currDockDetails.ExecutersMerge != null && currDockDetails.ExecutersMerge.Count > 0)
+				if (currDockDetails.ExecutorsMerge != null && currDockDetails.ExecutorsMerge.Count > 0)
 				{
-					Ship ship = ((currDockDetails.ExecutersMerge[0].ParentTriggerID.VesselGUID != base.GUID)
-						? (World.GetVessel(currDockDetails.ExecutersMerge[0].ParentTriggerID.VesselGUID) as Ship)
+					Ship ship = ((currDockDetails.ExecutorsMerge[0].ParentTriggerID.VesselGUID != base.GUID)
+						? (World.GetVessel(currDockDetails.ExecutorsMerge[0].ParentTriggerID.VesselGUID) as Ship)
 						: this);
-					Ship ship2 = ((currDockDetails.ExecutersMerge[0].ChildTriggerID.VesselGUID != base.GUID)
-						? (World.GetVessel(currDockDetails.ExecutersMerge[0].ChildTriggerID.VesselGUID) as Ship)
+					Ship ship2 = ((currDockDetails.ExecutorsMerge[0].ChildTriggerID.VesselGUID != base.GUID)
+						? (World.GetVessel(currDockDetails.ExecutorsMerge[0].ChildTriggerID.VesselGUID) as Ship)
 						: this);
 					if (ship != null && ship.SceneObjectsLoaded && ship2 != null && ship2.SceneObjectsLoaded)
 					{
 						SceneTriggerExecutor sceneTriggerExecutor = null;
 						SceneTriggerExecutor sceneTriggerExecuter2 = null;
-						foreach (ExecuterMergeDetails item in currDockDetails.ExecutersMerge)
+						foreach (ExecutorMergeDetails item in currDockDetails.ExecutorsMerge)
 						{
 							sceneTriggerExecutor =
 								ship.GetStructureObject<SceneTriggerExecutor>(item.ParentTriggerID.InSceneID);
@@ -1801,15 +1801,15 @@ namespace ZeroGravity.Objects
 					}
 				}
 			}
-			else if (currDockDetails.ExecutersMerge != null && currDockDetails.ExecutersMerge.Count > 0)
+			else if (currDockDetails.ExecutorsMerge != null && currDockDetails.ExecutorsMerge.Count > 0)
 			{
-				Ship ship3 = ((currDockDetails.ExecutersMerge[0].ParentTriggerID.VesselGUID != base.GUID)
-					? (World.GetVessel(currDockDetails.ExecutersMerge[0].ParentTriggerID.VesselGUID) as Ship)
+				Ship ship3 = ((currDockDetails.ExecutorsMerge[0].ParentTriggerID.VesselGUID != base.GUID)
+					? (World.GetVessel(currDockDetails.ExecutorsMerge[0].ParentTriggerID.VesselGUID) as Ship)
 					: this);
 				if (ship3 != null && ship3.SceneObjectsLoaded)
 				{
 					SceneTriggerExecutor sceneTriggerExecuter3 = null;
-					foreach (ExecuterMergeDetails item2 in currDockDetails.ExecutersMerge)
+					foreach (ExecutorMergeDetails item2 in currDockDetails.ExecutorsMerge)
 					{
 						sceneTriggerExecuter3 =
 							ship3.GetStructureObject<SceneTriggerExecutor>(item2.ParentTriggerID.InSceneID);
