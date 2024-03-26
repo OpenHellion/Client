@@ -27,7 +27,7 @@ namespace ZeroGravity.UI
 		{
 			if (Video.frameCount != 0)
 			{
-				Progress.fillAmount = (float)Video.frame / (float)Video.frameCount;
+				Progress.fillAmount = Video.frame / (float)Video.frameCount;
 			}
 		}
 
@@ -45,7 +45,7 @@ namespace ZeroGravity.UI
 
 		public void SkipToPercent(float pct)
 		{
-			float num = (float)Video.frameCount * pct;
+			float num = Video.frameCount * pct;
 			Video.frame = (long)num;
 		}
 	}

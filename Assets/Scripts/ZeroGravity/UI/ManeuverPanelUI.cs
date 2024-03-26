@@ -45,7 +45,7 @@ namespace ZeroGravity.UI
 			else if (TurnOffAfterTimer)
 			{
 				TurnOffAfterTimer = false;
-				base.gameObject.SetActive(false);
+				gameObject.SetActive(false);
 			}
 		}
 

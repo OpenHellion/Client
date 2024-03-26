@@ -102,12 +102,12 @@ namespace ZeroGravity
 			{
 				if (_artificialBodyObj != null)
 				{
-					return _artificialBodyObj.GUID;
+					return _artificialBodyObj.Guid;
 				}
 
 				if (_celestialBodyObj != null)
 				{
-					return _celestialBodyObj.GUID;
+					return _celestialBodyObj.Guid;
 				}
 
 				return 0L;
@@ -495,7 +495,7 @@ namespace ZeroGravity
 					double num2 = meanAnomaly + o._eccentricity * System.Math.Sin(meanAnomaly) +
 					              0.5 * o._eccentricity * o._eccentricity * System.Math.Sin(2.0 * meanAnomaly);
 					int num3 = 0;
-					while (System.Math.Abs(num) > maxDeltaDiff && (double)num3 < maxCalculations)
+					while (System.Math.Abs(num) > maxDeltaDiff && num3 < maxCalculations)
 					{
 						num = (meanAnomaly - (num2 - o._eccentricity * System.Math.Sin(num2))) /
 						      (1.0 - o._eccentricity * System.Math.Cos(num2));
@@ -507,13 +507,13 @@ namespace ZeroGravity
 				}
 
 				double num4 = meanAnomaly +
-				              0.85 * o._eccentricity * (double)System.Math.Sign(System.Math.Sin(meanAnomaly));
-				for (int i = 0; (double)i < maxCalculationsExtremeEcc; i++)
+				              0.85 * o._eccentricity * System.Math.Sign(System.Math.Sin(meanAnomaly));
+				for (int i = 0; i < maxCalculationsExtremeEcc; i++)
 				{
 					double num5 = o._eccentricity * System.Math.Sin(num4);
 					double num6 = num4 - num5 - meanAnomaly;
 					double num7 = 1.0 - o._eccentricity * System.Math.Cos(num4);
-					num4 += -5.0 * num6 / (num7 + (double)System.Math.Sign(num7) *
+					num4 += -5.0 * num6 / (num7 + System.Math.Sign(num7) *
 						System.Math.Sqrt(System.Math.Abs(16.0 * num7 * num7 - 20.0 * num6 * num5)));
 				}
 
@@ -528,7 +528,7 @@ namespace ZeroGravity
 			double num8 = 1.0;
 			double num9 = System.Math.Log(2.0 * meanAnomaly / o._eccentricity + 1.8);
 			int num10 = 0;
-			while (System.Math.Abs(num8) > maxDeltaDiff && (double)num10 < maxCalculations)
+			while (System.Math.Abs(num8) > maxDeltaDiff && num10 < maxCalculations)
 			{
 				num8 = (o._eccentricity * System.Math.Sinh(num9) - num9 - meanAnomaly) /
 				       (o._eccentricity * System.Math.Cosh(num9) - 1.0);
@@ -846,17 +846,17 @@ namespace ZeroGravity
 			List<Vector3D> list = new List<Vector3D>();
 			if (_eccentricity < 1.0)
 			{
-				double num = System.Math.PI * 2.0 / (double)numberOfPositions;
+				double num = System.Math.PI * 2.0 / numberOfPositions;
 				for (int i = 0; i < numberOfPositions; i++)
 				{
-					list.Add(PositionAtEccentricAnomaly((double)i * num, true));
+					list.Add(PositionAtEccentricAnomaly(i * num, true));
 				}
 			}
 			else
 			{
 				for (int j = 0; j < numberOfPositions; j++)
 				{
-					list.Add(PositionAtTimeAfterPeriapsis(_timeSincePeriapsis + (double)j * timeStep, true));
+					list.Add(PositionAtTimeAfterPeriapsis(_timeSincePeriapsis + j * timeStep, true));
 				}
 			}
 
@@ -873,17 +873,17 @@ namespace ZeroGravity
 			List<Vector3D> list = new List<Vector3D>();
 			if (_eccentricity < 1.0)
 			{
-				double num = System.Math.PI * 2.0 / (double)numberOfPositions;
+				double num = System.Math.PI * 2.0 / numberOfPositions;
 				for (int i = 0; i < numberOfPositions; i++)
 				{
-					list.Add(VelocityAtEccentricAnomaly((double)i * num, getRelativeVelocities));
+					list.Add(VelocityAtEccentricAnomaly(i * num, getRelativeVelocities));
 				}
 			}
 			else
 			{
 				for (int j = 0; j < numberOfPositions; j++)
 				{
-					list.Add(VelocityAtTimeAfterPeriapsis(_timeSincePeriapsis + (double)j * timeStep,
+					list.Add(VelocityAtTimeAfterPeriapsis(_timeSincePeriapsis + j * timeStep,
 						getRelativeVelocities));
 				}
 			}
@@ -941,10 +941,10 @@ namespace ZeroGravity
 
 		public void FillOrbitData(ref OrbitData data, SpaceObjectVessel targetVessel = null)
 		{
-			data.ParentGUID = _parent._celestialBodyObj.GUID;
+			data.ParentGUID = _parent._celestialBodyObj.Guid;
 			if (targetVessel != null)
 			{
-				data.GUID = targetVessel.GUID;
+				data.GUID = targetVessel.Guid;
 				if (targetVessel is Ship)
 				{
 					data.ObjectType = SpaceObjectType.Ship;
@@ -973,7 +973,7 @@ namespace ZeroGravity
 
 		private void CheckParent(World world, long parentGUID)
 		{
-			if (_parent == null || _parent._celestialBodyObj == null || _parent._celestialBodyObj.GUID != parentGUID)
+			if (_parent == null || _parent._celestialBodyObj == null || _parent._celestialBodyObj.Guid != parentGUID)
 			{
 				_parent = world.SolarSystem.FindCelestialBody(parentGUID).Orbit;
 			}
@@ -1173,7 +1173,7 @@ namespace ZeroGravity
 				double num = CalculateEccentricAnomaly(o, meanAnomaly);
 				double num2 = o._timeSincePeriapsis;
 				double num3 = o._timeSincePeriapsis;
-				double num4 = System.Math.PI * 2.0 / (double)numberOfPositions;
+				double num4 = System.Math.PI * 2.0 / numberOfPositions;
 				for (int i = 0; i < numberOfPositions; i++)
 				{
 					num += num4;
@@ -1218,7 +1218,7 @@ namespace ZeroGravity
 			double num9 = 0.0;
 			for (int j = 0; j < numberOfPositions; j++)
 			{
-				num7 = o._timeSincePeriapsis + (double)j * timeStep;
+				num7 = o._timeSincePeriapsis + j * timeStep;
 				double num10 = CalculateTrueAnomaly(o, num7);
 				timePassed += num7 - num6;
 				num6 = num7;

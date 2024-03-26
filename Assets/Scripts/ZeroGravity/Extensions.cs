@@ -451,7 +451,7 @@ namespace ZeroGravity
 			Type type = comp.GetType();
 			if (type != other.GetType())
 			{
-				return (T)null;
+				return null;
 			}
 
 			BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public |

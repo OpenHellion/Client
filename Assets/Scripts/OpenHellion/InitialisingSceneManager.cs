@@ -119,7 +119,7 @@ namespace OpenHellion
 		// Start game when we are done preloading and we have authenticated with Nakama.
 		private IEnumerator CheckStartGame()
 		{
-			yield return new WaitWhile(() => SceneLoader.IsPreloading || !NakamaClient.HasAuthenticated);
+			yield return new WaitWhile(() => _sceneLoader.IsPreloading || !NakamaClient.HasAuthenticated);
 			SceneManager.LoadScene(1, LoadSceneMode.Single);
 		}
 

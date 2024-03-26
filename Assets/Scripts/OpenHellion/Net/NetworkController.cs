@@ -99,8 +99,7 @@ namespace OpenHellion.Net
 				_unsubscribeFromObjectsList.Clear();
 			}
 
-			if (_gameConnection != null)
-				_gameConnection.Tick();
+			_gameConnection?.Tick();
 
 			// Handle Steam P2P packets.
 			if (RichPresenceManager.HasSteam && !_getP2PPacketsThreadActive)
@@ -126,12 +125,12 @@ namespace OpenHellion.Net
 			_subscribeToObjectsList.Remove(guid);
 		}
 
-		public static void ConnectToGame(ServerData serverData, Action onConnected)
+		public static void ConnectToGame(ServerData serverData, Action onConnected, Action onDisconnected)
 		{
 			_gameConnection?.Disconnect();
 			_gameConnection = new GsConnection();
 
-			_gameConnection.Connect(serverData.IpAddress, serverData.GamePort, onConnected);
+			_gameConnection.Connect(serverData.IpAddress, serverData.GamePort, onConnected, onDisconnected);
 		}
 
 		public static void SendToGameServer(NetworkData data)
@@ -176,11 +175,6 @@ namespace OpenHellion.Net
 		/// 	Send a request directly to a TCP endpoint.<br />
 		/// 	Useful for status requests.
 		/// </summary>
-		/// <remarks>
-		///		This code is an example of bad coding practice evolving over time. This is low-level code called directly by high level code
-		///		and will result in errors/ problems if used.<br />
-		///		It used to be blocking, but I made it async. This is still called blocking in some places, though.
-		/// </remarks>
 		public static async Task<NetworkData> SendTcp(NetworkData data, string address, int port,
 			bool getResponse = true, bool logException = false)
 		{
@@ -220,7 +214,7 @@ namespace OpenHellion.Net
 			_gameConnection?.Disconnect();
 		}
 
-		public void Disconnect()
+		public static void Disconnect()
 		{
 			_gameConnection?.Disconnect();
 		}
@@ -233,7 +227,7 @@ namespace OpenHellion.Net
 		{
 			_getP2PPacketsThreadActive = true;
 
-			// Create pointer array and put 1data in it.
+			// Create pointer array and put data in it.
 			IntPtr[] ptr = new IntPtr[1];
 			int msgSize = SteamNetworkingMessages.ReceiveMessagesOnChannel(0, ptr, 1);
 
@@ -270,8 +264,6 @@ namespace OpenHellion.Net
 #if DEBUG
 		public static void LogReceivedNetworkData(Type type)
 		{
-			Debug.Log("Received data of type: " + type);
-
 			Instance._receivedLog.Enqueue(new Tuple<float, Type>(
 				(float)(DateTime.UtcNow.ToUniversalTime() - Instance._clientStartTime).TotalSeconds, type));
 			while (Instance._receivedLog.Count > MaxNetworkDataLogsSize)

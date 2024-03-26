@@ -38,12 +38,12 @@ namespace ZeroGravity.UI
 
 		private void Awake()
 		{
-			yearField = base.transform.Find("NumericInputField_Year").GetComponent<InputField>();
-			monthField = base.transform.Find("NumericInputField_Month").GetComponent<InputField>();
-			dayField = base.transform.Find("NumericInputField_Day").GetComponent<InputField>();
-			hourField = base.transform.Find("NumericInputField_Hour").GetComponent<InputField>();
-			minField = base.transform.Find("NumericInputField_Min").GetComponent<InputField>();
-			secField = base.transform.Find("NumericInputField_Sec").GetComponent<InputField>();
+			yearField = transform.Find("NumericInputField_Year").GetComponent<InputField>();
+			monthField = transform.Find("NumericInputField_Month").GetComponent<InputField>();
+			dayField = transform.Find("NumericInputField_Day").GetComponent<InputField>();
+			hourField = transform.Find("NumericInputField_Hour").GetComponent<InputField>();
+			minField = transform.Find("NumericInputField_Min").GetComponent<InputField>();
+			secField = transform.Find("NumericInputField_Sec").GetComponent<InputField>();
 			yearField.text = CurrentDate.Year.ToString();
 			monthField.text = CurrentDate.Month.ToString();
 			dayField.text = CurrentDate.Day.ToString();

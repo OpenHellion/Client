@@ -115,8 +115,8 @@ namespace ZeroGravity.Objects
 
 		public bool CheckLocation(SpaceObjectVessel vessel)
 		{
-			return (!checkStation || (checkStation && StationMainVesselGUID == vessel.MainVessel.GUID)) &&
-			       (!checkCelestial || (checkCelestial && vessel.ParentCelesitalBody.GUID == (long)CelestialGUID)) &&
+			return (!checkStation || (checkStation && StationMainVesselGUID == vessel.MainVessel.Guid)) &&
+			       (!checkCelestial || (checkCelestial && vessel.ParentCelestialBody.Guid == (long)CelestialGUID)) &&
 			       (!checkTag || (checkTag && SceneHelper.CompareTags(vessel.VesselData.Tag, Tag)));
 		}
 	}

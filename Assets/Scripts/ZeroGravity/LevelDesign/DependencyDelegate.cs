@@ -27,8 +27,6 @@ namespace ZeroGravity.LevelDesign
 
 			public string ScriptFunctionName;
 
-			public int ScriptFunctionIndex;
-
 			public LogicalConjunction Operation = LogicalConjunction.OR;
 
 			public bool ValueBool;
@@ -50,64 +48,86 @@ namespace ZeroGravity.LevelDesign
 		{
 			foreach (DelegateObject delegateObject in DelegateObjects)
 			{
-				if (!(delegateObject.Object != null) || delegateObject.ScriptFunctionName.IsNullOrEmpty())
+				if (delegateObject.Object == null || delegateObject.ScriptFunctionName.IsNullOrEmpty())
 				{
 					continue;
 				}
 
-				string[] array = delegateObject.ScriptFunctionName.Split('/');
-				MonoBehaviour monoBehaviour = null;
+				string[] scriptFunctionNames = delegateObject.ScriptFunctionName.Split('/');
+				MonoBehaviour script = null;
 				MonoBehaviour[] components = delegateObject.Object.GetComponents<MonoBehaviour>();
-				foreach (MonoBehaviour monoBehaviour2 in components)
+				foreach (MonoBehaviour component in components)
 				{
-					if (monoBehaviour2.GetType().Name == array[0])
+					if (component.GetType().Name == scriptFunctionNames[0])
 					{
-						monoBehaviour = monoBehaviour2;
+						script = component;
 						break;
 					}
 				}
 
-				MethodInfo method = monoBehaviour.GetType()
-					.GetMethod(array[1], BindingFlags.Instance | BindingFlags.Public);
+				if (2 > scriptFunctionNames.Length || scriptFunctionNames[0].IsNullOrEmpty() ||
+				    scriptFunctionNames[1].IsNullOrEmpty())
+				{
+					Debug.LogWarningFormat(delegateObject.Object, "Dependency delegate did not find any class or function specified on object {0}.", delegateObject.Object.name);
+					continue;
+				}
+
+				if (script == null)
+				{
+					Debug.LogErrorFormat(delegateObject.Object, "Could not find MonoBehaviour with name {0} not found on object {1}.", scriptFunctionNames[0], delegateObject.Object.name);
+					continue;
+				}
+
+				MethodInfo method = script.GetType().GetMethod(scriptFunctionNames[1], BindingFlags.Instance | BindingFlags.Public);
+
 				if (method != null)
 				{
 					if (method.ReturnType == typeof(bool))
 					{
 						delegateObject.DelegateBool =
-							(DelegateFuncBool)Delegate.CreateDelegate(typeof(DelegateFuncBool), monoBehaviour, method);
+							(DelegateFuncBool)Delegate.CreateDelegate(typeof(DelegateFuncBool), script, method);
 					}
 					else if (method.ReturnType == typeof(int))
 					{
 						delegateObject.DelegateInt =
-							(DelegateFuncInt)Delegate.CreateDelegate(typeof(DelegateFuncInt), monoBehaviour, method);
+							(DelegateFuncInt)Delegate.CreateDelegate(typeof(DelegateFuncInt), script, method);
 					}
 					else if (method.ReturnType == typeof(string))
 					{
 						delegateObject.DelegateString =
-							(DelegateFuncString)Delegate.CreateDelegate(typeof(DelegateFuncString), monoBehaviour,
+							(DelegateFuncString)Delegate.CreateDelegate(typeof(DelegateFuncString), script,
 								method);
 					}
 
 					continue;
 				}
 
-				PropertyInfo property = monoBehaviour.GetType()
-					.GetProperty(array[1], BindingFlags.Instance | BindingFlags.Public);
-				if (property.PropertyType == typeof(bool))
+
+				PropertyInfo property = script.GetType()
+					.GetProperty(scriptFunctionNames[1], BindingFlags.Instance | BindingFlags.Public);
+
+				if (property != null && property.GetGetMethod() != null)
 				{
-					delegateObject.DelegateBool = (DelegateFuncBool)Delegate.CreateDelegate(typeof(DelegateFuncBool),
-						monoBehaviour, property.GetGetMethod());
+					if (property.PropertyType == typeof(bool))
+					{
+						delegateObject.DelegateBool = (DelegateFuncBool)Delegate.CreateDelegate(typeof(DelegateFuncBool),
+							script, property.GetGetMethod());
+					}
+					else if (property.PropertyType == typeof(int))
+					{
+						delegateObject.DelegateInt = (DelegateFuncInt)Delegate.CreateDelegate(typeof(DelegateFuncInt),
+							script, property.GetGetMethod());
+					}
+					else if (property.PropertyType == typeof(string))
+					{
+						delegateObject.DelegateString =
+							(DelegateFuncString)Delegate.CreateDelegate(typeof(DelegateFuncString), script,
+								property.GetGetMethod());
+					}
 				}
-				else if (property.PropertyType == typeof(int))
+				else
 				{
-					delegateObject.DelegateInt = (DelegateFuncInt)Delegate.CreateDelegate(typeof(DelegateFuncInt),
-						monoBehaviour, property.GetGetMethod());
-				}
-				else if (property.PropertyType == typeof(string))
-				{
-					delegateObject.DelegateString =
-						(DelegateFuncString)Delegate.CreateDelegate(typeof(DelegateFuncString), monoBehaviour,
-							property.GetGetMethod());
+					Debug.LogErrorFormat(delegateObject.Object, "Property or method with name {0} could not be found on object {1}.", scriptFunctionNames[1], delegateObject.Object.name);
 				}
 			}
 		}
@@ -120,10 +140,9 @@ namespace ZeroGravity.LevelDesign
 			}
 
 			bool flag = true;
-			bool flag2 = true;
 			for (int i = 0; i < DelegateObjects.Count; i++)
 			{
-				flag2 = true;
+				var flag2 = true;
 				if (DelegateObjects[i].DelegateBool != null)
 				{
 					if ((DelegateObjects[i].DelegateBool.GetInvocationList()[0] as DelegateFuncBool)() !=
@@ -147,7 +166,7 @@ namespace ZeroGravity.LevelDesign
 					flag2 = false;
 				}
 
-				flag = ((i != 0) ? ((DelegateObjects[i].Operation != 0) ? (flag || flag2) : (flag && flag2)) : flag2);
+				flag = i != 0 ? DelegateObjects[i].Operation != 0 ? flag || flag2 : flag && flag2 : flag2;
 			}
 
 			return flag;

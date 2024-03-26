@@ -58,6 +58,11 @@ namespace OpenHellion
 
 				if (type == SettingsType.All)
 				{
+					if (Screen.resolutions.Length <= SettingsData.VideoSettings.ResolutionIndex)
+					{
+						SettingsData.VideoSettings.ResolutionIndex = Screen.resolutions.Length - 1;
+					}
+
 					GlobalGUI.SetGameSettings(SettingsData.GameSettings);
 					GlobalGUI.SetControlsSettings(SettingsData.ControlsSettings);
 					GlobalGUI.SetVideoSettings(SettingsData.VideoSettings);

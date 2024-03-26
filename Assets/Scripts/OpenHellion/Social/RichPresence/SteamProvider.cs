@@ -29,14 +29,14 @@ namespace OpenHellion.Social.RichPresence
 	/// <seealso cref="DiscordProvider"/>
 	internal class SteamProvider : IRichPresenceProvider
 	{
-		private bool m_currentStatsRequested;
-		private bool m_userStatsReceived;
-		private bool m_storeStats;
-		private Callback<UserStatsReceived_t> m_userStatsReceivedCallback;
-		private Callback<GameRichPresenceJoinRequested_t> m_GameRichPresenceJoinRequested;
-		private readonly ConcurrentQueue<Task> m_pendingTasks = new ConcurrentQueue<Task>();
+		private bool _currentStatsRequested;
+		private bool _userStatsReceived;
+		private bool _storeStats;
+		private Callback<UserStatsReceived_t> _userStatsReceivedCallback;
+		private Callback<GameRichPresenceJoinRequested_t> _gameRichPresenceJoinRequested;
+		private readonly ConcurrentQueue<Task> _pendingTasks = new ConcurrentQueue<Task>();
 
-		private SteamAPIWarningMessageHook_t m_SteamAPIWarningMessageHook;
+		private SteamAPIWarningMessageHook_t _steamAPIWarningMessageHook;
 
 		[AOT.MonoPInvokeCallback(typeof(SteamAPIWarningMessageHook_t))]
 		protected static void SteamAPIDebugTextHook(int nSeverity, System.Text.StringBuilder pchDebugText)
@@ -72,20 +72,20 @@ namespace OpenHellion.Social.RichPresence
 		// This should only ever get called on first load and after an Assembly reload, You should never Disable the Steamworks Manager yourself.
 		void IRichPresenceProvider.Enable()
 		{
-			if (m_SteamAPIWarningMessageHook == null)
+			if (_steamAPIWarningMessageHook == null)
 			{
 				// Set up our callback to receive warning messages from Steam.
 				// You must launch with "-debug_steamapi" in the launch args to receive warnings.
-				m_SteamAPIWarningMessageHook = new SteamAPIWarningMessageHook_t(SteamAPIDebugTextHook);
-				SteamClient.SetWarningMessageHook(m_SteamAPIWarningMessageHook);
+				_steamAPIWarningMessageHook = new SteamAPIWarningMessageHook_t(SteamAPIDebugTextHook);
+				SteamClient.SetWarningMessageHook(_steamAPIWarningMessageHook);
 			}
 
-			if (m_currentStatsRequested)
+			if (_currentStatsRequested)
 			{
 				SteamUserStats.RequestCurrentStats();
 			}
 
-			m_GameRichPresenceJoinRequested =
+			_gameRichPresenceJoinRequested =
 				Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested);
 		}
 
@@ -103,26 +103,25 @@ namespace OpenHellion.Social.RichPresence
 			// Run Steam client callbacks
 			SteamAPI.RunCallbacks();
 
-			if (!m_currentStatsRequested)
+			if (!_currentStatsRequested)
 			{
-				m_userStatsReceivedCallback = Callback<UserStatsReceived_t>.Create(callback =>
+				_userStatsReceivedCallback = Callback<UserStatsReceived_t>.Create(callback =>
 				{
-					m_userStatsReceived = true;
+					_userStatsReceived = true;
 				});
-				m_currentStatsRequested = SteamUserStats.RequestCurrentStats();
+				_currentStatsRequested = SteamUserStats.RequestCurrentStats();
 			}
-			else if (m_userStatsReceived)
+			else if (_userStatsReceived)
 			{
-				Task result;
-				while (m_pendingTasks.TryDequeue(out result))
+				while (_pendingTasks.TryDequeue(out var result))
 				{
 					result.RunSynchronously();
 				}
 
-				if (m_storeStats)
+				if (_storeStats)
 				{
 					SteamUserStats.StoreStats();
-					m_storeStats = false;
+					_storeStats = false;
 				}
 			}
 		}
@@ -148,10 +147,10 @@ namespace OpenHellion.Social.RichPresence
 		/// <inheritdoc/>
 		public void SetAchievement(AchievementID id)
 		{
-			m_pendingTasks.Enqueue(new Task(delegate
+			_pendingTasks.Enqueue(new Task(delegate
 			{
 				SteamUserStats.SetAchievement(id.ToString());
-				m_storeStats = true;
+				_storeStats = true;
 			}));
 		}
 

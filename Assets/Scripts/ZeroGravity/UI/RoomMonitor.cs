@@ -100,7 +100,7 @@ namespace ZeroGravity.UI
 				Color color2 = GravityImage.color;
 				if (gravityLerp > 0)
 				{
-					color2.a = GravityImage.color.a + (float)gravityLerp * korak;
+					color2.a = GravityImage.color.a + gravityLerp * korak;
 					if (color2.a > 1f)
 					{
 						gravityLerp = -1;
@@ -108,7 +108,7 @@ namespace ZeroGravity.UI
 				}
 				else
 				{
-					color2.a = GravityImage.color.a + (float)gravityLerp * korak;
+					color2.a = GravityImage.color.a + gravityLerp * korak;
 					if (color2.a < 0f)
 					{
 						gravityLerp = 1;
@@ -134,7 +134,7 @@ namespace ZeroGravity.UI
 
 			AirQualityFiller.fillAmount = roomTrigger.AirQuality;
 			AirQualityText.text = (roomTrigger.AirQuality * 100f).ToString("f0");
-			if ((double)roomTrigger.AirPressure < -0.67 * (double)roomTrigger.AirQuality + 1.0)
+			if (roomTrigger.AirPressure < -0.67 * roomTrigger.AirQuality + 1.0)
 			{
 				if (!WarrningImage.gameObject.activeInHierarchy)
 				{

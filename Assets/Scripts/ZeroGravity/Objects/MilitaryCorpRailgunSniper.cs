@@ -36,7 +36,7 @@ namespace ZeroGravity.Objects
 
 		private void Update()
 		{
-			if (!base.IsSpecialStance || !CanZoom || !(MyPlayer.Instance.CurrentActiveItem == this))
+			if (!IsSpecialStance || !CanZoom || !(MyPlayer.Instance.CurrentActiveItem == this))
 			{
 				return;
 			}
@@ -61,7 +61,7 @@ namespace ZeroGravity.Objects
 			float zoomLerpHelper = 0f;
 			while (zoomLerpHelper <= 1f)
 			{
-				float newFovVal = (cam.fieldOfView = Mathf.Lerp(fromFov, fovVal, zoomLerpHelper));
+				float newFovVal = cam.fieldOfView = Mathf.Lerp(fromFov, fovVal, zoomLerpHelper);
 				zoomLerpHelper += Time.deltaTime * zoomingSpeed;
 				yield return new WaitForEndOfFrame();
 			}

@@ -103,7 +103,7 @@ namespace ZeroGravity
 				{
 					item.ShowOccludedObjects(MyPlayer.Instance.Parent == ves ||
 					                         MyPlayer.Instance.transform.position.DistanceSquared(
-						                         ves.transform.position) < (double)item.OcclusionDistanceSquared);
+						                         ves.transform.position) < item.OcclusionDistanceSquared);
 				}
 
 				return;
@@ -142,7 +142,7 @@ namespace ZeroGravity
 			foreach (ZeroOccluder item3 in zeroOccluders[ves].Distance)
 			{
 				item3.ShowOccludedObjects(MyPlayer.Instance.transform.position.DistanceSquared(ves.transform.position) <
-				                          (double)item3.OcclusionDistanceSquared);
+				                          item3.OcclusionDistanceSquared);
 			}
 
 			if (zeroOccluders[ves].PlayerOutside != null)

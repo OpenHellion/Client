@@ -80,7 +80,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			SubSystemDetails subSystemDetails = new SubSystemDetails
 			{
-				InSceneID = base.InSceneID,
+				InSceneID = InSceneID,
 				Status = ((!isSwitchedOn.HasValue)
 					? Status
 					: ((!isSwitchedOn.Value) ? SystemStatus.Offline : SystemStatus.Online)),

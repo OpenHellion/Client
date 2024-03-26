@@ -20,7 +20,7 @@ namespace ZeroGravity.UI
 			if (Time.time - counterTime >= timeThreshold)
 			{
 				counterTime = 0f;
-				base.gameObject.SetActive(false);
+				gameObject.SetActive(false);
 			}
 		}
 

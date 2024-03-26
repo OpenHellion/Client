@@ -100,9 +100,9 @@ namespace OpenHellion
 				// ...and exit safely instead.
 				ExitGame();
 			}
-			else if (NetworkController.Instance is not null)
+			else
 			{
-				NetworkController.Instance.Disconnect();
+				NetworkController.Disconnect();
 			}
 		}
 
@@ -118,7 +118,7 @@ namespace OpenHellion
 		private void QuitApplication()
 		{
 			OnHellionQuit?.Invoke();
-			NetworkController.Instance.Disconnect();
+			NetworkController.Disconnect();
 			HiResTime.Stop();
 #if UNITY_EDITOR
 			EditorApplication.ExitPlaymode();

@@ -242,7 +242,7 @@ namespace ZeroGravity.UI
 			MainScreen.Activate(value: true);
 			CraftingScreen.Activate(value: false);
 			ToggleCancelCrafting(cancel: false);
-			base.gameObject.Activate(value: true);
+			gameObject.Activate(value: true);
 			RefineryAction.Activate(Refinery != null);
 			FabricatorAction.Activate(Fabricator != null);
 			HaveAttachItem.Activate(AttachPoint.Item != null);
@@ -251,7 +251,7 @@ namespace ZeroGravity.UI
 		public override void OnDetach()
 		{
 			base.OnDetach();
-			base.gameObject.SetActive(value: false);
+			gameObject.SetActive(value: false);
 			RawToggle.onValueChanged.RemoveAllListeners();
 			RefinedToggle.onValueChanged.RemoveAllListeners();
 			CraftingToggle.onValueChanged.RemoveAllListeners();
@@ -284,7 +284,7 @@ namespace ZeroGravity.UI
 			{
 				if (!(allVessel.CargoBay == null))
 				{
-					GameObject gameObject = UnityEngine.Object.Instantiate(VesselObject, vesselListTransform);
+					GameObject gameObject = Instantiate(VesselObject, vesselListTransform);
 					gameObject.SetActive(value: true);
 					gameObject.transform.Reset();
 					VesselObjectScript component = gameObject.GetComponent<VesselObjectScript>();
@@ -363,7 +363,7 @@ namespace ZeroGravity.UI
 					{
 						MainCargoItems.Add(resource);
 						GameObject gameObject =
-							UnityEngine.Object.Instantiate(MainCargoResourcePref, CargoResourceHolder.transform);
+							Instantiate(MainCargoResourcePref, CargoResourceHolder.transform);
 						gameObject.transform.localScale = Vector3.one;
 						gameObject.SetActive(value: true);
 						CargoResourceUI component = gameObject.GetComponent<CargoResourceUI>();
@@ -423,7 +423,7 @@ namespace ZeroGravity.UI
 
 		private void MakeActiveSystem(SpaceObjectVessel vessel)
 		{
-			GameObject gameObject = UnityEngine.Object.Instantiate(CargoVesselObject, SystemHolder.transform);
+			GameObject gameObject = Instantiate(CargoVesselObject, SystemHolder.transform);
 			gameObject.transform.localScale = Vector3.one;
 			gameObject.SetActive(value: true);
 			ConnectedVessel component = gameObject.GetComponent<ConnectedVessel>();
@@ -442,13 +442,13 @@ namespace ZeroGravity.UI
 
 		private void MakeSystemItem(GameObject newVessel, ResourceContainer rc)
 		{
-			GameObject gameObject = UnityEngine.Object.Instantiate(CargoSystemObject, newVessel.transform);
+			GameObject gameObject = Instantiate(CargoSystemObject, newVessel.transform);
 			gameObject.transform.localScale = Vector3.one;
 			gameObject.SetActive(value: true);
 			CargoSystemObject component = gameObject.GetComponent<CargoSystemObject>();
 			component.Capacity = rc.Capacity;
 			component.Quantity = rc.Quantity;
-			GameObject gameObject2 = UnityEngine.Object.Instantiate(CargoSystemResource, newVessel.transform);
+			GameObject gameObject2 = Instantiate(CargoSystemResource, newVessel.transform);
 			gameObject2.transform.localScale = Vector3.one;
 			gameObject2.SetActive(value: true);
 			CargoResourceData cargoResourceData = rc.CargoCompartment.Resources[0];
@@ -514,19 +514,19 @@ namespace ZeroGravity.UI
 				AttachedItemContent.GetComponentsInChildren<CargoAttachPointContainer>(includeInactive: true);
 			foreach (CargoAttachPointContainer cargoAttachPointContainer in componentsInChildren)
 			{
-				UnityEngine.Object.DestroyImmediate(cargoAttachPointContainer.gameObject);
+				DestroyImmediate(cargoAttachPointContainer.gameObject);
 			}
 
 			CargoResourceUI[] componentsInChildren2 =
 				AttachedItemContent.GetComponentsInChildren<CargoResourceUI>(includeInactive: true);
 			foreach (CargoResourceUI cargoResourceUI in componentsInChildren2)
 			{
-				UnityEngine.Object.DestroyImmediate(cargoResourceUI.gameObject);
+				DestroyImmediate(cargoResourceUI.gameObject);
 			}
 
 			foreach (CargoCompartment compartment in itemCargos.Compartments)
 			{
-				GameObject gameObject = UnityEngine.Object.Instantiate(AttachedItemCompartment, AttachedItemContent);
+				GameObject gameObject = Instantiate(AttachedItemCompartment, AttachedItemContent);
 				gameObject.transform.localScale = Vector3.one;
 				gameObject.SetActive(value: true);
 				CargoAttachPointContainer component = gameObject.GetComponent<CargoAttachPointContainer>();
@@ -549,7 +549,7 @@ namespace ZeroGravity.UI
 				AttachedItemContent.GetComponentsInChildren<CargoResourceUI>(includeInactive: true);
 			foreach (CargoResourceUI cargoResourceUI in componentsInChildren)
 			{
-				UnityEngine.Object.DestroyImmediate(cargoResourceUI.gameObject);
+				DestroyImmediate(cargoResourceUI.gameObject);
 			}
 
 			foreach (CargoAttachPointContainer item in AttachedItemContainersUI)
@@ -570,7 +570,7 @@ namespace ZeroGravity.UI
 			     AttachPoint.Item.Type == ItemType.AltairRefinedCanister ||
 			     AttachPoint.Item.Type == ItemType.AltairResourceContainer) && itemCompartment.AvailableCapacity > 0f)
 			{
-				GameObject gameObject = UnityEngine.Object.Instantiate(AttachedCargoResourceItem, AttachedItemContent);
+				GameObject gameObject = Instantiate(AttachedCargoResourceItem, AttachedItemContent);
 				gameObject.transform.localScale = Vector3.one;
 				gameObject.SetActive(value: true);
 				CargoResourceUI component = gameObject.GetComponent<CargoResourceUI>();
@@ -586,7 +586,7 @@ namespace ZeroGravity.UI
 				foreach (CargoResourceData resource in itemCompartment.Resources)
 				{
 					GameObject gameObject2 =
-						UnityEngine.Object.Instantiate(AttachedCargoResourceItem, AttachedItemContent);
+						Instantiate(AttachedCargoResourceItem, AttachedItemContent);
 					gameObject2.transform.localScale = Vector3.one;
 					gameObject2.SetActive(value: true);
 					CargoResourceUI component2 = gameObject2.GetComponent<CargoResourceUI>();
@@ -694,7 +694,7 @@ namespace ZeroGravity.UI
 
 				foreach (ResourceType item in list)
 				{
-					UnityEngine.Object.Destroy(CraftingItems[item].gameObject);
+					Destroy(CraftingItems[item].gameObject);
 					CraftingItems.Remove(item);
 				}
 			}
@@ -812,12 +812,12 @@ namespace ZeroGravity.UI
 			PartSlotUI[] componentsInChildren = loc.GetComponentsInChildren<PartSlotUI>(includeInactive: true);
 			foreach (PartSlotUI partSlotUI in componentsInChildren)
 			{
-				UnityEngine.Object.DestroyImmediate(partSlotUI.gameObject);
+				DestroyImmediate(partSlotUI.gameObject);
 			}
 
 			foreach (SceneMachineryPartSlot partSlot in systemSlots)
 			{
-				GameObject gameObject = UnityEngine.Object.Instantiate(PartPref, PartsTransform);
+				GameObject gameObject = Instantiate(PartPref, PartsTransform);
 				gameObject.SetActive(value: true);
 				gameObject.transform.Reset();
 				PartSlotUI component = gameObject.GetComponent<PartSlotUI>();
@@ -867,7 +867,7 @@ namespace ZeroGravity.UI
 
 				foreach (ResourceType item in list)
 				{
-					UnityEngine.Object.DestroyImmediate(RefineryItems[item].gameObject);
+					DestroyImmediate(RefineryItems[item].gameObject);
 					RefineryItems.Remove(item);
 				}
 			}
@@ -878,7 +878,7 @@ namespace ZeroGravity.UI
 					RefineryItemContent.GetComponentsInChildren<CargoResourceUI>(includeInactive: true);
 				foreach (CargoResourceUI cargoResourceUI in componentsInChildren)
 				{
-					UnityEngine.Object.DestroyImmediate(cargoResourceUI.gameObject);
+					DestroyImmediate(cargoResourceUI.gameObject);
 				}
 			}
 
@@ -926,7 +926,7 @@ namespace ZeroGravity.UI
 
 		private void InstantiateResource(CargoResourceData resource, Transform loc)
 		{
-			GameObject gameObject = UnityEngine.Object.Instantiate(ResourceItem, loc);
+			GameObject gameObject = Instantiate(ResourceItem, loc);
 			gameObject.transform.localScale = Vector3.one;
 			gameObject.SetActive(value: true);
 			CargoResourceUI component = gameObject.GetComponent<CargoResourceUI>();
@@ -962,14 +962,14 @@ namespace ZeroGravity.UI
 						TransferResourceMessage transferResourceMessage = null;
 						TransferResourceMessage transferResourceMessage2 = new TransferResourceMessage();
 						transferResourceMessage2.ToLocationType = ResourceLocationType.CargoBay;
-						transferResourceMessage2.ToVesselGuid = CurrentlySelectedCargoBay.ParentVessel.GUID;
+						transferResourceMessage2.ToVesselGuid = CurrentlySelectedCargoBay.ParentVessel.Guid;
 						transferResourceMessage2.ToInSceneID = CurrentlySelectedCargoBay.InSceneID;
 						transferResourceMessage2.ToCompartmentID = CurrentlySelectedCargoBay.Compartments[0].ID;
 						transferResourceMessage2.ResourceType = resource.ResourceType;
 						transferResourceMessage2.Quantity = resource.Quantity;
 						transferResourceMessage = transferResourceMessage2;
 						transferResourceMessage.FromLocationType = ResourceLocationType.ResourcesTransferPoint;
-						transferResourceMessage.FromVesselGuid = AttachPoint.ParentVessel.GUID;
+						transferResourceMessage.FromVesselGuid = AttachPoint.ParentVessel.Guid;
 						transferResourceMessage.FromInSceneID = AttachPoint.InSceneID;
 						transferResourceMessage.FromCompartmentID = compartment.ID;
 						if (transferResourceMessage != null)
@@ -1012,14 +1012,14 @@ namespace ZeroGravity.UI
 								TransferResourceMessage transferResourceMessage = null;
 								TransferResourceMessage transferResourceMessage2 = new TransferResourceMessage();
 								transferResourceMessage2.ToLocationType = ResourceLocationType.ResourcesTransferPoint;
-								transferResourceMessage2.ToVesselGuid = AttachPoint.ParentVessel.GUID;
+								transferResourceMessage2.ToVesselGuid = AttachPoint.ParentVessel.Guid;
 								transferResourceMessage2.ToInSceneID = AttachPoint.InSceneID;
 								transferResourceMessage2.ToCompartmentID = cc.ID;
 								transferResourceMessage2.ResourceType = item.ResourceType;
 								transferResourceMessage2.Quantity = item.Quantity;
 								transferResourceMessage = transferResourceMessage2;
 								transferResourceMessage.FromLocationType = ResourceLocationType.CargoBay;
-								transferResourceMessage.FromVesselGuid = CurrentlySelectedCargoBay.ParentVessel.GUID;
+								transferResourceMessage.FromVesselGuid = CurrentlySelectedCargoBay.ParentVessel.Guid;
 								transferResourceMessage.FromInSceneID = CurrentlySelectedCargoBay.InSceneID;
 								transferResourceMessage.FromCompartmentID =
 									CurrentlySelectedCargoBay.Compartments[0].ID;
@@ -1043,14 +1043,14 @@ namespace ZeroGravity.UI
 							TransferResourceMessage transferResourceMessage3 = null;
 							TransferResourceMessage transferResourceMessage2 = new TransferResourceMessage();
 							transferResourceMessage2.ToLocationType = ResourceLocationType.ResourcesTransferPoint;
-							transferResourceMessage2.ToVesselGuid = AttachPoint.ParentVessel.GUID;
+							transferResourceMessage2.ToVesselGuid = AttachPoint.ParentVessel.Guid;
 							transferResourceMessage2.ToInSceneID = AttachPoint.InSceneID;
 							transferResourceMessage2.ToCompartmentID = cc.ID;
 							transferResourceMessage2.ResourceType = item2.ResourceType;
 							transferResourceMessage2.Quantity = item2.Quantity;
 							transferResourceMessage3 = transferResourceMessage2;
 							transferResourceMessage3.FromLocationType = ResourceLocationType.CargoBay;
-							transferResourceMessage3.FromVesselGuid = CurrentlySelectedCargoBay.ParentVessel.GUID;
+							transferResourceMessage3.FromVesselGuid = CurrentlySelectedCargoBay.ParentVessel.Guid;
 							transferResourceMessage3.FromInSceneID = CurrentlySelectedCargoBay.InSceneID;
 							transferResourceMessage3.FromCompartmentID = CurrentlySelectedCargoBay.Compartments[0].ID;
 							if (transferResourceMessage3 != null)
@@ -1083,14 +1083,14 @@ namespace ZeroGravity.UI
 					TransferResourceMessage transferResourceMessage = null;
 					TransferResourceMessage transferResourceMessage2 = new TransferResourceMessage();
 					transferResourceMessage2.ToLocationType = ResourceLocationType.CargoBay;
-					transferResourceMessage2.ToVesselGuid = CurrentlySelectedCargoBay.ParentVessel.GUID;
+					transferResourceMessage2.ToVesselGuid = CurrentlySelectedCargoBay.ParentVessel.Guid;
 					transferResourceMessage2.ToInSceneID = CurrentlySelectedCargoBay.InSceneID;
 					transferResourceMessage2.ToCompartmentID = CurrentlySelectedCargoBay.Compartments[0].ID;
 					transferResourceMessage2.ResourceType = resource.ResourceType;
 					transferResourceMessage2.Quantity = resource.Quantity;
 					transferResourceMessage = transferResourceMessage2;
 					transferResourceMessage.FromLocationType = ResourceLocationType.Refinery;
-					transferResourceMessage.FromVesselGuid = Refinery.ParentVessel.GUID;
+					transferResourceMessage.FromVesselGuid = Refinery.ParentVessel.Guid;
 					transferResourceMessage.FromInSceneID = Refinery.InSceneID;
 					transferResourceMessage.FromCompartmentID = Refinery.Compartments[0].ID;
 					if (transferResourceMessage != null)
@@ -1120,14 +1120,14 @@ namespace ZeroGravity.UI
 					TransferResourceMessage transferResourceMessage = null;
 					TransferResourceMessage transferResourceMessage2 = new TransferResourceMessage();
 					transferResourceMessage2.ToLocationType = ResourceLocationType.CargoBay;
-					transferResourceMessage2.ToVesselGuid = CurrentlySelectedCargoBay.ParentVessel.GUID;
+					transferResourceMessage2.ToVesselGuid = CurrentlySelectedCargoBay.ParentVessel.Guid;
 					transferResourceMessage2.ToInSceneID = CurrentlySelectedCargoBay.InSceneID;
 					transferResourceMessage2.ToCompartmentID = CurrentlySelectedCargoBay.Compartments[0].ID;
 					transferResourceMessage2.ResourceType = resource.ResourceType;
 					transferResourceMessage2.Quantity = resource.Quantity;
 					transferResourceMessage = transferResourceMessage2;
 					transferResourceMessage.FromLocationType = ResourceLocationType.Fabricator;
-					transferResourceMessage.FromVesselGuid = Fabricator.ParentVessel.GUID;
+					transferResourceMessage.FromVesselGuid = Fabricator.ParentVessel.Guid;
 					transferResourceMessage.FromInSceneID = Fabricator.InSceneID;
 					transferResourceMessage.FromCompartmentID = Fabricator.Compartments[0].ID;
 					if (transferResourceMessage != null)
@@ -1244,7 +1244,7 @@ namespace ZeroGravity.UI
 				VesselComponent vesselComponent = toCompartment.ParentCargo as VesselComponent;
 				TransferResourceMessage transferResourceMessage2 = new TransferResourceMessage();
 				transferResourceMessage2.ToLocationType = VesselComponentLocationType(toCompartment.ParentCargo);
-				transferResourceMessage2.ToVesselGuid = toCompartment.ParentCargo.ParentVessel.GUID;
+				transferResourceMessage2.ToVesselGuid = toCompartment.ParentCargo.ParentVessel.Guid;
 				transferResourceMessage2.ToInSceneID = vesselComponent.InSceneID;
 				transferResourceMessage2.ToCompartmentID = toCompartment.ID;
 				transferResourceMessage2.ResourceType = component.FromResource.ResourceType;
@@ -1253,7 +1253,7 @@ namespace ZeroGravity.UI
 				if (fromCompartment.ParentCargo.ParentVessel == null)
 				{
 					transferResourceMessage.FromLocationType = ResourceLocationType.ResourcesTransferPoint;
-					transferResourceMessage.FromVesselGuid = AttachPoint.ParentVessel.GUID;
+					transferResourceMessage.FromVesselGuid = AttachPoint.ParentVessel.Guid;
 					transferResourceMessage.FromInSceneID = AttachPoint.InSceneID;
 					transferResourceMessage.FromCompartmentID = fromCompartment.ID;
 				}
@@ -1261,7 +1261,7 @@ namespace ZeroGravity.UI
 				{
 					VesselComponent vesselComponent2 = fromCompartment.ParentCargo as VesselComponent;
 					transferResourceMessage.FromLocationType = VesselComponentLocationType(vesselComponent2 as ICargo);
-					transferResourceMessage.FromVesselGuid = fromCompartment.ParentCargo.ParentVessel.GUID;
+					transferResourceMessage.FromVesselGuid = fromCompartment.ParentCargo.ParentVessel.Guid;
 					transferResourceMessage.FromInSceneID = vesselComponent2.InSceneID;
 					transferResourceMessage.FromCompartmentID = fromCompartment.ID;
 				}
@@ -1274,7 +1274,7 @@ namespace ZeroGravity.UI
 				VesselComponent vesselComponent3 = fromCompartment.ParentCargo as VesselComponent;
 				TransferResourceMessage transferResourceMessage2 = new TransferResourceMessage();
 				transferResourceMessage2.FromLocationType = VesselComponentLocationType(fromCompartment.ParentCargo);
-				transferResourceMessage2.FromVesselGuid = fromCompartment.ParentCargo.ParentVessel.GUID;
+				transferResourceMessage2.FromVesselGuid = fromCompartment.ParentCargo.ParentVessel.Guid;
 				transferResourceMessage2.FromInSceneID = vesselComponent3.InSceneID;
 				transferResourceMessage2.FromCompartmentID = fromCompartment.ID;
 				transferResourceMessage2.ResourceType = component.FromResource.ResourceType;
@@ -1287,7 +1287,7 @@ namespace ZeroGravity.UI
 				else if (toCompartment.ParentCargo.ParentVessel == null)
 				{
 					transferResourceMessage.ToLocationType = ResourceLocationType.ResourcesTransferPoint;
-					transferResourceMessage.ToVesselGuid = AttachPoint.ParentVessel.GUID;
+					transferResourceMessage.ToVesselGuid = AttachPoint.ParentVessel.Guid;
 					transferResourceMessage.ToInSceneID = AttachPoint.InSceneID;
 					transferResourceMessage.ToCompartmentID = toCompartment.ID;
 				}
@@ -1295,7 +1295,7 @@ namespace ZeroGravity.UI
 				{
 					VesselComponent vesselComponent4 = toCompartment.ParentCargo as VesselComponent;
 					transferResourceMessage.ToLocationType = VesselComponentLocationType(toCompartment as ICargo);
-					transferResourceMessage.ToVesselGuid = toCompartment.ParentCargo.ParentVessel.GUID;
+					transferResourceMessage.ToVesselGuid = toCompartment.ParentCargo.ParentVessel.Guid;
 					transferResourceMessage.ToInSceneID = vesselComponent4.InSceneID;
 					transferResourceMessage.ToCompartmentID = toCompartment.ID;
 				}
@@ -1347,7 +1347,7 @@ namespace ZeroGravity.UI
 					    m.Type == data.CompoundType.Type && m.SubType == data.CompoundType.SubType &&
 					    m.PartType == data.CompoundType.PartType && m.Tier == data.CompoundType.Tier) != null)
 				{
-					GameObject gameObject = UnityEngine.Object.Instantiate(CraftingItemUI, CraftingItemsContent);
+					GameObject gameObject = Instantiate(CraftingItemUI, CraftingItemsContent);
 					gameObject.transform.localScale = Vector3.one;
 					CraftingItem component = gameObject.GetComponent<CraftingItem>();
 					component.gameObject.transform.localScale = Vector3.one;
@@ -1399,7 +1399,7 @@ namespace ZeroGravity.UI
 				foreach (Transform componentInChild in CurrentItemResources.GetComponentInChildren<Transform>(
 					         includeInactive: true))
 				{
-					UnityEngine.Object.Destroy(componentInChild.gameObject);
+					Destroy(componentInChild.gameObject);
 				}
 			}
 			else
@@ -1422,7 +1422,7 @@ namespace ZeroGravity.UI
 			foreach (Transform componentInChild in CurrentItemResources.GetComponentInChildren<Transform>(
 				         includeInactive: true))
 			{
-				UnityEngine.Object.Destroy(componentInChild.gameObject);
+				Destroy(componentInChild.gameObject);
 			}
 
 			foreach (KeyValuePair<ResourceType, float> resource in CurrentCraftingItem.Data.Resources)

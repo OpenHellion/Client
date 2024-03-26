@@ -10,15 +10,9 @@ namespace ZeroGravity.Objects
 
 		[SerializeField] private int maxBulletCount;
 
-		public override float Quantity
-		{
-			get { return bulletCount; }
-		}
+		public override float Quantity => bulletCount;
 
-		public override float MaxQuantity
-		{
-			get { return maxBulletCount; }
-		}
+		public override float MaxQuantity => maxBulletCount;
 
 		public override void ChangeQuantity(float amount)
 		{
@@ -75,9 +69,9 @@ namespace ZeroGravity.Objects
 			if (magazineStats.BulletCount.HasValue)
 			{
 				bulletCount = magazineStats.BulletCount.Value;
-				if (base.InvSlot != null && base.InvSlot.UI != null)
+				if (InvSlot != null && InvSlot.UI != null)
 				{
-					base.InvSlot.UI.UpdateSlot();
+					InvSlot.UI.UpdateSlot();
 				}
 				else if (DynamicObj.Parent is DynamicObject && (DynamicObj.Parent as DynamicObject).Item is Weapon)
 				{

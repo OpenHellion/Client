@@ -45,7 +45,7 @@ public class HUDFPS : MonoBehaviour
 		else
 		{
 			frameCountere = 0;
-			fps = 1f / (suma / (float)frameInterval);
+			fps = 1f / (suma / frameInterval);
 			suma = 0f;
 		}
 	}

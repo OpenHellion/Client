@@ -40,8 +40,8 @@ public class Lens : MonoBehaviour
 		{
 			Vector3 vector = GetComponent<Camera>().WorldToScreenPoint(BH.transform.position);
 			material.SetVector("_Position",
-				new Vector2(vector.x / (float)GetComponent<Camera>().pixelWidth,
-					vector.y / (float)GetComponent<Camera>().pixelHeight));
+				new Vector2(vector.x / GetComponent<Camera>().pixelWidth,
+					vector.y / GetComponent<Camera>().pixelHeight));
 			material.SetFloat("_Ratio", ratio);
 			material.SetFloat("_Rad", (!(vector.z > 0f)) ? 0f : radius);
 			material.SetFloat("_Distance", Vector3.Distance(BH.transform.position, base.transform.position));

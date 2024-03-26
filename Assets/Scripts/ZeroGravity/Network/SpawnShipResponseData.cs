@@ -21,7 +21,7 @@ namespace ZeroGravity.Network
 
 		public override SpaceObjectType Type
 		{
-			get { return SpaceObjectType.Ship; }
+			get => SpaceObjectType.Ship;
 			set { }
 		}
 	}

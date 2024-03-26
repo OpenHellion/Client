@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using OpenHellion;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
@@ -12,7 +13,7 @@ namespace ZeroGravity.LevelDesign
 	public class SceneTriggerExecutor : MonoBehaviour, ISceneObject
 	{
 		[Serializable]
-		public class CustomEventActions
+		public class CustomEventAction
 		{
 			public int Type;
 
@@ -36,7 +37,7 @@ namespace ZeroGravity.LevelDesign
 		}
 
 		[Serializable]
-		public class AnimatorActions
+		public class AnimatorAction
 		{
 			public SceneTriggerAnimation Animator;
 
@@ -46,7 +47,7 @@ namespace ZeroGravity.LevelDesign
 		}
 
 		[Serializable]
-		public class CharacterActions
+		public class CharacterAction
 		{
 			public UnityEvent InteractStart;
 
@@ -58,9 +59,9 @@ namespace ZeroGravity.LevelDesign
 		}
 
 		[Serializable]
-		public class StateActions
+		public class StateAction
 		{
-			[HideInInspector] public int StateID;
+			[NonSerialized] public int StateID;
 
 			public string StateName;
 
@@ -74,7 +75,7 @@ namespace ZeroGravity.LevelDesign
 
 			public CharacterInteractionState CharacterPosition;
 
-			[Space(5f)] public DependencyDelegate Dependencies;
+			[FormerlySerializedAs("Dependencies")] [Space(5f)] public DependencyDelegate Dependency;
 
 			public UnityEvent PassActions;
 
@@ -82,13 +83,13 @@ namespace ZeroGravity.LevelDesign
 
 			public UnityEvent InstantActions;
 
-			public CharacterActions CharacterActions = new CharacterActions();
+			[FormerlySerializedAs("CharacterActions")] public CharacterAction CharacterAction = new CharacterAction();
 
-			public List<AnimatorActions> AnimatorActions;
+			public List<AnimatorAction> AnimatorActions;
 
-			public List<CustomEventActions> CustomActions;
+			public List<CustomEventAction> CustomActions;
 
-			[HideInInspector] public long TriggeredPlayerGUID;
+			[NonSerialized] public long TriggeredPlayerGuid;
 		}
 
 		public TagAction TagAction;
@@ -101,19 +102,19 @@ namespace ZeroGravity.LevelDesign
 
 		private int _defaultStateID;
 
-		private StateActions _newState;
+		private StateAction _newState;
 
-		private StateActions _currentState;
+		private StateAction _currentState;
 
-		[SerializeField] private List<StateActions> actionStates = new List<StateActions>();
+		[FormerlySerializedAs("actionStates")] [SerializeField] private List<StateAction> _actionStates = new List<StateAction>();
 
-		private readonly Dictionary<int, StateActions> states = new Dictionary<int, StateActions>();
+		private readonly Dictionary<int, StateAction> _states = new Dictionary<int, StateAction>();
 
-		private readonly Dictionary<string, int> stateNameID = new Dictionary<string, int>();
+		private readonly Dictionary<string, int> _stateNameID = new Dictionary<string, int>();
 
 		private long _triggeredPlayerGuid;
 
-		[HideInInspector] public SpaceObjectVessel ParentVessel;
+		[NonSerialized] public SpaceObjectVessel ParentVessel;
 
 		private SceneTriggerExecutor _childExecutor;
 
@@ -137,16 +138,13 @@ namespace ZeroGravity.LevelDesign
 
 		public int DefaultStateID => _defaultStateID;
 
-		public StateActions CurrentStateActions => _currentState;
+		public StateAction CurrentStateAction => _currentState;
 
 		public int CurrentStateID => _currentState != null ? _currentState.StateID : 0;
 
 		public string CurrentState => _currentState == null ? string.Empty : _currentState.StateName;
 
-		public string AdditionalData
-		{
-			set { }
-		}
+		public string AdditionalData { get; set; } // Used by dependency delegate.
 
 		public SceneTriggerExecutor ChildExecutor => _childExecutor;
 
@@ -154,7 +152,7 @@ namespace ZeroGravity.LevelDesign
 
 		public bool IsMyPlayerInLockedState => MyPlayer.Instance != null && MyPlayer.Instance.InLockState;
 
-		public bool IsMyPlayerTriggered => MyPlayer.Instance != null && MyPlayer.Instance.GUID == _triggeredPlayerGuid;
+		public bool IsMyPlayerTriggered => MyPlayer.Instance != null && MyPlayer.Instance.Guid == _triggeredPlayerGuid; // Used by dependency delegate.
 
 		private void Awake()
 		{
@@ -173,13 +171,13 @@ namespace ZeroGravity.LevelDesign
 
 		public void ReadDefaultStates()
 		{
-			if (actionStates == null || actionStates.Count == 0)
+			if (_actionStates == null || _actionStates.Count == 0)
 			{
 				return;
 			}
 
 			int num = 1;
-			foreach (StateActions actionState in actionStates)
+			foreach (StateAction actionState in _actionStates)
 			{
 				actionState.StateID = num++;
 				if (actionState.StateName == _defaultState)
@@ -191,16 +189,16 @@ namespace ZeroGravity.LevelDesign
 
 			if (_currentState == null)
 			{
-				_currentState = actionStates[0];
+				_currentState = _actionStates[0];
 			}
 		}
 
 		public List<SceneTriggerExecutorStateData> GetExecuterStatesData()
 		{
 			List<SceneTriggerExecutorStateData> list = new List<SceneTriggerExecutorStateData>();
-			if (actionStates.Count > 0)
+			if (_actionStates.Count > 0)
 			{
-				foreach (StateActions actionState in actionStates)
+				foreach (StateAction actionState in _actionStates)
 				{
 					list.Add(new SceneTriggerExecutorStateData
 					{
@@ -222,26 +220,26 @@ namespace ZeroGravity.LevelDesign
 
 		private void ReadStates()
 		{
-			if (actionStates == null || actionStates.Count == 0)
+			if (_actionStates == null || _actionStates.Count == 0)
 			{
 				return;
 			}
 
 			int num = 1;
-			foreach (StateActions actionState in actionStates)
+			foreach (StateAction actionState in _actionStates)
 			{
 				actionState.StateID = num++;
-				states.Add(actionState.StateID, actionState);
-				stateNameID.Add(actionState.StateName, actionState.StateID);
-				actionState.Dependencies.CreateDelegates();
-				foreach (AnimatorActions animatorAction in actionState.AnimatorActions)
+				_states.Add(actionState.StateID, actionState);
+				_stateNameID.Add(actionState.StateName, actionState.StateID);
+				actionState.Dependency.CreateDelegates();
+				foreach (AnimatorAction animatorAction in actionState.AnimatorActions)
 				{
 					if (!(animatorAction.Animator != null))
 					{
 						continue;
 					}
 
-					AnimatorActions tmpAa = animatorAction;
+					AnimatorAction tmpAa = animatorAction;
 					int stateID = actionState.StateID;
 					if (animatorAction.Type == AnimatorActionType.ActivateStart ||
 					    animatorAction.Type == AnimatorActionType.FailStart ||
@@ -306,17 +304,17 @@ namespace ZeroGravity.LevelDesign
 
 			if (_currentState == null)
 			{
-				_currentState = actionStates[0];
+				_currentState = _actionStates[0];
 			}
 
-			actionStates.Clear();
+			_actionStates.Clear();
 		}
 
-		private bool CheckDependencies(StateActions st)
+		private bool CheckDependencies(StateAction st)
 		{
-			if (st.Dependencies != null)
+			if (st.Dependency != null)
 			{
-				return st.Dependencies.Invoke();
+				return st.Dependency.Invoke();
 			}
 
 			return true;
@@ -324,12 +322,12 @@ namespace ZeroGravity.LevelDesign
 
 		private void CharacterInteractStarted()
 		{
-			if (MyPlayer.Instance.GUID == _triggeredPlayerGuid)
+			if (MyPlayer.Instance.Guid == _triggeredPlayerGuid)
 			{
 				MyPlayer.Instance.OnIteractStart = null;
-				if (_currentState.CharacterActions.InteractStart != null)
+				if (_currentState.CharacterAction.InteractStart != null)
 				{
-					_currentState.CharacterActions.InteractStart.Invoke();
+					_currentState.CharacterAction.InteractStart.Invoke();
 				}
 
 				return;
@@ -339,21 +337,21 @@ namespace ZeroGravity.LevelDesign
 			if (player != null)
 			{
 				player.OnIteractStart = null;
-				if (_currentState.CharacterActions.InteractStart != null)
+				if (_currentState.CharacterAction.InteractStart != null)
 				{
-					_currentState.CharacterActions.InteractStart.Invoke();
+					_currentState.CharacterAction.InteractStart.Invoke();
 				}
 			}
 		}
 
 		private void CharacterInteractCompleted()
 		{
-			if (MyPlayer.Instance.GUID == _triggeredPlayerGuid)
+			if (MyPlayer.Instance.Guid == _triggeredPlayerGuid)
 			{
 				MyPlayer.Instance.OnIteractComplete = null;
-				if (_currentState.CharacterActions.InteractEnd != null)
+				if (_currentState.CharacterAction.InteractEnd != null)
 				{
-					_currentState.CharacterActions.InteractEnd.Invoke();
+					_currentState.CharacterAction.InteractEnd.Invoke();
 				}
 
 				return;
@@ -363,21 +361,21 @@ namespace ZeroGravity.LevelDesign
 			if (player != null)
 			{
 				player.OnIteractComplete = null;
-				if (_currentState.CharacterActions.InteractEnd != null)
+				if (_currentState.CharacterAction.InteractEnd != null)
 				{
-					_currentState.CharacterActions.InteractEnd.Invoke();
+					_currentState.CharacterAction.InteractEnd.Invoke();
 				}
 			}
 		}
 
 		private void CharacterLockStarted()
 		{
-			if (MyPlayer.Instance.GUID == _triggeredPlayerGuid)
+			if (MyPlayer.Instance.Guid == _triggeredPlayerGuid)
 			{
 				MyPlayer.Instance.OnLockStart = null;
-				if (_currentState.CharacterActions.LockStart != null)
+				if (_currentState.CharacterAction.LockStart != null)
 				{
-					_currentState.CharacterActions.LockStart.Invoke();
+					_currentState.CharacterAction.LockStart.Invoke();
 				}
 
 				return;
@@ -387,21 +385,21 @@ namespace ZeroGravity.LevelDesign
 			if (player != null)
 			{
 				player.OnLockStart = null;
-				if (_currentState.CharacterActions.LockStart != null)
+				if (_currentState.CharacterAction.LockStart != null)
 				{
-					_currentState.CharacterActions.LockStart.Invoke();
+					_currentState.CharacterAction.LockStart.Invoke();
 				}
 			}
 		}
 
 		private void CharacterLockCompleted()
 		{
-			if (MyPlayer.Instance.GUID == _triggeredPlayerGuid)
+			if (MyPlayer.Instance.Guid == _triggeredPlayerGuid)
 			{
 				MyPlayer.Instance.OnLockComplete = null;
-				if (_currentState.CharacterActions.LockEnd != null)
+				if (_currentState.CharacterAction.LockEnd != null)
 				{
-					_currentState.CharacterActions.LockEnd.Invoke();
+					_currentState.CharacterAction.LockEnd.Invoke();
 				}
 
 				return;
@@ -411,9 +409,9 @@ namespace ZeroGravity.LevelDesign
 			if (player != null)
 			{
 				player.OnLockComplete = null;
-				if (_currentState.CharacterActions.LockEnd != null)
+				if (_currentState.CharacterAction.LockEnd != null)
 				{
-					_currentState.CharacterActions.LockEnd.Invoke();
+					_currentState.CharacterAction.LockEnd.Invoke();
 				}
 			}
 		}
@@ -449,26 +447,26 @@ namespace ZeroGravity.LevelDesign
 			_proximityIsEnter = null;
 		}
 
-		private void RunActions(StateActions act, bool isFail, bool isInstant)
+		private void RunActions(StateAction act, bool isFail, bool isInstant)
 		{
-			if (MyPlayer.Instance.GUID == _triggeredPlayerGuid)
+			if (MyPlayer.Instance.Guid == _triggeredPlayerGuid)
 			{
-				if (act.CharacterActions.InteractStart.GetPersistentEventCount() > 0)
+				if (act.CharacterAction.InteractStart.GetPersistentEventCount() > 0)
 				{
 					MyPlayer.Instance.OnIteractStart = CharacterInteractStarted;
 				}
 
-				if (act.CharacterActions.InteractEnd.GetPersistentEventCount() > 0)
+				if (act.CharacterAction.InteractEnd.GetPersistentEventCount() > 0)
 				{
 					MyPlayer.Instance.OnIteractComplete = CharacterInteractCompleted;
 				}
 
-				if (act.CharacterActions.LockStart.GetPersistentEventCount() > 0)
+				if (act.CharacterAction.LockStart.GetPersistentEventCount() > 0)
 				{
 					MyPlayer.Instance.OnLockStart = CharacterLockStarted;
 				}
 
-				if (act.CharacterActions.LockEnd.GetPersistentEventCount() > 0)
+				if (act.CharacterAction.LockEnd.GetPersistentEventCount() > 0)
 				{
 					MyPlayer.Instance.OnLockComplete = CharacterLockCompleted;
 				}
@@ -501,20 +499,20 @@ namespace ZeroGravity.LevelDesign
 
 		public int GetStateID(string stateName)
 		{
-			if (stateNameID.Count > 0)
+			if (_stateNameID.Count > 0)
 			{
-				if (stateNameID.ContainsKey(stateName))
+				if (_stateNameID.ContainsKey(stateName))
 				{
-					return stateNameID[stateName];
+					return _stateNameID[stateName];
 				}
 
 				return 0;
 			}
 
-			if (actionStates.Count > 0 && !Application.isPlaying)
+			if (_actionStates.Count > 0 && !Application.isPlaying)
 			{
 				int num = 1;
-				foreach (StateActions actionState in actionStates)
+				foreach (StateAction actionState in _actionStates)
 				{
 					num++;
 					if (actionState.StateName == stateName)
@@ -529,25 +527,25 @@ namespace ZeroGravity.LevelDesign
 
 		public void ChangeState(string newState)
 		{
-			if (stateNameID.ContainsKey(newState))
+			if (_stateNameID.ContainsKey(newState))
 			{
-				ChangeStateID(stateNameID[newState], isInstantChange: false);
+				ChangeStateID(_stateNameID[newState], isInstantChange: false);
 			}
 		}
 
 		public void ChangeStateImmediate(string newState)
 		{
-			if (stateNameID.ContainsKey(newState))
+			if (_stateNameID.ContainsKey(newState))
 			{
-				ChangeStateID(stateNameID[newState], isInstantChange: true);
+				ChangeStateID(_stateNameID[newState], isInstantChange: true);
 			}
 		}
 
 		public void ChangeStateImmediateForce(string newState)
 		{
-			if (stateNameID.ContainsKey(newState))
+			if (_stateNameID.ContainsKey(newState))
 			{
-				ChangeStateID(stateNameID[newState], isInstantChange: true, force: true);
+				ChangeStateID(_stateNameID[newState], isInstantChange: true, force: true);
 			}
 		}
 
@@ -579,14 +577,14 @@ namespace ZeroGravity.LevelDesign
 
 		public void ChangeStateID(int newState, bool isInstantChange, bool force = false)
 		{
-			if (!states.ContainsKey(newState) || (_currentState.OnlyActivePlayerCanChangeState &&
-			                                      _currentState.TriggeredPlayerGUID != 0 &&
-			                                      _currentState.TriggeredPlayerGUID != MyPlayer.Instance.GUID))
+			if (!_states.ContainsKey(newState) || (_currentState.OnlyActivePlayerCanChangeState &&
+			                                      _currentState.TriggeredPlayerGuid != 0 &&
+			                                      _currentState.TriggeredPlayerGuid != MyPlayer.Instance.Guid))
 			{
 				return;
 			}
 
-			_newState = states[newState];
+			_newState = _states[newState];
 			if (_newState.CharacterPosition != null && _newState.CharacterPosition.InteractPosition != null)
 			{
 				if (_newState.CharacterPosition.SetColliderToKinematic)
@@ -594,7 +592,7 @@ namespace ZeroGravity.LevelDesign
 					MyPlayer.Instance.FpsController.ToggleKinematic(true);
 				}
 
-				_triggeredPlayerGuid = MyPlayer.Instance.GUID;
+				_triggeredPlayerGuid = MyPlayer.Instance.Guid;
 				if (isInstantChange)
 				{
 					MyPlayer.Instance.transform.position = _newState.CharacterPosition.InteractPosition.position;
@@ -634,10 +632,10 @@ namespace ZeroGravity.LevelDesign
 
 		public string GetExecutorDebugString()
 		{
-			return string.Format("{6} = {0}, {1}, PEX = {2}, {3}, CH = {4}, {5}", ParentVessel.GUID, InSceneID,
-				!(_parentExecutor != null) ? 0 : _parentExecutor.ParentVessel.GUID,
+			return string.Format("{6} = {0}, {1}, PEX = {2}, {3}, CH = {4}, {5}", ParentVessel.Guid, InSceneID,
+				!(_parentExecutor != null) ? 0 : _parentExecutor.ParentVessel.Guid,
 				_parentExecutor != null ? _parentExecutor.InSceneID : 0,
-				!(_childExecutor != null) ? 0 : _childExecutor.ParentVessel.GUID,
+				!(_childExecutor != null) ? 0 : _childExecutor.ParentVessel.Guid,
 				_childExecutor != null ? _childExecutor.InSceneID : 0, name);
 		}
 
@@ -650,7 +648,7 @@ namespace ZeroGravity.LevelDesign
 			}
 			else
 			{
-				if (!states.ContainsKey(details.NewStateID) ||
+				if (!_states.ContainsKey(details.NewStateID) ||
 				    (checkCurrentState && _currentState.StateID == details.NewStateID))
 				{
 					return;
@@ -669,9 +667,9 @@ namespace ZeroGravity.LevelDesign
 						MyPlayer.Instance.CancelInteractExecutor = null;
 					}
 
-					_currentState = states[details.NewStateID];
-					_currentState.TriggeredPlayerGUID = _triggeredPlayerGuid;
-					if (_currentState.TriggeredPlayerGUID == MyPlayer.Instance.GUID &&
+					_currentState = _states[details.NewStateID];
+					_currentState.TriggeredPlayerGuid = _triggeredPlayerGuid;
+					if (_currentState.TriggeredPlayerGuid == MyPlayer.Instance.Guid &&
 					    !_currentState.OnCancelIteractGoToState.IsNullOrEmpty())
 					{
 						MyPlayer.Instance.CancelInteractExecutor = this;
@@ -681,13 +679,13 @@ namespace ZeroGravity.LevelDesign
 				}
 				else
 				{
-					if (_currentState.TriggeredPlayerGUID == MyPlayer.Instance.GUID &&
+					if (_currentState.TriggeredPlayerGuid == MyPlayer.Instance.Guid &&
 					    !_currentState.OnCancelIteractGoToState.IsNullOrEmpty())
 					{
 						MyPlayer.Instance.CancelInteractExecutor = this;
 					}
 
-					RunActions(states[details.NewStateID], details.IsFail, isInstant);
+					RunActions(_states[details.NewStateID], details.IsFail, isInstant);
 				}
 
 				if (_childExecutor != null)
@@ -709,7 +707,7 @@ namespace ZeroGravity.LevelDesign
 
 		private void CharacterInteractRunner(CharacterInteractionState cis, bool isInstant)
 		{
-			if (MyPlayer.Instance.GUID == _triggeredPlayerGuid)
+			if (MyPlayer.Instance.Guid == _triggeredPlayerGuid)
 			{
 				if (!cis.ImmediatePositionChange && !isInstant &&
 				    (!MyPlayer.Instance.transform.position.IsEpsilonEqual(cis.InteractPosition.position, 0.01f) ||
@@ -856,7 +854,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void LockPlayerToTrigger(GameObject trigger)
 		{
-			if (!(trigger == null) && _triggeredPlayerGuid == MyPlayer.Instance.GUID)
+			if (!(trigger == null) && _triggeredPlayerGuid == MyPlayer.Instance.Guid)
 			{
 				if (!trigger.activeInHierarchy)
 				{
@@ -899,7 +897,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void CharacterUnlock()
 		{
-			if (MyPlayer.Instance.GUID == _triggeredPlayerGuid)
+			if (MyPlayer.Instance.Guid == _triggeredPlayerGuid)
 			{
 				MyPlayer.Instance.FpsController.ToggleKinematic(false);
 				MyPlayer.Instance.animHelper.ResetParameterTrigger(AnimatorHelper.Triggers.LockImmediate);
@@ -940,7 +938,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void LockCharacter()
 		{
-			if (MyPlayer.Instance.GUID == _triggeredPlayerGuid)
+			if (MyPlayer.Instance.Guid == _triggeredPlayerGuid)
 			{
 				MyPlayer.Instance.FpsController.ToggleMovement(false);
 				MyPlayer.Instance.FpsController.ToggleKinematic(true);
@@ -952,7 +950,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void CharacterUnlockWithTransform(Transform transform)
 		{
-			if (MyPlayer.Instance.GUID == _triggeredPlayerGuid)
+			if (MyPlayer.Instance.Guid == _triggeredPlayerGuid)
 			{
 				MyPlayer.Instance.transform.position = transform.position;
 				MyPlayer.Instance.transform.rotation = transform.rotation;
@@ -963,13 +961,13 @@ namespace ZeroGravity.LevelDesign
 
 		public void ExecuteCustomActions(int type)
 		{
-			if (MyPlayer.Instance.GUID != _triggeredPlayerGuid || _currentState.CustomActions == null ||
+			if (MyPlayer.Instance.Guid != _triggeredPlayerGuid || _currentState.CustomActions == null ||
 			    _currentState.CustomActions.Count == 0)
 			{
 				return;
 			}
 
-			foreach (CustomEventActions customAction in _currentState.CustomActions)
+			foreach (CustomEventAction customAction in _currentState.CustomActions)
 			{
 				if (customAction.Type == type)
 				{
@@ -979,7 +977,7 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public void OnAnimatorStateEnter(AnimatorActions animAction, SceneTriggerAnimation anim,
+		public void OnAnimatorStateEnter(AnimatorAction animAction, SceneTriggerAnimation anim,
 			SceneTriggerAnimation.AnimationState state, int stateID, bool isBefore)
 		{
 			if (animAction.Animator == anim && stateID == CurrentStateID &&
@@ -1007,7 +1005,7 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public void OnAnimatorStateExit(AnimatorActions animAction, SceneTriggerAnimation anim,
+		public void OnAnimatorStateExit(AnimatorAction animAction, SceneTriggerAnimation anim,
 			SceneTriggerAnimation.AnimationState state, int stateID, bool isAfter)
 		{
 			if (animAction.Animator == anim && stateID == CurrentStateID &&
@@ -1037,14 +1035,14 @@ namespace ZeroGravity.LevelDesign
 
 		public bool AreStatesEqual(SceneTriggerExecutor other)
 		{
-			if (states.Count != other.states.Count)
+			if (_states.Count != other._states.Count)
 			{
 				return false;
 			}
 
-			foreach (KeyValuePair<int, StateActions> state in states)
+			foreach (KeyValuePair<int, StateAction> state in _states)
 			{
-				if (!other.states.ContainsKey(state.Key) || other.states[state.Key].StateName != state.Value.StateName)
+				if (!other._states.ContainsKey(state.Key) || other._states[state.Key].StateName != state.Value.StateName)
 				{
 					return false;
 				}
@@ -1082,7 +1080,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void CallMyPlayerItemInHandsSpecial()
 		{
-			if (_triggeredPlayerGuid == MyPlayer.Instance.GUID && MyPlayer.Instance.Inventory.ItemInHands != null)
+			if (_triggeredPlayerGuid == MyPlayer.Instance.Guid && MyPlayer.Instance.Inventory.ItemInHands != null)
 			{
 				MyPlayer.Instance.Inventory.ItemInHands.Special();
 			}
@@ -1090,7 +1088,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void StartExitCryoChamberCountdown(string stateName)
 		{
-			if (_triggeredPlayerGuid == MyPlayer.Instance.GUID)
+			if (_triggeredPlayerGuid == MyPlayer.Instance.Guid)
 			{
 				MyPlayer.Instance.StartExitCryoChamberCountdown(this, stateName);
 			}
@@ -1098,7 +1096,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void MyPlayerInteractWithPilotChair()
 		{
-			if (CurrentStateActions.TriggeredPlayerGUID == MyPlayer.Instance.GUID)
+			if (CurrentStateAction.TriggeredPlayerGuid == MyPlayer.Instance.Guid)
 			{
 				MyPlayer.Instance.SittingOnPilotSeat = CurrentStateID != DefaultStateID;
 			}

@@ -26,20 +26,17 @@ namespace ZeroGravity.Objects
 
 		private Item _Item;
 
-		public Transform ItemPlacement
-		{
-			get { return (!(_ItemPlacement != null)) ? base.transform : _ItemPlacement; }
-		}
+		public Transform ItemPlacement => !(_ItemPlacement != null) ? transform : _ItemPlacement;
 
 		public SpaceObject Parent
 		{
-			get { return _Parent; }
-			set { _Parent = value; }
+			get => _Parent;
+			set => _Parent = value;
 		}
 
 		public Item Item
 		{
-			get { return _Item; }
+			get => _Item;
 			private set
 			{
 				_Item = value;
@@ -69,7 +66,7 @@ namespace ZeroGravity.Objects
 				item.Slot = this;
 				item.transform.parent = ItemPlacement;
 				item.transform.Reset();
-				item.gameObject.SetActive(ItemPlacement != base.transform);
+				item.gameObject.SetActive(ItemPlacement != transform);
 				if (UI != null)
 				{
 					UI.UpdateSlot();

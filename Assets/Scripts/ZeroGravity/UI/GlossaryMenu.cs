@@ -66,7 +66,7 @@ namespace ZeroGravity.UI
 				gameObject.GetComponent<Button>().onClick.AddListener(delegate { ChangeGroup(newGrpUI); });
 				foreach (GlosserySubGroup subGroup in glossaryGroup.SubGroups)
 				{
-					GlossaryGroupUI glossaryGroupUI = Object.Instantiate(GroupUI, GroupHolder);
+					GlossaryGroupUI glossaryGroupUI = Instantiate(GroupUI, GroupHolder);
 					glossaryGroupUI.GlossarySubGrp = subGroup;
 					glossaryGroupUI.Name.text = subGroup.SubGroupName.ToUpper();
 					glossaryGroupUI.AllItems = new List<GlossaryItemUI>();
@@ -74,7 +74,7 @@ namespace ZeroGravity.UI
 					newGrpUI.AllSubGroups.Add(glossaryGroupUI);
 					foreach (GlosseryItem item in subGroup.Items)
 					{
-						GlossaryItemUI glossaryItemUI = Object.Instantiate(ItemUI, glossaryGroupUI.ItemsHolder);
+						GlossaryItemUI glossaryItemUI = Instantiate(ItemUI, glossaryGroupUI.ItemsHolder);
 						glossaryItemUI.gameObject.SetActive(value: true);
 						glossaryItemUI.Menu = this;
 						glossaryItemUI.GlossaryItm = item;

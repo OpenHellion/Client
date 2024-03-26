@@ -14,10 +14,7 @@ namespace ZeroGravity.Objects
 
 		public Image fill;
 
-		public float BatteryPrecentage
-		{
-			get { return CurrentPower / MaxPower; }
-		}
+		public float BatteryPrecentage => CurrentPower / MaxPower;
 
 		private new void Start()
 		{

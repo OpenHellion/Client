@@ -69,7 +69,7 @@ namespace ZeroGravity.UI
 			if (!DontPlayCutScenes && !IsPlaying)
 			{
 				CurrentCutScene = cutscene;
-				Invoke("PlayFirstElement", Delay + CurrentCutScene.Delay);
+				Invoke(nameof(PlayFirstElement), Delay + CurrentCutScene.Delay);
 			}
 		}
 

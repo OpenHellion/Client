@@ -197,7 +197,7 @@ public class HelmetRadar : MonoBehaviour
 			Vector3 vector3 = Vector3.Project(vector2, vector.normalized);
 			Vector3 vector4 = Vector3.ProjectOnPlane(vector2, vector.normalized);
 			OnSpeedValText.text =
-				((0f - vector3.magnitude) * (float)MathHelper.Sign(Vector3.Dot(vector.normalized, vector3.normalized)))
+				((0f - vector3.magnitude) * MathHelper.Sign(Vector3.Dot(vector.normalized, vector3.normalized)))
 				.ToString("f1");
 			OffSpeedValText.text = vector4.magnitude.ToString("f1");
 			if (_currentTarget.Distance > 1000f)
@@ -237,7 +237,7 @@ public class HelmetRadar : MonoBehaviour
 		List<HelmetRadarTargetElement> list2 = radarItems.Where((HelmetRadarTargetElement m) =>
 			m.AB == null || !m.AB.gameObject.activeInHierarchy || !(m.AB is SpaceObjectVessel) ||
 			!(m.AB as SpaceObjectVessel).IsMainVessel || (MyPlayer.Instance.Parent.Position - m.AB.Position).Magnitude >
-			(double)RadarScanningRange).ToList();
+			RadarScanningRange).ToList();
 		foreach (HelmetRadarTargetElement item in list2)
 		{
 			radarItems.Remove(item);
@@ -253,9 +253,9 @@ public class HelmetRadar : MonoBehaviour
 		}
 
 		List<ArtificialBody> list = radarItems.Select((HelmetRadarTargetElement m) => m.AB).ToList();
-		foreach (ArtificialBody item2 in _world.SolarSystem.ArtificialBodies.Where((ArtificialBody m) =>
+		foreach (ArtificialBody item2 in SolarSystem.ArtificialBodyReferences.Where((ArtificialBody m) =>
 			         m is SpaceObjectVessel && (m as SpaceObjectVessel).IsMainVessel &&
-			         (MyPlayer.Instance.Parent.Position - m.Position).Magnitude <= (double)RadarScanningRange &&
+			         (MyPlayer.Instance.Parent.Position - m.Position).Magnitude <= RadarScanningRange &&
 			         !list.Contains(m)))
 		{
 			CreateUIElement(item2);
@@ -311,7 +311,7 @@ public class HelmetRadar : MonoBehaviour
 					Pivot pivot = radarItem.AB as Pivot;
 					if (pivot.ChildType == SpaceObjectType.Player)
 					{
-						Player player = _world.GetPlayer(pivot.GUID);
+						Player player = _world.GetPlayer(pivot.Guid);
 						if (player != null)
 						{
 							position2 += player.transform.position;

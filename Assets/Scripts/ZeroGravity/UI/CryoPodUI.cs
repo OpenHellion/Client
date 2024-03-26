@@ -170,7 +170,7 @@ namespace ZeroGravity.UI
 				InviteToPodButton.gameObject.SetActive(value: false);
 				UnregisterPodButton.gameObject.SetActive(value: false);
 			}
-			else if (SpawnPoint.State is SpawnPointState.Locked && SpawnPoint.PlayerGUID == MyPlayer.Instance.GUID)
+			else if (SpawnPoint.State is SpawnPointState.Locked && SpawnPoint.PlayerGUID == MyPlayer.Instance.Guid)
 			{
 				if (!SpawnPoint.InvitedPlayerName.IsNullOrEmpty())
 				{

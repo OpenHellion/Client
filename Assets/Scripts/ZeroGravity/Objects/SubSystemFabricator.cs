@@ -87,7 +87,7 @@ namespace ZeroGravity.Objects
 				where m != null
 				select m.InSceneID).ToList();
 			subSystemFabricatorAuxData.CargoCompartments = new List<CargoCompartmentData>
-				{ (!(CargoResources == null)) ? CargoResources.GetData() : null };
+				{ !(CargoResources == null) ? CargoResources.GetData() : null };
 			return subSystemFabricatorAuxData;
 		}
 
@@ -134,7 +134,7 @@ namespace ZeroGravity.Objects
 		{
 			NetworkController.SendToGameServer(new FabricateItemMessage
 			{
-				ID = new VesselObjectID(base.ParentVessel.GUID, base.InSceneID),
+				ID = new VesselObjectID(ParentVessel.Guid, InSceneID),
 				ItemType = new ItemCompoundType
 				{
 					Type = type,
@@ -149,7 +149,7 @@ namespace ZeroGravity.Objects
 		{
 			NetworkController.SendToGameServer(new CancelFabricationMessage
 			{
-				ID = new VesselObjectID(base.ParentVessel.GUID, base.InSceneID),
+				ID = new VesselObjectID(ParentVessel.Guid, InSceneID),
 				CurrentItemOnly = currentItemOnly
 			});
 		}

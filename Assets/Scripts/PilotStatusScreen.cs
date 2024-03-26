@@ -138,8 +138,8 @@ public class PilotStatusScreen : MonoBehaviour
 		}
 
 		WarningsUpdate();
-		if ((double)ParentPilot.ParentShip.ExposureDamage * SpaceObjectVessel.VesselDecayRateMultiplier * 3600.0 >
-		    (double)(ParentPilot.ParentShip.Armor * 3600f))
+		if (ParentPilot.ParentShip.ExposureDamage * SpaceObjectVessel.VesselDecayRateMultiplier * 3600.0 >
+		    ParentPilot.ParentShip.Armor * 3600f)
 		{
 			Armor.color = Colors.FormatedRed;
 		}

@@ -36,10 +36,5 @@ namespace OpenHellion.Social.RichPresence
 		/// 	Used to update rich presence.
 		/// </summary>
 		void UpdateStatus();
-
-		/// <summary>
-		/// 	Get the username of our local player.
-		/// </summary>
-		public string GetUsername();
 	}
 }

@@ -49,7 +49,7 @@ namespace ZeroGravity.Objects
 
 		public Jetpack Jetpack
 		{
-			get { return jetpack; }
+			get => jetpack;
 			set
 			{
 				jetpack = value;
@@ -67,50 +67,24 @@ namespace ZeroGravity.Objects
 
 		public ItemSlot BatterySlot { get; set; }
 
-		public Battery Battery
-		{
-			get { return (!(BatterySlot != null)) ? null : (BatterySlot.Item as Battery); }
-		}
+		public Battery Battery => !(BatterySlot != null) ? null : BatterySlot.Item as Battery;
 
-		public float BatteryPower
-		{
-			get { return (!(Battery != null)) ? 0f : Mathf.Clamp01(Battery.CurrentPower / Battery.MaxPower); }
-		}
+		public float BatteryPower => !(Battery != null) ? 0f : Mathf.Clamp01(Battery.CurrentPower / Battery.MaxPower);
 
-		public float Fuel
-		{
-			get { return (!(Jetpack != null)) ? 0f : Jetpack.PropFuel; }
-		}
+		public float Fuel => !(Jetpack != null) ? 0f : Jetpack.PropFuel;
 
-		public float Oxygen
-		{
-			get { return (!(Jetpack != null)) ? 0f : Jetpack.PropOxygen; }
-		}
+		public float Oxygen => !(Jetpack != null) ? 0f : Jetpack.PropOxygen;
 
-		public float Pressure
-		{
-			get
-			{
-				return (!(Jetpack != null) || !(MyPlayer.Instance.CurrentRoomTrigger != null))
-					? 0f
-					: MyPlayer.Instance.CurrentRoomTrigger.AirPressure;
-			}
-		}
+		public float Pressure =>
+			!(Jetpack != null) || !(MyPlayer.Instance.CurrentRoomTrigger != null)
+				? 0f
+				: MyPlayer.Instance.CurrentRoomTrigger.AirPressure;
 
-		public HelmetHudUI HudUI
-		{
-			get { return World.InGameGUI.HelmetHud; }
-		}
+		public HelmetHudUI HudUI => World.InGameGUI.HelmetHud;
 
-		public override bool IsInvetoryEquipable
-		{
-			get { return true; }
-		}
+		public override bool IsInvetoryEquipable => true;
 
-		public override EquipType EquipTo
-		{
-			get { return EquipType.EquipInventory; }
-		}
+		public override EquipType EquipTo => EquipType.EquipInventory;
 
 		private new void Start()
 		{
@@ -162,9 +136,9 @@ namespace ZeroGravity.Objects
 			}
 
 			string empty = string.Empty;
-			empty = ((!(MyPlayer.Instance.Inventory.Outfit == null))
+			empty = !(MyPlayer.Instance.Inventory.Outfit == null)
 				? Localization.AlreadyEquipped.ToUpper()
-				: Localization.EquipSuitFirst.ToUpper());
+				: Localization.EquipSuitFirst.ToUpper();
 			World.InGameGUI.ShowInteractionCanvasMessage(empty);
 		}
 
@@ -191,9 +165,9 @@ namespace ZeroGravity.Objects
 						Jetpack.Helmet = this;
 					}
 
-					base.transform.parent = myPlayer.HelmetPlacementTransform;
-					base.transform.localPosition = Vector3.zero;
-					base.transform.localRotation = Quaternion.identity;
+					transform.parent = myPlayer.HelmetPlacementTransform;
+					transform.localPosition = Vector3.zero;
+					transform.localRotation = Quaternion.identity;
 					ToggleVisor(IsVisorActive, false, true);
 
 					if (HudUI.CurrentHelmet == this)
@@ -222,10 +196,10 @@ namespace ZeroGravity.Objects
 			}
 			else if (pl is OtherPlayer)
 			{
-				(pl as OtherPlayer).CurrentHelmet = ((type != EquipTo) ? null : this);
+				(pl as OtherPlayer).CurrentHelmet = type != EquipTo ? null : this;
 				if ((pl as OtherPlayer).hairMesh != null)
 				{
-					(pl as OtherPlayer).hairMesh.SetBlendShapeWeight(0, (type != EquipTo) ? 100f : 0f);
+					(pl as OtherPlayer).hairMesh.SetBlendShapeWeight(0, type != EquipTo ? 100f : 0f);
 				}
 			}
 		}
@@ -243,7 +217,7 @@ namespace ZeroGravity.Objects
 				DynamicObject dynamicObj = DynamicObj;
 				HelmetStats statsData = new HelmetStats
 				{
-					isVisorActive = ((!isActive.HasValue) ? (!IsVisorActive) : isActive.Value)
+					isVisorActive = !isActive.HasValue ? !IsVisorActive : isActive.Value
 				};
 				dynamicObj.SendStatsMessage(null, statsData);
 			}
@@ -306,7 +280,7 @@ namespace ZeroGravity.Objects
 				DynamicObject dynamicObj = DynamicObj;
 				HelmetStats statsData = new HelmetStats
 				{
-					isLightActive = (isActive.HasValue ? isActive.Value : (Light != null && !LightOn))
+					isLightActive = isActive.HasValue ? isActive.Value : Light != null && !LightOn
 				};
 				dynamicObj.SendStatsMessage(null, statsData);
 				return;
@@ -325,7 +299,7 @@ namespace ZeroGravity.Objects
 
 			if (lightMat != null)
 			{
-				lightMat.material.SetColor("_EmissionColor", (!isActive.Value) ? Color.black : (Color.white * 8f));
+				lightMat.material.SetColor("_EmissionColor", !isActive.Value ? Color.black : Color.white * 8f);
 			}
 		}
 
@@ -394,7 +368,7 @@ namespace ZeroGravity.Objects
 
 		public override string QuantityCheck()
 		{
-			return (!(Battery == null)) ? FormatHelper.Percentage(BatteryPower) : "0";
+			return !(Battery == null) ? FormatHelper.Percentage(BatteryPower) : "0";
 		}
 	}
 }

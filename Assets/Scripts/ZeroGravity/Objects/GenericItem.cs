@@ -20,10 +20,7 @@ namespace ZeroGravity.Objects
 
 		public string Look;
 
-		public string ItemName
-		{
-			get { return SubType.ToLocalizedString(); }
-		}
+		public string ItemName => SubType.ToLocalizedString();
 
 		public string ItemDescription
 		{
@@ -39,10 +36,7 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public float ProporcionalHealth
-		{
-			get { return base.Health / base.MaxHealth; }
-		}
+		public float ProporcionalHealth => Health / MaxHealth;
 
 		public override DynamicObjectAuxData GetAuxData()
 		{
@@ -67,7 +61,7 @@ namespace ZeroGravity.Objects
 				return;
 			}
 
-			string path = "Materials/GenericItem/" + SubType.ToString() + "/" + Look;
+			string path = "Materials/GenericItem/" + SubType + "/" + Look;
 			Material material = Resources.Load<Material>(path);
 			if (material != null && UnfoldedItem != null)
 			{
@@ -95,7 +89,7 @@ namespace ZeroGravity.Objects
 				return;
 			}
 
-			bool flag = isAttached || base.AttachPoint == null || !(base.AttachPoint is ActiveSceneAttachPoint);
+			bool flag = isAttached || AttachPoint == null || !(AttachPoint is ActiveSceneAttachPoint);
 			FoldedItem.SetActive(flag);
 			UnfoldedItem.SetActive(!flag);
 			foreach (Collider foldedCollider in FoldedColliders)

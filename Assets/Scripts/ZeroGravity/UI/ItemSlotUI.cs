@@ -51,7 +51,7 @@ namespace ZeroGravity.UI
 				{
 					InventoryUI.AllSlots.Remove(this);
 					InventoryUI.LootSlots.Remove(this);
-					Object.Destroy(base.gameObject);
+					Destroy(gameObject);
 				}
 				else
 				{

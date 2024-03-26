@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Photon.Voice;
 using POpusCodec;
 using POpusCodec.Enums;
 using UnityEngine;
@@ -8,6 +7,7 @@ using ZeroGravity.Math;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using OpenHellion.Net;
+using Photon.Voice;
 
 namespace ZeroGravity.Audio
 {
@@ -102,7 +102,7 @@ namespace ZeroGravity.Audio
 		private void VoiceCommDataMessageListener(NetworkData data)
 		{
 			VoiceCommDataMessage voiceCommDataMessage = data as VoiceCommDataMessage;
-			if (voiceCommDataMessage.SourceGUID != thisPlayer.GUID || voiceCommDataMessage.AudioPackets == null)
+			if (voiceCommDataMessage.SourceGUID != thisPlayer.Guid || voiceCommDataMessage.AudioPackets == null)
 			{
 				return;
 			}

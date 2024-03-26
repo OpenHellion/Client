@@ -47,7 +47,7 @@ namespace ZeroGravity.UI
 			}
 
 			RefuelingStationText.text = "<color=#ec5500>AltCorp</color>" + Localization.RefuelingStation;
-			Invoke("MakeResourceContainers", 3f);
+			Invoke(nameof(MakeResourceContainers), 3f);
 		}
 
 		public void UpdateResourceContainer(ResourceContainer rcv)
@@ -95,7 +95,7 @@ namespace ZeroGravity.UI
 					{
 						try
 						{
-							GameObject gameObject = UnityEngine.Object.Instantiate(refuelingSubSystemPrefab,
+							GameObject gameObject = Instantiate(refuelingSubSystemPrefab,
 								refuelingSubSystemPrefab.transform.parent);
 							RefuelingSubSystemPrefab component = gameObject.GetComponent<RefuelingSubSystemPrefab>();
 							string value = vesselSystem.name;

@@ -160,7 +160,7 @@ namespace ZeroGravity.Objects
 			}
 
 			if (MyPlayer.Instance is not null && MyPlayer.Instance.Inventory != null &&
-			    (base.Slot == MyPlayer.Instance.Inventory.HandsSlot || (DynamicObj.Parent is DynamicObject &&
+			    (Slot == MyPlayer.Instance.Inventory.HandsSlot || (DynamicObj.Parent is DynamicObject &&
 			                                                            (DynamicObj.Parent as DynamicObject).Item
 			                                                            .Slot ==
 			                                                            MyPlayer.Instance.Inventory.HandsSlot)))

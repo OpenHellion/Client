@@ -71,7 +71,7 @@ namespace ZeroGravity.UI
 			NameTagMessage nameTagMessage = new NameTagMessage();
 			nameTagMessage.ID = new VesselObjectID
 			{
-				VesselGUID = _currentParentVessel.GUID,
+				VesselGUID = _currentParentVessel.Guid,
 				InSceneID = _currentSceneId
 			};
 			nameTagMessage.NameTagText = CustomInputField.text;

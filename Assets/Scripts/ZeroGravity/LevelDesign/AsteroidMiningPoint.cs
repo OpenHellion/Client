@@ -75,7 +75,7 @@ namespace ZeroGravity.LevelDesign
 		private void MiningPointStatsMessageListener(NetworkData data)
 		{
 			MiningPointStatsMessage miningPointStatsMessage = data as MiningPointStatsMessage;
-			if (miningPointStatsMessage.ID.VesselGUID == ParentVessel.GUID &&
+			if (miningPointStatsMessage.ID.VesselGUID == ParentVessel.Guid &&
 			    miningPointStatsMessage.ID.InSceneID == InSceneID)
 			{
 				SetValues(miningPointStatsMessage.Quantity, miningPointStatsMessage.GasBurst);

@@ -1433,7 +1433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2237a560c848b70418ec5d3f7badc010, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRadioDistance: 1000
+  _maxRadioDistance: 1000
 --- !u!1 &1113462175292821
 GameObject:
   m_ObjectHideFlags: 0
@@ -5335,7 +5335,6 @@ MonoBehaviour:
   InertiaCameraHolder: {fileID: 4160103456350745}
   itemInHandsCollider: {fileID: 65743008658368969}
   characterController: {fileID: 114588308043369360}
-  mainCamera: {fileID: 20457876916212877}
   cameraShakeController: {fileID: 114393173984183772}
   resetLerpDuration: 0.15
   maxUpAngle: 85
@@ -5353,7 +5352,7 @@ MonoBehaviour:
   tranInertionMultiplier: 0.5
 --- !u!95 &95696719220732892
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5370,7 +5369,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1227232127230880
 GameObject:
   m_ObjectHideFlags: 0
@@ -19761,7 +19761,7 @@ MonoBehaviour:
     Source: {fileID: 0}
     PlayOnAwake: 1
     UseStringInsteadOfId: 0
-    IsPlaying: 0
+    IsPlaying: 1
     ShowRadius: 0
     AttenuationRadius: 0
   - EventID: -1455436248
@@ -21148,7 +21148,6 @@ MonoBehaviour:
   nearCamera: {fileID: 20996397651856414}
   HeadCameraParent: {fileID: 4254979128083823}
   StarDustParticle: {fileID: 198932743652139379}
-  StarDustCustomSpace: {fileID: 4643738763714955}
   normalSpeeds:
     ForwardVelocity: 2.5
     RightVelocity: 2.5
@@ -21189,28 +21188,12 @@ MonoBehaviour:
     RotateVelocity: 4
     AccelerationStep: 0
     DeaccelerationStep: 0
-  zeroGFloatingSpeeds:
-    ForwardVelocity: 0.5
-    RightVelocity: 0.5
-    BackwardVelocity: 0.5
-    LeanVelocity: 3
-    RotateVelocity: 5
-    AccelerationStep: 0
-    DeaccelerationStep: 0
   zeroGJetpackSpeeds:
     ForwardVelocity: 2
     RightVelocity: 2
     BackwardVelocity: 2
     LeanVelocity: 2
     RotateVelocity: 4
-    AccelerationStep: 0
-    DeaccelerationStep: 0
-  zeroGGlideSpeeds:
-    ForwardVelocity: 1.5
-    RightVelocity: 1.5
-    BackwardVelocity: 1.5
-    LeanVelocity: 3
-    RotateVelocity: 5
     AccelerationStep: 0
     DeaccelerationStep: 0
   animatorForwardMaxVelocity: 1.5
@@ -21240,7 +21223,6 @@ MonoBehaviour:
   StickToVessel: {fileID: 0}
   StickToVesselRotation: {x: 0, y: 0, z: 0, w: 0}
   StickToVesselTangentialVelocity: {x: 0, y: 0, z: 0}
-  startLockedPos: {x: 0, y: 0, z: 0}
   legDistance: 1.15
   attachPointSaved: {fileID: 0}
 --- !u!114 &114541462591580603
@@ -21268,9 +21250,6 @@ MonoBehaviour:
   OnPlatform: {fileID: 0}
   TransitionTrigger: {fileID: 114493429894415821}
   EnterVesselRoomTrigger: {fileID: 0}
-  PlayerName: 
-  NativeId: 
-  PlayerId: 
   SittingOnPilotSeat: 0
   MeleeRange: 1
   OldGravity: {x: 0, y: 0, z: 0}
@@ -21280,13 +21259,10 @@ MonoBehaviour:
   ragdollComponent: {fileID: 114935409057489999}
   SunCameraRoot: {fileID: 0}
   PlanetsCameraRoot: {fileID: 0}
-  LookingAtTrigger: {fileID: 0}
   healthEffect: {fileID: 114937352832066361}
   burningEffect: {fileID: 114022578700973608}
   HealthSounds: {fileID: 114578113234407230}
-  LookingAtPlayer: {fileID: 0}
   HideCanvasDistance: 20
-  inventoryUI: {fileID: 0}
   CurrentOutfit: {fileID: 0}
   CurrentHelmet: {fileID: 0}
   Outfit: {fileID: 4136948393391667}
@@ -21300,14 +21276,9 @@ MonoBehaviour:
   InLadderTrigger: 0
   LadderTrigger: {fileID: 0}
   rigidBody: {fileID: 54445298816464987}
-  sunFlareEffect: {fileID: 0}
   animHelper: {fileID: 114982826734764824}
-  NearSnapshots: []
-  FarSnapshots: []
   HelmetPlacementTransform: {fileID: 4333505179169222}
   MuzzleFlashTransform: {fileID: 4524722596796785}
-  BulletHoleEffect: {fileID: 1882704286069647, guid: 1e2c963d01e34a947ab90bdde662a581,
-    type: 3}
   RcsThrustModifier: 1
   MyRoomTrigger: {fileID: 114849004377987937}
   PivotReset: 0
@@ -21317,14 +21288,11 @@ MonoBehaviour:
   SendDockUndockMsg: 0
   SentPacketStatistics: 
   ReceivedPacketStatistics: 
-  bloodCloudEffect: {fileID: 1876027292518349, guid: 14057ce9701e97a4c9528897a87c3efd,
-    type: 3}
   DebrisFieldVelocityDirection:
     X: 0
     Y: 0
     Z: 0
   ShipControlMode: 0
-  currentDockIndex: 0
   ShowGUIElements: 0
 --- !u!114 &114798149243960685
 MonoBehaviour:
@@ -27859,7 +27827,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &95588298754729090
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -27876,7 +27844,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &114209389543243857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27908,7 +27877,6 @@ MonoBehaviour:
   doneSwitchingState: 1
   animMain: {fileID: 95588298754729090}
   animBob: {fileID: 95696719220732892}
-  player: {fileID: 114541462591580603}
   aimIKController: {fileID: 0}
   defaultPickup: {fileID: 7400000, guid: e5b2f1b6841c45f43ae8d5052c6174f8, type: 2}
   defaultThrow: {fileID: 7400000, guid: 00fd815c29ac8514e95ee0be41a4ccc3, type: 2}
@@ -28190,7 +28158,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
 --- !u!95 &95164943382397007
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -28207,7 +28175,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &114935409057489999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28239,7 +28208,6 @@ MonoBehaviour:
   doneSwitchingState: 1
   animMain: {fileID: 95164943382397007}
   animBob: {fileID: 95696719220732892}
-  player: {fileID: 114541462591580603}
   aimIKController: {fileID: 0}
   defaultPickup: {fileID: 7400000, guid: e5b2f1b6841c45f43ae8d5052c6174f8, type: 2}
   defaultThrow: {fileID: 7400000, guid: 00fd815c29ac8514e95ee0be41a4ccc3, type: 2}

@@ -35,7 +35,9 @@ namespace OpenHellion.UI
 
 		public GameObject ToolTip;
 
-		public Text TooltipContent;
+		public TMP_Text TooltipHeading;
+
+		public TMP_Text TooltipContent;
 
 		public void LocalizePanels()
 		{

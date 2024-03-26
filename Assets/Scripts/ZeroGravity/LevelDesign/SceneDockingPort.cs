@@ -115,7 +115,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					if (!isInitialize)
 					{
-						Debug.LogErrorFormat("Docking Port: There is no parent ship. Child ship: {0}, Parent ship: {1}", ParentShip.GUID,
+						Debug.LogErrorFormat("Docking Port: There is no parent ship. Child ship: {0}, Parent ship: {1}", ParentShip.Guid,
 							details.DockedToID.VesselGUID);
 					}
 
@@ -127,7 +127,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					if (!isInitialize)
 					{
-						Debug.LogErrorFormat("Docking Port: There is no docking port on ship. Child ship: {0}, Parent ship: {1}, Parent loaded: {2}, Docked to port id: {3}", ParentShip.GUID, details.DockedToID.VesselGUID, ship.SceneObjectsLoaded, details.DockedToID.InSceneID);
+						Debug.LogErrorFormat("Docking Port: There is no docking port on ship. Child ship: {0}, Parent ship: {1}, Parent loaded: {2}, Docked to port id: {3}", ParentShip.Guid, details.DockedToID.VesselGUID, ship.SceneObjectsLoaded, details.DockedToID.InSceneID);
 					}
 
 					return;
@@ -229,8 +229,8 @@ namespace ZeroGravity.LevelDesign
 			Ship parentShip = sdc.ParentShip;
 			SceneDockingPortDetails sceneDockingPortDetails = new SceneDockingPortDetails
 			{
-				ID = new VesselObjectID(ParentShip.GUID, InSceneID),
-				DockedToID = new VesselObjectID(parentShip.GUID, sdc.InSceneID),
+				ID = new VesselObjectID(ParentShip.Guid, InSceneID),
+				DockedToID = new VesselObjectID(parentShip.Guid, sdc.InSceneID),
 				DockingStatus = toggle
 			};
 			Ship parentShip2 = ParentShip;

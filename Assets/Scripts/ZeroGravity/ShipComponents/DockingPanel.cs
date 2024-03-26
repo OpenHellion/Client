@@ -271,7 +271,7 @@ namespace ZeroGravity.ShipComponents
 
 				Vector3 relativePosition = GetRelativePosition(TargetDockingPort.CameraPosition.position);
 				float f = vector3.magnitude *
-				          (float)MathHelper.Sign(Vector3.Dot(vector.normalized, vector3.normalized));
+				          MathHelper.Sign(Vector3.Dot(vector.normalized, vector3.normalized));
 				OnSpeedValText.text = f.ToString("f1");
 				OffSpeedValText.text = vector4.magnitude.ToString("f1");
 				DirectionalGraph.transform.localScale = new Vector3(Mathf.Clamp(Mathf.Abs(f) / 5f, 0.01f, 1f), 1f, 1f);
@@ -310,7 +310,7 @@ namespace ZeroGravity.ShipComponents
 				}
 
 				float num4 = vector3.magnitude *
-				             (float)MathHelper.Sign(Vector3.Dot(vector.normalized, vector3.normalized));
+				             MathHelper.Sign(Vector3.Dot(vector.normalized, vector3.normalized));
 				Vector3 vector6 = TargetDockingPort.SceneDockingTriggerTrans.position -
 				                  dockingPort.SceneDockingTriggerTrans.position;
 				float num5 = Vector3.SignedAngle(TargetDockingPort.SceneDockingTriggerTrans.up,
@@ -445,7 +445,7 @@ namespace ZeroGravity.ShipComponents
 			TargetDockingPort = _targetedModulePorts[_currentTargetedModulePortIndex].Port;
 			if (_targetedModulePorts.Count > 8)
 			{
-				float y = 34.5f * (float)_currentTargetedModulePortIndex - 34.5f;
+				float y = 34.5f * _currentTargetedModulePortIndex - 34.5f;
 				TargetedModulePortsTranform.anchoredPosition = new Vector2(0f, y);
 			}
 			else if (_targetedModulePorts.Count == 0)
@@ -475,7 +475,7 @@ namespace ZeroGravity.ShipComponents
 		private Vector3 GetRelativePosition(Vector3 pos)
 		{
 			return (pos - MyPlayer.Instance.transform.position).normalized *
-			       (base.transform.position - MyPlayer.Instance.transform.position).magnitude +
+			       (transform.position - MyPlayer.Instance.transform.position).magnitude +
 			       MyPlayer.Instance.transform.position;
 		}
 
@@ -490,7 +490,7 @@ namespace ZeroGravity.ShipComponents
 			AvailableTargetShips.Clear();
 			foreach (DockingPortUI targetedModulePort in _targetedModulePorts)
 			{
-				Object.Destroy(targetedModulePort.UI.gameObject);
+				Destroy(targetedModulePort.UI.gameObject);
 			}
 
 			_targetedModulePorts.Clear();
@@ -558,7 +558,7 @@ namespace ZeroGravity.ShipComponents
 
 			_dockingPorts = (from m in _dockingPorts
 				where !m.Locked
-				orderby m.ParentShip != _parentShip, m.ParentShip.GUID, m.Name
+				orderby m.ParentShip != _parentShip, m.ParentShip.Guid, m.Name
 				select m).ToList();
 		}
 
@@ -616,7 +616,7 @@ namespace ZeroGravity.ShipComponents
 
 			if (_myVisibleDockingPortsUI.Count > 8)
 			{
-				float y = 34.5f * (float)_myVisibleDockingPortsUI.IndexOf(_myDockingPortsUI[_myCurrentPort]) - 34.5f;
+				float y = 34.5f * _myVisibleDockingPortsUI.IndexOf(_myDockingPortsUI[_myCurrentPort]) - 34.5f;
 				AvailableDockingPortsTransform.anchoredPosition = new Vector2(0f, y);
 			}
 			else if (_myVisibleDockingPortsUI.Count == 0)
@@ -628,7 +628,7 @@ namespace ZeroGravity.ShipComponents
 		private void ReloadRadarElements()
 		{
 			List<Ship> list = new List<Ship>(AvailableTargetShips);
-			foreach (ArtificialBody ab in _world.SolarSystem.ArtificialBodies.Where((ArtificialBody m) =>
+			foreach (ArtificialBody ab in SolarSystem.ArtificialBodyReferences.Where((ArtificialBody m) =>
 				         m is SpaceObjectVessel && (m as SpaceObjectVessel).MainVessel != _parentShip.MainVessel))
 			{
 				float num = (float)(_parentShip.Position - ab.Position).Magnitude;
@@ -698,7 +698,7 @@ namespace ZeroGravity.ShipComponents
 			foreach (DockingPortUI item in _myDockingPortsUI)
 			{
 				item.UI.gameObject.SetActive(value: false);
-				Object.Destroy(item.UI.gameObject);
+				Destroy(item.UI.gameObject);
 			}
 
 			_myDockingPortsUI.Clear();
@@ -729,7 +729,7 @@ namespace ZeroGravity.ShipComponents
 
 		private DockingPanelUIItem MakeDockingPortUI(SceneDockingPort port)
 		{
-			DockingPanelUIItem dockingPanelUIItem = Object.Instantiate(ListItemPrefab, AvailableDockingPortsTransform);
+			DockingPanelUIItem dockingPanelUIItem = Instantiate(ListItemPrefab, AvailableDockingPortsTransform);
 			dockingPanelUIItem.gameObject.SetActive(!port.IgnoreThisDockingPort && !port.Locked);
 			dockingPanelUIItem.transform.localScale = Vector3.one;
 			dockingPanelUIItem.gameObject.SetActive(!port.IgnoreThisDockingPort);
@@ -750,7 +750,7 @@ namespace ZeroGravity.ShipComponents
 
 			foreach (DockingPortUI targetedModulePort in _targetedModulePorts)
 			{
-				Object.Destroy(targetedModulePort.UI.gameObject);
+				Destroy(targetedModulePort.UI.gameObject);
 			}
 
 			_targetedModulePorts.Clear();
@@ -803,7 +803,7 @@ namespace ZeroGravity.ShipComponents
 
 		private DockingPanelUIItem MakeTargetModulePort(SceneDockingPort port)
 		{
-			DockingPanelUIItem dockingPanelUIItem = Object.Instantiate(ListItemPrefab, TargetedModulePortsTranform);
+			DockingPanelUIItem dockingPanelUIItem = Instantiate(ListItemPrefab, TargetedModulePortsTranform);
 			dockingPanelUIItem.transform.localScale = Vector3.one;
 			dockingPanelUIItem.gameObject.SetActive(value: true);
 			dockingPanelUIItem.IsSelected = false;

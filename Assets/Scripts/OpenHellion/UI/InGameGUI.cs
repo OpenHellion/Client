@@ -320,7 +320,7 @@ namespace OpenHellion.UI
 		/// </summary>
 		public void OpenInGameMenu()
 		{
-			ToggleInGameMenuCanvas(val: true);
+			ToggleInGameMenuCanvas(true);
 			Globals.ToggleCursor(true);
 			MyPlayer.Instance.FpsController.ToggleCameraController(false);
 			MyPlayer.Instance.FpsController.ToggleCameraMovement(false);

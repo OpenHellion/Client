@@ -3,7 +3,7 @@ using System.Collections;
 using System.Linq;
 using OpenHellion.IO;
 using UnityEngine;
-using ZeroGravity;
+using UnityEngine.Serialization;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Math;
 using ZeroGravity.Objects;
@@ -41,7 +41,7 @@ namespace ZeroGravity.CharacterMovement
 			Jump
 		}
 
-		public struct MovementAxis
+		private struct MovementAxis
 		{
 			public float Forward;
 
@@ -54,175 +54,175 @@ namespace ZeroGravity.CharacterMovement
 
 		public delegate void TranslateDelegate();
 
-		[SerializeField] private CapsuleCollider collider1G;
+		[FormerlySerializedAs("collider1G")] [SerializeField] private CapsuleCollider _collider1G;
 
-		[SerializeField] private SphereCollider collider0G;
+		[FormerlySerializedAs("collider0G")] [SerializeField] private SphereCollider _collider0G;
 
-		[SerializeField] private Transform characterRoot;
+		[FormerlySerializedAs("characterRoot")] [SerializeField] private Transform _characterRoot;
 
-		[SerializeField] public Rigidbody rigidBody;
+		[FormerlySerializedAs("rigidBody")] [SerializeField] public Rigidbody RigidBody;
 
-		[SerializeField] private MyPlayer myPlayer;
+		[FormerlySerializedAs("myPlayer")] [SerializeField] private MyPlayer _myPlayer;
 
-		[SerializeField] public AnimatorHelper animatorHelper;
+		[FormerlySerializedAs("animatorHelper")] [SerializeField] public AnimatorHelper AnimatorHelper;
 
-		[SerializeField] private CameraController cameraController;
+		[FormerlySerializedAs("cameraController")] [SerializeField] private CameraController _cameraController;
 
-		[SerializeField] private Camera mainCamera;
+		[FormerlySerializedAs("mainCamera")] [SerializeField] private Camera _mainCamera;
 
-		[SerializeField] private Camera farCamera;
+		[FormerlySerializedAs("farCamera")] [SerializeField] private Camera _farCamera;
 
-		[SerializeField] private Camera nearCamera;
+		[FormerlySerializedAs("nearCamera")] [SerializeField] private Camera _nearCamera;
 
 		public Transform HeadCameraParent;
 
 		public ParticleSystem StarDustParticle;
 
-		[SerializeField] private MovementSpeed normalSpeeds;
+		[FormerlySerializedAs("normalSpeeds")] [SerializeField] private MovementSpeed _normalSpeeds;
 
-		[SerializeField] private MovementSpeed runSpeeds;
+		[FormerlySerializedAs("runSpeeds")] [SerializeField] private MovementSpeed _runSpeeds;
 
-		[SerializeField] private MovementSpeed crouchSpeeds;
+		[FormerlySerializedAs("crouchSpeeds")] [SerializeField] private MovementSpeed _crouchSpeeds;
 
-		[SerializeField] private MovementSpeed airSpeeds;
+		[FormerlySerializedAs("airSpeeds")] [SerializeField] private MovementSpeed _airSpeeds;
 
-		[SerializeField] private MovementSpeed zeroGNormalSpeeds;
+		[FormerlySerializedAs("zeroGNormalSpeeds")] [SerializeField] private MovementSpeed _zeroGNormalSpeeds;
 
-		[SerializeField] private MovementSpeed zeroGJetpackSpeeds;
+		[FormerlySerializedAs("zeroGJetpackSpeeds")] [SerializeField] private MovementSpeed _zeroGJetpackSpeeds;
 
-		private MovementSpeed currSpeeds;
+		private MovementSpeed _currSpeeds;
 
-		[SerializeField] private float animatorForwardMaxVelocity;
+		[FormerlySerializedAs("animatorForwardMaxVelocity")] [SerializeField] private float _animatorForwardMaxVelocity;
 
-		[SerializeField] private float animatorBackwardMaxVelocity;
+		[FormerlySerializedAs("animatorBackwardMaxVelocity")] [SerializeField] private float _animatorBackwardMaxVelocity;
 
-		[SerializeField] private float animatorRightMaxVelocity;
+		[FormerlySerializedAs("animatorRightMaxVelocity")] [SerializeField] private float _animatorRightMaxVelocity;
 
-		[SerializeField] public Rigidbody ragdollChestRigidbody;
+		[FormerlySerializedAs("ragdollChestRigidbody")] [SerializeField] public Rigidbody RagdollChestRigidbody;
 
-		[SerializeField] private Transform centerOfMass;
+		[FormerlySerializedAs("centerOfMass")] [SerializeField] private Transform _centerOfMass;
 
 		public Rigidbody CenterOfMassRigidbody;
 
-		[SerializeField] private float maxSlopeAngle;
+		[FormerlySerializedAs("maxSlopeAngle")] [SerializeField] private float _maxSlopeAngle;
 
-		private float currSlopeAngle;
+		private float _currSlopeAngle;
 
-		private Vector3 currSlopeNormal;
+		private Vector3 _currSlopeNormal;
 
-		private bool isZeroG;
+		private bool _isZeroG;
 
-		private bool isMovementEnabled = true;
+		private bool _isMovementEnabled = true;
 
-		[SerializeField] private bool isGrounded;
+		[FormerlySerializedAs("isGrounded")] [SerializeField] private bool _isGrounded;
 
-		private float groundCheckDistance = 0.01f;
+		private const float GroundCheckDistance = 0.01f;
 
-		private bool isOnLadder;
+		private bool _isOnLadder;
 
-		[SerializeField] private float ladderVelocity = 1.5f;
+		[FormerlySerializedAs("ladderVelocity")] [SerializeField] private float _ladderVelocity = 1.5f;
 
-		public Jetpack CurrentJetpack;
+		[NonSerialized] public Jetpack CurrentJetpack;
 
-		private bool gravityChanged;
+		private bool _gravityChanged;
 
-		private bool gravityChangedRagdoll;
+		private bool _gravityChangedRagdoll;
 
-		private float gravitChangeStartTime;
+		private float _gravityChangeStartTime;
 
-		private Quaternion gravityChangeEndingRotation = Quaternion.identity;
+		private Quaternion _gravityChangeEndingRotation = Quaternion.identity;
 
-		private float gravityChangeLerpHelper;
+		private float _gravityChangeLerpHelper;
 
-		private float gravityChangeRagdollTimer;
+		private float _gravityChangeRagdollTimer;
 
-		private float gravityChangeRagdollTimeMax = 5f;
+		private float _normalColliderHeight;
 
-		private float normalColliderHeight;
+		private float _crouchLerpHelper = 1f;
 
-		private float crouchColliderHeight = 0.8f;
+		private const float GravityChangeRagdollTimeMax = 5f;
 
-		private float normalColliderCenter = -0.44f;
+		private const float CrouchColliderHeight = 0.8f;
 
-		private float crouchColliderCenter = -0.935f;
+		private const float NormalColliderCenter = -0.44f;
 
-		private float crouchLerpHelper = 1f;
+		private const float CrouchColliderCenter = -0.935f;
 
-		[SerializeField] private float crouchLerpSpeed = 1.5f;
+		[FormerlySerializedAs("crouchLerpSpeed")] [SerializeField] private float _crouchLerpSpeed = 1.5f;
 
-		[SerializeField] private float zgAtmosphereAngularDrag = 1.5f;
+		[FormerlySerializedAs("zgAtmosphereAngularDrag")] [SerializeField] private float _zgAtmosphereAngularDrag = 1.5f;
 
-		[SerializeField] private float zgAtmosphereDrag = 0.1f;
+		[FormerlySerializedAs("zgAtmosphereDrag")] [SerializeField] private float _zgAtmosphereDrag = 0.1f;
 
-		[SerializeField] private float zgJetpackAngularDrag = 3f;
+		[FormerlySerializedAs("zgJetpackAngularDrag")] [SerializeField] private float _zgJetpackAngularDrag = 3f;
 
-		[SerializeField] private float zgGrabDrag = 2.2f;
+		[FormerlySerializedAs("zgGrabDrag")] [SerializeField] private float _zgGrabDrag = 2.2f;
 
-		[SerializeField] private float zgGrabAngularDrag = 1.5f;
+		[FormerlySerializedAs("zgGrabAngularDrag")] [SerializeField] private float _zgGrabAngularDrag = 1.5f;
 
-		[SerializeField] private float jumpHeightMax = 0.8f;
+		[FormerlySerializedAs("jumpHeightMax")] [SerializeField] private float _jumpHeightMax = 0.8f;
 
-		private Vector3 currMovementDirection;
+		private Vector3 _currMovementDirection;
 
-		private MovementAxis movementAxis;
+		private MovementAxis _movementAxis;
 
-		private MovementState lastMovementState;
+		private MovementState _lastMovementState;
 
-		private float currForwardVelocity;
+		private float _currForwardVelocity;
 
-		private float currRightVelocity;
+		private float _currRightVelocity;
 
-		private float currUpVelocity;
+		private float _currUpVelocity;
 
-		private float stanceSpeedMultiplier = 1f;
+		private float _stanceSpeedMultiplier = 1f;
 
-		private float currForwardAnimationVal;
+		private float _currForwardAnimationVal;
 
-		private float currRightAnimationVal;
+		private float _currRightAnimationVal;
 
-		private float currForwardFloatingAnimationVal;
+		private float _currForwardFloatingAnimationVal;
 
-		private float currRightFloatingAnimationVal;
+		private float _currRightFloatingAnimationVal;
 
-		private float headBobStrength = 1f;
+		private float _headBobStrength = 1f;
 
-		private bool canLockToPoint;
+		private bool _canLockToPoint;
 
-		private bool isLockedToPoint;
+		private bool _isLockedToPoint;
 
-		private bool canGrabWall;
+		private bool _canGrabWall;
 
-		private bool lerpCameraBack;
+		private bool _lerpCameraBack;
 
-		private float lerpCameraBackStartTime;
+		private float _lerpCameraBackStartTime;
 
-		private float lerpCameraBackStep = 0.3333f;
+		private float _lerpCameraBackStep = 0.3333f;
 
-		private Quaternion lerpCameraBackZeroRotation = Quaternion.identity;
+		private Quaternion _lerpCameraBackZeroRotation = Quaternion.identity;
 
-		private Vector3 lerpCameraBackStartPos = Vector3.zero;
+		private Vector3 _lerpCameraBackStartPos = Vector3.zero;
 
-		private Quaternion lerpCameraBackStartRot = Quaternion.identity;
+		private Quaternion _lerpCameraBackStartRot = Quaternion.identity;
 
-		public bool grabSlowEnabled;
+		[FormerlySerializedAs("grabSlowEnabled")] public bool GrabSlowEnabled;
 
-		private float translateLerpHelper;
+		private float _translateLerpHelper;
 
 		public bool HasTumbled;
 
 		public SpaceObjectVessel NearbyVessel;
 
-		private int collisionLayerMask;
+		private int _collisionLayerMask;
 
-		[SerializeField] private float playerImpactVelocityTreshold;
+		[FormerlySerializedAs("playerImpactVelocityTreshold")] [SerializeField] private float _playerImpactVelocityTreshold;
 
 		public float DefaultMaxAngularVelocity = 20f;
 
 		public SceneTriggerLadder LockedToLadder;
 
-		private Vector3 TriggerHelperCenter;
+		private Vector3 _triggerHelperCenter;
 
-		private float lastImpactTime;
+		private float _lastImpactTime;
 
 		public GlassPostEffect HelmetGlassEffect;
 
@@ -232,7 +232,7 @@ namespace ZeroGravity.CharacterMovement
 
 		public Vector3 StickToVesselTangentialVelocity;
 
-		public float legDistance = 1.15f;
+		[FormerlySerializedAs("legDistance")] public float LegDistance = 1.15f;
 
 		private RaycastHit _groundRayHit = default(RaycastHit);
 
@@ -248,57 +248,58 @@ namespace ZeroGravity.CharacterMovement
 
 		private const float LockSpeed = 0.5f;
 
-		public Transform attachPointSaved;
+		[FormerlySerializedAs("attachPointSaved")] public Transform AttachPointSaved;
 
 		public float MaxAngularVelocity { get; private set; }
 
-		public bool IsGrounded => isGrounded;
+		public bool IsGrounded => _isGrounded;
 
 		public float HeadBobStrength
 		{
-			get { return headBobStrength; }
+			get { return _headBobStrength; }
 			set
 			{
-				headBobStrength = value;
-				AnimatorHelper obj = animatorHelper;
-				float? num = headBobStrength;
+				_headBobStrength = value;
+				AnimatorHelper obj = AnimatorHelper;
+				float? num = _headBobStrength;
 				obj.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null,
 					null, null, null, null, null, null, null, null, num);
 			}
 		}
 
-		public Camera MainCamera => mainCamera;
+		public Camera MainCamera => _mainCamera;
 
-		public Camera FarCamera => farCamera;
+		public Camera FarCamera => _farCamera;
 
-		public Camera NearCamera => nearCamera;
+		public Camera NearCamera => _nearCamera;
 
-		public Vector3 CameraPosition => mainCamera.transform.position;
+		public Vector3 CameraPosition => _mainCamera.transform.position;
 
-		public Vector3 CameraForward => mainCamera.transform.forward;
+		public Vector3 CameraForward => _mainCamera.transform.forward;
 
 		public Vector2 FreeLookAngle
 		{
 			get
 			{
-				float num = (Quaternion.FromToRotation(cameraController.MouseLookXTransform.forward,
-						cameraController.FreeLookXTransform.forward).Inverse() * cameraController.transform.rotation)
+				var freeLookForward = _cameraController.FreeLookXTransform.forward;
+				var mouseLookForward = _cameraController.MouseLookXTransform.forward;
+				var mouseLookUp = _cameraController.MouseLookXTransform.up;
+				float rotationSigned = MathHelper.AngleSigned(Vector3.ProjectOnPlane(freeLookForward, mouseLookUp).normalized,
+					mouseLookForward, mouseLookUp);
+				float degreeOfRotation = (Quaternion.FromToRotation(mouseLookForward,
+						freeLookForward).Inverse() * _cameraController.transform.rotation)
 					.eulerAngles.x;
-				float num2 = MathHelper.AngleSigned(
-					Vector3.ProjectOnPlane(cameraController.FreeLookXTransform.forward,
-						cameraController.MouseLookXTransform.up).normalized,
-					cameraController.MouseLookXTransform.forward, cameraController.MouseLookXTransform.up);
-				if (num > 180f)
+				if (degreeOfRotation > 180f)
 				{
-					num -= 360f;
+					degreeOfRotation -= 360f;
 				}
 
-				if (num2 > 180f)
+				if (rotationSigned > 180f)
 				{
-					num2 -= 360f;
+					rotationSigned -= 360f;
 				}
 
-				return new Vector2((0f - num) / 90f, num2 / 90f);
+				return new Vector2((0f - degreeOfRotation) / 90f, rotationSigned / 90f);
 			}
 		}
 
@@ -306,7 +307,7 @@ namespace ZeroGravity.CharacterMovement
 		{
 			get
 			{
-				float num = cameraController.MouseLookXTransform.localRotation.eulerAngles.x;
+				float num = _cameraController.MouseLookXTransform.localRotation.eulerAngles.x;
 				if (num > 180f)
 				{
 					num -= 360f;
@@ -316,35 +317,35 @@ namespace ZeroGravity.CharacterMovement
 			}
 		}
 
-		public bool IsAttached => cameraController.IsAttached;
+		public bool IsAttached => _cameraController.IsAttached;
 
-		public bool IsJump => lastMovementState == MovementState.Jump;
+		public bool IsJump => _lastMovementState == MovementState.Jump;
 
-		public bool IsCrouch => lastMovementState == MovementState.Crouch;
+		public bool IsCrouch => _lastMovementState == MovementState.Crouch;
 
-		public bool IsZeroG => isZeroG;
+		public bool IsZeroG => _isZeroG;
 
-		public bool IsFreeLook => cameraController.IsFreeLook;
+		public bool IsFreeLook => _cameraController.IsFreeLook;
 
 		public bool MeleeTriggered { get; set; }
 
 		public bool UseConsumableTriggered { get; set; }
 
-		public Vector3 Velocity => rigidBody.velocity;
+		public Vector3 Velocity => RigidBody.velocity;
 
 		public bool IsEquippingAnimationTriggered { get; set; }
 
-		public float MouseUpAxis => cameraController.MouseUpAxis;
+		public float MouseUpAxis => _cameraController.MouseUpAxis;
 
-		public float MouseRightAxis => cameraController.MouseRightAxis;
+		public float MouseRightAxis => _cameraController.MouseRightAxis;
 
-		public float CameraMaxUpAngle => cameraController.MaxUpAngle;
+		public float CameraMaxUpAngle => _cameraController.MaxUpAngle;
 
-		public float CameraMaxDownAngle => cameraController.MaxDownAngle;
+		public float CameraMaxDownAngle => _cameraController.MaxDownAngle;
 
-		public float CameraMaxRightAngle => cameraController.MaxRightAngle;
+		public float CameraMaxRightAngle => _cameraController.MaxRightAngle;
 
-		public bool IsOnLadder => isOnLadder;
+		public bool IsOnLadder => _isOnLadder;
 
 		public bool IsJetpackOn
 		{
@@ -360,176 +361,176 @@ namespace ZeroGravity.CharacterMovement
 
 		public float JetpackFuel => (!(CurrentJetpack != null)) ? 0f : CurrentJetpack.CurrentFuel;
 
-		public bool CanGrabWall => canGrabWall;
+		public bool CanGrabWall => _canGrabWall;
 
 		public bool CanLockToPoint
 		{
-			get { return canLockToPoint; }
-			set { canLockToPoint = value; }
+			get { return _canLockToPoint; }
+			set { _canLockToPoint = value; }
 		}
 
 		public bool IsLockedToPoint
 		{
-			get { return isLockedToPoint; }
-			set { isLockedToPoint = value; }
+			get { return _isLockedToPoint; }
+			set { _isLockedToPoint = value; }
 		}
 
-		public MovementSpeed CurrentSpeeds => currSpeeds;
+		public MovementSpeed CurrentSpeeds => _currSpeeds;
 
-		public Transform MouseLookXTransform => cameraController.MouseLookXTransform;
+		public Transform MouseLookXTransform => _cameraController.MouseLookXTransform;
 
-		public CameraController CameraController => cameraController;
+		public CameraController CameraController => _cameraController;
 
-		public bool IsMovementEnabled => isMovementEnabled;
+		public bool IsMovementEnabled => _isMovementEnabled;
 
 		public float AirTime => _airTime;
 
 		private void Awake()
 		{
-			collisionLayerMask = (1 << LayerMask.NameToLayer("Default")) |
+			_collisionLayerMask = (1 << LayerMask.NameToLayer("Default")) |
 			                     (1 << LayerMask.NameToLayer("PlayerCollision"));
-			currSpeeds = normalSpeeds;
-			lastMovementState = MovementState.Normal;
-			normalColliderHeight = collider1G.height;
-			collider0G.enabled = false;
+			_currSpeeds = _normalSpeeds;
+			_lastMovementState = MovementState.Normal;
+			_normalColliderHeight = _collider1G.height;
+			_collider0G.enabled = false;
 			RefreshMaxAngularVelocity();
 		}
 
 		private void Update()
 		{
-			if (isLockedToPoint)
+			if (_isLockedToPoint)
 			{
 				LockPlayerToPoint(locked: true);
 			}
 
-			if (grabSlowEnabled)
+			if (GrabSlowEnabled)
 			{
 				CheckVelocityForLock();
 			}
 
-			if (!isZeroG)
+			if (!_isZeroG)
 			{
-				update1GInput();
+				Update1GInput();
 			}
 
-			if (isZeroG)
+			if (_isZeroG)
 			{
 				CheckLegDistanceFromFloor();
 			}
 
-			if (lerpCameraBack)
+			if (_lerpCameraBack)
 			{
 				LerpCameraToLocalZero();
 			}
 
-			if (myPlayer.Parent is Pivot && rigidBody.drag.IsNotEpsilonZero() && NearbyVessel != null)
+			if (_myPlayer.Parent is Pivot && RigidBody.drag.IsNotEpsilonZero() && NearbyVessel != null)
 			{
-				Pivot pivot = myPlayer.Parent as Pivot;
-				rigidBody.velocity -= ((pivot.Velocity - NearbyVessel.Velocity) * Time.deltaTime).ToVector3();
+				Pivot pivot = _myPlayer.Parent as Pivot;
+				RigidBody.velocity -= ((pivot.Velocity - NearbyVessel.Velocity) * Time.deltaTime).ToVector3();
 			}
 		}
 
 		private void FixedUpdate()
 		{
-			if (!myPlayer.PlayerReady)
+			if (!_myPlayer.PlayerReady)
 			{
 				return;
 			}
 
-			if (isZeroG)
+			if (_isZeroG)
 			{
-				update0GMovement();
+				Update0GMovement();
 			}
 			else
 			{
-				if (!isGrounded && !HasTumbled)
+				if (!_isGrounded && !HasTumbled)
 				{
-					float num = Vector3.Dot(Vector3.Project(rigidBody.velocity, myPlayer.GravityDirection),
-						myPlayer.GravityDirection);
+					float num = Vector3.Dot(Vector3.Project(RigidBody.velocity, _myPlayer.GravityDirection),
+						_myPlayer.GravityDirection);
 					if (num > 7f)
 					{
-						Tumble(rigidBody.velocity);
+						Tumble(RigidBody.velocity);
 					}
 				}
 
-				update1GMovement();
+				Update1GMovement();
 			}
 
 			if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Sprint))
 			{
-				canGrabWall = Physics.OverlapSphere(centerOfMass.position, 0.8f, collisionLayerMask,
+				_canGrabWall = Physics.OverlapSphere(_centerOfMass.position, 0.8f, _collisionLayerMask,
 					QueryTriggerInteraction.Ignore).Length > 0;
 			}
 		}
 
 		private void CheckLegDistanceFromFloor()
 		{
-			bool? touchingFloor = Physics.Raycast(base.transform.position, -base.transform.up, legDistance,
-				collisionLayerMask);
-			animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null,
+			bool? touchingFloor = Physics.Raycast(base.transform.position, -base.transform.up, LegDistance,
+				_collisionLayerMask);
+			AnimatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, null, null, null, null, touchingFloor);
 		}
 
 		private void CalculateCrouch()
 		{
-			if (!IsCrouch && collider1G.height < normalColliderHeight && Physics.SphereCast(characterRoot.position,
-				    collider1G.radius - 0.02f, characterRoot.up, out var _, normalColliderHeight - collider1G.radius,
-				    collisionLayerMask))
+			if (!IsCrouch && _collider1G.height < _normalColliderHeight && Physics.SphereCast(_characterRoot.position,
+				    _collider1G.radius - 0.02f, _characterRoot.up, out var _, _normalColliderHeight - _collider1G.radius,
+				    _collisionLayerMask))
 			{
-				lastMovementState = MovementState.Crouch;
+				_lastMovementState = MovementState.Crouch;
 			}
 
-			float num = crouchLerpHelper;
+			float num = _crouchLerpHelper;
 			if (IsCrouch && num > 0f)
 			{
-				num = Mathf.Max(num - Time.deltaTime * crouchLerpSpeed, 0f);
+				num = Mathf.Max(num - Time.deltaTime * _crouchLerpSpeed, 0f);
 			}
 			else if (!IsCrouch && num < 1f)
 			{
-				Physics.SphereCast(characterRoot.position, collider1G.radius - 0.02f, characterRoot.up,
-					out var hitInfo2, normalColliderHeight - collider1G.radius, collisionLayerMask);
+				Physics.SphereCast(_characterRoot.position, _collider1G.radius - 0.02f, _characterRoot.up,
+					out var hitInfo2, _normalColliderHeight - _collider1G.radius, _collisionLayerMask);
 				if (hitInfo2.transform == null)
 				{
-					num = Mathf.Min(num + Time.deltaTime * crouchLerpSpeed, 1f);
+					num = Mathf.Min(num + Time.deltaTime * _crouchLerpSpeed, 1f);
 				}
 				else
 				{
-					lastMovementState = MovementState.Crouch;
+					_lastMovementState = MovementState.Crouch;
 					if (num > 0f)
 					{
-						num = Mathf.Max(num - Time.deltaTime * crouchLerpSpeed, 0f);
+						num = Mathf.Max(num - Time.deltaTime * _crouchLerpSpeed, 0f);
 					}
 				}
 			}
 
-			if (crouchLerpHelper != num)
+			if (_crouchLerpHelper != num)
 			{
-				crouchLerpHelper = num;
-				collider1G.height = Mathf.Lerp(crouchColliderHeight, normalColliderHeight, crouchLerpHelper);
-				collider1G.center = new Vector3(0f,
-					Mathf.Lerp(crouchColliderCenter, normalColliderCenter, crouchLerpHelper), 0f);
-				currSpeeds.AccelerationStep = Mathf.Lerp(crouchSpeeds.AccelerationStep, normalSpeeds.AccelerationStep,
-					crouchLerpHelper);
-				currSpeeds.DeaccelerationStep = Mathf.Lerp(crouchSpeeds.DeaccelerationStep,
-					normalSpeeds.DeaccelerationStep, crouchLerpHelper);
-				currSpeeds.ForwardVelocity = Mathf.Lerp(crouchSpeeds.ForwardVelocity, normalSpeeds.ForwardVelocity,
-					crouchLerpHelper);
-				currSpeeds.BackwardVelocity = Mathf.Lerp(crouchSpeeds.BackwardVelocity, normalSpeeds.BackwardVelocity,
-					crouchLerpHelper);
-				currSpeeds.RightVelocity =
-					Mathf.Lerp(crouchSpeeds.RightVelocity, normalSpeeds.RightVelocity, crouchLerpHelper);
-				if (crouchLerpHelper < 0.7f && myPlayer.MeshRenderersEnabled)
+				_crouchLerpHelper = num;
+				_collider1G.height = Mathf.Lerp(CrouchColliderHeight, _normalColliderHeight, _crouchLerpHelper);
+				_collider1G.center = new Vector3(0f,
+					Mathf.Lerp(CrouchColliderCenter, NormalColliderCenter, _crouchLerpHelper), 0f);
+				_currSpeeds.AccelerationStep = Mathf.Lerp(_crouchSpeeds.AccelerationStep, _normalSpeeds.AccelerationStep,
+					_crouchLerpHelper);
+				_currSpeeds.DeaccelerationStep = Mathf.Lerp(_crouchSpeeds.DeaccelerationStep,
+					_normalSpeeds.DeaccelerationStep, _crouchLerpHelper);
+				_currSpeeds.ForwardVelocity = Mathf.Lerp(_crouchSpeeds.ForwardVelocity, _normalSpeeds.ForwardVelocity,
+					_crouchLerpHelper);
+				_currSpeeds.BackwardVelocity = Mathf.Lerp(_crouchSpeeds.BackwardVelocity, _normalSpeeds.BackwardVelocity,
+					_crouchLerpHelper);
+				_currSpeeds.RightVelocity =
+					Mathf.Lerp(_crouchSpeeds.RightVelocity, _normalSpeeds.RightVelocity, _crouchLerpHelper);
+				if (_crouchLerpHelper < 0.7f && _myPlayer.MeshRenderersEnabled)
 				{
-					myPlayer.ToggleMeshRendereres(enableMesh: false);
+					_myPlayer.ToggleMeshRendereres(enableMesh: false);
 				}
-				else if (crouchLerpHelper >= 0.7f && !myPlayer.MeshRenderersEnabled)
+				else if (_crouchLerpHelper >= 0.7f && !_myPlayer.MeshRenderersEnabled)
 				{
-					myPlayer.ToggleMeshRendereres(enableMesh: true);
+					_myPlayer.ToggleMeshRendereres(enableMesh: true);
 				}
 			}
 
-			animatorHelper.SetParameter(IsCrouch);
+			AnimatorHelper.SetParameter(IsCrouch);
 		}
 
 		private static void RecalculateAxisValue(ref float currAxisVal, ref float currVelocity,
@@ -600,83 +601,83 @@ namespace ZeroGravity.CharacterMovement
 
 		private void Calculate1GMovementData()
 		{
-			if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Sprint) && !IsCrouch && animatorHelper.CanRun)
+			if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Sprint) && !IsCrouch && AnimatorHelper.CanRun)
 			{
-				if (lastMovementState != MovementState.Run)
+				if (_lastMovementState != MovementState.Run)
 				{
-					RecalculateAxisValue(ref movementAxis.Forward, ref currForwardVelocity,
-						ref runSpeeds.ForwardVelocity, ref runSpeeds.BackwardVelocity);
-					RecalculateAxisValue(ref movementAxis.Right, ref currRightVelocity, ref runSpeeds.RightVelocity,
-						ref runSpeeds.RightVelocity);
+					RecalculateAxisValue(ref _movementAxis.Forward, ref _currForwardVelocity,
+						ref _runSpeeds.ForwardVelocity, ref _runSpeeds.BackwardVelocity);
+					RecalculateAxisValue(ref _movementAxis.Right, ref _currRightVelocity, ref _runSpeeds.RightVelocity,
+						ref _runSpeeds.RightVelocity);
 				}
 
-				currSpeeds = runSpeeds;
-				lastMovementState = MovementState.Run;
-				myPlayer.HealthSounds.Switch("WalkRun", "Run");
+				_currSpeeds = _runSpeeds;
+				_lastMovementState = MovementState.Run;
+				_myPlayer.HealthSounds.Switch("WalkRun", "Run");
 			}
 			else if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Crouch))
 			{
-				if (lastMovementState != MovementState.Crouch)
+				if (_lastMovementState != MovementState.Crouch)
 				{
-					RecalculateAxisValue(ref movementAxis.Forward, ref currForwardVelocity,
-						ref crouchSpeeds.ForwardVelocity, ref crouchSpeeds.BackwardVelocity);
-					RecalculateAxisValue(ref movementAxis.Right, ref currRightVelocity, ref crouchSpeeds.RightVelocity,
-						ref crouchSpeeds.RightVelocity);
+					RecalculateAxisValue(ref _movementAxis.Forward, ref _currForwardVelocity,
+						ref _crouchSpeeds.ForwardVelocity, ref _crouchSpeeds.BackwardVelocity);
+					RecalculateAxisValue(ref _movementAxis.Right, ref _currRightVelocity, ref _crouchSpeeds.RightVelocity,
+						ref _crouchSpeeds.RightVelocity);
 				}
 
-				currSpeeds = crouchSpeeds;
-				lastMovementState = MovementState.Crouch;
-				myPlayer.HealthSounds.Switch("WalkRun", "Walk");
+				_currSpeeds = _crouchSpeeds;
+				_lastMovementState = MovementState.Crouch;
+				_myPlayer.HealthSounds.Switch("WalkRun", "Walk");
 			}
 			else
 			{
-				if (lastMovementState != MovementState.Normal)
+				if (_lastMovementState != MovementState.Normal)
 				{
-					RecalculateAxisValue(ref movementAxis.Forward, ref currForwardVelocity,
-						ref normalSpeeds.ForwardVelocity, ref normalSpeeds.BackwardVelocity);
-					RecalculateAxisValue(ref movementAxis.Right, ref currRightVelocity, ref normalSpeeds.RightVelocity,
-						ref normalSpeeds.RightVelocity);
+					RecalculateAxisValue(ref _movementAxis.Forward, ref _currForwardVelocity,
+						ref _normalSpeeds.ForwardVelocity, ref _normalSpeeds.BackwardVelocity);
+					RecalculateAxisValue(ref _movementAxis.Right, ref _currRightVelocity, ref _normalSpeeds.RightVelocity,
+						ref _normalSpeeds.RightVelocity);
 				}
 
-				currSpeeds = normalSpeeds;
-				lastMovementState = MovementState.Normal;
-				myPlayer.HealthSounds.Switch("WalkRun", "Walk");
+				_currSpeeds = _normalSpeeds;
+				_lastMovementState = MovementState.Normal;
+				_myPlayer.HealthSounds.Switch("WalkRun", "Walk");
 			}
 
-			movementAxis.Forward = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Forward);
-			movementAxis.Right = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Right);
-			movementAxis.Forward *= stanceSpeedMultiplier;
-			movementAxis.Right *= stanceSpeedMultiplier;
-			if (movementAxis.Forward != 0f && movementAxis.Right != 0f)
+			_movementAxis.Forward = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Forward);
+			_movementAxis.Right = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Right);
+			_movementAxis.Forward *= _stanceSpeedMultiplier;
+			_movementAxis.Right *= _stanceSpeedMultiplier;
+			if (_movementAxis.Forward != 0f && _movementAxis.Right != 0f)
 			{
-				currSpeeds.ForwardVelocity -= currSpeeds.ForwardVelocity * Mathf.Abs(movementAxis.Right) * 0.25f;
-				currSpeeds.RightVelocity -= currSpeeds.RightVelocity * Mathf.Abs(movementAxis.Forward) * 0.25f;
-				currSpeeds.BackwardVelocity -= currSpeeds.BackwardVelocity * Mathf.Abs(movementAxis.Right) * 0.25f;
+				_currSpeeds.ForwardVelocity -= _currSpeeds.ForwardVelocity * Mathf.Abs(_movementAxis.Right) * 0.25f;
+				_currSpeeds.RightVelocity -= _currSpeeds.RightVelocity * Mathf.Abs(_movementAxis.Forward) * 0.25f;
+				_currSpeeds.BackwardVelocity -= _currSpeeds.BackwardVelocity * Mathf.Abs(_movementAxis.Right) * 0.25f;
 			}
 
-			currMovementDirection = movementAxis.Forward * base.transform.forward;
-			currMovementDirection += movementAxis.Right * base.transform.right;
-			currMovementDirection.Normalize();
+			_currMovementDirection = _movementAxis.Forward * base.transform.forward;
+			_currMovementDirection += _movementAxis.Right * base.transform.right;
+			_currMovementDirection.Normalize();
 		}
 
-		private void update1GInput()
+		private void Update1GInput()
 		{
-			if (isOnLadder)
+			if (_isOnLadder)
 			{
 				return;
 			}
 
-			if (gravityChanged)
+			if (_gravityChanged)
 			{
-				if (gravityChangedRagdoll)
+				if (_gravityChangedRagdoll)
 				{
-					isGrounded = Physics.Raycast(ragdollChestRigidbody.position, myPlayer.GravityDirection,
-						out _groundRayHit, 0.4f, collisionLayerMask, QueryTriggerInteraction.Ignore);
+					_isGrounded = Physics.Raycast(RagdollChestRigidbody.position, _myPlayer.GravityDirection,
+						out _groundRayHit, 0.4f, _collisionLayerMask, QueryTriggerInteraction.Ignore);
 				}
 				else
 				{
-					isGrounded = Physics.Raycast(base.transform.position, myPlayer.GravityDirection, out _groundRayHit,
-						1.8f, collisionLayerMask, QueryTriggerInteraction.Ignore);
+					_isGrounded = Physics.Raycast(base.transform.position, _myPlayer.GravityDirection, out _groundRayHit,
+						1.8f, _collisionLayerMask, QueryTriggerInteraction.Ignore);
 				}
 
 				if (CurrentJetpack != null)
@@ -686,43 +687,43 @@ namespace ZeroGravity.CharacterMovement
 			}
 			else
 			{
-				isGrounded = Physics.SphereCast(characterRoot.position + characterRoot.up * (collider1G.height / 2f),
-					collider1G.radius - 0.01f, myPlayer.GravityDirection, out _groundRayHit,
-					collider1G.height / 2f - (collider1G.radius - 0.01f) + groundCheckDistance + 0.02f,
-					collisionLayerMask);
+				_isGrounded = Physics.SphereCast(_characterRoot.position + _characterRoot.up * (_collider1G.height / 2f),
+					_collider1G.radius - 0.01f, _myPlayer.GravityDirection, out _groundRayHit,
+					_collider1G.height / 2f - (_collider1G.radius - 0.01f) + GroundCheckDistance + 0.02f,
+					_collisionLayerMask);
 			}
 
-			if (!isGrounded)
+			if (!_isGrounded)
 			{
 				_airTime += Time.deltaTime;
 			}
-			else if (isGrounded)
+			else if (_isGrounded)
 			{
 				_airTime = 0f;
 			}
 
-			AnimatorHelper obj = animatorHelper;
-			bool? flag = isGrounded;
+			AnimatorHelper obj = AnimatorHelper;
+			bool? flag = _isGrounded;
 			float? num = _airTime;
 			obj.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, null, null, null, null, flag, null, null, null, null, null, null, null,
 				null, num);
-			if (isMovementEnabled && crouchLerpHelper.IsEpsilonEqual(1f, 0.001f) && isGrounded &&
+			if (_isMovementEnabled && _crouchLerpHelper.IsEpsilonEqual(1f, 0.001f) && _isGrounded &&
 			    ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Jump))
 			{
 				_doJump = true;
 			}
 		}
 
-		private void update1GMovement()
+		private void Update1GMovement()
 		{
-			cameraController.SetLeanRightAxis(0f);
-			if (isOnLadder)
+			_cameraController.SetLeanRightAxis(0f);
+			if (_isOnLadder)
 			{
 				float axisRaw = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Forward);
-				base.transform.Translate(base.transform.up * (axisRaw * ladderVelocity * Time.fixedDeltaTime),
+				base.transform.Translate(base.transform.up * (axisRaw * _ladderVelocity * Time.fixedDeltaTime),
 					Space.World);
-				AnimatorHelper animHelper = myPlayer.animHelper;
+				AnimatorHelper animHelper = _myPlayer.animHelper;
 				float? ladderDirection = axisRaw;
 				animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null,
 					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
@@ -731,81 +732,81 @@ namespace ZeroGravity.CharacterMovement
 				return;
 			}
 
-			if (gravityChanged)
+			if (_gravityChanged)
 			{
-				if (!gravityChangedRagdoll)
+				if (!_gravityChangedRagdoll)
 				{
-					gravityChangeLerpHelper += Time.fixedDeltaTime * 2f;
-					if (gravityChangeLerpHelper > 1f)
+					_gravityChangeLerpHelper += Time.fixedDeltaTime * 2f;
+					if (_gravityChangeLerpHelper > 1f)
 					{
-						gravityChangeLerpHelper = 1f;
+						_gravityChangeLerpHelper = 1f;
 					}
 
-					base.transform.rotation = gravityChangeEndingRotation;
-					if (collider1G.height < 1.8f)
+					base.transform.rotation = _gravityChangeEndingRotation;
+					if (_collider1G.height < 1.8f)
 					{
-						collider1G.height = Mathf.Lerp(1f, 1.8f, gravityChangeLerpHelper);
-						collider1G.center = new Vector3(0f, Mathf.Lerp(0f, -0.44f, gravityChangeLerpHelper), 0f);
+						_collider1G.height = Mathf.Lerp(1f, 1.8f, _gravityChangeLerpHelper);
+						_collider1G.center = new Vector3(0f, Mathf.Lerp(0f, -0.44f, _gravityChangeLerpHelper), 0f);
 					}
 				}
 				else
 				{
-					if (gravityChangeLerpHelper < 0.01f)
+					if (_gravityChangeLerpHelper < 0.01f)
 					{
-						gravityChangeRagdollTimer += Time.fixedDeltaTime;
-						if (gravityChangeRagdollTimer >= gravityChangeRagdollTimeMax)
+						_gravityChangeRagdollTimer += Time.fixedDeltaTime;
+						if (_gravityChangeRagdollTimer >= GravityChangeRagdollTimeMax)
 						{
-							gravityChangeLerpHelper += Time.fixedDeltaTime * 2f;
+							_gravityChangeLerpHelper += Time.fixedDeltaTime * 2f;
 						}
 					}
 
-					if (!ragdollChestRigidbody.velocity.sqrMagnitude.IsNotEpsilonZero(0.001f) ||
-					    gravityChangeLerpHelper.IsNotEpsilonZero(0.001f))
+					if (!RagdollChestRigidbody.velocity.sqrMagnitude.IsNotEpsilonZero(0.001f) ||
+					    _gravityChangeLerpHelper.IsNotEpsilonZero(0.001f))
 					{
-						gravityChangeLerpHelper += Time.fixedDeltaTime * 2f;
+						_gravityChangeLerpHelper += Time.fixedDeltaTime * 2f;
 					}
 				}
 			}
 
-			if (gravityChanged)
+			if (_gravityChanged)
 			{
-				if (!gravityChangedRagdoll && isGrounded && gravityChangeLerpHelper >= 1f)
+				if (!_gravityChangedRagdoll && _isGrounded && _gravityChangeLerpHelper >= 1f)
 				{
-					gravityChanged = false;
-					cameraController.ToggleCameraMovement(true);
-					gravityChangeLerpHelper = 0f;
-					base.transform.rotation = gravityChangeEndingRotation;
-					cameraController.ResetLookAt();
+					_gravityChanged = false;
+					_cameraController.ToggleCameraMovement(true);
+					_gravityChangeLerpHelper = 0f;
+					base.transform.rotation = _gravityChangeEndingRotation;
+					_cameraController.ResetLookAt();
 					return;
 				}
 
-				if (gravityChangedRagdoll && gravityChangeLerpHelper >= 1f)
+				if (_gravityChangedRagdoll && _gravityChangeLerpHelper >= 1f)
 				{
-					myPlayer.ToggleRagdoll(false);
-					gravityChangeLerpHelper = 0f;
-					gravityChanged = false;
+					_myPlayer.ToggleRagdoll(false);
+					_gravityChangeLerpHelper = 0f;
+					_gravityChanged = false;
 					HasTumbled = false;
 					return;
 				}
 			}
 
-			if (isGrounded)
+			if (_isGrounded)
 			{
-				if (gravityChanged || !isMovementEnabled)
+				if (_gravityChanged || !_isMovementEnabled)
 				{
 					return;
 				}
 
-				currSlopeNormal = _groundRayHit.normal;
-				currSlopeAngle = Vector3.Angle(currSlopeNormal, base.transform.up);
-				if (currSlopeAngle > 5f)
+				_currSlopeNormal = _groundRayHit.normal;
+				_currSlopeAngle = Vector3.Angle(_currSlopeNormal, base.transform.up);
+				if (_currSlopeAngle > 5f)
 				{
 					bool flag = false;
 					RaycastHit[] array = Physics.SphereCastAll(
-						characterRoot.position + characterRoot.up * (collider1G.height / 2f), collider1G.radius - 0.01f,
-						myPlayer.GravityDirection,
-						collider1G.height / 2f - (collider1G.radius - 0.01f) + groundCheckDistance + 0.02f,
-						collisionLayerMask);
+						_characterRoot.position + _characterRoot.up * (_collider1G.height / 2f), _collider1G.radius - 0.01f,
+						_myPlayer.GravityDirection,
+						_collider1G.height / 2f - (_collider1G.radius - 0.01f) + GroundCheckDistance + 0.02f,
+						_collisionLayerMask);
 					if (array != null && array.Length > 0)
 					{
 						for (int i = 0; i < array.Length; i++)
@@ -828,25 +829,25 @@ namespace ZeroGravity.CharacterMovement
 
 					if (flag)
 					{
-						currSlopeNormal = base.transform.up;
-						currSlopeAngle = 0f;
+						_currSlopeNormal = base.transform.up;
+						_currSlopeAngle = 0f;
 					}
 					else
 					{
-						currSlopeNormal = _groundRayHit.normal;
-						currSlopeAngle = Vector3.Angle(currSlopeNormal, base.transform.up);
+						_currSlopeNormal = _groundRayHit.normal;
+						_currSlopeAngle = Vector3.Angle(_currSlopeNormal, base.transform.up);
 					}
 				}
 
-				bool? isMoving = rigidBody.velocity.magnitude > float.Epsilon;
-				animatorHelper.SetParameter(null, isMoving);
+				bool? isMoving = RigidBody.velocity.magnitude > float.Epsilon;
+				AnimatorHelper.SetParameter(null, isMoving);
 				if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Crouch))
 				{
-					lastMovementState = MovementState.Crouch;
+					_lastMovementState = MovementState.Crouch;
 				}
 
 				CalculateCrouch();
-				if (currSlopeAngle < maxSlopeAngle)
+				if (_currSlopeAngle < _maxSlopeAngle)
 				{
 					if (_slopeJumpTimer != 0f)
 					{
@@ -855,121 +856,121 @@ namespace ZeroGravity.CharacterMovement
 
 					if (_doJump && !IsCrouch)
 					{
-						float num = Mathf.Sqrt(2f * jumpHeightMax * myPlayer.Gravity.magnitude);
-						rigidBody.AddForce(base.transform.up * num, ForceMode.VelocityChange);
-						lastMovementState = MovementState.Jump;
-						animatorHelper.SetParameterTrigger(AnimatorHelper.Triggers.Jump);
+						float num = Mathf.Sqrt(2f * _jumpHeightMax * _myPlayer.Gravity.magnitude);
+						RigidBody.AddForce(base.transform.up * num, ForceMode.VelocityChange);
+						_lastMovementState = MovementState.Jump;
+						AnimatorHelper.SetParameterTrigger(AnimatorHelper.Triggers.Jump);
 						_doJump = false;
-						isGrounded = false;
+						_isGrounded = false;
 					}
 					else
 					{
 						Calculate1GMovementData();
 					}
 
-					if (currSlopeAngle > 1f)
+					if (_currSlopeAngle > 1f)
 					{
-						currMovementDirection = Vector3.ProjectOnPlane(currMovementDirection, currSlopeNormal);
+						_currMovementDirection = Vector3.ProjectOnPlane(_currMovementDirection, _currSlopeNormal);
 					}
 
-					currForwardVelocity = movementAxis.Forward * ((!(movementAxis.Forward > 0f))
-						? currSpeeds.BackwardVelocity
-						: currSpeeds.ForwardVelocity);
-					currRightVelocity = movementAxis.Right * currSpeeds.RightVelocity;
-					if (isGrounded)
+					_currForwardVelocity = _movementAxis.Forward * ((!(_movementAxis.Forward > 0f))
+						? _currSpeeds.BackwardVelocity
+						: _currSpeeds.ForwardVelocity);
+					_currRightVelocity = _movementAxis.Right * _currSpeeds.RightVelocity;
+					if (_isGrounded)
 					{
-						if (Mathf.Abs(currForwardVelocity) > float.Epsilon ||
-						    Mathf.Abs(currRightVelocity) > float.Epsilon)
+						if (Mathf.Abs(_currForwardVelocity) > float.Epsilon ||
+						    Mathf.Abs(_currRightVelocity) > float.Epsilon)
 						{
-							rigidBody.AddForce(
-								currMovementDirection * Mathf.Sqrt(currForwardVelocity * currForwardVelocity +
-								                                   currRightVelocity * currRightVelocity) -
-								rigidBody.velocity, ForceMode.VelocityChange);
+							RigidBody.AddForce(
+								_currMovementDirection * Mathf.Sqrt(_currForwardVelocity * _currForwardVelocity +
+								                                   _currRightVelocity * _currRightVelocity) -
+								RigidBody.velocity, ForceMode.VelocityChange);
 						}
 						else
 						{
-							rigidBody.AddForce(
-								currMovementDirection * (currForwardVelocity + currRightVelocity) - rigidBody.velocity,
+							RigidBody.AddForce(
+								_currMovementDirection * (_currForwardVelocity + _currRightVelocity) - RigidBody.velocity,
 								ForceMode.VelocityChange);
 						}
 					}
 
-					currForwardAnimationVal = ((!(Mathf.Abs(movementAxis.Forward) <= float.Epsilon))
+					_currForwardAnimationVal = ((!(Mathf.Abs(_movementAxis.Forward) <= float.Epsilon))
 						? Mathf.Clamp(
-							Vector3.Project(myPlayer.MyVelocity, base.transform.forward).magnitude /
-							runSpeeds.ForwardVelocity * (float)MathHelper.Sign(movementAxis.Forward), -1f, 1f)
+							Vector3.Project(_myPlayer.MyVelocity, base.transform.forward).magnitude /
+							_runSpeeds.ForwardVelocity * MathHelper.Sign(_movementAxis.Forward), -1f, 1f)
 						: 0f);
-					currRightAnimationVal = ((!(Mathf.Abs(movementAxis.Right) <= float.Epsilon))
+					_currRightAnimationVal = ((!(Mathf.Abs(_movementAxis.Right) <= float.Epsilon))
 						? Mathf.Clamp(
-							Vector3.Project(myPlayer.MyVelocity, base.transform.right).magnitude /
-							runSpeeds.RightVelocity * (float)MathHelper.Sign(movementAxis.Right), -1f, 1f)
+							Vector3.Project(_myPlayer.MyVelocity, base.transform.right).magnitude /
+							_runSpeeds.RightVelocity * MathHelper.Sign(_movementAxis.Right), -1f, 1f)
 						: 0f);
-					float? ladderDirection = currForwardAnimationVal;
-					float? velocityRight = currRightAnimationVal;
-					animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null,
+					float? ladderDirection = _currForwardAnimationVal;
+					float? velocityRight = _currRightAnimationVal;
+					AnimatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null,
 						velocityRight, ladderDirection);
 				}
 				else
 				{
 					_slopeJumpTimer += Time.deltaTime;
-					movementAxis.Forward = 0f;
-					movementAxis.Right = 0f;
-					currForwardAnimationVal = 0f;
-					currRightAnimationVal = 0f;
-					float? ladderDirection = currForwardAnimationVal;
-					float? velocityRight = currRightAnimationVal;
-					animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null,
+					_movementAxis.Forward = 0f;
+					_movementAxis.Right = 0f;
+					_currForwardAnimationVal = 0f;
+					_currRightAnimationVal = 0f;
+					float? ladderDirection = _currForwardAnimationVal;
+					float? velocityRight = _currRightAnimationVal;
+					AnimatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null,
 						velocityRight, ladderDirection);
-					if (_slopeJumpTimer > 1f && isGrounded &&
+					if (_slopeJumpTimer > 1f && _isGrounded &&
 					    ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Jump))
 					{
-						float num2 = Mathf.Sqrt(2f * jumpHeightMax * myPlayer.Gravity.magnitude);
-						rigidBody.AddForce(base.transform.up * num2, ForceMode.VelocityChange);
-						lastMovementState = MovementState.Jump;
-						animatorHelper.SetParameterTrigger(AnimatorHelper.Triggers.Jump);
+						float num2 = Mathf.Sqrt(2f * _jumpHeightMax * _myPlayer.Gravity.magnitude);
+						RigidBody.AddForce(base.transform.up * num2, ForceMode.VelocityChange);
+						_lastMovementState = MovementState.Jump;
+						AnimatorHelper.SetParameterTrigger(AnimatorHelper.Triggers.Jump);
 						_doJump = false;
-						isGrounded = false;
+						_isGrounded = false;
 						_slopeJumpTimer = 0f;
 					}
 				}
 			}
-			else if (isMovementEnabled)
+			else if (_isMovementEnabled)
 			{
 				float axisRaw2 = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Forward);
 				float axisRaw3 = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Right);
-				if (axisRaw2 != 0f && Vector3.Project(rigidBody.velocity, base.transform.forward).sqrMagnitude <
-				    ((!(movementAxis.Forward > 0f))
-					    ? (airSpeeds.BackwardVelocity * airSpeeds.BackwardVelocity)
-					    : (airSpeeds.ForwardVelocity * airSpeeds.ForwardVelocity)))
+				if (axisRaw2 != 0f && Vector3.Project(RigidBody.velocity, base.transform.forward).sqrMagnitude <
+				    ((!(_movementAxis.Forward > 0f))
+					    ? (_airSpeeds.BackwardVelocity * _airSpeeds.BackwardVelocity)
+					    : (_airSpeeds.ForwardVelocity * _airSpeeds.ForwardVelocity)))
 				{
 					Vector3 force = base.transform.forward *
 					                ((!(axisRaw2 > 0f))
-						                ? (0f - airSpeeds.BackwardVelocity)
-						                : airSpeeds.ForwardVelocity);
-					rigidBody.AddForce(force, ForceMode.VelocityChange);
+						                ? (0f - _airSpeeds.BackwardVelocity)
+						                : _airSpeeds.ForwardVelocity);
+					RigidBody.AddForce(force, ForceMode.VelocityChange);
 				}
 
-				if (axisRaw3 != 0f && Vector3.Project(rigidBody.velocity, base.transform.right).sqrMagnitude <
-				    airSpeeds.RightVelocity * airSpeeds.RightVelocity)
+				if (axisRaw3 != 0f && Vector3.Project(RigidBody.velocity, base.transform.right).sqrMagnitude <
+				    _airSpeeds.RightVelocity * _airSpeeds.RightVelocity)
 				{
-					Vector3 force2 = base.transform.right * airSpeeds.RightVelocity * 0.005f;
-					rigidBody.AddForce(force2, ForceMode.VelocityChange);
+					Vector3 force2 = base.transform.right * _airSpeeds.RightVelocity * 0.005f;
+					RigidBody.AddForce(force2, ForceMode.VelocityChange);
 				}
 
-				movementAxis.Forward = Mathf.Lerp(movementAxis.Forward, 0f, 0.3f * Time.fixedDeltaTime);
-				movementAxis.Right = Mathf.Lerp(movementAxis.Right, 0f, 0.3f * Time.fixedDeltaTime);
+				_movementAxis.Forward = Mathf.Lerp(_movementAxis.Forward, 0f, 0.3f * Time.fixedDeltaTime);
+				_movementAxis.Right = Mathf.Lerp(_movementAxis.Right, 0f, 0.3f * Time.fixedDeltaTime);
 			}
 
-			if (!isGrounded || currSlopeAngle >= maxSlopeAngle)
+			if (!_isGrounded || _currSlopeAngle >= _maxSlopeAngle)
 			{
-				if (!isMovementEnabled && myPlayer.IsLockedToTrigger)
+				if (!_isMovementEnabled && _myPlayer.IsLockedToTrigger)
 				{
-					rigidBody.velocity = Vector3.zero;
-					rigidBody.angularVelocity = Vector3.zero;
+					RigidBody.velocity = Vector3.zero;
+					RigidBody.angularVelocity = Vector3.zero;
 				}
 				else
 				{
-					rigidBody.AddForce(myPlayer.Gravity, ForceMode.Acceleration);
+					RigidBody.AddForce(_myPlayer.Gravity, ForceMode.Acceleration);
 				}
 			}
 		}
@@ -978,15 +979,15 @@ namespace ZeroGravity.CharacterMovement
 		{
 			if (IsJetpackOn && JetpackFuel > float.Epsilon)
 			{
-				currSpeeds = zeroGJetpackSpeeds;
+				_currSpeeds = _zeroGJetpackSpeeds;
 			}
-			else if (canGrabWall)
+			else if (_canGrabWall)
 			{
-				currSpeeds = zeroGNormalSpeeds;
+				_currSpeeds = _zeroGNormalSpeeds;
 			}
 			else
 			{
-				currSpeeds = zeroGNormalSpeeds;
+				_currSpeeds = _zeroGNormalSpeeds;
 			}
 		}
 
@@ -996,150 +997,150 @@ namespace ZeroGravity.CharacterMovement
 		private void Calculate0GMovementData()
 		{
 			// Get normal input.
-			movementAxis.Forward = ControlsSubsystem.GetAxis(ControlsSubsystem.ConfigAction.Forward);
-			movementAxis.Right = ControlsSubsystem.GetAxis(ControlsSubsystem.ConfigAction.Right);
-			movementAxis.LeanRight = ControlsSubsystem.GetAxis(ControlsSubsystem.ConfigAction.Lean);
+			_movementAxis.Forward = ControlsSubsystem.GetAxis(ControlsSubsystem.ConfigAction.Forward);
+			_movementAxis.Right = ControlsSubsystem.GetAxis(ControlsSubsystem.ConfigAction.Right);
+			_movementAxis.LeanRight = ControlsSubsystem.GetAxis(ControlsSubsystem.ConfigAction.Lean);
 
 			// Get vertical input.
 			if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Jump))
 			{
-				movementAxis.Up = Mathf.Min(movementAxis.Up + Time.fixedDeltaTime * 4f, 1f);
+				_movementAxis.Up = Mathf.Min(_movementAxis.Up + Time.fixedDeltaTime * 4f, 1f);
 			}
 			else if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Crouch))
 			{
-				movementAxis.Up = Mathf.Max(movementAxis.Up - Time.fixedDeltaTime * 4f, -1f);
+				_movementAxis.Up = Mathf.Max(_movementAxis.Up - Time.fixedDeltaTime * 4f, -1f);
 			}
-			else if (movementAxis.Up < 0f)
+			else if (_movementAxis.Up < 0f)
 			{
-				movementAxis.Up = Mathf.Min(movementAxis.Up + Time.fixedDeltaTime * 4f, 0f);
+				_movementAxis.Up = Mathf.Min(_movementAxis.Up + Time.fixedDeltaTime * 4f, 0f);
 			}
 			else
 			{
-				movementAxis.Up = Mathf.Max(movementAxis.Up - Time.fixedDeltaTime * 4f, 0f);
+				_movementAxis.Up = Mathf.Max(_movementAxis.Up - Time.fixedDeltaTime * 4f, 0f);
 			}
 
 			// Sound and VFX.
 			if (CurrentJetpack != null && CurrentJetpack.IsActive && JetpackFuel > float.Epsilon)
 			{
 				CurrentJetpack.StartNozzles(
-					new Vector4(movementAxis.Right, movementAxis.Up, movementAxis.Forward, movementAxis.LeanRight),
+					new Vector4(_movementAxis.Right, _movementAxis.Up, _movementAxis.Forward, _movementAxis.LeanRight),
 					myJetpack: true);
 			}
 
 			Check0GCurrentSpeed();
 
 			// Calculate final velocity if numbers are not epsilon zero.
-			if (!movementAxis.Forward.IsNotEpsilonZero() || !movementAxis.Right.IsNotEpsilonZero() ||
-			    !movementAxis.Up.IsNotEpsilonZero())
+			if (!_movementAxis.Forward.IsNotEpsilonZero() || !_movementAxis.Right.IsNotEpsilonZero() ||
+			    !_movementAxis.Up.IsNotEpsilonZero())
 			{
-				float a = Mathf.Abs(movementAxis.Forward) * currSpeeds.ForwardVelocity;
-				float b = Mathf.Abs(movementAxis.Right) * currSpeeds.RightVelocity;
-				float c = Mathf.Abs(movementAxis.Up) * currSpeeds.RightVelocity;
-				float num2 = MathHelper.AverageMaxValue(a, b, c, currSpeeds.ForwardVelocity, currSpeeds.RightVelocity,
-					currSpeeds.RightVelocity);
-				currSpeeds.ForwardVelocity = num2;
-				currSpeeds.RightVelocity = num2;
-				currSpeeds.BackwardVelocity = num2;
+				float a = Mathf.Abs(_movementAxis.Forward) * _currSpeeds.ForwardVelocity;
+				float b = Mathf.Abs(_movementAxis.Right) * _currSpeeds.RightVelocity;
+				float c = Mathf.Abs(_movementAxis.Up) * _currSpeeds.RightVelocity;
+				float num2 = MathHelper.AverageMaxValue(a, b, c, _currSpeeds.ForwardVelocity, _currSpeeds.RightVelocity,
+					_currSpeeds.RightVelocity);
+				_currSpeeds.ForwardVelocity = num2;
+				_currSpeeds.RightVelocity = num2;
+				_currSpeeds.BackwardVelocity = num2;
 			}
 
-			myPlayer.HealthSounds.Switch("WalkRun", "Walk");
+			_myPlayer.HealthSounds.Switch("WalkRun", "Walk");
 		}
 
 		private void Calculate0GAnimatorParams()
 		{
-			Vector3 vector = Vector3.Project(myPlayer.MyVelocity, base.transform.forward);
-			Vector3 vector2 = Vector3.Project(myPlayer.MyVelocity, base.transform.right);
+			Vector3 vector = Vector3.Project(_myPlayer.MyVelocity, base.transform.forward);
+			Vector3 vector2 = Vector3.Project(_myPlayer.MyVelocity, base.transform.right);
 			float f = Vector3.Dot(vector2.normalized, base.transform.right);
 			float num3 = Vector3.Dot(vector.normalized, base.transform.forward);
 			float num = Mathf.Min(
 				            MathHelper.ProportionalValue(vector.magnitude, 0f,
-					            (!(num3 > 1f)) ? animatorBackwardMaxVelocity : animatorForwardMaxVelocity, 0f, 1f),
+					            (!(num3 > 1f)) ? _animatorBackwardMaxVelocity : _animatorForwardMaxVelocity, 0f, 1f),
 				            1f) *
 			            Mathf.Sign(num3);
 			float num2 =
-				Mathf.Min(MathHelper.ProportionalValue(vector2.magnitude, 0f, animatorRightMaxVelocity, 0f, 1f), 1f) *
+				Mathf.Min(MathHelper.ProportionalValue(vector2.magnitude, 0f, _animatorRightMaxVelocity, 0f, 1f), 1f) *
 				Mathf.Sign(f);
-			if (!Mathf.Approximately(currForwardAnimationVal, num))
+			if (!Mathf.Approximately(_currForwardAnimationVal, num))
 			{
-				currForwardAnimationVal = Mathf.Lerp(currForwardAnimationVal, num,
-					Time.fixedDeltaTime * animatorForwardMaxVelocity);
+				_currForwardAnimationVal = Mathf.Lerp(_currForwardAnimationVal, num,
+					Time.fixedDeltaTime * _animatorForwardMaxVelocity);
 			}
 
-			if (!Mathf.Approximately(currRightAnimationVal, num2))
+			if (!Mathf.Approximately(_currRightAnimationVal, num2))
 			{
-				currRightAnimationVal = Mathf.Lerp(currRightAnimationVal, num2,
-					Time.fixedDeltaTime * animatorRightMaxVelocity);
+				_currRightAnimationVal = Mathf.Lerp(_currRightAnimationVal, num2,
+					Time.fixedDeltaTime * _animatorRightMaxVelocity);
 			}
 
-			float? velocityForward = currForwardAnimationVal;
-			float? velocityRight = currRightAnimationVal;
-			animatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, velocityRight,
+			float? velocityForward = _currForwardAnimationVal;
+			float? velocityRight = _currRightAnimationVal;
+			AnimatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, velocityRight,
 				velocityForward);
-			float forward = movementAxis.Forward;
-			float right = movementAxis.Right;
-			AnimatorHelper animHelper = myPlayer.animHelper;
+			float forward = _movementAxis.Forward;
+			float right = _movementAxis.Right;
+			AnimatorHelper animHelper = _myPlayer.animHelper;
 			bool? isMovingZeroG = forward.IsNotEpsilonZero() || right.IsNotEpsilonZero();
 			animHelper.SetParameter(null, null, null, isMovingZeroG);
-			if (!Mathf.Approximately(currForwardFloatingAnimationVal, forward))
+			if (!Mathf.Approximately(_currForwardFloatingAnimationVal, forward))
 			{
-				currForwardFloatingAnimationVal = Mathf.Lerp(currForwardFloatingAnimationVal, forward,
-					Time.fixedDeltaTime * animatorForwardMaxVelocity);
+				_currForwardFloatingAnimationVal = Mathf.Lerp(_currForwardFloatingAnimationVal, forward,
+					Time.fixedDeltaTime * _animatorForwardMaxVelocity);
 			}
 
-			if (!Mathf.Approximately(currRightFloatingAnimationVal, right))
+			if (!Mathf.Approximately(_currRightFloatingAnimationVal, right))
 			{
-				currRightFloatingAnimationVal = Mathf.Lerp(currRightFloatingAnimationVal, right,
-					Time.fixedDeltaTime * animatorRightMaxVelocity);
+				_currRightFloatingAnimationVal = Mathf.Lerp(_currRightFloatingAnimationVal, right,
+					Time.fixedDeltaTime * _animatorRightMaxVelocity);
 			}
 
-			AnimatorHelper animHelper2 = myPlayer.animHelper;
-			velocityForward = currForwardFloatingAnimationVal;
-			velocityRight = currRightFloatingAnimationVal;
+			AnimatorHelper animHelper2 = _myPlayer.animHelper;
+			velocityForward = _currForwardFloatingAnimationVal;
+			velocityRight = _currRightFloatingAnimationVal;
 			animHelper2.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null, null,
 				velocityForward, velocityRight);
 		}
 
-		private void update0GMovement()
+		private void Update0GMovement()
 		{
-			if (isOnLadder)
+			if (_isOnLadder)
 			{
 				float axisRaw = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Forward);
-				base.transform.Translate(base.transform.up * (axisRaw * ladderVelocity * Time.fixedDeltaTime),
+				base.transform.Translate(base.transform.up * (axisRaw * _ladderVelocity * Time.fixedDeltaTime),
 					Space.World);
-				AnimatorHelper animHelper = myPlayer.animHelper;
+				AnimatorHelper animHelper = _myPlayer.animHelper;
 				float? ladderDirection = axisRaw;
 				animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null,
 					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
 					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
 					null, ladderDirection);
 			}
-			else if (gravityChanged && gravityChangedRagdoll)
+			else if (_gravityChanged && _gravityChangedRagdoll)
 			{
-				gravityChangeLerpHelper += Time.fixedDeltaTime * 2f;
-				if (gravityChangedRagdoll && gravityChangeLerpHelper >= 1f)
+				_gravityChangeLerpHelper += Time.fixedDeltaTime * 2f;
+				if (_gravityChangedRagdoll && _gravityChangeLerpHelper >= 1f)
 				{
-					myPlayer.ToggleRagdoll(false);
-					gravityChangeLerpHelper = 0f;
-					gravityChanged = false;
+					_myPlayer.ToggleRagdoll(false);
+					_gravityChangeLerpHelper = 0f;
+					_gravityChanged = false;
 				}
 			}
 			else
 			{
-				if (!isMovementEnabled)
+				if (!_isMovementEnabled)
 				{
 					return;
 				}
 
 				Calculate0GMovementData();
-				cameraController.SetLeanRightAxis(0f - movementAxis.LeanRight);
+				_cameraController.SetLeanRightAxis(0f - _movementAxis.LeanRight);
 				bool hasToStabilise = ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Sprint) ||
-				                      (myPlayer.IsUsingItemInHands &&
-				                       myPlayer.Inventory.CheckIfItemInHandsIsType<HandDrill>());
-				if (hasToStabilise && canGrabWall && NearbyVessel != null &&
-				    (NearbyVessel.Velocity - (myPlayer.Parent.Velocity + rigidBody.velocity.ToVector3D()))
+				                      (_myPlayer.IsUsingItemInHands &&
+				                       _myPlayer.Inventory.CheckIfItemInHandsIsType<HandDrill>());
+				if (hasToStabilise && _canGrabWall && NearbyVessel != null &&
+				    (NearbyVessel.Velocity - (_myPlayer.Parent.Velocity + RigidBody.velocity.ToVector3D()))
 				    .SqrMagnitude < 100.0)
 				{
-					if (myPlayer.CurrentRoomTrigger == null)
+					if (_myPlayer.CurrentRoomTrigger == null)
 					{
 						if (StickToVessel == null)
 						{
@@ -1149,78 +1150,78 @@ namespace ZeroGravity.CharacterMovement
 
 						if (StickToVessel != null)
 						{
-							rigidBody.velocity = Vector3.Lerp(rigidBody.velocity,
-								(StickToVessel.Velocity - myPlayer.Parent.Velocity).ToVector3(), 0.1f);
+							RigidBody.velocity = Vector3.Lerp(RigidBody.velocity,
+								(StickToVessel.Velocity - _myPlayer.Parent.Velocity).ToVector3(), 0.1f);
 						}
 					}
 					else
 					{
 						StickToVessel = null;
-						rigidBody.drag = zgGrabDrag;
-						rigidBody.velocity *= 0.9f;
+						RigidBody.drag = _zgGrabDrag;
+						RigidBody.velocity *= 0.9f;
 					}
 				}
-				else if (myPlayer.IsInsideSpaceObject && myPlayer.CurrentRoomTrigger != null &&
-				         myPlayer.CurrentRoomTrigger.AirPressure > 0.5f)
+				else if (_myPlayer.IsInsideSpaceObject && _myPlayer.CurrentRoomTrigger != null &&
+				         _myPlayer.CurrentRoomTrigger.AirPressure > 0.5f)
 				{
 					StickToVessel = null;
 					StickToVesselTangentialVelocity = Vector3.zero;
 					StickToVesselRotation = Quaternion.identity;
-					rigidBody.drag = zgAtmosphereDrag;
+					RigidBody.drag = _zgAtmosphereDrag;
 				}
 				else
 				{
 					if (StickToVessel != null)
 					{
-						rigidBody.velocity = StickToVesselTangentialVelocity;
+						RigidBody.velocity = StickToVesselTangentialVelocity;
 					}
 
 					StickToVessel = null;
 					StickToVesselTangentialVelocity = Vector3.zero;
 					StickToVesselRotation = Quaternion.identity;
-					rigidBody.drag = 0f;
+					RigidBody.drag = 0f;
 				}
 
 				// Handle rotation.
 				if (IsJetpackOn)
 				{
-					rigidBody.angularDrag = zgJetpackAngularDrag;
+					RigidBody.angularDrag = _zgJetpackAngularDrag;
 				}
-				else if (hasToStabilise && canGrabWall)
+				else if (hasToStabilise && _canGrabWall)
 				{
-					rigidBody.angularDrag = zgGrabAngularDrag;
+					RigidBody.angularDrag = _zgGrabAngularDrag;
 				}
-				else if (myPlayer.IsInsideSpaceObject && myPlayer.CurrentRoomTrigger != null &&
-				         myPlayer.CurrentRoomTrigger.AirPressure > 0.5f)
+				else if (_myPlayer.IsInsideSpaceObject && _myPlayer.CurrentRoomTrigger != null &&
+				         _myPlayer.CurrentRoomTrigger.AirPressure > 0.5f)
 				{
-					rigidBody.angularDrag = zgAtmosphereAngularDrag;
+					RigidBody.angularDrag = _zgAtmosphereAngularDrag;
 				}
 				else
 				{
-					rigidBody.angularDrag = 0f;
+					RigidBody.angularDrag = 0f;
 				}
 
-				if (movementAxis.Right.IsNotEpsilonZero() || movementAxis.Forward.IsNotEpsilonZero() ||
-				    movementAxis.Up.IsNotEpsilonZero())
+				if (_movementAxis.Right.IsNotEpsilonZero() || _movementAxis.Forward.IsNotEpsilonZero() ||
+				    _movementAxis.Up.IsNotEpsilonZero())
 				{
-					Vector3 vector = cameraController.transform.forward * movementAxis.Forward *
-					                 currSpeeds.ForwardVelocity
-					                 + cameraController.transform.right * movementAxis.Right * currSpeeds.RightVelocity
-					                 + cameraController.transform.up * movementAxis.Up * currSpeeds.RightVelocity;
+					Vector3 vector = _cameraController.transform.forward * _movementAxis.Forward *
+					                 _currSpeeds.ForwardVelocity
+					                 + _cameraController.transform.right * _movementAxis.Right * _currSpeeds.RightVelocity
+					                 + _cameraController.transform.up * _movementAxis.Up * _currSpeeds.RightVelocity;
 
-					if (!IsJetpackOn && rigidBody.velocity.sqrMagnitude >=
-					    currSpeeds.ForwardVelocity * currSpeeds.ForwardVelocity)
+					if (!IsJetpackOn && RigidBody.velocity.sqrMagnitude >=
+					    _currSpeeds.ForwardVelocity * _currSpeeds.ForwardVelocity)
 					{
-						Vector3 vector2 = Vector3.Project(vector, rigidBody.velocity);
-						if (MathHelper.SameSign(rigidBody.velocity.normalized, vector2.normalized))
+						Vector3 vector2 = Vector3.Project(vector, RigidBody.velocity);
+						if (MathHelper.SameSign(RigidBody.velocity.normalized, vector2.normalized))
 						{
 							vector -= vector2;
 						}
 					}
 
-					if (IsJetpackOn || myPlayer.IsInsideSpaceObject || canGrabWall)
+					if (IsJetpackOn || _myPlayer.IsInsideSpaceObject || _canGrabWall)
 					{
-						rigidBody.AddForce(vector, ForceMode.Impulse);
+						RigidBody.AddForce(vector, ForceMode.Impulse);
 					}
 				}
 
@@ -1231,33 +1232,33 @@ namespace ZeroGravity.CharacterMovement
 
 		private void LerpCameraToLocalZero()
 		{
-			float num = (Time.time - lerpCameraBackStartTime) * lerpCameraBackStep;
-			mainCamera.transform.localPosition = Vector3.Lerp(lerpCameraBackStartPos, Vector3.zero, num);
-			mainCamera.transform.localRotation =
-				Quaternion.Lerp(lerpCameraBackStartRot, lerpCameraBackZeroRotation, num);
+			float num = (Time.time - _lerpCameraBackStartTime) * _lerpCameraBackStep;
+			_mainCamera.transform.localPosition = Vector3.Lerp(_lerpCameraBackStartPos, Vector3.zero, num);
+			_mainCamera.transform.localRotation =
+				Quaternion.Lerp(_lerpCameraBackStartRot, _lerpCameraBackZeroRotation, num);
 			if (num >= 1f)
 			{
-				lerpCameraBack = false;
+				_lerpCameraBack = false;
 			}
 		}
 
 		public void LockPlayerToPoint(bool locked, Transform attachPoint = null)
 		{
-			isLockedToPoint = locked;
+			_isLockedToPoint = locked;
 			if (locked)
 			{
 				if (attachPoint != null)
 				{
-					attachPointSaved = attachPoint;
+					AttachPointSaved = attachPoint;
 				}
 
-				myPlayer.transform.parent = attachPointSaved;
+				_myPlayer.transform.parent = AttachPointSaved;
 				if (_lockLerp < 1f)
 				{
 					_lockLerp += LockSpeed * Time.deltaTime;
 				}
 
-				base.transform.position = Vector3.Lerp(base.transform.position, attachPointSaved.position,
+				base.transform.position = Vector3.Lerp(base.transform.position, AttachPointSaved.position,
 					Mathf.Clamp01(_lockLerp));
 			}
 			else
@@ -1270,44 +1271,44 @@ namespace ZeroGravity.CharacterMovement
 		{
 			if (locked)
 			{
-				rigidBody.constraints = RigidbodyConstraints.FreezeRotationZ;
+				RigidBody.constraints = RigidbodyConstraints.FreezeRotationZ;
 			}
 			else
 			{
-				rigidBody.constraints = RigidbodyConstraints.None;
+				RigidBody.constraints = RigidbodyConstraints.None;
 			}
 		}
 
 		public void SetGravity(Vector3 newGravity)
 		{
-			if (!base.isActiveAndEnabled && !gravityChangedRagdoll)
+			if (!base.isActiveAndEnabled && !_gravityChangedRagdoll)
 			{
 				return;
 			}
 
 			if (IsOnLadder && LockedToLadder != null)
 			{
-				if (!isZeroG && myPlayer.Gravity.IsEpsilonEqual(Vector3.zero))
+				if (!_isZeroG && _myPlayer.Gravity.IsEpsilonEqual(Vector3.zero))
 				{
-					isZeroG = true;
-					isGrounded = false;
-					collider1G.enabled = false;
-					collider0G.enabled = true;
-					rigidBody.freezeRotation = false;
-					rigidBody.angularDrag = 1.5f;
-					cameraController.IsZeroG = true;
-					animatorHelper.SetParameter(null, false, true, false);
-					cameraController.LerpCameraControllerBack(1f);
+					_isZeroG = true;
+					_isGrounded = false;
+					_collider1G.enabled = false;
+					_collider0G.enabled = true;
+					RigidBody.freezeRotation = false;
+					RigidBody.angularDrag = 1.5f;
+					_cameraController.IsZeroG = true;
+					AnimatorHelper.SetParameter(null, false, true, false);
+					_cameraController.LerpCameraControllerBack(1f);
 				}
-				else if (isZeroG && !myPlayer.Gravity.IsEpsilonEqual(Vector3.zero))
+				else if (_isZeroG && !_myPlayer.Gravity.IsEpsilonEqual(Vector3.zero))
 				{
-					isZeroG = false;
-					collider0G.enabled = false;
-					collider1G.enabled = true;
-					cameraController.IsZeroG = false;
-					rigidBody.drag = 0f;
-					rigidBody.angularDrag = 0f;
-					rigidBody.freezeRotation = true;
+					_isZeroG = false;
+					_collider0G.enabled = false;
+					_collider1G.enabled = true;
+					_cameraController.IsZeroG = false;
+					RigidBody.drag = 0f;
+					RigidBody.angularDrag = 0f;
+					RigidBody.freezeRotation = true;
 					if (CurrentJetpack != null && CurrentJetpack.IsActive)
 					{
 						CurrentJetpack.OldJetpackActiveState = CurrentJetpack.IsActive;
@@ -1316,42 +1317,42 @@ namespace ZeroGravity.CharacterMovement
 						RefreshMaxAngularVelocity();
 					}
 
-					animatorHelper.SetParameter(null, false, false, false);
+					AnimatorHelper.SetParameter(null, false, false, false);
 				}
 
-				LockedToLadder.LadderAttach(myPlayer, checkGravity: false);
-				myPlayer.OldGravity = myPlayer.Gravity;
+				LockedToLadder.LadderAttach(_myPlayer, checkGravity: false);
+				_myPlayer.OldGravity = _myPlayer.Gravity;
 				return;
 			}
 
-			if (!isZeroG && myPlayer.Gravity.IsEpsilonEqual(Vector3.zero))
+			if (!_isZeroG && _myPlayer.Gravity.IsEpsilonEqual(Vector3.zero))
 			{
-				isZeroG = true;
-				isGrounded = false;
-				collider1G.enabled = false;
-				collider0G.enabled = true;
-				rigidBody.freezeRotation = false;
-				rigidBody.angularDrag = 1.5f;
-				cameraController.IsZeroG = true;
-				if (cameraController.transform.localPosition.y.IsNotEpsilonZero())
+				_isZeroG = true;
+				_isGrounded = false;
+				_collider1G.enabled = false;
+				_collider0G.enabled = true;
+				RigidBody.freezeRotation = false;
+				RigidBody.angularDrag = 1.5f;
+				_cameraController.IsZeroG = true;
+				if (_cameraController.transform.localPosition.y.IsNotEpsilonZero())
 				{
 					ReparentCenterOfMass(isInChest: false);
-					base.transform.position += base.transform.up * cameraController.transform.localPosition.y;
-					lastMovementState = MovementState.Normal;
-					crouchLerpHelper = 1f;
-					collider1G.height = normalColliderHeight;
-					collider1G.center = new Vector3(0f, normalColliderCenter, 0f);
-					animatorHelper.SetParameter(false);
-					animatorHelper.SetParameterTrigger(AnimatorHelper.Triggers.InstantStandUp);
+					base.transform.position += base.transform.up * _cameraController.transform.localPosition.y;
+					_lastMovementState = MovementState.Normal;
+					_crouchLerpHelper = 1f;
+					_collider1G.height = _normalColliderHeight;
+					_collider1G.center = new Vector3(0f, NormalColliderCenter, 0f);
+					AnimatorHelper.SetParameter(false);
+					AnimatorHelper.SetParameterTrigger(AnimatorHelper.Triggers.InstantStandUp);
 					ReparentCenterOfMass(isInChest: true);
 				}
 
 				if (!IsAttached)
 				{
-					cameraController.LerpCameraControllerBack(1f);
+					_cameraController.LerpCameraControllerBack(1f);
 				}
 
-				animatorHelper.SetParameter(null, false, true, false);
+				AnimatorHelper.SetParameter(null, false, true, false);
 				if (CurrentJetpack != null && CurrentJetpack.OldJetpackActiveState)
 				{
 					CurrentJetpack.IsActive = true;
@@ -1361,15 +1362,15 @@ namespace ZeroGravity.CharacterMovement
 
 				ToggleJetPack(true);
 			}
-			else if (isZeroG && !myPlayer.Gravity.IsEpsilonEqual(Vector3.zero))
+			else if (_isZeroG && !_myPlayer.Gravity.IsEpsilonEqual(Vector3.zero))
 			{
-				isZeroG = false;
-				collider0G.enabled = false;
-				collider1G.enabled = true;
-				cameraController.IsZeroG = false;
-				rigidBody.drag = 0f;
-				rigidBody.angularDrag = 0f;
-				rigidBody.freezeRotation = true;
+				_isZeroG = false;
+				_collider0G.enabled = false;
+				_collider1G.enabled = true;
+				_cameraController.IsZeroG = false;
+				RigidBody.drag = 0f;
+				RigidBody.angularDrag = 0f;
+				RigidBody.freezeRotation = true;
 				if (CurrentJetpack != null && CurrentJetpack.IsActive)
 				{
 					CurrentJetpack.OldJetpackActiveState = CurrentJetpack.IsActive;
@@ -1378,61 +1379,61 @@ namespace ZeroGravity.CharacterMovement
 					RefreshMaxAngularVelocity();
 				}
 
-				animatorHelper.SetParameter(null, false, false, false);
+				AnimatorHelper.SetParameter(null, false, false, false);
 			}
 
-			if (!isZeroG && !myPlayer.OldGravity.IsEpsilonEqual(newGravity) && !myPlayer.InIteractLayer)
+			if (!_isZeroG && !_myPlayer.OldGravity.IsEpsilonEqual(newGravity) && !_myPlayer.InIteractLayer)
 			{
-				gravityChanged = true;
-				gravityChangedRagdoll = false;
-				gravityChangeLerpHelper = 0f;
-				gravityChangeRagdollTimer = 0f;
-				cameraController.ToggleCameraMovement(false);
-				Vector3 vector = Vector3.ProjectOnPlane(base.transform.forward, -myPlayer.GravityDirection).normalized;
+				_gravityChanged = true;
+				_gravityChangedRagdoll = false;
+				_gravityChangeLerpHelper = 0f;
+				_gravityChangeRagdollTimer = 0f;
+				_cameraController.ToggleCameraMovement(false);
+				Vector3 vector = Vector3.ProjectOnPlane(base.transform.forward, -_myPlayer.GravityDirection).normalized;
 				if (!vector.IsNotEpsilonZero())
 				{
 					vector = Vector3.forward;
 				}
 
-				gravityChangeEndingRotation = Quaternion.LookRotation(vector, -myPlayer.GravityDirection);
-				if (Vector3.Angle(base.transform.up, -myPlayer.GravityDirection) > 40f || CheckGravityRagdollDistance())
+				_gravityChangeEndingRotation = Quaternion.LookRotation(vector, -_myPlayer.GravityDirection);
+				if (Vector3.Angle(base.transform.up, -_myPlayer.GravityDirection) > 40f || CheckGravityRagdollDistance())
 				{
-					gravityChangedRagdoll = true;
-					ragdollChestRigidbody.velocity = rigidBody.velocity;
-					myPlayer.ToggleRagdoll(true);
+					_gravityChangedRagdoll = true;
+					RagdollChestRigidbody.velocity = RigidBody.velocity;
+					_myPlayer.ToggleRagdoll(true);
 				}
-				else if (myPlayer.OldGravity.IsEpsilonEqual(Vector3.zero))
+				else if (_myPlayer.OldGravity.IsEpsilonEqual(Vector3.zero))
 				{
-					if (Physics.SphereCast(base.transform.position, collider1G.radius - 0.05f,
-						    myPlayer.GravityDirection, out var _, 1.34f - collider1G.radius, collisionLayerMask))
+					if (Physics.SphereCast(base.transform.position, _collider1G.radius - 0.05f,
+						    _myPlayer.GravityDirection, out var _, 1.34f - _collider1G.radius, _collisionLayerMask))
 					{
-						gravityChanged = false;
-						base.transform.rotation = gravityChangeEndingRotation;
-						cameraController.ToggleCameraMovement(true);
-						base.transform.position += base.transform.up * (0f - crouchColliderCenter + 0.05f);
-						crouchLerpHelper = 0f;
-						collider1G.height = crouchColliderHeight;
-						collider1G.center = new Vector3(0f, crouchColliderCenter, 0f);
-						lastMovementState = MovementState.Crouch;
-						animatorHelper.SetParameter(true);
-						myPlayer.ToggleMeshRendereres(enableMesh: false);
+						_gravityChanged = false;
+						base.transform.rotation = _gravityChangeEndingRotation;
+						_cameraController.ToggleCameraMovement(true);
+						base.transform.position += base.transform.up * (0f - CrouchColliderCenter + 0.05f);
+						_crouchLerpHelper = 0f;
+						_collider1G.height = CrouchColliderHeight;
+						_collider1G.center = new Vector3(0f, CrouchColliderCenter, 0f);
+						_lastMovementState = MovementState.Crouch;
+						AnimatorHelper.SetParameter(true);
+						_myPlayer.ToggleMeshRendereres(enableMesh: false);
 					}
 					else
 					{
-						collider1G.height = 1f;
-						collider1G.center = Vector3.zero;
+						_collider1G.height = 1f;
+						_collider1G.center = Vector3.zero;
 					}
 				}
 			}
 
-			myPlayer.OldGravity = myPlayer.Gravity;
+			_myPlayer.OldGravity = _myPlayer.Gravity;
 		}
 
 		private bool CheckGravityRagdollDistance()
 		{
 			RaycastHit[] array =
-				(from h in Physics.RaycastAll(base.transform.position, myPlayer.GravityDirection, 4f,
-						collisionLayerMask)
+				(from h in Physics.RaycastAll(base.transform.position, _myPlayer.GravityDirection, 4f,
+						_collisionLayerMask)
 					orderby h.distance
 					select h).ToArray();
 			if (array != null && array.Length > 0)
@@ -1458,7 +1459,7 @@ namespace ZeroGravity.CharacterMovement
 
 		private void OnCollisionEnter(Collision coli)
 		{
-			if (coli.relativeVelocity.magnitude >= playerImpactVelocityTreshold)
+			if (coli.relativeVelocity.magnitude >= _playerImpactVelocityTreshold)
 			{
 				CameraController.cameraShakeController.CamShake(0.2f, 0.05f, 15f, 15f);
 			}
@@ -1466,71 +1467,71 @@ namespace ZeroGravity.CharacterMovement
 
 		public void ResetVelocity()
 		{
-			movementAxis.Forward = 0f;
-			movementAxis.Right = 0f;
-			if (isZeroG)
+			_movementAxis.Forward = 0f;
+			_movementAxis.Right = 0f;
+			if (_isZeroG)
 			{
-				currSpeeds = normalSpeeds;
+				_currSpeeds = _normalSpeeds;
 			}
 			else
 			{
-				currSpeeds = zeroGNormalSpeeds;
+				_currSpeeds = _zeroGNormalSpeeds;
 			}
 
-			lastMovementState = MovementState.Normal;
-			rigidBody.velocity = Vector3.zero;
-			rigidBody.angularVelocity = Vector3.zero;
-			animatorHelper.SetParameter(false, null, null, null, null, null, null, null, null, null, 0f, 0f);
-			myPlayer.ToggleMeshRendereres(enableMesh: true);
+			_lastMovementState = MovementState.Normal;
+			RigidBody.velocity = Vector3.zero;
+			RigidBody.angularVelocity = Vector3.zero;
+			AnimatorHelper.SetParameter(false, null, null, null, null, null, null, null, null, null, 0f, 0f);
+			_myPlayer.ToggleMeshRendereres(enableMesh: true);
 		}
 
 		public void ResetPlayerLock()
 		{
 			IsLockedToPoint = false;
-			myPlayer.SetParentTransferableObjectsRoot();
+			_myPlayer.SetParentTransferableObjectsRoot();
 			LockRigidbodyZRotation(locked: false);
 		}
 
 		public void CheckVelocityForLock()
 		{
-			if (rigidBody.velocity.magnitude < 0.1f)
+			if (RigidBody.velocity.magnitude < 0.1f)
 			{
-				canLockToPoint = true;
-				grabSlowEnabled = false;
+				_canLockToPoint = true;
+				GrabSlowEnabled = false;
 			}
 		}
 
 		public void SetStateSpeedMultiplier(float speedMultiplier)
 		{
-			stanceSpeedMultiplier = Mathf.Clamp01(speedMultiplier);
+			_stanceSpeedMultiplier = Mathf.Clamp01(speedMultiplier);
 		}
 
 		public void ToggleCameraController(bool? isEnabled = null)
 		{
 			if (isEnabled.HasValue)
 			{
-				cameraController.enabled = isEnabled.Value;
+				_cameraController.enabled = isEnabled.Value;
 			}
 			else
 			{
-				cameraController.enabled = !cameraController.enabled;
+				_cameraController.enabled = !_cameraController.enabled;
 			}
 		}
 
 		public void ToggleCameraMovement(bool? isEnabled = null)
 		{
-			cameraController.ToggleCameraMovement(isEnabled);
+			_cameraController.ToggleCameraMovement(isEnabled);
 		}
 
 		public void ToggleMovement(bool? isEnabled = null)
 		{
 			if (isEnabled.HasValue)
 			{
-				isMovementEnabled = isEnabled.Value;
+				_isMovementEnabled = isEnabled.Value;
 			}
 			else
 			{
-				isMovementEnabled = !isMovementEnabled;
+				_isMovementEnabled = !_isMovementEnabled;
 			}
 		}
 
@@ -1538,20 +1539,20 @@ namespace ZeroGravity.CharacterMovement
 		{
 			if (isAttached.HasValue)
 			{
-				cameraController.IsAttached = isAttached.Value;
+				_cameraController.IsAttached = isAttached.Value;
 			}
 			else
 			{
-				cameraController.IsAttached = !cameraController.IsAttached;
+				_cameraController.IsAttached = !_cameraController.IsAttached;
 			}
 
-			if (cameraController.IsAttached)
+			if (_cameraController.IsAttached)
 			{
-				cameraController.ToggleFreeLook(isActive: false);
+				_cameraController.ToggleFreeLook(isActive: false);
 			}
-			else if (cameraController.IsAttached && cameraController.AutoFreeLook)
+			else if (_cameraController.IsAttached && _cameraController.AutoFreeLook)
 			{
-				cameraController.ToggleFreeLook(isActive: true);
+				_cameraController.ToggleFreeLook(isActive: true);
 			}
 		}
 
@@ -1559,14 +1560,14 @@ namespace ZeroGravity.CharacterMovement
 		{
 			if (isOn.HasValue)
 			{
-				isOnLadder = isOn.Value;
+				_isOnLadder = isOn.Value;
 			}
 			else
 			{
-				isOnLadder = !isOnLadder;
+				_isOnLadder = !_isOnLadder;
 			}
 
-			LockedToLadder = ((!isOnLadder) ? null : ladder);
+			LockedToLadder = ((!_isOnLadder) ? null : ladder);
 		}
 
 		public void ToggleJetPack(bool? isOn = null)
@@ -1596,64 +1597,64 @@ namespace ZeroGravity.CharacterMovement
 
 		public void ToggleInPlayerCollider(bool? isInTrigger = null)
 		{
-			if (!(myPlayer.CurrentRoomTrigger == null))
+			if (!(_myPlayer.CurrentRoomTrigger == null))
 			{
 			}
 		}
 
 		public void ToggleColliders(bool isEnabled)
 		{
-			collider1G.enabled = !isZeroG && isEnabled;
-			collider0G.enabled = isZeroG && isEnabled;
+			_collider1G.enabled = !_isZeroG && isEnabled;
+			_collider0G.enabled = _isZeroG && isEnabled;
 		}
 
 		public void ResetLookAt(float? duration = null)
 		{
-			cameraController.ResetLookAt(duration);
+			_cameraController.ResetLookAt(duration);
 		}
 
 		public void ToggleAutoFreeLook(bool isActive)
 		{
-			cameraController.ToggleAutoFreeLook(isActive);
+			_cameraController.ToggleAutoFreeLook(isActive);
 		}
 
 		public void LookAtPoint(Vector3 point)
 		{
-			cameraController.LookAtPoint(point);
+			_cameraController.LookAtPoint(point);
 		}
 
 		public void AddForce(Vector3 force, ForceMode foceMode)
 		{
-			rigidBody.AddForce(force, foceMode);
+			RigidBody.AddForce(force, foceMode);
 		}
 
 		public void AddTorque(Vector3 torque, ForceMode forceMode)
 		{
-			rigidBody.AddTorque(torque, forceMode);
+			RigidBody.AddTorque(torque, forceMode);
 		}
 
 		public void RotateVelocity(Vector3 axis, float angle)
 		{
-			if (isGrounded && !IsJump)
+			if (_isGrounded && !IsJump)
 			{
-				rigidBody.velocity = Quaternion.AngleAxis(angle, axis) * rigidBody.velocity;
+				RigidBody.velocity = Quaternion.AngleAxis(angle, axis) * RigidBody.velocity;
 			}
 		}
 
 		public void RefreshOutfitData(Transform outfitTrans)
 		{
-			HeadCameraParent = animatorHelper.GetBone(AnimatorHelper.HumanBones.Head).Find("HeadCameraParent");
-			ragdollChestRigidbody = animatorHelper.GetBone(AnimatorHelper.HumanBones.Spine2).GetComponent<Rigidbody>();
-			centerOfMass.transform.parent = ragdollChestRigidbody.transform;
-			centerOfMass.localScale = Vector3.one;
-			centerOfMass.transform.localPosition = new Vector3(-0.133f, 0.014f, 0.001f);
-			centerOfMass.transform.localRotation = Quaternion.Euler(97.33099f, -90f, 0.2839966f);
-			cameraController.RefreshOutfitData(outfitTrans);
+			HeadCameraParent = AnimatorHelper.GetBone(AnimatorHelper.HumanBones.Head).Find("HeadCameraParent");
+			RagdollChestRigidbody = AnimatorHelper.GetBone(AnimatorHelper.HumanBones.Spine2).GetComponent<Rigidbody>();
+			_centerOfMass.transform.parent = RagdollChestRigidbody.transform;
+			_centerOfMass.localScale = Vector3.one;
+			_centerOfMass.transform.localPosition = new Vector3(-0.133f, 0.014f, 0.001f);
+			_centerOfMass.transform.localRotation = Quaternion.Euler(97.33099f, -90f, 0.2839966f);
+			_cameraController.RefreshOutfitData(outfitTrans);
 		}
 
 		public void AddCharacterRotation(Vector3 euler)
 		{
-			cameraController.AddCharacterRotation(euler);
+			_cameraController.AddCharacterRotation(euler);
 		}
 
 		public IEnumerator AddCharacterRotationByTime(Vector3 euler, float time)
@@ -1663,7 +1664,7 @@ namespace ZeroGravity.CharacterMovement
 			float z = euler.z / time;
 			while (time > 0f)
 			{
-				cameraController.AddCharacterRotation(new Vector3(x, y, z));
+				_cameraController.AddCharacterRotation(new Vector3(x, y, z));
 				yield return new WaitForEndOfFrame();
 				time -= Time.deltaTime;
 			}
@@ -1673,47 +1674,47 @@ namespace ZeroGravity.CharacterMovement
 
 		public void ToggleCameraAttachToHeadBone(bool? isAttached = null, Vector3? lockedAngle = null)
 		{
-			cameraController.ToggleCameraAttachToHeadBone(isAttached, lockedAngle);
+			_cameraController.ToggleCameraAttachToHeadBone(isAttached, lockedAngle);
 		}
 
 		public void ToggleKinematic(bool? isKinematic = null)
 		{
-			bool flag = ((!isKinematic.HasValue) ? (!rigidBody.isKinematic) : isKinematic.Value);
-			collider0G.enabled = !flag && isZeroG;
-			collider1G.enabled = !flag && !isZeroG;
-			rigidBody.isKinematic = flag;
+			bool flag = ((!isKinematic.HasValue) ? (!RigidBody.isKinematic) : isKinematic.Value);
+			_collider0G.enabled = !flag && _isZeroG;
+			_collider1G.enabled = !flag && !_isZeroG;
+			RigidBody.isKinematic = flag;
 		}
 
 		public void ReparentCenterOfMass(bool isInChest)
 		{
 			if (!isInChest)
 			{
-				centerOfMass.transform.parent = null;
+				_centerOfMass.transform.parent = null;
 				return;
 			}
 
-			centerOfMass.transform.parent = ragdollChestRigidbody.transform;
-			centerOfMass.localScale = Vector3.one;
-			centerOfMass.transform.localPosition = new Vector3(-0.133f, 0.014f, 0.001f);
-			centerOfMass.transform.localRotation = Quaternion.Euler(97.33099f, -90f, 0.2839966f);
+			_centerOfMass.transform.parent = RagdollChestRigidbody.transform;
+			_centerOfMass.localScale = Vector3.one;
+			_centerOfMass.transform.localPosition = new Vector3(-0.133f, 0.014f, 0.001f);
+			_centerOfMass.transform.localRotation = Quaternion.Euler(97.33099f, -90f, 0.2839966f);
 		}
 
 		public void LerpCameraBack(float time, Vector3? localZeroRotation = null)
 		{
-			lerpCameraBack = true;
+			_lerpCameraBack = true;
 			if (localZeroRotation.HasValue)
 			{
-				lerpCameraBackZeroRotation = Quaternion.Euler(localZeroRotation.Value);
+				_lerpCameraBackZeroRotation = Quaternion.Euler(localZeroRotation.Value);
 			}
 			else
 			{
-				lerpCameraBackZeroRotation = Quaternion.identity;
+				_lerpCameraBackZeroRotation = Quaternion.identity;
 			}
 
-			lerpCameraBackStartPos = mainCamera.transform.localPosition;
-			lerpCameraBackStartRot = mainCamera.transform.localRotation;
-			lerpCameraBackStartTime = Time.time;
-			lerpCameraBackStep = 1f / time;
+			_lerpCameraBackStartPos = _mainCamera.transform.localPosition;
+			_lerpCameraBackStartRot = _mainCamera.transform.localRotation;
+			_lerpCameraBackStartTime = Time.time;
+			_lerpCameraBackStep = 1f / time;
 		}
 
 		public IEnumerator TranslateAndLookAt(Transform position, Transform lookAt, TranslateDelegate actionToCall)
@@ -1723,41 +1724,41 @@ namespace ZeroGravity.CharacterMovement
 			ToggleCameraMovement(false);
 			Vector3 startingPosition = base.transform.position;
 			Quaternion startingRotation = base.transform.rotation;
-			Vector3 startingLookAt = mainCamera.transform.position + mainCamera.transform.forward;
-			translateLerpHelper = 0f;
-			myPlayer.InLerpingState = true;
-			if (myPlayer.CurrentActiveItem != null)
+			Vector3 startingLookAt = _mainCamera.transform.position + _mainCamera.transform.forward;
+			_translateLerpHelper = 0f;
+			_myPlayer.InLerpingState = true;
+			if (_myPlayer.CurrentActiveItem != null)
 			{
-				myPlayer.Inventory.AddToInventoryOrDrop(myPlayer.CurrentActiveItem, myPlayer.Inventory.HandsSlot);
+				_myPlayer.Inventory.AddToInventoryOrDrop(_myPlayer.CurrentActiveItem, _myPlayer.Inventory.HandsSlot);
 			}
 
-			while (translateLerpHelper < 1f)
+			while (_translateLerpHelper < 1f)
 			{
 				if (position != null)
 				{
 					transform.position = Vector3.Lerp(startingPosition, position.position,
-						Mathf.SmoothStep(0f, 1f, translateLerpHelper));
+						Mathf.SmoothStep(0f, 1f, _translateLerpHelper));
 					transform.rotation = Quaternion.Lerp(startingRotation, position.rotation,
-						Mathf.SmoothStep(0f, 1f, translateLerpHelper));
+						Mathf.SmoothStep(0f, 1f, _translateLerpHelper));
 				}
 
 				if (lookAt != null)
 				{
-					cameraController.LookAtPoint(Vector3.Lerp(startingLookAt, lookAt.position,
-						Mathf.SmoothStep(0f, 1f, translateLerpHelper)));
+					_cameraController.LookAtPoint(Vector3.Lerp(startingLookAt, lookAt.position,
+						Mathf.SmoothStep(0f, 1f, _translateLerpHelper)));
 				}
 
-				translateLerpHelper += Time.deltaTime;
+				_translateLerpHelper += Time.deltaTime;
 				yield return new WaitForEndOfFrame();
 			}
 
-			myPlayer.InLerpingState = false;
+			_myPlayer.InLerpingState = false;
 			base.transform.position = position.position;
 			base.transform.rotation = position.rotation;
 			ToggleCameraMovement(true);
 			if (lookAt != null)
 			{
-				cameraController.LookAtPoint(lookAt.position);
+				_cameraController.LookAtPoint(lookAt.position);
 			}
 
 			actionToCall();
@@ -1766,24 +1767,24 @@ namespace ZeroGravity.CharacterMovement
 		public void Tumble(Vector3? tumbleVelocity = null)
 		{
 			HasTumbled = true;
-			gravityChanged = true;
-			gravityChangedRagdoll = true;
-			gravityChangeLerpHelper = 0f;
-			gravityChangeRagdollTimer = 0f;
-			cameraController.ToggleCameraMovement(false);
+			_gravityChanged = true;
+			_gravityChangedRagdoll = true;
+			_gravityChangeLerpHelper = 0f;
+			_gravityChangeRagdollTimer = 0f;
+			_cameraController.ToggleCameraMovement(false);
 			if (tumbleVelocity.HasValue)
 			{
 				float num = tumbleVelocity.Value.magnitude;
-				if (num < playerImpactVelocityTreshold)
+				if (num < _playerImpactVelocityTreshold)
 				{
-					num = playerImpactVelocityTreshold + 1f;
+					num = _playerImpactVelocityTreshold + 1f;
 				}
 
-				myPlayer.ImpactVelocity = num;
+				_myPlayer.ImpactVelocity = num;
 			}
 
-			myPlayer.ToggleRagdoll(true);
-			ragdollChestRigidbody.velocity = myPlayer.GravityDirection * 0.1f;
+			_myPlayer.ToggleRagdoll(true);
+			RagdollChestRigidbody.velocity = _myPlayer.GravityDirection * 0.1f;
 		}
 
 		public void SetHandsBoxCollider(BoxCollider collider)
@@ -1793,16 +1794,16 @@ namespace ZeroGravity.CharacterMovement
 
 		public int CheckGetUpRoom()
 		{
-			if (Physics.SphereCast(characterRoot.position, collider1G.radius - 0.02f,
-				    -myPlayer.GravityDirection * 1.34f, out var _, normalColliderHeight - collider1G.radius,
-				    collisionLayerMask))
+			if (Physics.SphereCast(_characterRoot.position, _collider1G.radius - 0.02f,
+				    -_myPlayer.GravityDirection * 1.34f, out var _, _normalColliderHeight - _collider1G.radius,
+				    _collisionLayerMask))
 			{
-				crouchLerpHelper = 0f;
-				collider1G.height = crouchColliderHeight;
-				collider1G.center = new Vector3(0f, crouchColliderCenter, 0f);
-				lastMovementState = MovementState.Crouch;
-				animatorHelper.SetParameter(true);
-				myPlayer.ToggleMeshRendereres(enableMesh: false);
+				_crouchLerpHelper = 0f;
+				_collider1G.height = CrouchColliderHeight;
+				_collider1G.center = new Vector3(0f, CrouchColliderCenter, 0f);
+				_lastMovementState = MovementState.Crouch;
+				AnimatorHelper.SetParameter(true);
+				_myPlayer.ToggleMeshRendereres(enableMesh: false);
 				return 0;
 			}
 
@@ -1811,21 +1812,21 @@ namespace ZeroGravity.CharacterMovement
 
 		public void RefreshMaxAngularVelocity()
 		{
-			MaxAngularVelocity = (float)((double)DefaultMaxAngularVelocity * (System.Math.PI / 180.0));
+			MaxAngularVelocity = (float)(DefaultMaxAngularVelocity * (System.Math.PI / 180.0));
 		}
 
 		private void OnParticleCollision(GameObject other)
 		{
 			if ((bool)other.GetComponentInParent<DebrisFieldEffect>())
 			{
-				myPlayer.ImpactVelocity = 9f;
+				_myPlayer.ImpactVelocity = 9f;
 				CameraController.cameraShakeController.CamShake(0.2f, 0.05f, 15f, 15f);
 			}
 		}
 
 		public Collider GetCollider()
 		{
-			return (!collider1G.enabled) ? ((Collider)collider0G) : ((Collider)collider1G);
+			return (!_collider1G.enabled) ? _collider0G : _collider1G;
 		}
 	}
 }

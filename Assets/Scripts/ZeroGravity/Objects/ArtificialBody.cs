@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using ZeroGravity.LevelDesign;
@@ -15,19 +16,17 @@ namespace ZeroGravity.Objects
 
 		public VesselDestructionEffects DestructionEffects;
 
-		private RadarVisibilityType _RadarVisibilityType;
+		private RadarVisibilityType _radarVisibilityType;
 
-		public List<VesselRequestButton> VesselRequestButtons = new List<VesselRequestButton>();
+		[NonSerialized] public ArtificialBody StabilizeToTargetObj;
 
-		public ArtificialBody StabilizeToTargetObj;
+		[NonSerialized] public Vector3D StabilizationOffset;
 
-		public Vector3D StabilizationOffset;
-
-		public HashSet<ArtificialBody> StabilizedChildren = new HashSet<ArtificialBody>();
+		public readonly HashSet<ArtificialBody> StabilizedChildren = new HashSet<ArtificialBody>();
 
 		public virtual OrbitParameters Orbit { get; set; }
 
-		public virtual CelestialBody ParentCelesitalBody => Orbit.Parent.CelestialBody;
+		public virtual CelestialBody ParentCelestialBody => Orbit.Parent.CelestialBody;
 
 		public double Radius { get; protected set; }
 
@@ -44,14 +43,13 @@ namespace ZeroGravity.Objects
 					return RadarVisibilityType.AlwaysVisible;
 				}
 
-				return (!IsDistressSignalActive) ? _RadarVisibilityType : RadarVisibilityType.Distress;
+				return !IsDistressSignalActive ? _radarVisibilityType : RadarVisibilityType.Distress;
 			}
 			set
 			{
-				_RadarVisibilityType = value;
-				MapObject value2;
+				_radarVisibilityType = value;
 				if (this is IMapMainObject &&
-				    World.Map.AllMapObjects.TryGetValue(this as IMapMainObject, out value2))
+				    World.Map.AllMapObjects.TryGetValue(this as IMapMainObject, out MapObject value2))
 				{
 					value2.UpdateVisibility();
 				}
@@ -66,10 +64,29 @@ namespace ZeroGravity.Objects
 
 		public bool IsStabilized => StabilizeToTargetObj is not null;
 
-		public static ArtificialBody Create(SpaceObjectType type, long guid, ObjectTransform trans, bool isMainObject)
+		public static ArtificialBody CreateDummy(ObjectTransform trans)
 		{
-			GameObject gameObject = new GameObject(type.ToString() + "_" + guid);
-			ArtificialBody artificialBody = null;
+			switch (trans.Type)
+			{
+				case SpaceObjectType.Ship:
+					return Ship.Create(trans.GUID, null, trans, false);
+				case SpaceObjectType.PlayerPivot:
+				case SpaceObjectType.DynamicObjectPivot:
+				case SpaceObjectType.CorpsePivot:
+					return Pivot.Create(trans.Type, trans, false);
+				case SpaceObjectType.Asteroid:
+					return Asteroid.Create(trans, null, false);
+				default:
+					Debug.LogError("Unknown artificial body type " + trans.Type + " " + trans.GUID);
+					return null;
+			}
+		}
+
+		// Called by the Ship, Asteroid, and Pivot classes. The actual creating is done here.
+		protected static ArtificialBody CreateImpl(SpaceObjectType type, long guid, ObjectTransform trans, bool isMainObject)
+		{
+			GameObject gameObject = new GameObject(type + "_" + guid);
+			ArtificialBody artificialBody;
 			switch (type)
 			{
 				case SpaceObjectType.Ship:
@@ -86,14 +103,17 @@ namespace ZeroGravity.Objects
 				case SpaceObjectType.Station:
 					artificialBody = gameObject.AddComponent<Station>();
 					break;
+				default:
+					Debug.LogError("Cannot create artificial body of invalid type:" + type);
+					return null;
 			}
 
-			if (type == SpaceObjectType.Ship || type == SpaceObjectType.Asteroid)
+			if (type is SpaceObjectType.Ship or SpaceObjectType.Asteroid)
 			{
 				artificialBody.gameObject.SetActive(false);
 			}
 
-			artificialBody.GUID = guid;
+			artificialBody.Guid = guid;
 			artificialBody.Orbit = new OrbitParameters();
 			artificialBody.Orbit.SetArtificialBody(artificialBody);
 			artificialBody.Radius = 30.0;
@@ -105,29 +125,29 @@ namespace ZeroGravity.Objects
 			{
 				artificialBody.Orbit.ParseNetworkData(World, trans.Realtime);
 			}
-			else if (trans.StabilizeToTargetGUID.HasValue && trans.StabilizeToTargetGUID.Value > 0)
+			else if (trans.StabilizeToTargetGUID is > 0)
 			{
 				ArtificialBody artificialBody2 =
 					World.SolarSystem.GetArtificialBody(trans.StabilizeToTargetGUID.Value);
-				if (artificialBody2 != null)
+				if (artificialBody2 is not null)
 				{
 					artificialBody.Orbit.CopyDataFrom(artificialBody2.Orbit, World.SolarSystem.CurrentTime, true);
 				}
 			}
 			else
 			{
-				Debug.LogError("How this happend !!! Artificial bodies should always have orbit or realtime data.");
+				Debug.LogError("Artificial bodies should always have orbit or realtime data.");
 			}
 
-			artificialBody.Forward = ((trans.Forward == null) ? Vector3.forward : trans.Forward.ToVector3());
-			artificialBody.Up = ((trans.Up == null) ? Vector3.up : trans.Up.ToVector3());
+			artificialBody.Forward = trans.Forward?.ToVector3() ?? Vector3.forward;
+			artificialBody.Up = trans.Up?.ToVector3() ?? Vector3.up;
 			artificialBody.TransferableObjectsRoot = new GameObject("TransferableObjectsRoot");
 			artificialBody.TransferableObjectsRoot.transform.parent = artificialBody.transform;
 			artificialBody.TransferableObjectsRoot.transform.Reset();
 			artificialBody.ConnectedObjectsRoot = new GameObject("ConnectedObjectsRoot");
 			artificialBody.ConnectedObjectsRoot.transform.parent = artificialBody.transform;
 			artificialBody.ConnectedObjectsRoot.transform.Reset();
-			if (type == SpaceObjectType.Asteroid || type == SpaceObjectType.Ship || type == SpaceObjectType.Station)
+			if (type is SpaceObjectType.Asteroid or SpaceObjectType.Ship or SpaceObjectType.Station)
 			{
 				artificialBody.GeometryPlaceholder = new GameObject("GeometryPlaceholder");
 				artificialBody.GeometryPlaceholder.transform.parent = artificialBody.transform;
@@ -158,8 +178,7 @@ namespace ZeroGravity.Objects
 				{
 					artificialBody.LoadGeometry();
 				}
-				else if (type == SpaceObjectType.Asteroid || type == SpaceObjectType.Ship ||
-				         type == SpaceObjectType.Station)
+				else if (type is SpaceObjectType.Asteroid or SpaceObjectType.Ship or SpaceObjectType.Station)
 				{
 					artificialBody.RequestSpawn();
 				}
@@ -169,14 +188,10 @@ namespace ZeroGravity.Objects
 			return artificialBody;
 		}
 
-		public void CreateArtificalRigidbody()
-		{
-		}
-
 		public override void DestroyGeometry()
 		{
 			base.DestroyGeometry();
-			if (GeometryRoot != null)
+			if (GeometryRoot is not null)
 			{
 				if (this is SpaceObjectVessel)
 				{
@@ -185,9 +200,9 @@ namespace ZeroGravity.Objects
 
 				foreach (Transform child in GeometryRoot.transform.GetChildren())
 				{
-					if (child != null)
+					if (child is not null)
 					{
-						Object.Destroy(child.gameObject);
+						Destroy(child.gameObject);
 					}
 				}
 
@@ -195,18 +210,18 @@ namespace ZeroGravity.Objects
 				GeometryRoot.transform.Reset();
 			}
 
-			if (ArtificalRigidbody != null)
+			if (ArtificialRigidbody is not null)
 			{
-				Object.Destroy(ArtificalRigidbody);
+				Destroy(ArtificialRigidbody);
 			}
 
-			ArtificalRigidbody = null;
-			base.IsDummyObject = true;
+			ArtificialRigidbody = null;
+			IsDummyObject = true;
 		}
 
 		public void UpdateOrbitPosition(double time, bool resetTime = false)
 		{
-			if (Maneuver != null || StabilizeToTargetObj != null)
+			if (Maneuver != null || StabilizeToTargetObj is not null)
 			{
 				return;
 			}
@@ -220,7 +235,7 @@ namespace ZeroGravity.Objects
 				Orbit.UpdateOrbit(time);
 			}
 
-			if (StabilizedChildren == null || StabilizedChildren.Count <= 0)
+			if (StabilizedChildren is not { Count: > 0 })
 			{
 				return;
 			}
@@ -240,28 +255,6 @@ namespace ZeroGravity.Objects
 			TransferableObjectsRoot.DestroyAll(true);
 		}
 
-		public static ArtificialBody CreateArtificialBody(ObjectTransform trans)
-		{
-			if (trans.Type == SpaceObjectType.Ship)
-			{
-				return Ship.Create(trans.GUID, null, trans, false);
-			}
-
-			if (trans.Type == SpaceObjectType.PlayerPivot || trans.Type == SpaceObjectType.DynamicObjectPivot ||
-			    trans.Type == SpaceObjectType.CorpsePivot)
-			{
-				return Pivot.Create(trans.Type, trans, false);
-			}
-
-			if (trans.Type == SpaceObjectType.Asteroid)
-			{
-				return Asteroid.Create(trans, null, false);
-			}
-
-			Debug.LogError("Unknown artificial body type " + trans.Type + " " + trans.GUID);
-			return null;
-		}
-
 		public void UpdateStabilizedPosition()
 		{
 			if (!(StabilizeToTargetObj == null))
@@ -278,7 +271,7 @@ namespace ZeroGravity.Objects
 
 		public void StabilizeToTarget(long guid, Vector3D stabilizationOffset)
 		{
-			if (StabilizeToTargetObj != null && StabilizeToTargetObj.GUID != guid)
+			if (StabilizeToTargetObj != null && StabilizeToTargetObj.Guid != guid)
 			{
 				StabilizeToTargetObj.StabilizedChildren.Remove(this);
 			}

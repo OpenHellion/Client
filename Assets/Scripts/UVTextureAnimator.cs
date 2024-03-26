@@ -62,7 +62,7 @@ internal class UVTextureAnimator : MonoBehaviour
 		index = Columns - 1;
 		Vector3 zero = Vector3.zero;
 		OffsetMat -= OffsetMat / count * count;
-		Vector2 value = new Vector2(1f / (float)Columns, 1f / (float)Rows);
+		Vector2 value = new Vector2(1f / Columns, 1f / Rows);
 		if (currentRenderer != null)
 		{
 			instanceMaterial = currentRenderer.material;
@@ -77,7 +77,7 @@ internal class UVTextureAnimator : MonoBehaviour
 		{
 			if (StartDelay > 0.0001f)
 			{
-				Invoke("PlayDelay", StartDelay);
+				Invoke(nameof(PlayDelay), StartDelay);
 			}
 			else
 			{
@@ -108,7 +108,7 @@ internal class UVTextureAnimator : MonoBehaviour
 		isCorutineStarted = false;
 		isVisible = false;
 		StopAllCoroutines();
-		CancelInvoke("PlayDelay");
+		CancelInvoke(nameof(PlayDelay));
 	}
 
 	private IEnumerator UpdateCorutine()
@@ -137,8 +137,8 @@ internal class UVTextureAnimator : MonoBehaviour
 			index = 0;
 		}
 
-		Vector2 value = new Vector2((float)index / (float)Columns - (float)(index / Columns),
-			1f - (float)(index / Columns) / (float)Rows);
+		Vector2 value = new Vector2(index / (float)Columns - index / Columns,
+			1f - index / Columns / (float)Rows);
 		if (currentRenderer != null)
 		{
 			instanceMaterial.SetTextureOffset("_MainTex", value);

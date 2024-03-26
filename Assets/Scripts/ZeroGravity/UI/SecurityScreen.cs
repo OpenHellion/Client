@@ -326,7 +326,7 @@ namespace ZeroGravity.UI
 		{
 			NetworkController.SendToGameServer(new VesselSecurityRequest
 			{
-				VesselGUID = SecuritySystem.ParentShip.GUID,
+				VesselGUID = SecuritySystem.ParentShip.Guid,
 				AddPlayerId = _selectedCrewman.PlayerId,
 				AddPlayerRank = AuthorizedPersonRank.CommandingOfficer,
 				AddPlayerName = _selectedCrewman.Name
@@ -349,7 +349,7 @@ namespace ZeroGravity.UI
 			{
 				NetworkController.SendToGameServer(new VesselSecurityRequest
 				{
-					VesselGUID = SecuritySystem.ParentShip.GUID,
+					VesselGUID = SecuritySystem.ParentShip.Guid,
 					AddPlayerId = MyPlayer.Instance.PlayerId,
 					AddPlayerRank = AuthorizedPersonRank.CommandingOfficer,
 					AddPlayerName = MyPlayer.Instance.PlayerName
@@ -389,7 +389,7 @@ namespace ZeroGravity.UI
 				SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.Crewman);
 			NetworkController.SendToGameServer(new VesselSecurityRequest
 			{
-				VesselGUID = SecuritySystem.ParentShip.GUID,
+				VesselGUID = SecuritySystem.ParentShip.Guid,
 				AddPlayerId = crewman.PlayerId,
 				AddPlayerRank = AuthorizedPersonRank.CommandingOfficer,
 				AddPlayerName = crewman.Name

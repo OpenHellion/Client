@@ -33,7 +33,7 @@ namespace ZeroGravity.Objects
 
 		public override string QuantityCheck()
 		{
-			return FormatHelper.CurrentMax(base.Health, base.MaxHealth);
+			return FormatHelper.CurrentMax(Health, MaxHealth);
 		}
 	}
 }

@@ -4,7 +4,7 @@ namespace ZeroGravity.Objects
 {
 	public interface IMapMainObject
 	{
-		long GUID { get; }
+		long Guid { get; }
 
 		CelestialBody ParentCelesitalBody { get; }
 

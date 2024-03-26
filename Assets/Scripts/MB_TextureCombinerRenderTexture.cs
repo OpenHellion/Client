@@ -71,7 +71,7 @@ public class MB_TextureCombinerRenderTexture
 		myCamera.targetTexture = _destinationTexture;
 		myCamera.clearFlags = CameraClearFlags.Color;
 		Transform component = myCamera.GetComponent<Transform>();
-		component.localPosition = new Vector3((float)width / 2f, (float)height / 2f, 3f);
+		component.localPosition = new Vector3(width / 2f, height / 2f, 3f);
 		component.localRotation = Quaternion.Euler(0f, 180f, 180f);
 		_doRenderAtlas = true;
 		if (LOG_LEVEL >= MB2_LogLevel.debug)
@@ -198,8 +198,8 @@ public class MB_TextureCombinerRenderTexture
 	private Color32 ConvertNormalFormatFromUnity_ToStandard(Color32 c)
 	{
 		Vector3 zero = Vector3.zero;
-		zero.x = (float)(int)c.a * 2f - 1f;
-		zero.y = (float)(int)c.g * 2f - 1f;
+		zero.x = c.a * 2f - 1f;
+		zero.y = c.g * 2f - 1f;
 		zero.z = Mathf.Sqrt(1f - zero.x * zero.x - zero.y * zero.y);
 		Color32 result = default(Color32);
 		result.a = 1;
@@ -275,9 +275,9 @@ public class MB_TextureCombinerRenderTexture
 
 		Rect sourceRect = default(Rect);
 		sourceRect.x = r.x;
-		sourceRect.y = r.y + 1f - 1f / (float)t.height;
+		sourceRect.y = r.y + 1f - 1f / t.height;
 		sourceRect.width = r.width;
-		sourceRect.height = 1f / (float)t.height;
+		sourceRect.height = 1f / t.height;
 		screenRect.x = rect.x;
 		screenRect.y = rect2.y;
 		screenRect.width = rect.width;
@@ -286,7 +286,7 @@ public class MB_TextureCombinerRenderTexture
 		sourceRect.x = r.x;
 		sourceRect.y = r.y;
 		sourceRect.width = r.width;
-		sourceRect.height = 1f / (float)t.height;
+		sourceRect.height = 1f / t.height;
 		screenRect.x = rect.x;
 		screenRect.y = rect.y + rect.height;
 		screenRect.width = rect.width;
@@ -294,16 +294,16 @@ public class MB_TextureCombinerRenderTexture
 		Graphics.DrawTexture(screenRect, t, sourceRect, 0, 0, 0, 0, mat);
 		sourceRect.x = r.x;
 		sourceRect.y = r.y;
-		sourceRect.width = 1f / (float)t.width;
+		sourceRect.width = 1f / t.width;
 		sourceRect.height = r.height;
 		screenRect.x = rect2.x;
 		screenRect.y = rect.y;
 		screenRect.width = _padding;
 		screenRect.height = rect.height;
 		Graphics.DrawTexture(screenRect, t, sourceRect, 0, 0, 0, 0, mat);
-		sourceRect.x = r.x + 1f - 1f / (float)t.width;
+		sourceRect.x = r.x + 1f - 1f / t.width;
 		sourceRect.y = r.y;
-		sourceRect.width = 1f / (float)t.width;
+		sourceRect.width = 1f / t.width;
 		sourceRect.height = r.height;
 		screenRect.x = rect.x + rect.width;
 		screenRect.y = rect.y;
@@ -311,18 +311,18 @@ public class MB_TextureCombinerRenderTexture
 		screenRect.height = rect.height;
 		Graphics.DrawTexture(screenRect, t, sourceRect, 0, 0, 0, 0, mat);
 		sourceRect.x = r.x;
-		sourceRect.y = r.y + 1f - 1f / (float)t.height;
-		sourceRect.width = 1f / (float)t.width;
-		sourceRect.height = 1f / (float)t.height;
+		sourceRect.y = r.y + 1f - 1f / t.height;
+		sourceRect.width = 1f / t.width;
+		sourceRect.height = 1f / t.height;
 		screenRect.x = rect2.x;
 		screenRect.y = rect2.y;
 		screenRect.width = _padding;
 		screenRect.height = _padding;
 		Graphics.DrawTexture(screenRect, t, sourceRect, 0, 0, 0, 0, mat);
-		sourceRect.x = r.x + 1f - 1f / (float)t.width;
-		sourceRect.y = r.y + 1f - 1f / (float)t.height;
-		sourceRect.width = 1f / (float)t.width;
-		sourceRect.height = 1f / (float)t.height;
+		sourceRect.x = r.x + 1f - 1f / t.width;
+		sourceRect.y = r.y + 1f - 1f / t.height;
+		sourceRect.width = 1f / t.width;
+		sourceRect.height = 1f / t.height;
 		screenRect.x = rect.x + rect.width;
 		screenRect.y = rect2.y;
 		screenRect.width = _padding;
@@ -330,17 +330,17 @@ public class MB_TextureCombinerRenderTexture
 		Graphics.DrawTexture(screenRect, t, sourceRect, 0, 0, 0, 0, mat);
 		sourceRect.x = r.x;
 		sourceRect.y = r.y;
-		sourceRect.width = 1f / (float)t.width;
-		sourceRect.height = 1f / (float)t.height;
+		sourceRect.width = 1f / t.width;
+		sourceRect.height = 1f / t.height;
 		screenRect.x = rect2.x;
 		screenRect.y = rect.y + rect.height;
 		screenRect.width = _padding;
 		screenRect.height = _padding;
 		Graphics.DrawTexture(screenRect, t, sourceRect, 0, 0, 0, 0, mat);
-		sourceRect.x = r.x + 1f - 1f / (float)t.width;
+		sourceRect.x = r.x + 1f - 1f / t.width;
 		sourceRect.y = r.y;
-		sourceRect.width = 1f / (float)t.width;
-		sourceRect.height = 1f / (float)t.height;
+		sourceRect.width = 1f / t.width;
+		sourceRect.height = 1f / t.height;
 		screenRect.x = rect.x + rect.width;
 		screenRect.y = rect.y + rect.height;
 		screenRect.width = _padding;

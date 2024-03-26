@@ -169,12 +169,7 @@ namespace ZeroGravity.UI
 		public void LogoutButton()
 		{
 			GlobalGUI.ShowConfirmMessageBox(Localization.Logout, Localization.AreYouSureLogout, Localization.Yes,
-				Localization.No, LogoutYes);
-		}
-
-		public void LogoutYes()
-		{
-			_world.LogOut();
+				Localization.No, _world.LogOut);
 		}
 
 		public void ExitGameButton()

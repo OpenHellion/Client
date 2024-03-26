@@ -165,7 +165,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					InSceneID = InSceneID,
 					NewState = SpawnPointState.Locked,
-					PlayerGUID = MyPlayer.Instance.GUID
+					PlayerGUID = MyPlayer.Instance.Guid
 				};
 				parentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null,
 					spawnPoint);
@@ -179,14 +179,14 @@ namespace ZeroGravity.LevelDesign
 				Debug.LogError("UnlockSpawnPoint, Spawn point vessel is NULL" + base.name + InSceneID);
 			}
 			else if (SpawnType != 0 && State != 0 && State != SpawnPointState.Authorized &&
-			         PlayerGUID == MyPlayer.Instance.GUID)
+			         PlayerGUID == MyPlayer.Instance.Guid)
 			{
 				SpaceObjectVessel parentVessel = ParentVessel;
 				SpawnPointStats spawnPoint = new SpawnPointStats
 				{
 					InSceneID = InSceneID,
 					NewState = SpawnPointState.Unlocked,
-					PlayerGUID = MyPlayer.Instance.GUID
+					PlayerGUID = MyPlayer.Instance.Guid
 				};
 				parentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null,
 					spawnPoint);
@@ -206,11 +206,11 @@ namespace ZeroGravity.LevelDesign
 				{
 					InSceneID = InSceneID,
 					NewState = SpawnPointState.Authorized,
-					PlayerGUID = MyPlayer.Instance.GUID
+					PlayerGUID = MyPlayer.Instance.Guid
 				};
 				parentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null,
 					spawnPoint);
-				MyPlayer.Instance.HomeStationGUID = ParentVessel.GUID;
+				MyPlayer.Instance.HomeStationGUID = ParentVessel.Guid;
 			}
 		}
 
@@ -221,7 +221,7 @@ namespace ZeroGravity.LevelDesign
 				Debug.LogError("HackSpawnPoint, Spawn point vessel is NULL" + base.name + InSceneID);
 			}
 			else if (SpawnType != 0 && State != 0 && State != SpawnPointState.Authorized &&
-			         PlayerGUID != MyPlayer.Instance.GUID)
+			         PlayerGUID != MyPlayer.Instance.Guid)
 			{
 				SpaceObjectVessel parentVessel = ParentVessel;
 				SpawnPointStats spawnPoint = new SpawnPointStats
@@ -229,7 +229,7 @@ namespace ZeroGravity.LevelDesign
 					InSceneID = InSceneID,
 					HackUnlock = true,
 					NewState = SpawnPointState.Unlocked,
-					PlayerGUID = MyPlayer.Instance.GUID
+					PlayerGUID = MyPlayer.Instance.Guid
 				};
 				parentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null,
 					spawnPoint);
@@ -245,7 +245,7 @@ namespace ZeroGravity.LevelDesign
 			else
 			{
 				if (SpawnType is SpawnPointType.SimpleSpawn || State is SpawnPointState.Authorized ||
-				    (State is SpawnPointState.Locked && PlayerGUID != MyPlayer.Instance.GUID))
+				    (State is SpawnPointState.Locked && PlayerGUID != MyPlayer.Instance.Guid))
 				{
 					return;
 				}
@@ -285,7 +285,7 @@ namespace ZeroGravity.LevelDesign
 			GetInvitedPlayersDelegate onPlayersLoaded)
 		{
 			if (SpawnType == SpawnPointType.SimpleSpawn || State == SpawnPointState.Authorized ||
-			    (State == SpawnPointState.Locked && PlayerGUID != MyPlayer.Instance.GUID))
+			    (State == SpawnPointState.Locked && PlayerGUID != MyPlayer.Instance.Guid))
 			{
 				return;
 			}
@@ -320,7 +320,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					SpawnPointID = new VesselObjectID
 					{
-						VesselGUID = ParentVessel.GUID,
+						VesselGUID = ParentVessel.Guid,
 						InSceneID = InSceneID
 					}
 				});

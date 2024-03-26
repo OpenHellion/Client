@@ -27,7 +27,7 @@ namespace ZeroGravity
 
 		public GameObject SkipQuest;
 
-		public QuestUI SelectedQuest;
+		[NonSerialized] public QuestUI SelectedQuest;
 
 		public GameObject QuestHolder;
 
@@ -52,11 +52,6 @@ namespace ZeroGravity
 		private readonly List<QuestCutSceneUI> _logElements = new List<QuestCutSceneUI>();
 
 		[SerializeField] private InGameGUI _inGameGUI;
-
-		private void Awake()
-		{
-			QuestUI.Init(_inGameGUI);
-		}
 
 		public void Toggle(bool val)
 		{
@@ -129,7 +124,7 @@ namespace ZeroGravity
 
 		public QuestUI CreateQuestUI(Quest quest)
 		{
-			QuestUI questUI = Object.Instantiate(QuestItem, QuestsHolder);
+			QuestUI questUI = Instantiate(QuestItem, QuestsHolder);
 			questUI.transform.Reset();
 			questUI.transform.SetAsFirstSibling();
 			questUI.gameObject.SetActive(value: true);
@@ -137,6 +132,7 @@ namespace ZeroGravity
 			questUI.Quest = quest;
 			questUI.RefreshQuestUI();
 			AllQuests.Add(questUI);
+			QuestUI.Init(_inGameGUI);
 			return questUI;
 		}
 

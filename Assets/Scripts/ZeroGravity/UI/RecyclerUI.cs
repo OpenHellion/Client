@@ -87,7 +87,7 @@ namespace ZeroGravity.UI
 					float num = 0f;
 					foreach (ResourceType key in recycleResources.Keys)
 					{
-						GameObject gameObject = GameObject.Instantiate(ResultItem, ResultsTransform);
+						GameObject gameObject = Instantiate(ResultItem, ResultsTransform);
 						gameObject.SetActive(value: true);
 						gameObject.transform.Reset();
 						RecycleResultUI component = gameObject.GetComponent<RecycleResultUI>();
@@ -120,8 +120,8 @@ namespace ZeroGravity.UI
 					Status.text = Localization.Jettison.ToUpper();
 				}
 
-				CancelInvoke("UpdateUI");
-				Invoke("UpdateUI", 5f);
+				CancelInvoke(nameof(UpdateUI));
+				Invoke(nameof(UpdateUI), 5f);
 			}
 			else
 			{

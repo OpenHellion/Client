@@ -2308,7 +2308,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7733}
   - component: {fileID: 5019}
-  - component: {fileID: 10916}
   - component: {fileID: 10918}
   - component: {fileID: 10917}
   m_Layer: 5
@@ -38429,7 +38428,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 10916}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: ToggleNews
         m_Mode: 6
@@ -38895,7 +38894,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 10916}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: ShowMe
         m_Mode: 1
@@ -39748,22 +39747,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CorpseObject: {fileID: 0}
   ColType: 3
---- !u!114 &10916
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cba665067ec03b648b39753dcbb1d5e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HeadingText: {fileID: 12150}
-  PostTime: {fileID: 12756}
-  Image: {fileID: 11002}
-  Body: {fileID: 10300}
 --- !u!114 &10917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39808,7 +39791,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 10916}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: ToggleNews
         m_Mode: 6

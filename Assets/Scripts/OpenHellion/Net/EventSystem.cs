@@ -7,6 +7,7 @@ using ZeroGravity.Network;
 
 namespace OpenHellion.Net
 {
+	// TODO: This class should be replaced by a network manager that is async/callback-based.
 	public static class EventSystem
 	{
 		public class InternalEventData
@@ -28,11 +29,7 @@ namespace OpenHellion.Net
 
 		public enum InternalEventType
 		{
-			OpenMainScreen = 3,
-			OcExteriorStatus = 4,
 			EquipAnimationEnd = 5,
-			ReconnectAuto = 6,
-			ConnectionFailed = 8,
 		}
 
 		private static readonly ConcurrentDictionary<Type, NetworkDataDelegate> Listeners =
@@ -94,7 +91,14 @@ namespace OpenHellion.Net
 		/// </summary>
 		public static void RemoveListener(Type group, NetworkDataDelegate function)
 		{
-			Listeners[group] -= function;
+			try
+			{
+				Listeners[group] -= function;
+			}
+			catch (KeyNotFoundException e)
+			{
+				Debug.LogFormat("Tried to remove listener but it doesn't exist: {0}", e.StackTrace);
+			}
 		}
 
 		/// <summary>

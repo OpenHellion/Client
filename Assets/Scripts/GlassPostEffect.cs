@@ -80,12 +80,12 @@ public class GlassPostEffect : MonoBehaviour
 
 	public void Raise()
 	{
-		StartCoroutine("RaiseLowerVisor", true);
+		StartCoroutine(nameof(RaiseLowerVisor), true);
 	}
 
 	public void Lower()
 	{
-		StartCoroutine("RaiseLowerVisor", false);
+		StartCoroutine(nameof(RaiseLowerVisor), false);
 	}
 
 	private IEnumerator RaiseLowerVisor(bool raise)

@@ -65,7 +65,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				LeverLight.material.SetColor("_EmColor", Colors.Red);
 				parentPort.LeverPulse = true;
-				parentPort.StartCoroutine("PulseColourOnMaterial");
+				parentPort.StartCoroutine(nameof(SceneDockingPort.PulseColourOnMaterial));
 				foreach (SceneDockingPortController portController in parentPort.DockedToPort.portControllers)
 				{
 					portController.LeverLight.material.SetColor("_EmColor", Colors.Blue);
@@ -76,7 +76,7 @@ namespace ZeroGravity.LevelDesign
 					}
 				}
 
-				parentPort.DockedToPort.StartCoroutine("PulseColourOnMaterial");
+				parentPort.DockedToPort.StartCoroutine(nameof(SceneDockingPort.PulseColourOnMaterial));
 			}
 			else
 			{

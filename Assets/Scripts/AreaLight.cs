@@ -626,7 +626,7 @@ public class AreaLight : MonoBehaviour
 			temp[i].filterMode = FilterMode.Bilinear;
 			temp[i].wrapMode = TextureWrapMode.Clamp;
 			m_BlurShadowmapMaterial.SetVector("_TexelSize",
-				new Vector4(0.5f / (float)num4, 0.5f / (float)num4, 0f, 0f));
+				new Vector4(0.5f / num4, 0.5f / num4, 0f, 0f));
 			if (i == 0)
 			{
 				m_BlurShadowmapMaterial.SetTexture("_Shadowmap", m_Shadowmap);
@@ -658,7 +658,7 @@ public class AreaLight : MonoBehaviour
 			temporary.filterMode = FilterMode.Bilinear;
 			temporary.wrapMode = TextureWrapMode.Clamp;
 			m_BlurShadowmapMaterial.SetVector("_MainTex_TexelSize",
-				new Vector4(1f / (float)num2, 1f / (float)num2, 0f, 0f));
+				new Vector4(1f / num2, 1f / num2, 0f, 0f));
 			float num5 = m_FogLight.m_BlurSize;
 			for (int k = 0; k < m_FogLight.m_BlurIterations; k++)
 			{

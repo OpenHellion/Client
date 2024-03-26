@@ -17,7 +17,7 @@ namespace ZeroGravity.Network
 
 		public override SpaceObjectType Type
 		{
-			get { return SpaceObjectType.Asteroid; }
+			get => SpaceObjectType.Asteroid;
 			set { }
 		}
 	}

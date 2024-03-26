@@ -449,10 +449,10 @@ public class AnimatorHelper : MonoBehaviour
 			animationData.VelocityRight = MathHelper.ProportionalValue(data.VelocityRight, 0f, 255f, -1f, 1f);
 			animationData.ZeroGForward = !animationData.IsZeroG
 				? 0f
-				: MathHelper.ProportionalValue((int)data.ZeroGForward, 0f, 255f, -1f, 1f);
+				: MathHelper.ProportionalValue(data.ZeroGForward, 0f, 255f, -1f, 1f);
 			animationData.ZeroGRight = !animationData.IsZeroG
 				? 0f
-				: MathHelper.ProportionalValue((int)data.ZeroGRight, 0f, 255f, -1f, 1f);
+				: MathHelper.ProportionalValue(data.ZeroGRight, 0f, 255f, -1f, 1f);
 			animationData.InteractType = data.InteractType;
 			animationData.PlayerStance = data.PlayerStance;
 			animationData.TurningDirection = data.TurningDirection;

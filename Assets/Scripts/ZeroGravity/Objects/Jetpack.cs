@@ -80,59 +80,31 @@ namespace ZeroGravity.Objects
 
 		public GameObject OxyLow;
 
-		public float CurrentFuel
-		{
-			get
-			{
-				return (PropellantCompartment.Resources == null || PropellantCompartment.Resources.Count <= 0)
-					? 0f
-					: PropellantCompartment.Resources[0].Quantity;
-			}
-		}
+		public float CurrentFuel =>
+			PropellantCompartment.Resources == null || PropellantCompartment.Resources.Count <= 0
+				? 0f
+				: PropellantCompartment.Resources[0].Quantity;
 
-		public float MaxFuel
-		{
-			get { return PropellantCompartment.Capacity; }
-		}
+		public float MaxFuel => PropellantCompartment.Capacity;
 
-		public float CurrentOxygen
-		{
-			get
-			{
-				return (OxygenCompartment.Resources == null || OxygenCompartment.Resources.Count <= 0)
-					? 0f
-					: OxygenCompartment.Resources[0].Quantity;
-			}
-		}
+		public float CurrentOxygen =>
+			OxygenCompartment.Resources == null || OxygenCompartment.Resources.Count <= 0
+				? 0f
+				: OxygenCompartment.Resources[0].Quantity;
 
-		public float MaxOxygen
-		{
-			get { return OxygenCompartment.Capacity; }
-		}
+		public float MaxOxygen => OxygenCompartment.Capacity;
 
-		public float PropFuel
-		{
-			get { return CurrentFuel / MaxFuel; }
-		}
+		public float PropFuel => CurrentFuel / MaxFuel;
 
-		public float PropOxygen
-		{
-			get { return CurrentOxygen / MaxOxygen; }
-		}
+		public float PropOxygen => CurrentOxygen / MaxOxygen;
 
-		public List<ICargoCompartment> Compartments
-		{
-			get { return _Compartments; }
-		}
+		public List<ICargoCompartment> Compartments => _Compartments;
 
-		public new string Name
-		{
-			get { return base.Name; }
-		}
+		public new string Name => base.Name;
 
 		public Helmet Helmet
 		{
-			get { return helmet; }
+			get => helmet;
 			set
 			{
 				helmet = value;
@@ -144,20 +116,11 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public override bool IsInvetoryEquipable
-		{
-			get { return true; }
-		}
+		public override bool IsInvetoryEquipable => true;
 
-		public override EquipType EquipTo
-		{
-			get { return EquipType.EquipInventory; }
-		}
+		public override EquipType EquipTo => EquipType.EquipInventory;
 
-		public SpaceObjectVessel ParentVessel
-		{
-			get { return null; }
-		}
+		public SpaceObjectVessel ParentVessel => null;
 
 		protected override void Awake()
 		{
@@ -186,7 +149,7 @@ namespace ZeroGravity.Objects
 
 		public void StartNozzles(Vector4 direction, bool myJetpack = false)
 		{
-			SoundEffect soundEffect = ((!myJetpack) ? JetpackSounds : MyJetpackSounds);
+			SoundEffect soundEffect = !myJetpack ? JetpackSounds : MyJetpackSounds;
 			if (soundEffect != null)
 			{
 				if (direction.z >= 0.01f)
@@ -330,9 +293,9 @@ namespace ZeroGravity.Objects
 			    !MyPlayer.Instance.Inventory.AddToInventory(this, inventorySlot, MyPlayer.Instance.Inventory.HandsSlot))
 			{
 				string empty = string.Empty;
-				empty = ((!(MyPlayer.Instance.Inventory.Outfit == null))
+				empty = !(MyPlayer.Instance.Inventory.Outfit == null)
 					? Localization.AlreadyEquipped.ToUpper()
-					: Localization.EquipSuitFirst.ToUpper());
+					: Localization.EquipSuitFirst.ToUpper();
 				World.InGameGUI.ShowInteractionCanvasMessage(empty);
 			}
 		}
@@ -341,7 +304,7 @@ namespace ZeroGravity.Objects
 		{
 			if (pl is OtherPlayer)
 			{
-				(pl as OtherPlayer).CurrentJetpack = ((type != EquipTo) ? null : this);
+				(pl as OtherPlayer).CurrentJetpack = type != EquipTo ? null : this;
 			}
 			else
 			{
@@ -405,7 +368,7 @@ namespace ZeroGravity.Objects
 				OxygenCompartment.Resources.Add(jetpackStats.Oxygen);
 			}
 
-			if (base.AttachPoint != null && MyPlayer.Instance.IsLockedToTrigger &&
+			if (AttachPoint != null && MyPlayer.Instance.IsLockedToTrigger &&
 			    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
 			{
 				SceneTriggerCargoPanel sceneTriggerCargoPanel =

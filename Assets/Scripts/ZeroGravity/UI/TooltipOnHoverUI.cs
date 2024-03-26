@@ -1,76 +1,89 @@
+using System;
+using OpenHellion.UI;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 namespace ZeroGravity.UI
 {
 	[RequireComponent(typeof(Image))]
-	public class TooltipOnHoverUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IEventSystemHandler
+	[Obsolete]
+	public class TooltipOnHoverUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	{
-		private GameObject Tooltip;
+		private GameObject _tooltip;
 
-		private Text Heading;
+		private TMP_Text _heading;
 
-		private Text Content;
+		private TMP_Text _content;
 
-		private bool show;
+		private bool _show;
 
-		private void Start()
+		private void Awake()
 		{
-			//Tooltip = Client.Instance.InGamePanels.ToolTip;
-			//Heading = Client.Instance.InGamePanels.TooltipHeading;
-			//Content = Client.Instance.InGamePanels.TooltipContent;
+			var inWorldPanels = GameObject.Find("/InWorldPanels").GetComponent<InWorldPanels>();
+			if (inWorldPanels is null)
+			{
+				Debug.LogWarning("Tried to get InWorldPanels tooltip, but it couldn't be found. Destroying object. " + gameObject.name);
+				Destroy(gameObject);
+				return;
+			}
+
+			_tooltip = inWorldPanels.ToolTip;
+			_heading = inWorldPanels.TooltipHeading;
+			_content = inWorldPanels.TooltipContent;
 		}
 
 		public void OnPointerEnter(PointerEventData eventData)
 		{
-			show = true;
-			Invoke("ShowTooltip", 0.5f);
+			_show = true;
+			Invoke(nameof(ShowTooltip), 0.5f);
 		}
 
 		public void OnPointerExit(PointerEventData eventData)
 		{
-			show = false;
+			_show = false;
 			HideTooltip();
 		}
 
 		private void ShowTooltip()
 		{
-			if (!show)
+			if (!_show)
 			{
 				return;
 			}
-			string localizedField = Localization.GetLocalizedField(base.name + "Tooltip");
+			string localizedField = Localization.GetLocalizedField(name + "Tooltip");
 			if (localizedField != null)
 			{
-				string text = Localization.GetLocalizedField(base.name + "Title");
+				string text = Localization.GetLocalizedField(name + "Title");
 				if (text == null)
 				{
 					text = "Info";
 				}
-				Heading.text = text.ToUpper();
-				Content.text = localizedField;
-				if (Mouse.current.position.x.ReadValue() > (float)(Screen.width / 2))
+				_heading.text = text.ToUpper();
+				_content.text = localizedField;
+				if (Mouse.current.position.x.ReadValue() > Screen.width / 2)
 				{
-					Tooltip.GetComponent<RectTransform>().pivot = new Vector2(1f, 1f);
+					_tooltip.GetComponent<RectTransform>().pivot = new Vector2(1f, 1f);
 				}
 				else
 				{
-					Tooltip.GetComponent<RectTransform>().pivot = new Vector2(0f, 1f);
+					_tooltip.GetComponent<RectTransform>().pivot = new Vector2(0f, 1f);
 				}
-				Tooltip.transform.position = (Vector3) Mouse.current.position.ReadValue();
-				Tooltip.SetActive(true);
+				_tooltip.transform.position = Mouse.current.position.ReadValue();
+				_tooltip.SetActive(true);
 			}
 			else
 			{
-				Tooltip.SetActive(false);
+				_tooltip.SetActive(false);
 			}
 		}
 
 		private void HideTooltip()
 		{
-			Tooltip.SetActive(false);
+			_tooltip.SetActive(false);
 		}
 	}
 }

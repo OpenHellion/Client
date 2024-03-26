@@ -68,7 +68,7 @@ public class EnterAtmosphereEffect : MonoBehaviour
 			try
 			{
 				ArtificialBody artificialBody = MyPlayer.Instance.Parent as ArtificialBody;
-				CelestialBody parentCelesitalBody = artificialBody.ParentCelesitalBody;
+				CelestialBody parentCelesitalBody = artificialBody.ParentCelestialBody;
 				float num = (float)((artificialBody.Position - parentCelesitalBody.Position).Magnitude -
 				                    parentCelesitalBody.Radius);
 				Intensity = 1f - Mathf.Clamp01((num - MinDistance) / (MaxDistance - MinDistance));

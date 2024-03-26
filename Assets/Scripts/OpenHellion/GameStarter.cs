@@ -56,6 +56,8 @@ namespace OpenHellion
 
 		private World _world;
 
+		private bool _hasGotLoginRequest;
+
 		/// <summary>
 		///		Creates a GameStarter instance. If inviteId is provided the class automatically connects to it.
 		/// </summary>
@@ -151,6 +153,9 @@ namespace OpenHellion
 				// Connect to server!
 				ConnectToServer(connectingServerData);
 				_lastConnectedServer = connectingServerData;
+
+				// Apparently references do not work.
+				MainMenuGUI.LastConnectedServer = _lastConnectedServer;
 			}
 			catch (Exception e)
 			{
@@ -167,13 +172,15 @@ namespace OpenHellion
 			_lastConnectedServer = server;
 			GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.ConnectingToGame);
 
-			SceneManager.LoadScene("WorldScene", LoadSceneMode.Single);
-			NetworkController.ConnectToGame(server, OnConnected);
+			var load = SceneManager.LoadSceneAsync("WorldScene", LoadSceneMode.Single);
+			load.completed += _ =>
+			{
+				_world = GameObject.Find("/World").GetComponent<World>();
+				Debug.Assert(_world is not null);
+				NetworkController.ConnectToGame(server, OnConnected, _world.OnDisconnectedFromServer);
 
-			_world = GameObject.Find("/World").GetComponent<World>();
-			Debug.Assert(_world != null);
-
-			InvokeRepeating(nameof(CheckLoadingComplete), 3f, 1f);
+				InvokeRepeating(nameof(CheckLoadingComplete), 3f, 1f);
+			};
 		}
 
 		private async void OnConnected()
@@ -203,11 +210,20 @@ namespace OpenHellion
 
 		private void LogInResponseListener(NetworkData data)
 		{
+			// TODO: Ideally this would be made impossible by the design of the networking backend.
+			if (_hasGotLoginRequest)
+			{
+				Debug.LogWarning("Got a log in request when already logged in.");
+				return;
+			}
+
 			LogInResponse logInResponse = data as LogInResponse;
 			if (logInResponse.Response == ResponseResult.Success)
 			{
+				_hasGotLoginRequest = true;
+				Debug.Log("Received log in response.");
+
 				GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.LoadWorld);
-				Debug.Log("Successfully logged into game.");
 
 				if (_inviteMessage is not null)
 				{
@@ -240,7 +256,7 @@ namespace OpenHellion
 		private void CheckLoadingComplete()
 		{
 			Debug.Log("CheckLoadingComplete");
-			if (_world.LoadingFinishedTask != null)
+			if (_world is not null && _world.LoadingFinishedTask is not null)
 			{
 				Invoke(nameof(AfterLoadingFinishedTask), 1f);
 			}

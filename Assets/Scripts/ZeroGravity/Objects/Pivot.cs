@@ -14,14 +14,11 @@ namespace ZeroGravity.Objects
 
 		private SpaceObjectType pivotType;
 
-		public override SpaceObjectType Type
-		{
-			get { return pivotType; }
-		}
+		public override SpaceObjectType Type => pivotType;
 
 		public static Pivot Create(SpaceObjectType pivotType, ObjectTransform trans, bool isMainObject)
 		{
-			Pivot pivot = ArtificialBody.Create(pivotType, trans.GUID, trans, isMainObject) as Pivot;
+			Pivot pivot = CreateImpl(pivotType, trans.GUID, trans, isMainObject) as Pivot;
 			pivot.pivotType = pivotType;
 			switch (pivotType)
 			{
@@ -60,7 +57,7 @@ namespace ZeroGravity.Objects
 				Forward = Vector3.forward.ToArray(),
 				Up = Vector3.up.ToArray()
 			}, isMainObject);
-			if (guid == MyPlayer.Instance.GUID)
+			if (guid == MyPlayer.Instance.Guid)
 			{
 				pivot.transform.parent = null;
 			}
@@ -90,17 +87,17 @@ namespace ZeroGravity.Objects
 
 		private void OnDrawGizmos()
 		{
-			Color color = ((ChildType == SpaceObjectType.Player)
+			Color color = ChildType == SpaceObjectType.Player
 				? new Color(1f, 0f, 0f, 0.05f)
-				: ((ChildType != SpaceObjectType.Corpse)
+				: ChildType != SpaceObjectType.Corpse
 					? new Color(0f, 1f, 0f, 0.05f)
-					: new Color(0f, 0f, 1f, 0.05f)));
-			Gizmos.matrix = base.transform.localToWorldMatrix;
+					: new Color(0f, 0f, 1f, 0.05f);
+			Gizmos.matrix = transform.localToWorldMatrix;
 			Gizmos.color = color;
-			Gizmos.DrawSphere(base.transform.position, 0.5f);
+			Gizmos.DrawSphere(transform.position, 0.5f);
 			color.a = 0.3f;
 			Gizmos.color = color;
-			Gizmos.DrawWireSphere(base.transform.position, 0.5f);
+			Gizmos.DrawWireSphere(transform.position, 0.5f);
 		}
 	}
 }

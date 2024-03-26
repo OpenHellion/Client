@@ -54,7 +54,7 @@ namespace ZeroGravity.UI
 		{
 			Name.text = Room.RoomName;
 			Volume.text = FormatHelper.FormatValue(Room.ConnectedRooms.Sum((SceneTriggerRoom m) => m.Volume));
-			base.gameObject.SetActive(Vessel.IsPlayerAuthorizedOrNoSecurity(MyPlayer.Instance));
+			gameObject.SetActive(Vessel.IsPlayerAuthorizedOrNoSecurity(MyPlayer.Instance));
 		}
 
 		public void RefreshUI()

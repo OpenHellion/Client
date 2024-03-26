@@ -319,11 +319,11 @@ namespace ZeroGravity.CharacterMovement
 			}
 			else
 			{
-				characterController.rigidBody.maxAngularVelocity = characterController.MaxAngularVelocity;
+				characterController.RigidBody.maxAngularVelocity = characterController.MaxAngularVelocity;
 				_yRotationLerped = Mathf.Lerp(0f, yRotation, Time.deltaTime);
 				_xRotationLerped = Mathf.Lerp(0f, xRotation, Time.deltaTime);
 				_zRotationLerped = Mathf.Lerp(0f, zRotation, Time.deltaTime);
-				characterController.rigidBody.AddRelativeTorque(
+				characterController.RigidBody.AddRelativeTorque(
 					new Vector3(_xRotationLerped, _yRotationLerped, (_leanRightAxis == 0f) ? 0f : _zRotationLerped) *
 					characterController.CurrentSpeeds.RotateVelocity, ForceMode.Impulse);
 			}

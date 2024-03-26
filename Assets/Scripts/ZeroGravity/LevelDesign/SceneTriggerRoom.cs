@@ -327,7 +327,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			NetworkController.SendToGameServer(new RoomPressureMessage
 			{
-				ID = new VesselObjectID(ParentVessel.GUID, InSceneID),
+				ID = new VesselObjectID(ParentVessel.Guid, InSceneID),
 				TargetPressure = pressure
 			});
 		}
@@ -336,8 +336,8 @@ namespace ZeroGravity.LevelDesign
 		{
 			NetworkController.SendToGameServer(new RoomPressureMessage
 			{
-				ID = new VesselObjectID(ParentVessel.GUID, InSceneID),
-				TargetRoomID = ((!(room == null)) ? new VesselObjectID(room.ParentVessel.GUID, room.InSceneID) : null)
+				ID = new VesselObjectID(ParentVessel.Guid, InSceneID),
+				TargetRoomID = ((!(room == null)) ? new VesselObjectID(room.ParentVessel.Guid, room.InSceneID) : null)
 			});
 		}
 

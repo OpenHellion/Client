@@ -80,7 +80,7 @@ public class MB3_MeshBakerGrouper : MonoBehaviour
 			DrawCircle(grouper.clusterGrouper.pieAxis, grouper.clusterGrouper.origin, magnitude, 24);
 			Quaternion quaternion = Quaternion.FromToRotation(Vector3.up, grouper.clusterGrouper.pieAxis);
 			Quaternion quaternion2 =
-				Quaternion.AngleAxis(180f / (float)grouper.clusterGrouper.pieNumSegments, Vector3.up);
+				Quaternion.AngleAxis(180f / grouper.clusterGrouper.pieNumSegments, Vector3.up);
 			Vector3 vector3 = quaternion2 * Vector3.forward;
 			for (int i = 0; i < grouper.clusterGrouper.pieNumSegments; i++)
 			{

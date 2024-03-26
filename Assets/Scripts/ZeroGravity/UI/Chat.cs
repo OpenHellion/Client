@@ -112,7 +112,7 @@ namespace ZeroGravity.UI
 				return;
 			}
 
-			GameObject chatItem = Instantiate(ChatItemPref, base.transform.position, base.transform.rotation);
+			GameObject chatItem = Instantiate(ChatItemPref, transform.position, transform.rotation);
 			chatItem.transform.SetParent(ContentTrans);
 			chatItem.SetActive(true);
 			chatItem.transform.localScale = new Vector3(1f, 1f, 1f);

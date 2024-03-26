@@ -282,12 +282,12 @@ namespace ZeroGravity.UI
 			AlertBox.SetActive(value: false);
 			MainScreen.SetActive(value: true);
 			Unauthorized.Activate(!MyAirlock.MySceneTrigger.CheckAuthorization());
-			base.gameObject.SetActive(value: true);
+			gameObject.SetActive(value: true);
 		}
 
 		public void OnDetach()
 		{
-			base.gameObject.SetActive(value: false);
+			gameObject.SetActive(value: false);
 		}
 
 		public void GetVesselAndAirTanks()

@@ -59,33 +59,33 @@ namespace ZeroGravity.ShipComponents
 
 		public override void UpdateObject()
 		{
-			Position.position = base.ObjectPosition;
-			Orbits.localScale = Vector3.one * (float)base.ObjectScale;
-			Visual.localScale = Vector3.one * (float)((double)Radius * base.ObjectScale) * 2f;
+			Position.position = ObjectPosition;
+			Orbits.localScale = Vector3.one * (float)ObjectScale;
+			Visual.localScale = Vector3.one * (float)(Radius * ObjectScale) * 2f;
 			if (!double.IsInfinity(Orbit.GravityInfluenceRadius))
 			{
 				SphereOfInfluence.localScale =
-					Vector3.one * (float)(Orbit.GravityInfluenceRadius * base.ObjectScale) * 2f;
+					Vector3.one * (float)(Orbit.GravityInfluenceRadius * ObjectScale) * 2f;
 			}
 		}
 
 		public override void UpdateOrbitColors()
 		{
-			float num = 8.45228E+09f / Radius * base.Map.ClosestSunScale / OrbitFadeEnd;
-			float num2 = 8.45228E+09f / Radius * base.Map.ClosestSunScale / OrbitFadeStart;
+			float num = 8.45228E+09f / Radius * Map.ClosestSunScale / OrbitFadeEnd;
+			float num2 = 8.45228E+09f / Radius * Map.ClosestSunScale / OrbitFadeStart;
 			Color orbitColor = OrbitColor;
-			orbitAlpha = OrbitFadeCurve.Evaluate(((float)base.Map.Scale - num2) * 1f / (num - num2));
-			orbitColor.a = orbitAlpha;
+			OrbitAlpha = OrbitFadeCurve.Evaluate(((float)Map.Scale - num2) * 1f / (num - num2));
+			orbitColor.a = OrbitAlpha;
 			MyOrbitRenderer.startColor = orbitColor;
 			MyOrbitRenderer.endColor = orbitColor;
 			if (SphereOfInfluence.gameObject.GetComponent<MeshRenderer>().enabled)
 			{
-				SphereOfInfluence.gameObject.GetComponent<MeshRenderer>().material.SetFloat("_Fade", orbitAlpha);
+				SphereOfInfluence.gameObject.GetComponent<MeshRenderer>().material.SetFloat("_Fade", OrbitAlpha);
 			}
 
-			if (Orbit.CelestialBody.GUID != 1 && Orbit.Parent.CelestialBody.GUID != 1)
+			if (Orbit.CelestialBody.Guid != 1 && Orbit.Parent.CelestialBody.Guid != 1)
 			{
-				if (orbitAlpha < 0.999f)
+				if (OrbitAlpha < 0.999f)
 				{
 					PositionCollider.enabled = true;
 					IconVisual.gameObject.SetActive(true);
@@ -104,7 +104,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				CelestialBody celestialBody = MainObject as CelestialBody;
 				GameObject gameObject =
-					Object.Instantiate(Resources.Load(CelestialBodyData.NavigationPrefabPath) as GameObject);
+					Instantiate(Resources.Load(CelestialBodyData.NavigationPrefabPath) as GameObject);
 				gameObject.SetLayerRecursively("Map");
 				gameObject.transform.SetParent(Visual);
 				gameObject.transform.localScale = Vector3.one;

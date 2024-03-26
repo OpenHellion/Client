@@ -119,7 +119,7 @@ namespace ZeroGravity.UI
 				ScreenCanvasStatus.sprite = CyclingSprite;
 				CyclingScreen.SetActive(true);
 			}
-			else if ((double)Mathf.Abs(((!(MyPlayer.Instance.CurrentRoomTrigger != null))
+			else if (Mathf.Abs(((!(MyPlayer.Instance.CurrentRoomTrigger != null))
 				         ? 0f
 				         : MyPlayer.Instance.CurrentRoomTrigger.AirPressure) - Room.AirPressure) < 0.1)
 			{

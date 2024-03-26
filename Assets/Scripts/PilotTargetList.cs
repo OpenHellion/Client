@@ -67,7 +67,7 @@ public class PilotTargetList : MonoBehaviour
 		int num = ParentPilot.AllTargets.IndexOf(ParentPilot.SelectedTarget);
 		if (ParentPilot.AllTargets.Count > 6)
 		{
-			float y = 70f * (float)num;
+			float y = 70f * num;
 			TargetListHolder.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, y);
 		}
 		else if (ParentPilot.AllTargets.Count == 0)

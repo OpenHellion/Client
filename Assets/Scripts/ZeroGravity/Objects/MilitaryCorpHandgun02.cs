@@ -11,7 +11,7 @@ namespace ZeroGravity.Objects
 
 		public int BulletCount
 		{
-			get { return _BulletCount; }
+			get => _BulletCount;
 			set
 			{
 				_BulletCount = value;

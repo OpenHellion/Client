@@ -159,7 +159,7 @@ public class HealthPostEffect : MonoBehaviour
 			}
 		}
 
-		if ((double)Mathf.Abs(LerpedVeins - VeinsAppear) > 0.01)
+		if (Mathf.Abs(LerpedVeins - VeinsAppear) > 0.01)
 		{
 			LerpedVeins = Mathf.Lerp(LerpedVeins, VeinsAppear, Time.deltaTime * 2f);
 		}
@@ -181,7 +181,7 @@ public class HealthPostEffect : MonoBehaviour
 			LerpedHealth = Mathf.Lerp(LerpedHealth, Health, Time.deltaTime * 2f);
 		}
 
-		if ((double)Mathf.Abs(BlurAmount - Suffocation) > 0.01)
+		if (Mathf.Abs(BlurAmount - Suffocation) > 0.01)
 		{
 			BlurAmount = Mathf.Lerp(BlurAmount, Suffocation, Time.deltaTime * 2f);
 		}

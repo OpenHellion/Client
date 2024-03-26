@@ -363,8 +363,8 @@ namespace DigitalOpus.MB.Core
 				{
 					for (int j = 0; j < newHeight; j++)
 					{
-						float x = (float)i / num;
-						float y = (float)j / num2;
+						float x = i / num;
+						float y = j / num2;
 						texture2D.SetPixel(i, j, source.GetPixelBilinear(x, y));
 					}
 				}

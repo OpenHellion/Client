@@ -45,7 +45,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				NetworkController.SendToGameServer(new VesselSecurityRequest
 				{
-					VesselGUID = _parentShip.GUID,
+					VesselGUID = _parentShip.Guid,
 					VesselName = newName
 				});
 			}
@@ -61,7 +61,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			NetworkController.SendToGameServer(new VesselSecurityRequest
 			{
-				VesselGUID = _parentShip.GUID,
+				VesselGUID = _parentShip.Guid,
 				AddPlayerId = player.PlayerId,
 				AddPlayerRank = newRank,
 				AddPlayerName = player.Name
@@ -72,7 +72,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			NetworkController.SendToGameServer(new VesselSecurityRequest
 			{
-				VesselGUID = _parentShip.GUID,
+				VesselGUID = _parentShip.Guid,
 				RemovePlayerId = player.PlayerId
 			});
 			UpdateUI();
@@ -85,7 +85,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				NetworkController.SendToGameServer(new VesselSecurityRequest
 				{
-					VesselGUID = _parentShip.GUID,
+					VesselGUID = _parentShip.Guid,
 					HackPanel = true
 				});
 			}
@@ -124,7 +124,7 @@ namespace ZeroGravity.ShipComponents
 				{
 					SecuritySystemID = new VesselObjectID
 					{
-						VesselGUID = ParentShip.GUID,
+						VesselGUID = ParentShip.Guid,
 						InSceneID = 0
 					}
 				});
@@ -148,7 +148,7 @@ namespace ZeroGravity.ShipComponents
 			if (!data.VesselName.IsNullOrEmpty() && data.VesselName != _parentShip.VesselData.VesselName)
 			{
 				_parentShip.VesselData.VesselName = data.VesselName;
-				_world.Map.InitializeMapObject(_parentShip);
+				_world.Map.InitialiseMapObject(_parentShip);
 			}
 
 			AuthorizedPlayers.Clear();

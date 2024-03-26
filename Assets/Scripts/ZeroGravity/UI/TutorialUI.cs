@@ -16,7 +16,7 @@ namespace ZeroGravity.UI
 			timer += Time.deltaTime;
 			if (timer > timerTreshold)
 			{
-				Object.Destroy(base.gameObject);
+				Destroy(gameObject);
 			}
 		}
 	}

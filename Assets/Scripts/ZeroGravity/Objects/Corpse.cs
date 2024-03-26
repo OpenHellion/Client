@@ -68,7 +68,7 @@ namespace ZeroGravity.Objects
 
 		public override SpaceObject Parent
 		{
-			get { return base.Parent; }
+			get => base.Parent;
 			set
 			{
 				base.Parent = value;
@@ -85,19 +85,19 @@ namespace ZeroGravity.Objects
 		public static Corpse SpawnCorpse(Corpse template)
 		{
 			GameObject gameObject = template.Gender != 0
-				? UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpseFemale"),
+				? Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpseFemale"),
 					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject
-				: UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpse"),
+				: Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpse"),
 					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject;
 			gameObject.SetActive(value: false);
 			Corpse component = gameObject.GetComponent<Corpse>();
 			component.Gender = template.Gender;
-			component.GUID = template.GUID;
+			component.Guid = template.Guid;
 			component.animHelper.CreateRig();
 			component.InitializeInventory();
 			component.ReconnectAllBones();
-			component.gameObject.name = "Corpse_" + component.GUID;
-			World.AddCorpse(component.GUID, component);
+			component.gameObject.name = "Corpse_" + component.Guid;
+			World.AddCorpse(component.Guid, component);
 			component.Parent = template.Parent;
 			component.transform.position = template.transform.position;
 			component.transform.rotation = template.transform.rotation;
@@ -137,12 +137,12 @@ namespace ZeroGravity.Objects
 			corpseObj.SetActive(value: false);
 			Corpse component = corpseObj.GetComponent<Corpse>();
 			component.Gender = details.Gender;
-			component.GUID = details.GUID;
+			component.Guid = details.GUID;
 			component.animHelper.CreateRig();
 			component.InitializeInventory();
 			component.ReconnectAllBones();
-			component.gameObject.name = "Corpse_" + component.GUID;
-			World.AddCorpse(component.GUID, component);
+			component.gameObject.name = "Corpse_" + component.Guid;
+			World.AddCorpse(component.Guid, component);
 			if (details.DynamicObjectData != null && details.DynamicObjectData.Count > 0)
 			{
 				DynamicObjectDetails dynamicObjectDetails = details.DynamicObjectData.Find((DynamicObjectDetails x) =>
@@ -211,13 +211,13 @@ namespace ZeroGravity.Objects
 		private void SendMovementMessage()
 		{
 			CorpseMovementMessage corpseMovementMessage = new CorpseMovementMessage();
-			corpseMovementMessage.GUID = base.GUID;
-			corpseMovementMessage.LocalPosition = base.transform.localPosition.ToArray();
-			corpseMovementMessage.LocalRotation = base.transform.localRotation.ToArray();
+			corpseMovementMessage.GUID = Guid;
+			corpseMovementMessage.LocalPosition = transform.localPosition.ToArray();
+			corpseMovementMessage.LocalRotation = transform.localRotation.ToArray();
 			corpseMovementMessage.Velocity = corpseParts[hipsKey].RBody.velocity.ToArray();
 			corpseMovementMessage.AngularVelocity = corpseParts[hipsKey].RBody.angularVelocity.ToArray();
 			corpseMovementMessage.Timestamp = Time.time;
-			corpseMovementMessage.IsInsideSpaceObject = base.IsInsideSpaceObject;
+			corpseMovementMessage.IsInsideSpaceObject = IsInsideSpaceObject;
 			corpseMovementMessage.RagdollDataList = new Dictionary<byte, RagdollItemData>();
 			CorpseMovementMessage corpseMovementMessage2 = corpseMovementMessage;
 			CorpsePart corpsePart = corpseParts[hipsKey];
@@ -276,7 +276,7 @@ namespace ZeroGravity.Objects
 					rigidbody = bone.Value.GetComponent<Rigidbody>();
 					if (rigidbody == null)
 					{
-						Debug.LogError("Missing rigidbody on ragdoll colliders" + component.name + base.GUID);
+						Debug.LogError("Missing rigidbody on ragdoll colliders" + component.name + Guid);
 						return;
 					}
 
@@ -303,7 +303,7 @@ namespace ZeroGravity.Objects
 			if (Gender == Gender.Female)
 			{
 				GameObject gameObject =
-					UnityEngine.Object.Instantiate(Resources.Load("Models/Units/Characters/Hairs/Female/Hair1")) as
+					Instantiate(Resources.Load("Models/Units/Characters/Hairs/Female/Hair1")) as
 						GameObject;
 				gameObject.transform.parent = animHelper.GetBone(AnimatorHelper.HumanBones.Head);
 				gameObject.transform.localPosition = Vector3.zero;
@@ -357,7 +357,7 @@ namespace ZeroGravity.Objects
 		public void EquipOutfit(Outfit o)
 		{
 			o.FoldedOutfitTrans.gameObject.SetActive(value: false);
-			o.transform.parent = base.transform;
+			o.transform.parent = transform;
 			RemoveOutfit();
 			CurrentOutfit = o;
 			SetOutfitParent(o.OutfitTrans.GetChildren(), outfitTransform, activeGeometry: true);
@@ -369,7 +369,7 @@ namespace ZeroGravity.Objects
 		{
 			ragdollComponent.ToggleRagdoll(enabled: false, this);
 			RemoveOutfit();
-			UnityEngine.Object.Destroy(base.gameObject);
+			Destroy(gameObject);
 			SpawnCorpse(this);
 		}
 
@@ -400,11 +400,11 @@ namespace ZeroGravity.Objects
 		private void SendStatsMessage()
 		{
 			CorpseStatsMessage corpseStatsMessage = new CorpseStatsMessage();
-			corpseStatsMessage.GUID = base.GUID;
-			corpseStatsMessage.ParentGUID = Parent.GUID;
+			corpseStatsMessage.GUID = Guid;
+			corpseStatsMessage.ParentGUID = Parent.Guid;
 			corpseStatsMessage.ParentType = Parent.Type;
-			corpseStatsMessage.LocalPosition = base.transform.localPosition.ToArray();
-			corpseStatsMessage.LocalRotation = base.transform.localRotation.ToArray();
+			corpseStatsMessage.LocalPosition = transform.localPosition.ToArray();
+			corpseStatsMessage.LocalRotation = transform.localRotation.ToArray();
 			CorpseStatsMessage data = corpseStatsMessage;
 			NetworkController.SendToGameServer(data);
 		}
@@ -446,7 +446,7 @@ namespace ZeroGravity.Objects
 		{
 			base.OnDestroy();
 			Disconnect();
-			World.RemoveCorpse(GUID);
+			World.RemoveCorpse(Guid);
 		}
 
 		public void ProcessMoveCorpseObectMessage(CorpseMovementMessage mm)
@@ -462,29 +462,29 @@ namespace ZeroGravity.Objects
 		private void CorpseStatsMessageListener(NetworkData data)
 		{
 			CorpseStatsMessage corpseStatsMessage = data as CorpseStatsMessage;
-			if (corpseStatsMessage.GUID != base.GUID)
+			if (corpseStatsMessage.GUID != Guid)
 			{
 				return;
 			}
 
 			if (corpseStatsMessage.DestroyCorpse)
 			{
-				UnityEngine.Object.Destroy(base.gameObject);
+				Destroy(gameObject);
 			}
 			else if (!(Parent is Pivot) && corpseStatsMessage.ParentType == SpaceObjectType.CorpsePivot)
 			{
 				ArtificialBody artificialBody = Parent as ArtificialBody;
 				if (artificialBody == null)
 				{
-					Debug.LogError("Corpse exited vessel but we don't know from where." + base.GUID + Parent +
+					Debug.LogError("Corpse exited vessel but we don't know from where." + Guid + Parent +
 						corpseStatsMessage.ParentType + corpseStatsMessage.ParentGUID);
 				}
 				else
 				{
-					Pivot pivot = World.SolarSystem.GetArtificialBody(base.GUID) as Pivot;
+					Pivot pivot = World.SolarSystem.GetArtificialBody(Guid) as Pivot;
 					if (pivot == null)
 					{
-						pivot = Pivot.Create(SpaceObjectType.CorpsePivot, base.GUID, artificialBody,
+						pivot = Pivot.Create(SpaceObjectType.CorpsePivot, Guid, artificialBody,
 							isMainObject: false);
 					}
 
@@ -496,7 +496,7 @@ namespace ZeroGravity.Objects
 			                             corpseStatsMessage.ParentType == SpaceObjectType.Asteroid))
 			{
 				World.SolarSystem.RemoveArtificialBody(Parent as Pivot);
-				UnityEngine.Object.Destroy(Parent.gameObject);
+				Destroy(Parent.gameObject);
 				Parent = World.GetVessel(corpseStatsMessage.ParentGUID);
 				TransitionTrigger.ResetTriggers();
 			}
@@ -504,7 +504,7 @@ namespace ZeroGravity.Objects
 
 		public override void OnGravityChanged(Vector3 oldGravity)
 		{
-			if (!(oldGravity != Vector3.zero) || !base.Gravity.IsEpsilonEqual(Vector3.zero))
+			if (!(oldGravity != Vector3.zero) || !Gravity.IsEpsilonEqual(Vector3.zero))
 			{
 				return;
 			}
@@ -540,7 +540,7 @@ namespace ZeroGravity.Objects
 				if (Parent is Pivot && Parent != vessel)
 				{
 					World.SolarSystem.RemoveArtificialBody(Parent as Pivot);
-					UnityEngine.Object.Destroy(Parent.gameObject);
+					Destroy(Parent.gameObject);
 				}
 
 				Parent = vessel;
@@ -557,11 +557,11 @@ namespace ZeroGravity.Objects
 					: (Parent as SpaceObjectVessel).MainVessel;
 				if (artificialBody == null)
 				{
-					Debug.LogError("Corpse cannot exit vessel, cannot find parents artificial body" + base.name + base.GUID);
+					Debug.LogError("Corpse cannot exit vessel, cannot find parents artificial body" + name + Guid);
 				}
 				else
 				{
-					Pivot pivot = (Pivot)(Parent = Pivot.Create(SpaceObjectType.CorpsePivot, base.GUID, artificialBody,
+					Pivot pivot = (Pivot)(Parent = Pivot.Create(SpaceObjectType.CorpsePivot, Guid, artificialBody,
 						isMainObject: false));
 					SendStatsMessage();
 				}
@@ -602,8 +602,8 @@ namespace ZeroGravity.Objects
 		{
 			Transform parent = corpseParts[hipsKey].Trans.parent;
 			corpseParts[hipsKey].Trans.parent = null;
-			base.transform.position = corpseParts[hipsKey].Trans.position;
-			base.transform.rotation = corpseParts[hipsKey].Trans.rotation;
+			transform.position = corpseParts[hipsKey].Trans.position;
+			transform.rotation = corpseParts[hipsKey].Trans.rotation;
 			corpseParts[hipsKey].Trans.parent = parent;
 			float num = Time.time - movementReceivedTime;
 			if (!IsKinematic)
@@ -625,9 +625,9 @@ namespace ZeroGravity.Objects
 			}
 			else if (movementReceivedTime > 0f && num < 1f)
 			{
-				base.transform.localPosition = Vector3.Lerp(base.transform.localPosition, movementTargetLocalPosition,
+				transform.localPosition = Vector3.Lerp(transform.localPosition, movementTargetLocalPosition,
 					Mathf.Pow(num, 0.5f));
-				base.transform.localRotation = Quaternion.Slerp(base.transform.localRotation,
+				transform.localRotation = Quaternion.Slerp(transform.localRotation,
 					movementTargetLocalRotation, Mathf.Pow(num, 0.5f));
 			}
 			else if (num > 1f && num - Time.deltaTime <= 1f)
@@ -646,7 +646,7 @@ namespace ZeroGravity.Objects
 			{
 				if (takeoverTrigger == null)
 				{
-					takeoverTrigger = base.gameObject.AddComponent<SphereCollider>();
+					takeoverTrigger = gameObject.AddComponent<SphereCollider>();
 					takeoverTrigger.isTrigger = true;
 				}
 			}
@@ -654,7 +654,7 @@ namespace ZeroGravity.Objects
 			{
 				if (takeoverTrigger != null)
 				{
-					GameObject.Destroy(takeoverTrigger);
+					Destroy(takeoverTrigger);
 				}
 
 				velocityCheckTimer = 0f;

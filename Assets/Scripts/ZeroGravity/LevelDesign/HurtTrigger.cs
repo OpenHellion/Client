@@ -40,7 +40,7 @@ namespace ZeroGravity.LevelDesign
 			if (playerInTrigger && !InstantDamage)
 			{
 				duration += Time.fixedDeltaTime;
-				if ((double)(Time.time - prevMessageTime) > 0.5)
+				if (Time.time - prevMessageTime > 0.5)
 				{
 					prevMessageTime = Time.time;
 					SendDamageMessage();

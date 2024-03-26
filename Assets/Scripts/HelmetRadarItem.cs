@@ -31,7 +31,7 @@ public class HelmetRadarItem : MonoBehaviour
 			float num = MathHelper.AngleSigned(playerCamera.forward, vec2, playerCamera.right);
 			if ((num < -8f && num > -172f) || (num > 8f && num < 172f))
 			{
-				if ((float)MathHelper.Sign(num) < 1f)
+				if (MathHelper.Sign(num) < 1f)
 				{
 					currIndicator = Indicator_Up;
 					Indicator_Visible.SetActive(false);

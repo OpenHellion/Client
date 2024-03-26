@@ -223,7 +223,7 @@ namespace ZeroGravity.UI
 				while (enumerator.MoveNext())
 				{
 					Transform transform = (Transform)enumerator.Current;
-					UnityEngine.Object.Destroy(transform.gameObject);
+					Destroy(transform.gameObject);
 				}
 			}
 			finally
@@ -240,7 +240,7 @@ namespace ZeroGravity.UI
 			{
 				foreach (KeyValuePair<ResourceType, float> item in recycleResources)
 				{
-					GameObject gameObject = UnityEngine.Object.Instantiate(ResourceObj, ResourcesTransform);
+					GameObject gameObject = Instantiate(ResourceObj, ResourcesTransform);
 					gameObject.transform.localScale = Vector3.one;
 					gameObject.SetActive(true);
 					CargoResourceForCraftingUI component = gameObject.GetComponent<CargoResourceForCraftingUI>();
@@ -256,7 +256,7 @@ namespace ZeroGravity.UI
 
 		private void AddBar(string name, float value, float maxValue)
 		{
-			GameObject gameObject = UnityEngine.Object.Instantiate(StatusBar, Root);
+			GameObject gameObject = Instantiate(StatusBar, Root);
 			gameObject.SetActive(true);
 			gameObject.transform.Reset(true);
 			StatusBarUI component = gameObject.GetComponent<StatusBarUI>();

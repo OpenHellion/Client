@@ -20,6 +20,7 @@ namespace ZeroGravity.UI
 			{
 				Debug.LogError("SpriteManager already exists.");
 				Destroy(this);
+				return;
 			}
 
 			DontDestroyOnLoad(this);

@@ -252,7 +252,7 @@ namespace ThreeEyedGames
 						{
 							_matrices[num] = current.transform.localToWorldMatrix;
 							_fadeValues[num] = current.Fade;
-							_limitToValues[num] = ((!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
+							_limitToValues[num] = ((!current.LimitTo) ? 0f : current.LimitTo.GetInstanceID());
 							num++;
 							if (num == 1023)
 							{
@@ -270,7 +270,7 @@ namespace ThreeEyedGames
 							_directBlock.Clear();
 							_directBlock.SetFloat("_MaskMultiplier", current.Fade);
 							_directBlock.SetFloat("_LimitTo",
-								(!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
+								(!current.LimitTo) ? 0f : current.LimitTo.GetInstanceID());
 							if (current.UseLightProbes)
 							{
 								SphericalHarmonicsL2 probe;
@@ -335,7 +335,7 @@ namespace ThreeEyedGames
 							_instancedBlock.Clear();
 							_instancedBlock.SetFloat("_MaskMultiplier", current.Fade);
 							_instancedBlock.SetFloat("_LimitTo",
-								(!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
+								(!current.LimitTo) ? 0f : current.LimitTo.GetInstanceID());
 							_bufferDeferred.DrawMesh(_cubeMesh, current.transform.localToWorldMatrix, key, 0, 1,
 								_instancedBlock);
 						}
@@ -343,7 +343,7 @@ namespace ThreeEyedGames
 						{
 							_matrices[num3] = current.transform.localToWorldMatrix;
 							_fadeValues[num3] = current.Fade;
-							_limitToValues[num3] = ((!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
+							_limitToValues[num3] = ((!current.LimitTo) ? 0f : current.LimitTo.GetInstanceID());
 							num3++;
 							if (num3 == 1023)
 							{
@@ -371,7 +371,7 @@ namespace ThreeEyedGames
 							_instancedBlock.Clear();
 							_instancedBlock.SetFloat("_MaskMultiplier", current.Fade);
 							_instancedBlock.SetFloat("_LimitTo",
-								(!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
+								(!current.LimitTo) ? 0f : current.LimitTo.GetInstanceID());
 							_bufferDeferred.DrawMesh(_cubeMesh, current.transform.localToWorldMatrix, key, 0, 1,
 								_instancedBlock);
 							num3++;
@@ -424,7 +424,7 @@ namespace ThreeEyedGames
 						{
 							_matrices[num] = current.transform.localToWorldMatrix;
 							_fadeValues[num] = current.Fade;
-							_limitToValues[num] = ((!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
+							_limitToValues[num] = ((!current.LimitTo) ? 0f : current.LimitTo.GetInstanceID());
 							num++;
 							if (num == 1023)
 							{
@@ -440,7 +440,7 @@ namespace ThreeEyedGames
 							_instancedBlock.Clear();
 							_instancedBlock.SetFloat("_MaskMultiplier", current.Fade);
 							_instancedBlock.SetFloat("_LimitTo",
-								(!current.LimitTo) ? 0f : ((float)current.LimitTo.GetInstanceID()));
+								(!current.LimitTo) ? 0f : current.LimitTo.GetInstanceID());
 							_bufferUnlit.DrawMesh(_cubeMesh, current.transform.localToWorldMatrix, key, 0, 0,
 								_instancedBlock);
 						}

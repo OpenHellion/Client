@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using OpenHellion;
 using UnityEngine;
+using UnityEngine.Serialization;
 using ZeroGravity.Data;
 using ZeroGravity.Math;
 using ZeroGravity.Objects;
@@ -28,7 +29,7 @@ namespace ZeroGravity.ShipComponents
 
 		public AnimationCurve SelectedOrbitFadeCurve;
 
-		public float orbitAlpha;
+		[FormerlySerializedAs("orbitAlpha")] public float OrbitAlpha;
 
 		public Transform OrbitPlane;
 
@@ -36,7 +37,7 @@ namespace ZeroGravity.ShipComponents
 
 		public float OrbitFadeEnd = 2f;
 
-		public float VisulFadeMultiplier = 0.5f;
+		[FormerlySerializedAs("VisulFadeMultiplier")] public float VisualFadeMultiplier = 0.5f;
 
 		public bool IsDragging;
 
@@ -65,7 +66,7 @@ namespace ZeroGravity.ShipComponents
 		public virtual string Name
 		{
 			get => MainObject.Name;
-			set { }
+			set => throw new NotImplementedException();
 		}
 
 		protected double ObjectScale => Map.Scale / 149597870700.0;
@@ -74,7 +75,7 @@ namespace ZeroGravity.ShipComponents
 
 		public virtual float Radius => (float)MainObject.Radius;
 
-		public Vector3 ObjectPosition => ((TruePosition - Map.Focus) * ObjectScale).ToVector3();
+		protected Vector3 ObjectPosition => ((TruePosition - Map.Focus) * ObjectScale).ToVector3();
 
 		public virtual OrbitParameters Orbit
 		{
@@ -106,9 +107,9 @@ namespace ZeroGravity.ShipComponents
 			}
 		}
 
-		public virtual bool IsVisibleOnMap => true;
+		protected virtual bool IsVisibleOnMap => true;
 
-		public virtual Color OrbitColor
+		protected virtual Color OrbitColor
 		{
 			get
 			{
@@ -139,11 +140,10 @@ namespace ZeroGravity.ShipComponents
 			}
 		}
 
-		public float PlayerExposureDamage => World.GetPlayerExposureDamage(MainObject.Orbit.Position.Magnitude);
-
-		private void Awake()
+		public void OnCreate(World world, IMapMainObject mainObject)
 		{
-			World ??= GameObject.Find("/World").GetComponent<World>();
+			World = world;
+			MainObject = mainObject;
 		}
 
 		private void OnEnable()
@@ -178,7 +178,7 @@ namespace ZeroGravity.ShipComponents
 			UpdateObject();
 			UpdateOrbitColors();
 			UpdateOrbitPlane();
-			if (NewObjectVisibility != null)
+			if (NewObjectVisibility is not null)
 			{
 				Renderer component = NewObjectVisibility.GetComponent<Renderer>();
 				if (component != null)
@@ -200,24 +200,19 @@ namespace ZeroGravity.ShipComponents
 				float num = 8.45228E+09f / (float)Orbit.DistanceAtTrueAnomaly * Map.ClosestSunScale / OrbitFadeEnd;
 				float num2 = 8.45228E+09f / (float)Orbit.DistanceAtTrueAnomaly * Map.ClosestSunScale / OrbitFadeStart;
 				Color orbitColor = OrbitColor;
-				if (Map.SelectedObject != this)
-				{
-					orbitAlpha = OrbitFadeCurve.Evaluate(((float)Map.Scale - num2) * 1f / (num - num2));
-				}
-				else
-				{
-					orbitAlpha = SelectedOrbitFadeCurve.Evaluate(((float)Map.Scale - num2) * 1f / (num - num2));
-				}
+				OrbitAlpha = Map.SelectedObject != this
+					? OrbitFadeCurve.Evaluate(((float)Map.Scale - num2) * 1f / (num - num2))
+					: SelectedOrbitFadeCurve.Evaluate(((float)Map.Scale - num2) * 1f / (num - num2));
 
-				orbitColor.a = orbitAlpha;
+				orbitColor.a = OrbitAlpha;
 				MyOrbitRenderer.startColor = orbitColor;
 				MyOrbitRenderer.endColor = orbitColor;
-				if (Map.Scale < (double)(num2 * VisulFadeMultiplier) && Visual.gameObject.activeInHierarchy)
+				if (Map.Scale < num2 * VisualFadeMultiplier && Visual.gameObject.activeInHierarchy)
 				{
 					Visual.gameObject.SetActive(false);
 					Position.GetComponent<SphereCollider>().enabled = false;
 				}
-				else if (Map.Scale > (double)(num2 * VisulFadeMultiplier) && !Visual.gameObject.activeInHierarchy)
+				else if (Map.Scale > num2 * VisualFadeMultiplier && !Visual.gameObject.activeInHierarchy)
 				{
 					Visual.gameObject.SetActive(true);
 					Position.GetComponent<SphereCollider>().enabled = true;
@@ -227,10 +222,9 @@ namespace ZeroGravity.ShipComponents
 
 		public virtual void SetOrbit()
 		{
-			List<Vector3D> list = null;
-			list = Orbit.GetOrbitPositions(NumberOfOrbitPositions, 60.0);
+			var list = Orbit.GetOrbitPositions(NumberOfOrbitPositions, 60.0);
 			MyOrbitRenderer.positionCount = list.Count;
-			if (list != null && list.Count > 0)
+			if (list is { Count: > 0 })
 			{
 				for (int i = 0; i < list.Count; i++)
 				{
@@ -249,9 +243,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (!(OrbitPlane == null))
 			{
-				QuaternionD rotation = QuaternionD.Identity;
-				Vector3D centerPosition = Vector3D.Zero;
-				Orbit.GetOrbitPlaneData(out rotation, out centerPosition);
+				Orbit.GetOrbitPlaneData(out var rotation, out var centerPosition);
 				OrbitPlane.localPosition = (centerPosition * ObjectScale).ToVector3();
 				OrbitPlane.localRotation = rotation.ToQuaternion();
 				OrbitPlane.localScale =
@@ -277,7 +269,7 @@ namespace ZeroGravity.ShipComponents
 
 		public virtual void UpdateVisibility()
 		{
-			base.gameObject.Activate(IsVisibleOnMap);
+			gameObject.Activate(IsVisibleOnMap);
 			if (!IsVisibleOnMap && Map.SelectedObject == this)
 			{
 				Map.SelectedObject = null;

@@ -46,7 +46,7 @@ namespace ZeroGravity.UI
 			foreach (KeyValuePair<ResourceType, float> resource in Data.Resources)
 			{
 				CargoResourceForCraftingUI cargoResourceForCraftingUI =
-					UnityEngine.Object.Instantiate(ResourceForCrafting, ResourcesTransform);
+					Instantiate(ResourceForCrafting, ResourcesTransform);
 				cargoResourceForCraftingUI.transform.localScale = Vector3.one;
 				cargoResourceForCraftingUI.gameObject.SetActive(true);
 				cargoResourceForCraftingUI.Name.text = resource.Key.ToLocalizedString().ToUpper();

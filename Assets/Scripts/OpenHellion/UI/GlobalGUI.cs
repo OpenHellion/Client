@@ -95,8 +95,16 @@ namespace OpenHellion.UI
 		{
 			if (_instance is not null)
 			{
-				Debug.LogError("Two instances of GlobalGUI created.");
-				Destroy(this);
+				if (gameObject.name.Equals("GlobalGUI"))
+				{
+					Destroy(gameObject);
+				}
+				else
+				{
+					Debug.LogError("Two instances of GlobalGUI created.");
+					Destroy(this);
+				}
+
 				return;
 			}
 			_instance = this;
@@ -158,8 +166,6 @@ namespace OpenHellion.UI
 			_audioSettingsButton.clicked += () => ChangeSettingsScreen(SettingsMenu.Audio);
 
 			// TODO: Confirm saving settings.
-
-			ChangeSettingsScreen(SettingsMenu.Game);
 
 			_messageBox.visible = false;
 			_errorBox.visible = false;
@@ -224,6 +230,7 @@ namespace OpenHellion.UI
 		/// <param name="onClose">An action to execute when we click the close button.</param>
 		public static void ShowErrorMessage(string title, string text, Action onClose = null)
 		{
+			Debug.Log("Showing error message " + text);
 			_instance._errorBox.visible = true;
 			_instance._errorTitle.text = title;
 			_instance._errorDescription.text = text;

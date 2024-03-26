@@ -5,12 +5,12 @@ namespace ZeroGravity.ShipComponents
 {
 	public abstract class MapObjectVessel : MapObject
 	{
-		public override bool IsVisibleOnMap
+		protected override bool IsVisibleOnMap
 		{
 			get
 			{
-				return (base.RadarVisibilityType != 0 && base.RadarVisibilityType != RadarVisibilityType.Warp) ||
-				       this == base.Map.MyShip || base.Map.AllObjectsVisible;
+				return (RadarVisibilityType != 0 && RadarVisibilityType != RadarVisibilityType.Warp) ||
+				       this == Map.MyShip || Map.AllObjectsVisible;
 			}
 		}
 
@@ -29,10 +29,10 @@ namespace ZeroGravity.ShipComponents
 
 			if (ObjectVisibilityBackground != null)
 			{
-				ObjectVisibilityBackground.material.color = Colors.RadarVisibility[base.RadarVisibilityType];
+				ObjectVisibilityBackground.material.color = Colors.RadarVisibility[RadarVisibilityType];
 			}
 
-			if (!base.gameObject.activeSelf || !(NewObjectVisibility != null) || NewObjectVisibility.activeSelf)
+			if (!gameObject.activeSelf || !(NewObjectVisibility != null) || NewObjectVisibility.activeSelf)
 			{
 				return;
 			}
@@ -44,11 +44,11 @@ namespace ZeroGravity.ShipComponents
 				num = (MainObject as SpaceObjectVessel).VesselData.SpawnRuleID;
 			}
 
-			if (base.Map.IsInitializing || (num != 0 &&
-			                                base.Map.KnownSpawnRuleIDs.Contains((MainObject as SpaceObjectVessel)
+			if (Map.IsInitializing || (num != 0 &&
+			                                Map.KnownSpawnRuleIDs.Contains((MainObject as SpaceObjectVessel)
 				                                .VesselData.SpawnRuleID)))
 			{
-				Object.Destroy(NewObjectVisibility);
+				Destroy(NewObjectVisibility);
 			}
 			else
 			{
@@ -60,12 +60,12 @@ namespace ZeroGravity.ShipComponents
 					NewObjectColorFadeIncrement = color / NewObjectVisibilityDuration;
 				}
 
-				Object.Destroy(NewObjectVisibility, NewObjectVisibilityDuration);
+				Destroy(NewObjectVisibility, NewObjectVisibilityDuration);
 			}
 
 			if (num != 0)
 			{
-				base.Map.KnownSpawnRuleIDs.Add(num);
+				Map.KnownSpawnRuleIDs.Add(num);
 			}
 		}
 	}

@@ -17,7 +17,7 @@ namespace ZeroGravity
 		{
 			if ((lerpValue < 1f && direction > 0) || (lerpValue > 0f && direction < 0))
 			{
-				lerpValue = Mathf.Clamp01(lerpValue + (float)direction * Speed * Time.deltaTime);
+				lerpValue = Mathf.Clamp01(lerpValue + direction * Speed * Time.deltaTime);
 			}
 
 			if (lerpValue <= 0f)

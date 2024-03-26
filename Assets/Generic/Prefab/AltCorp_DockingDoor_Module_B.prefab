@@ -14051,14 +14051,14 @@ MonoBehaviour:
         ValueInt: 0
         ValueString:
       - Object: {fileID: 1923718385801176}
-        ScriptFunctionName: SceneTriggerExecuter/AdditionalData
+        ScriptFunctionName: SceneTriggerExecutor/AdditionalData
         ScriptFunctionIndex: 83
         Operation: 0
         ValueBool: 1
         ValueInt: 0
         ValueString:
       - Object: {fileID: 1923718385801176}
-        ScriptFunctionName: SceneTriggerExecuter/CurrentState
+        ScriptFunctionName: SceneTriggerExecutor/CurrentState
         ScriptFunctionIndex: 87
         Operation: 0
         ValueBool: 1
@@ -14259,14 +14259,14 @@ MonoBehaviour:
         ValueInt: 0
         ValueString:
       - Object: {fileID: 1923718385801176}
-        ScriptFunctionName: SceneTriggerExecuter/AdditionalData
+        ScriptFunctionName: SceneTriggerExecutor/AdditionalData
         ScriptFunctionIndex: 81
         Operation: 0
         ValueBool: 1
         ValueInt: 0
         ValueString:
       - Object: {fileID: 1923718385801176}
-        ScriptFunctionName: SceneTriggerExecuter/CurrentState
+        ScriptFunctionName: SceneTriggerExecutor/CurrentState
         ScriptFunctionIndex: 85
         Operation: 0
         ValueBool: 1
@@ -14415,14 +14415,14 @@ MonoBehaviour:
         ValueInt: 0
         ValueString:
       - Object: {fileID: 1923718385801176}
-        ScriptFunctionName: SceneTriggerExecuter/AdditionalData
+        ScriptFunctionName: SceneTriggerExecutor/AdditionalData
         ScriptFunctionIndex: 83
         Operation: 0
         ValueBool: 1
         ValueInt: 0
         ValueString:
       - Object: {fileID: 1923718385801176}
-        ScriptFunctionName: SceneTriggerExecuter/CurrentState
+        ScriptFunctionName: SceneTriggerExecutor/CurrentState
         ScriptFunctionIndex: 87
         Operation: 0
         ValueBool: 1

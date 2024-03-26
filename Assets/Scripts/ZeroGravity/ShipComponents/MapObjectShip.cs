@@ -66,13 +66,13 @@ namespace ZeroGravity.ShipComponents
 
 		public override void CreateVisual()
 		{
-			if (MainObject != null)
+			if (MainObject is not null)
 			{
 				gameObject.SetLayerRecursively("Map");
 				SetOrbit();
 				UpdateOrbitPlane();
 				SetIcon();
-				if ((MainObject as Ship).RadarSystem == null)
+				if ((MainObject as Ship)?.RadarSystem == null)
 				{
 					Destroy(ScanningCone);
 					Destroy(ScanningEffectCone);
@@ -95,20 +95,20 @@ namespace ZeroGravity.ShipComponents
 		public override void UpdateObject()
 		{
 			Position.position = ObjectPosition;
-			Orbits.localScale = Vector3.one * (float)base.ObjectScale;
+			Orbits.localScale = Vector3.one * (float)ObjectScale;
 			DistressVisual.SetActive(RadarVisibilityType == RadarVisibilityType.Distress);
-			if (Map == null || Map.SelectedObject != this)
+			if (Map is null || Map.SelectedObject != this)
 			{
 				ToggleCone(false);
 			}
 
-			if (!(ScanningCone != null))
+			if (ScanningCone is null)
 			{
 				return;
 			}
 
 			ScanningCone.Activate(_scanningConeActive && !ScanningEffectCone.activeSelf);
-			if (ScanningCone.activeSelf && (MainObject as Ship).RadarSystem != null)
+			if (ScanningCone.activeSelf && (MainObject as Ship).RadarSystem is not null)
 			{
 				if (ScanningConeAngle < 1f)
 				{
@@ -123,14 +123,14 @@ namespace ZeroGravity.ShipComponents
 				}
 
 				float num2 = (float)((MainObject as Ship).RadarSystem.ActiveScanFuzzySensitivity * 1000.0 /
-					(double)ScanningConeAngle * (double)ReferentRadarSignature * num);
+					ScanningConeAngle * ReferentRadarSignature * num);
 				float num3 = (float)(2.0 * System.Math.Tan(ScanningConeAngle * (System.Math.PI / 180.0) / 2.0));
 				ScanningCone.transform.localScale =
-					new Vector3(num3 * num2, num3 * num2, num2) * (float)base.ObjectScale;
+					new Vector3(num3 * num2, num3 * num2, num2) * (float)ObjectScale;
 				ScanningEffectCone.transform.localScale =
 					ScanningCone.transform.localScale * ScanningEffectConeScaleMultiplier;
 				Yaw.transform.localScale =
-					new Vector3(PitchYawScale, PitchYawScale, PitchYawScale) * (float)base.ObjectScale;
+					new Vector3(PitchYawScale, PitchYawScale, PitchYawScale) * (float)ObjectScale;
 			}
 		}
 
@@ -187,7 +187,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void ToggleCone(bool val)
 		{
-			if (ScanningCone != null)
+			if (ScanningCone is not null)
 			{
 				_scanningConeActive = val;
 				Pitch.Activate(val);

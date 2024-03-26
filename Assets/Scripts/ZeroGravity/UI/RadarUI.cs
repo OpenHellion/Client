@@ -60,18 +60,18 @@ namespace ZeroGravity.UI
 
 		private void Update()
 		{
-			if (!CanRadarWork && base.gameObject.activeInHierarchy)
+			if (!CanRadarWork && gameObject.activeInHierarchy)
 			{
 				SetTarget();
-				base.gameObject.SetActive(value: false);
+				gameObject.SetActive(value: false);
 				ToggleTargeting(val: false);
 				return;
 			}
 
-			if (CanRadarWork && !base.gameObject.activeInHierarchy)
+			if (CanRadarWork && !gameObject.activeInHierarchy)
 			{
 				ToggleTargeting(val: true);
-				base.gameObject.SetActive(value: true);
+				gameObject.SetActive(value: true);
 			}
 
 			UpdateRadarList();
@@ -137,10 +137,10 @@ namespace ZeroGravity.UI
 			}
 
 			List<ArtificialBody> list = AllTargets.Select((TargetObject m) => m.ArtificialBody).ToList();
-			foreach (ArtificialBody item2 in _world.SolarSystem.ArtificialBodies.Where((ArtificialBody m) =>
+			foreach (ArtificialBody item2 in SolarSystem.ArtificialBodyReferences.Where((ArtificialBody m) =>
 				         m is SpaceObjectVessel && (m as SpaceObjectVessel).VesselData != null &&
 				         (m as SpaceObjectVessel).IsMainVessel && !(m as SpaceObjectVessel).IsWarpOnline &&
-				         (myPos - m.Position).Magnitude <= (double)CurrentRadarRange && !list.Contains(m)))
+				         (myPos - m.Position).Magnitude <= CurrentRadarRange && !list.Contains(m)))
 			{
 				TargetObject targetObject = new TargetObject
 				{
@@ -253,7 +253,7 @@ namespace ZeroGravity.UI
 		{
 			arrowUp = Vector3.zero;
 			Vector3 vector = MyPlayer.Instance.FpsController.MainCamera.WorldToScreenPoint(pos);
-			if (vector.x < 0f || vector.x > (float)Screen.width || vector.y < 0f || vector.y > (float)Screen.height ||
+			if (vector.x < 0f || vector.x > Screen.width || vector.y < 0f || vector.y > Screen.height ||
 			    vector.z < 0f)
 			{
 				Vector3 vector2 = new Vector3(Screen.width, Screen.height, 0f) / 2f;
@@ -264,10 +264,10 @@ namespace ZeroGravity.UI
 				}
 
 				vector =
-					(!(System.Math.Abs(vector3.x / (float)Screen.width) >
-					   System.Math.Abs(vector3.y / (float)Screen.height)))
-						? (vector3 / System.Math.Abs(vector3.y / ((float)Screen.height / 2f)) + vector2)
-						: (vector3 / System.Math.Abs(vector3.x / ((float)Screen.width / 2f)) + vector2);
+					(!(System.Math.Abs(vector3.x / Screen.width) >
+					   System.Math.Abs(vector3.y / Screen.height)))
+						? (vector3 / System.Math.Abs(vector3.y / (Screen.height / 2f)) + vector2)
+						: (vector3 / System.Math.Abs(vector3.x / (Screen.width / 2f)) + vector2);
 				arrowUp = (vector2 - vector).normalized;
 				arrowUp.z = 0f;
 			}

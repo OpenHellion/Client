@@ -182,7 +182,7 @@ namespace ZeroGravity
 				                                                    (MyPlayer.Instance.Parent as SpaceObjectVessel)
 				                                                    .SpawnPoints.Values
 				                                                    .FirstOrDefault((SceneSpawnPoint m) =>
-					                                                    m.PlayerGUID == MyPlayer.Instance.GUID) !=
+					                                                    m.PlayerGUID == MyPlayer.Instance.Guid) !=
 				                                                    null));
 			}
 			else if (MyPlayer.Instance.IsDrivingShip || MyPlayer.Instance.ShipControlMode == ShipControlMode.Docking)

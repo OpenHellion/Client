@@ -16,7 +16,7 @@ namespace ZeroGravity.Objects
 
 		public int BulletCount
 		{
-			get { return _BulletCount; }
+			get => _BulletCount;
 			set
 			{
 				_BulletCount = value;
@@ -26,7 +26,7 @@ namespace ZeroGravity.Objects
 
 		public bool IsSingleFire
 		{
-			get { return _IsSingleFire; }
+			get => _IsSingleFire;
 			set
 			{
 				_IsSingleFire = value;

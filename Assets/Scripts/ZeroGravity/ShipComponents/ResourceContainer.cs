@@ -71,7 +71,7 @@ namespace ZeroGravity.ShipComponents
 		public ResourceContainerData GetData()
 		{
 			ResourceContainerData resourceContainerData = new ResourceContainerData();
-			resourceContainerData.InSceneID = base.InSceneID;
+			resourceContainerData.InSceneID = InSceneID;
 			resourceContainerData.DistributionSystemType = DistributionSystemType;
 			resourceContainerData.CargoCompartment =
 				((!(CargoCompartment != null)) ? null : CargoCompartment.GetData());

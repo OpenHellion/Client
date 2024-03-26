@@ -121,7 +121,7 @@ public class TextTypeEffect : MonoBehaviour
 			return;
 		}
 
-		if (Substring >= (float)Text.Length)
+		if (Substring >= Text.Length)
 		{
 			Substring = Text.Length;
 			finished = true;

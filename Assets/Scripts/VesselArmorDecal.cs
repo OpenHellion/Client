@@ -29,8 +29,7 @@ public class VesselArmorDecal : MonoBehaviour
 		}
 
 		ParentVessel = GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
-		_armorSlot = ParentVessel.VesselBaseSystem.MachineryPartSlots
-			.Where((SceneMachineryPartSlot m) => m.Scope == MachineryPartSlotScope.Armor).FirstOrDefault();
+		_armorSlot = ParentVessel.VesselBaseSystem.MachineryPartSlots.FirstOrDefault(m => m.Scope == MachineryPartSlotScope.Armor);
 	}
 
 	public void UpdateDecals()

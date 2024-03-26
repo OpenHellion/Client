@@ -34,9 +34,9 @@ namespace ZeroGravity.UI
 				num2 = Mathf.Clamp01(num / drawDistance);
 			}
 
-			base.transform.localScale = new Vector3(num2, num2, num2);
-			base.transform.position = MyPlayer.Instance.FpsController.MainCamera.transform.position + vector;
-			base.transform.rotation =
+			transform.localScale = new Vector3(num2, num2, num2);
+			transform.position = MyPlayer.Instance.FpsController.MainCamera.transform.position + vector;
+			transform.rotation =
 				Quaternion.LookRotation(forward, MyPlayer.Instance.FpsController.MainCamera.transform.up);
 		}
 	}

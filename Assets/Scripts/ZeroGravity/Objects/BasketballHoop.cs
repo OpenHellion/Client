@@ -17,9 +17,9 @@ namespace ZeroGravity.Objects
 
 			if (DynamicObj.Parent is SpaceObjectVessel)
 			{
-				if (base.AttachPoint != null)
+				if (AttachPoint != null)
 				{
-					scoreTexts = base.AttachPoint.GetComponentsInChildren<SceneNameTag>();
+					scoreTexts = AttachPoint.GetComponentsInChildren<SceneNameTag>();
 					if (scoreTexts.Length > 0)
 					{
 						int result;

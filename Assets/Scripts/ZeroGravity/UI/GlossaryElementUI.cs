@@ -20,12 +20,12 @@ namespace ZeroGravity.UI
 
 		public void OnPointerEnter(PointerEventData eventData)
 		{
-			base.gameObject.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+			gameObject.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
 		}
 
 		public void OnPointerExit(PointerEventData eventData)
 		{
-			base.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+			gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
 		}
 
 		public void OnPointerClick(PointerEventData eventData)

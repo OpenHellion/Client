@@ -910,7 +910,7 @@ namespace DigitalOpus.MB.Core
 							if (texture2D != null && _normalizeTexelDensity)
 							{
 								texelDens = ((value[l].submeshArea != 0f)
-									? ((float)(texture2D.width * texture2D.height) / value[l].submeshArea)
+									? (texture2D.width * texture2D.height / value[l].submeshArea)
 									: 0f);
 							}
 
@@ -1318,7 +1318,7 @@ namespace DigitalOpus.MB.Core
 			if (LOG_LEVEL >= MB2_LogLevel.debug)
 			{
 				UnityEngine.Debug.Log("Time Step 3 Create And Save Atlases part 3 " +
-				                      ((float)sw.ElapsedMilliseconds - t3).ToString("f5"));
+				                      (sw.ElapsedMilliseconds - t3).ToString("f5"));
 			}
 
 			if (LOG_LEVEL >= MB2_LogLevel.debug)
@@ -1424,10 +1424,10 @@ namespace DigitalOpus.MB.Core
 
 							Rect r = uvRects[texSetIdx];
 							Texture2D t = texSet.ts[propIdx].t;
-							int x = Mathf.RoundToInt(r.x * (float)atlasSizeX);
-							int y = Mathf.RoundToInt(r.y * (float)atlasSizeY);
-							int ww = Mathf.RoundToInt(r.width * (float)atlasSizeX);
-							int hh = Mathf.RoundToInt(r.height * (float)atlasSizeY);
+							int x = Mathf.RoundToInt(r.x * atlasSizeX);
+							int y = Mathf.RoundToInt(r.y * atlasSizeY);
+							int ww = Mathf.RoundToInt(r.width * atlasSizeX);
+							int hh = Mathf.RoundToInt(r.height * atlasSizeY);
 							if (ww == 0 || hh == 0)
 							{
 								UnityEngine.Debug.LogError("Image in atlas has no height or width");
@@ -1819,10 +1819,10 @@ namespace DigitalOpus.MB.Core
 			{
 				Rect rect = rs[i];
 				Texture2D texture2D2 = texToPack[i];
-				int x = Mathf.RoundToInt(rect.x * (float)w);
-				int y = Mathf.RoundToInt(rect.y * (float)h);
-				int num = Mathf.RoundToInt(rect.width * (float)w);
-				int num2 = Mathf.RoundToInt(rect.height * (float)h);
+				int x = Mathf.RoundToInt(rect.x * w);
+				int y = Mathf.RoundToInt(rect.y * h);
+				int num = Mathf.RoundToInt(rect.width * w);
+				int num2 = Mathf.RoundToInt(rect.height * h);
 				if (texture2D2.width != num && texture2D2.height != num2)
 				{
 					texture2D2 = MB_Utility.resampleTexture(texture2D2, num, num2);
@@ -2102,14 +2102,14 @@ namespace DigitalOpus.MB.Core
 					obUVoffset, " ", obUVscale));
 			}
 
-			float num = (float)source.encapsulatingSamplingRect.width * (float)source.t.width;
-			float num2 = (float)source.encapsulatingSamplingRect.height * (float)source.t.height;
-			if (num > (float)_maxTilingBakeSize)
+			float num = (float)source.encapsulatingSamplingRect.width * source.t.width;
+			float num2 = (float)source.encapsulatingSamplingRect.height * source.t.height;
+			if (num > _maxTilingBakeSize)
 			{
 				num = _maxTilingBakeSize;
 			}
 
-			if (num2 > (float)_maxTilingBakeSize)
+			if (num2 > _maxTilingBakeSize)
 			{
 				num2 = _maxTilingBakeSize;
 			}
@@ -2162,8 +2162,8 @@ namespace DigitalOpus.MB.Core
 			{
 				num *= obUVscale.x;
 				num2 *= obUVscale.y;
-				num3 = (float)(source.matTilingRect.x * (double)obUVscale.x + (double)obUVoffset.x);
-				num4 = (float)(source.matTilingRect.y * (double)obUVscale.y + (double)obUVoffset.y);
+				num3 = (float)(source.matTilingRect.x * obUVscale.x + obUVoffset.x);
+				num4 = (float)(source.matTilingRect.y * obUVscale.y + obUVoffset.y);
 			}
 
 			Texture2D texture2D = _createTemporaryTexture((int)x, (int)y, TextureFormat.ARGB32, mipMaps: true);
@@ -2171,8 +2171,8 @@ namespace DigitalOpus.MB.Core
 			{
 				for (int j = 0; j < texture2D.height; j++)
 				{
-					float x2 = (float)i / x * num + num3;
-					float y2 = (float)j / y * num2 + num4;
+					float x2 = i / x * num + num3;
+					float y2 = j / y * num2 + num4;
 					texture2D.SetPixel(i, j, source.t.GetPixelBilinear(x2, y2));
 				}
 			}
@@ -2275,13 +2275,13 @@ namespace DigitalOpus.MB.Core
 			{
 				if (progressInfo != null && w > 0)
 				{
-					progressInfo("CopyScaledAndTiledToAtlas " + ((float)k / (float)w * 100f).ToString("F0"), 0.2f);
+					progressInfo("CopyScaledAndTiledToAtlas " + (k / (float)w * 100f).ToString("F0"), 0.2f);
 				}
 
 				for (int l = 0; l < h; l++)
 				{
-					float x = (float)k / newWidth * scx + ox;
-					float y = (float)l / newHeight * scy + oy;
+					float x = k / newWidth * scx + ox;
+					float y = l / newHeight * scy + oy;
 					Color reference = atlasPixels[targY + l][targX + k];
 					reference = t2.GetPixelBilinear(x, y);
 				}
@@ -2662,8 +2662,8 @@ namespace DigitalOpus.MB.Core
 		private Color32 ConvertNormalFormatFromUnity_ToStandard(Color32 c)
 		{
 			Vector3 zero = Vector3.zero;
-			zero.x = (float)(int)c.a * 2f - 1f;
-			zero.y = (float)(int)c.g * 2f - 1f;
+			zero.x = c.a * 2f - 1f;
+			zero.y = c.g * 2f - 1f;
 			zero.z = Mathf.Sqrt(1f - zero.x * zero.x - zero.y * zero.y);
 			Color32 result = default(Color32);
 			result.a = 1;

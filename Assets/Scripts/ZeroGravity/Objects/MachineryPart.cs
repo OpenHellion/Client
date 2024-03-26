@@ -8,10 +8,7 @@ namespace ZeroGravity.Objects
 	{
 		public MachineryPartType PartType;
 
-		public string PartName
-		{
-			get { return PartType.ToLocalizedString(); }
-		}
+		public string PartName => PartType.ToLocalizedString();
 
 		public string PartDescription
 		{
@@ -31,8 +28,8 @@ namespace ZeroGravity.Objects
 		{
 			MachineryPartData baseAuxData = GetBaseAuxData<MachineryPartData>();
 			baseAuxData.PartType = PartType;
-			baseAuxData.MaxHealth = base.MaxHealth;
-			baseAuxData.Health = base.Health;
+			baseAuxData.MaxHealth = MaxHealth;
+			baseAuxData.Health = Health;
 			baseAuxData.AuxValues = AuxValues.ToArray();
 			return baseAuxData;
 		}
@@ -41,7 +38,7 @@ namespace ZeroGravity.Objects
 		{
 			base.ProcesStatsData(dos);
 			MachineryPartStats machineryPartStats = dos as MachineryPartStats;
-			UpdateHealthIndicator(base.Health, base.MaxHealth);
+			UpdateHealthIndicator(Health, MaxHealth);
 		}
 	}
 }

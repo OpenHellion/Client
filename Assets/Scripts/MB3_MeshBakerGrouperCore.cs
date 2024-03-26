@@ -146,7 +146,7 @@ public class MB3_MeshBakerGrouperCore
 					}
 				}
 
-				int num2 = Mathf.FloorToInt(num / 360f * (float)pieNumSegments);
+				int num2 = Mathf.FloorToInt(num / 360f * pieNumSegments);
 				List<Renderer> list = null;
 				string key = "seg_" + num2;
 				if (dictionary.ContainsKey(key))

@@ -192,7 +192,7 @@ namespace ZeroGravity.ShipComponents
 
 			if (!AllTargets.Contains(SelectedTarget) || SelectedTarget == null ||
 			    (SelectedTarget.ArtificialBody.Position - ParentShip.Position).Magnitude >
-			    (double)RadarRange[RadarRange.Count - 1])
+			    RadarRange[RadarRange.Count - 1])
 			{
 				if (AllTargets.Count > 0)
 				{
@@ -344,7 +344,7 @@ namespace ZeroGravity.ShipComponents
 				OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(includeInactive: true);
 			foreach (TargetOverlayUI targetOverlayUI in componentsInChildren)
 			{
-				UnityEngine.Object.Destroy(targetOverlayUI.gameObject);
+				Destroy(targetOverlayUI.gameObject);
 			}
 
 			if (CurrentTargetList != null)
@@ -353,7 +353,7 @@ namespace ZeroGravity.ShipComponents
 					CurrentTargetList.TargetListHolder.GetComponentsInChildren<TargetInListUI>(includeInactive: true);
 				foreach (TargetInListUI targetInListUI in componentsInChildren2)
 				{
-					UnityEngine.Object.Destroy(targetInListUI.gameObject);
+					Destroy(targetInListUI.gameObject);
 				}
 			}
 
@@ -363,11 +363,11 @@ namespace ZeroGravity.ShipComponents
 					CurrentRadar.Root.GetComponentsInChildren<RadarShipElement>(includeInactive: true);
 				foreach (RadarShipElement radarShipElement in componentsInChildren3)
 				{
-					UnityEngine.Object.Destroy(radarShipElement.gameObject);
+					Destroy(radarShipElement.gameObject);
 				}
 			}
 
-			base.gameObject.SetActive(value: false);
+			gameObject.SetActive(value: false);
 		}
 
 		public void UpdateRadarList()
@@ -392,7 +392,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				if (list2.Contains(targetOverlayUI.Target))
 				{
-					UnityEngine.Object.Destroy(targetOverlayUI.gameObject);
+					Destroy(targetOverlayUI.gameObject);
 				}
 			}
 
@@ -404,7 +404,7 @@ namespace ZeroGravity.ShipComponents
 				{
 					if (list2.Contains(targetInListUI.Target))
 					{
-						UnityEngine.Object.Destroy(targetInListUI.gameObject);
+						Destroy(targetInListUI.gameObject);
 					}
 				}
 			}
@@ -417,21 +417,23 @@ namespace ZeroGravity.ShipComponents
 				{
 					if (list2.Contains(radarShipElement.Target))
 					{
-						UnityEngine.Object.Destroy(radarShipElement.gameObject);
+						Destroy(radarShipElement.gameObject);
 					}
 				}
 			}
 
 			List<ArtificialBody> list = AllTargets.Select((TargetObject m) => m.ArtificialBody).ToList();
-			foreach (ArtificialBody item2 in _world.SolarSystem.ArtificialBodies.Where((ArtificialBody m) =>
-				         m is SpaceObjectVessel && (m as SpaceObjectVessel).VesselData != null &&
-				         (m as SpaceObjectVessel).IsMainVessel && !(m as SpaceObjectVessel).IsWarpOnline &&
-				         ParentShip.MainVessel != (m as SpaceObjectVessel).MainVessel &&
-				         (myPos - m.Position).Magnitude <= (double)RadarRange[currentRadarRange] && !list.Contains(m) &&
-				         m as SpaceObjectVessel != ParentShip))
+			foreach (ArtificialBody item2 in SolarSystem.ArtificialBodyReferences.Where((ArtificialBody m) =>
+				         (m as SpaceObjectVessel)?.VesselData != null &&
+				         ((SpaceObjectVessel)m).IsMainVessel && !((SpaceObjectVessel)m).IsWarpOnline &&
+				         ParentShip.MainVessel != ((SpaceObjectVessel)m).MainVessel &&
+				         (myPos - m.Position).Magnitude <= RadarRange[currentRadarRange] && !list.Contains(m) &&
+				         (SpaceObjectVessel)m != ParentShip))
 			{
-				TargetObject targetObject = new TargetObject();
-				targetObject.ArtificialBody = item2;
+				TargetObject targetObject = new TargetObject
+				{
+					ArtificialBody = item2
+				};
 				AllTargets.Add(targetObject);
 				CreateOverlayTargets(targetObject);
 				if (CurrentTargetList != null)
@@ -448,7 +450,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void CreateOverlayTargets(TargetObject target)
 		{
-			TargetOverlayUI targetOverlayUI = UnityEngine.Object.Instantiate(TargetOnScreen, OverlayTargets);
+			TargetOverlayUI targetOverlayUI = Instantiate(TargetOnScreen, OverlayTargets);
 			targetOverlayUI.AB = target.ArtificialBody;
 			targetOverlayUI.Target = target;
 			targetOverlayUI.Name.text = target.Name;
@@ -647,7 +649,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			arrowUp = Vector3.zero;
 			Vector3 vector = MyPlayer.Instance.FpsController.MainCamera.WorldToScreenPoint(pos);
-			if (vector.x < 0f || vector.x > (float)Screen.width || vector.y < 0f || vector.y > (float)Screen.height ||
+			if (vector.x < 0f || vector.x > Screen.width || vector.y < 0f || vector.y > Screen.height ||
 			    vector.z < 0f)
 			{
 				Vector3 vector2 = new Vector3(Screen.width, Screen.height, 0f) / 2f;
@@ -657,9 +659,9 @@ namespace ZeroGravity.ShipComponents
 					vector3 = Quaternion.Euler(0f, 0f, 180f) * vector3;
 				}
 
-				vector = (!(Mathf.Abs(vector3.x / (float)Screen.width) > Mathf.Abs(vector3.y / (float)Screen.height)))
-					? (vector3 / MathF.Abs(vector3.y / ((float)Screen.height / 2f)) + vector2)
-					: (vector3 / Mathf.Abs(vector3.x / ((float)Screen.width / 2f)) + vector2);
+				vector = (!(Mathf.Abs(vector3.x / Screen.width) > Mathf.Abs(vector3.y / Screen.height)))
+					? (vector3 / MathF.Abs(vector3.y / (Screen.height / 2f)) + vector2)
+					: (vector3 / Mathf.Abs(vector3.x / (Screen.width / 2f)) + vector2);
 				arrowUp = (vector2 - vector).normalized;
 				arrowUp.z = 0f;
 			}
@@ -696,7 +698,7 @@ namespace ZeroGravity.ShipComponents
 				if (Settings.SettingsData.GameSettings.AutoStabilization && !ParentShip.IsRotationStabilized)
 				{
 					StabilizeRotationTimer += Time.deltaTime;
-					if (shipRotationCursor.magnitude > 5f || (double)shipRotationCursor.magnitude < 0.5 ||
+					if (shipRotationCursor.magnitude > 5f || shipRotationCursor.magnitude < 0.5 ||
 					    Mathf.Abs(MyPlayer.Instance.FpsController.MouseRightAxis) > float.Epsilon ||
 					    Mathf.Abs(MyPlayer.Instance.FpsController.MouseUpAxis) > float.Epsilon)
 					{
@@ -848,7 +850,7 @@ namespace ZeroGravity.ShipComponents
 		public void StartTargetStabilization()
 		{
 			SpaceObjectVessel mainVessel = ParentShip.MainVessel;
-			long? stabilizationTarget = SelectedTarget.ArtificialBody.GUID;
+			long? stabilizationTarget = SelectedTarget.ArtificialBody.Guid;
 			mainVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null,
 				stabilizationTarget);
 		}

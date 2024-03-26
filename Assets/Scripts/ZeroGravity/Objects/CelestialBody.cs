@@ -22,7 +22,7 @@ namespace ZeroGravity.Objects
 
 		public OrbitParameters Orbit { get; set; }
 
-		public long GUID { get; set; }
+		public long Guid { get; set; }
 
 		public string Name { get; set; }
 
@@ -51,7 +51,7 @@ namespace ZeroGravity.Objects
 			{
 				double num = Orbit.ApoapsisDistance;
 				OrbitParameters parent = Orbit.Parent;
-				while (((parent != null) ? parent.Parent : null) != null)
+				while ((parent != null ? parent.Parent : null) != null)
 				{
 					num = parent.ApoapsisDistance + num;
 					parent = parent.Parent;
@@ -63,7 +63,7 @@ namespace ZeroGravity.Objects
 
 		public CelestialBody(long guid)
 		{
-			GUID = guid;
+			Guid = guid;
 			Orbit = new OrbitParameters();
 			Orbit.SetCelestialBody(this);
 		}
@@ -175,9 +175,9 @@ namespace ZeroGravity.Objects
 			}
 
 			double magnitude = (ab.Position - Position).Magnitude;
-			double num = ((Orbit.GravityInfluenceRadius != double.PositiveInfinity)
+			double num = Orbit.GravityInfluenceRadius != double.PositiveInfinity
 				? Orbit.GravityInfluenceRadius
-				: world.ExposureRange);
+				: world.ExposureRange;
 			return RadarSignatureModifierValues[(int)(MathHelper.Clamp(magnitude / num, 0.0, 1.0) * 99.0)];
 		}
 
@@ -189,9 +189,9 @@ namespace ZeroGravity.Objects
 			}
 
 			double magnitude = (ab.Position - Position).Magnitude;
-			double num = ((Orbit.GravityInfluenceRadius != double.PositiveInfinity)
+			double num = Orbit.GravityInfluenceRadius != double.PositiveInfinity
 				? Orbit.GravityInfluenceRadius
-				: world.ExposureRange);
+				: world.ExposureRange;
 			return ScanningSensitivityModifierValues[(int)(MathHelper.Clamp(magnitude / num, 0.0, 1.0) * 99.0)];
 		}
 	}

@@ -160,7 +160,7 @@ namespace ZeroGravity.Objects
 		private void OnDrawGizmosSelected()
 		{
 			Gizmos.color = Color.red;
-			Gizmos.DrawWireSphere(base.transform.position, ExplosionRadius);
+			Gizmos.DrawWireSphere(transform.position, ExplosionRadius);
 		}
 	}
 }

@@ -232,7 +232,7 @@ namespace ZeroGravity.Objects
 
 		public IItemSlot Slot
 		{
-			get { return _Slot; }
+			get => _Slot;
 			set
 			{
 				UpdateUI();
@@ -243,7 +243,7 @@ namespace ZeroGravity.Objects
 
 		public int Tier
 		{
-			get { return _Tier; }
+			get => _Tier;
 			set
 			{
 				_Tier = value;
@@ -277,23 +277,23 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public long GUID => DynamicObj.GUID;
+		public long GUID => DynamicObj.Guid;
 
 		public bool IsInsideSpaceObject => DynamicObj.IsInsideSpaceObject;
 
 		public BaseSceneAttachPoint AttachPoint
 		{
-			get { return (!(_Slot is BaseSceneAttachPoint)) ? null : (_Slot as BaseSceneAttachPoint); }
-			private set { Slot = value; }
+			get => !(_Slot is BaseSceneAttachPoint) ? null : _Slot as BaseSceneAttachPoint;
+			private set => Slot = value;
 		}
 
 		public InventorySlot InvSlot
 		{
-			get { return (!(_Slot is InventorySlot)) ? null : (_Slot as InventorySlot); }
-			private set { Slot = value; }
+			get => !(_Slot is InventorySlot) ? null : _Slot as InventorySlot;
+			private set => Slot = value;
 		}
 
-		public short InvSlotID => (short)((InvSlot == null) ? (-1111) : InvSlot.SlotID);
+		public short InvSlotID => (short)(InvSlot == null ? -1111 : InvSlot.SlotID);
 
 		public virtual Transform TipOfItem => null;
 
@@ -303,20 +303,20 @@ namespace ZeroGravity.Objects
 
 		public float MaxHealth
 		{
-			get { return _MaxHealth; }
-			set { _MaxHealth = ((!(value < 0f)) ? value : 0f); }
+			get => _MaxHealth;
+			set => _MaxHealth = !(value < 0f) ? value : 0f;
 		}
 
 		public float Health
 		{
-			get { return _Health; }
-			set { _Health = ((value > MaxHealth) ? MaxHealth : ((!(value < 0f)) ? value : 0f)); }
+			get => _Health;
+			set => _Health = value > MaxHealth ? MaxHealth : !(value < 0f) ? value : 0f;
 		}
 
 		public float Armor
 		{
-			get { return _Armor; }
-			set { _Armor = ((!(value < 0f)) ? value : 0f); }
+			get => _Armor;
+			set => _Armor = !(value < 0f) ? value : 0f;
 		}
 
 		public bool Damageable => _Damageable;
@@ -327,8 +327,8 @@ namespace ZeroGravity.Objects
 
 		public float UsageWear
 		{
-			get { return _UsageWear; }
-			set { _UsageWear = ((!(value < 0f)) ? value : 0f); }
+			get => _UsageWear;
+			set => _UsageWear = !(value < 0f) ? value : 0f;
 		}
 
 		public string TypeName
@@ -463,7 +463,7 @@ namespace ZeroGravity.Objects
 				return;
 			}
 
-			Debug.LogErrorFormat("Cannot attach item to slot because there is no attach point for it {0}, id {1}", base.name, slot.SlotID);
+			Debug.LogErrorFormat("Cannot attach item to slot because there is no attach point for it {0}, id {1}", name, slot.SlotID);
 		}
 
 		public virtual void AttachToObject(BaseSceneAttachPoint attachPoint, bool hideObject, bool sendAttachMessage)
@@ -486,7 +486,7 @@ namespace ZeroGravity.Objects
 				return;
 			}
 
-			Debug.LogErrorFormat("Cannot attach item to object, {0}, {1}, {2}, {3},", base.name, GUID, obj, obj.GUID);
+			Debug.LogErrorFormat("Cannot attach item to object, {0}, {1}, {2}, {3},", name, GUID, obj, obj.Guid);
 		}
 
 		public virtual void AttachToBone(Player pl, AnimatorHelper.HumanBones bone, bool resetTransform = true,
@@ -518,7 +518,7 @@ namespace ZeroGravity.Objects
 				if (DynamicObj.Parent is Pivot && DynamicObj.Parent != obj)
 				{
 					World.SolarSystem.RemoveArtificialBody(DynamicObj.Parent as Pivot);
-					UnityEngine.Object.Destroy(DynamicObj.Parent.gameObject);
+					Destroy(DynamicObj.Parent.gameObject);
 				}
 
 				if (AttachPoint != null && AttachPoint != attachPoint)
@@ -619,8 +619,8 @@ namespace ZeroGravity.Objects
 
 				if (flag2)
 				{
-					base.transform.SetParent(attachToTrans);
-					base.transform.Reset(resetScale: true);
+					transform.SetParent(attachToTrans);
+					transform.Reset(resetScale: true);
 					OnAttach(AttachPoint == null, DynamicObj.Parent is Player);
 				}
 				else
@@ -628,12 +628,12 @@ namespace ZeroGravity.Objects
 					OnAttach(isAttached: true, DynamicObj.Parent is Player);
 					if (DynamicObj.Parent is SpaceObjectVessel)
 					{
-						base.transform.SetParent(DynamicObj.Parent.TransferableObjectsRoot.transform);
+						transform.SetParent(DynamicObj.Parent.TransferableObjectsRoot.transform);
 						DynamicObj.CheckRoomTrigger(null);
 					}
 					else if (DynamicObj.Parent is Pivot && DynamicObj.Parent.Type == SpaceObjectType.DynamicObjectPivot)
 					{
-						base.transform.SetParent(DynamicObj.Parent.TransferableObjectsRoot.transform);
+						transform.SetParent(DynamicObj.Parent.TransferableObjectsRoot.transform);
 					}
 					else
 					{
@@ -669,20 +669,20 @@ namespace ZeroGravity.Objects
 				DynamicObj.SendStatsMessage(new DynamicObjectAttachData
 				{
 					IsAttached = DynamicObj.IsAttached,
-					ParentGUID = DynamicObj.Parent.GUID,
+					ParentGUID = DynamicObj.Parent.Guid,
 					ParentType = DynamicObj.Parent.Type,
 					InventorySlotID = InvSlotID,
-					APDetails = ((!(AttachPoint == null))
+					APDetails = !(AttachPoint == null)
 						? new AttachPointDetails
 						{
 							InSceneID = AttachPoint.InSceneID
 						}
-						: null),
-					LocalPosition = ((!DynamicObj.IsAttached) ? base.transform.localPosition.ToArray() : null),
-					LocalRotation = ((!DynamicObj.IsAttached) ? base.transform.localPosition.ToArray() : null),
-					Velocity = ((!sendVelocity.HasValue) ? null : sendVelocity.Value.ToArray()),
-					Torque = ((!sendTorque.HasValue) ? null : sendTorque.Value.ToArray()),
-					ThrowForce = ((!sendThrowForce.HasValue) ? null : sendThrowForce.Value.ToArray())
+						: null,
+					LocalPosition = !DynamicObj.IsAttached ? transform.localPosition.ToArray() : null,
+					LocalRotation = !DynamicObj.IsAttached ? transform.localPosition.ToArray() : null,
+					Velocity = !sendVelocity.HasValue ? null : sendVelocity.Value.ToArray(),
+					Torque = !sendTorque.HasValue ? null : sendTorque.Value.ToArray(),
+					ThrowForce = !sendThrowForce.HasValue ? null : sendThrowForce.Value.ToArray()
 				});
 				sendVelocity = null;
 				sendTorque = null;
@@ -692,10 +692,10 @@ namespace ZeroGravity.Objects
 
 		public bool AreAttachDataSame(DynamicObjectAttachData data)
 		{
-			SpaceObject spaceObject = ((Slot is InventorySlot && InvSlot.Outfit != null)
+			SpaceObject spaceObject = Slot is InventorySlot && InvSlot.Outfit != null
 				? InvSlot.Outfit.DynamicObj.Parent
-				: ((!(Slot is ItemSlot)) ? DynamicObj.Parent : Slot.Parent));
-			return spaceObject.Type == data.ParentType && spaceObject.GUID == data.ParentGUID && Slot is ItemSlot &&
+				: !(Slot is ItemSlot) ? DynamicObj.Parent : Slot.Parent;
+			return spaceObject.Type == data.ParentType && spaceObject.Guid == data.ParentGUID && Slot is ItemSlot &&
 			       (Slot as ItemSlot).ID == data.ItemSlotID && DynamicObj.IsAttached == data.IsAttached &&
 			       InvSlotID == data.InventorySlotID && ((AttachPoint == null && data.APDetails == null) ||
 			                                             (AttachPoint != null && data.APDetails != null &&
@@ -707,7 +707,7 @@ namespace ZeroGravity.Objects
 			SpaceObject @object = World.GetObject(data.ParentGUID, data.ParentType);
 			if (@object == null)
 			{
-				Debug.LogErrorFormat("Could not find space object to attach item to. {0}, {1}, {2}", base.name, data.ParentGUID,
+				Debug.LogErrorFormat("Could not find space object to attach item to. {0}, {1}, {2}", name, data.ParentGUID,
 					data.ParentType);
 				return;
 			}
@@ -817,12 +817,12 @@ namespace ZeroGravity.Objects
 					{
 						if (data.LocalPosition != null)
 						{
-							base.transform.localPosition = data.LocalPosition.ToVector3();
+							transform.localPosition = data.LocalPosition.ToVector3();
 						}
 
 						if (data.LocalRotation != null)
 						{
-							base.transform.localRotation = data.LocalRotation.ToQuaternion();
+							transform.localRotation = data.LocalRotation.ToQuaternion();
 						}
 					}
 
@@ -1119,7 +1119,7 @@ namespace ZeroGravity.Objects
 				return;
 			}
 
-			base.transform.position = dropPosition;
+			transform.position = dropPosition;
 			ResetRoomTriggers();
 			ToggleTriggersEnabled(value: true);
 			Vector3 vector = new Vector3(UnityEngine.Random.Range(0.001f, 0.01f),
@@ -1131,7 +1131,7 @@ namespace ZeroGravity.Objects
 				sendThrowForce = throwForce;
 			}
 
-			base.transform.localRotation = Quaternion.identity;
+			transform.localRotation = Quaternion.identity;
 			if (MyPlayer.Instance.Parent is Pivot)
 			{
 				DynamicObj.ExitVessel(forceExit: true);
@@ -1208,15 +1208,15 @@ namespace ZeroGravity.Objects
 
 		public virtual void AttackWithItem()
 		{
-			SpaceObject spaceObject = ((!(MyPlayer.Instance.Parent is SpaceObjectVessel))
+			SpaceObject spaceObject = !(MyPlayer.Instance.Parent is SpaceObjectVessel)
 				? MyPlayer.Instance.Parent
-				: (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel);
+				: (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel;
 			ShotData shotData = new ShotData();
 			shotData.Position = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) *
 			                     MyPlayer.Instance.FpsController.MainCamera.transform.position).ToArray();
 			shotData.Orientation = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) *
 			                        MyPlayer.Instance.FpsController.MainCamera.transform.forward.normalized).ToArray();
-			shotData.parentGUID = spaceObject.GUID;
+			shotData.parentGUID = spaceObject.Guid;
 			shotData.parentType = spaceObject.Type;
 			shotData.Range = MeleeRange;
 			shotData.IsMeleeAttack = true;
@@ -1237,7 +1237,7 @@ namespace ZeroGravity.Objects
 		{
 			if (HealthIndicator != null && HealthIndicator.materials.Length >= MaterialIndex + 1)
 			{
-				float num = HealthIndicatorCurve.Evaluate((!(maxValue > 0f)) ? 0f : (value / maxValue));
+				float num = HealthIndicatorCurve.Evaluate(!(maxValue > 0f) ? 0f : value / maxValue);
 				float num2;
 				Color color;
 				if (num < 0.5f)
@@ -1265,7 +1265,7 @@ namespace ZeroGravity.Objects
 
 		public void ApplyTierColor()
 		{
-			int? num = ((TierColors != null) ? new int?(TierColors.Length) : null);
+			int? num = TierColors != null ? new int?(TierColors.Length) : null;
 			if (num.HasValue && num.GetValueOrDefault() > 0)
 			{
 				Color value = Color.white;
@@ -1331,7 +1331,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			int? num2 = ((TierGameObjects != null) ? new int?(TierGameObjects.Length) : null);
+			int? num2 = TierGameObjects != null ? new int?(TierGameObjects.Length) : null;
 			if (!num2.HasValue || num2.GetValueOrDefault() <= 0)
 			{
 				return;
@@ -1348,7 +1348,7 @@ namespace ZeroGravity.Objects
 					}
 					else
 					{
-						UnityEngine.Object.Destroy(gameObject);
+						Destroy(gameObject);
 					}
 				}
 			}
@@ -1356,7 +1356,7 @@ namespace ZeroGravity.Objects
 
 		private void OnDrawGizmos()
 		{
-			Gizmos.DrawIcon(base.transform.position, "Item");
+			Gizmos.DrawIcon(transform.position, "Item");
 		}
 
 		public static Dictionary<ResourceType, float> GetRecycleResources(Item item)
@@ -1518,10 +1518,10 @@ namespace ZeroGravity.Objects
 			InventorySlot inventorySlot = null;
 			InventorySlot slotByID = MyPlayer.Instance.Inventory.GetSlotByID(-2);
 			inventorySlot =
-				((!(this is Outfit) || slotByID == null || !(slotByID.Item == null) ||
-				  !(MyPlayer.Instance.Inventory.HandsSlot.Item == null))
+				!(this is Outfit) || slotByID == null || !(slotByID.Item == null) ||
+				!(MyPlayer.Instance.Inventory.HandsSlot.Item == null)
 					? MyPlayer.Instance.Inventory.FindEmptyOutfitSlot(this)
-					: slotByID);
+					: slotByID;
 			if (MyPlayer.Instance.Inventory.HandsSlot.Item == null && (handsFirst || inventorySlot == null))
 			{
 				inventorySlot = MyPlayer.Instance.Inventory.HandsSlot;
@@ -1556,10 +1556,10 @@ namespace ZeroGravity.Objects
 				MyPlayer.Instance.FpsController.MainCamera.transform.forward);
 			Vector3 vector = MyPlayer.Instance.FpsController.CameraForward * MathHelper.ProportionalValue(throwStrength,
 				0f, World.DROP_MAX_TIME, 0f, World.DROP_MAX_FORCE);
-			Vector3 value2 = ((!(vector == Vector3.zero))
+			Vector3 value2 = !(vector == Vector3.zero)
 				? new Vector3(UnityEngine.Random.Range(-0.1f, 0.1f), UnityEngine.Random.Range(-0.1f, 0.1f),
 					UnityEngine.Random.Range(-0.1f, 0.1f))
-				: Vector3.zero);
+				: Vector3.zero;
 			DynamicObj.SendAttachMessage(MyPlayer.Instance.Parent, null, value, Quaternion.identity, vector, value2,
 				MyPlayer.Instance.rigidBody.velocity);
 			if (DynamicObj.Parent is MyPlayer)
@@ -1641,7 +1641,7 @@ namespace ZeroGravity.Objects
 
 		public void CalculateRecycle()
 		{
-			for (int i = 0; i < ((TierMultipliers.Length < 1) ? 1 : TierMultipliers.Length); i++)
+			for (int i = 0; i < (TierMultipliers.Length < 1 ? 1 : TierMultipliers.Length); i++)
 			{
 				Ingredients[i].Recycle = ObjectCopier.DeepCopy(Ingredients[i].Craft);
 				ItemIngredient[] recycle = Ingredients[i].Recycle;
@@ -1699,7 +1699,7 @@ namespace ZeroGravity.Objects
 			HashSet<VesselObjectID> hashSet2 = new HashSet<VesselObjectID>();
 			if (ExplosionRadius > 0f)
 			{
-				Collider[] array = Physics.OverlapSphere(base.transform.position, ExplosionRadius);
+				Collider[] array = Physics.OverlapSphere(transform.position, ExplosionRadius);
 				Collider[] array2 = array;
 				foreach (Collider colliderOverlaped in array2)
 				{
@@ -1712,13 +1712,13 @@ namespace ZeroGravity.Objects
 				if (DynamicObj.Parent is SpaceObjectVessel)
 				{
 					foreach (VesselRepairPoint item in from m in (DynamicObj.Parent as SpaceObjectVessel).RepairPoints
-					         where (base.transform.position - m.Value.transform.position).magnitude <= ExplosionRadius
-					         orderby (base.transform.position - m.Value.transform.position).magnitude
+					         where (transform.position - m.Value.transform.position).magnitude <= ExplosionRadius
+					         orderby (transform.position - m.Value.transform.position).magnitude
 					         select m
 					         into kvp
 					         select kvp.Value)
 					{
-						hashSet2.Add(new VesselObjectID(item.ParentVessel.GUID, item.InSceneID));
+						hashSet2.Add(new VesselObjectID(item.ParentVessel.Guid, item.InSceneID));
 					}
 				}
 			}
@@ -1773,9 +1773,9 @@ namespace ZeroGravity.Objects
 			{
 				foreach (Vector3 target in GetTargets(colliderOverlaped.transform.position, 0.1f))
 				{
-					Debug.DrawRay(base.transform.position, target - base.transform.position, Color.green, 100f);
-					RaycastHit[] array = (from m in Physics.RaycastAll(base.transform.position,
-							target - base.transform.position, ExplosionRadius, explosionRaycastMask,
+					Debug.DrawRay(transform.position, target - transform.position, Color.green, 100f);
+					RaycastHit[] array = (from m in Physics.RaycastAll(transform.position,
+							target - transform.position, ExplosionRadius, explosionRaycastMask,
 							QueryTriggerInteraction.Collide)
 						orderby m.distance
 						select m).ToArray();
@@ -1791,7 +1791,7 @@ namespace ZeroGravity.Objects
 								hitGUIDs.Add(componentInParent.GUID);
 							}
 
-							Vector3 vector = base.transform.position - target;
+							Vector3 vector = transform.position - target;
 							colliderOverlaped.GetComponentInParent<DynamicObject>().AddForce(
 								vector.normalized * (1f - ExplosionRadius / vector.magnitude) * ExplosionImpulse,
 								ForceMode.Impulse);
@@ -1818,8 +1818,8 @@ namespace ZeroGravity.Objects
 				TargetingPoint[] array = componentsInChildren;
 				foreach (TargetingPoint targetingPoint in array)
 				{
-					RaycastHit[] array2 = (from m in Physics.RaycastAll(base.transform.position,
-							targetingPoint.transform.position - base.transform.position, ExplosionRadius,
+					RaycastHit[] array2 = (from m in Physics.RaycastAll(transform.position,
+							targetingPoint.transform.position - transform.position, ExplosionRadius,
 							explosionRaycastMask, QueryTriggerInteraction.Collide)
 						orderby m.distance
 						select m).ToArray();
@@ -1829,7 +1829,7 @@ namespace ZeroGravity.Objects
 						RaycastHit raycastHit = array3[j];
 						if (raycastHit.collider.GetComponentInParent<Player>() != null)
 						{
-							hitGUIDs.Add(componentInParent.GUID);
+							hitGUIDs.Add(componentInParent.Guid);
 							if (componentInParent is MyPlayer && ExplosionDamageType == TypeOfDamage.Impact &&
 							    !MyPlayer.Instance.IsLockedToTrigger)
 							{
@@ -1841,7 +1841,7 @@ namespace ZeroGravity.Objects
 									MyPlayer.Instance.FpsController.Tumble();
 								}
 
-								Vector3 vector = base.transform.position - MyPlayer.Instance.transform.position;
+								Vector3 vector = transform.position - MyPlayer.Instance.transform.position;
 								MyPlayer.Instance.FpsController.AddForce(
 									vector.normalized * (1f - ExplosionRadius / vector.magnitude) * ExplosionImpulse,
 									ForceMode.Impulse);
@@ -1871,8 +1871,8 @@ namespace ZeroGravity.Objects
 
 			foreach (Vector3 target in GetTargets(colliderOverlaped.transform.position, 0.35f))
 			{
-				RaycastHit[] array = (from m in Physics.RaycastAll(base.transform.position,
-						target - base.transform.position, ExplosionRadius, explosionRaycastMask,
+				RaycastHit[] array = (from m in Physics.RaycastAll(transform.position,
+						target - transform.position, ExplosionRadius, explosionRaycastMask,
 						QueryTriggerInteraction.Collide)
 					orderby m.distance
 					select m).ToArray();
@@ -1882,7 +1882,7 @@ namespace ZeroGravity.Objects
 					RaycastHit raycastHit = array2[i];
 					if (raycastHit.collider.GetComponentInParent<VesselRepairPoint>() == componentInParent)
 					{
-						rpts.Add(new VesselObjectID(componentInParent.ParentVessel.GUID, componentInParent.InSceneID));
+						rpts.Add(new VesselObjectID(componentInParent.ParentVessel.Guid, componentInParent.InSceneID));
 					}
 					else if (!raycastHit.collider.isTrigger)
 					{
@@ -1896,7 +1896,7 @@ namespace ZeroGravity.Objects
 		{
 			List<Vector3> list = new List<Vector3>();
 			Quaternion quaternion =
-				Quaternion.FromToRotation(Vector3.forward, (targetPos - base.transform.position).normalized);
+				Quaternion.FromToRotation(Vector3.forward, (targetPos - transform.position).normalized);
 			Quaternion quaternion2 = Quaternion.Euler(0f, 0f, MathHelper.RandomRange(0, 90));
 			list.Add(targetPos);
 			list.Add(targetPos + quaternion * quaternion2 * new Vector3(radius, radius, 0f));

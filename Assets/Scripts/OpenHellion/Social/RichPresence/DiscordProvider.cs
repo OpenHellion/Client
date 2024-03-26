@@ -134,7 +134,7 @@ namespace OpenHellion.Social.RichPresence
 		}
 
 		// When we get an invite to a game.
-		private void InviteCallback(ActivityActionType Type, ref User user, ref Activity activity2)
+		private void InviteCallback(ActivityActionType type, ref User user, ref Activity activity2)
 		{
 			// TODO: Make this safer.
 			_activityManager.AcceptInvite(user.Id, result => { Debug.LogFormat("AcceptInvite {0}", result); });
@@ -143,7 +143,7 @@ namespace OpenHellion.Social.RichPresence
 		// When we get an ask to join request from another user.
 		private void JoinRequestCallback(ref User user)
 		{
-			Debug.Log(string.Format("Discord: Join request {0}#{1}: {2}", user.Username, user.Discriminator, user.Id));
+			Debug.Log($"Discord: Join request {user.Username}#{user.Discriminator}: {user.Id}");
 			_joinUser = user;
 
 			RequestRespondYes();
@@ -189,21 +189,19 @@ namespace OpenHellion.Social.RichPresence
 					_activity.Secrets.Join = Globals.GetInviteString(null);
 					_activity.Assets.LargeText = Localization.InGameDescription;
 					_activity.Details = Descriptions[UnityEngine.Random.Range(0, Descriptions.Count - 1)];
-					ArtificialBody artificialBody = MyPlayer.Instance.Parent as ArtificialBody;
-					if (artificialBody is not null && artificialBody.ParentCelesitalBody != null)
+					if (MyPlayer.Instance.Parent is ArtificialBody { ParentCelestialBody: not null } artificialBody)
 					{
-						string value;
-						if (Planets.TryGetValue(artificialBody.ParentCelesitalBody.GUID, out value))
+						if (Planets.TryGetValue(artificialBody.ParentCelestialBody.Guid, out var value))
 						{
-							_activity.Assets.LargeImage = artificialBody.ParentCelesitalBody.GUID.ToString();
+							_activity.Assets.LargeImage = artificialBody.ParentCelestialBody.Guid.ToString();
 						}
 						else
 						{
 							_activity.Assets.LargeImage = "default";
-							value = artificialBody.ParentCelesitalBody.Name;
+							value = artificialBody.ParentCelestialBody.Name;
 						}
 
-						if (artificialBody is Ship && (artificialBody as Ship).IsWarpOnline)
+						if (artificialBody is Ship { IsWarpOnline: true })
 						{
 							_activity.State = Localization.WarpingNear + " " + value.ToUpper();
 						}

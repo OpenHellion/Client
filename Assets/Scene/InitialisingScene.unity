@@ -897,12 +897,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ca0e3c59ca6ec34bac05c2445bdfda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _PreloadImages:
+  _preloadImages:
   - {fileID: 21300000, guid: ec1aa9e88880f9c46a170f034b5312a6, type: 3}
   - {fileID: 21300000, guid: da77ea9e4da469f4dbe642cd4c297198, type: 3}
   - {fileID: 21300000, guid: 24001ef337aff40498219bb450f71331, type: 3}
   - {fileID: 21300000, guid: 2a546a4b9da0c6844a0c4fdacf36f1ab, type: 3}
   - {fileID: 21300000, guid: facd40e18fa03654d8655941cb8c63a7, type: 3}
+  _sceneLoader: {fileID: 2063511445}
 --- !u!1 &1611738941
 GameObject:
   m_ObjectHideFlags: 0
@@ -1340,7 +1341,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4318f3459b5a5d04cbf9a6ae8ee08bbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _StartupGUI: {fileID: 1216738502}
 --- !u!4 &2063511446
 Transform:
   m_ObjectHideFlags: 0

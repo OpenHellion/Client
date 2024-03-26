@@ -164,7 +164,7 @@ namespace ZeroGravity.Math
 
 		public static float AngleSigned(Vector3 vec1, Vector3 vec2, Vector3 planeNormal)
 		{
-			return Vector3.Angle(vec1, vec2) * (float)Sign(Vector3.Dot(planeNormal, Vector3.Cross(vec1, vec2)));
+			return Vector3.Angle(vec1, vec2) * Sign(Vector3.Dot(planeNormal, Vector3.Cross(vec1, vec2)));
 		}
 
 		public static Vector3 RotateAroundPivot(Vector3 vector, Vector3 pivot, Vector3 angles)
@@ -174,7 +174,7 @@ namespace ZeroGravity.Math
 
 		public static double AngleSigned(Vector3D vec1, Vector3D vec2, Vector3D planeNormal)
 		{
-			return Vector3D.Angle(vec1, vec2) * (double)Sign(Vector3D.Dot(planeNormal, Vector3D.Cross(vec1, vec2)));
+			return Vector3D.Angle(vec1, vec2) * Sign(Vector3D.Dot(planeNormal, Vector3D.Cross(vec1, vec2)));
 		}
 
 		public static Vector3D RotateAroundPivot(Vector3D vector, Vector3D pivot, Vector3D angles)
@@ -194,7 +194,7 @@ namespace ZeroGravity.Math
 
 		public static float RandomRange(float min, float max)
 		{
-			return (float)(_randGenerator.NextDouble() * (double)(max - min) + (double)min);
+			return (float)(_randGenerator.NextDouble() * (max - min) + min);
 		}
 
 		public static double RandomRange(double min, double max)

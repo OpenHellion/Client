@@ -10,7 +10,7 @@ namespace ZeroGravity.UI
 
 		private void Start()
 		{
-			GameObject gameObject = Object.Instantiate(DockingPanelPrefab, DockingPanelRoot.transform);
+			GameObject gameObject = Instantiate(DockingPanelPrefab, DockingPanelRoot.transform);
 			gameObject.transform.Reset();
 			gameObject.transform.localScale = Vector3.one;
 		}

@@ -290,13 +290,13 @@ namespace DigitalOpus.MB.Core
 		private static void drawGizmosNode(Node r)
 		{
 			Vector3 size = new Vector3(r.r.w, r.r.h, 0f);
-			Vector3 center = new Vector3((float)r.r.x + size.x / 2f, (float)(-r.r.y) - size.y / 2f, 0f);
+			Vector3 center = new Vector3(r.r.x + size.x / 2f, -r.r.y - size.y / 2f, 0f);
 			Gizmos.DrawWireCube(center, size);
 			if (r.img != null)
 			{
 				Gizmos.color = Color.blue;
 				size = new Vector3(r.img.w, r.img.h, 0f);
-				center = new Vector3((float)r.img.x + size.x / 2f, (float)(-r.img.y) - size.y / 2f, 0f);
+				center = new Vector3(r.img.x + size.x / 2f, -r.img.y - size.y / 2f, 0f);
 				Gizmos.DrawCube(center, size);
 			}
 
@@ -375,16 +375,16 @@ namespace DigitalOpus.MB.Core
 					}
 
 					flag = x <= maxAtlasDim && y <= maxAtlasDim;
-					float num3 = Mathf.Max(1f, (float)x / (float)maxAtlasDim);
-					float num4 = Mathf.Max(1f, (float)y / (float)maxAtlasDim);
-					float num5 = (float)num * num3 * (float)num2 * num4;
+					float num3 = Mathf.Max(1f, x / (float)maxAtlasDim);
+					float num4 = Mathf.Max(1f, y / (float)maxAtlasDim);
+					float num5 = num * num3 * num2 * num4;
 					num6 = 1f - (num5 - imgArea) / num5;
 					num7 = 1f;
 				}
 				else
 				{
-					num6 = 1f - ((float)(x * y) - imgArea) / (float)(x * y);
-					num7 = ((x >= y) ? ((float)y / (float)x) : ((float)x / (float)y));
+					num6 = 1f - (x * y - imgArea) / (x * y);
+					num7 = ((x >= y) ? (y / (float)x) : (x / (float)y));
 					flag = x <= maxAtlasDim && y <= maxAtlasDim;
 				}
 
@@ -500,12 +500,12 @@ namespace DigitalOpus.MB.Core
 			{
 				Image image = (array[i] = new Image(i, (int)imgWidthHeights[i].x, (int)imgWidthHeights[i].y, padding,
 					minImageSizeX, minImageSizeY));
-				num += (float)(image.w * image.h);
+				num += image.w * image.h;
 				num2 = Mathf.Max(num2, image.w);
 				num3 = Mathf.Max(num3, image.h);
 			}
 
-			if ((float)num3 / (float)num2 > 2f)
+			if (num3 / (float)num2 > 2f)
 			{
 				if (LOG_LEVEL >= MB2_LogLevel.debug)
 				{
@@ -514,7 +514,7 @@ namespace DigitalOpus.MB.Core
 
 				Array.Sort(array, new ImageHeightComparer());
 			}
-			else if ((double)((float)num3 / (float)num2) < 0.5)
+			else if (num3 / (float)num2 < 0.5)
 			{
 				if (LOG_LEVEL >= MB2_LogLevel.debug)
 				{
@@ -556,12 +556,12 @@ namespace DigitalOpus.MB.Core
 				if (num2 > num4)
 				{
 					num6 = num2;
-					num5 = Mathf.Max(Mathf.CeilToInt(num / (float)num2), num3);
+					num5 = Mathf.Max(Mathf.CeilToInt(num / num2), num3);
 				}
 
 				if (num3 > num4)
 				{
-					num6 = Mathf.Max(Mathf.CeilToInt(num / (float)num3), num2);
+					num6 = Mathf.Max(Mathf.CeilToInt(num / num3), num2);
 					num5 = num3;
 				}
 			}
@@ -576,8 +576,8 @@ namespace DigitalOpus.MB.Core
 				num5 = 1;
 			}
 
-			int num7 = (int)((float)num6 * 0.15f);
-			int num8 = (int)((float)num5 * 0.15f);
+			int num7 = (int)(num6 * 0.15f);
+			int num8 = (int)(num5 * 0.15f);
 			if (num7 == 0)
 			{
 				num7 = 1;
@@ -679,11 +679,11 @@ namespace DigitalOpus.MB.Core
 			int minImageSizeX2 = minImageSizeX;
 			int minImageSizeY2 = minImageSizeY;
 			bool flag2 = false;
-			float num12 = (float)padding / (float)outW;
+			float num12 = padding / (float)outW;
 			if (bestRoot.w > maxDimension)
 			{
-				num12 = (float)padding / (float)maxDimension;
-				float num13 = (float)maxDimension / (float)bestRoot.w;
+				num12 = padding / (float)maxDimension;
+				float num13 = maxDimension / (float)bestRoot.w;
 				if (LOG_LEVEL >= MB2_LogLevel.warn)
 				{
 					Debug.LogWarning("Packing exceeded atlas width shrinking to " + num13);
@@ -692,7 +692,7 @@ namespace DigitalOpus.MB.Core
 				for (int j = 0; j < list.Count; j++)
 				{
 					Image image2 = list[j];
-					if ((float)image2.w * num13 < (float)masterImageSizeX)
+					if (image2.w * num13 < masterImageSizeX)
 					{
 						if (LOG_LEVEL >= MB2_LogLevel.debug)
 						{
@@ -701,22 +701,22 @@ namespace DigitalOpus.MB.Core
 						}
 
 						flag2 = true;
-						minImageSizeX2 = Mathf.CeilToInt((float)minImageSizeX / num13);
+						minImageSizeX2 = Mathf.CeilToInt(minImageSizeX / num13);
 					}
 
-					int num14 = (int)((float)(image2.x + image2.w) * num13);
-					image2.x = (int)(num13 * (float)image2.x);
+					int num14 = (int)((image2.x + image2.w) * num13);
+					image2.x = (int)(num13 * image2.x);
 					image2.w = num14 - image2.x;
 				}
 
 				outW = maxDimension;
 			}
 
-			float num15 = (float)padding / (float)outH;
+			float num15 = padding / (float)outH;
 			if (bestRoot.h > maxDimension)
 			{
-				num15 = (float)padding / (float)maxDimension;
-				float num16 = (float)maxDimension / (float)bestRoot.h;
+				num15 = padding / (float)maxDimension;
+				float num16 = maxDimension / (float)bestRoot.h;
 				if (LOG_LEVEL >= MB2_LogLevel.warn)
 				{
 					Debug.LogWarning("Packing exceeded atlas height shrinking to " + num16);
@@ -725,7 +725,7 @@ namespace DigitalOpus.MB.Core
 				for (int k = 0; k < list.Count; k++)
 				{
 					Image image3 = list[k];
-					if ((float)image3.h * num16 < (float)masterImageSizeY)
+					if (image3.h * num16 < masterImageSizeY)
 					{
 						if (LOG_LEVEL >= MB2_LogLevel.debug)
 						{
@@ -734,11 +734,11 @@ namespace DigitalOpus.MB.Core
 						}
 
 						flag2 = true;
-						minImageSizeY2 = Mathf.CeilToInt((float)minImageSizeY / num16);
+						minImageSizeY2 = Mathf.CeilToInt(minImageSizeY / num16);
 					}
 
-					int num17 = (int)((float)(image3.y + image3.h) * num16);
-					image3.y = (int)(num16 * (float)image3.y);
+					int num17 = (int)((image3.y + image3.h) * num16);
+					image3.y = (int)(num16 * image3.y);
 					image3.h = num17 - image3.y;
 				}
 
@@ -752,14 +752,14 @@ namespace DigitalOpus.MB.Core
 				for (int l = 0; l < list.Count; l++)
 				{
 					Image image4 = list[l];
-					Rect rect = (array2[l] = new Rect((float)image4.x / (float)outW + num12,
-						(float)image4.y / (float)outH + num15, (float)image4.w / (float)outW - num12 * 2f,
-						(float)image4.h / (float)outH - num15 * 2f));
+					Rect rect = (array2[l] = new Rect(image4.x / (float)outW + num12,
+						image4.y / (float)outH + num15, image4.w / (float)outW - num12 * 2f,
+						image4.h / (float)outH - num15 * 2f));
 					if (LOG_LEVEL >= MB2_LogLevel.debug)
 					{
-						MB2_Log.LogDebug("Image: " + l + " imgID=" + image4.imgId + " x=" + rect.x * (float)outW +
-						                 " y=" + rect.y * (float)outH + " w=" + rect.width * (float)outW + " h=" +
-						                 rect.height * (float)outH + " padding=" + padding);
+						MB2_Log.LogDebug("Image: " + l + " imgID=" + image4.imgId + " x=" + rect.x * outW +
+						                 " y=" + rect.y * outH + " w=" + rect.width * outW + " h=" +
+						                 rect.height * outH + " padding=" + padding);
 					}
 				}
 			}

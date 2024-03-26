@@ -170,7 +170,7 @@ namespace ZeroGravity.Audio
 			{
 				VoiceCommDataMessage voiceCommDataMessage = new VoiceCommDataMessage
 				{
-					SourceGUID = MyPlayer.Instance.GUID,
+					SourceGUID = MyPlayer.Instance.Guid,
 					IsRadioComm = _radio,
 					AudioPackets = list
 				};

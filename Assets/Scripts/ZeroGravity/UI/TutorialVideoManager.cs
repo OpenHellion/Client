@@ -25,7 +25,7 @@ namespace ZeroGravity.UI
 		{
 			foreach (TutorialVideo tutorialVideo in TutorialVideos)
 			{
-				GameObject gameObject = Object.Instantiate(VideoObject, VideoListTransform);
+				GameObject gameObject = Instantiate(VideoObject, VideoListTransform);
 				gameObject.Activate(true);
 				TutorialVideoUI component = gameObject.GetComponent<TutorialVideoUI>();
 				component.Video = tutorialVideo.Video;

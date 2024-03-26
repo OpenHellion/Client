@@ -215,7 +215,7 @@ namespace ZeroGravity.UI
 
 		public void PanelExit()
 		{
-			base.gameObject.SetActive(value: false);
+			gameObject.SetActive(value: false);
 			MyPlayer.Instance.DetachFromPanel();
 		}
 	}

@@ -9,61 +9,38 @@ namespace ZeroGravity
 {
 	public static class Properties
 	{
-		private static Dictionary<string, string> properties = new Dictionary<string, string>();
+		private static readonly Dictionary<string, string> _properties = new Dictionary<string, string>();
 
-		private static DateTime propertiesChangedTime;
+		private static DateTime _propertiesChangedTime;
 
-		private static string fileName = "Properties.ini";
-
-		public static string FileName
-		{
-			get { return fileName; }
-			set
-			{
-				fileName = value;
-				LoadProperties();
-			}
-		}
+		private static string _fileName = "Properties.ini";
 
 		private static void LoadProperties()
 		{
-			try
+			_propertiesChangedTime = File.GetLastWriteTime(_fileName);
+			_properties.Clear();
+			string[] file = File.ReadAllLines(_fileName);
+			foreach (string row in file)
 			{
-				properties.Clear();
-				string[] array = File.ReadAllLines(fileName);
-				foreach (string text in array)
-				{
-					if (!text.TrimStart().StartsWith("#"))
-					{
-						try
-						{
-							string[] array2 = text.Split("=".ToCharArray(), 2);
-							properties.Add(array2[0], array2[1]);
-						}
-						catch
-						{
-						}
-					}
-				}
-			}
-			catch
-			{
+				if (row.IsNullOrEmpty() || row.TrimStart().StartsWith("#")) continue;
+				string[] parts = row.Split("=".ToCharArray(), 2);
+				_properties.Add(parts[0].ToLower(), parts[1]);
 			}
 		}
 
-		public static T GetProperty<T>(string propertyName, T defaultValue = default(T))
+		public static T GetProperty<T>(string propertyName, T defaultValue = default)
 		{
-			DateTime lastWriteTime = File.GetLastWriteTime(fileName);
-			if (lastWriteTime != propertiesChangedTime)
+			DateTime lastWriteTime = File.GetLastWriteTime(_fileName);
+			if (lastWriteTime != _propertiesChangedTime)
 			{
-				propertiesChangedTime = lastWriteTime;
+				_propertiesChangedTime = lastWriteTime;
 				LoadProperties();
 			}
 
 			TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
 			try
 			{
-				return (T)converter.ConvertFrom(properties[propertyName]);
+				return (T)converter.ConvertFrom(_properties[propertyName]);
 			}
 			catch
 			{
@@ -84,7 +61,7 @@ namespace ZeroGravity
 
 		public static void SetProperty<T>(string propertyName, T propertyValue, string filePath = null)
 		{
-			filePath = Path.Combine((filePath == null) ? string.Empty : filePath, fileName);
+			filePath = Path.Combine((filePath == null) ? string.Empty : filePath, _fileName);
 			if (!File.Exists(filePath))
 			{
 				File.Create(filePath);

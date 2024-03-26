@@ -450,7 +450,7 @@ namespace ZeroGravity.UI
 			{
 				if (guiAnimItems[i].Image.transform.GetComponent<Button>() != null)
 				{
-					guiAnimItems[i].Material = UnityEngine.Object.Instantiate(guiAnimItems[i].Image.material);
+					guiAnimItems[i].Material = Instantiate(guiAnimItems[i].Image.material);
 					guiAnimItems[i].Image.material = guiAnimItems[i].Material;
 				}
 			}
@@ -503,7 +503,7 @@ namespace ZeroGravity.UI
 				return;
 			}
 
-			IEnumerator enumerator = base.transform.GetEnumerator();
+			IEnumerator enumerator = this.transform.GetEnumerator();
 			try
 			{
 				while (enumerator.MoveNext())
@@ -591,7 +591,7 @@ namespace ZeroGravity.UI
 			{
 				if (guiAnimItem.Image.GetComponent<Button>() != null && guiAnimItem.Image.gameObject.activeInHierarchy)
 				{
-					Material material = (guiAnimItem.Material = UnityEngine.Object.Instantiate(DefaultMaterial));
+					Material material = (guiAnimItem.Material = Instantiate(DefaultMaterial));
 					guiAnimItem.Image.material = material;
 				}
 			}

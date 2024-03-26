@@ -152,7 +152,7 @@ public class QuestIndicators : MonoBehaviour
 			{
 				MapObject value3 = _world.Map.AllMapObjects
 					.FirstOrDefault((KeyValuePair<IMapMainObject, MapObject> m) => m.Key is CelestialBody &&
-						(m.Key as CelestialBody).GUID == (long)trigger.TaskObject.Celestial).Value;
+						(m.Key as CelestialBody).Guid == (long)trigger.TaskObject.Celestial).Value;
 				if (value3 != null && !MapQuestIndicators.ContainsKey(trigger))
 				{
 					QuestIndicatorUI component2 = Object.Instantiate(MapQuestIndicatorPrefab, IndicatorParent)

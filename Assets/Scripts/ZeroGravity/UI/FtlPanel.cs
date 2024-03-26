@@ -22,7 +22,7 @@ namespace ZeroGravity.UI
 			Color color = ZeroCells.color;
 			if (colorLerp > 0)
 			{
-				color.a = ZeroCells.color.a + (float)colorLerp * korak;
+				color.a = ZeroCells.color.a + colorLerp * korak;
 				if (color.a > 1f)
 				{
 					colorLerp = -1;
@@ -30,7 +30,7 @@ namespace ZeroGravity.UI
 			}
 			else
 			{
-				color.a = ZeroCells.color.a + (float)colorLerp * korak;
+				color.a = ZeroCells.color.a + colorLerp * korak;
 				if (color.a < 0f)
 				{
 					colorLerp = 1;

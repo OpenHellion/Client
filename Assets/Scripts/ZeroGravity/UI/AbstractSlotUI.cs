@@ -247,7 +247,7 @@ namespace ZeroGravity.UI
 			SmallSlotUI[] componentsInChildren = ItemSlotHolder.GetComponentsInChildren<SmallSlotUI>();
 			foreach (SmallSlotUI smallSlotUI in componentsInChildren)
 			{
-				Object.Destroy(smallSlotUI.gameObject);
+				Destroy(smallSlotUI.gameObject);
 			}
 
 			if (Item == null)
@@ -271,7 +271,7 @@ namespace ZeroGravity.UI
 
 		public void CreateSmallSlot(ItemSlot slot, Transform holder)
 		{
-			GameObject gameObject = Object.Instantiate(SlotUI.gameObject, holder);
+			GameObject gameObject = Instantiate(SlotUI.gameObject, holder);
 			gameObject.transform.Reset();
 			gameObject.Activate(true);
 			SmallSlotUI componentInChildren = gameObject.GetComponentInChildren<SmallSlotUI>();

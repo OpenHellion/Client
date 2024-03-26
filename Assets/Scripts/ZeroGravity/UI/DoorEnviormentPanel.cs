@@ -262,7 +262,7 @@ namespace ZeroGravity.UI
 		{
 			if (Room == null)
 			{
-				Gizmos.DrawIcon(base.transform.position, "RoomNotAssigned");
+				Gizmos.DrawIcon(transform.position, "RoomNotAssigned");
 			}
 		}
 
@@ -271,7 +271,7 @@ namespace ZeroGravity.UI
 			if (Room != null)
 			{
 				Gizmos.color = Color.green;
-				Gizmos.DrawLine(Room.transform.position, base.transform.position);
+				Gizmos.DrawLine(Room.transform.position, transform.position);
 			}
 		}
 

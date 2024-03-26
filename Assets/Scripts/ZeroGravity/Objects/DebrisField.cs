@@ -29,28 +29,19 @@ namespace ZeroGravity.Objects
 
 		public OrbitParameters Orbit { get; set; }
 
-		public RadarVisibilityType RadarVisibilityType
-		{
-			get { return RadarVisibilityType.Visible; }
-		}
+		public RadarVisibilityType RadarVisibilityType => RadarVisibilityType.Visible;
 
-		public long GUID { get; set; }
+		public long Guid { get; set; }
 
 		public CelestialBody ParentCelesitalBody
 		{
-			get { return Orbit.Parent.CelestialBody; }
+			get => Orbit.Parent.CelestialBody;
 			set { }
 		}
 
-		public Vector3D Position
-		{
-			get { return Orbit.Position; }
-		}
+		public Vector3D Position => Orbit.Position;
 
-		public bool IsDummyObject
-		{
-			get { return false; }
-		}
+		public bool IsDummyObject => false;
 
 		public DebrisField(World world, DebrisFieldDetails data)
 		{

@@ -93,13 +93,13 @@ namespace ZeroGravity.ShipComponents
 				}
 
 				num = ResourceRequirements.Where(_003CGetResourceRequirement_003Ec__AnonStorey._003C_003Em__0)
-					.Sum((Func<ResourceRequirement, float>)_003CGetResourceRequirement_003Ec__AnonStorey
+					.Sum(_003CGetResourceRequirement_003Ec__AnonStorey
 						._003C_003Em__1);
 			}
 			else
 			{
 				num = ResourceRequirements.Where(_003CGetResourceRequirement_003Ec__AnonStorey._003C_003Em__2)
-					.Sum((Func<ResourceRequirement, float>)_003CGetResourceRequirement_003Ec__AnonStorey
+					.Sum(_003CGetResourceRequirement_003Ec__AnonStorey
 						._003C_003Em__3);
 			}
 
@@ -122,7 +122,7 @@ namespace ZeroGravity.ShipComponents
 		protected GeneratorDetails getDetails(bool? isSwitchedOn = null)
 		{
 			GeneratorDetails generatorDetails = new GeneratorDetails();
-			generatorDetails.InSceneID = base.InSceneID;
+			generatorDetails.InSceneID = InSceneID;
 			generatorDetails.Status = ((!isSwitchedOn.HasValue)
 				? Status
 				: ((!isSwitchedOn.Value) ? SystemStatus.Offline : SystemStatus.Online));
@@ -249,7 +249,7 @@ namespace ZeroGravity.ShipComponents
 			}
 
 			GeneratorData generatorData = new GeneratorData();
-			generatorData.InSceneID = base.InSceneID;
+			generatorData.InSceneID = InSceneID;
 			generatorData.Type = Type;
 			generatorData.PowerUpTime = PowerUpTime;
 			generatorData.CoolDownTime = CoolDownTime;

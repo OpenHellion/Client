@@ -17,27 +17,27 @@ public class Sequencer : MonoBehaviour
 	public void StartActivationSequence()
 	{
 		delayTime = GlobalDelayTime;
-		StartCoroutine("StartActivationSequenceCoroutine");
+		StartCoroutine(nameof(StartActivationSequenceCoroutine));
 	}
 
 	public void StartActivationSequence(float time)
 	{
 		delayTime = time;
-		StartCoroutine("StartActivationSequenceCoroutine");
+		StartCoroutine(nameof(StartActivationSequenceCoroutine));
 	}
 
 	public void StartAnimationSequence(string trigger)
 	{
 		delayTime = GlobalDelayTime;
 		animationParameter = trigger;
-		StartCoroutine("StartAnimationTriggerSequenceCoroutine");
+		StartCoroutine(nameof(StartAnimationTriggerSequenceCoroutine));
 	}
 
 	public void StartAnimationSequence(string trigger, float time)
 	{
 		delayTime = time;
 		animationParameter = trigger;
-		StartCoroutine("StartAnimationTriggerSequenceCoroutine");
+		StartCoroutine(nameof(StartAnimationTriggerSequenceCoroutine));
 	}
 
 	public void StartAnimationSequence(string boolName, bool boolValue)

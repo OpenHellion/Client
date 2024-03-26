@@ -34,6 +34,6 @@ public class TempTest : MonoBehaviour
 		}
 
 		num2 = heatDissipationFactor / mass * (currentTemperature + 273.15);
-		currentTemperature = (float)(currentTemperature + (num - num2) * (double)Time.deltaTime);
+		currentTemperature = (float)(currentTemperature + (num - num2) * Time.deltaTime);
 	}
 }

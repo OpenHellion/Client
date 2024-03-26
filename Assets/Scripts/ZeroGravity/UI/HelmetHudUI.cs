@@ -284,7 +284,7 @@ namespace ZeroGravity.UI
 				PressureValue.color = Colors.White;
 			}
 
-			Hb.speed = 3f - (float)MyPlayer.Instance.Health / 100f * 2f;
+			Hb.speed = 3f - MyPlayer.Instance.Health / 100f * 2f;
 			if (MyPlayer.Instance.Health < 70 && MyPlayer.Instance.Health > 30)
 			{
 				HeartBeat.color = Colors.Yellow;

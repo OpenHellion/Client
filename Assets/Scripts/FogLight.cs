@@ -146,7 +146,7 @@ public class FogLight : LightOverride
 		for (; i < num3; i++)
 		{
 			m_BufGrabShadowmap.SetGlobalVector("_TexelSize",
-				new Vector4(0.5f / (float)num4, 0.5f / (float)num4, 0f, 0f));
+				new Vector4(0.5f / num4, 0.5f / num4, 0f, 0f));
 			RenderTargetIdentifier dest;
 			if (i < num3 - 1)
 			{

@@ -4,6 +4,10 @@ using ZeroGravity.Network;
 
 namespace ZeroGravity.Objects
 {
+	/// <summary>
+	///		Unfinished class from the original developers. Probably intended to be a large space station with the ability to park ships and such.
+	///		Might be cool to implement later.
+	/// </summary>
 	public class Station : SpaceObjectVessel
 	{
 		public override void ChangeStats(Vector3? thrust = null, Vector3? rotation = null,

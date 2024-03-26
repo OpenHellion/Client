@@ -99,7 +99,7 @@ namespace ZeroGravity.Objects
 
 		public TargetingPoint CurrentTarget
 		{
-			get { return currentTarget; }
+			get => currentTarget;
 			set
 			{
 				if (!(currentTarget == value))
@@ -126,12 +126,10 @@ namespace ZeroGravity.Objects
 
 		public VesselSystem BaseVesselSystem
 		{
-			get
-			{
-				return (!(base.AttachPoint != null) || !(base.AttachPoint is ActiveSceneAttachPoint))
+			get =>
+				!(AttachPoint != null) || !(AttachPoint is ActiveSceneAttachPoint)
 					? null
-					: (base.AttachPoint as ActiveSceneAttachPoint).BaseVesselSystem;
-			}
+					: (AttachPoint as ActiveSceneAttachPoint).BaseVesselSystem;
 			set { }
 		}
 
@@ -158,12 +156,12 @@ namespace ZeroGravity.Objects
 			PortableTurretStats portableTurretStats = data as PortableTurretStats;
 			if (portableTurretStats.Health.HasValue)
 			{
-				if (base.Health > 0f && portableTurretStats.Health.Value <= 0f)
+				if (Health > 0f && portableTurretStats.Health.Value <= 0f)
 				{
 					DestroyTurret();
 				}
-				else if (base.Health <= base.MaxHealth * 0.5f &&
-				         portableTurretStats.Health.Value > base.MaxHealth * 0.5f)
+				else if (Health <= MaxHealth * 0.5f &&
+				         portableTurretStats.Health.Value > MaxHealth * 0.5f)
 				{
 					RestoreTurret();
 				}
@@ -192,7 +190,7 @@ namespace ZeroGravity.Objects
 		private void RestoreTurret()
 		{
 			isDestroyed = false;
-			if (base.AttachPoint != null)
+			if (AttachPoint != null)
 			{
 				turretAnimator.SetBool("IsDestroyed", value: false);
 				OnEnable();
@@ -219,7 +217,7 @@ namespace ZeroGravity.Objects
 		{
 			if (!(UnfoldedItem == null) && !(FoldedItem == null))
 			{
-				bool flag = isAttached || base.AttachPoint == null || !(base.AttachPoint is ActiveSceneAttachPoint);
+				bool flag = isAttached || AttachPoint == null || !(AttachPoint is ActiveSceneAttachPoint);
 				FoldedItem.SetActive(flag);
 				UnfoldedItem.SetActive(!flag);
 				CurrentTarget = null;
@@ -308,7 +306,7 @@ namespace ZeroGravity.Objects
 				NetworkController.SendToGameServer(new PortableTurretShootingMessage
 				{
 					IsShooting = true,
-					TurretGUID = base.GUID
+					TurretGUID = GUID
 				});
 				isShooting = true;
 				shootingSoundPlaying = true;
@@ -324,7 +322,7 @@ namespace ZeroGravity.Objects
 				NetworkController.SendToGameServer(new PortableTurretShootingMessage
 				{
 					IsShooting = false,
-					TurretGUID = base.GUID
+					TurretGUID = GUID
 				});
 			}
 		}
@@ -336,9 +334,9 @@ namespace ZeroGravity.Objects
 				return;
 			}
 
-			Vector3 vector = ((!(CurrentTarget.MainObject is Player))
+			Vector3 vector = !(CurrentTarget.MainObject is Player)
 				? CurrentTarget.transform.position
-				: (CurrentTarget.MainObject as Player).AnimHelper.GetBone(AnimatorHelper.HumanBones.Spine2).position);
+				: (CurrentTarget.MainObject as Player).AnimHelper.GetBone(AnimatorHelper.HumanBones.Spine2).position;
 			Vector3 vec = vector - turretBaseMovable.position;
 			upDownAngle = Mathf.Clamp(135f - MathHelper.AngleSigned(turretBaseMovable.up, vec, turretBaseMovable.right),
 				0f, 135f);
@@ -371,7 +369,7 @@ namespace ZeroGravity.Objects
 
 					for (animationPercentage_Horizontal = oldPercentage_Horizontal +
 					                                      turretAngularSpeed * Time.deltaTime *
-					                                      (float)MathHelper.Sign(hFrameDifference);
+					                                      MathHelper.Sign(hFrameDifference);
 					     animationPercentage_Horizontal > 1f;
 					     animationPercentage_Horizontal -= 1f)
 					{
@@ -406,7 +404,7 @@ namespace ZeroGravity.Objects
 
 				for (animationPercentage_Vertical = oldPercentage_Vertical +
 				                                    turretAngularSpeed * Time.deltaTime *
-				                                    (float)MathHelper.Sign(vFrameDifference);
+				                                    MathHelper.Sign(vFrameDifference);
 				     animationPercentage_Vertical > 1f;
 				     animationPercentage_Vertical -= 1f)
 				{
@@ -431,7 +429,7 @@ namespace ZeroGravity.Objects
 			bool flag = true;
 			List<TargetingPoint> list = Targets.OrderByDescending((TargetingPoint y) => y.Priority)
 				.ThenBy((TargetingPoint x) =>
-					(!(x == null))
+					!(x == null)
 						? (x.transform.position - detectionRaycastSource.position).sqrMagnitude
 						: float.MaxValue).ToList();
 			List<TargetingPoint> list2 = new List<TargetingPoint>();
@@ -550,7 +548,7 @@ namespace ZeroGravity.Objects
 
 		private bool ShouldShootAtPlayer(Player pl)
 		{
-			if (DynamicObj.Parent is SpaceObjectVessel && base.AttachPoint != null &&
+			if (DynamicObj.Parent is SpaceObjectVessel && AttachPoint != null &&
 			    !(DynamicObj.Parent as SpaceObjectVessel).IsPlayerAuthorized(MyPlayer.Instance))
 			{
 				return true;
@@ -567,7 +565,7 @@ namespace ZeroGravity.Objects
 		private void PortableTurretShootingMessageListener(NetworkData data)
 		{
 			PortableTurretShootingMessage portableTurretShootingMessage = data as PortableTurretShootingMessage;
-			if (portableTurretShootingMessage.TurretGUID == base.GUID)
+			if (portableTurretShootingMessage.TurretGUID == GUID)
 			{
 				turretAnimator.SetBool("IsShooting", portableTurretShootingMessage.IsShooting);
 				if (portableTurretShootingMessage.IsShooting)

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -21,7 +20,7 @@ namespace ZeroGravity
 
 		public List<GameObject> Options;
 
-		public GlossaryElementUI Current;
+		[NonSerialized] public GlossaryElementUI Current;
 
 		public GameObject CurrentHolder;
 

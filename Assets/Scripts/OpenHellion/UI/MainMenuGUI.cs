@@ -465,7 +465,7 @@ namespace OpenHellion.UI
 		{
 			_currentGenderGUI = _currentGenderGUI == Gender.Male ? Gender.Female : Gender.Male;
 			CurrentGenderText.text = _currentGenderGUI.ToLocalizedString();
-			InventoryCharacterPreview.Instance.ChangeGender(_currentGenderGUI);
+			//TODO: InventoryCharacterPreview.Instance.ChangeGender(_currentGenderGUI);
 		}
 
 		public void QuitGameButton()

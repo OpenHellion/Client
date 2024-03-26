@@ -23,7 +23,7 @@ namespace ZeroGravity.UI
 		{
 			if (Screen.Current != this)
 			{
-				base.gameObject.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+				gameObject.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
 				Screen.Current = this;
 				Screen.SetCurrent();
 			}
@@ -33,7 +33,7 @@ namespace ZeroGravity.UI
 		{
 			if (Screen.Current == this)
 			{
-				base.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+				gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
 				Screen.Current = null;
 				Screen.SetCurrent();
 			}
@@ -59,7 +59,7 @@ namespace ZeroGravity.UI
 				itemCompoundType.Tier = i + 1;
 				if (inst)
 				{
-					GameObject gameObject = UnityEngine.Object.Instantiate(Screen.TierPrefab, Screen.TiersHolder);
+					GameObject gameObject = Instantiate(Screen.TierPrefab, Screen.TiersHolder);
 					gameObject.transform.localScale = Vector3.one;
 					gameObject.GetComponent<Image>().color = Colors.Tier[i + 1];
 					gameObject.GetComponentInChildren<Text>().text = itemCompoundType.Tier.ToString();
@@ -78,7 +78,7 @@ namespace ZeroGravity.UI
 						gameObject.GetComponentInChildren<Text>().color = Colors.Gray;
 					}
 
-					if (num2 == (float)num)
+					if (num2 == num)
 					{
 						Screen.TiersDescription.text = Localization.AllTiersUnlocked.ToUpper();
 					}
@@ -94,7 +94,7 @@ namespace ZeroGravity.UI
 						num2 += 1f;
 					}
 
-					TierColor.fillAmount = num2 / (float)num;
+					TierColor.fillAmount = num2 / num;
 					if (num2 == 0f)
 					{
 						Icon.color = Colors.BlueprintIcon;

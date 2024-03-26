@@ -25,6 +25,8 @@ namespace ZeroGravity.ShipComponents
 			set { }
 		}
 
+		public override string Name => gameObject.name;
+
 		public override string Description { get; set; }
 
 		public override Vector3D TruePosition => WarpStartPosition;

@@ -23,7 +23,7 @@ namespace ZeroGravity.Objects
 		public override void UpdateUI()
 		{
 			base.UpdateUI();
-			if (base.IsSpecialStance)
+			if (IsSpecialStance)
 			{
 				regular.SetActive(false);
 				stance.SetActive(true);

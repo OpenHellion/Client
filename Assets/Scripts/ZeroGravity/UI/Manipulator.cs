@@ -46,9 +46,9 @@ namespace ZeroGravity.UI
 			else if (Mouse.current.leftButton.isPressed && theOne != null)
 			{
 				Vector3 vector = MainCamera.WorldToScreenPoint(theOne.transform.position) -
-				                 MainCamera.WorldToScreenPoint(base.transform.position);
+				                 MainCamera.WorldToScreenPoint(transform.position);
 				Vector3 vector2 = (Vector3)Mouse.current.position.ReadValue() -
-				                  MainCamera.WorldToScreenPoint(base.transform.position);
+				                  MainCamera.WorldToScreenPoint(transform.position);
 				float num = Vector2.Angle(vector2, vector);
 				if ((num > 80f && num < 110f) || (vector.magnitude.IsEpsilonEqual(vector2.magnitude, 8f) && num < 90f))
 				{

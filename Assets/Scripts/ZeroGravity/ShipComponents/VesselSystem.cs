@@ -56,7 +56,7 @@ namespace ZeroGravity.ShipComponents
 				switch (value)
 				{
 					case SystemStatus.Online:
-						SceneQuestTrigger.OnTrigger(base.gameObject, SceneQuestTriggerEvent.SystemSwitchOn);
+						SceneQuestTrigger.OnTrigger(gameObject, SceneQuestTriggerEvent.SystemSwitchOn);
 						if (OnOnlineEvent != null)
 						{
 							OnOnlineEvent.Invoke();
@@ -64,7 +64,7 @@ namespace ZeroGravity.ShipComponents
 
 						break;
 					case SystemStatus.Offline:
-						SceneQuestTrigger.OnTrigger(base.gameObject, SceneQuestTriggerEvent.SystemSwitchOff);
+						SceneQuestTrigger.OnTrigger(gameObject, SceneQuestTriggerEvent.SystemSwitchOff);
 						if (OnOfflineEvent != null)
 						{
 							OnOfflineEvent.Invoke();
@@ -127,10 +127,10 @@ namespace ZeroGravity.ShipComponents
 
 		private void OnDrawGizmos()
 		{
-			Gizmos.DrawIcon(base.transform.position, "SubSystem");
+			Gizmos.DrawIcon(transform.position, "SubSystem");
 			if (Room == null)
 			{
-				Gizmos.DrawIcon(base.transform.position + base.transform.up * 0.2f, "RoomNotAssigned");
+				Gizmos.DrawIcon(transform.position + transform.up * 0.2f, "RoomNotAssigned");
 			}
 		}
 
@@ -139,7 +139,7 @@ namespace ZeroGravity.ShipComponents
 			if (Room != null)
 			{
 				Gizmos.color = Color.green;
-				Gizmos.DrawLine(Room.transform.position, base.transform.position);
+				Gizmos.DrawLine(Room.transform.position, transform.position);
 			}
 		}
 	}

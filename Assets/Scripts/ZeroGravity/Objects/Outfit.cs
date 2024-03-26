@@ -98,18 +98,18 @@ namespace ZeroGravity.Objects
 			base.Awake();
 			if (OutfitTrans == null)
 			{
-				OutfitTrans = base.transform.Find("Outfit");
+				OutfitTrans = transform.Find("Outfit");
 			}
 
 			if (FoldedOutfitTrans == null)
 			{
-				FoldedOutfitTrans = base.transform.Find("Folded");
+				FoldedOutfitTrans = transform.Find("Folded");
 			}
 
 			short num = 1;
 			foreach (SlotGroup slotGroup in slotGroups)
 			{
-				if (slotGroup.Size == (InventorySlot.Size)0)
+				if (slotGroup.Size == 0)
 				{
 					slotGroup.Size = InventorySlot.Size.One;
 				}
@@ -178,7 +178,7 @@ namespace ZeroGravity.Objects
 
 		public bool CanRemoveOutfit()
 		{
-			return base.InvSlot == null || base.InvSlot.Inventory.HandsSlot.Item == null;
+			return InvSlot == null || InvSlot.Inventory.HandsSlot.Item == null;
 		}
 
 		public override void Special()
@@ -230,7 +230,7 @@ namespace ZeroGravity.Objects
 					MyPlayer.Instance.GetComponentInChildren<ImpactDetector>(includeInactive: true);
 				if (componentInChildren != null)
 				{
-					ImpactDetector impactDetector = MyPlayer.Instance.FpsController.ragdollChestRigidbody.gameObject
+					ImpactDetector impactDetector = MyPlayer.Instance.FpsController.RagdollChestRigidbody.gameObject
 						.AddComponent<ImpactDetector>();
 					impactDetector.ImpactSound = componentInChildren.ImpactSound;
 					impactDetector.VelocityThrashold = componentInChildren.VelocityThrashold;
@@ -271,7 +271,7 @@ namespace ZeroGravity.Objects
 				child.parent = parentTransform;
 				child.localScale = Vector3.one;
 				child.localPosition = Vector3.zero;
-				child.localRotation = ((!(child.name == "Root")) ? Quaternion.identity : rootRotation);
+				child.localRotation = !(child.name == "Root") ? Quaternion.identity : rootRotation;
 				if (!child.GetComponent<Item>())
 				{
 					child.gameObject.SetActive(activateGeometry);
@@ -281,12 +281,12 @@ namespace ZeroGravity.Objects
 
 		public void TakeOffOutfit(bool isDeath = false, bool sendToServer = true)
 		{
-			if (base.InvSlot != null && base.InvSlotID != -2)
+			if (InvSlot != null && InvSlotID != -2)
 			{
 				return;
 			}
 
-			Player player = base.InvSlot.Parent as Player;
+			Player player = InvSlot.Parent as Player;
 			if (player == null || player.Inventory.Outfit != this ||
 			    (!isDeath && !player.Inventory.Outfit.CanRemoveOutfit()))
 			{
@@ -303,7 +303,7 @@ namespace ZeroGravity.Objects
 					Helmet helmet = inventorySlot.Item as Helmet;
 					helmet.ChangeEquip(EquipType.Inventory, myPlayer);
 					helmet.gameObject.SetActive(value: false);
-					helmet.transform.parent = base.transform;
+					helmet.transform.parent = transform;
 				}
 
 				InventorySlot inventorySlot2 = myPlayer.CurrentOutfit.GetSlotsByGroup(InventorySlot.Group.Jetpack)
@@ -313,7 +313,7 @@ namespace ZeroGravity.Objects
 					Jetpack jetpack = inventorySlot2.Item as Jetpack;
 					jetpack.ChangeEquip(EquipType.Inventory, myPlayer);
 					jetpack.gameObject.SetActive(value: false);
-					jetpack.transform.parent = base.transform;
+					jetpack.transform.parent = transform;
 				}
 
 				ReparentCurrentOutfit();
@@ -321,7 +321,7 @@ namespace ZeroGravity.Objects
 				{
 					child.parent = myPlayer.Outfit;
 					child.localPosition = Vector3.zero;
-					child.localRotation = ((!(child.name == "Root")) ? Quaternion.identity : rootRotation);
+					child.localRotation = !(child.name == "Root") ? Quaternion.identity : rootRotation;
 					child.gameObject.SetActive(value: true);
 				}
 

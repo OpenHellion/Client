@@ -20,13 +20,13 @@ namespace ZeroGravity.UI
 
 		public void OnCompletedTask()
 		{
-			base.gameObject.SetActive(false);
+			gameObject.SetActive(false);
 			QuestTracker.RefreshBatch();
 		}
 
 		public void OnHideTask()
 		{
-			base.gameObject.SetActive(false);
+			gameObject.SetActive(false);
 		}
 	}
 }

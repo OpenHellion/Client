@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace ZeroGravity
 
 		public GameObject BlueprintUI;
 
-		public BlueprintItemUI Current;
+		[NonSerialized] public BlueprintItemUI Current;
 
 		public Transform TiersHolder;
 

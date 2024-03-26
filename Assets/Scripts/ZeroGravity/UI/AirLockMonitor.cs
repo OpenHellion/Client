@@ -108,7 +108,7 @@ namespace ZeroGravity.UI
 				Color color = DepressuriseImage.color;
 				if (depresurizeLerp > 0)
 				{
-					color.a = DepressuriseImage.color.a + (float)depresurizeLerp * korak;
+					color.a = DepressuriseImage.color.a + depresurizeLerp * korak;
 					if (color.a > 1f)
 					{
 						depresurizeLerp = -1;
@@ -116,7 +116,7 @@ namespace ZeroGravity.UI
 				}
 				else
 				{
-					color.a = DepressuriseImage.color.a + (float)depresurizeLerp * korak;
+					color.a = DepressuriseImage.color.a + depresurizeLerp * korak;
 					if (color.a < 0f)
 					{
 						depresurizeLerp = 1;
@@ -143,7 +143,7 @@ namespace ZeroGravity.UI
 				Color color3 = PressuriseImage.color;
 				if (presurizeLerp > 0)
 				{
-					color3.a = PressuriseImage.color.a + (float)presurizeLerp * korak;
+					color3.a = PressuriseImage.color.a + presurizeLerp * korak;
 					if (color3.a > 1f)
 					{
 						presurizeLerp = -1;
@@ -151,7 +151,7 @@ namespace ZeroGravity.UI
 				}
 				else
 				{
-					color3.a = PressuriseImage.color.a + (float)presurizeLerp * korak;
+					color3.a = PressuriseImage.color.a + presurizeLerp * korak;
 					if (color3.a < 0f)
 					{
 						presurizeLerp = 1;
@@ -202,7 +202,7 @@ namespace ZeroGravity.UI
 				Color color5 = DoorImage.color;
 				if (doorAlarm > 0)
 				{
-					color5.a = DoorImage.color.a + (float)doorAlarm * korak2;
+					color5.a = DoorImage.color.a + doorAlarm * korak2;
 					if (color5.a > 1f)
 					{
 						doorAlarm = -1;
@@ -210,7 +210,7 @@ namespace ZeroGravity.UI
 				}
 				else
 				{
-					color5.a = DoorImage.color.a + (float)doorAlarm * korak2;
+					color5.a = DoorImage.color.a + doorAlarm * korak2;
 					if (color5.a < 0f)
 					{
 						doorAlarm = 1;

@@ -119,7 +119,7 @@ namespace ZeroGravity.Objects
 
 		private float rotDifferenceCheck = 1E-08f;
 
-		public GameScenes.SceneId SceneID => (VesselData == null) ? GameScenes.SceneId.None : VesselData.SceneID;
+		public GameScenes.SceneId SceneID => VesselData == null ? GameScenes.SceneId.None : VesselData.SceneID;
 
 		public float MaxHealth { get; protected set; }
 
@@ -137,13 +137,13 @@ namespace ZeroGravity.Objects
 
 		public bool IsMainVessel => MainVessel == this;
 
-		public SpaceObjectVessel MainVessel => (!(DockedToMainVessel != null)) ? this : DockedToMainVessel;
+		public SpaceObjectVessel MainVessel => !(DockedToMainVessel != null) ? this : DockedToMainVessel;
 
-		public override CelestialBody ParentCelesitalBody => base.ParentCelesitalBody;
+		public override CelestialBody ParentCelestialBody => base.ParentCelestialBody;
 
-		public virtual string Name => (VesselData == null)
+		public virtual string Name => VesselData == null
 			? name
-			: (VesselData.VesselRegistration + " " + VesselData.VesselName);
+			: VesselData.VesselRegistration + " " + VesselData.VesselName;
 
 		public virtual string CustomName
 		{
@@ -222,6 +222,8 @@ namespace ZeroGravity.Objects
 			}
 		}
 
+		public CelestialBody ParentCelesitalBody { get; }
+
 		public override Vector3D Position
 		{
 			get
@@ -251,9 +253,9 @@ namespace ZeroGravity.Objects
 		}
 
 		public override bool IsDistressSignalActive =>
-			(VesselData != null && VesselData.IsDistressSignalActive) ? true : false;
+			VesselData != null && VesselData.IsDistressSignalActive ? true : false;
 
-		public override bool IsAlwaysVisible => (VesselData != null && VesselData.IsAlwaysVisible) ? true : false;
+		public override bool IsAlwaysVisible => VesselData != null && VesselData.IsAlwaysVisible ? true : false;
 
 		public bool IsDebrisFragment
 		{
@@ -270,7 +272,7 @@ namespace ZeroGravity.Objects
 
 		public override Vector3 Forward
 		{
-			get { return base.Forward; }
+			get => base.Forward;
 			set
 			{
 				base.Forward = value;
@@ -293,7 +295,7 @@ namespace ZeroGravity.Objects
 
 		public override Vector3 Up
 		{
-			get { return base.Up; }
+			get => base.Up;
 			set
 			{
 				base.Up = value;
@@ -367,14 +369,14 @@ namespace ZeroGravity.Objects
 				for (OrbitParameters parent = Orbit.Parent; parent != null; parent = parent.Parent)
 				{
 					CelestialBody celestialBody = parent.CelestialBody;
-					num *= (double)celestialBody.GetRadarSignatureModifier(World, this);
+					num *= celestialBody.GetRadarSignatureModifier(World, this);
 				}
 
 				foreach (DebrisField debrisField in World.DebrisFields)
 				{
 					if (debrisField.CheckObject(this))
 					{
-						num *= (double)debrisField.RadarSignatureMultiplier;
+						num *= debrisField.RadarSignatureMultiplier;
 					}
 				}
 
@@ -631,7 +633,7 @@ namespace ZeroGravity.Objects
 				if (obj != null)
 				{
 					DynamicObjectDetails dynamicObjectDetails2 =
-						dynamicObjectDetails.Find((DynamicObjectDetails m) => m.GUID == obj.GUID);
+						dynamicObjectDetails.Find((DynamicObjectDetails m) => m.GUID == obj.Guid);
 					if (dynamicObjectDetails2 != null)
 					{
 						dynamicObjectDetails.Remove(dynamicObjectDetails2);
@@ -679,7 +681,7 @@ namespace ZeroGravity.Objects
 				if (opl != null)
 				{
 					CharacterDetails characterDetails2 =
-						characterDetails.Find((CharacterDetails m) => m.GUID == opl.GUID);
+						characterDetails.Find((CharacterDetails m) => m.GUID == opl.Guid);
 					if (characterDetails2 != null)
 					{
 						characterDetails.Remove(characterDetails2);
@@ -726,7 +728,7 @@ namespace ZeroGravity.Objects
 			{
 				if (obj != null)
 				{
-					CorpseDetails corpseDetails2 = corpseDetails.Find((CorpseDetails m) => m.GUID == obj.GUID);
+					CorpseDetails corpseDetails2 = corpseDetails.Find((CorpseDetails m) => m.GUID == obj.Guid);
 					if (corpseDetails2 != null)
 					{
 						corpseDetails.Remove(corpseDetails2);
@@ -842,12 +844,12 @@ namespace ZeroGravity.Objects
 
 		public override void UpdateArtificialBodyPosition(bool updateChildren)
 		{
-			if (ArtificalRigidbody != null && GeometryPlaceholder != null)
+			if (ArtificialRigidbody != null && GeometryPlaceholder != null)
 			{
 				GeometryRoot.transform.position = GeometryPlaceholder.transform.position;
 				GeometryRoot.transform.rotation = GeometryPlaceholder.transform.rotation;
-				ArtificalRigidbody.position = GeometryPlaceholder.transform.position;
-				ArtificalRigidbody.rotation = GeometryPlaceholder.transform.rotation;
+				ArtificialRigidbody.position = GeometryPlaceholder.transform.position;
+				ArtificialRigidbody.rotation = GeometryPlaceholder.transform.rotation;
 			}
 
 			if (!updateChildren || AllDockedVessels == null || AllDockedVessels.Count <= 0)
@@ -857,15 +859,15 @@ namespace ZeroGravity.Objects
 
 			foreach (SpaceObjectVessel allDockedVessel in AllDockedVessels)
 			{
-				if (allDockedVessel.ArtificalRigidbody != null && allDockedVessel.GeometryPlaceholder != null)
+				if (allDockedVessel.ArtificialRigidbody != null && allDockedVessel.GeometryPlaceholder != null)
 				{
 					allDockedVessel.GeometryRoot.transform.position =
 						allDockedVessel.GeometryPlaceholder.transform.position;
 					allDockedVessel.GeometryRoot.transform.rotation =
 						allDockedVessel.GeometryPlaceholder.transform.rotation;
-					allDockedVessel.ArtificalRigidbody.position =
+					allDockedVessel.ArtificialRigidbody.position =
 						allDockedVessel.GeometryPlaceholder.transform.position;
-					allDockedVessel.ArtificalRigidbody.rotation =
+					allDockedVessel.ArtificialRigidbody.rotation =
 						allDockedVessel.GeometryPlaceholder.transform.rotation;
 				}
 			}
@@ -952,7 +954,7 @@ namespace ZeroGravity.Objects
 		public string GetDescription()
 		{
 			SpaceObjectVessel mainVessel = MainVessel;
-			int num = ((!IsDummyObject) ? mainVessel.AllDockedVessels.Count : DummyDockedVessels.Count);
+			int num = !IsDummyObject ? mainVessel.AllDockedVessels.Count : DummyDockedVessels.Count;
 			if (num == 0)
 			{
 				if (GameScenes.Ranges.IsShip(mainVessel.SceneID))
@@ -993,9 +995,9 @@ namespace ZeroGravity.Objects
 
 		protected void SmoothRotation(float deltaTime)
 		{
-			SpaceObject spaceObject = ((!(MyPlayer.Instance.Parent is SpaceObjectVessel))
+			SpaceObject spaceObject = !(MyPlayer.Instance.Parent is SpaceObjectVessel)
 				? MyPlayer.Instance.Parent
-				: (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel);
+				: (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel;
 			if (TargetRotation.HasValue)
 			{
 				Quaternion quaternion = Quaternion.LookRotation(Forward, Up);

@@ -52,7 +52,7 @@ namespace ZeroGravity.ShipComponents
 
 		private Vector3 oldRayIntersection = Vector3.zero;
 
-		public override string Name => base.gameObject.name;
+		public override string Name => gameObject.name;
 
 		public override OrbitParameters Orbit => orbit;
 
@@ -60,13 +60,13 @@ namespace ZeroGravity.ShipComponents
 
 		public override float Radius => 100f;
 
-		public override Color OrbitColor
+		protected override Color OrbitColor
 		{
 			get
 			{
 				if (Map != null)
 				{
-					if (base.Map.SelectedObject == this)
+					if (Map.SelectedObject == this)
 					{
 						return Colors.Cyan;
 					}
@@ -98,9 +98,9 @@ namespace ZeroGravity.ShipComponents
 		public override void UpdateObject()
 		{
 			Orbit.ResetOrbit(World.SolarSystem.CurrentTime);
-			Position.position = base.ObjectPosition;
-			Orbits.localScale = Vector3.one * (float)base.ObjectScale;
-			LongitudeOfAscendingNodePlane.localScale = Vector3.one * ((float)(Orbit.Parent.Radius * base.ObjectScale) *
+			Position.position = ObjectPosition;
+			Orbits.localScale = Vector3.one * (float)ObjectScale;
+			LongitudeOfAscendingNodePlane.localScale = Vector3.one * ((float)(Orbit.Parent.Radius * ObjectScale) *
 			                                                          IndicatorsScale *
 			                                                          Mathf.Clamp(
 				                                                          (float)(orbit.PeriapsisDistance /
@@ -120,18 +120,18 @@ namespace ZeroGravity.ShipComponents
 
 		public void UpdateOrbitIndicators()
 		{
-			if (this == base.Map.SelectedObject)
+			if (this == Map.SelectedObject)
 			{
 				PeriapsisIndicator.gameObject.SetActive(true);
 				ApoapsisIndicator.gameObject.SetActive(true);
 				LongitudeOfAscendingNodePlane.gameObject.SetActive(true);
 				PeriapsisIndicator.position =
-					((Orbit.PositionAtTimeAfterPeriapsis(0.0, false) - base.Map.Focus) * base.ObjectScale).ToVector3();
+					((Orbit.PositionAtTimeAfterPeriapsis(0.0, false) - Map.Focus) * ObjectScale).ToVector3();
 				ApoapsisIndicator.position =
-					((Orbit.PositionAtTimeAfterPeriapsis(Orbit.OrbitalPeriod / 2.0, false) - base.Map.Focus) *
-					 base.ObjectScale).ToVector3();
+					((Orbit.PositionAtTimeAfterPeriapsis(Orbit.OrbitalPeriod / 2.0, false) - Map.Focus) *
+					 ObjectScale).ToVector3();
 				LongitudeOfAscendingNodePlane.position =
-					((Orbit.Parent.Position - base.Map.Focus) * base.ObjectScale).ToVector3();
+					((Orbit.Parent.Position - Map.Focus) * ObjectScale).ToVector3();
 				LongitudeOfAscendingNodePlane.localRotation =
 					Quaternion.Euler(0f, 0f - (float)Orbit.LongitudeOfAscendingNode, 0f);
 				InclinationIndicator.localRotation = Quaternion.Euler((float)Orbit.Inclination + 90f, 0f, 0f);
@@ -148,7 +148,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			base.StartDragging(dragObject, ray);
 			Vector3 vector = MathHelper.RayPlaneIntersect(ray, OrbitPlane.position, OrbitPlane.up);
-			Vector3 vector2 = ((Orbit.Parent.Position - base.Map.Focus) * base.ObjectScale).ToVector3();
+			Vector3 vector2 = ((Orbit.Parent.Position - Map.Focus) * ObjectScale).ToVector3();
 			oldRayIntersection = PeriapsisIndicator.position;
 			Debug.DrawLine(vector2, vector);
 			if (dragObject.transform == PeriapsisIndicator)
@@ -197,7 +197,7 @@ namespace ZeroGravity.ShipComponents
 		public override void Dragging(Ray ray)
 		{
 			Vector3 vector = MathHelper.RayPlaneIntersect(ray, OrbitPlane.position, OrbitPlane.up);
-			Vector3 vector2 = ((Orbit.Parent.Position - base.Map.Focus) * base.ObjectScale).ToVector3();
+			Vector3 vector2 = ((Orbit.Parent.Position - Map.Focus) * ObjectScale).ToVector3();
 			double num = Orbit.PeriapsisDistance;
 			double num2 = Orbit.ApoapsisDistance;
 			double num3 = Orbit.Inclination;
@@ -207,21 +207,21 @@ namespace ZeroGravity.ShipComponents
 			double solarSystemTime = 0.0;
 			if (DraggingParameter == PeriapsisIndicator)
 			{
-				num = oldPeriapsis * (double)(vector2 - vector).magnitude / (double)oldPeriapsisRayDistance;
+				num = oldPeriapsis * (vector2 - vector).magnitude / oldPeriapsisRayDistance;
 				if (num > Orbit.ApoapsisDistance)
 				{
 					num = Orbit.ApoapsisDistance;
 				}
 
-				num4 = (double)(MathHelper.AngleSigned((vector2 - vector).normalized,
-					       (vector2 - oldRayIntersection).normalized, OrbitPlane.up) - oldArgumentOfPeriapsisRayAngle) +
+				num4 = MathHelper.AngleSigned((vector2 - vector).normalized,
+					       (vector2 - oldRayIntersection).normalized, OrbitPlane.up) - oldArgumentOfPeriapsisRayAngle +
 				       oldArgumentOfPeriapsis;
 				num6 = oldTrueAnomalyAtZeroTime;
 				dragTrueAnomaly = true;
 			}
 			else if (DraggingParameter == ApoapsisIndicator)
 			{
-				num2 = oldApoapsis * (double)(vector2 - vector).magnitude / (double)oldApoapsisRayDistance;
+				num2 = oldApoapsis * (vector2 - vector).magnitude / oldApoapsisRayDistance;
 				if (num2 < Orbit.PeriapsisDistance)
 				{
 					num2 = Orbit.PeriapsisDistance;
@@ -231,8 +231,8 @@ namespace ZeroGravity.ShipComponents
 					num2 = Orbit.Parent.GravityInfluenceRadius;
 				}
 
-				num4 = (double)(MathHelper.AngleSigned((vector2 - vector).normalized,
-					       (vector2 - oldRayIntersection).normalized, OrbitPlane.up) - oldArgumentOfPeriapsisRayAngle) +
+				num4 = MathHelper.AngleSigned((vector2 - vector).normalized,
+					       (vector2 - oldRayIntersection).normalized, OrbitPlane.up) - oldArgumentOfPeriapsisRayAngle +
 				       oldArgumentOfPeriapsis;
 				num6 = oldTrueAnomalyAtZeroTime;
 				dragTrueAnomaly = true;
@@ -240,22 +240,22 @@ namespace ZeroGravity.ShipComponents
 			else if (DraggingParameter == LongitudeOfAscendingNodeIndicator)
 			{
 				vector = MathHelper.RayPlaneIntersect(ray, vector2, Vector3.up);
-				num5 = (double)(MathHelper.AngleSigned((vector2 - vector).normalized,
+				num5 = MathHelper.AngleSigned((vector2 - vector).normalized,
 					       (vector2 - oldRayIntersection).normalized, Vector3.up) -
-				       oldLongitudeOfAscendingNodeRayAngle) +
+				       oldLongitudeOfAscendingNodeRayAngle +
 				       oldLongitudeOfAscendingNode;
 			}
 			else if (DraggingParameter == InclinationIndicator)
 			{
 				vector = MathHelper.RayPlaneIntersect(ray, vector2, LongitudeOfAscendingNodePlane.right);
-				num3 = (double)(0f - (MathHelper.AngleSigned((vector2 - vector).normalized,
-					                      (vector2 - oldRayIntersection).normalized,
-					                      LongitudeOfAscendingNodePlane.right) -
-				                      oldInclinationRayAngle)) + oldInclination;
+				num3 = 0f - (MathHelper.AngleSigned((vector2 - vector).normalized,
+					             (vector2 - oldRayIntersection).normalized,
+					             LongitudeOfAscendingNodePlane.right) -
+				             oldInclinationRayAngle) + oldInclination;
 			}
 			else if (DraggingParameter == Position)
 			{
-				num6 = (double)MathHelper.AngleSigned((vector2 - vector).normalized,
+				num6 = MathHelper.AngleSigned((vector2 - vector).normalized,
 					       (vector2 - oldRayIntersection).normalized, OrbitPlane.up) -
 				       oldTrueAnomalyAtZeroTimeRayAngle +
 				       oldTrueAnomalyAtZeroTime;

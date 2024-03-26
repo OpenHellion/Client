@@ -40,7 +40,7 @@ namespace ZeroGravity.UI
 						: (r1 + (r2 - r1) * MathHelper.ProportionalValue(num4, num5, 90f, 0f, 1f))));
 				float y = -1f * Mathf.Sin(f) * num3;
 				float x = -1f * Mathf.Cos(f) * num3;
-				base.transform.localPosition = new Vector2(x, y);
+				transform.localPosition = new Vector2(x, y);
 			}
 		}
 	}

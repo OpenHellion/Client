@@ -163,7 +163,7 @@ namespace DigitalOpus.MB.Core
 
 		internal static Vector2 TransformPoint(ref DRect r, Vector2 p)
 		{
-			return new Vector2((float)(r.width * (double)p.x + r.x), (float)(r.height * (double)p.y + r.y));
+			return new Vector2((float)(r.width * p.x + r.x), (float)(r.height * p.y + r.y));
 		}
 	}
 }

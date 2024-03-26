@@ -92,13 +92,13 @@ namespace ZeroGravity.UI
 			RefreshLifeSupport();
 			MainScreen.SetActive(value: true);
 			InfoScreen.SetActive(value: false);
-			base.gameObject.SetActive(value: true);
+			gameObject.SetActive(value: true);
 		}
 
 		public override void OnDetach()
 		{
 			base.OnDetach();
-			base.gameObject.SetActive(value: false);
+			gameObject.SetActive(value: false);
 		}
 
 		public void RefreshLifeSupport()

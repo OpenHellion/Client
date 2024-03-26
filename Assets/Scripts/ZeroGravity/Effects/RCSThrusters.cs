@@ -79,18 +79,18 @@ namespace ZeroGravity.Effects
 		{
 			foreach (ExhaustScript thruster in Thrusters)
 			{
-				if ((moveVector.IsNotEpsilonZero() && (double)Vector3.Dot(moveVector,
+				if ((moveVector.IsNotEpsilonZero() && Vector3.Dot(moveVector,
 					    Quaternion.Inverse(CenterOfMass.rotation) * thruster.transform.rotation * Vector3.up) < -0.7) ||
 				    (rotateVector.x.IsNotEpsilonZero() &&
-				     (double)Vector3.Dot(
+				     Vector3.Dot(
 					     Quaternion.AngleAxis(90f * rotateVector.x, CenterOfMass.right) *
 					     (CenterOfMass.position - thruster.transform.position), thruster.transform.up) > 0.7) ||
 				    (rotateVector.y.IsNotEpsilonZero() &&
-				     (double)Vector3.Dot(
+				     Vector3.Dot(
 					     Quaternion.AngleAxis(90f * rotateVector.y, CenterOfMass.up) *
 					     (CenterOfMass.position - thruster.transform.position), thruster.transform.up) > 0.7) ||
 				    (rotateVector.z.IsNotEpsilonZero() &&
-				     (double)Vector3.Dot(
+				     Vector3.Dot(
 					     Quaternion.AngleAxis(90f * rotateVector.z, CenterOfMass.forward) *
 					     (CenterOfMass.position - thruster.transform.position), thruster.transform.up) > 0.7))
 				{
@@ -104,18 +104,18 @@ namespace ZeroGravity.Effects
 
 			foreach (ParticleSystem particleThruster in ParticleThrusters)
 			{
-				if ((moveVector.IsNotEpsilonZero() && (double)Vector3.Dot(moveVector,
+				if ((moveVector.IsNotEpsilonZero() && Vector3.Dot(moveVector,
 					    Quaternion.Inverse(CenterOfMass.rotation) * particleThruster.transform.rotation *
 					    Vector3.forward) < -0.7) ||
-				    (rotateVector.x.IsNotEpsilonZero() && (double)Vector3.Dot(
+				    (rotateVector.x.IsNotEpsilonZero() && Vector3.Dot(
 					    Quaternion.AngleAxis(90f * rotateVector.x, CenterOfMass.right) *
 					    (CenterOfMass.position - particleThruster.transform.position),
 					    particleThruster.transform.forward) > 0.7) ||
-				    (rotateVector.y.IsNotEpsilonZero() && (double)Vector3.Dot(
+				    (rotateVector.y.IsNotEpsilonZero() && Vector3.Dot(
 					    Quaternion.AngleAxis(90f * rotateVector.y, CenterOfMass.up) *
 					    (CenterOfMass.position - particleThruster.transform.position),
 					    particleThruster.transform.forward) > 0.7) || (rotateVector.z.IsNotEpsilonZero() &&
-					                                                   (double)Vector3.Dot(
+					                                                   Vector3.Dot(
 						                                                   Quaternion.AngleAxis(90f * rotateVector.z,
 							                                                   CenterOfMass.forward) *
 						                                                   (CenterOfMass.position -

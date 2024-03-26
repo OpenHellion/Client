@@ -126,7 +126,7 @@
   "LatencyProblems": "Latency problems",
   "Rubberbanding": "Rubberbanding",
   "ServerStuck": "Server stuck on loading",
-  "DisconnectedFromServer": "Disconnected from the server for no reason",
+  "DisconnectedFromServer": "Disconnected from the server without any specified reason.",
   "Other": "Other",
   "SendReport": "Send report",
   "FreshStartConfrimTitle": "Fresh Start Confirm",

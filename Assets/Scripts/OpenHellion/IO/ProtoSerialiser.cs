@@ -192,15 +192,15 @@ namespace OpenHellion.IO
 			{
 				text2 = text;
 				text = text2 + item.Key.Name + ": " + item.Value.PacketNumber + " (" +
-				       ((float)item.Value.ByteSum / 1000f).ToString("##,0") + " kB), \n";
+				       (item.Value.ByteSum / 1000f).ToString("##,0") + " kB), \n";
 				item.Value.BytesSinceLastCheck = 0L;
 				num += item.Value.ByteSum;
 			}
 
 			text2 = text;
 			text = text2 + "-----------------------------------------\nTotal: " +
-			       ((float)num / 1000f).ToString("##,0") + " kB (avg: " +
-			       ((double)num / timeSpan.TotalSeconds / 1000.0).ToString("##,0") + " kB/s)";
+			       (num / 1000f).ToString("##,0") + " kB (avg: " +
+			       (num / timeSpan.TotalSeconds / 1000.0).ToString("##,0") + " kB/s)";
 			if (MyPlayer.Instance != null)
 			{
 				if (stat == _sentStatistics)

@@ -53,7 +53,7 @@ namespace ZeroGravity.Objects
 
 		public override float MaxQuantity => FuelCompartment.Capacity;
 
-		public override float Quantity => (FuelCompartment.Resources == null)
+		public override float Quantity => FuelCompartment.Resources == null
 			? 0f
 			: FuelCompartment.Resources.Sum((CargoResourceData m) => m.Quantity);
 
@@ -150,7 +150,7 @@ namespace ZeroGravity.Objects
 			}
 
 			if (!active || Time.time - lastUsageTime < UsageCooldown ||
-			    (base.InvSlot != null && !(base.InvSlot.Parent is MyPlayer)))
+			    (InvSlot != null && !(InvSlot.Parent is MyPlayer)))
 			{
 				return;
 			}
@@ -192,7 +192,7 @@ namespace ZeroGravity.Objects
 				{
 					NetworkController.SendToGameServer(new RepairVesselMessage
 					{
-						ID = new VesselObjectID(componentInParent2.ParentVessel.GUID, componentInParent2.InSceneID)
+						ID = new VesselObjectID(componentInParent2.ParentVessel.Guid, componentInParent2.InSceneID)
 					});
 					flag = true;
 					break;
@@ -228,8 +228,8 @@ namespace ZeroGravity.Objects
 		{
 			base.ProcesStatsData(dos);
 			RepairToolStats repairToolStats = dos as RepairToolStats;
-			if (repairToolStats.Active.HasValue && base.InvSlot != null && base.InvSlot.Parent is Player &&
-			    !(base.InvSlot.Parent is MyPlayer) && base.InvSlot.SlotType == InventorySlot.Type.Hands)
+			if (repairToolStats.Active.HasValue && InvSlot != null && InvSlot.Parent is Player &&
+			    !(InvSlot.Parent is MyPlayer) && InvSlot.SlotType == InventorySlot.Type.Hands)
 			{
 				if (repairToolStats.Active.Value)
 				{
@@ -248,7 +248,7 @@ namespace ZeroGravity.Objects
 				UpdateHealthIndicator(repairToolStats.FuelResource.Quantity, FuelCompartment.Capacity);
 			}
 
-			if (base.AttachPoint != null && MyPlayer.Instance.IsLockedToTrigger &&
+			if (AttachPoint != null && MyPlayer.Instance.IsLockedToTrigger &&
 			    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
 			{
 				SceneTriggerCargoPanel sceneTriggerCargoPanel =

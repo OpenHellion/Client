@@ -43,15 +43,11 @@ namespace ZeroGravity
 
 		[Title("PlayerInfo")] public Text PlayerName;
 
-		public Image CharacterPreview;
-
 		public Text ArmorValue;
 
 		public Image HeartBeat;
 
 		public Animator Hb;
-
-		public Text HealthValue;
 
 		[Title("CharacterSlots")] public Transform HandSlot;
 
@@ -65,8 +61,9 @@ namespace ZeroGravity
 
 		public Transform JetpackSlot;
 
-		[Title("SelectedItem")] public Item SelectedItem;
+		[NonSerialized] public Item SelectedItem;
 
+		[Title("SelectedItem")]
 		public GameObject SelectedItemHolder;
 
 		public TooltipInventory SelectedItemData;
@@ -97,9 +94,9 @@ namespace ZeroGravity
 
 		public object LootingTarget;
 
-		public HashSet<BaseSceneAttachPoint> APLootingList = new HashSet<BaseSceneAttachPoint>();
+		private readonly HashSet<BaseSceneAttachPoint> _apLootingList = new HashSet<BaseSceneAttachPoint>();
 
-		private float lootRadius = 1.65f;
+		private const float LootRadius = 1.65f;
 
 		[Title("ItemSlots")] public bool ShowItemSlots;
 
@@ -493,9 +490,9 @@ namespace ZeroGravity
 			}
 
 			ApSlots.Clear();
-			APLootingList.Clear();
-			fillAPList(APLootingList);
-			if (APLootingList.Count <= 0)
+			_apLootingList.Clear();
+			fillAPList(_apLootingList);
+			if (_apLootingList.Count <= 0)
 			{
 				return;
 			}
@@ -507,7 +504,7 @@ namespace ZeroGravity
 			inventoryGroupUI.LootAllButton.SetActive(value: true);
 			inventoryGroupUI.Inventory = this;
 			ProximityGroup = inventoryGroupUI;
-			foreach (BaseSceneAttachPoint item in APLootingList.OrderBy((BaseSceneAttachPoint m) => m.StandardTip))
+			foreach (BaseSceneAttachPoint item in _apLootingList.OrderBy((BaseSceneAttachPoint m) => m.StandardTip))
 			{
 				if (item.Item == null || (Inventory.Parent is MyPlayer &&
 				                          item.Item.CanPlayerPickUp(Inventory.Parent as MyPlayer)))
@@ -523,7 +520,7 @@ namespace ZeroGravity
 		{
 			HashSet<BaseSceneAttachPoint> hashSet = new HashSet<BaseSceneAttachPoint>();
 			fillAPList(hashSet);
-			if (hashSet.Except(APLootingList).Count() > 0 || APLootingList.Except(hashSet).Count() > 0)
+			if (hashSet.Except(_apLootingList).Count() > 0 || _apLootingList.Except(hashSet).Count() > 0)
 			{
 				CheckProximityAttachPoints();
 			}
@@ -532,7 +529,7 @@ namespace ZeroGravity
 		private void fillAPList(HashSet<BaseSceneAttachPoint> list)
 		{
 			Collider[] array = Physics.OverlapSphere(MyPlayer.Instance.FpsController.MainCamera.transform.position,
-				lootRadius * 1.5f);
+				LootRadius * 1.5f);
 			foreach (Collider collider in array)
 			{
 				BaseSceneAttachPoint componentInParent = collider.GetComponentInParent<BaseSceneAttachPoint>();
@@ -546,7 +543,7 @@ namespace ZeroGravity
 				foreach (Transform transform in componentsInChildren)
 				{
 					Vector3 rhs = transform.position - MyPlayer.Instance.FpsController.MainCamera.transform.position;
-					if (rhs.magnitude <= lootRadius &&
+					if (rhs.magnitude <= LootRadius &&
 					    Vector3.Dot(MyPlayer.Instance.FpsController.MainCamera.transform.forward, rhs) > 0f)
 					{
 						list.Add(componentInParent);

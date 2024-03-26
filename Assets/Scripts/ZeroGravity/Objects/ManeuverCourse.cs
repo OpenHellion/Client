@@ -144,10 +144,10 @@ namespace ZeroGravity.Objects
 			Transfer.StartSolarSystemTime = _world.SolarSystem.CurrentTime + _timeToStart;
 			Transfer.EndSolarSystemTime = _world.SolarSystem.CurrentTime + _timeToTarget;
 			Vector3 position =
-				((StartOrbit.PositionAtTrueAnomaly((double)Transfer.StartOrbitAngle * (Mathf.PI / 180.0),
+				((StartOrbit.PositionAtTrueAnomaly(Transfer.StartOrbitAngle * (Mathf.PI / 180.0),
 					getRelativePosition: true) + (StartOrbit.Parent.Position - Map.Focus)) * ObjectScale).ToVector3();
 			Vector3 position2 =
-				((EndOrbit.PositionAtTrueAnomaly((double)Transfer.EndOrbitAngle * (Mathf.PI / 180.0),
+				((EndOrbit.PositionAtTrueAnomaly(Transfer.EndOrbitAngle * (Mathf.PI / 180.0),
 					getRelativePosition: true) + (EndOrbit.Parent.Position - Map.Focus)) * ObjectScale).ToVector3();
 			ManeuverLine.SetPosition(0, position);
 			ManeuverLine.SetPosition(1, position2);
@@ -188,7 +188,7 @@ namespace ZeroGravity.Objects
 			Vector3D vector3D = StartOrbit.PositionAfterTime(_timeToStart, getRelativePosition);
 			Vector3D vector3D2 = EndOrbit.PositionAfterTime(_timeToTarget, getRelativePosition);
 			ManeuverDistance = Vector3D.Distance(vector3D, vector3D2);
-			if (MyShip.GetCompoundMass() > (double)(MyShip.Mass + MyShip.FTLEngine.TowingCapacity) ||
+			if (MyShip.GetCompoundMass() > MyShip.Mass + MyShip.FTLEngine.TowingCapacity ||
 			    (Transfer.WarpIndex == 0 && MyShip.MainVessel.AllDockedVessels.Count > 0))
 			{
 				_isFeasible = false;
@@ -216,7 +216,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			float num2 = (float)(MyShip.GetCompoundMass() / (double)MyShip.Mass);
+			float num2 = (float)(MyShip.GetCompoundMass() / MyShip.Mass);
 			if (MyShip.FTLEngine.WarpsData.Length <= Transfer.WarpIndex)
 			{
 				_isFeasible = false;
@@ -242,10 +242,10 @@ namespace ZeroGravity.Objects
 			float num4 = 0f;
 			foreach (int warpCell in Transfer.WarpCells)
 			{
-				num4 += ((!MyShip.FTLEngine.WarpCellsFuel.ContainsKey(warpCell) ||
-				          !MyShip.FTLEngine.WarpCellsFuel[warpCell].HasValue)
+				num4 += !MyShip.FTLEngine.WarpCellsFuel.ContainsKey(warpCell) ||
+				        !MyShip.FTLEngine.WarpCellsFuel[warpCell].HasValue
 					? 0f
-					: MyShip.FTLEngine.WarpCellsFuel[warpCell].Value);
+					: MyShip.FTLEngine.WarpCellsFuel[warpCell].Value;
 			}
 
 			if (num4 < FuelAmountRequired)
@@ -270,14 +270,14 @@ namespace ZeroGravity.Objects
 				PowerError = false;
 			}
 
-			double num5 = 4.0 * (vector3D - vector3D2).Magnitude / (double)(num * num);
-			if (num5 > (double)warpData.MaxAcceleration)
+			double num5 = 4.0 * (vector3D - vector3D2).Magnitude / (num * num);
+			if (num5 > warpData.MaxAcceleration)
 			{
 				_isFeasible = false;
 				FeasibilityError = FeasibilityErrorType.AccelerationLow;
 				ManeuverError = true;
 			}
-			else if (num5 < (double)warpData.MinAcceleration)
+			else if (num5 < warpData.MinAcceleration)
 			{
 				_isFeasible = false;
 				FeasibilityError = FeasibilityErrorType.AccelerationHigh;

@@ -23,7 +23,7 @@ public class MB_DynamicAddDeleteExample : MonoBehaviour
 			{
 				GameObject gameObject = Object.Instantiate(prefab);
 				array[i * num + j] = gameObject.GetComponentInChildren<MeshRenderer>().gameObject;
-				gameObject.transform.position = new Vector3(9f * (float)i, 0f, 9f * (float)j);
+				gameObject.transform.position = new Vector3(9f * i, 0f, 9f * j);
 				if ((i * num + j) % 3 == 0)
 				{
 					objsInCombined.Add(array[i * num + j]);

@@ -64,15 +64,15 @@ namespace ZeroGravity.ShipComponents
 				return false;
 			}
 
-			Vector3D vector3D = target.Position - base.ParentVessel.Position;
+			Vector3D vector3D = target.Position - ParentVessel.Position;
 			double magnitude = vector3D.Magnitude;
 			float num = (float)Vector3D.Angle(scanDirection.ToVector3D(), vector3D.Normalized);
 			if (num <= scanAngle / 2f)
 			{
 				double sensitivityMultiplier = GetSensitivityMultiplier();
 				double num2 = target.RadarSignature * CheckBehindPlanets(vector3D, magnitude);
-				double num3 = ActiveScanSensitivity * 1000.0 / (double)scanAngle * num2 * sensitivityMultiplier;
-				double num4 = ActiveScanFuzzySensitivity * 1000.0 / (double)scanAngle * num2 * sensitivityMultiplier;
+				double num3 = ActiveScanSensitivity * 1000.0 / scanAngle * num2 * sensitivityMultiplier;
+				double num4 = ActiveScanFuzzySensitivity * 1000.0 / scanAngle * num2 * sensitivityMultiplier;
 				bool flag = magnitude < num3;
 				bool flag2 = magnitude < num4;
 				bool flag3 = magnitude < PassiveScanSensitivity * 1000.0 * num2 * sensitivityMultiplier;
@@ -96,11 +96,11 @@ namespace ZeroGravity.ShipComponents
 				if (target.RadarVisibilityType == RadarVisibilityType.Invisible && flag2 && !flag3 && !flag &&
 				    spaceObjectVessel != null)
 				{
-					double num5 = System.Math.Cos(((double)scanAngle / 2.0 - (double)num) * (System.Math.PI / 180.0)) *
+					double num5 = System.Math.Cos((scanAngle / 2.0 - num) * (System.Math.PI / 180.0)) *
 					              magnitude;
-					double num6 = num5 / System.Math.Cos((double)scanAngle / 2.0 * (System.Math.PI / 180.0));
+					double num6 = num5 / System.Math.Cos(scanAngle / 2.0 * (System.Math.PI / 180.0));
 					double num7 = System.Math.Sqrt(num6 * num6 - num5 * num5);
-					Vector3D vector3D2 = base.ParentVessel.Position + scanDirection.ToVector3D().Normalized * num6;
+					Vector3D vector3D2 = ParentVessel.Position + scanDirection.ToVector3D().Normalized * num6;
 					if (fuzzySphereSize == 1f)
 					{
 						World.Map.InitializeMapObjectFuzzyScan(vector3D2, num7 * 2.0, spaceObjectVessel);
@@ -108,7 +108,7 @@ namespace ZeroGravity.ShipComponents
 					else
 					{
 						Vector3D vector3D3 = vector3D - vector3D2;
-						double num8 = num7 * (double)fuzzySphereSize;
+						double num8 = num7 * fuzzySphereSize;
 						int hashCode = target.GetHashCode();
 						Vector3D vector3D4 = new Vector3D(MathHelper.RandomRange(-1.0, 1.0, hashCode),
 								MathHelper.RandomRange(-1.0, 1.0, hashCode),
@@ -127,12 +127,12 @@ namespace ZeroGravity.ShipComponents
 
 		public double GetSensitivityMultiplier()
 		{
-			double num = (double)SignalAmplification * GetCelestialSensitivityModifier();
+			double num = SignalAmplification * GetCelestialSensitivityModifier();
 			foreach (DebrisField debrisField in World.DebrisFields)
 			{
-				if (debrisField.CheckObject(base.ParentVessel))
+				if (debrisField.CheckObject(ParentVessel))
 				{
-					num *= (double)debrisField.ScanningSensitivityMultiplier;
+					num *= debrisField.ScanningSensitivityMultiplier;
 				}
 			}
 
@@ -147,8 +147,8 @@ namespace ZeroGravity.ShipComponents
 				return false;
 			}
 
-			if (target == base.ParentVessel ||
-			    (MyPlayer.Instance != null && target.GUID == MyPlayer.Instance.HomeStationGUID))
+			if (target == ParentVessel ||
+			    (MyPlayer.Instance != null && target.Guid == MyPlayer.Instance.HomeStationGUID))
 			{
 				if (target.RadarVisibilityType != RadarVisibilityType.Visible)
 				{
@@ -159,7 +159,7 @@ namespace ZeroGravity.ShipComponents
 				return false;
 			}
 
-			Vector3D relTargetPosition = target.Position - base.ParentVessel.Position;
+			Vector3D relTargetPosition = target.Position - ParentVessel.Position;
 			double magnitude = relTargetPosition.Magnitude;
 			double sensitivityMultiplier = GetSensitivityMultiplier();
 			double num = target.RadarSignature * CheckBehindPlanets(relTargetPosition, magnitude);
@@ -279,7 +279,7 @@ namespace ZeroGravity.ShipComponents
 		public void PassiveScan()
 		{
 			bool flag = false;
-			foreach (ArtificialBody artificialBody in World.SolarSystem.ArtificialBodies)
+			foreach (ArtificialBody artificialBody in SolarSystem.ArtificialBodyReferences)
 			{
 				if (!(artificialBody is Pivot) &&
 				    (!(artificialBody is SpaceObjectVessel) || (artificialBody as SpaceObjectVessel).IsMainVessel) &&
@@ -291,7 +291,7 @@ namespace ZeroGravity.ShipComponents
 
 			if (flag)
 			{
-				World.SolarSystem.ArtificialBodiesVisiblityModified();
+				World.SolarSystem.ArtificialBodiesVisibilityModified();
 				World.Map.SaveMapDetails();
 				World.Map.IsInitializing = false;
 			}
@@ -305,8 +305,8 @@ namespace ZeroGravity.ShipComponents
 			}
 
 			bool flag = false;
-			foreach (ArtificialBody item in World.SolarSystem.ArtificialBodies
-				         .OrderBy((ArtificialBody m) => (m.Position - base.ParentVessel.Position).SqrMagnitude)
+			foreach (ArtificialBody item in SolarSystem.ArtificialBodyReferences
+				         .OrderBy((ArtificialBody m) => (m.Position - ParentVessel.Position).SqrMagnitude)
 				         .Reverse())
 			{
 				if (item is not Pivot && (item is not SpaceObjectVessel || (item as SpaceObjectVessel).IsMainVessel) &&
@@ -318,7 +318,7 @@ namespace ZeroGravity.ShipComponents
 
 			if (flag)
 			{
-				World.SolarSystem.ArtificialBodiesVisiblityModified();
+				World.SolarSystem.ArtificialBodiesVisibilityModified();
 				World.Map.SaveMapDetails();
 			}
 		}
@@ -360,7 +360,7 @@ namespace ZeroGravity.ShipComponents
 			for (OrbitParameters parent = target.Orbit.Parent; parent != null; parent = parent.Parent)
 			{
 				CelestialBody celestialBody = parent.CelestialBody;
-				num *= (double)celestialBody.GetRadarSignatureModifier(World, target);
+				num *= celestialBody.GetRadarSignatureModifier(World, target);
 			}
 
 			return num;
@@ -369,10 +369,10 @@ namespace ZeroGravity.ShipComponents
 		public double GetCelestialSensitivityModifier()
 		{
 			double num = 1.0;
-			for (OrbitParameters parent = base.ParentVessel.Orbit.Parent; parent != null; parent = parent.Parent)
+			for (OrbitParameters parent = ParentVessel.Orbit.Parent; parent != null; parent = parent.Parent)
 			{
 				CelestialBody celestialBody = parent.CelestialBody;
-				num *= (double)celestialBody.GetScanningSensitivityModifier(World, ParentVessel);
+				num *= celestialBody.GetScanningSensitivityModifier(World, ParentVessel);
 			}
 
 			return num;

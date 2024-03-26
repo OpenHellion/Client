@@ -64,7 +64,7 @@ public class ScrollList : MonoBehaviour
 					 item.GetComponent<RectTransform>().rect.height / 2f) /
 					ScrollView.GetComponent<RectTransform>().rect.height));
 			item.GetComponent<LayoutElement>().minHeight = num2;
-			if ((double)num2 >= (double)MaxHeight * 0.99)
+			if (num2 >= MaxHeight * 0.99)
 			{
 				TrenutniIndex = num;
 			}
@@ -98,7 +98,7 @@ public class ScrollList : MonoBehaviour
 	{
 		Vector3 localPosition = ListContent.localPosition;
 		float num = 0f;
-		num = localPosition.y + (float)(index - (TrenutniIndex - AddToTop)) * MinHeight;
+		num = localPosition.y + (index - (TrenutniIndex - AddToTop)) * MinHeight;
 		ListContent.localPosition = new Vector3(localPosition.x, num, localPosition.z);
 	}
 
@@ -130,11 +130,11 @@ public class ScrollList : MonoBehaviour
 		float target2 = 0f;
 		if (listCount % 2 == 0)
 		{
-			float test2 = (float)listCount / 2f;
+			float test2 = listCount / 2f;
 		}
 		else
 		{
-			float test2 = (float)listCount / 2f - 1f;
+			float test2 = listCount / 2f - 1f;
 		}
 
 		if (goUp)

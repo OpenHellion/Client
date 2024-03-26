@@ -39,32 +39,26 @@ namespace ZeroGravity.ShipComponents
 
 		private object fadeIncrement;
 
-		public override string Name { get; set; }
-
 		public override string Description { get; set; }
 
 		public override Sprite Icon
 		{
-			get { return (!(_Icon != null)) ? SpriteManager.Instance.DefaultRadarObject : _Icon; }
+			get => (!(_Icon != null)) ? SpriteManager.Instance.DefaultRadarObject : _Icon;
 			set { }
 		}
 
-		protected double ObjectVisualScale
-		{
-			get { return MinScale + (MaxScale - MinScale) * MinMaxScale; }
-		}
+		protected double ObjectVisualScale => MinScale + (MaxScale - MinScale) * MinMaxScale;
 
-		public override Vector3D TruePosition
-		{
-			get { return FixedPosition; }
-		}
+		public override Vector3D TruePosition => FixedPosition;
+
+		public override string Name => gameObject.name;
 
 		public override void CreateVisual()
 		{
 			Renderer component = FixedPositionObjectVisual.GetComponent<Renderer>();
 			if (FadeOut && component != null)
 			{
-				fixedPositionObjectVisualMaterial = UnityEngine.Object.Instantiate(component.sharedMaterial);
+				fixedPositionObjectVisualMaterial = Instantiate(component.sharedMaterial);
 				component.material = fixedPositionObjectVisualMaterial;
 				if (FadeFieldType == FadeMaterialFieldType.Float01)
 				{
@@ -79,7 +73,7 @@ namespace ZeroGravity.ShipComponents
 				}
 			}
 
-			base.gameObject.SetLayerRecursively("Map");
+			gameObject.SetLayerRecursively("Map");
 			if (RandomOffsetPosition)
 			{
 				FixedPosition +=
@@ -90,7 +84,7 @@ namespace ZeroGravity.ShipComponents
 
 			if (TimeToLive > 0f)
 			{
-				UnityEngine.Object.Destroy(base.gameObject, TimeToLive);
+				Destroy(gameObject, TimeToLive);
 			}
 
 			UpdateObject();
@@ -98,9 +92,9 @@ namespace ZeroGravity.ShipComponents
 
 		public override void UpdateObject()
 		{
-			Position.position = base.ObjectPosition;
+			Position.position = ObjectPosition;
 			FixedPositionObjectVisual.transform.localScale =
-				Vector3.one * (float)(ObjectVisualScale * base.ObjectScale);
+				Vector3.one * (float)(ObjectVisualScale * ObjectScale);
 		}
 
 		public override void UpdateVisibility()

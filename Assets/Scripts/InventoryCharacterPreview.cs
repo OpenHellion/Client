@@ -138,14 +138,14 @@ public class InventoryCharacterPreview : MonoBehaviour
 				bodyObject.SetActive(value: false);
 			}
 
-			Outfit outfit = item as Outfit;
+			Outfit outfit = (Outfit)item;
 			foreach (Outfit.SlotGroup slotGroup in outfit.slotGroups)
 			{
 				foreach (Outfit.SlotInfo slot in slotGroup.Slots)
 				{
 					foreach (InventorySlot.AttachData itemToAttach in slot.ItemsToAttach)
 					{
-						if (!(itemToAttach.Point != null) || !(itemToAttach.Point != outfit.OutfitTrans.gameObject))
+						if (itemToAttach.Point is not null || !(itemToAttach.Point != outfit.OutfitTrans.gameObject))
 						{
 							continue;
 						}

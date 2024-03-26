@@ -1,9 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using OpenHellion;
 using OpenHellion.IO;
-using OpenHellion.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using ZeroGravity.Data;
@@ -23,7 +23,7 @@ namespace ZeroGravity
 		{
 			public SceneType Type;
 
-			public long GUID;
+			public long Guid;
 
 			public GameObject RootObject;
 		}
@@ -34,17 +34,36 @@ namespace ZeroGravity
 
 		private readonly Dictionary<long, string> _celestialScenes = new Dictionary<long, string>();
 
-		public static bool IsPreloading { get; private set; }
+		public bool IsPreloading { get; private set; }
 
 		private Transform _geometryCacheTransform;
 
 		private readonly List<long> _scenesCurrentlyLoading = new List<long>();
 
-		// Only call this when preloading.
-		[SerializeField] private StartupGUI _StartupGUI;
+		public Action OnStartPreload { get; set; }
+		public Action OnEndPreload { get; set; }
+		public Action<float> OnPreloadUpdate { get; set; }
+
+		private static bool _alreadyExists;
 
 		private void Awake()
 		{
+			if (_alreadyExists)
+			{
+				// Can't think of any way of avoiding singleton.
+				if (gameObject.name.Equals("SceneLoader"))
+				{
+					Destroy(gameObject);
+				}
+				else
+				{
+					Debug.Log("Can only have one SceneLoader at a time.");
+					Destroy(this);
+				}
+
+				return;
+			}
+			_alreadyExists = true;
 			IsPreloading = true;
 
 			DontDestroyOnLoad(this);
@@ -80,8 +99,7 @@ namespace ZeroGravity
 		{
 			if (InitialisingSceneManager.SceneLoadType != InitialisingSceneManager.SceneLoadTypeValue.PreloadWithCopy)
 			{
-				Debug.Log("Skipping preloading.");
-				_StartupGUI.ClosePreloading();
+				OnEndPreload?.Invoke();
 				IsPreloading = false;
 				return;
 			}
@@ -94,7 +112,7 @@ namespace ZeroGravity
 				geometryCache.transform.SetParent(null);
 				DontDestroyOnLoad(geometryCache);
 				_geometryCacheTransform = geometryCache.transform;
-				_StartupGUI.OpenPreloading();
+				OnStartPreload?.Invoke();
 				IsPreloading = true;
 
 				// Do the loading.
@@ -112,7 +130,7 @@ namespace ZeroGravity
 			{
 				_loadedSceneReferences.Add(new SceneReference
 				{
-					GUID = structureScene.GUID,
+					Guid = structureScene.GUID,
 					Type = SceneType.Structure,
 					RootObject = structureScene.gameObject
 				});
@@ -125,7 +143,7 @@ namespace ZeroGravity
 			{
 				_loadedSceneReferences.Add(new SceneReference
 				{
-					GUID = asteroidScene.GUID,
+					Guid = asteroidScene.GUID,
 					Type = SceneType.CelestialBody,
 					RootObject = asteroidScene.gameObject
 				});
@@ -144,19 +162,19 @@ namespace ZeroGravity
 			foreach (KeyValuePair<long, string> celestial in _celestialScenes)
 			{
 				currentSceneNumber += 1f;
-				_StartupGUI.UpdateProgressBar(currentSceneNumber / totalNumberOfScenes);
+				OnPreloadUpdate?.Invoke(currentSceneNumber / totalNumberOfScenes);
 				yield return StartCoroutine(LoadSceneCoroutine(SceneType.CelestialBody, celestial.Key));
 			}
 
 			// Load _structureScenes.
-			foreach (KeyValuePair<long, string> str in _structureScenes)
+			foreach (KeyValuePair<long, string> structureScene in _structureScenes)
 			{
 				currentSceneNumber += 1f;
-				_StartupGUI.UpdateProgressBar(currentSceneNumber / totalNumberOfScenes);
-				yield return StartCoroutine(LoadSceneCoroutine(SceneType.Structure, str.Key));
+				OnPreloadUpdate?.Invoke(currentSceneNumber / totalNumberOfScenes);
+				yield return StartCoroutine(LoadSceneCoroutine(SceneType.Structure, structureScene.Key));
 			}
 
-			_StartupGUI.ClosePreloading();
+			OnEndPreload?.Invoke();
 			IsPreloading = false;
 			Debug.Log("Done preloading.");
 		}
@@ -191,47 +209,46 @@ namespace ZeroGravity
 			}
 		}
 
-		public GameObject GetLoadedScene(SceneType type, long guid)
+		public GameObject GetLoadedScene(SceneType type, GameScenes.SceneId sceneId)
 		{
-			SceneReference sceneItem =
-				_loadedSceneReferences.Find((SceneReference m) => m.GUID == guid && m.Type == type);
-			if (sceneItem != null)
+			SceneReference sceneItem = _loadedSceneReferences.Find((SceneReference m) => m.Guid == (long) sceneId && m.Type == type);
+			if (sceneItem == null)
 			{
-				if (InitialisingSceneManager.SceneLoadType ==
-				    InitialisingSceneManager.SceneLoadTypeValue.PreloadWithCopy)
-				{
-					return Instantiate(sceneItem.RootObject);
-				}
+				Debug.LogErrorFormat("Cannot find loaded scene of scene id {0}", sceneId);
+				return null;
+			}
+			_loadedSceneReferences.Remove(sceneItem);
 
-				_loadedSceneReferences.Remove(sceneItem);
-				return sceneItem.RootObject;
+			if (InitialisingSceneManager.SceneLoadType == InitialisingSceneManager.SceneLoadTypeValue.PreloadWithCopy)
+			{
+				return Instantiate(sceneItem.RootObject);
 			}
 
-			Debug.LogErrorFormat("Cannot find loaded scene of type {0} with guid {1}", type, guid);
-			return null;
+			return sceneItem.RootObject;
 		}
 
-		public IEnumerator LoadSceneCoroutine(SceneType type, long guid)
+		public IEnumerator LoadSceneCoroutine(SceneType type, long sceneId)
 		{
 			if (InitialisingSceneManager.SceneLoadType == InitialisingSceneManager.SceneLoadTypeValue.PreloadWithCopy &&
-			    _loadedSceneReferences.FirstOrDefault((SceneReference m) => m.GUID == guid && m.Type == type) != null)
+			    _loadedSceneReferences.Any((SceneReference m) => m.Guid == sceneId && m.Type == type))
 			{
 				yield break;
 			}
 
-			string sceneName = ((type != 0) ? _celestialScenes[guid] : _structureScenes[guid]);
+			string sceneName = type != 0 ? _celestialScenes[sceneId] : _structureScenes[sceneId];
 			if (sceneName.IsNullOrEmpty())
 			{
+				Debug.LogError("Stopped loading scene because it is not defined.");
 				yield break;
 			}
 
-			if (_scenesCurrentlyLoading.Contains(guid))
+			if (_scenesCurrentlyLoading.Contains(sceneId))
 			{
-				yield return new WaitWhile(() => _scenesCurrentlyLoading.Contains(guid));
+				yield return new WaitWhile(() => _scenesCurrentlyLoading.Contains(sceneId));
 			}
 			else
 			{
-				_scenesCurrentlyLoading.Add(guid);
+				_scenesCurrentlyLoading.Add(sceneId);
 				AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 				yield return new WaitUntil(() => asyncLoad.isDone);
 				UnityEngine.SceneManagement.Scene scene = SceneManager.GetSceneByName(sceneName);
@@ -247,7 +264,7 @@ namespace ZeroGravity
 							_loadedSceneReferences.Add(new SceneReference
 							{
 								Type = SceneType.Structure,
-								GUID = sceneScript.GUID,
+								Guid = sceneScript.GUID,
 								RootObject = sceneScript.gameObject
 							});
 							sceneScript.transform.SetParent(_geometryCacheTransform.transform);
@@ -267,7 +284,7 @@ namespace ZeroGravity
 							_loadedSceneReferences.Add(new SceneReference
 							{
 								Type = SceneType.CelestialBody,
-								GUID = sceneScript.GUID,
+								Guid = sceneScript.GUID,
 								RootObject = sceneScript.gameObject
 							});
 							sceneScript.transform.SetParent(_geometryCacheTransform.transform);
@@ -277,7 +294,7 @@ namespace ZeroGravity
 					}
 				}
 
-				_scenesCurrentlyLoading.Remove(guid);
+				_scenesCurrentlyLoading.Remove(sceneId);
 			}
 		}
 	}

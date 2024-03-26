@@ -92,10 +92,7 @@ namespace ZeroGravity.Objects
 
 		[CompilerGenerated] private static Func<KeyValuePair<ResourceType, float>, bool> _003C_003Ef__am_0024cache0;
 
-		public float Range
-		{
-			get { return (float)MaxRange * base.TierMultiplier; }
-		}
+		public float Range => MaxRange * TierMultiplier;
 
 		private new void Start()
 		{
@@ -192,7 +189,7 @@ namespace ZeroGravity.Objects
 		{
 			GameObject gameObject = Instantiate(UI.Resource, UI.ResourcesHolder);
 			gameObject.GetComponentInChildren<Image>().sprite = SpriteManager.Instance.GetSprite(res);
-			if (base.Tier == 2)
+			if (Tier == 2)
 			{
 				if (quantity < 500f)
 				{
@@ -210,7 +207,7 @@ namespace ZeroGravity.Objects
 					gameObject.GetComponentInChildren<Text>().color = Colors.GreenText;
 				}
 			}
-			else if (base.Tier == 3)
+			else if (Tier == 3)
 			{
 				gameObject.GetComponentInChildren<Text>().text = quantity.ToString();
 				gameObject.GetComponentInChildren<Text>().color = Colors.White;

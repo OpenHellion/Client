@@ -399,7 +399,7 @@ namespace ZeroGravity.ShipComponents
 
 			if (HoverObjectUi.activeInHierarchy)
 			{
-				HoverObjectUi.transform.position = (Vector3)Mouse.current.position.ReadValue();
+				HoverObjectUi.transform.position = Mouse.current.position.ReadValue();
 			}
 		}
 
@@ -668,7 +668,7 @@ namespace ZeroGravity.ShipComponents
 			GroupItemsHolder.DestroyAll<MapObjectUI>();
 			foreach (MapObject item in Map.SelectedVesselsGroup)
 			{
-				MapObjectUI mapObjectUI = UnityEngine.Object.Instantiate(MapObjectPrefab, GroupItemsHolder);
+				MapObjectUI mapObjectUI = Instantiate(MapObjectPrefab, GroupItemsHolder);
 				mapObjectUI.gameObject.SetActive(value: true);
 				mapObjectUI.gameObject.transform.Reset();
 				mapObjectUI.gameObject.transform.localScale = Vector3.one;
@@ -688,7 +688,7 @@ namespace ZeroGravity.ShipComponents
 			foreach (MapObject item in Map.AllMapObjects.Values.Where((MapObject m) =>
 				         m.RadarVisibilityType == RadarVisibilityType.Distress))
 			{
-				MapObjectUI mapObjectUI = UnityEngine.Object.Instantiate(MapObjectPrefab, DistressItemsHolder);
+				MapObjectUI mapObjectUI = Instantiate(MapObjectPrefab, DistressItemsHolder);
 				mapObjectUI.gameObject.SetActive(value: true);
 				mapObjectUI.gameObject.transform.Reset();
 				mapObjectUI.gameObject.transform.localScale = Vector3.one;
@@ -719,7 +719,7 @@ namespace ZeroGravity.ShipComponents
 				}
 
 				List<long> list = new List<long>();
-				list.Add(spaceObjectVessel.GUID);
+				list.Add(spaceObjectVessel.Guid);
 				List<long> list2 = list;
 				if (spaceObjectVessel.IsDummyObject && spaceObjectVessel.DummyDockedVessels.Count > 0)
 				{
@@ -727,7 +727,7 @@ namespace ZeroGravity.ShipComponents
 				}
 				else
 				{
-					list2.AddRange(spaceObjectVessel.AllDockedVessels.Select((SpaceObjectVessel m) => m.GUID));
+					list2.AddRange(spaceObjectVessel.AllDockedVessels.Select((SpaceObjectVessel m) => m.Guid));
 				}
 
 				if (list2.FirstOrDefault((long m) => avr.GUIDs.Contains(m)) != 0)
@@ -991,7 +991,7 @@ namespace ZeroGravity.ShipComponents
 			WarpStageHolder.DestroyAll<WarpStageUI>();
 			for (int i = 0; i <= ParentVessel.FTLEngine.MaxWarp; i++)
 			{
-				WarpStageUI warpStageUI = UnityEngine.Object.Instantiate(WarpStage, WarpStageHolder);
+				WarpStageUI warpStageUI = Instantiate(WarpStage, WarpStageHolder);
 				warpStageUI.gameObject.SetActive(value: true);
 				warpStageUI.gameObject.transform.Reset();
 				warpStageUI.gameObject.transform.localScale = Vector3.one;
@@ -1039,7 +1039,7 @@ namespace ZeroGravity.ShipComponents
 			         orderby m.SlotIndex
 			         select m)
 			{
-				WarpCellUI warpCellUI = UnityEngine.Object.Instantiate(WarpCell, WarpCellsHolder);
+				WarpCellUI warpCellUI = Instantiate(WarpCell, WarpCellsHolder);
 				warpCellUI.gameObject.SetActive(value: true);
 				warpCellUI.gameObject.transform.Reset();
 				warpCellUI.gameObject.transform.localScale = Vector3.one;
@@ -1251,7 +1251,7 @@ namespace ZeroGravity.ShipComponents
 		public void CalculateMass()
 		{
 			float num = ((SelectedWarpStage != 0) ? ParentVessel.FTLEngine.TowingCapacity : 0f);
-			float num2 = (float)(ParentVessel.GetCompoundMass() - (double)ParentVessel.Mass);
+			float num2 = (float)(ParentVessel.GetCompoundMass() - ParentVessel.Mass);
 			if (num2 / num > 0.85f)
 			{
 				MassFiller.color = Colors.Red;

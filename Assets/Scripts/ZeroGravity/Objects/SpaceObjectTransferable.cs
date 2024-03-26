@@ -27,11 +27,11 @@ namespace ZeroGravity.Objects
 		public Vector3 Gravity => Parent is null ? _gravity : Parent.transform.rotation * _gravity;
 
 		public Vector3 GravityDirection =>
-			Parent is null ? _gravity.normalized : (Parent.transform.rotation * _gravity.normalized);
+			Parent is null ? _gravity.normalized : Parent.transform.rotation * _gravity.normalized;
 
 		public SceneTriggerRoom CurrentRoomTrigger
 		{
-			get { return _currentRoomTrigger; }
+			get => _currentRoomTrigger;
 			set
 			{
 				_currentRoomTrigger = value;
@@ -72,14 +72,7 @@ namespace ZeroGravity.Objects
 			SoundEffect[] componentsInChildren = GetComponentsInChildren<SoundEffect>();
 			foreach (SoundEffect soundEffect in componentsInChildren)
 			{
-				if (roomTrigger != null)
-				{
-					soundEffect.SetEnvironment(roomTrigger.EnvironmentReverb);
-				}
-				else
-				{
-					soundEffect.SetEnvironment(string.Empty);
-				}
+				soundEffect.SetEnvironment(roomTrigger != null ? roomTrigger.EnvironmentReverb : string.Empty);
 			}
 		}
 

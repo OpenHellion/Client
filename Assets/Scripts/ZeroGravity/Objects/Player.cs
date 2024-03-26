@@ -1,3 +1,4 @@
+using System;
 using OpenHellion.Social.RichPresence;
 using UnityEngine;
 using ZeroGravity.LevelDesign;
@@ -6,24 +7,15 @@ namespace ZeroGravity.Objects
 {
 	public abstract class Player : SpaceObjectTransferable
 	{
-		public string PlayerName;
+		[NonSerialized] public string PlayerName;
 
-		public string PlayerId;
+		[NonSerialized] public string PlayerId;
 
-		private BaseSceneTrigger _LockedToTrigger;
+		[NonSerialized] public Inventory Inventory;
 
-		public Inventory Inventory;
+		public virtual bool IsLockedToTrigger => LockedToTrigger is not null;
 
-		public virtual bool IsLockedToTrigger
-		{
-			get { return LockedToTrigger != null; }
-		}
-
-		public virtual BaseSceneTrigger LockedToTrigger
-		{
-			get { return _LockedToTrigger; }
-			set { _LockedToTrigger = value; }
-		}
+		public virtual BaseSceneTrigger LockedToTrigger { get; set; }
 
 		public bool IsUsingItemInHands { get; set; }
 
@@ -60,7 +52,7 @@ namespace ZeroGravity.Objects
 
 		public override SpaceObject Parent
 		{
-			get { return base.Parent; }
+			get => base.Parent;
 			set
 			{
 				base.Parent = value;
@@ -77,7 +69,7 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public static Texture GetAvatar(string PlayerId)
+		public static Texture GetAvatar(string playerId)
 		{
 			return Resources.Load<Texture2D>("UI/default_avatar");
 		}

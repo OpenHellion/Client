@@ -17,7 +17,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +36,7 @@ namespace OpenHellion.UI
 	[RequireComponent(typeof(UIDocument))]
 	public class StartupGUI : MonoBehaviour
 	{
-		[SerializeField] private List<Sprite> _PreloadImages = new List<Sprite>();
+		[SerializeField] private List<Sprite> _preloadImages = new List<Sprite>();
 
 		private VisualElement _preloadBackground;
 		private VisualElement _preloadBottom;
@@ -62,9 +61,14 @@ namespace OpenHellion.UI
 		private IEnumerator<string> _shuffledTexts;
 		private IEnumerator<Sprite> _shuffledImages;
 
+		[SerializeField] private SceneLoader _sceneLoader;
+
 		private void Awake()
 		{
 			NakamaClient.OnRequireAuthentication += OpenAuthenticationScreen;
+			_sceneLoader.OnStartPreload += OpenPreloading;
+			_sceneLoader.OnEndPreload += ClosePreloading;
+			_sceneLoader.OnPreloadUpdate += UpdateProgressBar;
 
 			// The UXML is already instantiated by the UIDocument component
 			var uiDocument = GetComponent<UIDocument>();
@@ -93,7 +97,7 @@ namespace OpenHellion.UI
 			_authenticationScreen.visible = false;
 			_createAccountScreen.visible = false;
 
-			_preloadBackground.style.backgroundImage = new StyleBackground(_PreloadImages[0]);
+			_preloadBackground.style.backgroundImage = new StyleBackground(_preloadImages[0]);
 
 			Debug.Assert(_authenticateButton is not null);
 			_authenticateButton.clicked += EnterGameCredentials;
@@ -208,7 +212,7 @@ namespace OpenHellion.UI
 			_preloadBottom.visible = true;
 
 			_shuffledTexts = Localization.PreloadText.OrderBy(m => MathHelper.RandomNextDouble()).GetEnumerator();
-			_shuffledImages = _PreloadImages.OrderBy(m => MathHelper.RandomNextDouble()).ToList().GetEnumerator();
+			_shuffledImages = _preloadImages.OrderBy(m => MathHelper.RandomNextDouble()).ToList().GetEnumerator();
 
 			StartCoroutine(Preload());
 		}
@@ -226,7 +230,7 @@ namespace OpenHellion.UI
 		{
 			_preloadBottom.visible = false;
 			StopCoroutine(Preload());
-			_preloadBackground.style.backgroundImage = new StyleBackground(_PreloadImages[0]);
+			_preloadBackground.style.backgroundImage = new StyleBackground(_preloadImages[0]);
 
 			_shuffledTexts?.Dispose();
 			_shuffledImages?.Dispose();

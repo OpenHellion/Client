@@ -177,14 +177,14 @@ namespace ZeroGravity.Objects
 
 		public CargoCompartmentType CompartmentType
 		{
-			get { return _CompartmentType; }
-			set { _CompartmentType = value; }
+			get => _CompartmentType;
+			set => _CompartmentType = value;
 		}
 
 		public short ID
 		{
-			get { return _ID; }
-			set { _ID = value; }
+			get => _ID;
+			set => _ID = value;
 		}
 
 		public string Name
@@ -194,13 +194,10 @@ namespace ZeroGravity.Objects
 				_Name = CompartmentType.ToLocalizedString();
 				return _Name;
 			}
-			set { _Name = value; }
+			set => _Name = value;
 		}
 
-		private List<ResourceType> allowedResources
-		{
-			get { return allowedResourcesDict[CompartmentType]; }
-		}
+		private List<ResourceType> allowedResources => allowedResourcesDict[CompartmentType];
 
 		public bool AllowOnlyOneType
 		{
@@ -223,20 +220,17 @@ namespace ZeroGravity.Objects
 
 		public List<CargoResourceData> Resources
 		{
-			get { return _Resources; }
-			set { _Resources = value; }
+			get => _Resources;
+			set => _Resources = value;
 		}
 
 		public float Capacity
 		{
-			get { return _Capacity; }
-			set { _Capacity = value; }
+			get => _Capacity;
+			set => _Capacity = value;
 		}
 
-		public ICargo ParentCargo
-		{
-			get { return _ParentCargo; }
-		}
+		public ICargo ParentCargo => _ParentCargo;
 
 		public float AvailableCapacity
 		{

@@ -92,7 +92,7 @@ namespace ZeroGravity.Objects
 
 		public Item Item
 		{
-			get { return _Item; }
+			get => _Item;
 			private set
 			{
 				_Item = value;

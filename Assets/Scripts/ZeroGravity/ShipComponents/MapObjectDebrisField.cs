@@ -22,7 +22,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (MainObject != null)
 			{
-				base.gameObject.SetLayerRecursively("Map");
+				gameObject.SetLayerRecursively("Map");
 				UpdateOrbitPlane();
 				mapDebrisFieldEffect.SetRadius(Radius, (float)Orbit.SemiMinorAxis);
 			}
@@ -30,7 +30,7 @@ namespace ZeroGravity.ShipComponents
 
 		public override void UpdateObject()
 		{
-			Orbits.localScale = Vector3.one * (float)base.ObjectScale;
+			Orbits.localScale = Vector3.one * (float)ObjectScale;
 		}
 	}
 }

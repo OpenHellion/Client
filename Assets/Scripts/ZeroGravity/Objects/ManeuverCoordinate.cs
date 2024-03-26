@@ -39,11 +39,11 @@ namespace ZeroGravity.Objects
 		{
 			double periapsisDistance = coordinate.PeriapsisHeight;
 			double apoapsisDistance = coordinate.ApoapsisHeight;
-			double inclination = (double)coordinate.InclinationAngle % 360.0;
-			double argumentOfPeriapsis = (double)coordinate.ArgumentOfPeriapsis % 360.0;
-			double longitudeOfAscendingNode = (double)coordinate.LongitudeOfAscendingNode % 360.0;
-			double num = (double)coordinate.LongitudeOfAscendingNode % 360.0;
-			double trueAnomalyAngleDeg = (double)coordinate.PositionOnOrbit % 360.0;
+			double inclination = coordinate.InclinationAngle % 360.0;
+			double argumentOfPeriapsis = coordinate.ArgumentOfPeriapsis % 360.0;
+			double longitudeOfAscendingNode = coordinate.LongitudeOfAscendingNode % 360.0;
+			double num = coordinate.LongitudeOfAscendingNode % 360.0;
+			double trueAnomalyAngleDeg = coordinate.PositionOnOrbit % 360.0;
 			OrbitParameters orbitParameters = new OrbitParameters();
 			orbitParameters.InitFromPeriapisAndApoapsis(coordinate.TargetCel.Orbit, periapsisDistance, apoapsisDistance,
 				inclination, argumentOfPeriapsis, longitudeOfAscendingNode, trueAnomalyAngleDeg, 0.0);

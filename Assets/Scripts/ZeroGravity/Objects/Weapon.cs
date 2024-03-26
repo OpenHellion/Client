@@ -48,22 +48,22 @@ namespace ZeroGravity.Objects
 
 		public override EquipType EquipTo => EquipType.Hands;
 
-		public override Transform TipOfItem => (!IsSpecialStance) ? NormalTipOfTheGun : SpecialTipOfTheGun;
+		public override Transform TipOfItem => !IsSpecialStance ? NormalTipOfTheGun : SpecialTipOfTheGun;
 
 		public Vector2 CurrentRecoil =>
-			(!IsSpecialStance) ? CurrentWeaponMod.NormalRecoil : CurrentWeaponMod.SpecialRecoil;
+			!IsSpecialStance ? CurrentWeaponMod.NormalRecoil : CurrentWeaponMod.SpecialRecoil;
 
 		public float Range => CurrentWeaponMod.Range;
 
-		public override float Quantity => (!(Magazine != null)) ? 0f : Magazine.Quantity;
+		public override float Quantity => !(Magazine != null) ? 0f : Magazine.Quantity;
 
-		public override float MaxQuantity => (!(Magazine != null)) ? 0f : Magazine.MaxQuantity;
+		public override float MaxQuantity => !(Magazine != null) ? 0f : Magazine.MaxQuantity;
 
-		public Magazine Magazine => (!(magazineSlot != null)) ? null : (magazineSlot.Item as Magazine);
+		public Magazine Magazine => !(magazineSlot != null) ? null : magazineSlot.Item as Magazine;
 
 		public bool IsSpecialStance
 		{
-			get { return isSpecialStance; }
+			get => isSpecialStance;
 			set
 			{
 				if (CanZoom)
@@ -155,7 +155,7 @@ namespace ZeroGravity.Objects
 				{
 					MyPlayer.Instance.ChangeCamerasFov(Globals.Instance.DefaultCameraFov);
 					MyPlayer.Instance.ReloadItem(newReloadingItem, Magazine,
-						(!(Magazine != null))
+						!(Magazine != null)
 							? AnimatorHelper.ReloadType.JustLoad
 							: AnimatorHelper.ReloadType.FullReload, Type);
 					ToggleZoomCamera(status: false);
@@ -192,16 +192,16 @@ namespace ZeroGravity.Objects
 						Vector3 vector = TipOfItem.forward;
 					}
 
-					SpaceObject spaceObject = ((!(MyPlayer.Instance.Parent is SpaceObjectVessel))
+					SpaceObject spaceObject = !(MyPlayer.Instance.Parent is SpaceObjectVessel)
 						? MyPlayer.Instance.Parent
-						: (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel);
+						: (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel;
 					ShotData shotData = new ShotData();
 					shotData.Position = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) *
 					                     MyPlayer.Instance.FpsController.MainCamera.transform.position).ToArray();
 					shotData.Orientation = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) *
 					                        MyPlayer.Instance.FpsController.MainCamera.transform.forward.normalized)
 						.ToArray();
-					shotData.parentGUID = spaceObject.GUID;
+					shotData.parentGUID = spaceObject.Guid;
 					shotData.parentType = spaceObject.Type;
 					shotData.Range = Range;
 					ShotData shotData2 = shotData;
@@ -254,7 +254,7 @@ namespace ZeroGravity.Objects
 						break;
 				}
 
-				BulletImpact component = GameObject.Instantiate(bulletImpact.gameObject).GetComponent<BulletImpact>();
+				BulletImpact component = Instantiate(bulletImpact.gameObject).GetComponent<BulletImpact>();
 				component.transform.position = hitInfo.point + hitInfo.normal * 0.1f;
 				component.transform.forward = forward;
 				if (bulletImpact.Decal != null)
@@ -275,7 +275,7 @@ namespace ZeroGravity.Objects
 		{
 			return new Vector3(UnityEngine.Random.Range(0f - maxVertical, 0f),
 				       UnityEngine.Random.Range(0f - maxHorizontal, maxHorizontal), 0f) *
-			       ((!MyPlayer.Instance.FpsController.IsCrouch) ? 1f : CrouchAimMultiplier);
+			       (!MyPlayer.Instance.FpsController.IsCrouch ? 1f : CrouchAimMultiplier);
 		}
 
 		public void ChangeMod(int mod, bool send = true)
@@ -314,10 +314,10 @@ namespace ZeroGravity.Objects
 		{
 			if (MyPlayer.Instance.MuzzleFlashTransform.childCount != 0)
 			{
-				GameObject.Destroy(MyPlayer.Instance.MuzzleFlashTransform.GetChild(0).gameObject);
+				Destroy(MyPlayer.Instance.MuzzleFlashTransform.GetChild(0).gameObject);
 			}
 
-			currentMuzzle = GameObject.Instantiate(MuzzleFlash, NormalTipOfTheGun.position, NormalTipOfTheGun.rotation)
+			currentMuzzle = Instantiate(MuzzleFlash, NormalTipOfTheGun.position, NormalTipOfTheGun.rotation)
 				.GetComponent<MuzzleActivator>();
 			currentMuzzle.transform.SetParent(MyPlayer.Instance.MuzzleFlashTransform);
 		}
@@ -353,14 +353,13 @@ namespace ZeroGravity.Objects
 
 			if (pl is OtherPlayer)
 			{
-				(pl as OtherPlayer).CurrentWeapon = ((type != EquipTo) ? null : this);
+				(pl as OtherPlayer).CurrentWeapon = type != EquipTo ? null : this;
 				if (NormalTipOfTheGun.childCount != 0)
 				{
-					GameObject.Destroy(NormalTipOfTheGun.GetChild(0).gameObject);
+					Destroy(NormalTipOfTheGun.GetChild(0).gameObject);
 				}
 
-				currentMuzzle = GameObject
-					.Instantiate(MuzzleFlash, NormalTipOfTheGun.position, NormalTipOfTheGun.rotation)
+				currentMuzzle = Instantiate(MuzzleFlash, NormalTipOfTheGun.position, NormalTipOfTheGun.rotation)
 					.GetComponent<MuzzleActivator>();
 				currentMuzzle.transform.SetParent(NormalTipOfTheGun);
 				currentMuzzle.currentSmoke.SetActive(value: false);
@@ -504,7 +503,7 @@ namespace ZeroGravity.Objects
 
 		public override string QuantityCheck()
 		{
-			return (!(Magazine == null)) ? FormatHelper.CurrentMax(Magazine.Quantity, Magazine.MaxQuantity) : "0";
+			return !(Magazine == null) ? FormatHelper.CurrentMax(Magazine.Quantity, Magazine.MaxQuantity) : "0";
 		}
 
 		public virtual void ToggleZoomCamera(bool status)

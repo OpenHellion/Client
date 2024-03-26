@@ -302,7 +302,7 @@ public class SoundEffect : AkGameObj
 
 	public void InvokePlay(float time)
 	{
-		Invoke("Play", time);
+		Invoke(nameof(Play), time);
 	}
 
 	public void Play(int index, bool dontPlayIfPlaying = false)

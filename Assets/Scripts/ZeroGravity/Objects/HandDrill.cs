@@ -83,21 +83,21 @@ namespace ZeroGravity.Objects
 
 		public SoundEffect RockDrillingSoundEffect;
 
-		public override float Quantity => (!(Canister != null)) ? 0f : Canister.Quantity;
+		public override float Quantity => !(Canister != null) ? 0f : Canister.Quantity;
 
-		public override float MaxQuantity => (!(Canister != null)) ? 0f : Canister.MaxQuantity;
+		public override float MaxQuantity => !(Canister != null) ? 0f : Canister.MaxQuantity;
 
 		public override EquipType EquipTo => EquipType.Hands;
 
 		public ItemSlot BatterySlot { get; set; }
 
-		public Battery Battery => (!(BatterySlot != null)) ? null : (BatterySlot.Item as Battery);
+		public Battery Battery => !(BatterySlot != null) ? null : BatterySlot.Item as Battery;
 
-		public float BatteryPower => (!(Battery != null)) ? 0f : Mathf.Clamp01(Battery.CurrentPower / Battery.MaxPower);
+		public float BatteryPower => !(Battery != null) ? 0f : Mathf.Clamp01(Battery.CurrentPower / Battery.MaxPower);
 
-		public Canister Canister => (!(canisterSlot != null)) ? null : (canisterSlot.Item as Canister);
+		public Canister Canister => !(canisterSlot != null) ? null : canisterSlot.Item as Canister;
 
-		public Item DrillBit => (!(drillBitSlot != null)) ? null : (drillBitSlot.Item as GenericItem);
+		public Item DrillBit => !(drillBitSlot != null) ? null : drillBitSlot.Item as GenericItem;
 
 		public override Transform TipOfItem => drillTip;
 
@@ -110,7 +110,7 @@ namespace ZeroGravity.Objects
 				if (num.HasValue && num.GetValueOrDefault() > float.Epsilon && Canister.HasSpace)
 				{
 					float? num2 = DrillBit?.Health;
-					result = ((num2.HasValue && num2.GetValueOrDefault() > float.Epsilon) ? 1 : 0);
+					result = num2.HasValue && num2.GetValueOrDefault() > float.Epsilon ? 1 : 0;
 				}
 				else
 				{
@@ -130,9 +130,8 @@ namespace ZeroGravity.Objects
 
 		public void CreateParticle()
 		{
-			drillEffectTransform = GameObject
-				.Instantiate((!(DynamicObj.Parent is MyPlayer)) ? drillingParticle3rd : drillingParticle,
-					(!(DynamicObj.Parent is MyPlayer)) ? TipOfItem : MyPlayer.Instance.MuzzleFlashTransform).transform;
+			drillEffectTransform = Instantiate(!(DynamicObj.Parent is MyPlayer) ? drillingParticle3rd : drillingParticle,
+					!(DynamicObj.Parent is MyPlayer) ? TipOfItem : MyPlayer.Instance.MuzzleFlashTransform).transform;
 			drillEffectTransform.Reset();
 			effectScript = drillEffectTransform.GetComponent<DrillEffectScript>();
 		}
@@ -201,13 +200,13 @@ namespace ZeroGravity.Objects
 							null, true);
 					}
 
-					if ((double)miningTime > 0.02)
+					if (miningTime > 0.02)
 					{
 						playerDrillingMessage.MiningTime = miningTime;
 						playerDrillingMessage.MiningPointID = new VesselObjectID
 						{
 							InSceneID = miningPoint.InSceneID,
-							VesselGUID = miningPoint.ParentVessel.GUID
+							VesselGUID = miningPoint.ParentVessel.Guid
 						};
 						NetworkController.SendToGameServer(playerDrillingMessage);
 						miningTime = 0f;
@@ -236,7 +235,7 @@ namespace ZeroGravity.Objects
 						false);
 				}
 
-				if ((double)miningTime > 0.02 || flag)
+				if (miningTime > 0.02 || flag)
 				{
 					playerDrillingMessage.MiningTime = miningTime;
 					NetworkController.SendToGameServer(playerDrillingMessage);
@@ -516,7 +515,7 @@ namespace ZeroGravity.Objects
 				PrimaryReleased();
 				if (drillEffectTransform != null)
 				{
-					GameObject.Destroy(drillEffectTransform.gameObject);
+					Destroy(drillEffectTransform.gameObject);
 				}
 			}
 			else if (type == EquipTo)
@@ -538,7 +537,7 @@ namespace ZeroGravity.Objects
 
 		public override string QuantityCheck()
 		{
-			return (!(Canister == null)) ? FormatHelper.CurrentMax(Canister.Quantity, Canister.MaxQuantity) : "0";
+			return !(Canister == null) ? FormatHelper.CurrentMax(Canister.Quantity, Canister.MaxQuantity) : "0";
 		}
 	}
 }

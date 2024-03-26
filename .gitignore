@@ -114,4 +114,6 @@ GeneratedSoundBanks**
 /NuGet
 
 .vsconfig
-/Assets/Scripts/OpenHellion/Networking/MSConnection.cs
+/.vscode
+
+UpgradeLog.htm

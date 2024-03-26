@@ -58,7 +58,7 @@ namespace ZeroGravity.LevelDesign
 				break;
 			}
 
-			return new VesselObjectID(componentInParent.GUID, Mathf.Abs(text.GetHashCode()));
+			return new VesselObjectID(componentInParent.Guid, Mathf.Abs(text.GetHashCode()));
 		}
 
 		public static bool OtherPlayerLockedToTrigger(this BaseSceneTrigger trigger, World state)
