@@ -27,7 +27,6 @@ using OpenHellion.IO;
 using OpenHellion.Net;
 using OpenHellion.Social.NakamaRpc;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using ZeroGravity;
 using ZeroGravity.Network;
 using ZeroGravity.UI;
@@ -35,6 +34,12 @@ using Cysharp.Threading.Tasks;
 
 namespace OpenHellion.Social
 {
+	/// <summary>
+	/// 	Interact with the main server. Used for authentification, cross-server data storage, chatting, and discovering servers.
+	/// </summary>
+	/// <remarks>
+	/// 	Chat still has to be implemented.
+	/// </remarks>
 	public static class NakamaClient
 	{
 		public static Action OnRequireAuthentication;
@@ -51,18 +56,19 @@ namespace OpenHellion.Social
 
 		private static IChannel _chatChannel;
 
-		private const string NakamaHost = "127.0.0.1";
-		private const int NakamaPort = 7350;
+		private static readonly string NakamaHost = Properties.GetProperty("main_server_ip", "127.0.0.1");
+		private static readonly int NakamaPort = Properties.GetProperty("main_server_port", 7350);
+		private static readonly string NakamaKey = Properties.GetProperty("main_server_key", "defaultkey");
 
 		private static readonly CancellationTokenSource _cancelToken = new();
 
-		public static async UniTaskVoid Initialise()
+		public static async UniTask Initialise()
 		{
 			try
 			{
 				Debug.Log("Connecting to Nakama...");
 
-				_client = new Client("http", NakamaHost, NakamaPort, "defaultkey")
+				_client = new Client("http", NakamaHost, NakamaPort, NakamaKey)
 				{
 					Timeout = 3,
 					Logger = new HellionNakamaLogger(),
@@ -352,7 +358,7 @@ namespace OpenHellion.Social
 		///		Update the <see cref="CharacterData"/> stored by Nakama.
 		/// </summary>
 		/// <param name="data">The character data to upload.</param>
-		public static async UniTaskVoid UpdateCharacterData(CharacterData data)
+		public static async UniTask UpdateCharacterData(CharacterData data)
 		{
 			try
 			{
@@ -428,7 +434,7 @@ namespace OpenHellion.Social
 		///		Update the <see cref="VesselObjectID"/> stored by Nakama.
 		/// </summary>
 		/// <param name="data">The character data to upload.</param>
-		public static async UniTaskVoid UpdateSpawnPointData(VesselObjectID data)
+		public static async UniTask UpdateSpawnPointData(VesselObjectID data)
 		{
 			try
 			{
@@ -520,7 +526,6 @@ namespace OpenHellion.Social
 		private static void NakamaConnectionTerminated()
 		{
 			Debug.Log("Nakama connection failed unexpectedly. Returning to initialising screen...");
-			Application.Quit();
 		}
 	}
 }
