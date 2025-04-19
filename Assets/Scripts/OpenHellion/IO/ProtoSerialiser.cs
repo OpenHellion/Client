@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using ProtoBuf;
 using UnityEngine;
 using ZeroGravity.Network;
@@ -12,18 +12,11 @@ using ZeroGravity.Objects;
 namespace OpenHellion.IO
 {
 	/// <summary>
-	/// 	Class for deserialisation of network messages. Handles safe deserialsation of packets from the server.
-	/// </summary>
+	/// 	Class for deserialisation of network messages.
+	/// 	Handles safe deserialisation of packets from the server and processes statistics.
+	/// </summary
 	public static class ProtoSerialiser
 	{
-		private class ZeroDataException : Exception
-		{
-			public ZeroDataException(string message)
-				: base(message)
-			{
-			}
-		}
-
 		private class StatisticsHelper
 		{
 			public long ByteSum;
@@ -55,13 +48,13 @@ namespace OpenHellion.IO
 		/// <summary>
 		/// 	For deserialisation of data not sent through network.
 		/// </summary>
-		private static NetworkData Deserialize(MemoryStream ms)
+		public static NetworkData Deserialise(Stream ms)
 		{
 			NetworkData networkData = null;
 			ms.Position = 0L;
 			try
 			{
-				networkData = Serializer.Deserialize<NetworkDataTransportWrapper>(ms).data;
+				networkData = Serializer.Deserialize<NetworkData>(ms);
 			}
 			catch (Exception ex)
 			{
@@ -84,58 +77,58 @@ namespace OpenHellion.IO
 			return networkData;
 		}
 
-		public static async Task<NetworkData> Unpack(Stream str)
+		public static async UniTask<NetworkData> Unpack(Stream stream, int maxMessageSize)
 		{
-			int dataReadSize = 0;
-			int size;
+			if (stream == null) throw new ArgumentNullException(nameof(stream));
+			if (!stream.CanRead) throw new ArgumentException("Cannot read from stream.");
+			int dataRead = 0;
+			int readSize;
 
 			// Get size of buffer
-			byte[] bufferSize = new byte[4];
+			byte[] dataLengthBuffer = new byte[4];
 			do
 			{
-				size = await str.ReadAsync(bufferSize, dataReadSize, bufferSize.Length - dataReadSize);
-				if (size == 0)
+				readSize = await stream.ReadAsync(dataLengthBuffer.AsMemory(dataRead, dataLengthBuffer.Length - dataRead));
+				if (readSize == 0)
 				{
-					throw new ZeroDataException("Received zero data message.");
+					throw new Exception("Received zero data message.");
 				}
 
-				dataReadSize += size;
-			} while (dataReadSize < bufferSize.Length);
+				dataRead += readSize;
+			} while (dataRead < dataLengthBuffer.Length);
 
-			uint bufferLength = BitConverter.ToUInt32(bufferSize, 0);
+			uint dataLength = BitConverter.ToUInt32(dataLengthBuffer, 0);
+			if (dataLength > maxMessageSize)
+			{
+				throw new ArgumentException($"Message too large. Payload of {dataLength}.");
+			}
 
 			// Read following contents.
-			byte[] buffer = new byte[bufferLength];
-			dataReadSize = 0;
+			byte[] buffer = new byte[dataLength];
+			dataRead = 0;
 			do
 			{
-				size = await str.ReadAsync(buffer, dataReadSize, buffer.Length - dataReadSize);
-				if (size == 0)
+				readSize = await stream.ReadAsync(buffer.AsMemory(dataRead, buffer.Length - dataRead));
+				if (readSize == 0)
 				{
-					throw new ZeroDataException("Received zero data message.");
+					throw new Exception("Received zero data message.");
 				}
 
-				dataReadSize += size;
-			} while (dataReadSize < buffer.Length);
+				dataRead += readSize;
+			} while (dataRead < buffer.Length);
 
 			// Make the stream into NetworkData.
-			MemoryStream ms = new MemoryStream(buffer, 0, buffer.Length);
-			return Deserialize(ms);
+			using MemoryStream ms = new MemoryStream(buffer, 0, buffer.Length);
+			return Deserialise(ms);
 		}
 
-		public static async Task<byte[]> Pack(NetworkData data)
+		public static async UniTask<byte[]> Pack(NetworkData data)
 		{
-			await using MemoryStream outMs = new MemoryStream();
 			await using MemoryStream ms = new MemoryStream();
 
 			try
 			{
-				NetworkDataTransportWrapper dataWrapper = new NetworkDataTransportWrapper
-				{
-					data = data
-				};
-
-				await Task.Run(() => Serializer.Serialize(ms, dataWrapper));
+				Serializer.Serialize(ms, data);
 			}
 			catch (Exception ex)
 			{
@@ -155,13 +148,14 @@ namespace OpenHellion.IO
 				}
 			}
 
+			await using MemoryStream outMs = new MemoryStream();
 			await outMs.WriteAsync(BitConverter.GetBytes((uint)ms.Length), 0, 4);
 			await outMs.WriteAsync(ms.ToArray(), 0, (int)ms.Length);
 			await outMs.FlushAsync();
 			return outMs.ToArray();
 		}
 
-		private static void ProcessStatistics(NetworkData data, MemoryStream ms,
+		private static void ProcessStatistics(NetworkData data, Stream ms,
 			Dictionary<Type, StatisticsHelper> stat)
 		{
 			Type type = data.GetType();
@@ -188,19 +182,19 @@ namespace OpenHellion.IO
 			long num = 0L;
 			string text2;
 			foreach (KeyValuePair<Type, StatisticsHelper> item in stat
-				         .OrderBy((KeyValuePair<Type, StatisticsHelper> m) => m.Value.ByteSum).Reverse())
+						 .OrderBy((KeyValuePair<Type, StatisticsHelper> m) => m.Value.ByteSum).Reverse())
 			{
 				text2 = text;
 				text = text2 + item.Key.Name + ": " + item.Value.PacketNumber + " (" +
-				       (item.Value.ByteSum / 1000f).ToString("##,0") + " kB), \n";
+					   (item.Value.ByteSum / 1000f).ToString("##,0") + " kB), \n";
 				item.Value.BytesSinceLastCheck = 0L;
 				num += item.Value.ByteSum;
 			}
 
 			text2 = text;
 			text = text2 + "-----------------------------------------\nTotal: " +
-			       (num / 1000f).ToString("##,0") + " kB (avg: " +
-			       (num / timeSpan.TotalSeconds / 1000.0).ToString("##,0") + " kB/s)";
+				   (num / 1000f).ToString("##,0") + " kB (avg: " +
+				   (num / timeSpan.TotalSeconds / 1000.0).ToString("##,0") + " kB/s)";
 			if (MyPlayer.Instance != null)
 			{
 				if (stat == _sentStatistics)

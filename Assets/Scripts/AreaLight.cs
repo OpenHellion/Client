@@ -128,9 +128,9 @@ public class AreaLight : MonoBehaviour
 
 		m_SourceRenderer = GetComponent<MeshRenderer>();
 		m_SourceRenderer.enabled = true;
-		m_SourceMesh = UnityEngine.Object.Instantiate(m_Quad);
+		m_SourceMesh = Instantiate(m_Quad);
 		m_SourceMesh.hideFlags = HideFlags.HideAndDontSave;
-		MeshFilter component = base.gameObject.GetComponent<MeshFilter>();
+		MeshFilter component = gameObject.GetComponent<MeshFilter>();
 		component.sharedMesh = m_SourceMesh;
 		Transform transform = base.transform;
 		if (transform.localScale != Vector3.one)
@@ -174,12 +174,12 @@ public class AreaLight : MonoBehaviour
 	{
 		if (m_ProxyMaterial != null)
 		{
-			UnityEngine.Object.DestroyImmediate(m_ProxyMaterial);
+			DestroyImmediate(m_ProxyMaterial);
 		}
 
 		if (m_SourceMesh != null)
 		{
-			UnityEngine.Object.DestroyImmediate(m_SourceMesh);
+			DestroyImmediate(m_SourceMesh);
 		}
 
 		Cleanup();
@@ -191,7 +191,7 @@ public class AreaLight : MonoBehaviour
 		m_Size.y = Mathf.Max(m_Size.y, 0f);
 		m_Size.z = Mathf.Max(m_Size.z, 0f);
 		Vector2 vector =
-			((!m_RenderSource || !base.enabled) ? (Vector2.one * 0.0001f) : new Vector2(m_Size.x, m_Size.y));
+			((!m_RenderSource || !enabled) ? (Vector2.one * 0.0001f) : new Vector2(m_Size.x, m_Size.y));
 		if (vector != m_CurrentQuadSize)
 		{
 			float num = vector.x * 0.5f;
@@ -213,7 +213,7 @@ public class AreaLight : MonoBehaviour
 
 	private void Update()
 	{
-		if (!base.gameObject.activeInHierarchy || !base.enabled)
+		if (!gameObject.activeInHierarchy || !enabled)
 		{
 			Cleanup();
 		}
@@ -294,7 +294,7 @@ public class AreaLight : MonoBehaviour
 			matrix4x *= GetOffsetMatrix(nearToCenter);
 		}
 
-		return matrix4x * base.transform.worldToLocalMatrix;
+		return matrix4x * transform.worldToLocalMatrix;
 	}
 
 	public Vector4 MultiplyPoint(Matrix4x4 m, Vector3 v)
@@ -365,15 +365,15 @@ public class AreaLight : MonoBehaviour
 		Gizmos.color = Color.white;
 		if (m_Angle == 0f)
 		{
-			Gizmos.matrix = base.transform.localToWorldMatrix;
+			Gizmos.matrix = transform.localToWorldMatrix;
 			Gizmos.DrawWireCube(new Vector3(0f, 0f, 0.5f * m_Size.z), m_Size);
 			return;
 		}
 
 		float nearToCenter = GetNearToCenter();
-		Gizmos.matrix = base.transform.localToWorldMatrix * GetOffsetMatrix(0f - nearToCenter);
+		Gizmos.matrix = transform.localToWorldMatrix * GetOffsetMatrix(0f - nearToCenter);
 		Gizmos.DrawFrustum(Vector3.zero, m_Angle, nearToCenter + m_Size.z, nearToCenter, m_Size.x / m_Size.y);
-		Gizmos.matrix = base.transform.localToWorldMatrix;
+		Gizmos.matrix = transform.localToWorldMatrix;
 		Gizmos.color = Color.yellow;
 		Bounds frustumBounds = GetFrustumBounds();
 		Gizmos.DrawWireCube(frustumBounds.center, frustumBounds.size);
@@ -439,7 +439,7 @@ public class AreaLight : MonoBehaviour
 		if (!m_Cameras.ContainsKey(cam))
 		{
 			commandBuffer = new CommandBuffer();
-			commandBuffer.name = base.gameObject.name;
+			commandBuffer.name = gameObject.name;
 			m_Cameras[cam] = commandBuffer;
 			cam.AddCommandBuffer(kCameraEvent, commandBuffer);
 			cam.depthTextureMode |= DepthTextureMode.Depth;
@@ -541,7 +541,7 @@ public class AreaLight : MonoBehaviour
 			m_ShadowmapCamera.renderingPath = RenderingPath.Forward;
 			m_ShadowmapCamera.backgroundColor = Color.white;
 			m_ShadowmapCameraTransform = gameObject.transform;
-			m_ShadowmapCameraTransform.parent = base.transform;
+			m_ShadowmapCameraTransform.parent = transform;
 			m_ShadowmapCameraTransform.localRotation = Quaternion.identity;
 		}
 
@@ -597,7 +597,7 @@ public class AreaLight : MonoBehaviour
 		InitFogLight();
 		int num = (int)m_ShadowmapRes;
 		int num2 = (int)m_FogLight.m_ShadowmapRes;
-		if (base.isActiveAndEnabled && m_Shadows)
+		if (isActiveAndEnabled && m_Shadows)
 		{
 			num2 = Mathf.Min(num2, num / 2);
 		}

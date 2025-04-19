@@ -325,7 +325,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void ChangeAirPressure(float pressure)
 		{
-			NetworkController.SendToGameServer(new RoomPressureMessage
+			NetworkController.Send(new RoomPressureMessage
 			{
 				ID = new VesselObjectID(ParentVessel.Guid, InSceneID),
 				TargetPressure = pressure
@@ -334,7 +334,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void ChangeAirPressure(SceneTriggerRoom room)
 		{
-			NetworkController.SendToGameServer(new RoomPressureMessage
+			NetworkController.Send(new RoomPressureMessage
 			{
 				ID = new VesselObjectID(ParentVessel.Guid, InSceneID),
 				TargetRoomID = ((!(room == null)) ? new VesselObjectID(room.ParentVessel.Guid, room.InSceneID) : null)

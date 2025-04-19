@@ -1,6 +1,6 @@
-﻿// GameState.cs
+﻿// Globals.cs
 //
-// Copyright (C) 2023, OpenHellion contributors
+// Copyright (C) 2024, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -18,10 +18,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using OpenHellion.IO;
 using OpenHellion.Net;
 using OpenHellion.Net.Message;
@@ -31,6 +27,7 @@ using UnityEngine;
 using ZeroGravity;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
+using ZeroGravity.UI;
 using Debug = UnityEngine.Debug;
 
 namespace OpenHellion
@@ -46,10 +43,6 @@ namespace OpenHellion
 
 		public static readonly uint CombinedHash = NetworkDataHash * SceneDataHash;
 
-		private float _secondsToWaitForExit = 3f;
-
-		private bool _gameExitWanted;
-
 		[NonSerialized] public Action OnHellionQuit;
 
 		public float DefaultCameraFov = 75f;
@@ -60,7 +53,40 @@ namespace OpenHellion
 
 		public const int SettingsVersion = 1;
 
+		[SerializeField]
+		private SceneLoader _sceneLoader;
+
+		[SerializeField]
+		private SpriteManager _spriteManager;
+
+		[SerializeField]
+		private SoundEffect _soundEffect;
+
 		public static Globals Instance { get; private set; }
+
+		public static SceneLoader SceneLoader
+		{
+			get
+			{
+				return Instance._sceneLoader;
+			}
+		}
+
+		public static SpriteManager SpriteManager
+		{
+			get
+			{
+				return Instance._spriteManager;
+			}
+		}
+
+		public static SoundEffect SoundEffect
+		{
+			get
+			{
+				return Instance._soundEffect;
+			}
+		}
 
 		private void Awake()
 		{
@@ -75,55 +101,16 @@ namespace OpenHellion
 
 			Instance = this;
 			DontDestroyOnLoad(gameObject);
-		}
 
-		private void Update()
-		{
-			if (_gameExitWanted)
-			{
-				_secondsToWaitForExit -= Time.deltaTime;
-				if (_secondsToWaitForExit <= 0f)
-				{
-					QuitApplication();
-				}
-			}
 		}
 
 		private void OnApplicationQuit()
-		{
-			// If we didn't tell the game explicitly that we want to exit.
-			if (!_gameExitWanted)
-			{
-				// Prevent the app from quitting...
-				Application.wantsToQuit += () => false;
-
-				// ...and exit safely instead.
-				ExitGame();
-			}
-			else
-			{
-				NetworkController.Disconnect();
-			}
-		}
-
-		/// <summary>
-		/// 	Method to exit the game safely. Handles shutting down connections to servers/clients properly, and saves settings.
-		/// </summary>
-		public static void ExitGame()
-		{
-			Instance._gameExitWanted = true;
-			Instance.QuitApplication();
-		}
-
-		private void QuitApplication()
 		{
 			OnHellionQuit?.Invoke();
 			NetworkController.Disconnect();
 			HiResTime.Stop();
 #if UNITY_EDITOR
 			EditorApplication.ExitPlaymode();
-#else
-			Application.Quit();
 #endif
 		}
 

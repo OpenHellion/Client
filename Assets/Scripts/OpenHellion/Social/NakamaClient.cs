@@ -1,6 +1,6 @@
 // NakamaClient.cs
 //
-// Copyright (C) 2023, OpenHellion contributors
+// Copyright (C) 2024, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -21,11 +21,8 @@ using Nakama;
 using System;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Nakama.TinyJson;
-using OpenHellion.Data;
 using OpenHellion.IO;
 using OpenHellion.Net;
 using OpenHellion.Social.NakamaRpc;
@@ -34,6 +31,7 @@ using UnityEngine.SceneManagement;
 using ZeroGravity;
 using ZeroGravity.Network;
 using ZeroGravity.UI;
+using Cysharp.Threading.Tasks;
 
 namespace OpenHellion.Social
 {
@@ -56,11 +54,9 @@ namespace OpenHellion.Social
 		private const string NakamaHost = "127.0.0.1";
 		private const int NakamaPort = 7350;
 
-		private static readonly CancellationTokenSource CancelToken = new();
+		private static readonly CancellationTokenSource _cancelToken = new();
 
-		public static string NakamaIdCached { get; private set; }
-
-		public static async void Initialise()
+		public static async UniTaskVoid Initialise()
 		{
 			try
 			{
@@ -73,13 +69,11 @@ namespace OpenHellion.Social
 					GlobalRetryConfiguration = new RetryConfiguration(0, 2)
 				};
 
-
 				Debug.Log("Creating/restoring Nakama session.");
 
 				var authToken = PlayerPrefs.GetString("authToken", null);
 				var refreshToken = PlayerPrefs.GetString("refreshToken", null);
 				_session = Session.Restore(authToken, refreshToken);
-
 
 				// Create new or refresh session.
 				if (_session is null)
@@ -91,10 +85,9 @@ namespace OpenHellion.Social
 				{
 					try
 					{
-						_session = await _client.SessionRefreshAsync(_session, canceller: CancelToken.Token);
-						NakamaIdCached = await GetUserId();
+						_session = await _client.SessionRefreshAsync(_session, canceller: _cancelToken.Token);
 						HasAuthenticated = true;
-						Globals.Instance.OnHellionQuit += CancelToken.Cancel;
+						Globals.Instance.OnHellionQuit += _cancelToken.Cancel;
 					}
 					catch (ApiResponseException ex)
 					{
@@ -123,24 +116,23 @@ namespace OpenHellion.Social
 		/// <param name="email">The user's email.</param>
 		/// <param name="password">The user's password.</param>
 		/// <returns>If we successfully authenticated.</returns>
-		public static async Task<bool> Authenticate(string email, string password)
+		public static async UniTask<bool> Authenticate(string email, string password)
 		{
 			try
 			{
 				_session = await _client.AuthenticateEmailAsync(email, password, create: false,
-					canceller: CancelToken.Token);
+					canceller: _cancelToken.Token);
 
 				PlayerPrefs.SetString("authToken", _session.AuthToken);
 				PlayerPrefs.SetString("refreshToken", _session.RefreshToken);
 
 				Debug.Log("Successfully authenticated.");
 				HasAuthenticated = true;
-				NakamaIdCached = await GetUserId();
 				return true;
 			}
 			catch (ApiResponseException ex)
 			{
-				Debug.LogError($"Error authenticating user: {ex.StatusCode}: {ex.Message}");
+				Debug.Log($"Error authenticating user: {ex.StatusCode}: {ex.Message}");
 
 				// Error code for non-existent account.
 				if (ex.StatusCode is 404)
@@ -169,19 +161,19 @@ namespace OpenHellion.Social
 		/// <param name="username">The user's username.</param>
 		/// <param name="displayName">The user's display name.</param>
 		/// <returns>If we successfully created an account.</returns>
-		public static async Task<bool> CreateAccount(string email, string password, string username, string displayName)
+		public static async UniTask<bool> CreateAccount(string email, string password, string username, string displayName)
 		{
 			try
 			{
 				_session = await _client.AuthenticateEmailAsync(email, password, username,
-					canceller: CancelToken.Token);
+					canceller: _cancelToken.Token);
 
 				PlayerPrefs.SetString("authToken", _session.AuthToken);
 				PlayerPrefs.SetString("refreshToken", _session.RefreshToken);
 
 				await _client.UpdateAccountAsync(_session, username, displayName, null, CultureInfo.CurrentCulture.TwoLetterISOLanguageName,
 					RegionInfo.CurrentRegion.EnglishName,
-					TimeZoneInfo.Local.StandardName, canceller: CancelToken.Token);
+					TimeZoneInfo.Local.StandardName, canceller: _cancelToken.Token);
 
 				Debug.Log("Account successfully created.");
 				HasAuthenticated = true;
@@ -193,6 +185,12 @@ namespace OpenHellion.Social
 				if (ex.StatusCode is 401)
 				{
 					OnNakamaError.Invoke(Localization.AccountAlreadyExists, null);
+					return false;
+				}
+
+				if (ex.StatusCode is 400)
+				{
+					OnNakamaError.Invoke(Localization.InvalidPassword, null);
 					return false;
 				}
 
@@ -213,11 +211,11 @@ namespace OpenHellion.Social
 		///		A session must be created before we call this method.
 		/// </summary>
 		/// <returns>Out user id.</returns>
-		public static async Task<String> GetUserId()
+		public static async UniTask<string> GetUserId()
 		{
 			try
 			{
-				var account = await _client.GetAccountAsync(_session, canceller: CancelToken.Token);
+				var account = await _client.GetAccountAsync(_session, canceller: _cancelToken.Token);
 				return account.User.Id;
 			}
 			catch (TaskCanceledException)
@@ -234,11 +232,11 @@ namespace OpenHellion.Social
 		///		A session must be created before we call this method.
 		/// </summary>
 		/// <returns>Our display name on Nakama.</returns>
-		public static async Task<String> GetDisplayName()
+		public static async UniTask<string> GetDisplayName()
 		{
 			try
 			{
-				var account = await _client.GetAccountAsync(_session, canceller: CancelToken.Token);
+				var account = await _client.GetAccountAsync(_session, canceller: _cancelToken.Token);
 				return account.User.DisplayName;
 			}
 			catch (TaskCanceledException)
@@ -255,17 +253,17 @@ namespace OpenHellion.Social
 		///		A session must be created before we call this method.
 		/// </summary>
 		/// <returns>A list of nakama friends.</returns>
-		public static async Task<IApiFriend[]> GetFriends()
+		public static async UniTask<IApiFriend[]> GetFriends()
 		{
 			try
 			{
-				var friends = await _client.ListFriendsAsync(_session, 0, 0, "", canceller: CancelToken.Token);
+				var friends = await _client.ListFriendsAsync(_session, 0, 0, "", canceller: _cancelToken.Token);
 				return friends.Friends.ToArray();
 			}
 			catch (TaskCanceledException)
 			{
 				Debug.LogError("Nakama disconnected when doing task");
-				SceneManager.LoadScene(0);
+				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
 			}
 
 			return null;
@@ -275,7 +273,7 @@ namespace OpenHellion.Social
 		///		Creates a socket and makes us appear as online. Makes us be able to communicate with the main server. Also initialises callbacks.<br/>
 		///		A session must be created before we call this method.
 		/// </summary>
-		public static async Task CreateSocket()
+		public static async UniTask CreateSocket()
 		{
 			try
 			{
@@ -300,7 +298,7 @@ namespace OpenHellion.Social
 		///		<see cref="CreateSocket"/> must be called before this method.
 		/// </summary>
 		/// <returns>Returns an array of match ids, which we can use to display a set of match options.</returns>
-		public static async Task<string[]> FindMatches(FindMatchesRequest request)
+		public static async UniTask<string[]> FindMatches(FindMatchesRequest request)
 		{
 			try
 			{
@@ -325,7 +323,7 @@ namespace OpenHellion.Social
 		/// </summary>
 		/// <param name="matchId">The id of the match to join.</param>
 		/// <returns>The connection information of the server to connect to.</returns>
-		public static async Task<ServerData> GetMatchConnectionInfo(string matchId)
+		public static async UniTask<ServerData> GetMatchConnectionInfo(string matchId)
 		{
 			try
 			{
@@ -354,7 +352,7 @@ namespace OpenHellion.Social
 		///		Update the <see cref="CharacterData"/> stored by Nakama.
 		/// </summary>
 		/// <param name="data">The character data to upload.</param>
-		public static async void UpdateCharacterData(CharacterData data)
+		public static async UniTaskVoid UpdateCharacterData(CharacterData data)
 		{
 			try
 			{
@@ -387,7 +385,7 @@ namespace OpenHellion.Social
 		/// </summary>
 		/// <returns>A <see cref="CharacterData"/> object. Null if none is found.</returns>
 		/// <exception cref="Exception">Fails if this user has several characters or if the format is wrong.</exception>
-		public static async Task<CharacterData> GetCharacterData()
+		public static async UniTask<CharacterData> GetCharacterData()
 		{
 			try
 			{
@@ -430,7 +428,7 @@ namespace OpenHellion.Social
 		///		Update the <see cref="VesselObjectID"/> stored by Nakama.
 		/// </summary>
 		/// <param name="data">The character data to upload.</param>
-		public static async void UpdateSpawnPointData(VesselObjectID data)
+		public static async UniTaskVoid UpdateSpawnPointData(VesselObjectID data)
 		{
 			try
 			{
@@ -463,7 +461,7 @@ namespace OpenHellion.Social
 		///		<see cref="CreateSocket"/> must be called before this method.
 		/// </summary>
 		/// <param name="chatState">The type of chat we are looking for.</param>
-		public static async Task<bool> JoinChatRoom(Chat.ChatState chatState)
+		public static async UniTask<bool> JoinChatRoom(Chat.ChatState chatState)
 		{
 			string id;
 			ChannelType channelType;
@@ -500,7 +498,7 @@ namespace OpenHellion.Social
 		///		<see cref="JoinChatRoom"/> must be called before this.
 		/// </summary>
 		/// <param name="chatText">The text we want to send.</param>
-		public static async void SendChat(string chatText)
+		public static async UniTaskVoid SendChat(string chatText)
 		{
 			try
 			{
@@ -513,7 +511,7 @@ namespace OpenHellion.Social
 			}
 		}
 
-		public static async void LogOut()
+		public static async UniTaskVoid LogOut()
 		{
 			await _client.SessionLogoutAsync(_session);
 			_socket?.CloseAsync();
@@ -522,7 +520,7 @@ namespace OpenHellion.Social
 		private static void NakamaConnectionTerminated()
 		{
 			Debug.Log("Nakama connection failed unexpectedly. Returning to initialising screen...");
-			Globals.ExitGame();
+			Application.Quit();
 		}
 	}
 }

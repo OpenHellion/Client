@@ -115,7 +115,7 @@ public class SoundEffect : AkGameObj
 
 			if (!ParticleSystem.isPlaying)
 			{
-				AkSoundEngine.StopAll(base.gameObject);
+				AkSoundEngine.StopAll(gameObject);
 				SoundEvents[0].IsPlaying = false;
 			}
 		}
@@ -162,7 +162,7 @@ public class SoundEffect : AkGameObj
 				}
 			}
 
-			AkSoundEngine.SetListeners(base.gameObject, array, (uint)array.Length);
+			AkSoundEngine.SetListeners(gameObject, array, (uint)array.Length);
 		}
 		else if (ListenerType == Listener.MyPlayer)
 		{
@@ -181,7 +181,7 @@ public class SoundEffect : AkGameObj
 				}
 			}
 
-			AkSoundEngine.SetListeners(base.gameObject, array2, (uint)array2.Length);
+			AkSoundEngine.SetListeners(gameObject, array2, (uint)array2.Length);
 		}
 		else
 		{
@@ -219,8 +219,8 @@ public class SoundEffect : AkGameObj
 				}
 				else
 				{
-					akAuxSendArray.Add(base.gameObject, AkSoundEngine.GetIDFromString(env), 1f);
-					AkSoundEngine.SetGameObjectAuxSendValues(base.gameObject, akAuxSendArray,
+					akAuxSendArray.Add(gameObject, AkSoundEngine.GetIDFromString(env), 1f);
+					AkSoundEngine.SetGameObjectAuxSendValues(gameObject, akAuxSendArray,
 						(uint)akAuxSendArray.Count());
 				}
 			}
@@ -236,8 +236,8 @@ public class SoundEffect : AkGameObj
 					}
 					else
 					{
-						akAuxSendArray.Add(base.gameObject, AkSoundEngine.GetIDFromString(env), 1f);
-						AkSoundEngine.SetGameObjectAuxSendValues(base.gameObject, akAuxSendArray,
+						akAuxSendArray.Add(gameObject, AkSoundEngine.GetIDFromString(env), 1f);
+						AkSoundEngine.SetGameObjectAuxSendValues(gameObject, akAuxSendArray,
 							(uint)akAuxSendArray.Count());
 					}
 				}
@@ -254,7 +254,7 @@ public class SoundEffect : AkGameObj
 			}
 			else
 			{
-				AkSoundEngine.SetGameObjectAuxSendValues(base.gameObject, akAuxSendArray, 0u);
+				AkSoundEngine.SetGameObjectAuxSendValues(gameObject, akAuxSendArray, 0u);
 			}
 		}
 
@@ -266,14 +266,14 @@ public class SoundEffect : AkGameObj
 			}
 			else
 			{
-				AkSoundEngine.SetGameObjectAuxSendValues(base.gameObject, akAuxSendArray, 0u);
+				AkSoundEngine.SetGameObjectAuxSendValues(gameObject, akAuxSendArray, 0u);
 			}
 		}
 	}
 
 	private void OnDestroy()
 	{
-		AkSoundEngine.StopAll(base.gameObject);
+		AkSoundEngine.StopAll(gameObject);
 		foreach (SoundEvent soundEvent in SoundEvents)
 		{
 			if (soundEvent.Source != null)
@@ -285,7 +285,7 @@ public class SoundEffect : AkGameObj
 
 	private void OnDisable()
 	{
-		AkSoundEngine.StopAll(base.gameObject);
+		AkSoundEngine.StopAll(gameObject);
 		foreach (SoundEvent soundEvent in SoundEvents)
 		{
 			if (soundEvent.Source != null)
@@ -370,7 +370,7 @@ public class SoundEffect : AkGameObj
 		}
 
 		soundEvent.IsPlaying = true;
-		AkSoundEngine.PostEvent(AkSoundEngine.GetIDFromString(soundEvent.EventString), base.gameObject, 1u,
+		AkSoundEngine.PostEvent(AkSoundEngine.GetIDFromString(soundEvent.EventString), gameObject, 1u,
 			OnSoundEventEnd, soundEvent);
 	}
 
@@ -390,7 +390,7 @@ public class SoundEffect : AkGameObj
 			}
 			else
 			{
-				AkSoundEngine.SetRTPCValue(AkSoundEngine.GetIDFromString(parameter), value, base.gameObject);
+				AkSoundEngine.SetRTPCValue(AkSoundEngine.GetIDFromString(parameter), value, gameObject);
 			}
 		}
 
@@ -403,7 +403,7 @@ public class SoundEffect : AkGameObj
 			}
 			else
 			{
-				AkSoundEngine.SetRTPCValue(AkSoundEngine.GetIDFromString(parameter), value, base.gameObject);
+				AkSoundEngine.SetRTPCValue(AkSoundEngine.GetIDFromString(parameter), value, gameObject);
 			}
 		}
 	}
@@ -418,7 +418,7 @@ public class SoundEffect : AkGameObj
 			}
 			else
 			{
-				AkSoundEngine.SetSwitch("Ambience", ambience, base.gameObject);
+				AkSoundEngine.SetSwitch("Ambience", ambience, gameObject);
 			}
 		}
 
@@ -430,7 +430,7 @@ public class SoundEffect : AkGameObj
 			}
 			else
 			{
-				AkSoundEngine.SetSwitch("Ambience", ambience, base.gameObject);
+				AkSoundEngine.SetSwitch("Ambience", ambience, gameObject);
 			}
 		}
 	}
@@ -446,8 +446,7 @@ public class SoundEffect : AkGameObj
 			}
 			else
 			{
-				AkSoundEngine.SetSwitch(AkSoundEngine.GetIDFromString(group), AkSoundEngine.GetIDFromString(swtch),
-					base.gameObject);
+				AkSoundEngine.SetSwitch(AkSoundEngine.GetIDFromString(group), AkSoundEngine.GetIDFromString(swtch), gameObject);
 			}
 		}
 
@@ -461,13 +460,13 @@ public class SoundEffect : AkGameObj
 			else
 			{
 				AkSoundEngine.SetSwitch(AkSoundEngine.GetIDFromString(group), AkSoundEngine.GetIDFromString(swtch),
-					base.gameObject);
+					gameObject);
 			}
 		}
 	}
 
 	private void OnDrawGizmos()
 	{
-		Gizmos.DrawIcon(base.transform.position, "SoundEffect", false);
+		Gizmos.DrawIcon(transform.position, "SoundEffect", false);
 	}
 }

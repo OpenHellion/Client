@@ -1,6 +1,6 @@
 // MainMenuGUI.cs
 //
-// Copyright (C) 2023, OpenHellion contributors
+// Copyright (C) 2024, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using OpenHellion.Data;
 using OpenHellion.Net;
 using OpenHellion.Social;
 using OpenHellion.Social.RichPresence;
@@ -33,6 +32,7 @@ using UnityEngine.Serialization;
 using ZeroGravity;
 using ZeroGravity.Network;
 using ZeroGravity.UI;
+using Cysharp.Threading.Tasks;
 
 namespace OpenHellion.UI
 {
@@ -68,7 +68,7 @@ namespace OpenHellion.UI
 
 		[Title("Disconnect screen")] public GameObject DisconnectScreen;
 
-		public static bool HasDisconnected { private get; set; }
+		public static bool WasDisconnectUncontrolled { private get; set; }
 
 		[Title("Character screen")]
 		public InputField CharacterInputField;
@@ -104,25 +104,28 @@ namespace OpenHellion.UI
 
 		private void Awake()
 		{
-			if (HasDisconnected)
+			if (WasDisconnectUncontrolled)
 			{
 				DisconnectScreen.SetActive(value: true);
-				HasDisconnected = false;
+				WasDisconnectUncontrolled = false;
 			}
 
-			#if DEBUG
+			#if UNITY_DEBUG
 			RichPresenceManager.SetAchievement(AchievementID.other_testing_squad_member);
 			#endif
 		}
 
-		private async void Start()
+		private async UniTaskVoid Start()
 		{
 			// Localize text in child objects.
-			foreach (Text text in GetComponentsInChildren<Text>(true))
+			if (Localization.MainMenuLocalisation?.Count > 0)
 			{
-				if (Localization.MainMenuLocalisation.TryGetValue(text.name, out string value))
+				foreach (Text text in GetComponentsInChildren<Text>(true))
 				{
-					text.text = value;
+					if (Localization.MainMenuLocalisation.TryGetValue(text.name, out string value))
+					{
+						text.text = value;
+					}
 				}
 			}
 
@@ -147,8 +150,6 @@ namespace OpenHellion.UI
 				CharacterInputField.text = await NakamaClient.GetDisplayName();
 				SwitchCurrentGender();
 			}
-
-			EventSystem.AddListener(typeof(AvailableSpawnPointsResponse), AvailableSpawnPointsResponseListener);
 		}
 
 		private void Update()
@@ -159,11 +160,20 @@ namespace OpenHellion.UI
 				return;
 			}
 
-			// Close the disclaimer.
-			if (Disclamer.activeInHierarchy && Keyboard.current.anyKey.wasPressedThisFrame)
+			if (Keyboard.current.anyKey.wasPressedThisFrame)
 			{
-				DisclaimerAgree();
-				return;
+				if (DisconnectScreen.activeInHierarchy)
+				{
+					DisconnectScreen.SetActive(false);
+					return;
+				}
+
+				// Close the disclaimer.
+				if (Disclamer.activeInHierarchy)
+				{
+					DisclaimerAgree();
+					return;
+				}
 			}
 
 			if (Keyboard.current.enterKey.wasPressedThisFrame)
@@ -186,11 +196,6 @@ namespace OpenHellion.UI
 					ExitStartingPointScreen();
 				}
 			}
-		}
-
-		private void OnDestroy()
-		{
-			EventSystem.RemoveListener(typeof(AvailableSpawnPointsResponse), AvailableSpawnPointsResponseListener);
 		}
 
 		public void DisclaimerAgree()
@@ -272,12 +277,6 @@ namespace OpenHellion.UI
 			});
 		}
 
-		private void OnFreshStartConfirm()
-		{
-			GlobalGUI.ShowConfirmMessageBox(Localization.FreshStartConfrimTitle, Localization.FreshStartConfrimText,
-				Localization.Yes, Localization.No, ShowFreshStartOptions);
-		}
-
 		public static void SendSpawnRequest(SpawnPointDetails details)
 		{
 			if (CanChooseSpawn)
@@ -288,7 +287,7 @@ namespace OpenHellion.UI
 					SpawnSetupType = details.SpawnSetupType,
 					SpawnPointParentId = details.SpawnPointParentID
 				};
-				NetworkController.SendToGameServer(playerSpawnRequest);
+				//NetworkController.Send(playerSpawnRequest);
 			}
 		}
 
@@ -303,24 +302,12 @@ namespace OpenHellion.UI
 			ShowStartingPoints(spawnPoints, SendSpawnRequest, canContinue);
 		}
 
-		public void SendAvailableSpawnPointsRequest()
+		public async UniTaskVoid SendAvailableSpawnPointsRequest()
 		{
-			NetworkController.SendToGameServer(new AvailableSpawnPointsRequest());
-		}
-
-		private void AvailableSpawnPointsResponseListener(NetworkData data)
-		{
-			try
+			var response = await NetworkController.SendReceiveAsync(new AvailableSpawnPointsRequest()) as AvailableSpawnPointsResponse;
+			if (response.SpawnPoints != null)
 			{
-				AvailableSpawnPointsResponse availableSpawnPointsResponse = data as AvailableSpawnPointsResponse;
-				if (availableSpawnPointsResponse.SpawnPoints != null)
-				{
-					ShowStartingPoints(availableSpawnPointsResponse.SpawnPoints, SendSpawnRequest, canContinue: false);
-				}
-			}
-			catch (Exception ex)
-			{
-				Debug.LogException(ex);
+				ShowStartingPoints(response.SpawnPoints, SendSpawnRequest, canContinue: false);
 			}
 		}
 
@@ -343,7 +330,9 @@ namespace OpenHellion.UI
 			freshStartOptionUI.Data = StartingPointData.FirstOrDefault(m => m.Type == StartingPointOption.NewGame);
 			if (canContinue)
 			{
-				freshStartOptionUI.GetComponent<Button>().onClick.AddListener(OnFreshStartConfirm);
+				freshStartOptionUI.GetComponent<Button>().onClick.AddListener(
+					() => GlobalGUI.ShowConfirmMessageBox(Localization.FreshStartConfrimTitle, Localization.FreshStartConfrimText,
+				Localization.Yes, Localization.No, ShowFreshStartOptions));
 			}
 			else
 			{
@@ -400,22 +389,22 @@ namespace OpenHellion.UI
 			switch (screen)
 			{
 				case Screen.None:
-					MainMenu.SetActive(value: false);
-					CreateCharacterPanel.SetActive(value: false);
-					StartingPointScreen.SetActive(value: false);
-					GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.None);
+					MainMenu.SetActive(true);
+					CreateCharacterPanel.SetActive(false);
+					StartingPointScreen.SetActive(false);
+					GlobalGUI.CloseLoadingScreen();
 					break;
 				case Screen.CreateCharacter:
-					CreateCharacterPanel.SetActive(value: true);
-					MainMenu.SetActive(value: false);
-					StartingPointScreen.SetActive(value: false);
-					GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.None);
+					MainMenu.SetActive(false);
+					CreateCharacterPanel.SetActive(true);
+					StartingPointScreen.SetActive(false);
+					GlobalGUI.CloseLoadingScreen();
 					break;
 				case Screen.StartingPoint:
-					MainMenu.SetActive(value: false);
-					CreateCharacterPanel.SetActive(value: false);
-					StartingPointScreen.SetActive(value: true);
-					GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.None);
+					MainMenu.SetActive(false);
+					CreateCharacterPanel.SetActive(false);
+					StartingPointScreen.SetActive(true);
+					GlobalGUI.CloseLoadingScreen();
 					CanChooseSpawn = true;
 					break;
 			}
@@ -427,8 +416,8 @@ namespace OpenHellion.UI
 		public void PlayButton()
 		{
 			SelectScreen(Screen.None);
-			GameStarter gameStarter = GameStarter.Create(ref LastConnectedServer);
-			gameStarter.FindServerAndConnect();
+			GameStarter gameStarter = GameStarter.Create();
+			gameStarter.FindServerAndConnect().Forget();
 		}
 
 		/// <summary>
@@ -443,7 +432,7 @@ namespace OpenHellion.UI
 		/// </summary>
 		public void QuitButton()
 		{
-			Globals.ExitGame();
+			Application.Quit();
 		}
 
 		public void CreateCharacterButton()
@@ -456,7 +445,7 @@ namespace OpenHellion.UI
 				HairType = 1
 			};
 
-			NakamaClient.UpdateCharacterData(character);
+			NakamaClient.UpdateCharacterData(character).Forget();
 
 			SelectScreen(Screen.None);
 		}
@@ -471,7 +460,7 @@ namespace OpenHellion.UI
 		public void QuitGameButton()
 		{
 			GlobalGUI.ShowConfirmMessageBox(Localization.ExitGame, Localization.AreYouSureExitGame, Localization.Yes,
-				Localization.No, Globals.ExitGame);
+				Localization.No, Application.Quit);
 		}
 
 		/// <summary>

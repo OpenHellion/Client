@@ -14,6 +14,7 @@ using ZeroGravity.UI;
 using OpenHellion.Social.RichPresence;
 using OpenHellion.IO;
 using UnityEngine.Serialization;
+using Cysharp.Threading.Tasks;
 
 namespace ZeroGravity.Audio
 {
@@ -97,7 +98,7 @@ namespace ZeroGravity.Audio
 			}
 		}
 
-		private async void FixedUpdate()
+		private async UniTaskVoid FixedUpdate()
 		{
 			if (!RichPresenceManager.HasSteam)
 			{

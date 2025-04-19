@@ -201,7 +201,7 @@ namespace ZeroGravity
 
 		public void SkipQuestAction()
 		{
-			NetworkController.SendToGameServer(new SkipQuestMessage
+			NetworkController.Send(new SkipQuestMessage
 			{
 				QuestID = SelectedQuest.Quest.ID
 			});

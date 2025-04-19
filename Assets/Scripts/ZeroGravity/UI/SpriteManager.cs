@@ -23,7 +23,6 @@ namespace ZeroGravity.UI
 				return;
 			}
 
-			DontDestroyOnLoad(this);
 			Instance = this;
 		}
 

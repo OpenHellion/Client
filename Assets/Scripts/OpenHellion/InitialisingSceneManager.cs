@@ -1,6 +1,6 @@
 // InitialisingSceneManager.cs
 //
-// Copyright (C) 2023, OpenHellion contributors
+// Copyright (C) 2024, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -40,8 +40,6 @@ namespace OpenHellion
 			PreloadWithCopy
 		}
 
-		[SerializeField] private SceneLoader _sceneLoader;
-
 		public static SceneLoadTypeValue SceneLoadType = SceneLoadTypeValue.PreloadWithCopy;
 
 		private void Awake()
@@ -65,31 +63,11 @@ namespace OpenHellion
 			ControlsSubsystem.Reset();
 			Settings.LoadSettings(Settings.SettingsType.All);
 
-			string customLocalisationFile = Properties.GetProperty("custom_localization_file", string.Empty);
-			if (Localization.LocalizationFiles.TryGetValue(Settings.SettingsData.GameSettings.LanguageIndex,
-				    out var value))
-			{
-				try
-				{
-					Localization.ImportFromString(Resources.Load<TextAsset>(value).text);
-				}
-				catch
-				{
-					Debug.LogError("Error when loading language. Could not find language.");
-				}
-			}
-			else if (customLocalisationFile != string.Empty)
-			{
-				Localization.ImportFromFile(customLocalisationFile);
-			}
-			else
-			{
-				Debug.LogError("Error when loading language. Could not find language.");
-			}
+			Localization.LoadLanguage(Settings.SettingsData.GameSettings.LanguageIndex);
 
 			ControlsRebinder.Initialize();
 
-			NakamaClient.Initialise();
+			NakamaClient.Initialise().Forget();
 		}
 
 		private void OnDestroy()
@@ -111,7 +89,7 @@ namespace OpenHellion
 			}
 			else
 			{
-				_sceneLoader.InitializeScenes();
+				Globals.SceneLoader.InitializeScenes();
 				StartCoroutine(CheckStartGame());
 			}
 		}
@@ -119,7 +97,7 @@ namespace OpenHellion
 		// Start game when we are done preloading and we have authenticated with Nakama.
 		private IEnumerator CheckStartGame()
 		{
-			yield return new WaitWhile(() => _sceneLoader.IsPreloading || !NakamaClient.HasAuthenticated);
+			yield return new WaitWhile(() => Globals.SceneLoader.IsPreloading || !NakamaClient.HasAuthenticated);
 			SceneManager.LoadScene(1, LoadSceneMode.Single);
 		}
 

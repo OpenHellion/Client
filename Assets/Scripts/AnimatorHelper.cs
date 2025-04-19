@@ -1768,9 +1768,7 @@ public class AnimatorHelper : MonoBehaviour
 	{
 		if (_player is MyPlayer)
 		{
-			EventSystem.InternalEventData data =
-				new EventSystem.InternalEventData(EventSystem.InternalEventType.EquipAnimationEnd, equipping);
-			EventSystem.Invoke(data);
+			((MyPlayer) _player).EquipAnimationEnd(equipping);
 		}
 	}
 

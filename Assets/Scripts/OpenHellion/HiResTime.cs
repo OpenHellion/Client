@@ -1,6 +1,6 @@
 // HiResTime.cs
 //
-// Copyright (C) 2023, OpenHellion contributors
+// Copyright (C) 2024, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //

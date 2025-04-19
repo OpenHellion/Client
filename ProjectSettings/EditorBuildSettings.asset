@@ -108,9 +108,6 @@ EditorBuildSettings:
     path: Assets/Scene/Environment/Station/Module/AltCorp_V02/AltCorp_Corridor_Module/AlrCorp_Corridor_MKII.unity
     guid: 0628467db3761b74f988bdf03d644a69
   - enabled: 1
-    path: Assets/Test/FlatShipTest.unity
-    guid: 56eb96898e3cdf44a9c2f1c3fc63510a
-  - enabled: 1
     path: Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid01/Asteroid01.unity
     guid: 06c0c725a35381447bf0f825d6d3d565
   - enabled: 1

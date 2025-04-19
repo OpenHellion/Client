@@ -162,7 +162,7 @@ namespace ZeroGravity.UI
 
 			gameMenuUp = false;
 			MainMenu(false);
-			_world.InGameGUI.ToggleInGameMenuCanvas(false);
+			_world.InGameGUI.Close();
 			Globals.ToggleCursor(false);
 		}
 
@@ -180,7 +180,7 @@ namespace ZeroGravity.UI
 
 		public void ExitGameYes()
 		{
-			Globals.ExitGame();
+			Application.Quit();
 		}
 
 		public void RespawnButton()

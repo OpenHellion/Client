@@ -1,6 +1,6 @@
 ﻿// AutoPlayModeSceneSetup.cs
 //
-// Copyright (C) 2023, OpenHellion contributors
+// Copyright (C) 2024, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -17,12 +17,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
 namespace OpenHellion
 {
-#if UNITY_EDITOR
 	/// Got from thread: https://forum.unity.com/threads/executing-first-scene-in-build-settings-when-pressing-play-button-in-editor.157502/#post-4152451
 	/// <summary>
 	///		This script ensures the first scene defined in build settings (if any) is always loaded when entering play mode.
@@ -55,5 +55,5 @@ namespace OpenHellion
 			}
 		}
 	}
-#endif
 }
+#endif

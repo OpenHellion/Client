@@ -233,7 +233,7 @@ namespace ZeroGravity.Objects
 				corpsePart.Trans.hasChanged = false;
 			}
 
-			NetworkController.SendToGameServer(corpseMovementMessage2);
+			NetworkController.Send(corpseMovementMessage2);
 		}
 
 		public void CopyPositionFromPlayer(OtherPlayer player)
@@ -406,7 +406,7 @@ namespace ZeroGravity.Objects
 			corpseStatsMessage.LocalPosition = transform.localPosition.ToArray();
 			corpseStatsMessage.LocalRotation = transform.localRotation.ToArray();
 			CorpseStatsMessage data = corpseStatsMessage;
-			NetworkController.SendToGameServer(data);
+			NetworkController.Send(data);
 		}
 
 		public InventorySlot GetInventorySlot(short attachedToID)

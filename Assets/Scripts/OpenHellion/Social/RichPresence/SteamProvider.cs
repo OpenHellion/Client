@@ -1,6 +1,6 @@
 // SteamProvider.cs
 //
-// Copyright (C) 2023, OpenHellion contributors
+// Copyright (C) 2024, OpenHellion contributors
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,10 +19,8 @@ using UnityEngine;
 using Steamworks;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using OpenHellion.IO;
 using OpenHellion.Net.Message;
-using OpenHellion;
 
 namespace OpenHellion.Social.RichPresence
 {
@@ -32,8 +30,6 @@ namespace OpenHellion.Social.RichPresence
 		private bool _currentStatsRequested;
 		private bool _userStatsReceived;
 		private bool _storeStats;
-		private Callback<UserStatsReceived_t> _userStatsReceivedCallback;
-		private Callback<GameRichPresenceJoinRequested_t> _gameRichPresenceJoinRequested;
 		private readonly ConcurrentQueue<Task> _pendingTasks = new ConcurrentQueue<Task>();
 
 		private SteamAPIWarningMessageHook_t _steamAPIWarningMessageHook;
@@ -85,8 +81,7 @@ namespace OpenHellion.Social.RichPresence
 				SteamUserStats.RequestCurrentStats();
 			}
 
-			_gameRichPresenceJoinRequested =
-				Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested);
+			Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested);
 		}
 
 		// OnApplicationQuit gets called too early to shutdown the SteamAPI.
@@ -105,7 +100,7 @@ namespace OpenHellion.Social.RichPresence
 
 			if (!_currentStatsRequested)
 			{
-				_userStatsReceivedCallback = Callback<UserStatsReceived_t>.Create(callback =>
+				Callback<UserStatsReceived_t>.Create(callback =>
 				{
 					_userStatsReceived = true;
 				});
@@ -127,10 +122,11 @@ namespace OpenHellion.Social.RichPresence
 		}
 
 		// When we are joining a game.
-		// TODO: Add invites.
 		private void OnGameRichPresenceJoinRequested(GameRichPresenceJoinRequested_t param)
 		{
 			InviteMessage inviteMessage = JsonSerialiser.Deserialize<InviteMessage>(param.m_rgchConnect);
+			GameStarter gameStarter = GameStarter.Create(inviteMessage);
+			gameStarter.FindServerAndConnect().Forget();
 		}
 
 		/// <inheritdoc/>

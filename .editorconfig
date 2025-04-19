@@ -10,6 +10,9 @@ dotnet_diagnostic.IDE0090.severity = none
 dotnet_diagnostic.IDE0018.severity = none
 dotnet_diagnostic.IDE0030.severity = none
 
+# UNT0006: Incorrect message signature
+dotnet_diagnostic.UNT0006.severity = none
+
 [**.{cs,shader}]
 indent_style = tab
 indent_size = tab

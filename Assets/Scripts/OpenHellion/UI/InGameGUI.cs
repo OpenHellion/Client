@@ -1,6 +1,6 @@
 ﻿// InGameGUI.cs
 //
-// Copyright (C) 2023, OpenHellion contributors
+// Copyright (C) 2024, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -150,8 +150,6 @@ namespace OpenHellion.UI
 		public GameObject QuickTipHolder;
 
 		public Text QuickTipContent;
-
-		[Title("Sound")] public SoundEffect SoundEffect;
 
 		[Title("My player")] public PlayerOverview PlayerOverview;
 
@@ -318,9 +316,9 @@ namespace OpenHellion.UI
 		/// <summary>
 		/// 	Open the in-game menu.
 		/// </summary>
-		public void OpenInGameMenu()
+		public void Open()
 		{
-			ToggleInGameMenuCanvas(true);
+			ToggleCanvas(true);
 			Globals.ToggleCursor(true);
 			MyPlayer.Instance.FpsController.ToggleCameraController(false);
 			MyPlayer.Instance.FpsController.ToggleCameraMovement(false);
@@ -329,6 +327,25 @@ namespace OpenHellion.UI
 			{
 				TextChat.CloseChat();
 			}
+
+			if (!MyPlayer.Instance.FpsController.IsZeroG)
+			{
+				MyPlayer.Instance.FpsController.ResetVelocity();
+			}
+
+			if (MyPlayer.Instance != null && MyPlayer.Instance.CurrentActiveItem != null)
+			{
+				MyPlayer.Instance.CurrentActiveItem.PrimaryReleased();
+			}
+		}
+
+		public void Close()
+		{
+			ToggleCanvas(false);
+			Globals.ToggleCursor(false);
+			MyPlayer.Instance.FpsController.ToggleCameraController(true);
+			MyPlayer.Instance.FpsController.ToggleCameraMovement(true);
+			MyPlayer.Instance.FpsController.ToggleMovement(true);
 		}
 
 		public void BeingHit()
@@ -338,20 +355,11 @@ namespace OpenHellion.UI
 			_hitCanvasVisible = true;
 		}
 
-		public void ToggleInGameMenuCanvas(bool val)
+		// Just turn on and of graphical elements.
+		private void ToggleCanvas(bool val)
 		{
 			_world.InWorldPanels.gameObject.SetActive(val);
-			Globals.ToggleCursor(true);
 			PauseMenu.MainMenu(val);
-			if (!MyPlayer.Instance.FpsController.IsZeroG)
-			{
-				MyPlayer.Instance.FpsController.ResetVelocity();
-			}
-
-			if (MyPlayer.Instance is not null && MyPlayer.Instance.CurrentActiveItem is not null)
-			{
-				MyPlayer.Instance.CurrentActiveItem.PrimaryReleased();
-			}
 		}
 
 		public void ToggleDeadMsg(bool val)
@@ -380,7 +388,7 @@ namespace OpenHellion.UI
 
 				if (IsGameMenuOpen)
 				{
-					ToggleInGameMenuCanvas(val: false);
+					ToggleCanvas(val: false);
 				}
 
 				if (Console.gameObject.activeInHierarchy)
@@ -397,7 +405,7 @@ namespace OpenHellion.UI
 				_showDeadMsgTime = 0f;
 				DeadScreen.SetActive(value: false);
 				GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.ConnectingToMain);
-				_world.OpenMainScreen();
+				_world.ReturnToMainMenu();
 			}
 		}
 

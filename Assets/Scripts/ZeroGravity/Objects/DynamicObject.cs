@@ -16,71 +16,55 @@ namespace ZeroGravity.Objects
 	{
 		public static float SendMovementInterval = 0.1f;
 
-		private float sendMovementTime;
+		public Rigidbody _rigidBody;
 
-		public Rigidbody rigidBody;
-
-		private GameObject collisionDetector;
+		private GameObject _collisionDetector;
 
 		public bool Master = true;
 
-		private float velocityCheckTimer;
+		private float _takeoverTimer;
 
-		private float takeoverTimer;
+		private Vector3 _movementVelocity;
 
-		private float movementReceivedTime = -1f;
+		private Vector3 _movementAngularVelocity;
 
-		private Vector3 movementTargetLocalPosition;
-
-		private Quaternion movementTargetLocalRotation;
-
-		private Vector3 movementVelocity;
-
-		private Vector3 movementAngularVelocity;
-
-		private Collider takeoverTrigger;
-
-		private float lastImpactTime;
-
-		private Vector3 prevPosition;
+		private Collider _takeoverTrigger;
 
 		[HideInInspector] public Item Item;
 
-		private List<Collider> collidersWithTriggerChanged = new List<Collider>();
-
-		[SerializeField] private bool drawDebugPath;
+		private readonly List<Collider> _collidersWithTriggerChanged = new List<Collider>();
 
 		public override SpaceObjectType Type => SpaceObjectType.DynamicObject;
 
 		public float Diameter { get; private set; }
 
-		public float Mass => rigidBody.mass;
+		public float Mass => _rigidBody.mass;
 
 		public new Vector3 Velocity
 		{
-			get => rigidBody.velocity;
+			get => _rigidBody.velocity;
 			set
 			{
 				if (Master)
 				{
-					rigidBody.velocity = value;
+					_rigidBody.velocity = value;
 				}
 			}
 		}
 
 		public new Vector3 AngularVelocity
 		{
-			get => rigidBody.angularVelocity;
+			get => _rigidBody.angularVelocity;
 			set
 			{
 				if (Master)
 				{
-					rigidBody.angularVelocity = value;
+					_rigidBody.angularVelocity = value;
 				}
 			}
 		}
 
-		public bool IsKinematic => rigidBody.isKinematic;
+		public bool IsKinematic => _rigidBody.isKinematic;
 
 		public bool IsAttached =>
 			Item != null && (Item.InvSlot != null || Item.AttachPoint != null || Parent is DynamicObject);
@@ -98,37 +82,17 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		private void Awake()
-		{
-			if (TransitionTrigger == null)
-			{
-				TransitionTrigger = GetComponent<TransitionTriggerHelper>();
-			}
-
-			if (TransitionTrigger == null)
-			{
-				Debug.LogError("Transition trigger not set for dynamic object" + name + gameObject.scene);
-			}
-
-			gameObject.SetLayerRecursively(LayerMask.NameToLayer("DynamicObject"), "FirstPerson", "Triggers");
-			rigidBody = GetComponent<Rigidbody>();
-			rigidBody.useGravity = false;
-			rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-			Item = GetComponent<Item>();
-			EventSystem.AddListener(typeof(DynamicObjectStatsMessage), DynamicObjectStatsMessageListener);
-		}
-
-		private void Start()
-		{
-		}
-
 		public void SendStatsMessage(DynamicObjectAttachData attachData = null, DynamicObjectStats statsData = null)
 		{
 			if (attachData != null || statsData != null)
 			{
-				DynamicObjectStatsMessage dynamicObjectStatsMessage = new DynamicObjectStatsMessage();
-				dynamicObjectStatsMessage.Info = new DynamicObjectInfo();
-				dynamicObjectStatsMessage.Info.GUID = Guid;
+				DynamicObjectStatsMessage dynamicObjectStatsMessage = new DynamicObjectStatsMessage
+				{
+					Info = new DynamicObjectInfo
+					{
+						GUID = Guid
+					}
+				};
 				if (attachData != null)
 				{
 					dynamicObjectStatsMessage.AttachData = attachData;
@@ -139,21 +103,18 @@ namespace ZeroGravity.Objects
 					dynamicObjectStatsMessage.Info.Stats = statsData;
 				}
 
-				NetworkController.SendToGameServer(dynamicObjectStatsMessage);
+				NetworkController.Send(dynamicObjectStatsMessage);
 			}
 		}
 
-		public void ProcessDynamicObectMovementMessage(DynamicObectMovementMessage mm)
+		public void ProcessDynamicObectMovementMessage(DynamicObjectMovementMessage mm)
 		{
-			if (!IsAttached && !(takeoverTimer < 1f))
+			if (!IsAttached && !(_takeoverTimer < 1f))
 			{
 				Master = false;
 				ToggleKinematic(value: true);
-				movementReceivedTime = Time.realtimeSinceStartup;
-				movementTargetLocalPosition = mm.LocalPosition.ToVector3();
-				movementTargetLocalRotation = mm.LocalRotation.ToQuaternion();
-				movementVelocity = mm.Velocity.ToVector3();
-				movementAngularVelocity = mm.AngularVelocity.ToVector3();
+				_movementVelocity = mm.Velocity.ToVector3();
+				_movementAngularVelocity = mm.AngularVelocity.ToVector3();
 			}
 		}
 
@@ -250,7 +211,7 @@ namespace ZeroGravity.Objects
 					{
 						if (dosm.AttachData.Velocity != null)
 						{
-							rigidBody.velocity = dosm.AttachData.Velocity.ToVector3();
+							_rigidBody.velocity = dosm.AttachData.Velocity.ToVector3();
 						}
 
 						if (dosm.AttachData.Torque != null)
@@ -317,61 +278,21 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		private void FixedUpdate()
-		{
-			if (IsDestroying || Guid == 0 || IsAttached)
-			{
-				return;
-			}
-
-			if (Master && sendMovementTime + SendMovementInterval <= Time.realtimeSinceStartup &&
-			    !rigidBody.isKinematic)
-			{
-				sendMovementTime = Time.realtimeSinceStartup;
-				SendMovementMessage();
-			}
-
-			if (IsInsideSpaceObject && Gravity.IsNotEpsilonZero() && !IsKinematic)
-			{
-				rigidBody.velocity += Gravity * Time.fixedDeltaTime;
-			}
-		}
-
 		private void SendMovementMessage()
 		{
-			DynamicObectMovementMessage dynamicObectMovementMessage = new DynamicObectMovementMessage();
-			dynamicObectMovementMessage.GUID = Guid;
-			dynamicObectMovementMessage.LocalPosition = transform.localPosition.ToArray();
-			dynamicObectMovementMessage.LocalRotation = transform.localRotation.ToArray();
-			dynamicObectMovementMessage.Velocity = Velocity.ToArray();
-			dynamicObectMovementMessage.AngularVelocity = AngularVelocity.ToArray();
-			dynamicObectMovementMessage.ImpactVelocity = ImpactVelocity;
-			dynamicObectMovementMessage.Timestamp = Time.fixedTime;
-			DynamicObectMovementMessage data = dynamicObectMovementMessage;
-			NetworkController.SendToGameServer(data);
+			DynamicObjectMovementMessage message = new DynamicObjectMovementMessage
+			{
+				GUID = Guid,
+				LocalPosition = transform.localPosition.ToArray(),
+				LocalRotation = transform.localRotation.ToArray(),
+				Velocity = Velocity.ToArray(),
+				AngularVelocity = AngularVelocity.ToArray(),
+				ImpactVelocity = ImpactVelocity,
+				Timestamp = Time.fixedTime
+			};
+			NetworkController.Send(message);
 			ImpactVelocity = 0f;
 			transform.hasChanged = false;
-		}
-
-		private void OnCollisionEnter(Collision coli)
-		{
-			if (!IsAttached && IsKinematic)
-			{
-				ToggleKinematic(value: false);
-				SpaceObjectTransferable componentInParent =
-					coli.gameObject.GetComponentInParent<SpaceObjectTransferable>();
-				if (componentInParent is MyPlayer)
-				{
-					Master = true;
-					takeoverTimer = 0f;
-				}
-				else if (componentInParent is DynamicObject && (componentInParent as DynamicObject).Master)
-				{
-					Master = true;
-				}
-
-				AddForce(coli.relativeVelocity, ForceMode.VelocityChange);
-			}
 		}
 
 		public void ResetRoomTriggers()
@@ -388,15 +309,13 @@ namespace ZeroGravity.Objects
 
 			if (!value)
 			{
-				if (takeoverTrigger != null)
+				if (_takeoverTrigger != null)
 				{
-					Destroy(takeoverTrigger);
+					Destroy(_takeoverTrigger);
 				}
-
-				velocityCheckTimer = 0f;
 			}
 
-			rigidBody.isKinematic = value;
+			_rigidBody.isKinematic = value;
 		}
 
 		public void ToggleEnabled(bool isEnabled, bool toggleColliders)
@@ -422,9 +341,9 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			if (collisionDetector != null)
+			if (_collisionDetector != null)
 			{
-				collisionDetector.SetActive(isEnabled && !IsAttached);
+				_collisionDetector.SetActive(isEnabled && !IsAttached);
 			}
 		}
 
@@ -437,9 +356,9 @@ namespace ZeroGravity.Objects
 				{
 					if (!collider.isTrigger)
 					{
-						if (!collidersWithTriggerChanged.Contains(collider))
+						if (!_collidersWithTriggerChanged.Contains(collider))
 						{
-							collidersWithTriggerChanged.Add(collider);
+							_collidersWithTriggerChanged.Add(collider);
 						}
 
 						collider.isTrigger = true;
@@ -448,17 +367,17 @@ namespace ZeroGravity.Objects
 			}
 			else
 			{
-				if (collidersWithTriggerChanged.Count <= 0)
+				if (_collidersWithTriggerChanged.Count <= 0)
 				{
 					return;
 				}
 
-				foreach (Collider item in collidersWithTriggerChanged)
+				foreach (Collider item in _collidersWithTriggerChanged)
 				{
 					item.isTrigger = false;
 				}
 
-				collidersWithTriggerChanged.Clear();
+				_collidersWithTriggerChanged.Clear();
 			}
 		}
 
@@ -466,9 +385,9 @@ namespace ZeroGravity.Objects
 		{
 			gameObject.SetActive(isActive);
 			TransitionTrigger.enabled = isActive;
-			if (collisionDetector != null)
+			if (_collisionDetector != null)
 			{
-				collisionDetector.SetActive(isActive && !IsAttached);
+				_collisionDetector.SetActive(isActive && !IsAttached);
 			}
 		}
 
@@ -481,7 +400,7 @@ namespace ZeroGravity.Objects
 					ToggleKinematic(value: false);
 				}
 
-				rigidBody.AddForce(force, forceMode);
+				_rigidBody.AddForce(force, forceMode);
 			}
 		}
 
@@ -494,7 +413,7 @@ namespace ZeroGravity.Objects
 					ToggleKinematic(value: false);
 				}
 
-				rigidBody.AddTorque(torque);
+				_rigidBody.AddTorque(torque);
 			}
 		}
 
@@ -502,7 +421,7 @@ namespace ZeroGravity.Objects
 		{
 			if (Master && !IsAttached && !IsKinematic)
 			{
-				rigidBody.AddTorque(torque, forceMode);
+				_rigidBody.AddTorque(torque, forceMode);
 			}
 		}
 
@@ -525,39 +444,6 @@ namespace ZeroGravity.Objects
 			}
 
 			return null;
-		}
-
-		private static void SetupCollisionModeChanger(DynamicObject dobj)
-		{
-			GameObject gameObject = new GameObject("CollisionDetectionModeChanger");
-			gameObject.transform.parent = dobj.transform;
-			gameObject.transform.Reset();
-			Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
-			rigidbody.isKinematic = true;
-			rigidbody.useGravity = false;
-			rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
-			SphereCollider sphereCollider = gameObject.AddComponent<SphereCollider>();
-			sphereCollider.isTrigger = true;
-			Quaternion rotation = dobj.transform.rotation;
-			dobj.transform.rotation = Quaternion.identity;
-			Bounds bounds = new Bounds(dobj.transform.position, Vector3.zero);
-			MeshRenderer[] componentsInChildren = dobj.GetComponentsInChildren<MeshRenderer>();
-			foreach (MeshRenderer meshRenderer in componentsInChildren)
-			{
-				if (meshRenderer.bounds.size.magnitude.IsNotEpsilonZero(1E-05f))
-				{
-					bounds.Encapsulate(meshRenderer.bounds);
-				}
-			}
-
-			bounds.center -= dobj.transform.position;
-			dobj.transform.rotation = rotation;
-			sphereCollider.center = bounds.center;
-			sphereCollider.radius = bounds.size.magnitude;
-			dobj.Diameter = sphereCollider.radius;
-			gameObject.AddComponent<CollisionDetectionModeChanger>();
-			gameObject.layer = LayerMask.NameToLayer("Triggers");
-			dobj.collisionDetector = gameObject;
 		}
 
 		public static DynamicObject SpawnDynamicObject(DynamicObjectDetails details, DynamicObjectData data,
@@ -596,8 +482,8 @@ namespace ZeroGravity.Objects
 				{
 					dynamicObject.transform.localPosition = details.LocalPosition.ToVector3();
 					dynamicObject.transform.localRotation = details.LocalRotation.ToQuaternion();
-					dynamicObject.rigidBody.velocity = details.Velocity.ToVector3();
-					dynamicObject.rigidBody.angularVelocity = details.AngularVelocity.ToVector3();
+					dynamicObject._rigidBody.velocity = details.Velocity.ToVector3();
+					dynamicObject._rigidBody.angularVelocity = details.AngularVelocity.ToVector3();
 				}
 
 				World.AddDynamicObject(dynamicObject.Guid, dynamicObject);
@@ -659,8 +545,7 @@ namespace ZeroGravity.Objects
 		{
 			if (!IsAttached || forceExit)
 			{
-				ArtificialBody artificialBody = null;
-				artificialBody = !(Parent is SpaceObjectVessel)
+				ArtificialBody artificialBody = Parent is not SpaceObjectVessel
 					? GetParent<ArtificialBody>()
 					: (Parent as SpaceObjectVessel).MainVessel;
 				if (artificialBody == null)
@@ -719,46 +604,12 @@ namespace ZeroGravity.Objects
 			base.RoomChanged(prevRoomTrigger);
 		}
 
-		private void Update()
-		{
-			float num = Time.realtimeSinceStartup - movementReceivedTime;
-			if (!IsKinematic)
-			{
-				if (AngularVelocity.IsEpsilonEqual(Vector3.zero, 0.5f) && Velocity.IsEpsilonEqual(Vector3.zero, 0.1f))
-				{
-					velocityCheckTimer += Time.deltaTime;
-					if (velocityCheckTimer > 1f)
-					{
-						SendMovementMessage();
-						ToggleKinematic(value: true);
-					}
-				}
-				else
-				{
-					velocityCheckTimer = 0f;
-				}
-			}
-			else if (movementReceivedTime > 0f && num < 1f)
-			{
-				transform.localPosition = Vector3.Lerp(transform.localPosition, movementTargetLocalPosition,
-					Mathf.Pow(num, 0.5f));
-				transform.localRotation = Quaternion.Slerp(transform.localRotation,
-					movementTargetLocalRotation, Mathf.Pow(num, 0.5f));
-			}
-			else if (num > 1f && num - Time.deltaTime <= 1f)
-			{
-				ForceActivate();
-			}
-
-			takeoverTimer += Time.deltaTime;
-		}
-
 		private void ForceActivate()
 		{
 			Master = true;
 			ToggleKinematic(value: false);
-			Velocity = movementVelocity;
-			AngularVelocity = movementAngularVelocity;
+			Velocity = _movementVelocity;
+			AngularVelocity = _movementAngularVelocity;
 		}
 
 		public void CheckNearbyObjects(HashSet<DynamicObject> alreadyTraversed = null)

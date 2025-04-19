@@ -1,6 +1,6 @@
 ﻿// GlobalGUI.cs
 //
-// Copyright (C) 2023, OpenHellion contributors
+// Copyright (C) 2024, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -21,8 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenHellion.Data;
-using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UIElements;
@@ -36,7 +34,6 @@ namespace OpenHellion.UI
 	{
 		public enum LoadingScreenType
 		{
-			None,
 			Loading,
 			ConnectingToMain,
 			ConnectingToGame,
@@ -108,14 +105,9 @@ namespace OpenHellion.UI
 				return;
 			}
 			_instance = this;
-
-			DontDestroyOnLoad(this);
-
-			_settingsViewModel = GetComponent<SettingsMenuViewModel>();
+			_settingsViewModel = gameObject.GetComponent<SettingsMenuViewModel>();
 
 			var uiDocument = GetComponent<UIDocument>();
-
-			uiDocument.rootVisualElement.Bind(new SerializedObject(_settingsViewModel));
 
 			_messageBox = uiDocument.rootVisualElement.Q("MessageBox");
 			_messageTitle = _messageBox.Q("MessageTitle") as Label;
@@ -173,14 +165,6 @@ namespace OpenHellion.UI
 			_loadingScreen.visible = false;
 			_settingsScreen.visible = false;
 
-			if (Properties.GetProperty("custom_localization_file", string.Empty) != string.Empty)
-			{
-				//LanguageDropdown.options.Add(new Dropdown.OptionData
-				//{
-				//	text = "Custom"
-				//});
-			}
-
 			//resolutionDropdown.options.Clear();
 			//foreach (var resolution in Screen.resolutions)
 			//{
@@ -230,7 +214,6 @@ namespace OpenHellion.UI
 		/// <param name="onClose">An action to execute when we click the close button.</param>
 		public static void ShowErrorMessage(string title, string text, Action onClose = null)
 		{
-			Debug.Log("Showing error message " + text);
 			_instance._errorBox.visible = true;
 			_instance._errorTitle.text = title;
 			_instance._errorDescription.text = text;

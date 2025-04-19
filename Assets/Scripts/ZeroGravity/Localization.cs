@@ -5,14 +5,12 @@ using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 using OpenHellion.UI;
-using UnityEditor;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
-using ZeroGravity.UI;
 
 namespace ZeroGravity
 {
@@ -233,6 +231,8 @@ namespace ZeroGravity
 		public static string Key;
 
 		public static string Loading;
+
+		public static string LoadingWorld;
 
 		public static string Logout;
 
@@ -1829,9 +1829,13 @@ namespace ZeroGravity
 
 		public static string InvalidEmail;
 
+		public static string InvalidPassword;
+
 		public static string InvalidUsername;
 
 		public static string ConsentToDataStorage;
+
+		public static string ConnectionTimedOut;
 
 		public static Dictionary<Enum, string> Enums;
 
@@ -1855,35 +1859,37 @@ namespace ZeroGravity
 		{
 			LocalizationFiles = new Dictionary<int, string>
 			{
-				{ 0, "Localisation/en-US" },
-				{ 1, "Localisation/sr-RS" },
-				{ 2, "Localisation/ch-CN" },
-				{ 3, "Localisation/fr-FR" },
-				{ 4, "Localisation/it-IT" },
-				{ 5, "Localisation/pt-pt" },
-				{ 6, "Localisation/ru-RU" },
-				{ 7, "Localisation/es-ES" },
-				{ 8, "Localisation/tr-TR" },
-				{ 9, "Localisation/cs-CZ" },
-				{ 10, "Localisation/da-DK" },
-				{ 11, "Localisation/nl-NL" },
-				{ 12, "Localisation/fi-FI" },
-				{ 13, "Localisation/de-DE" },
-				{ 14, "Localisation/el-GR" },
-				{ 15, "Localisation/hu-HU" },
-				{ 16, "Localisation/ja-JP" },
-				{ 17, "Localisation/nb-NO" },
-				{ 18, "Localisation/pl-PL" },
-				{ 19, "Localisation/pt-BR" },
-				{ 20, "Localisation/ro-RO" },
-				{ 21, "Localisation/sk-SK" },
-				{ 22, "Localisation/sl-SL" },
-				{ 23, "Localisation/sv-SE" },
-				{ 24, "Localisation/uk-UA" }
+				{ 0, "Localisation/en-GB" },
+				{ 1, "Localisation/en-US" },
+				{ 2, "Localisation/sr-RS" },
+				{ 3, "Localisation/zh-CN" },
+				{ 4, "Localisation/fr-FR" },
+				{ 5, "Localisation/it-IT" },
+				{ 6, "Localisation/pt-PT" },
+				{ 7, "Localisation/ru-RU" },
+				{ 8, "Localisation/es-ES" },
+				{ 9, "Localisation/tr-TR" },
+				{ 10, "Localisation/cs-CZ" },
+				{ 11, "Localisation/da-DK" },
+				{ 12, "Localisation/nl-NL" },
+				{ 13, "Localisation/fi-FI" },
+				{ 14, "Localisation/de-DE" },
+				{ 15, "Localisation/el-GR" },
+				{ 16, "Localisation/hu-HU" },
+				{ 17, "Localisation/ja-JP" },
+				{ 18, "Localisation/nb-NO" },
+				{ 19, "Localisation/pl-PL" },
+				{ 20, "Localisation/pt-BR" },
+				{ 21, "Localisation/ro-RO" },
+				{ 22, "Localisation/sk-SK" },
+				{ 23, "Localisation/sl-SL" },
+				{ 24, "Localisation/sv-SE" },
+				{ 25, "Localisation/uk-UA" },
+				{ 26, "Localisation/zh-TW" }
 			};
 		}
 
-		private static void Initialize()
+		private static void GenerateDictionaries()
 		{
 			TutorialText = new Dictionary<int, string>
 			{
@@ -2030,8 +2036,8 @@ namespace ZeroGravity
 				{ OpenHellion.Settings.SettingsType.Controls, Controls },
 				{ OpenHellion.Settings.SettingsType.Video, Video },
 				{ OpenHellion.Settings.SettingsType.Game, Game },
-				{ Gender.Male, Male.ToUpper() },
-				{ Gender.Female, Female.ToUpper() },
+				{ Gender.Male, Male?.ToUpper() },
+				{ Gender.Female, Female?.ToUpper() },
 				{ SpawnPointState.Authorized, Authorized },
 				{ SpawnPointState.Locked, Locked },
 				{ SpawnPointState.Unlocked, Unlocked },
@@ -2170,11 +2176,11 @@ namespace ZeroGravity
 				{ GenericItemSubType.RupturedInsulation, RupturedInsulation },
 				{ GenericItemSubType.BurnedPDU, BurnedPDU },
 				{ GenericItemSubType.DiamondCoreDrillBit, DiamondCore },
-				{ GlobalGUI.LoadingScreenType.None, None },
-				{ GlobalGUI.LoadingScreenType.Loading, Loading.ToUpper() },
-				{ GlobalGUI.LoadingScreenType.ConnectingToMain, ConnectingToMain.ToUpper() },
-				{ GlobalGUI.LoadingScreenType.ConnectingToGame, ConnectingToGame.ToUpper() },
-				{ SpawnSetupType.Continue, Continue.ToUpper() },
+				{ GlobalGUI.LoadingScreenType.Loading, Loading?.ToUpper() },
+				{ GlobalGUI.LoadingScreenType.ConnectingToMain, ConnectingToMain?.ToUpper() },
+				{ GlobalGUI.LoadingScreenType.ConnectingToGame, ConnectingToGame?.ToUpper() },
+				{ GlobalGUI.LoadingScreenType.LoadWorld, LoadingWorld?.ToUpper() },
+				{ SpawnSetupType.Continue, Continue?.ToUpper() },
 				{ SpawnSetupType.FreeRoamArges, FreeRoamArges },
 				{ SpawnSetupType.FreeRoamSteropes, FreeRoamSteropes },
 				{ SpawnSetupType.MiningArges, MiningArges },
@@ -2299,177 +2305,177 @@ namespace ZeroGravity
 
 			MainMenuLocalisation = new Dictionary<string, string>
 			{
-				{ "NameText", Name.ToUpper() },
-				{ "JoinDiscordText", JoinDiscord.ToUpper() },
-				{ "BackText", Back.ToUpper() },
-				{ "CancelText", Cancel.ToUpper() },
-				{ "CharacterText", Character.ToUpper() },
-				{ "ChooseStartingPointText", ChooseStartingPoint.ToUpper() },
-				{ "ConfirmText", Confirm.ToUpper() },
-				{ "CreateCharacterText", CreateCharacter.ToUpper() },
+				{ "NameText", Name?.ToUpper() },
+				{ "JoinDiscordText", JoinDiscord?.ToUpper() },
+				{ "BackText", Back?.ToUpper() },
+				{ "CancelText", Cancel?.ToUpper() },
+				{ "CharacterText", Character?.ToUpper() },
+				{ "ChooseStartingPointText", ChooseStartingPoint?.ToUpper() },
+				{ "ConfirmText", Confirm?.ToUpper() },
+				{ "CreateCharacterText", CreateCharacter?.ToUpper() },
 				{ "DisclaimerText", Disclaimer },
 				{ "KeyText", Key },
-				{ "PlayText", Play.ToUpper() },
-				{ "QuitText", Quit.ToUpper() },
-				{ "SettingsText", Settings.ToUpper() },
-				{ "PressAnyKeyText", PressAnyKeyToContinue.ToUpper() },
-				{ "ReadMoreText", ReadMore.ToUpper() },
-				{ "LatestNewsText", LatestNews.ToUpper() },
-				{ "DisconnectedText", Disconnected.ToUpper() },
-				{ "ConnectionErrorText", ConnectionError.ToUpper() },
-				{ "ConnectingToInviteText", ConnectingToInvite.ToUpper() },
+				{ "PlayText", Play?.ToUpper() },
+				{ "QuitText", Quit?.ToUpper() },
+				{ "SettingsText", Settings?.ToUpper() },
+				{ "PressAnyKeyText", PressAnyKeyToContinue?.ToUpper() },
+				{ "ReadMoreText", ReadMore?.ToUpper() },
+				{ "LatestNewsText", LatestNews?.ToUpper() },
+				{ "DisconnectedText", Disconnected?.ToUpper() },
+				{ "ConnectionErrorText", ConnectionError?.ToUpper() },
+				{ "ConnectingToInviteText", ConnectingToInvite?.ToUpper() },
 			};
 
 			InGameGUILocalisation = new Dictionary<string, string>
 			{
-				{ "ActionsText", Actions.ToUpper() },
-				{ "MovementText", Movement.ToUpper() },
-				{ "ShipText", Ship.ToUpper() },
-				{ "SuitText", Suit.ToUpper() },
-				{ "CommunicationsText", Communications.ToUpper() },
-				{ "QuickActionsText", QuickActions.ToUpper() },
-				{ "AdvancedVideoSettingsText", AdvancedVideoSettings.ToUpper() },
-				{ "ApplyText", Apply.ToUpper() },
+				{ "ActionsText", Actions?.ToUpper() },
+				{ "MovementText", Movement?.ToUpper() },
+				{ "ShipText", Ship?.ToUpper() },
+				{ "SuitText", Suit?.ToUpper() },
+				{ "CommunicationsText", Communications?.ToUpper() },
+				{ "QuickActionsText", QuickActions?.ToUpper() },
+				{ "AdvancedVideoSettingsText", AdvancedVideoSettings?.ToUpper() },
+				{ "ApplyText", Apply?.ToUpper() },
 				{ "AltKeyText", AltKey },
-				{ "AmbientOcclusionText", AmbientOcclusion.ToUpper() },
-				{ "AntiAliasingText", AntiAliasing.ToUpper() },
-				{ "AudioText", Audio.ToUpper() },
-				{ "AutoStabilizationText", AutoStabilization.ToUpper() },
-				{ "BasicVideoSettingsText", BasicVideoSettings.ToUpper() },
-				{ "BasicAudioSettingsText", BasicAudioSettings.ToUpper() },
-				{ "BloomText", Bloom.ToUpper() },
-				{ "ChromaticAberrationText", ChromaticAberration.ToUpper() },
-				{ "ConfirmText", Confirm.ToUpper() },
-				{ "ControlsText", Controls.ToUpper() },
-				{ "DefaultText", Default.ToUpper() },
+				{ "AmbientOcclusionText", AmbientOcclusion?.ToUpper() },
+				{ "AntiAliasingText", AntiAliasing?.ToUpper() },
+				{ "AudioText", Audio?.ToUpper() },
+				{ "AutoStabilizationText", AutoStabilization?.ToUpper() },
+				{ "BasicVideoSettingsText", BasicVideoSettings?.ToUpper() },
+				{ "BasicAudioSettingsText", BasicAudioSettings?.ToUpper() },
+				{ "BloomText", Bloom?.ToUpper() },
+				{ "ChromaticAberrationText", ChromaticAberration?.ToUpper() },
+				{ "ConfirmText", Confirm?.ToUpper() },
+				{ "ControlsText", Controls?.ToUpper() },
+				{ "DefaultText", Default?.ToUpper() },
 				{ "EADisclaimerText", EADisclaimer },
-				{ "EnterCustomBoxNameText", EnterCustomBoxName.ToUpper() },
-				{ "ExitText", Exit.ToUpper() },
-				{ "EyeAdaptationText", EyeAdaptation.ToUpper() },
-				{ "FullscreenText", FullScreen.ToUpper() },
-				{ "GameSettingsText", GameSettings.ToUpper() },
-				{ "GeneralSettingsText", GeneralSettings.ToUpper() },
-				{ "GlossaryText", Glossary.ToUpper() },
-				{ "HeadBobStrengthText", HeadBobStrength.ToUpper() },
-				{ "HideTipsText", HideTips.ToUpper() },
-				{ "HideTutorialText", HideTutorial.ToUpper() },
+				{ "EnterCustomBoxNameText", EnterCustomBoxName?.ToUpper() },
+				{ "ExitText", Exit?.ToUpper() },
+				{ "EyeAdaptationText", EyeAdaptation?.ToUpper() },
+				{ "FullscreenText", FullScreen?.ToUpper() },
+				{ "GameSettingsText", GameSettings?.ToUpper() },
+				{ "GeneralSettingsText", GeneralSettings?.ToUpper() },
+				{ "GlossaryText", Glossary?.ToUpper() },
+				{ "HeadBobStrengthText", HeadBobStrength?.ToUpper() },
+				{ "HideTipsText", HideTips?.ToUpper() },
+				{ "HideTutorialText", HideTutorial?.ToUpper() },
 				{ "InteractText", Interact },
-				{ "LoadingText", Loading.ToUpper() },
-				{ "MasterVolumeText", MasterVolume.ToUpper() },
-				{ "MotionBlurText", MotionBlur.ToUpper() },
-				{ "OptionsText", Options.ToUpper() },
-				{ "QualityText", Quality.ToUpper() },
-				{ "ResolutionText", Resolution.ToUpper() },
-				{ "RespawnText", Respawn.ToUpper() },
-				{ "ResumeText", Resume.ToUpper() },
-				{ "ServerText", Server.ToUpper() },
-				{ "ShadowsText", Shadows.ToUpper() },
-				{ "ShipSettingsText", ShipSettings.ToUpper() },
-				{ "ShowCrosshairText", ShowCrosshair.ToUpper() },
-				{ "TextureQualityText", TextureQuality.ToUpper() },
-				{ "ThrowingText", Throwing.ToUpper() },
-				{ "MouseSettingsText", MouseSettings.ToUpper() },
-				{ "SensitivityText", Sensitivity.ToUpper() },
-				{ "InvertMouseWhileDrivingText", InvertMouseWhileDriving.ToUpper() },
-				{ "InvertMouseText", InvertMouse.ToUpper() },
+				{ "LoadingText", Loading?.ToUpper() },
+				{ "MasterVolumeText", MasterVolume?.ToUpper() },
+				{ "MotionBlurText", MotionBlur?.ToUpper() },
+				{ "OptionsText", Options?.ToUpper() },
+				{ "QualityText", Quality?.ToUpper() },
+				{ "ResolutionText", Resolution?.ToUpper() },
+				{ "RespawnText", Respawn?.ToUpper() },
+				{ "ResumeText", Resume?.ToUpper() },
+				{ "ServerText", Server?.ToUpper() },
+				{ "ShadowsText", Shadows?.ToUpper() },
+				{ "ShipSettingsText", ShipSettings?.ToUpper() },
+				{ "ShowCrosshairText", ShowCrosshair?.ToUpper() },
+				{ "TextureQualityText", TextureQuality?.ToUpper() },
+				{ "ThrowingText", Throwing?.ToUpper() },
+				{ "MouseSettingsText", MouseSettings?.ToUpper() },
+				{ "SensitivityText", Sensitivity?.ToUpper() },
+				{ "InvertMouseWhileDrivingText", InvertMouseWhileDriving?.ToUpper() },
+				{ "InvertMouseText", InvertMouse?.ToUpper() },
 				{ "UseText", Use },
 				{ "UsernameText", Username },
-				{ "VideoText", Video.ToUpper() },
-				{ "VoiceVolumeText", VoiceVolume.ToUpper() },
-				{ "PressAnyKeyText", PressAnyKeyToContinue.ToUpper() },
-				{ "KeyboardSettingsText", KeyboardSettings.ToUpper() },
-				{ "ChooseLanguageText", ChooseLanguage.ToUpper() },
-				{ "ReportServerText", ReportServer.ToUpper() },
-				{ "OtherText", Other.ToUpper() },
-				{ "SendReportText", SendReport.ToUpper() },
-				{ "ReportText", ReportServer.ToUpper() },
-				{ "PlayerSettingsText", PlayerSettings.ToUpper() },
-				{ "GlobalSettingsText", GlobalSettings.ToUpper() },
-				{ "UnavailableFromInGameMenuText", UnavailableFromInGameMenu.ToUpper() },
-				{ "RecyclingOutputText", RecyclingOutput.ToUpper() },
-				{ "VolumetricLightingText", VolumetricLighting.ToUpper() },
-				{ "ServerRestartInText", ServerRestartIn.ToUpper() },
-				{ "ConsoleText", Console.ToUpper() },
-				{ "ItemsText", Items.ToUpper() },
-				{ "ModulesText", Modules.ToUpper() },
-				{ "CommandListText", CommandList.ToUpper() },
-				{ "ServerInfoText", ServerInfo.ToUpper() },
-				{ "AmbienceVolumeText", AmbienceVolume.ToUpper() },
-				{ "RollText", Roll.ToUpper() },
-				{ "HideTipsFromMenuText", HideTipsFromMenu.ToUpper() },
+				{ "VideoText", Video?.ToUpper() },
+				{ "VoiceVolumeText", VoiceVolume?.ToUpper() },
+				{ "PressAnyKeyText", PressAnyKeyToContinue?.ToUpper() },
+				{ "KeyboardSettingsText", KeyboardSettings?.ToUpper() },
+				{ "ChooseLanguageText", ChooseLanguage?.ToUpper() },
+				{ "ReportServerText", ReportServer?.ToUpper() },
+				{ "OtherText", Other?.ToUpper() },
+				{ "SendReportText", SendReport?.ToUpper() },
+				{ "ReportText", ReportServer?.ToUpper() },
+				{ "PlayerSettingsText", PlayerSettings?.ToUpper() },
+				{ "GlobalSettingsText", GlobalSettings?.ToUpper() },
+				{ "UnavailableFromInGameMenuText", UnavailableFromInGameMenu?.ToUpper() },
+				{ "RecyclingOutputText", RecyclingOutput?.ToUpper() },
+				{ "VolumetricLightingText", VolumetricLighting?.ToUpper() },
+				{ "ServerRestartInText", ServerRestartIn?.ToUpper() },
+				{ "ConsoleText", Console?.ToUpper() },
+				{ "ItemsText", Items?.ToUpper() },
+				{ "ModulesText", Modules?.ToUpper() },
+				{ "CommandListText", CommandList?.ToUpper() },
+				{ "ServerInfoText", ServerInfo?.ToUpper() },
+				{ "AmbienceVolumeText", AmbienceVolume?.ToUpper() },
+				{ "RollText", Roll?.ToUpper() },
+				{ "HideTipsFromMenuText", HideTipsFromMenu?.ToUpper() },
 				{ "CreateCharacterLoreText", CreateCharacterLore },
-				{ "NetworkingText", Networking.ToUpper() },
-				{ "SentText", Sent.ToUpper() },
-				{ "ReceivedText", Received.ToUpper() },
-				{ "ResetText", Reset.ToUpper() },
-				{ "RCSFuelText", RCS.ToUpper() + " " + Fuel.ToUpper() },
-				{ "OxygenText", Oxygen.ToUpper() },
-				{ "NoJetpackText", Jetpack.ToUpper() + " " + Missing.ToUpper() },
-				{ "WarningText", Warning.ToUpper() },
-				{ "PressureText", Pressure.ToUpper() },
-				{ "LateralText", HelmetOffSpeed.ToUpper() },
-				{ "DirectionalText", HelmetOnSpeed.ToUpper() },
-				{ "ZeroGravityMovementText", ZeroGravityMovement.ToUpper() },
-				{ "UpText", Up.ToUpper() },
-				{ "DownText", Down.ToUpper() },
-				{ "GrabStabilizeText", Grab.ToUpper() + " / " + Stabilization.ToUpper() },
-				{ "InventoryText", Inventory.ToUpper() },
-				{ "JournalText", Journal.ToUpper() },
-				{ "BlueprintsText", Blueprints.ToUpper() },
-				{ "WeaponsText", Weapons.ToUpper() },
-				{ "MagazinesText", Magazines.ToUpper() },
-				{ "ToolsText", Tools.ToUpper() },
-				{ "UtilityText", Utility.ToUpper() },
-				{ "SuitsText", Suits.ToUpper() },
-				{ "PartsText", Parts.ToUpper() },
-				{ "ContainersText", Containers.ToUpper() },
-				{ "NoSuitEquippedText", NoSuitEquipped.ToUpper() },
-				{ "DropText", Drop.ToUpper() },
-				{ "RemoveOutfitText", RemoveOutfit.ToUpper() },
-				{ "ObjectivesText", Objectives.ToUpper() },
-				{ "QuestLogText", QuestLog.ToUpper() },
-				{ "NoLogAvailableText", NoLogAvailable.ToUpper() },
-				{ "ShowContainerSlotsText", ShowContainerSlots.ToUpper() },
-				{ "QuestTerminalHintText", QuestTerminalHint.ToUpper() },
-				{ "ToBeContinuedText", ToBeContinued.ToUpper() },
-				{ "EquipmentText", Equipment.ToUpper() },
-				{ "ResourcesText", ResourcesLabel.ToUpper() },
-				{ "MedicalText", Medical.ToUpper() }
+				{ "NetworkingText", Networking?.ToUpper() },
+				{ "SentText", Sent?.ToUpper() },
+				{ "ReceivedText", Received?.ToUpper() },
+				{ "ResetText", Reset?.ToUpper() },
+				{ "RCSFuelText", RCS?.ToUpper() + " " + Fuel?.ToUpper() },
+				{ "OxygenText", Oxygen?.ToUpper() },
+				{ "NoJetpackText", Jetpack?.ToUpper() + " " + Missing?.ToUpper() },
+				{ "WarningText", Warning?.ToUpper() },
+				{ "PressureText", Pressure?.ToUpper() },
+				{ "LateralText", HelmetOffSpeed?.ToUpper() },
+				{ "DirectionalText", HelmetOnSpeed?.ToUpper() },
+				{ "ZeroGravityMovementText", ZeroGravityMovement?.ToUpper() },
+				{ "UpText", Up?.ToUpper() },
+				{ "DownText", Down?.ToUpper() },
+				{ "GrabStabilizeText", Grab?.ToUpper() + " / " + Stabilization?.ToUpper() },
+				{ "InventoryText", Inventory?.ToUpper() },
+				{ "JournalText", Journal?.ToUpper() },
+				{ "BlueprintsText", Blueprints?.ToUpper() },
+				{ "WeaponsText", Weapons?.ToUpper() },
+				{ "MagazinesText", Magazines?.ToUpper() },
+				{ "ToolsText", Tools?.ToUpper() },
+				{ "UtilityText", Utility?.ToUpper() },
+				{ "SuitsText", Suits?.ToUpper() },
+				{ "PartsText", Parts?.ToUpper() },
+				{ "ContainersText", Containers?.ToUpper() },
+				{ "NoSuitEquippedText", NoSuitEquipped?.ToUpper() },
+				{ "DropText", Drop?.ToUpper() },
+				{ "RemoveOutfitText", RemoveOutfit?.ToUpper() },
+				{ "ObjectivesText", Objectives?.ToUpper() },
+				{ "QuestLogText", QuestLog?.ToUpper() },
+				{ "NoLogAvailableText", NoLogAvailable?.ToUpper() },
+				{ "ShowContainerSlotsText", ShowContainerSlots?.ToUpper() },
+				{ "QuestTerminalHintText", QuestTerminalHint?.ToUpper() },
+				{ "ToBeContinuedText", ToBeContinued?.ToUpper() },
+				{ "EquipmentText", Equipment?.ToUpper() },
+				{ "ResourcesText", ResourcesLabel?.ToUpper() },
+				{ "MedicalText", Medical?.ToUpper() }
 			};
 
 			PanelsLocalization = new Dictionary<string, string>
 			{
-				{ "ConfirmText", Confirm.ToUpper() },
-				{ "CancelText", Cancel.ToUpper() },
-				{ "TurnOffText", TurnOff.ToUpper() },
-				{ "TurnOnText", TurnOn.ToUpper() },
-				{ "OutputText", Output.ToUpper() },
-				{ "BackText", Back.ToUpper() },
-				{ "ZeroGravityMovementText", ZeroGravityMovement.ToUpper() },
-				{ "RotationText", Rotation.ToUpper() },
-				{ "UpText", Up.ToUpper() },
-				{ "DownText", Down.ToUpper() },
-				{ "GrabStabilizeText", Grab.ToUpper() + " / " + Stabilization.ToUpper() },
-				{ "InfoScreenText", InfoScreen.ToUpper() },
-				{ "ExitPanelText", ExitPanel.ToUpper() },
-				{ "PowerSupplyPanelText", PowerSupplyScreen.ToUpper() },
-				{ "TotalOutputText", TotalOutput.ToUpper() },
-				{ "PowerCapacityText", PowerCapacity.ToUpper() },
-				{ "TotalConsumptionText", TotalConsumption.ToUpper() },
-				{ "NoPowerSupplyConnectedText", NoPowerSupplyConnected.ToUpper() },
-				{ "UnauthorizedAccessText", UnauthorizedAccess.ToUpper() },
-				{ "PowerOutputText", PowerOutput.ToUpper() },
-				{ "DeuteriumTankText", DeuteriumTank.ToUpper() },
-				{ "SystemPartsText", SystemParts.ToUpper() },
-				{ "SolarPanelsText", SolarPanels.ToUpper() },
-				{ "CapacitorText", Capacitor.ToUpper() },
-				{ "CapacityText", Capacity.ToUpper() },
-				{ "ConsumptionText", Consumption.ToUpper() },
-				{ "CapacitorsTotalText", CapacitorsTotal.ToUpper() },
-				{ "ModuleOutputText", Module.ToUpper() + " " + Output.ToUpper() },
-				{ "BaseConsumptionText", BaseConsumption.ToUpper() },
-				{ "NoSunExposureText", NoSunExposure.ToUpper() },
-				{ "PowerSupplySystemText", PowerSupplySystem.ToUpper() },
+				{ "ConfirmText", Confirm?.ToUpper() },
+				{ "CancelText", Cancel?.ToUpper() },
+				{ "TurnOffText", TurnOff?.ToUpper() },
+				{ "TurnOnText", TurnOn?.ToUpper() },
+				{ "OutputText", Output?.ToUpper() },
+				{ "BackText", Back?.ToUpper() },
+				{ "ZeroGravityMovementText", ZeroGravityMovement?.ToUpper() },
+				{ "RotationText", Rotation?.ToUpper() },
+				{ "UpText", Up?.ToUpper() },
+				{ "DownText", Down?.ToUpper() },
+				{ "GrabStabilizeText", Grab?.ToUpper() + " / " + Stabilization?.ToUpper() },
+				{ "InfoScreenText", InfoScreen?.ToUpper() },
+				{ "ExitPanelText", ExitPanel?.ToUpper() },
+				{ "PowerSupplyPanelText", PowerSupplyScreen?.ToUpper() },
+				{ "TotalOutputText", TotalOutput?.ToUpper() },
+				{ "PowerCapacityText", PowerCapacity?.ToUpper() },
+				{ "TotalConsumptionText", TotalConsumption?.ToUpper() },
+				{ "NoPowerSupplyConnectedText", NoPowerSupplyConnected?.ToUpper() },
+				{ "UnauthorizedAccessText", UnauthorizedAccess?.ToUpper() },
+				{ "PowerOutputText", PowerOutput?.ToUpper() },
+				{ "DeuteriumTankText", DeuteriumTank?.ToUpper() },
+				{ "SystemPartsText", SystemParts?.ToUpper() },
+				{ "SolarPanelsText", SolarPanels?.ToUpper() },
+				{ "CapacitorText", Capacitor?.ToUpper() },
+				{ "CapacityText", Capacity?.ToUpper() },
+				{ "ConsumptionText", Consumption?.ToUpper() },
+				{ "CapacitorsTotalText", CapacitorsTotal?.ToUpper() },
+				{ "ModuleOutputText", Module?.ToUpper() + " " + Output?.ToUpper() },
+				{ "BaseConsumptionText", BaseConsumption?.ToUpper() },
+				{ "NoSunExposureText", NoSunExposure?.ToUpper() },
+				{ "PowerSupplySystemText", PowerSupplySystem?.ToUpper() },
 				{ "PowerSupplyInfoText", PowerSupplyInfo },
 				{ "CapacitorDescriptionText", CapacitorDescription },
 				{ "SolarPanelDescriptionText", SolarPanelDescription },
@@ -2477,356 +2483,319 @@ namespace ZeroGravity
 				{ "CurrentVesselConsumptionText", CurrentVesselConsumtion },
 				{ "ConnectedVesselDescriptionText", ConnectedVesselDescription },
 				{ "ToggleBaseConsumptionText", ToggleBaseConsumption },
-				{ "LifeSupportPanelText", LifeSupportPanelLabel.ToUpper() },
-				{ "LifeSupportSystemText", LifeSupportSystem.ToUpper() },
-				{ "TotalCapacityText", TotalCapacity.ToUpper() },
-				{ "AirTankText", AirTank.ToUpper() },
-				{ "NoLifeSupportConnectedText", NoLifeSupportConnected.ToUpper() },
-				{ "NoAirGeneratorsText", NoAirGenerator.ToUpper() },
-				{ "NoAirFiltersText", NoAirFilter.ToUpper() },
-				{ "AirGeneratorText", AirGenerator.ToUpper() },
-				{ "OxygenTankText", OxygenTank.ToUpper() },
-				{ "NitrogenTankText", NitrogenTank.ToUpper() },
-				{ "AirFilterText", AirFilter.ToUpper() },
-				{ "PressureText", Pressure.ToUpper() },
-				{ "AirQualityText", AirQuality.ToUpper() },
-				{ "AirFilteringText", AirFiltering.ToUpper() },
-				{ "PressureRegulationText", PressureRegulation.ToUpper() },
-				{ "AirlockText", Airlock.ToUpper() },
-				{ "AirOutputText", AirOutput.ToUpper() },
-				{ "AirCapacityText", AirCapacity.ToUpper() },
-				{ "ConnectedLifeSupportSystemsText", ConnectedLifeSupportSystems.ToUpper() },
-				{ "ConnectedPowerSupplySystemsText", ConnectedPowerSupplySystems.ToUpper() },
-				{ "ConnectedVesselsText", ConnectedVessels.ToUpper() },
-				{ "SunExposureText", SunExposure.ToUpper() },
-				{ "ModuleVolumeText", ModuleVolume.ToUpper() },
-				{ "FilteringRateText", FilteringRate.ToUpper() },
+				{ "LifeSupportPanelText", LifeSupportPanelLabel?.ToUpper() },
+				{ "LifeSupportSystemText", LifeSupportSystem?.ToUpper() },
+				{ "TotalCapacityText", TotalCapacity?.ToUpper() },
+				{ "AirTankText", AirTank?.ToUpper() },
+				{ "NoLifeSupportConnectedText", NoLifeSupportConnected?.ToUpper() },
+				{ "NoAirGeneratorsText", NoAirGenerator?.ToUpper() },
+				{ "NoAirFiltersText", NoAirFilter?.ToUpper() },
+				{ "AirGeneratorText", AirGenerator?.ToUpper() },
+				{ "OxygenTankText", OxygenTank?.ToUpper() },
+				{ "NitrogenTankText", NitrogenTank?.ToUpper() },
+				{ "AirFilterText", AirFilter?.ToUpper() },
+				{ "PressureText", Pressure?.ToUpper() },
+				{ "AirQualityText", AirQuality?.ToUpper() },
+				{ "AirFilteringText", AirFiltering?.ToUpper() },
+				{ "PressureRegulationText", PressureRegulation?.ToUpper() },
+				{ "AirlockText", Airlock?.ToUpper() },
+				{ "AirOutputText", AirOutput?.ToUpper() },
+				{ "AirCapacityText", AirCapacity?.ToUpper() },
+				{ "ConnectedLifeSupportSystemsText", ConnectedLifeSupportSystems?.ToUpper() },
+				{ "ConnectedPowerSupplySystemsText", ConnectedPowerSupplySystems?.ToUpper() },
+				{ "ConnectedVesselsText", ConnectedVessels?.ToUpper() },
+				{ "SunExposureText", SunExposure?.ToUpper() },
+				{ "ModuleVolumeText", ModuleVolume?.ToUpper() },
+				{ "FilteringRateText", FilteringRate?.ToUpper() },
 				{ "LifeSupportInfoText", LifeSupportInfo },
 				{ "AirGeneratorDescriptionText", AirGeneratorDescription },
 				{ "AirFilterDescriptionText", AirFilterDescription },
 				{ "AirTankDescriptionText", AirTankDescription },
-				{ "AirTankNotConnectedText", AirTankNotConnected.ToUpper() },
-				{ "ConnectedCargosText", ConnectedCargos.ToUpper() },
-				{ "VesselSystemsText", VesselSystems.ToUpper() },
-				{ "FabricatorText", Fabricator.ToUpper() },
-				{ "RefineryText", Refinery.ToUpper() },
-				{ "AttachPointText", AttachPoint.ToUpper() },
-				{ "CargoPanelText", CargoHeading.ToUpper() },
-				{ "RawText", Raw.ToUpper() },
-				{ "RefinedText", Refined.ToUpper() },
-				{ "CraftingText", Crafting.ToUpper() },
-				{ "CargoText", Cargo.ToUpper() },
-				{ "RefiningText", Refining.ToUpper() },
-				{ "SlotText", Slot.ToUpper() },
-				{ "ActiveSystemsText", ActiveSystems.ToUpper() },
-				{ "NoSlotConnectionText", NothingConnectedToSlot.ToUpper() },
-				{ "OxygenText", Oxygen.ToUpper() },
-				{ "PropellantText", Propellant.ToUpper() },
-				{ "EnergyConsumptionText", EnergyConsumption.ToUpper() },
-				{ "ProcessingTimeText", ProcessingTime.ToUpper() },
-				{ "RefineText", Refine.ToUpper() },
-				{ "NoOtherCargoAttachedText", NoOtherCargoAvailable.ToUpper() },
-				{ "VentText", Vent.ToUpper() },
-				{ "VentDescriptionText", VentDescription.ToUpper() },
-				{ "UnloadText", Unload.ToUpper() },
-				{ "NoItemAttachedToCargoText", NoItemAttachedToCargo.ToUpper() },
-				{ "NoRefineryAvailableText", NoRefineryAvailable.ToUpper() },
-				{ "AmountToTransferText", AmountToTransfer.ToUpper() },
-				{ "PowerConsumptionText", PowerConsumption.ToUpper() },
-				{ "RefiningTimeText", RefiningTime.ToUpper() },
-				{ "TransferResourcesText", TransferResources.ToUpper() },
-				{ "ChooseAnItemToCraftText", ChooseAnItemToCraft.ToUpper() },
-				{ "NoFabricatorAvailableText", NoFabricatorAvailable.ToUpper() },
-				{ "TransferFromText", TransferFrom.ToUpper() },
-				{ "TransferToText", TransferTo.ToUpper() },
-				{ "DragResourcesForCraftingText", DragResourcesForCrafting.ToUpper() },
-				{ "RefillText", Refill.ToUpper() },
-				{ "CraftText", Craft.ToUpper() },
-				{ "CraftingTimeText", CraftingTime.ToUpper() },
-				{ "CancelCraftingText", CancelCrafting.ToUpper() },
-				{ "CancelingCraftingText", CancelCraftingDescription.ToUpper() },
-				{ "CancelingCraftingWarningText", CancelCraftingWarning.ToUpper() },
-				{ "RegisterText", Register.ToUpper() },
-				{ "SetAsPointText", SetAsPoint.ToUpper() },
-				{ "InvitePlayerText", InviteFriend.ToUpper() },
-				{ "UnregisterText", Unregister.ToUpper() },
-				{ "CryoChamberText", CryoChamber.ToUpper() },
-				{ "SelectFriendText", SelectFriend.ToUpper() },
-				{ "ActionRequiredText", ActionRequired.ToUpper() },
-				{ "AreYouSureCryoText", AreYouSureCryo.ToUpper() },
-				{ "DangerCryoText", DangerCryo.ToUpper() },
-				{ "SecurityTermninalText", SecurityTerminal.ToUpper() },
-				{ "ClaimText", Claim.ToUpper() },
-				{ "AddCrewMemberText", AddCrewMember.ToUpper() },
-				{ "ResignText", Resign.ToUpper() },
-				{ "AuthPersonnelListText", AuthorizedPersonnelList.ToUpper() },
-				{ "CommandingOfficerText", CommandingOfficer.ToUpper() },
-				{ "CrewText", Crew.ToUpper() },
-				{ "ChangeShipNameText", ChangeShipName.ToUpper() },
-				{ "CustomShipNameText", EnterCustomShipName.ToUpper() },
-				{ "ShipCrewText", ShipCrew.ToUpper() },
-				{ "AreYouSureResignText", AreYouSureResign.ToUpper() },
-				{ "PromoteText", Promote.ToUpper() },
-				{ "RemoveText", Remove.ToUpper() },
-				{ "AreYouSurePromoteText", AreYouSurePromote.ToUpper() },
-				{ "AreYouSureSelfDestructText", AreYouSureSelfDestruct.ToUpper() },
-				{ "SelfDestructActiveText", SelfDestruct.ToUpper() + " " + Active.ToUpper() },
-				{ "ChangeShipEmblemText", ChangeShipEmblem.ToUpper() },
-				{ "AirlockControlText", AirLockcontrols.ToUpper() },
-				{ "PressurizeText", RePressurize.ToUpper() },
-				{ "DepressurizeText", Depressurize.ToUpper() },
-				{ "InnerDoorText", InnerDoor.ToUpper() },
-				{ "OuterDoorText", OuterDoor.ToUpper() },
+				{ "AirTankNotConnectedText", AirTankNotConnected?.ToUpper() },
+				{ "ConnectedCargosText", ConnectedCargos?.ToUpper() },
+				{ "VesselSystemsText", VesselSystems?.ToUpper() },
+				{ "FabricatorText", Fabricator?.ToUpper() },
+				{ "RefineryText", Refinery?.ToUpper() },
+				{ "AttachPointText", AttachPoint?.ToUpper() },
+				{ "CargoPanelText", CargoHeading?.ToUpper() },
+				{ "RawText", Raw?.ToUpper() },
+				{ "RefinedText", Refined?.ToUpper() },
+				{ "CraftingText", Crafting?.ToUpper() },
+				{ "CargoText", Cargo?.ToUpper() },
+				{ "RefiningText", Refining?.ToUpper() },
+				{ "SlotText", Slot?.ToUpper() },
+				{ "ActiveSystemsText", ActiveSystems?.ToUpper() },
+				{ "NoSlotConnectionText", NothingConnectedToSlot?.ToUpper() },
+				{ "OxygenText", Oxygen?.ToUpper() },
+				{ "PropellantText", Propellant?.ToUpper() },
+				{ "EnergyConsumptionText", EnergyConsumption?.ToUpper() },
+				{ "ProcessingTimeText", ProcessingTime?.ToUpper() },
+				{ "RefineText", Refine?.ToUpper() },
+				{ "NoOtherCargoAttachedText", NoOtherCargoAvailable?.ToUpper() },
+				{ "VentText", Vent?.ToUpper() },
+				{ "VentDescriptionText", VentDescription?.ToUpper() },
+				{ "UnloadText", Unload?.ToUpper() },
+				{ "NoItemAttachedToCargoText", NoItemAttachedToCargo?.ToUpper() },
+				{ "NoRefineryAvailableText", NoRefineryAvailable?.ToUpper() },
+				{ "AmountToTransferText", AmountToTransfer?.ToUpper() },
+				{ "PowerConsumptionText", PowerConsumption?.ToUpper() },
+				{ "RefiningTimeText", RefiningTime?.ToUpper() },
+				{ "TransferResourcesText", TransferResources?.ToUpper() },
+				{ "ChooseAnItemToCraftText", ChooseAnItemToCraft?.ToUpper() },
+				{ "NoFabricatorAvailableText", NoFabricatorAvailable?.ToUpper() },
+				{ "TransferFromText", TransferFrom?.ToUpper() },
+				{ "TransferToText", TransferTo?.ToUpper() },
+				{ "DragResourcesForCraftingText", DragResourcesForCrafting?.ToUpper() },
+				{ "RefillText", Refill?.ToUpper() },
+				{ "CraftText", Craft?.ToUpper() },
+				{ "CraftingTimeText", CraftingTime?.ToUpper() },
+				{ "CancelCraftingText", CancelCrafting?.ToUpper() },
+				{ "CancelingCraftingText", CancelCraftingDescription?.ToUpper() },
+				{ "CancelingCraftingWarningText", CancelCraftingWarning?.ToUpper() },
+				{ "RegisterText", Register?.ToUpper() },
+				{ "SetAsPointText", SetAsPoint?.ToUpper() },
+				{ "InvitePlayerText", InviteFriend?.ToUpper() },
+				{ "UnregisterText", Unregister?.ToUpper() },
+				{ "CryoChamberText", CryoChamber?.ToUpper() },
+				{ "SelectFriendText", SelectFriend?.ToUpper() },
+				{ "ActionRequiredText", ActionRequired?.ToUpper() },
+				{ "AreYouSureCryoText", AreYouSureCryo?.ToUpper() },
+				{ "DangerCryoText", DangerCryo?.ToUpper() },
+				{ "SecurityTermninalText", SecurityTerminal?.ToUpper() },
+				{ "ClaimText", Claim?.ToUpper() },
+				{ "AddCrewMemberText", AddCrewMember?.ToUpper() },
+				{ "ResignText", Resign?.ToUpper() },
+				{ "AuthPersonnelListText", AuthorizedPersonnelList?.ToUpper() },
+				{ "CommandingOfficerText", CommandingOfficer?.ToUpper() },
+				{ "CrewText", Crew?.ToUpper() },
+				{ "ChangeShipNameText", ChangeShipName?.ToUpper() },
+				{ "CustomShipNameText", EnterCustomShipName?.ToUpper() },
+				{ "ShipCrewText", ShipCrew?.ToUpper() },
+				{ "AreYouSureResignText", AreYouSureResign?.ToUpper() },
+				{ "PromoteText", Promote?.ToUpper() },
+				{ "RemoveText", Remove?.ToUpper() },
+				{ "AreYouSurePromoteText", AreYouSurePromote?.ToUpper() },
+				{ "AreYouSureSelfDestructText", AreYouSureSelfDestruct?.ToUpper() },
+				{ "SelfDestructActiveText", SelfDestruct?.ToUpper() + " " + Active?.ToUpper() },
+				{ "ChangeShipEmblemText", ChangeShipEmblem?.ToUpper() },
+				{ "AirlockControlText", AirLockcontrols?.ToUpper() },
+				{ "PressurizeText", RePressurize?.ToUpper() },
+				{ "DepressurizeText", Depressurize?.ToUpper() },
+				{ "InnerDoorText", InnerDoor?.ToUpper() },
+				{ "OuterDoorText", OuterDoor?.ToUpper() },
 				{ "WarningAirlockText", WarningArilock },
-				{ "AreYouSureAirlockText", AreYouSureAirlock.ToUpper() },
-				{ "DangerAirlockText", DangerAirlock.ToUpper() },
-				{ "StopText", Stop.ToUpper() },
-				{ "AirlockPressureText", AirlockPressure.ToUpper() },
-				{ "DoorControlText", DoorControl.ToUpper() },
-				{ "BarText", Bar.ToUpper() },
-				{ "NoAirTankAvailableText", NoAirTankAvailable.ToUpper() },
-				{ "VolumeDescriptionText", VolumeDescription.ToUpper() },
-				{ "PressurizeDescriptionText", PressurizeDescription.ToUpper() },
-				{ "DepressurizeDescriptionText", DepressurizeDescription.ToUpper() },
-				{ "VentActionDescriptionText", VentActionDescription.ToUpper() },
-				{ "HoldToStabilizeText", HoldToStabilize.ToUpper() },
-				{ "ObjectsInClusterText", ObjectsInCluster.ToUpper() },
-				{ "ObjectClusterText", ObjectCluster.ToUpper() },
-				{ "AddCustomOrbitText", AddCustomOrbit.ToUpper() },
-				{ "RemoveCustomOrbitText", RemoveOrbit.ToUpper() },
-				{ "WarpToObjectText", WarpTo.ToUpper() },
-				{ "ManeuverInitiatedText", ManeuverInitiated.ToUpper() },
-				{ "PleaseAlignText", AlignShip.ToUpper() },
-				{ "ZoomOutText", ZoomOut.ToUpper() },
-				{ "HomeStationText", HomeStation.ToUpper() },
-				{ "MyShipText", MyShip.ToUpper() },
-				{ "ScanText", Scan.ToUpper() },
-				{ "SignalAmplificationText", SignalAmplification.ToUpper() },
-				{ "AutorizedVesselsText", AuthorizedVessels.ToUpper() },
-				{ "DistressSignalsText", DistressSignal.ToUpper() },
-				{ "FTLManeuverText", FtlManeuver.ToUpper() },
-				{ "CellsSelectedText", CellsSelected.ToUpper() },
-				{ "WarpDistanceText", WarpDistance.ToUpper() },
-				{ "ManeuverStatusText", ManeuverStatus.ToUpper() },
-				{ "ManeuverTimeAdjustmentText", ManeuverTimeAdjustment.ToUpper() },
-				{ "ActivationTimeText", ActivationTime.ToUpper() },
-				{ "ArrivalTimeText", ArrivalTime.ToUpper() },
-				{ "InitializeText", InitializeNavigation.ToUpper() },
-				{ "ClusterText", ObjectCluster.ToUpper() },
+				{ "AreYouSureAirlockText", AreYouSureAirlock?.ToUpper() },
+				{ "DangerAirlockText", DangerAirlock?.ToUpper() },
+				{ "StopText", Stop?.ToUpper() },
+				{ "AirlockPressureText", AirlockPressure?.ToUpper() },
+				{ "DoorControlText", DoorControl?.ToUpper() },
+				{ "BarText", Bar?.ToUpper() },
+				{ "NoAirTankAvailableText", NoAirTankAvailable?.ToUpper() },
+				{ "VolumeDescriptionText", VolumeDescription?.ToUpper() },
+				{ "PressurizeDescriptionText", PressurizeDescription?.ToUpper() },
+				{ "DepressurizeDescriptionText", DepressurizeDescription?.ToUpper() },
+				{ "VentActionDescriptionText", VentActionDescription?.ToUpper() },
+				{ "HoldToStabilizeText", HoldToStabilize?.ToUpper() },
+				{ "ObjectsInClusterText", ObjectsInCluster?.ToUpper() },
+				{ "ObjectClusterText", ObjectCluster?.ToUpper() },
+				{ "AddCustomOrbitText", AddCustomOrbit?.ToUpper() },
+				{ "RemoveCustomOrbitText", RemoveOrbit?.ToUpper() },
+				{ "WarpToObjectText", WarpTo?.ToUpper() },
+				{ "ManeuverInitiatedText", ManeuverInitiated?.ToUpper() },
+				{ "PleaseAlignText", AlignShip?.ToUpper() },
+				{ "ZoomOutText", ZoomOut?.ToUpper() },
+				{ "HomeStationText", HomeStation?.ToUpper() },
+				{ "MyShipText", MyShip?.ToUpper() },
+				{ "ScanText", Scan?.ToUpper() },
+				{ "SignalAmplificationText", SignalAmplification?.ToUpper() },
+				{ "AutorizedVesselsText", AuthorizedVessels?.ToUpper() },
+				{ "DistressSignalsText", DistressSignal?.ToUpper() },
+				{ "FTLManeuverText", FtlManeuver?.ToUpper() },
+				{ "CellsSelectedText", CellsSelected?.ToUpper() },
+				{ "WarpDistanceText", WarpDistance?.ToUpper() },
+				{ "ManeuverStatusText", ManeuverStatus?.ToUpper() },
+				{ "ManeuverTimeAdjustmentText", ManeuverTimeAdjustment?.ToUpper() },
+				{ "ActivationTimeText", ActivationTime?.ToUpper() },
+				{ "ArrivalTimeText", ArrivalTime?.ToUpper() },
+				{ "InitializeText", InitializeNavigation?.ToUpper() },
+				{ "ClusterText", ObjectCluster?.ToUpper() },
 				{ "RcsCancelManeuverText", RcsCancelManeuver },
-				{ "UnstableOrbitText", UnstableOrbit.ToUpper() },
-				{ "ArgumentOfPeriapsisText", ArgumentOfPeriapsis.ToUpper() },
-				{ "LongitudeOfAscendingNodeText", LongitudeOfAscendingNode.ToUpper() },
-				{ "InclinationText", Inclination.ToUpper() },
-				{ "PeriapsisText", Periapsis.ToUpper() },
-				{ "ApoapsisText", Apoapsis.ToUpper() },
-				{ "PositionOnOrbitText", PositionOnOrbit.ToUpper() },
-				{ "OrbitalPeriodText", OrbitalPeriod.ToUpper() },
-				{ "StageText", Stage.ToUpper() },
-				{ "WarpSettingsText", WarpSettings.ToUpper() },
-				{ "PleaseSelectManeuverText", SelectManeuver.ToUpper() },
-				{ "RadiationText", Radiation.ToUpper() },
-				{ "CellConsumptionText", CellConsumption.ToUpper() },
-				{ "SignatureText", Signature.ToUpper() },
-				{ "ModuleText", Module.ToUpper() },
-				{ "AvilableDockingPortsText", AvailbaleDockingPorts.ToUpper() },
-				{ "SelectedText", Selected.ToUpper() },
-				{ "RCSFuelLevelText", RCSFuelLevel.ToUpper() },
-				{ "ModulesInRangeText", ModulesInRange.ToUpper() },
-				{ "AvailableModulesText", AvailableModules.ToUpper() },
-				{ "TargetedModuleText", TargetedModule.ToUpper() },
-				{ "AvailablePortsText", AvailablePorts.ToUpper() },
-				{ "DistanceText", Distance.ToUpper() },
-				{ "DirectionalSpeedText", DirectionalSpeed.ToUpper() },
-				{ "ResourceInjectorText", ResourceInjector.ToUpper() + " :" },
-				{ "ResourceInjectorMissingText", ResourceInjector.ToUpper() + " " + Missing.ToUpper() },
-				{ "CheckRcsUtilityAccessText", CheckRcsUtilityAccess.ToUpper() },
-				{ "ChangeDockingPortText", ChangeDockingPort.ToUpper() },
-				{ "ChangeTargetText", ChangeTarget.ToUpper() },
-				{ "ChangeTargetPortText", ChangeTargetPort.ToUpper() },
-				{ "NoTargetModulesInRangeText", NoTargetModulesInRange.ToUpper() },
-				{ "EngineStatusText", EngineStatus.ToUpper() },
-				{ "FuelText", Fuel.ToUpper() },
-				{ "ENGText", ENG.ToUpper() },
-				{ "RCSText", RCS.ToUpper() },
-				{ "FTLText", FTL.ToUpper() },
-				{ "HealthText", Health.ToUpper() },
-				{ "ContactsText", Contacts.ToUpper() },
-				{ "RadarRangeText", RadarRange.ToUpper() },
-				{ "MatchedText", Matched.ToUpper() },
-				{ "AvailableText", Available.ToUpper() },
-				{ "EtaText", ETA.ToUpper() },
-				{ "SystemsText", Systems.ToUpper() },
-				{ "EngineText", Engine.ToUpper() },
-				{ "FuelLevelsText", FuelLevels.ToUpper() },
-				{ "MatchVelocityText", MatchVelocity.ToUpper() },
-				{ "ToggleEngineText", ToggleEngine.ToUpper() },
-				{ "MatchTargetsVelocityText", MatchTargetsVelocity.ToUpper() },
-				{ "CollisionImminentText", CollisionWarning.ToUpper() },
-				{ "OffSpeedAssistantText", OffSpeedAssistant.ToUpper() },
-				{ "ChangeRadarRangeText", ChangeRadarRange.ToUpper() },
-				{ "OffTargetText", OffTarget.ToUpper() },
-				{ "WarningText", Warning.ToUpper() },
-				{ "DrivingTipsText", DrivingTips.ToUpper() },
-				{ "RollText", Roll.ToUpper() },
-				{ "StabilizeText", Stabilize.ToUpper() },
-				{ "HideTipsFromMenuText", HideTipsFromMenu.ToUpper() }
+				{ "UnstableOrbitText", UnstableOrbit?.ToUpper() },
+				{ "ArgumentOfPeriapsisText", ArgumentOfPeriapsis?.ToUpper() },
+				{ "LongitudeOfAscendingNodeText", LongitudeOfAscendingNode?.ToUpper() },
+				{ "InclinationText", Inclination?.ToUpper() },
+				{ "PeriapsisText", Periapsis?.ToUpper() },
+				{ "ApoapsisText", Apoapsis?.ToUpper() },
+				{ "PositionOnOrbitText", PositionOnOrbit?.ToUpper() },
+				{ "OrbitalPeriodText", OrbitalPeriod?.ToUpper() },
+				{ "StageText", Stage?.ToUpper() },
+				{ "WarpSettingsText", WarpSettings?.ToUpper() },
+				{ "PleaseSelectManeuverText", SelectManeuver?.ToUpper() },
+				{ "RadiationText", Radiation?.ToUpper() },
+				{ "CellConsumptionText", CellConsumption?.ToUpper() },
+				{ "SignatureText", Signature?.ToUpper() },
+				{ "ModuleText", Module?.ToUpper() },
+				{ "AvilableDockingPortsText", AvailbaleDockingPorts?.ToUpper() },
+				{ "SelectedText", Selected?.ToUpper() },
+				{ "RCSFuelLevelText", RCSFuelLevel?.ToUpper() },
+				{ "ModulesInRangeText", ModulesInRange?.ToUpper() },
+				{ "AvailableModulesText", AvailableModules?.ToUpper() },
+				{ "TargetedModuleText", TargetedModule?.ToUpper() },
+				{ "AvailablePortsText", AvailablePorts?.ToUpper() },
+				{ "DistanceText", Distance?.ToUpper() },
+				{ "DirectionalSpeedText", DirectionalSpeed?.ToUpper() },
+				{ "ResourceInjectorText", ResourceInjector?.ToUpper() + " :" },
+				{ "ResourceInjectorMissingText", ResourceInjector?.ToUpper() + " " + Missing?.ToUpper() },
+				{ "CheckRcsUtilityAccessText", CheckRcsUtilityAccess?.ToUpper() },
+				{ "ChangeDockingPortText", ChangeDockingPort?.ToUpper() },
+				{ "ChangeTargetText", ChangeTarget?.ToUpper() },
+				{ "ChangeTargetPortText", ChangeTargetPort?.ToUpper() },
+				{ "NoTargetModulesInRangeText", NoTargetModulesInRange?.ToUpper() },
+				{ "EngineStatusText", EngineStatus?.ToUpper() },
+				{ "FuelText", Fuel?.ToUpper() },
+				{ "ENGText", ENG?.ToUpper() },
+				{ "RCSText", RCS?.ToUpper() },
+				{ "FTLText", FTL?.ToUpper() },
+				{ "HealthText", Health?.ToUpper() },
+				{ "ContactsText", Contacts?.ToUpper() },
+				{ "RadarRangeText", RadarRange?.ToUpper() },
+				{ "MatchedText", Matched?.ToUpper() },
+				{ "AvailableText", Available?.ToUpper() },
+				{ "EtaText", ETA?.ToUpper() },
+				{ "SystemsText", Systems?.ToUpper() },
+				{ "EngineText", Engine?.ToUpper() },
+				{ "FuelLevelsText", FuelLevels?.ToUpper() },
+				{ "MatchVelocityText", MatchVelocity?.ToUpper() },
+				{ "ToggleEngineText", ToggleEngine?.ToUpper() },
+				{ "MatchTargetsVelocityText", MatchTargetsVelocity?.ToUpper() },
+				{ "CollisionImminentText", CollisionWarning?.ToUpper() },
+				{ "OffSpeedAssistantText", OffSpeedAssistant?.ToUpper() },
+				{ "ChangeRadarRangeText", ChangeRadarRange?.ToUpper() },
+				{ "OffTargetText", OffTarget?.ToUpper() },
+				{ "WarningText", Warning?.ToUpper() },
+				{ "DrivingTipsText", DrivingTips?.ToUpper() },
+				{ "RollText", Roll?.ToUpper() },
+				{ "StabilizeText", Stabilize?.ToUpper() },
+				{ "HideTipsFromMenuText", HideTipsFromMenu?.ToUpper() }
 			};
 
 			EnvironmentPanelLocalization = new Dictionary<string, string>
 			{
-				{ "EnvironmentalMonitorText", EnvironmentalMonitor.ToUpper() },
-				{ "GravityText", Gravity.ToUpper() },
-				{ "PressureText", Pressure.ToUpper() },
-				{ "BarText", Bar.ToUpper() },
-				{ "AirQualityText", AirQuality.ToUpper() },
-				{ "TemperatureText", Temperature.ToUpper() },
-				{ "UnbreathableDangerText", UnbreathableAtmosphere.ToUpper() },
-				{ "VesselStatusText", VesselStatus.ToUpper() },
-				{ "GravityFailText", GravityFail.ToUpper() },
-				{ "FireText", FireHazard.ToUpper() },
-				{ "BreachText", Breach.ToUpper() },
-				{ "DistressCallActiveText", DistressCallActive.ToUpper() },
-				{ "InDebrisFieldText", InDebrisField.ToUpper() },
-				{ "SelfDestructActiveText", SelfDestruct.ToUpper() + " " + Active.ToUpper() },
-				{ "SystemFailiureText", SystemFailiure.ToUpper() },
-				{ "WarningText", Warning.ToUpper() }
+				{ "EnvironmentalMonitorText", EnvironmentalMonitor?.ToUpper() },
+				{ "GravityText", Gravity?.ToUpper() },
+				{ "PressureText", Pressure?.ToUpper() },
+				{ "BarText", Bar?.ToUpper() },
+				{ "AirQualityText", AirQuality?.ToUpper() },
+				{ "TemperatureText", Temperature?.ToUpper() },
+				{ "UnbreathableDangerText", UnbreathableAtmosphere?.ToUpper() },
+				{ "VesselStatusText", VesselStatus?.ToUpper() },
+				{ "GravityFailText", GravityFail?.ToUpper() },
+				{ "FireText", FireHazard?.ToUpper() },
+				{ "BreachText", Breach?.ToUpper() },
+				{ "DistressCallActiveText", DistressCallActive?.ToUpper() },
+				{ "InDebrisFieldText", InDebrisField?.ToUpper() },
+				{ "SelfDestructActiveText", SelfDestruct?.ToUpper() + " " + Active?.ToUpper() },
+				{ "SystemFailiureText", SystemFailiure?.ToUpper() },
+				{ "WarningText", Warning?.ToUpper() }
 			};
 		}
 
-		public static void ImportFromFile(string fileName)
+		public static void LoadLanguage(int id)
 		{
-			try
+			if (LocalizationFiles.TryGetValue(id, out var value))
 			{
-				ImportFromString(File.ReadAllText(fileName));
+				ImportFromJson(Resources.Load<TextAsset>(value).text);
 			}
-			catch (Exception ex)
+			else
 			{
-				Debug.LogError("Localization import failed " + ex.Message);
+				Debug.LogWarning("Error when loading language. Could not find language.");
 			}
 		}
 
-		public static void ImportFromString(string jsonObject)
+		public static void ImportFromJson(string jsonObject)
 		{
-			try
+			Dictionary<string, string> dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonObject);
+			FieldInfo[] fields = typeof(Localization).GetFields(BindingFlags.Static | BindingFlags.Public);
+			string value;
+			foreach (FieldInfo fieldInfo in fields)
 			{
-				Dictionary<string, string> dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonObject);
-				ImportFromDictionary(dict);
-			}
-			catch (Exception ex)
-			{
-				Debug.LogError("Localization import failed " + ex.Message);
-			}
-		}
-
-		private static void ImportFromDictionary(Dictionary<string, string> dict)
-		{
-			try
-			{
-				FieldInfo[] fields = typeof(Localization).GetFields(BindingFlags.Static | BindingFlags.Public);
-				string value;
-				foreach (FieldInfo fieldInfo in fields)
+				if (fieldInfo.FieldType == typeof(string) && dict.TryGetValue(fieldInfo.Name, out value))
 				{
-					if (fieldInfo.FieldType == typeof(string) && dict.TryGetValue(fieldInfo.Name, out value))
+					fieldInfo.SetValue(null, value);
+				}
+			}
+
+			ScriptableObject[] array =
+				Resources.FindObjectsOfTypeAll(typeof(ScriptableObject)) as ScriptableObject[];
+			foreach (ScriptableObject scriptableObject in array)
+			{
+				FieldInfo[] fields2 = scriptableObject.GetType().GetFields();
+				foreach (FieldInfo fieldInfo2 in fields2)
+				{
+					if (fieldInfo2.FieldType == typeof(string) && dict.TryGetValue(
+						    "SO_" + scriptableObject.GetType().Name + "." + scriptableObject.name + "." +
+						    fieldInfo2.Name, out value))
 					{
-						fieldInfo.SetValue(null, value);
+						fieldInfo2.SetValue(scriptableObject, value);
 					}
 				}
-
-				ScriptableObject[] array =
-					Resources.FindObjectsOfTypeAll(typeof(ScriptableObject)) as ScriptableObject[];
-				foreach (ScriptableObject scriptableObject in array)
-				{
-					FieldInfo[] fields2 = scriptableObject.GetType().GetFields();
-					foreach (FieldInfo fieldInfo2 in fields2)
-					{
-						if (fieldInfo2.FieldType == typeof(string) && dict.TryGetValue(
-							    "SO_" + scriptableObject.GetType().Name + "." + scriptableObject.name + "." +
-							    fieldInfo2.Name, out value))
-						{
-							fieldInfo2.SetValue(scriptableObject, value);
-						}
-					}
-				}
-
-				Initialize();
-				ControlsRebinder.Initialize();
 			}
-			catch (Exception ex)
-			{
-				Debug.LogError("Localization import failed " + ex.Message);
-			}
+
+			GenerateDictionaries();
 		}
-
 
 		public static void SaveToFile(string fileName)
 		{
-			try
-			{
-				File.WriteAllText(fileName, GetJsonString());
-			}
-			catch (Exception ex)
-			{
-				Debug.LogError("Localization import failed " + ex.Message);
-			}
+			File.WriteAllText(fileName, GetJsonString());
 		}
 
 		private static string GetJsonString()
 		{
-			try
+			// Gets all static or public fields in this class and puts them in a dictionary of keys.
+			Dictionary<string, string> localisationKeys = new Dictionary<string, string>();
+			FieldInfo[] fields = typeof(Localization).GetFields(BindingFlags.Static | BindingFlags.Public);
+			foreach (FieldInfo fieldInfo in fields)
 			{
-				// Gets all static or public fields in this class and puts them in a dictionary of keys.
-				Dictionary<string, string> localisationKeys = new Dictionary<string, string>();
-				FieldInfo[] fields = typeof(Localization).GetFields(BindingFlags.Static | BindingFlags.Public);
-				foreach (FieldInfo fieldInfo in fields)
+				if (fieldInfo.FieldType == typeof(string))
 				{
-					if (fieldInfo.FieldType == typeof(string))
-					{
-						localisationKeys[fieldInfo.Name] = (string)fieldInfo.GetValue(null);
-					}
+					localisationKeys[fieldInfo.Name] = (string)fieldInfo.GetValue(null);
 				}
-
-				// Gets all fields on scriptable objects in the resources folder and adds them as keys.
-				ScriptableObject[] scriptableObjects =
-					Resources.FindObjectsOfTypeAll(typeof(ScriptableObject)) as ScriptableObject[];
-				Debug.Assert(scriptableObjects != null, nameof(scriptableObjects) + " != null");
-				foreach (ScriptableObject scriptableObject in scriptableObjects)
-				{
-					FieldInfo[] fields2 = scriptableObject.GetType().GetFields();
-					foreach (FieldInfo fieldInfo2 in fields2)
-					{
-						if (fieldInfo2.CustomAttributes.FirstOrDefault((CustomAttributeData m) =>
-							    m.AttributeType == typeof(LocalizeField)) != null &&
-						    fieldInfo2.FieldType == typeof(string) &&
-						    (string)fieldInfo2.GetValue(scriptableObject) != string.Empty)
-						{
-							localisationKeys[
-								"SO_" + scriptableObject.GetType().Name + "." + scriptableObject.name + "." +
-								fieldInfo2.Name] = (string)fieldInfo2.GetValue(scriptableObject);
-						}
-					}
-				}
-
-				return JsonConvert.SerializeObject(localisationKeys, Formatting.Indented);
-			}
-			catch (Exception ex)
-			{
-				Debug.LogError("Localization import failed " + ex.Message);
 			}
 
-			return null;
+			// Gets all fields on scriptable objects in the resources folder and adds them as keys.
+			ScriptableObject[] scriptableObjects =
+				Resources.FindObjectsOfTypeAll(typeof(ScriptableObject)) as ScriptableObject[];
+			Debug.Assert(scriptableObjects != null, nameof(scriptableObjects) + " != null");
+			foreach (ScriptableObject scriptableObject in scriptableObjects)
+			{
+				FieldInfo[] fields2 = scriptableObject.GetType().GetFields();
+				foreach (FieldInfo fieldInfo2 in fields2)
+				{
+					if (fieldInfo2.CustomAttributes.FirstOrDefault((CustomAttributeData m) =>
+						    m.AttributeType == typeof(LocalizeField)) != null &&
+					    fieldInfo2.FieldType == typeof(string) &&
+					    (string)fieldInfo2.GetValue(scriptableObject) != string.Empty)
+					{
+						localisationKeys[
+							"SO_" + scriptableObject.GetType().Name + "." + scriptableObject.name + "." +
+							fieldInfo2.Name] = (string)fieldInfo2.GetValue(scriptableObject);
+					}
+				}
+			}
+
+			return JsonConvert.SerializeObject(localisationKeys, Formatting.Indented);
 		}
 
 		public static string GetLocalizedField(string fieldName, bool useDefault = false)
 		{
-			try
+			var fieldValue = typeof(Localization).GetField(fieldName).GetValue(null).ToString();
+
+			if (useDefault && fieldValue == null)
 			{
-				return typeof(Localization).GetField(fieldName).GetValue(null).ToString();
+				return fieldName;
 			}
-			catch
-			{
-				return !useDefault ? null : fieldName;
-			}
+
+			return fieldValue;
 		}
 	}
 }

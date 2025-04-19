@@ -48,17 +48,6 @@ namespace ZeroGravity
 			}
 		}
 
-		public static void GetProperty<T>(string propertyName, ref T value)
-		{
-			try
-			{
-				value = GetProperty<T>(propertyName);
-			}
-			catch
-			{
-			}
-		}
-
 		public static void SetProperty<T>(string propertyName, T propertyValue, string filePath = null)
 		{
 			filePath = Path.Combine((filePath == null) ? string.Empty : filePath, _fileName);

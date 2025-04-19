@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Nakama;
 using OpenHellion;
 using OpenHellion.Net;
@@ -281,7 +282,7 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public async void GetPlayersForInvite(bool getNakamaFriends, bool getPlayerFromServer,
+		public async UniTaskVoid GetPlayersForInvite(bool getNakamaFriends, bool getPlayerFromServer,
 			GetInvitedPlayersDelegate onPlayersLoaded)
 		{
 			if (SpawnType == SpawnPointType.SimpleSpawn || State == SpawnPointState.Authorized ||
@@ -316,7 +317,7 @@ namespace ZeroGravity.LevelDesign
 
 			if (getPlayerFromServer)
 			{
-				NetworkController.SendToGameServer(new PlayersOnServerRequest
+				NetworkController.Send(new PlayersOnServerRequest
 				{
 					SpawnPointID = new VesselObjectID
 					{
@@ -328,7 +329,7 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public async void ParsePlayersOnServerResponse(PlayersOnServerResponse data)
+		public async UniTaskVoid ParsePlayersOnServerResponse(PlayersOnServerResponse data)
 		{
 			if (onPlayersLodedDelegate == null)
 			{

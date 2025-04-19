@@ -1080,7 +1080,7 @@ namespace ZeroGravity.ShipComponents
 					LastKnownOrbit =
 						(m.Key as SpaceObjectVessel).LastKnownMapOrbit.GetOrbitData(m.Key as SpaceObjectVessel)
 				}).ToList();
-			NetworkController.SendToGameServer(new NavigationMapDetailsMessage
+			NetworkController.Send(new NavigationMapDetailsMessage
 			{
 				NavMapDetails = navigationMapDetails
 			});

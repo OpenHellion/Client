@@ -51,13 +51,13 @@ namespace ZeroGravity.Objects
 
 					if (value != null)
 					{
-						World.AmbientSounds.SwitchAmbience(value.Ambience);
-						World.AmbientSounds.SetEnvironment(value.EnvironmentReverb);
+						Globals.SoundEffect.SwitchAmbience(value.Ambience);
+						Globals.SoundEffect.SetEnvironment(value.EnvironmentReverb);
 					}
 					else
 					{
-						World.AmbientSounds.SwitchAmbience(SoundManager.SpaceAmbience);
-						World.AmbientSounds.SetEnvironment(SoundManager.SpaceEnvironment);
+						Globals.SoundEffect.SwitchAmbience(SoundManager.SpaceAmbience);
+						Globals.SoundEffect.SetEnvironment(SoundManager.SpaceEnvironment);
 					}
 
 					World.InGameGUI.HelmetHud.WarningsUpdate();

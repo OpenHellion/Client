@@ -830,7 +830,7 @@ namespace ZeroGravity.Objects
 					{
 						if (data.Velocity != null)
 						{
-							DynamicObj.rigidBody.velocity = data.Velocity.ToVector3();
+							DynamicObj._rigidBody.velocity = data.Velocity.ToVector3();
 						}
 
 						if (data.Torque != null)
@@ -1723,7 +1723,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			NetworkController.SendToGameServer(new ExplosionMessage
+			NetworkController.Send(new ExplosionMessage
 			{
 				AffectedGUIDs = hashSet.ToArray(),
 				ItemGUID = GUID,

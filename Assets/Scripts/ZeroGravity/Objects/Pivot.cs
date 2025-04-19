@@ -12,14 +12,14 @@ namespace ZeroGravity.Objects
 
 		public SpaceObjectType ChildType;
 
-		private SpaceObjectType pivotType;
+		private SpaceObjectType _pivotType;
 
-		public override SpaceObjectType Type => pivotType;
+		public override SpaceObjectType Type => _pivotType;
 
 		public static Pivot Create(SpaceObjectType pivotType, ObjectTransform trans, bool isMainObject)
 		{
 			Pivot pivot = CreateImpl(pivotType, trans.GUID, trans, isMainObject) as Pivot;
-			pivot.pivotType = pivotType;
+			pivot._pivotType = pivotType;
 			switch (pivotType)
 			{
 				case SpaceObjectType.PlayerPivot:

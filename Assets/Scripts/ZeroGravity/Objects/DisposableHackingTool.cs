@@ -18,12 +18,11 @@ namespace ZeroGravity.Objects
 
 		public void SendPackage()
 		{
-			DynamicObject dynamicObj = DynamicObj;
 			DisposableHackingToolStats statsData = new DisposableHackingToolStats
 			{
 				Use = true
 			};
-			dynamicObj.SendStatsMessage(null, statsData);
+			DynamicObj.SendStatsMessage(null, statsData);
 		}
 
 		public override DynamicObjectAuxData GetAuxData()

@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using OpenHellion;
 using OpenHellion.Net;
 using OpenHellion.Social.RichPresence;
 using OpenHellion.UI;
@@ -397,7 +399,7 @@ namespace ZeroGravity.Objects
 
 			if (_shipStatsChanged)
 			{
-				NetworkController.SendToGameServer(_shipStatsMsg);
+				NetworkController.Send(_shipStatsMsg);
 				CreateNewStatsMessage();
 			}
 
@@ -604,7 +606,7 @@ namespace ZeroGravity.Objects
 			{
 				maneuverCourseRequestData.ShipGUID = Guid;
 				maneuverCourseRequestData.Activate = false;
-				NetworkController.SendToGameServer(maneuverCourseRequestData);
+				NetworkController.Send(maneuverCourseRequestData);
 			}
 		}
 
@@ -615,7 +617,7 @@ namespace ZeroGravity.Objects
 			if (maneuverCourseRequestData != null)
 			{
 				maneuverCourseRequestData.ShipGUID = Guid;
-				NetworkController.SendToGameServer(maneuverCourseRequestData);
+				NetworkController.Send(maneuverCourseRequestData);
 			}
 		}
 
@@ -623,7 +625,7 @@ namespace ZeroGravity.Objects
 		{
 			if (CourseWaitingActivation > 0)
 			{
-				NetworkController.SendToGameServer(new ManeuverCourseRequest
+				NetworkController.Send(new ManeuverCourseRequest
 				{
 					CourseGUID = CourseWaitingActivation,
 					ShipGUID = Guid,
@@ -1496,13 +1498,13 @@ namespace ZeroGravity.Objects
 				_sceneLoadStarted = true;
 				transform.parent = World.ShipExteriorRoot.transform;
 				gameObject.SetActive(value: true);
-				StartCoroutine(LoadAllShipScenesCoroutine(spawnShipResponseData));
+				LoadAllShipScenesAsync(spawnShipResponseData).Forget();
 			}
 		}
 
-		private IEnumerator LoadAllShipScenesCoroutine(SpawnShipResponseData res)
+		private async UniTaskVoid LoadAllShipScenesAsync(SpawnShipResponseData res)
 		{
-			yield return StartCoroutine(LoadShipScenesCoroutine(isMainShip: false, res.VesselObjects));
+			await LoadAsync(isMainShip: false, res.VesselObjects);
 			if (res.DockedVessels != null && res.DockedVessels.Count > 0)
 			{
 				foreach (DockedVesselData dockVess in res.DockedVessels)
@@ -1511,8 +1513,7 @@ namespace ZeroGravity.Objects
 					childShip.IsDummyObject = false;
 					_sceneLoadStarted = true;
 					childShip.VesselData = dockVess.Data;
-					yield return StartCoroutine(
-						childShip.LoadShipScenesCoroutine(isMainShip: false, dockVess.VesselObjects));
+					await childShip.LoadAsync(isMainShip: false, dockVess.VesselObjects);
 					childShip.transform.parent = ConnectedObjectsRoot.transform;
 				}
 			}
@@ -1572,14 +1573,14 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		private IEnumerator LoadStructureScenes(GameScenes.SceneId sceneID, Transform rootTransform,
+		private async UniTask LoadStructureScenesAsync(GameScenes.SceneId sceneID, Transform rootTransform,
 			VesselObjects shipObjects)
 		{
 			Debug.LogFormat("Starting load of structure scene: {0}.", sceneID.ToString());
-			yield return StartCoroutine(World.SceneLoader.LoadSceneCoroutine(SceneLoader.SceneType.Structure, (long)sceneID));
+			await Globals.SceneLoader.LoadSceneAsync(SceneLoader.SceneType.Structure, (long)sceneID);
 			Debug.LogFormat("Ending load of structure scene: {0}.", sceneID.ToString());
 
-			GameObject sceneRoot = World.SceneLoader.GetLoadedScene(SceneLoader.SceneType.Structure, sceneID);
+			GameObject sceneRoot = Globals.SceneLoader.GetLoadedScene(SceneLoader.SceneType.Structure, sceneID);
 			sceneRoot.transform.SetParent(rootTransform);
 			sceneRoot.transform.localRotation = Quaternion.identity;
 			RootObject = sceneRoot;
@@ -1701,19 +1702,17 @@ namespace ZeroGravity.Objects
 				MathHelper.RandomRange(0f, MathHelper.Clamp(1f / damagePointsFrequency, 1f, 10f)));
 		}
 
-		public IEnumerator LoadShipScenesCoroutine(bool isMainShip, VesselObjects shipObjects)
+		public async UniTask LoadAsync(bool isMainShip, VesselObjects shipObjects)
 		{
 			if (isMainShip)
 			{
-				yield return StartCoroutine(
-					LoadStructureScenes(VesselData.SceneID, GeometryRoot.transform, shipObjects));
+				await LoadStructureScenesAsync(VesselData.SceneID, GeometryRoot.transform, shipObjects);
 				UpdateShipObjects(shipObjects, isInitialize: true);
 			}
 			else
 			{
 				World.InGameGUI.ToggleBusyLoading(isActive: true);
-				yield return StartCoroutine(
-					LoadStructureScenes(VesselData.SceneID, GeometryRoot.transform, shipObjects));
+				await LoadStructureScenesAsync(VesselData.SceneID, GeometryRoot.transform, shipObjects);
 				UpdateShipObjects(shipObjects, isInitialize: true);
 				World.InGameGUI.ToggleBusyLoading(isActive: false);
 			}

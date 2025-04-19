@@ -114,9 +114,9 @@ namespace ZeroGravity.ShipComponents
 								MathHelper.RandomRange(-1.0, 1.0, hashCode),
 								MathHelper.RandomRange(-1.0, 1.0, hashCode))
 							.Normalized * num8;
-						Vector3D position = ((!(vector3D3.Magnitude > num7 - num8))
+						Vector3D position = (!(vector3D3.Magnitude > num7 - num8))
 							? (target.Position + vector3D4)
-							: (target.Position + Vector3D.Project(vector3D4, -vector3D3)));
+							: (target.Position + Vector3D.Project(vector3D4, -vector3D3));
 						World.Map.InitializeMapObjectFuzzyScan(position, num8 * 2.0, spaceObjectVessel);
 					}
 				}

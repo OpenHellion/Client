@@ -27,7 +27,7 @@ namespace ZeroGravity.Network
 
 		public List<CharacterMovementMessage> CharactersMovement;
 
-		public List<DynamicObectMovementMessage> DynamicObjectsMovement;
+		public List<DynamicObjectMovementMessage> DynamicObjectsMovement;
 
 		public List<CorpseMovementMessage> CorpsesMovement;
 

@@ -20,7 +20,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using Cysharp.Threading.Tasks;
 using OpenHellion.Social;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -100,7 +102,7 @@ namespace OpenHellion.UI
 			_preloadBackground.style.backgroundImage = new StyleBackground(_preloadImages[0]);
 
 			Debug.Assert(_authenticateButton is not null);
-			_authenticateButton.clicked += EnterGameCredentials;
+			_authenticateButton.clicked += UniTask.Action(EnterGameCredentials);
 
 			Debug.Assert(_createAccountScreenButton is not null);
 			_createAccountScreenButton.clicked += OpenCreateAccountScreen;
@@ -109,7 +111,7 @@ namespace OpenHellion.UI
 			_createScreenBackButton.clicked += OpenAuthenticationScreen;
 
 			Debug.Assert(_createScreenButton is not null);
-			_createScreenButton.clicked += CreateNewAccount;
+			_createScreenButton.clicked += UniTask.Action(CreateNewAccount);
 		}
 
 		private void OnDestroy()
@@ -127,7 +129,7 @@ namespace OpenHellion.UI
 			_authenticationScreen.visible = true;
 		}
 
-		private async void EnterGameCredentials()
+		private async UniTaskVoid EnterGameCredentials()
 		{
 			string email = _authenticationEmail.value;
 			string password = _authenticationPassword.value;
@@ -162,7 +164,7 @@ namespace OpenHellion.UI
 			_createAccountScreen.visible = true;
 		}
 
-		private async void CreateNewAccount()
+		private async UniTaskVoid CreateNewAccount()
 		{
 			if (!_createScreenConsent.value)
 			{
@@ -188,7 +190,6 @@ namespace OpenHellion.UI
 			}
 
 			bool success = await NakamaClient.CreateAccount(email, password, username, displayName);
-
 
 			// Clear the contents for next time.
 			_createScreenUsername.value = string.Empty;

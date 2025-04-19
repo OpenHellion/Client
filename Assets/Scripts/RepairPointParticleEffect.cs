@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using OpenHellion;
 using UnityEngine;
 
 public class RepairPointParticleEffect : MonoBehaviour
@@ -15,13 +16,7 @@ public class RepairPointParticleEffect : MonoBehaviour
 	[Tooltip("Child particles on which to change gravity.")]
 	public List<ParticleEffectIntensity> ChildParticles;
 
-	public SoundEffect SoundEffect;
-
-	private bool testGravity;
-
-	public void Update()
-	{
-	}
+	private bool _testGravity;
 
 	public void Test()
 	{
@@ -30,8 +25,8 @@ public class RepairPointParticleEffect : MonoBehaviour
 
 	public void TestGravity()
 	{
-		testGravity = !testGravity;
-		SetGravity(testGravity);
+		_testGravity = !_testGravity;
+		SetGravity(_testGravity);
 	}
 
 	public void Awake()
@@ -49,10 +44,7 @@ public class RepairPointParticleEffect : MonoBehaviour
 		}
 
 		Play();
-		if (SoundEffect != null)
-		{
-			SoundEffect.SetRTPCValue(SoundManager.RepairPointIntensity, intensity);
-		}
+		Globals.SoundEffect.SetRTPCValue(SoundManager.RepairPointIntensity, intensity);
 
 		ParticleSystem.MainModule main = Effect.Particle.main;
 		ParticleSystem.EmissionModule emission = Effect.Particle.emission;

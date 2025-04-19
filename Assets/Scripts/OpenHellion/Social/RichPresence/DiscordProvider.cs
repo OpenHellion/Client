@@ -1,6 +1,6 @@
 // DiscordProvider.cs
 //
-// Copyright (C) 2023, OpenHellion contributors
+// Copyright (C) 2024, OpenHellion contributors
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,11 +17,9 @@
 
 using System;
 using System.Collections.Generic;
-using OpenHellion;
 using Discord;
 using OpenHellion.IO;
 using OpenHellion.Net.Message;
-using OpenHellion.UI;
 using UnityEngine;
 using ZeroGravity;
 using ZeroGravity.Network;
@@ -60,7 +58,7 @@ namespace OpenHellion.Social.RichPresence
 
 		private static readonly List<string> Descriptions = new()
 		{
-			"Building a huuuuuge station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job",
+			"Building station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job",
 			"Repairing a hull breach"
 		};
 
@@ -95,10 +93,10 @@ namespace OpenHellion.Social.RichPresence
 			_activityManager.RegisterCommand();
 
 			// Callbacks.
-			_activityManager.OnActivitySpectate += JoinCallback;
-			_activityManager.OnActivityJoin += JoinCallback;
-			_activityManager.OnActivityInvite += InviteCallback;
-			_activityManager.OnActivityJoinRequest += JoinRequestCallback;
+			_activityManager.OnActivitySpectate += OnJoining;
+			_activityManager.OnActivityJoin += OnJoining;
+			_activityManager.OnActivityInvite += OnInviteReceived;
+			_activityManager.OnActivityJoinRequest += OnJoinRequestReceived;
 
 			_userManager = _discord.GetUserManager();
 
@@ -120,12 +118,13 @@ namespace OpenHellion.Social.RichPresence
 		}
 
 		// When we are joining a game.
-		// TODO: Add invites.
-		private void JoinCallback(string secret)
+		private void OnJoining(string secret)
 		{
 			try
 			{
 				InviteMessage inviteMessage = JsonSerialiser.Deserialize<InviteMessage>(secret);
+				GameStarter gameStarter = GameStarter.Create(inviteMessage);
+				gameStarter.FindServerAndConnect().Forget();
 			}
 			catch (Exception ex)
 			{
@@ -134,37 +133,18 @@ namespace OpenHellion.Social.RichPresence
 		}
 
 		// When we get an invite to a game.
-		private void InviteCallback(ActivityActionType type, ref User user, ref Activity activity2)
+		private void OnInviteReceived(ActivityActionType type, ref User user, ref Activity activity2)
 		{
 			// TODO: Make this safer.
-			_activityManager.AcceptInvite(user.Id, result => { Debug.LogFormat("AcceptInvite {0}", result); });
+			//_activityManager.AcceptInvite(user.Id, result => { Debug.LogFormat("AcceptInvite {0}", result); });
 		}
 
 		// When we get an ask to join request from another user.
-		private void JoinRequestCallback(ref User user)
+		private void OnJoinRequestReceived(ref User user)
 		{
 			Debug.Log($"Discord: Join request {user.Username}#{user.Discriminator}: {user.Id}");
-			_joinUser = user;
 
-			RequestRespondYes();
-		}
-
-		private void RequestRespondYes()
-		{
-			Debug.Log("Discord: Responding yes to Ask to Join request");
-			_activityManager.SendRequestReply(_joinUser.Id, ActivityJoinRequestReply.Yes, res =>
-			{
-				if (res == Result.Ok)
-				{
-					Console.WriteLine("Responded successfully");
-				}
-			});
-		}
-
-		private void RequestRespondNo()
-		{
-			Debug.Log("Discord: Responding no to Ask to Join request");
-			_activityManager.SendRequestReply(_joinUser.Id, ActivityJoinRequestReply.No, res =>
+			_activityManager.SendRequestReply(user.Id, ActivityJoinRequestReply.Yes, res =>
 			{
 				if (res == Result.Ok)
 				{

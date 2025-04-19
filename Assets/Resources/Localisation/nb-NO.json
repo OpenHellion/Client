@@ -845,5 +845,6 @@
   "SpawnMiningDescription": "Start with a ship and basic equipment close to a random ore rich asteroid",
   "SpawnFreeRoamDescription": "Start with a ship and basic equipment on a random stable orbit",
   "SpawnPremadeStationDescription": "Start with a ship and basic equipment close to a random premade station",
-  "SpawnDoomedDescription": "Start with a ship and basic equipment on a collision orbit close to a Doomed outpost"
+  "SpawnDoomedDescription": "Start with a ship and basic equipment on a collision orbit close to a Doomed outpost",
+   "ConnectionTimedOut": "Tidsavbrudd ved tilkobling..."
 }

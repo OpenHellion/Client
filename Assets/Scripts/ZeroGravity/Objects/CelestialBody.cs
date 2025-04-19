@@ -1,3 +1,4 @@
+using System;
 using OpenHellion;
 using UnityEngine;
 using ZeroGravity.Math;
@@ -113,31 +114,45 @@ namespace ZeroGravity.Objects
 
 		public void CreateSunSpaceGameObject(Transform sunRoot)
 		{
-			GameObject gameObject = Object.Instantiate(Resources.Load(PrefabPath) as GameObject);
-			gameObject.transform.SetParent(sunRoot);
-			gameObject.SetLayerRecursively("Sun");
-			gameObject.name = Name;
-			float num = (float)(Orbit.Radius / 149597870.7);
-			gameObject.transform.localScale = new Vector3(num, num, num);
+			try
+			{
+				GameObject gameObject = GameObject.Instantiate(Resources.Load(PrefabPath) as GameObject);
+				gameObject.transform.SetParent(sunRoot);
+				gameObject.SetLayerRecursively("Sun");
+				gameObject.name = Name;
+				float num = (float)(Orbit.Radius / 149597870.7);
+				gameObject.transform.localScale = new Vector3(num, num, num);
+			}
+			catch (ArgumentException)
+			{
+				Debug.LogErrorFormat("Could not load {0} with path: {1}", Name, PrefabPath);
+			}
 		}
 
 		public void CreatePlanetsSpaceGameObject(Transform planetsRoot)
 		{
-			GameObject gameObject = new GameObject(Name);
-			GameObject gameObject2 = Object.Instantiate(Resources.Load(PrefabPath) as GameObject);
-			gameObject2.transform.parent = gameObject.transform;
-			gameObject.SetLayerRecursively("Planets");
-			gameObject.transform.SetParent(planetsRoot);
-			gameObject2.name = Name + "_Visual";
-			float num = (float)(Orbit.Radius * 2.0 / 1000000.0);
-			gameObject2.transform.localScale = new Vector3(num, num, num);
-			PlanetsSpaceGameObject = gameObject;
-			PlanetsSpaceGameObjectVisual = gameObject2;
+			try
+			{
+				GameObject parent = new GameObject(Name);
+				GameObject child = GameObject.Instantiate(Resources.Load(PrefabPath) as GameObject);
+				child.transform.parent = parent.transform;
+				parent.SetLayerRecursively("Planets");
+				parent.transform.SetParent(planetsRoot);
+				child.name = Name + "_Visual";
+				float num = (float)(Orbit.Radius * 2.0 / 1000000.0);
+				child.transform.localScale = new Vector3(num, num, num);
+				PlanetsSpaceGameObject = parent;
+				PlanetsSpaceGameObjectVisual = child;
+			}
+			catch (ArgumentException)
+			{
+				Debug.LogErrorFormat("Could not load planet {0} with path: {1}", Name, PrefabPath);
+			}
 		}
 
 		public void DestroyPlanetsSpaceGameObject()
 		{
-			Object.Destroy(PlanetsSpaceGameObject);
+			GameObject.Destroy(PlanetsSpaceGameObject);
 			PlanetsSpaceGameObject = null;
 			PlanetsSpaceGameObjectVisual = null;
 		}

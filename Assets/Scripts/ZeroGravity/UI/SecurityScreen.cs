@@ -261,7 +261,7 @@ namespace ZeroGravity.UI
 		private void GetPlayerList()
 		{
 			PurgeList();
-			SecuritySystem.GetPlayersForAuthorization(getFriends: true, getPlayerFromServer: true, UpdatePlayerList);
+			SecuritySystem.GetPlayersForAuthorization(getFriends: true, getPlayerFromServer: true, UpdatePlayerList).Forget();
 		}
 
 		public void UpdateSecurityList()
@@ -324,7 +324,7 @@ namespace ZeroGravity.UI
 
 		public void ConfirmPlayerPromotion()
 		{
-			NetworkController.SendToGameServer(new VesselSecurityRequest
+			NetworkController.Send(new VesselSecurityRequest
 			{
 				VesselGUID = SecuritySystem.ParentShip.Guid,
 				AddPlayerId = _selectedCrewman.PlayerId,
@@ -347,7 +347,7 @@ namespace ZeroGravity.UI
 				m.Rank == AuthorizedPersonRank.CommandingOfficer);
 			if (commandingOfficer == null || commandingOfficer.PlayerId == MyPlayer.Instance.PlayerId)
 			{
-				NetworkController.SendToGameServer(new VesselSecurityRequest
+				NetworkController.Send(new VesselSecurityRequest
 				{
 					VesselGUID = SecuritySystem.ParentShip.Guid,
 					AddPlayerId = MyPlayer.Instance.PlayerId,
@@ -387,7 +387,7 @@ namespace ZeroGravity.UI
 			SecuritySystem.RemovePerson(ourPerson);
 			AuthorizedPerson crewman =
 				SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.Crewman);
-			NetworkController.SendToGameServer(new VesselSecurityRequest
+			NetworkController.Send(new VesselSecurityRequest
 			{
 				VesselGUID = SecuritySystem.ParentShip.Guid,
 				AddPlayerId = crewman.PlayerId,

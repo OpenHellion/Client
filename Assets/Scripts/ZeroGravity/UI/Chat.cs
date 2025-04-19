@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using OpenHellion;
 using OpenHellion.IO;
 using OpenHellion.Net;
@@ -67,12 +68,12 @@ namespace ZeroGravity.UI
 				    !_world.InGameGUI.IsInputFieldIsActive && !_world.InGameGUI.OverlayCanvasIsOn &&
 				    !ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Drop))
 				{
-					ShowChat(true);
+					CloseChat();
 				}
 
 				if (_world.IsChatOpened && Keyboard.current.enterKey.wasPressedThisFrame)
 				{
-					ShowChat(false);
+					CloseChat();
 				}
 
 				if (_world.IsChatOpened && Mouse.current.scroll.y.ReadValue().IsNotEpsilonZero() &&
@@ -193,7 +194,7 @@ namespace ZeroGravity.UI
 				TextChatMessage textChatMessage = new TextChatMessage();
 				textChatMessage.MessageText = messageText;
 				textChatMessage.Local = true;
-				NetworkController.SendToGameServer(textChatMessage);
+				NetworkController.Send(textChatMessage);
 			}
 			else
 			{
@@ -221,7 +222,7 @@ namespace ZeroGravity.UI
 		}
 
 		// Shows or hides the chat box.
-		private void ShowChat(bool show)
+		private async UniTaskVoid ShowChat(bool show)
 		{
 			if (Settings.SettingsData.GameSettings.DisableChat)
 			{
@@ -241,7 +242,7 @@ namespace ZeroGravity.UI
 				return;
 			}
 
-			ParseMessageCommands();
+			await ParseMessageCommands();
 
 			if (ChatInput.text.Length > 0)
 			{
@@ -259,13 +260,12 @@ namespace ZeroGravity.UI
 		}
 
 		// Parses message and modifies the state directly.
-		private async void ParseMessageCommands()
+		private async UniTask ParseMessageCommands()
 		{
 			if (ChatInput.text.Equals("/l", StringComparison.OrdinalIgnoreCase))
 			{
 				_chatState = ChatState.Local;
 				ChatInput.text = string.Empty;
-				ShowChat(true);
 			}
 			else if (ChatInput.text.Equals("/g", StringComparison.OrdinalIgnoreCase))
 			{
@@ -273,7 +273,6 @@ namespace ZeroGravity.UI
 				{
 					_chatState = ChatState.Global;
 					ChatInput.text = string.Empty;
-					ShowChat(true);
 				}
 				else
 				{
@@ -286,7 +285,6 @@ namespace ZeroGravity.UI
 				{
 					_chatState = ChatState.Party;
 					ChatInput.text = string.Empty;
-					ShowChat(true);
 				}
 				else
 				{
@@ -299,7 +297,7 @@ namespace ZeroGravity.UI
 
 		public void CloseChat()
 		{
-			ShowChat(false);
+			ShowChat(false).Forget();
 			if (MyPlayer.Instance.LockedToTrigger is null)
 			{
 				MyPlayer.Instance.FpsController.ToggleMovement(true);

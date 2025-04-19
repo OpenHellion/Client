@@ -5,7 +5,7 @@ using ZeroGravity.Network;
 namespace ZeroGravity.Objects
 {
 	/// <summary>
-	///		Unfinished class from the original developers. Probably intended to be a large space station with the ability to park ships and such.
+	///		Unfinished class from the original developers. Probably intended split station code from ship code.
 	///		Might be cool to implement later.
 	/// </summary>
 	public class Station : SpaceObjectVessel

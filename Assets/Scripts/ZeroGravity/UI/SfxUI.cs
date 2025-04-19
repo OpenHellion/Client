@@ -2,26 +2,12 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using OpenHellion.UI;
+using OpenHellion;
 
 namespace ZeroGravity.UI
 {
 	public class SfxUI : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
     {
-    	private static InGameGUI _inGameGUI;
-
-    	private void Awake()
-	    {
-		    GameObject inGameGui = GameObject.Find("/InGameGUI");
-		    if (inGameGui is null)
-		    {
-			    Debug.LogError("SFX UI could not find InGameGUI GameObject in scene.");
-			    Destroy(this);
-			    return;
-		    }
-
-		    _inGameGUI ??= inGameGui.GetComponent<InGameGUI>();
-    	}
-
     	public enum ButtonType
     	{
     		Default = 0,
@@ -35,15 +21,15 @@ namespace ZeroGravity.UI
     	{
     		if (Type == ButtonType.Cancel)
     		{
-    			_inGameGUI.SoundEffect.Play(1);
+    			Globals.SoundEffect.Play(1);
     		}
     		else if (Type == ButtonType.SpawnPoint)
     		{
-    			_inGameGUI.SoundEffect.Play(1);
+    			Globals.SoundEffect.Play(1);
     		}
     		else
     		{
-    			_inGameGUI.SoundEffect.Play(1);
+    			Globals.SoundEffect.Play(1);
     		}
     	}
 
@@ -51,15 +37,15 @@ namespace ZeroGravity.UI
     	{
     		if (Type == ButtonType.Cancel)
     		{
-    			_inGameGUI.SoundEffect.Play(1);
+    			Globals.SoundEffect.Play(1);
     		}
     		else if (Type == ButtonType.SpawnPoint)
     		{
-    			_inGameGUI.SoundEffect.Play(0);
+    			Globals.SoundEffect.Play(0);
     		}
     		else
     		{
-    			_inGameGUI.SoundEffect.Play(0);
+    			Globals.SoundEffect.Play(0);
     		}
     	}
     }

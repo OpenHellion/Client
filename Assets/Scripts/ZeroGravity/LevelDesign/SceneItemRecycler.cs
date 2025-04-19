@@ -91,7 +91,7 @@ namespace ZeroGravity.LevelDesign
 			yield return new WaitForSeconds(RecycleDelay);
 			if (BaseVesselSystem.Status == SystemStatus.Online && !(Item == null))
 			{
-				NetworkController.SendToGameServer(new RecycleItemMessage
+				NetworkController.Send(new RecycleItemMessage
 				{
 					ID = new VesselObjectID(ParentVessel.Guid, base.InSceneID),
 					GUID = Item.GUID,
@@ -176,7 +176,7 @@ namespace ZeroGravity.LevelDesign
 			}
 
 			RecyclerUI.ShowResults(item);
-			NetworkController.SendToGameServer(new RecycleItemMessage
+			NetworkController.Send(new RecycleItemMessage
 			{
 				ID = new VesselObjectID(ParentVessel.Guid, base.InSceneID),
 				GUID = item.GUID

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Nakama;
 using OpenHellion;
 using OpenHellion.Net;
@@ -43,7 +44,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (_parentShip is not null && !newName.IsNullOrEmpty())
 			{
-				NetworkController.SendToGameServer(new VesselSecurityRequest
+				NetworkController.Send(new VesselSecurityRequest
 				{
 					VesselGUID = _parentShip.Guid,
 					VesselName = newName
@@ -59,7 +60,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void AddPerson(AuthorizedPerson player, AuthorizedPersonRank newRank)
 		{
-			NetworkController.SendToGameServer(new VesselSecurityRequest
+			NetworkController.Send(new VesselSecurityRequest
 			{
 				VesselGUID = _parentShip.Guid,
 				AddPlayerId = player.PlayerId,
@@ -70,7 +71,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void RemovePerson(AuthorizedPerson player)
 		{
-			NetworkController.SendToGameServer(new VesselSecurityRequest
+			NetworkController.Send(new VesselSecurityRequest
 			{
 				VesselGUID = _parentShip.Guid,
 				RemovePlayerId = player.PlayerId
@@ -83,7 +84,7 @@ namespace ZeroGravity.ShipComponents
 			if (MyPlayer.Instance.CurrentActiveItem is not null &&
 			    ItemTypeRange.IsHackingTool(MyPlayer.Instance.CurrentActiveItem.Type))
 			{
-				NetworkController.SendToGameServer(new VesselSecurityRequest
+				NetworkController.Send(new VesselSecurityRequest
 				{
 					VesselGUID = _parentShip.Guid,
 					HackPanel = true
@@ -91,7 +92,7 @@ namespace ZeroGravity.ShipComponents
 			}
 		}
 
-		public async void GetPlayersForAuthorization(bool getFriends, bool getPlayerFromServer,
+		public async UniTaskVoid GetPlayersForAuthorization(bool getFriends, bool getPlayerFromServer,
 			GetInvitedPlayersDelegate updatePlayerListUI)
 		{
 			if (getFriends)
@@ -120,7 +121,7 @@ namespace ZeroGravity.ShipComponents
 
 			if (getPlayerFromServer)
 			{
-				NetworkController.SendToGameServer(new PlayersOnServerRequest
+				NetworkController.Send(new PlayersOnServerRequest
 				{
 					SecuritySystemID = new VesselObjectID
 					{

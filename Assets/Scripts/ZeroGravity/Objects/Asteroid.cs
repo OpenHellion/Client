@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using OpenHellion;
 using OpenHellion.Net;
 using UnityEngine;
 using ZeroGravity.Data;
@@ -101,16 +103,15 @@ namespace ZeroGravity.Objects
 			{
 				sceneLoadStarted = true;
 				gameObject.SetActive(true);
-				StartCoroutine(LoadScenesCoroutine(spawnAsteroidResponseData.MiningPoints));
+				LoadAsync(spawnAsteroidResponseData.MiningPoints).Forget();
 			}
 		}
 
-		private IEnumerator LoadScenes(Transform rootTransform)
+		private async UniTask LoadAsteroidsAsync(Transform rootTransform)
 		{
-			yield return StartCoroutine(
-				World.SceneLoader.LoadSceneCoroutine(SceneLoader.SceneType.CelestialBody, (long)SceneID));
+			await Globals.SceneLoader.LoadSceneAsync(SceneLoader.SceneType.CelestialBody, (long)SceneID);
 			GameObject sceneRoot =
-				World.SceneLoader.GetLoadedScene(SceneLoader.SceneType.CelestialBody, SceneID);
+				Globals.SceneLoader.GetLoadedScene(SceneLoader.SceneType.CelestialBody, SceneID);
 			sceneRoot.transform.SetParent(rootTransform);
 			sceneRoot.transform.Reset();
 			RootObject = sceneRoot;
@@ -136,10 +137,10 @@ namespace ZeroGravity.Objects
 			SceneHelper.CheckTags(sceneRoot, VesselData == null ? string.Empty : VesselData.Tag);
 		}
 
-		public IEnumerator LoadScenesCoroutine(List<AsteroidMiningPointDetails> miningPoints)
+		public async UniTask LoadAsync(List<AsteroidMiningPointDetails> miningPoints)
 		{
 			World.InGameGUI.ToggleBusyLoading(true);
-			yield return StartCoroutine(LoadScenes(GeometryRoot.transform));
+			await LoadAsteroidsAsync(GeometryRoot.transform);
 			SceneHelper.FillMiningPoints(this, gameObject, MiningPoints, miningPoints);
 			IsDummyObject = false;
 			SceneObjectsLoaded = true;

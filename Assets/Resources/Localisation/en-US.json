@@ -891,5 +891,6 @@
   "SO_StartingPointOptionData.Regular.Title": "Standard mode",
   "SO_StartingPointOptionData.Regular.Description": "Brave the dangers of vacuum in this standard single player mode.",
   "SO_StartingPointOptionData.Sandbox.Title": "Sandbox",
-  "SO_StartingPointOptionData.Sandbox.Description": "There are no limitations in this mode, all dev commands lie at your disposal.\\nPress [F2] to access console commands."
+  "SO_StartingPointOptionData.Sandbox.Description": "There are no limitations in this mode, all dev commands lie at your disposal.\\nPress [F2] to access console commands.",
+  "ConnectionTimedOut": "Connection to server timed out..."
 }

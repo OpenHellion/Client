@@ -240,7 +240,7 @@ namespace ZeroGravity.UI
 			}
 
 			AvailablePlayersForInvite.Clear();
-			SpawnPoint.GetPlayersForInvite(getNakamaFriends: true, getPlayerFromServer: true, OnInvitePlayersLoaded);
+			SpawnPoint.GetPlayersForInvite(getNakamaFriends: true, getPlayerFromServer: true, OnInvitePlayersLoaded).Forget();
 		}
 
 		public void InvitePlayer(SceneSpawnPoint.PlayerInviteData pl)

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using OpenHellion.Net.Message;
 using ProtoBuf;
 using ZeroGravity.Data;
 
@@ -8,8 +7,6 @@ namespace ZeroGravity.Network
 	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 	public class LogInResponse : NetworkData
 	{
-		public ResponseResult Response = ResponseResult.Success;
-
 		public long GUID;
 
 		public CharacterData Data;

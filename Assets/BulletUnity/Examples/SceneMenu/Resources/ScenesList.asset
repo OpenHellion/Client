@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Scenes:
   - Name: InitializingScene
-    Path: Assets/Scenes/InitializingScene.unity
+    Path: Assets/Scenes/InitialisingScene.unity
     isLocked: 0
     Index: 0
   - Name: Client
-    Path: Assets/Scenes/Client.unity
+    Path: Assets/Scenes/WorldScene.unity
     isLocked: 0
     Index: 1
   - Name: SolarSystemSetup
@@ -149,10 +149,6 @@ MonoBehaviour:
     Path: Assets/Scenes/Environment/Station/Module/AltCorp_V02/AltCorp_Corridor_Module/AlrCorp_Corridor_MKII.unity
     isLocked: 0
     Index: 33
-  - Name: FlatShipTest
-    Path: Assets/Test/FlatShipTest.unity
-    isLocked: 0
-    Index: 34
   - Name: Asteroid01
     Path: Assets/Scenes/Environment/SolarSystem/Asteroids/Asteroid01/Asteroid01.unity
     isLocked: 0

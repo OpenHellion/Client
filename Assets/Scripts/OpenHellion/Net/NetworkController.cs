@@ -1,6 +1,24 @@
+// NetworkController.cs
+//
+// Copyright (C) 2024, OpenHellion contributors
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using UnityEngine;
 using Steamworks;
 using System;
@@ -8,16 +26,16 @@ using System.Runtime.InteropServices;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 using OpenHellion.IO;
 using OpenHellion.Social.RichPresence;
 using ZeroGravity.Network;
+using Cysharp.Threading.Tasks;
 
 namespace OpenHellion.Net
 {
 	public class NetworkController : MonoBehaviour
 	{
-		private static GsConnection _gameConnection;
+		private static GameTransport _gameTransport;
 
 		private bool _getP2PPacketsThreadActive;
 
@@ -73,7 +91,7 @@ namespace OpenHellion.Net
 					GUIDs = new List<long>(_spawnObjectsList)
 				};
 
-				SendToGameServer(spawnObjectsRequest);
+				Send(spawnObjectsRequest);
 				_spawnObjectsList.Clear();
 			}
 
@@ -84,7 +102,7 @@ namespace OpenHellion.Net
 					GUIDs = new List<long>(_subscribeToObjectsList)
 				};
 
-				SendToGameServer(subscribeToObjectsRequest);
+				Send(subscribeToObjectsRequest);
 				_subscribeToObjectsList.Clear();
 			}
 
@@ -95,16 +113,14 @@ namespace OpenHellion.Net
 					GUIDs = new List<long>(_unsubscribeFromObjectsList)
 				};
 
-				SendToGameServer(unsubscribeFromObjectsRequest);
+				Send(unsubscribeFromObjectsRequest);
 				_unsubscribeFromObjectsList.Clear();
 			}
-
-			_gameConnection?.Tick();
 
 			// Handle Steam P2P packets.
 			if (RichPresenceManager.HasSteam && !_getP2PPacketsThreadActive)
 			{
-				new Thread(P2PPacketListener).Start();
+				//UniTask.Void(P2PPacketListener);
 			}
 		}
 
@@ -125,23 +141,43 @@ namespace OpenHellion.Net
 			_subscribeToObjectsList.Remove(guid);
 		}
 
-		public static void ConnectToGame(ServerData serverData, Action onConnected, Action onDisconnected)
+		public async static UniTask ConnectToGame(ServerData serverData, Action onDisconnected)
 		{
-			_gameConnection?.Disconnect();
-			_gameConnection = new GsConnection();
+			_gameTransport?.DisconnectImmediateInternal();
+			_gameTransport = new GameTransport(() =>
+			{
+				_gameTransport = null;
+				onDisconnected();
+			});
 
-			_gameConnection.Connect(serverData.IpAddress, serverData.GamePort, onConnected, onDisconnected);
+			await _gameTransport.Connect(serverData.IpAddress, serverData.GamePort);
 		}
 
-		public static void SendToGameServer(NetworkData data)
+
+		/// <summary>
+		/// 	Send network data to the server.
+		/// </summary>
+		/// <param name="data">The data to send.</param>
+		public static void Send(NetworkData data)
 		{
-			_gameConnection.Send(data);
+			_gameTransport.SendInternal(data).Forget();
+		}
+
+		/// <summary>
+		/// 	Use request/response-like communication with async support.
+		/// 	A <a cref="TimeoutException"/> is thrown when no response is received within the configured timeframe.
+		/// </summary>
+		/// <param name="data">The data to send.</param>
+		/// <exception cref="TimeoutException"/>
+		public static UniTask<NetworkData> SendReceiveAsync(NetworkData data)
+		{
+			return _gameTransport.SendReceiveAsyncInternal(data);
 		}
 
 		/// <summary>
 		/// 	Checks the latency between the client and server.
 		/// </summary>
-		public static async Task<int> LatencyTest(string address, int port, bool logException = false)
+		public static async UniTask<int> LatencyTest(string address, int port, bool logException = false)
 		{
 			try
 			{
@@ -160,6 +196,11 @@ namespace OpenHellion.Net
 
 				return (int)(DateTime.UtcNow - dateTime).TotalMilliseconds;
 			}
+			catch (SocketException)
+			{
+				Disconnect();
+				return -1;
+			}
 			catch (Exception ex)
 			{
 				if (logException)
@@ -175,7 +216,7 @@ namespace OpenHellion.Net
 		/// 	Send a request directly to a TCP endpoint.<br />
 		/// 	Useful for status requests.
 		/// </summary>
-		public static async Task<NetworkData> SendTcp(NetworkData data, string address, int port,
+		public static async UniTask<NetworkData> SendTcp(NetworkData data, string address, int port,
 			bool getResponse = true, bool logException = false)
 		{
 			try
@@ -194,7 +235,7 @@ namespace OpenHellion.Net
 
 				if (getResponse)
 				{
-					NetworkData result = await ProtoSerialiser.Unpack(networkStream);
+					NetworkData result = await ProtoSerialiser.Unpack(networkStream, 10000);
 					return result;
 				}
 			}
@@ -211,26 +252,27 @@ namespace OpenHellion.Net
 
 		private void OnDestroy()
 		{
-			_gameConnection?.Disconnect();
+			_gameTransport?.DisconnectInternal();
 		}
 
+		/// <summary>
+		/// 	Terminate connection cancelling all queued data.
+		/// </summary>
 		public static void Disconnect()
 		{
-			_gameConnection?.Disconnect();
+			_gameTransport?.DisconnectInternal();
 		}
 
 		/// <summary>
 		/// 	Read and invoke P2P packets sent though Steam.<br/>
-		/// 	TODO: Create a new class.
 		/// </summary>
-		private async void P2PPacketListener()
+		private async UniTaskVoid P2PPacketListener()
 		{
 			_getP2PPacketsThreadActive = true;
 
 			// Create pointer array and put data in it.
 			IntPtr[] ptr = new IntPtr[1];
 			int msgSize = SteamNetworkingMessages.ReceiveMessagesOnChannel(0, ptr, 1);
-
 			if (msgSize == 0)
 			{
 				return;
@@ -246,7 +288,7 @@ namespace OpenHellion.Net
 					Marshal.Copy(netMessage.m_pData, message, 0, message.Length);
 
 					// Deseralise data and invoke code.
-					NetworkData networkData = await ProtoSerialiser.Unpack(new MemoryStream(message));
+					NetworkData networkData = await ProtoSerialiser.Unpack(new MemoryStream(message), 1000000);
 					Debug.Log(networkData);
 					if (networkData is ISteamP2PMessage)
 					{
@@ -261,7 +303,15 @@ namespace OpenHellion.Net
 
 			_getP2PPacketsThreadActive = false;
 		}
-#if DEBUG
+#if UNITY_DEBUG
+
+		private void OnGUI()
+		{
+			GUILayout.ExpandHeight(true);
+			GUILayout.ExpandWidth(true);
+			GUILayout.Label(GetNetworkDataLogs());
+		}
+
 		public static void LogReceivedNetworkData(Type type)
 		{
 			Instance._receivedLog.Enqueue(new Tuple<float, Type>(
@@ -313,6 +363,6 @@ namespace OpenHellion.Net
 					select y).Reverse()
 				select z.Item1 + ": " + z.Item2);
 		}
-	}
 #endif
+	}
 }

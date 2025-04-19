@@ -10,6 +10,12 @@ using ZeroGravity.Objects;
 
 namespace ZeroGravity.LevelDesign
 {
+	/// <summary>
+	/// 	Executes actions when triggered. Uses a state machine.
+	/// </summary>
+	/// <remarks>
+	/// 	Don't remove functions here as they might be used by Unity.
+	/// </remarks>
 	public class SceneTriggerExecutor : MonoBehaviour, ISceneObject
 	{
 		[Serializable]

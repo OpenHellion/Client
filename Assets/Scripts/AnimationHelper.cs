@@ -50,37 +50,37 @@ public class AnimationHelper : MonoBehaviour
 
 	public void PlayBoolTrue()
 	{
-		base.gameObject.GetComponent<Animator>().SetBool(Parameter, true);
+		gameObject.GetComponent<Animator>().SetBool(Parameter, true);
 	}
 
 	public void PlayBoolFalse()
 	{
-		base.gameObject.GetComponent<Animator>().SetBool(Parameter, false);
+		gameObject.GetComponent<Animator>().SetBool(Parameter, false);
 	}
 
 	public void PlayTrigger()
 	{
-		base.gameObject.GetComponent<Animator>().SetTrigger(Parameter);
+		gameObject.GetComponent<Animator>().SetTrigger(Parameter);
 	}
 
 	public void Disable()
 	{
-		base.gameObject.SetActive(false);
+		gameObject.SetActive(false);
 	}
 
 	public void DisableMeshRenderer()
 	{
-		base.gameObject.GetComponent<MeshRenderer>().enabled = false;
+		gameObject.GetComponent<MeshRenderer>().enabled = false;
 	}
 
 	public void EnableMeshRenderer()
 	{
-		base.gameObject.GetComponent<MeshRenderer>().enabled = true;
+		gameObject.GetComponent<MeshRenderer>().enabled = true;
 	}
 
 	public void DestroyObject()
 	{
-		Object.Destroy(base.gameObject);
+		Destroy(gameObject);
 	}
 
 	public void PlaySound(AnimationEvent ev)

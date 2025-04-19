@@ -1,6 +1,6 @@
 ﻿// GameStarter.cs
 //
-// Copyright (C) 2023, OpenHellion contributors
+// Copyright (C) 2024, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -35,16 +35,16 @@ using ZeroGravity;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
+using System.Net.Sockets;
+using Cysharp.Threading.Tasks;
 
 namespace OpenHellion
 {
 	/// <summary>
-	///		This class is to be instantiated when the game starts, and then destroyed when we finally connect.
-	///		Its point is to handle the mid-level code from clicking the button to closing the loading screen.
+	///		This class is to be instantiated when the we click the play button, and then destroyed when we finally connect.
 	/// </summary>
 	/// <remarks>
-	///		This class has two methods of starting the game. 1. calling PlayMultiplayer and 2. assigning an id to inviteId when calling Create.
-	///		This class is temporary, so nothing here will be kept.
+	///		Start a game by calling Create and FindAndConnectServer. It is expected that we are not calling this from the World scene.
 	/// </remarks>
 	public class GameStarter : MonoBehaviour
 	{
@@ -52,11 +52,7 @@ namespace OpenHellion
 
 		private string _nakamaId;
 
-		private ServerData _lastConnectedServer;
-
 		private World _world;
-
-		private bool _hasGotLoginRequest;
 
 		/// <summary>
 		///		Creates a GameStarter instance. If inviteId is provided the class automatically connects to it.
@@ -64,12 +60,10 @@ namespace OpenHellion
 		/// <param name="lastConnectedServer">Last server we were connected to.</param>
 		/// <param name="inviteMessage">The invite message we received.</param>
 		/// <returns>An instance of GameStarter.</returns>
-		public static GameStarter Create(ref ServerData lastConnectedServer,
-			InviteMessage inviteMessage = null)
+		public static GameStarter Create(InviteMessage inviteMessage = null)
 		{
 			var gameObject = new GameObject();
 			var gameStarter = gameObject.AddComponent<GameStarter>();
-			gameStarter._lastConnectedServer = lastConnectedServer;
 			gameStarter._inviteMessage = inviteMessage;
 
 			DontDestroyOnLoad(gameStarter);
@@ -77,33 +71,26 @@ namespace OpenHellion
 			return gameStarter;
 		}
 
-		private async void Awake()
+		private async UniTaskVoid Awake()
 		{
 			_nakamaId = await NakamaClient.GetUserId();
-
-			EventSystem.AddListener(typeof(LogInResponse), LogInResponseListener);
-		}
-
-		private void OnDestroy()
-		{
-			EventSystem.RemoveListener(typeof(LogInResponse), LogInResponseListener);
 		}
 
 		/// <summary>
 		/// 	Get server to connect to from the main server or invite, then start multiplayer game.
 		/// </summary>
-		public async void FindServerAndConnect(bool reconnecting = false)
+		public async UniTaskVoid FindServerAndConnect(bool reconnecting = false)
 		{
 			GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.ConnectingToMain);
 
 			try
 			{
 				// If signing in for the first time this session, get server we should connect to.
-				ServerData connectingServerData = _lastConnectedServer;
+				ServerData connectingServerData = MainMenuGUI.LastConnectedServer;
 				if (!reconnecting)
 				{
 					// Create socket if we are connecting to the game for the first time this session.
-					if (_lastConnectedServer is null)
+					if (MainMenuGUI.LastConnectedServer is null)
 					{
 						await NakamaClient.CreateSocket();
 					}
@@ -129,6 +116,7 @@ namespace OpenHellion
 						{
 							GlobalGUI.ShowMessageBox(Localization.ConnectionError, Localization.VersionError);
 							Debug.LogError("Encountered server error with message: " + ex.Message);
+							Destroy(gameObject);
 							return;
 						}
 
@@ -136,168 +124,121 @@ namespace OpenHellion
 						// TODO: Add selection menu or something.
 						connectingServerData = await NakamaClient.GetMatchConnectionInfo(result[0]);
 					}
-
-					// TODO: Move this to InitialisingScene.
-					//if (signInResponse.Result is ResponseResult.ServerNotFound)
-					//{
-					//	CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
-					//	ShowMessageBox(Localization.ConnectionError, Localization.NoServerConnection);
-					//}
-					//else if (signInResponse.Result is ResponseResult.ClientVersionError)
-					//{
-					//	CanvasManager.SelectScreen(CanvasManager.Screen.MainMenu);
-					//	ShowMessageBox(Localization.VersionError, Localization.VersionErrorMessage);
-					//}
 				}
 
 				// Connect to server!
-				ConnectToServer(connectingServerData);
-				_lastConnectedServer = connectingServerData;
-
-				// Apparently references do not work.
-				MainMenuGUI.LastConnectedServer = _lastConnectedServer;
+				MainMenuGUI.LastConnectedServer = connectingServerData;
+				ConnectToServer(connectingServerData).Forget();
 			}
 			catch (Exception e)
 			{
 				GlobalGUI.ShowMessageBox(Localization.ConnectionError, Localization.NoServerConnection);
 				Debug.LogException(e);
+				Destroy(gameObject);
 			}
 		}
 
 		/// <summary>
 		/// 	Connect to a remote server.
 		/// </summary>
-		private void ConnectToServer(ServerData server)
+		private async UniTaskVoid ConnectToServer(ServerData server)
 		{
-			_lastConnectedServer = server;
 			GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.ConnectingToGame);
 
-			var load = SceneManager.LoadSceneAsync("WorldScene", LoadSceneMode.Single);
-			load.completed += _ =>
-			{
-				_world = GameObject.Find("/World").GetComponent<World>();
-				Debug.Assert(_world is not null);
-				NetworkController.ConnectToGame(server, OnConnected, _world.OnDisconnectedFromServer);
+			await SceneManager.LoadSceneAsync("WorldScene", LoadSceneMode.Single);
 
-				InvokeRepeating(nameof(CheckLoadingComplete), 3f, 1f);
-			};
-		}
+			_world = GameObject.Find("/World").GetComponent<World>();
+			Debug.Assert(_world is not null);
 
-		private async void OnConnected()
-		{
-			try
-			{
+			try {
+				await NetworkController.ConnectToGame(server, _world.OnDisconnectedFromServer);
+
 				Debug.Log("Successfully established connection with server.");
 
 				LogInRequest logInRequest = new LogInRequest
 				{
-					ServerID = _lastConnectedServer.Id,
+					ServerID = server.Id,
 					ClientHash = Globals.CombinedHash,
 					PlayerId = _nakamaId,
 					CharacterData = await NakamaClient.GetCharacterData()
 				};
 
-				NetworkController.SendToGameServer(logInRequest);
+				var response = await NetworkController.SendReceiveAsync(logInRequest) as LogInResponse;
+
+				if (response != null && response.Status == NetworkData.MessageStatus.Success)
+				{
+					Debug.Log("Received log in response.");
+
+					GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.LoadWorld);
+
+					bool wasLoginSuccessful = false;
+					if (_inviteMessage is not null)
+					{
+						wasLoginSuccessful = await _world.OnLogin(response, _inviteMessage.SpawnPointId);
+					}
+					else
+					{
+						wasLoginSuccessful = await _world.OnLogin(response);
+					}
+
+					if (wasLoginSuccessful)
+					{
+						Debug.Log("ClearCanvasesAndStartGame");
+						AkSoundEngine.SetRTPCValue(SoundManager.InGameVolume, 1f);
+						MyPlayer.Instance.PlayerReady = true;
+						RichPresenceManager.UpdateStatus();
+						MyPlayer.Instance.InitializeCameraEffects();
+
+						Globals.ToggleCursor(false);
+
+						GlobalGUI.CloseLoadingScreen();
+						_world.LoadingFinishedDelegate();
+						FixPlayerInCryo().Forget();
+						NetworkController.Send(new EnvironmentReadyMessage());
+					}
+
+					Destroy(gameObject);
+					return;
+				}
+				/*else if (response.Status == NetworkData.MessageStatus.VersionError)
+				{
+					Debug.LogWarning("Version error.");
+					GlobalGUI.ShowMessageBox(Localization.ConnectionError, Localization.VersionError);
+				}*/
+				else
+				{
+					Debug.LogWarning("Error in login data.");
+					GlobalGUI.ShowErrorMessage(Localization.ConnectionError, Localization.NoServerConnection);
+				}
+			}
+			catch (SocketException)
+			{
+				GlobalGUI.ShowErrorMessage(Localization.ConnectionError, Localization.NoServerConnection);
+				Debug.LogWarning("Server refused connection.");
 			}
 			catch (Exception ex)
 			{
-				Debug.LogErrorFormat("Server dropped connection. Exception: {0}\nStack trace: {1}", ex.Message, ex.StackTrace);
-				GlobalGUI.ShowMessageBox(Localization.ConnectionError, Localization.NoServerConnection);
-				CancelInvoke(nameof(CheckLoadingComplete));
-				SceneManager.LoadScene(1);
+				Debug.LogException(ex);
+				GlobalGUI.ShowErrorMessage(Localization.ConnectionError, Localization.NoServerConnection);
 			}
-		}
-
-		private void LogInResponseListener(NetworkData data)
-		{
-			// TODO: Ideally this would be made impossible by the design of the networking backend.
-			if (_hasGotLoginRequest)
-			{
-				Debug.LogWarning("Got a log in request when already logged in.");
-				return;
-			}
-
-			LogInResponse logInResponse = data as LogInResponse;
-			if (logInResponse.Response == ResponseResult.Success)
-			{
-				_hasGotLoginRequest = true;
-				Debug.Log("Received log in response.");
-
-				GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.LoadWorld);
-
-				if (_inviteMessage is not null)
-				{
-					_world.OnLogin(logInResponse, ref _inviteMessage.SpawnPointId);
-				}
-				else
-				{
-					_world.OnLogin(logInResponse, ref new InviteMessage().SpawnPointId);
-				}
-
-				return;
-			}
-
-			if (logInResponse.Response == ResponseResult.ClientVersionError)
-			{
-				Debug.LogError("Version error.");
-
-				GlobalGUI.ShowMessageBox(Localization.ConnectionError, Localization.VersionError);
-			}
-			else
-			{
-				Debug.LogError("Server dropped connection.");
-				GlobalGUI.ShowMessageBox(Localization.ConnectionError, Localization.NoServerConnection);
-			}
-
-			CancelInvoke(nameof(CheckLoadingComplete));
-			SceneManager.LoadScene(1);
-		}
-
-		private void CheckLoadingComplete()
-		{
-			Debug.Log("CheckLoadingComplete");
-			if (_world is not null && _world.LoadingFinishedTask is not null)
-			{
-				Invoke(nameof(AfterLoadingFinishedTask), 1f);
-			}
-		}
-
-		public void AfterLoadingFinishedTask()
-		{
-			this.Invoke(ClearCanvasesAndStartGame, MyPlayer.Instance.Parent is Pivot ? 10 : 0);
-		}
-
-		private void ClearCanvasesAndStartGame()
-		{
-			Debug.Log("ClearCanvasesAndStartGame");
-			this.CancelInvoke(CheckLoadingComplete);
-			AkSoundEngine.SetRTPCValue(SoundManager.InGameVolume, 1f);
-			MyPlayer.Instance.PlayerReady = true;
-			RichPresenceManager.UpdateStatus();
-			MyPlayer.Instance.InitializeCameraEffects();
-
-			Globals.ToggleCursor(false);
 
 			GlobalGUI.CloseLoadingScreen();
-			StartCoroutine(FixPlayerInCryo());
-			_world.LoadingFinishedTask.RunSynchronously();
-			NetworkController.SendToGameServer(new EnvironmentReadyMessage());
+			SceneManager.LoadScene(1);
+			Destroy(gameObject);
 		}
 
-		private IEnumerator FixPlayerInCryo()
+		private async UniTaskVoid FixPlayerInCryo()
 		{
 			Debug.Log("FixPlayerInCryo");
 			SceneTriggerExecutor exec = MyPlayer.Instance.Parent
 				.GetComponentsInChildren<SceneTriggerExecutor>(includeInactive: true)
 				.FirstOrDefault((SceneTriggerExecutor m) => m.IsMyPlayerInLockedState && m.CurrentState == "spawn");
-			if (exec is not null)
+			if (exec != null)
 			{
-				yield return new WaitUntil(() => MyPlayer.Instance.gameObject.activeInHierarchy);
-				yield return new WaitForSecondsRealtime(0.5f);
+				await UniTask.WaitUntil(() => MyPlayer.Instance.gameObject.activeInHierarchy);
+				await UniTask.WaitForSeconds(0.5f);
 				exec.ChangeStateImmediateForce("occupied");
 			}
-
-			Destroy(gameObject);
 		}
 	}
 }

@@ -171,7 +171,7 @@ namespace ZeroGravity.Objects
 				    componentInParent.MaxHealth - componentInParent.Health > float.Epsilon &&
 				    FuelCompartment.Resources[0].Quantity > float.Epsilon)
 				{
-					NetworkController.SendToGameServer(new RepairItemMessage
+					NetworkController.Send(new RepairItemMessage
 					{
 						GUID = componentInParent.GUID
 					});
@@ -190,7 +190,7 @@ namespace ZeroGravity.Objects
 				                                                               componentInParent2
 					                                                               .SecondaryDamageActive)))
 				{
-					NetworkController.SendToGameServer(new RepairVesselMessage
+					NetworkController.Send(new RepairVesselMessage
 					{
 						ID = new VesselObjectID(componentInParent2.ParentVessel.Guid, componentInParent2.InSceneID)
 					});
@@ -201,7 +201,7 @@ namespace ZeroGravity.Objects
 
 			if (!flag && Type == ItemType.FireExtinguisher && FuelCompartment.Resources[0].Quantity > float.Epsilon)
 			{
-				NetworkController.SendToGameServer(new RepairItemMessage
+				NetworkController.Send(new RepairItemMessage
 				{
 					GUID = -1L
 				});

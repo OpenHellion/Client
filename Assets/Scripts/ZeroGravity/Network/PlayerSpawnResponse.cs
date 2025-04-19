@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using OpenHellion.Net.Message;
 using ProtoBuf;
 using ZeroGravity.Data;
 using ZeroGravity.Objects;
@@ -9,8 +8,6 @@ namespace ZeroGravity.Network
 	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 	public class PlayerSpawnResponse : NetworkData
 	{
-		public ResponseResult Response = ResponseResult.Success;
-
 		public long ParentID;
 
 		public SpaceObjectType ParentType;
