@@ -97,18 +97,18 @@ namespace ZeroGravity.ShipComponents
 			Position.position = ObjectPosition;
 			Orbits.localScale = Vector3.one * (float)ObjectScale;
 			DistressVisual.SetActive(RadarVisibilityType == RadarVisibilityType.Distress);
-			if (Map is null || Map.SelectedObject != this)
+			if (Map == null || Map.SelectedObject != this)
 			{
 				ToggleCone(false);
 			}
 
-			if (ScanningCone is null)
+			if (ScanningCone == null)
 			{
 				return;
 			}
 
 			ScanningCone.Activate(_scanningConeActive && !ScanningEffectCone.activeSelf);
-			if (ScanningCone.activeSelf && (MainObject as Ship).RadarSystem is not null)
+			if (ScanningCone.activeSelf && (MainObject as Ship).RadarSystem != null)
 			{
 				if (ScanningConeAngle < 1f)
 				{
@@ -187,7 +187,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void ToggleCone(bool val)
 		{
-			if (ScanningCone is not null)
+			if (ScanningCone != null)
 			{
 				_scanningConeActive = val;
 				Pitch.Activate(val);

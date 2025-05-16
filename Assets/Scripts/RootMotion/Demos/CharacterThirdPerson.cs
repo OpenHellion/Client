@@ -155,7 +155,7 @@ namespace RootMotion.Demos
 
 		private void FixedUpdate()
 		{
-			if (animator != null && animator.updateMode == AnimatorUpdateMode.AnimatePhysics)
+			if (animator != null && animator.updateMode == AnimatorUpdateMode.Fixed)
 			{
 				smoothPhysics = false;
 				characterAnimation.smoothFollow = false;
@@ -195,7 +195,7 @@ namespace RootMotion.Demos
 		{
 			animState.onGround = onGround;
 			animState.moveDirection = GetMoveDirection();
-			animState.yVelocity = Mathf.Lerp(animState.yVelocity, r.velocity.y, Time.deltaTime * 10f);
+			animState.yVelocity = Mathf.Lerp(animState.yVelocity, r.linearVelocity.y, Time.deltaTime * 10f);
 			animState.crouch = userControl.state.crouch;
 			animState.isStrafing = moveMode == MoveMode.Strafe;
 		}
@@ -230,17 +230,17 @@ namespace RootMotion.Demos
 			{
 				vector = Vector3.Lerp(
 					b: new Vector3(userControl.state.move.x * airSpeed, 0f, userControl.state.move.z * airSpeed),
-					a: r.velocity, t: Time.deltaTime * airControl);
+					a: r.linearVelocity, t: Time.deltaTime * airControl);
 			}
 
 			if (onGround && Time.time > jumpEndTime)
 			{
-				r.velocity -= base.transform.up * stickyForce * Time.deltaTime;
+				r.linearVelocity -= base.transform.up * stickyForce * Time.deltaTime;
 			}
 
-			vector.y = Mathf.Clamp(r.velocity.y, r.velocity.y,
-				(!onGround) ? r.velocity.y : maxVerticalVelocityOnGround);
-			r.velocity = vector;
+			vector.y = Mathf.Clamp(r.linearVelocity.y, r.linearVelocity.y,
+				(!onGround) ? r.linearVelocity.y : maxVerticalVelocityOnGround);
+			r.linearVelocity = vector;
 			float b3 = (onGround ? GetSlopeDamper(-deltaPosition / Time.deltaTime, normal) : 1f);
 			forwardMlp = Mathf.Lerp(forwardMlp, b3, Time.deltaTime * 5f);
 		}
@@ -270,9 +270,9 @@ namespace RootMotion.Demos
 			lastWallRunWeight = wallRunWeight;
 			if (!(wallRunWeight <= 0f))
 			{
-				if (onGround && r.velocity.y < 0f)
+				if (onGround && r.linearVelocity.y < 0f)
 				{
-					r.velocity = new Vector3(r.velocity.x, 0f, r.velocity.z);
+					r.linearVelocity = new Vector3(r.linearVelocity.x, 0f, r.linearVelocity.z);
 				}
 
 				Vector3 forward = base.transform.forward;
@@ -304,7 +304,7 @@ namespace RootMotion.Demos
 				return false;
 			}
 
-			if (r.velocity.y < wallRunMinVelocityY)
+			if (r.linearVelocity.y < wallRunMinVelocityY)
 			{
 				return false;
 			}
@@ -406,8 +406,8 @@ namespace RootMotion.Demos
 			onGround = false;
 			jumpEndTime = Time.time + 0.1f;
 			Vector3 velocity = userControl.state.move * airSpeed;
-			r.velocity = velocity;
-			r.velocity += base.transform.up * jumpPower;
+			r.linearVelocity = velocity;
+			r.linearVelocity += base.transform.up * jumpPower;
 			return true;
 		}
 
@@ -419,12 +419,12 @@ namespace RootMotion.Demos
 			hit = GetSpherecastHit();
 			normal = base.transform.up;
 			groundDistance = r.position.y - hit.point.y;
-			if (Time.time > jumpEndTime && r.velocity.y < jumpPower * 0.5f)
+			if (Time.time > jumpEndTime && r.linearVelocity.y < jumpPower * 0.5f)
 			{
 				bool flag = onGround;
 				onGround = false;
 				float num2 = (flag ? airborneThreshold : (airborneThreshold * 0.5f));
-				Vector3 velocity = r.velocity;
+				Vector3 velocity = r.linearVelocity;
 				velocity.y = 0f;
 				float magnitude = velocity.magnitude;
 				if (groundDistance < num2)

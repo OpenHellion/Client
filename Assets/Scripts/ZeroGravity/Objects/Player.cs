@@ -13,7 +13,7 @@ namespace ZeroGravity.Objects
 
 		[NonSerialized] public Inventory Inventory;
 
-		public virtual bool IsLockedToTrigger => LockedToTrigger is not null;
+		public virtual bool IsLockedToTrigger => LockedToTrigger != null;
 
 		public virtual BaseSceneTrigger LockedToTrigger { get; set; }
 

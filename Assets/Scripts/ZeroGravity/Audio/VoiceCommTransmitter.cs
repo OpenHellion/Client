@@ -107,9 +107,9 @@ namespace ZeroGravity.Audio
 
 			SceneTriggerRoom currentRoomTrigger = MyPlayer.Instance.CurrentRoomTrigger;
 			Helmet currentHelmet = MyPlayer.Instance.CurrentHelmet;
-			if (!_talk || _inAudioClip is null ||
-			    ((currentRoomTrigger is null || !(currentRoomTrigger.AirPressure > 0f)) &&
-			     (currentHelmet is null || !currentHelmet.IsVisorActive)))
+			if (!_talk || _inAudioClip == null ||
+			    ((currentRoomTrigger == null || !(currentRoomTrigger.AirPressure > 0f)) &&
+			     (currentHelmet == null || !currentHelmet.IsVisorActive)))
 			{
 				return;
 			}

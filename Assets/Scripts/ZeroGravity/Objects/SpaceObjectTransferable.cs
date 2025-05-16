@@ -24,10 +24,10 @@ namespace ZeroGravity.Objects
 
 		protected bool IsDestroying;
 
-		public Vector3 Gravity => Parent is null ? _gravity : Parent.transform.rotation * _gravity;
+		public Vector3 Gravity => Parent == null ? _gravity : Parent.transform.rotation * _gravity;
 
 		public Vector3 GravityDirection =>
-			Parent is null ? _gravity.normalized : Parent.transform.rotation * _gravity.normalized;
+			Parent == null ? _gravity.normalized : Parent.transform.rotation * _gravity.normalized;
 
 		public SceneTriggerRoom CurrentRoomTrigger
 		{
@@ -65,7 +65,7 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public bool IsInsideSpaceObject => Parent is not null && Parent is SpaceObjectVessel;
+		public bool IsInsideSpaceObject => Parent != null && Parent is SpaceObjectVessel;
 
 		public void SetSoundEnvirontment(SceneTriggerRoom roomTrigger)
 		{
@@ -78,7 +78,7 @@ namespace ZeroGravity.Objects
 
 		private void UpdateGravity()
 		{
-			Vector3 gravity = _currentRoomTrigger is not null && _currentRoomTrigger.UseGravity
+			Vector3 gravity = _currentRoomTrigger != null && _currentRoomTrigger.UseGravity
 				? _currentRoomTrigger.GravityForce
 				: Vector3.zero;
 			SetGravity(gravity);
@@ -110,11 +110,11 @@ namespace ZeroGravity.Objects
 
 		public void CheckRoomTrigger(SceneTriggerRoom trigger)
 		{
-			if (CurrentRoomTrigger is not null && (trigger is null || CurrentRoomTrigger == trigger))
+			if (CurrentRoomTrigger != null && (trigger == null || CurrentRoomTrigger == trigger))
 			{
 				UpdateGravity();
 			}
-			else if (trigger is null && CurrentRoomTrigger is null)
+			else if (trigger == null && CurrentRoomTrigger == null)
 			{
 				UpdateGravity();
 			}

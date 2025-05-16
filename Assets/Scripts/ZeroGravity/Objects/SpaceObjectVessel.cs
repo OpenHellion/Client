@@ -922,7 +922,7 @@ namespace ZeroGravity.Objects
 			{
 				foreach (Collider optimizationCollider in OptimizationColliders)
 				{
-					if (optimizationCollider is not null)
+					if (optimizationCollider != null)
 					{
 						optimizationCollider.enabled = !optimizationEnabled;
 					}

@@ -122,7 +122,7 @@ namespace ZeroGravity.Objects
 
 		public void RemoveArtificialBody(ArtificialBody body)
 		{
-			if (body is not null && ArtificialBodyReferences.Remove(body))
+			if (body != null && ArtificialBodyReferences.Remove(body))
 			{
 			}
 		}
@@ -193,7 +193,7 @@ namespace ZeroGravity.Objects
 					double distanceFromPlayer = Vector3D.Distance(celestialBody.Position, playerVesselPosition) - celestialBody.Orbit.Radius;
 					if (distanceFromPlayer <= PlanetsToShowDistance)
 					{
-						if (celestialBody.PlanetsSpaceGameObject is null)
+						if (celestialBody.PlanetsSpaceGameObject == null)
 						{
 							celestialBody.CreatePlanetsSpaceGameObject(_planetsRoot);
 							celestialBody.SetPlanetSpacePosition(
@@ -205,7 +205,7 @@ namespace ZeroGravity.Objects
 								((celestialBody.Position - playerVesselPosition) / 1000000.0).ToVector3(), forceChange: false);
 						}
 					}
-					else if (celestialBody.PlanetsSpaceGameObject is not null && distanceFromPlayer > PlanetsToDestroyDistance)
+					else if (celestialBody.PlanetsSpaceGameObject != null && distanceFromPlayer > PlanetsToDestroyDistance)
 					{
 						celestialBody.DestroyPlanetsSpaceGameObject();
 					}
@@ -214,7 +214,7 @@ namespace ZeroGravity.Objects
 
 			foreach (ArtificialBody artificialBody in ArtificialBodyReferences)
 			{
-				if (artificialBody is null || artificialBody.IsMainObject ||
+				if (artificialBody == null || artificialBody.IsMainObject ||
 				    artificialBody is SpaceObjectVessel { IsMainVessel: false })
 				{
 					continue;

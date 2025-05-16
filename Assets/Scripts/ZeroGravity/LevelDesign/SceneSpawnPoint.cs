@@ -239,7 +239,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void InvitePlayer(PlayerInviteData player)
 		{
-			if (ParentVessel is null)
+			if (ParentVessel == null)
 			{
 				Debug.LogError("InvitePlayer, Spawn point vessel is NULL" + base.name + InSceneID);
 			}

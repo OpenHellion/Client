@@ -18,7 +18,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections;
 using System.Globalization;
 using System.Linq;
 using System.Net.WebSockets;
@@ -128,7 +127,7 @@ namespace OpenHellion
 
 				// Connect to server!
 				MainMenuGUI.LastConnectedServer = connectingServerData;
-				ConnectToServer(connectingServerData).Forget();
+				await ConnectToServer(connectingServerData);
 			}
 			catch (Exception e)
 			{
@@ -141,14 +140,14 @@ namespace OpenHellion
 		/// <summary>
 		/// 	Connect to a remote server.
 		/// </summary>
-		private async UniTaskVoid ConnectToServer(ServerData server)
+		private async UniTask ConnectToServer(ServerData server)
 		{
 			GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.ConnectingToGame);
 
 			await SceneManager.LoadSceneAsync("WorldScene", LoadSceneMode.Single);
 
 			_world = GameObject.Find("/World").GetComponent<World>();
-			Debug.Assert(_world is not null);
+			Debug.Assert(_world != null);
 
 			try {
 				await NetworkController.ConnectToGame(server, _world.OnDisconnectedFromServer);
@@ -163,7 +162,7 @@ namespace OpenHellion
 					CharacterData = await NakamaClient.GetCharacterData()
 				};
 
-				var response = await NetworkController.SendReceiveAsync(logInRequest) as LogInResponse;
+				var response = await NetworkController.SendReceiveAsync(logInRequest, 10000) as LogInResponse;
 
 				if (response != null && response.Status == NetworkData.MessageStatus.Success)
 				{
@@ -183,7 +182,6 @@ namespace OpenHellion
 
 					if (wasLoginSuccessful)
 					{
-						Debug.Log("ClearCanvasesAndStartGame");
 						AkSoundEngine.SetRTPCValue(SoundManager.InGameVolume, 1f);
 						MyPlayer.Instance.PlayerReady = true;
 						RichPresenceManager.UpdateStatus();
@@ -193,7 +191,7 @@ namespace OpenHellion
 
 						GlobalGUI.CloseLoadingScreen();
 						_world.LoadingFinishedDelegate();
-						FixPlayerInCryo().Forget();
+						await FixPlayerInCryo();
 						NetworkController.Send(new EnvironmentReadyMessage());
 					}
 
@@ -216,10 +214,9 @@ namespace OpenHellion
 				GlobalGUI.ShowErrorMessage(Localization.ConnectionError, Localization.NoServerConnection);
 				Debug.LogWarning("Server refused connection.");
 			}
-			catch (Exception ex)
+			catch (TimeoutException)
 			{
-				Debug.LogException(ex);
-				GlobalGUI.ShowErrorMessage(Localization.ConnectionError, Localization.NoServerConnection);
+				GlobalGUI.ShowErrorMessage(Localization.ConnectionError, Localization.ConnectionTimedOut);
 			}
 
 			GlobalGUI.CloseLoadingScreen();
@@ -227,7 +224,7 @@ namespace OpenHellion
 			Destroy(gameObject);
 		}
 
-		private async UniTaskVoid FixPlayerInCryo()
+		private async UniTask FixPlayerInCryo()
 		{
 			Debug.Log("FixPlayerInCryo");
 			SceneTriggerExecutor exec = MyPlayer.Instance.Parent

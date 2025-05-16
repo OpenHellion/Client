@@ -164,7 +164,7 @@ namespace OpenHellion.Social.RichPresence
 		{
 			try
 			{
-				if (MyPlayer.Instance is not null && MyPlayer.Instance.PlayerReady)
+				if (MyPlayer.Instance != null && MyPlayer.Instance.PlayerReady)
 				{
 					_activity.Secrets.Join = Globals.GetInviteString(null);
 					_activity.Assets.LargeText = Localization.InGameDescription;

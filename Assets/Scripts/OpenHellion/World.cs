@@ -222,7 +222,7 @@ namespace OpenHellion
 			EventSystem.AddListener(typeof(SpawnObjectsResponse), SpawnObjectsResponseListener);
 			EventSystem.AddListener(typeof(MovementMessage), MovementMessageListener);
 			EventSystem.AddListener(typeof(DynamicObjectsInfoMessage), DynamicObjectsInfoMessageListener);
-			EventSystem.AddListener(typeof(PlayersOnServerResponse), PlayersOnServerResponseListener);
+			EventSystem.AddListener<PlayersOnServerResponse>(PlayersOnServerResponseListener);
 			EventSystem.AddListener(typeof(ConsoleMessage), ConsoleMessageListener);
 			EventSystem.AddListener(typeof(ShipCollisionMessage), ShipCollisionMessageListener);
 			EventSystem.AddListener(typeof(UpdateVesselDataMessage), UpdateVesselDataMessageListener);
@@ -393,7 +393,7 @@ namespace OpenHellion
 			EventSystem.RemoveListener(typeof(LogOutResponse), LogOutResponseListener);
 			EventSystem.RemoveListener(typeof(DestroyObjectMessage), DestroyObjectMessageListener);
 			EventSystem.RemoveListener(typeof(MovementMessage), MovementMessageListener);
-			EventSystem.RemoveListener(typeof(PlayersOnServerResponse), PlayersOnServerResponseListener);
+			EventSystem.RemoveListener<PlayersOnServerResponse>(PlayersOnServerResponseListener);
 			EventSystem.RemoveListener(typeof(ShipCollisionMessage), ShipCollisionMessageListener);
 			EventSystem.RemoveListener(typeof(UpdateVesselDataMessage), UpdateVesselDataMessageListener);
 		}
@@ -1098,7 +1098,7 @@ namespace OpenHellion
 
 			try
 			{
-				var spawnResponse = await NetworkController.SendReceiveAsync(playerSpawnRequest) as PlayerSpawnResponse;
+				var spawnResponse = await NetworkController.SendReceiveAsync(playerSpawnRequest, 10000) as PlayerSpawnResponse;
 
 				if (spawnResponse.Status != NetworkData.MessageStatus.Success)
 				{
@@ -1230,7 +1230,6 @@ namespace OpenHellion
 			}
 			catch (TimeoutException)
 			{
-				GlobalGUI.ShowErrorMessage(Localization.SpawnErrorTitle, Localization.ConnectionTimedOut);
 				Debug.Log("Connection timed out when logging in.");
 				MainMenuGUI.CanChooseSpawn = true;
 				ReturnToMainMenu();

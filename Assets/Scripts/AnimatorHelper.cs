@@ -1172,7 +1172,7 @@ public class AnimatorHelper : MonoBehaviour
 		if (isCrouch.HasValue)
 		{
 			animMain.SetBool("Crouch", isCrouch.Value);
-			if (animBob is not null)
+			if (animBob != null)
 			{
 				animBob.SetBool("Crouch", isCrouch.Value);
 			}
@@ -1181,7 +1181,7 @@ public class AnimatorHelper : MonoBehaviour
 		if (isMoving.HasValue)
 		{
 			animMain.SetBool("isMoving", isMoving.Value);
-			if (animBob is not null)
+			if (animBob != null)
 			{
 				animBob.SetBool("isMoving", isMoving.Value);
 			}
@@ -1191,7 +1191,7 @@ public class AnimatorHelper : MonoBehaviour
 		{
 			animMain.SetBool("isZeroG", isZeroG.Value);
 			_animatorIsZeroG = isZeroG.Value;
-			if (animBob is not null)
+			if (animBob != null)
 			{
 				animBob.SetBool("isZeroG", isZeroG.Value);
 			}
@@ -1200,7 +1200,7 @@ public class AnimatorHelper : MonoBehaviour
 		if (isMovingZeroG.HasValue)
 		{
 			animMain.SetBool("isMovingZeroG", isMovingZeroG.Value);
-			if (animBob is not null)
+			if (animBob != null)
 			{
 				animBob.SetBool("isMovingZeroG", isMovingZeroG.Value);
 			}
@@ -1219,7 +1219,7 @@ public class AnimatorHelper : MonoBehaviour
 		if (isTurning.HasValue)
 		{
 			animMain.SetBool("Turning", isTurning.Value);
-			if (animBob is not null)
+			if (animBob != null)
 			{
 				animBob.SetBool("Turning", isTurning.Value);
 			}
@@ -1257,7 +1257,7 @@ public class AnimatorHelper : MonoBehaviour
 		if (velocityRight.HasValue)
 		{
 			animMain.SetFloat("VelocityRight", velocityRight.Value);
-			if (animBob is not null)
+			if (animBob != null)
 			{
 				animBob.SetFloat("VelocityRight", velocityRight.Value);
 			}
@@ -1266,7 +1266,7 @@ public class AnimatorHelper : MonoBehaviour
 		if (velocityForward.HasValue)
 		{
 			animMain.SetFloat("VelocityForward", velocityForward.Value);
-			if (animBob is not null)
+			if (animBob != null)
 			{
 				animBob.SetFloat("VelocityForward", velocityForward.Value);
 			}

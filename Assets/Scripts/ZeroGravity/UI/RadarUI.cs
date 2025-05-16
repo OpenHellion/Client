@@ -290,7 +290,7 @@ namespace ZeroGravity.UI
 					MyPlayer.Instance.transform.position;
 				Vector3 vector2 =
 					(SelectedTarget.ArtificialBody.Velocity - MyPlayer.Instance.Parent.Velocity).ToVector3() -
-					MyPlayer.Instance.rigidBody.velocity;
+					MyPlayer.Instance.rigidBody.linearVelocity;
 				Vector3 vector3 = Vector3.Project(vector2, vector.normalized);
 				Vector3 vector4 = Vector3.ProjectOnPlane(vector2, vector.normalized);
 				float magnitude = vector.magnitude;

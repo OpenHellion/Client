@@ -9,14 +9,14 @@ A [separate repository](https://github.com/OpenHellion/Server) for the developme
 Hellion Revived is a multiplayer game set in space. You're a part of a mission-gone-wrong to colonise the nearest star. The goal is to survive in space, and to do such you need to follow some quests. The game is an open-world sandbox game, and have features that allow you to build and manage your own space stations and ships.
 
 ## Info
-The game is developed with `Unity 2021.3 LTS` and `Wwise 2021.1 LTS`. The game should be cross-platform, but it has only been tested on Windows.
+The game is developed with `Unity 6 LTS`. The game should be cross-platform, but it has only been tested on Windows.
 
 Any improvements you may have are gladly accepted in the form of a pull request. I probably won't bother reviewing pull requests with thousands of lines of code, so please keep them small. If enough people want to become part of the project, I might create a whole team around the development of this game.
 
 ## How to open
 To open this project in the editor, you need to download and install the [Wwise Launcher](https://www.audiokinetic.com/download/). Adding the program to the Wwise Launcher is as simple as downloading this project and adding it to Unity Hub, but be careful not to open it. Once you have added the project to Unity Hub, it should be visible under the Unity tab.
 
-Before you modify the project, you should download the Wwise SDK, of which I strongly recommend version 2021.1 with default settings, and maybe add some compiler targets for Linux or Mac if you want.
+Before you modify the project, you should download the Wwise SDK, and maybe add some compiler targets for Linux or Mac if you want.
 
 After this, you may modify the project. Choose the SDK you downloaded, and locate your Unity installation. You can apply the changes directly, since you can just revert with Git if it goes wrong.
 

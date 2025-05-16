@@ -145,7 +145,7 @@ public class InventoryCharacterPreview : MonoBehaviour
 				{
 					foreach (InventorySlot.AttachData itemToAttach in slot.ItemsToAttach)
 					{
-						if (itemToAttach.Point is not null || !(itemToAttach.Point != outfit.OutfitTrans.gameObject))
+						if (itemToAttach.Point != null || !(itemToAttach.Point != outfit.OutfitTrans.gameObject))
 						{
 							continue;
 						}

@@ -43,7 +43,7 @@ namespace DigitalOpus.MB.Core
 
 		public UnityEngine.Object[] FindSceneObjectsOfType(Type t)
 		{
-			return UnityEngine.Object.FindObjectsOfType(t);
+			return UnityEngine.Object.FindObjectsByType(t, FindObjectsSortMode.None);
 		}
 
 		public bool IsRunningAndMeshNotReadWriteable(Mesh m)

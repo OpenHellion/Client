@@ -13,6 +13,7 @@ using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
+using Cysharp.Threading.Tasks;
 
 namespace ZeroGravity.UI
 {
@@ -98,7 +99,7 @@ namespace ZeroGravity.UI
 			ResignButton.onClick.AddListener(delegate { Resign(); });
 			ChangeNameButton.onClick.AddListener(delegate { ChangeShipName(); });
 			ChangeEmblemButton.onClick.AddListener(delegate { ShowEmblemPanel(status: true); });
-			InviteButton.onClick.AddListener(delegate { GetPlayerList(); });
+			InviteButton.onClick.AddListener(delegate { GetPlayerList().Forget(); });
 			ShipCrewButton.onClick.AddListener(delegate { ShowShipCrew(status: true); });
 			SelfDestructButton.onClick.AddListener(delegate { SelfDestructAction(); });
 		}
@@ -258,10 +259,10 @@ namespace ZeroGravity.UI
 			}
 		}
 
-		private void GetPlayerList()
+		private async UniTaskVoid GetPlayerList()
 		{
 			PurgeList();
-			SecuritySystem.GetPlayersForAuthorization(getFriends: true, getPlayerFromServer: true, UpdatePlayerList).Forget();
+			await SecuritySystem.GetPlayersForAuthorization(getFriends: true, getPlayerFromServer: true, UpdatePlayerList);
 		}
 
 		public void UpdateSecurityList()

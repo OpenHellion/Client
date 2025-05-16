@@ -174,7 +174,7 @@ namespace ZeroGravity.CharacterMovement
 			else
 			{
 				SceneTriggerLadder ladderTrigger = coli.GetComponentInParent<SceneTriggerLadder>();
-				if (_transferableObj is not MyPlayer myPlayer || ladderTrigger is null)
+				if (_transferableObj is not MyPlayer myPlayer || ladderTrigger == null)
 				{
 					return;
 				}
@@ -226,10 +226,10 @@ namespace ZeroGravity.CharacterMovement
 			Collider[] hitColliders = new Collider[10];
 			Physics.OverlapSphereNonAlloc(transform.position, _sphereCollider.radius, hitColliders);
 
-			Collider firstCollider = hitColliders.FirstOrDefault((Collider m) => m is not null && GetRoomTrigger(m) != null);
+			Collider firstCollider = hitColliders.FirstOrDefault((Collider m) => m != null && GetRoomTrigger(m) != null);
 			if (firstCollider == null)
 			{
-				if (TransferableObject.CurrentRoomTrigger is not null || _transferableObj.Parent is not Pivot)
+				if (TransferableObject.CurrentRoomTrigger != null || _transferableObj.Parent is not Pivot)
 				{
 					TransferableObject.ExitVessel(forceExit: true);
 					ResetTriggers();

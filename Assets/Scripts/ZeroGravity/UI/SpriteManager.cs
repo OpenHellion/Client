@@ -16,7 +16,7 @@ namespace ZeroGravity.UI
 
 		private void Awake()
 		{
-			if (Instance is not null)
+			if (Instance != null)
 			{
 				Debug.LogError("SpriteManager already exists.");
 				Destroy(this);

@@ -303,7 +303,7 @@ namespace ZeroGravity.CharacterMovement
 			Rigidbody[] componentsInChildren = base.transform.GetComponentsInChildren<Rigidbody>(true);
 			foreach (Rigidbody rigidbody in componentsInChildren)
 			{
-				rigidbody.velocity = Vector3.zero;
+				rigidbody.linearVelocity = Vector3.zero;
 				rigidbody.isKinematic = true;
 				rigidbody.useGravity = false;
 			}

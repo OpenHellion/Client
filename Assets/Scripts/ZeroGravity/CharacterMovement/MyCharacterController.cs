@@ -331,7 +331,7 @@ namespace ZeroGravity.CharacterMovement
 
 		public bool UseConsumableTriggered { get; set; }
 
-		public Vector3 Velocity => RigidBody.velocity;
+		public Vector3 Velocity => RigidBody.linearVelocity;
 
 		public bool IsEquippingAnimationTriggered { get; set; }
 
@@ -423,10 +423,10 @@ namespace ZeroGravity.CharacterMovement
 				LerpCameraToLocalZero();
 			}
 
-			if (_myPlayer.Parent is Pivot && RigidBody.drag.IsNotEpsilonZero() && NearbyVessel != null)
+			if (_myPlayer.Parent is Pivot && RigidBody.linearDamping.IsNotEpsilonZero() && NearbyVessel != null)
 			{
 				Pivot pivot = _myPlayer.Parent as Pivot;
-				RigidBody.velocity -= ((pivot.Velocity - NearbyVessel.Velocity) * Time.deltaTime).ToVector3();
+				RigidBody.linearVelocity -= ((pivot.Velocity - NearbyVessel.Velocity) * Time.deltaTime).ToVector3();
 			}
 		}
 
@@ -445,11 +445,11 @@ namespace ZeroGravity.CharacterMovement
 			{
 				if (!_isGrounded && !HasTumbled)
 				{
-					float num = Vector3.Dot(Vector3.Project(RigidBody.velocity, _myPlayer.GravityDirection),
+					float num = Vector3.Dot(Vector3.Project(RigidBody.linearVelocity, _myPlayer.GravityDirection),
 						_myPlayer.GravityDirection);
 					if (num > 7f)
 					{
-						Tumble(RigidBody.velocity);
+						Tumble(RigidBody.linearVelocity);
 					}
 				}
 
@@ -760,7 +760,7 @@ namespace ZeroGravity.CharacterMovement
 						}
 					}
 
-					if (!RagdollChestRigidbody.velocity.sqrMagnitude.IsNotEpsilonZero(0.001f) ||
+					if (!RagdollChestRigidbody.linearVelocity.sqrMagnitude.IsNotEpsilonZero(0.001f) ||
 					    _gravityChangeLerpHelper.IsNotEpsilonZero(0.001f))
 					{
 						_gravityChangeLerpHelper += Time.fixedDeltaTime * 2f;
@@ -839,7 +839,7 @@ namespace ZeroGravity.CharacterMovement
 					}
 				}
 
-				bool? isMoving = RigidBody.velocity.magnitude > float.Epsilon;
+				bool? isMoving = RigidBody.linearVelocity.magnitude > float.Epsilon;
 				AnimatorHelper.SetParameter(null, isMoving);
 				if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Crouch))
 				{
@@ -885,12 +885,12 @@ namespace ZeroGravity.CharacterMovement
 							RigidBody.AddForce(
 								_currMovementDirection * Mathf.Sqrt(_currForwardVelocity * _currForwardVelocity +
 								                                   _currRightVelocity * _currRightVelocity) -
-								RigidBody.velocity, ForceMode.VelocityChange);
+								RigidBody.linearVelocity, ForceMode.VelocityChange);
 						}
 						else
 						{
 							RigidBody.AddForce(
-								_currMovementDirection * (_currForwardVelocity + _currRightVelocity) - RigidBody.velocity,
+								_currMovementDirection * (_currForwardVelocity + _currRightVelocity) - RigidBody.linearVelocity,
 								ForceMode.VelocityChange);
 						}
 					}
@@ -938,7 +938,7 @@ namespace ZeroGravity.CharacterMovement
 			{
 				float axisRaw2 = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Forward);
 				float axisRaw3 = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Right);
-				if (axisRaw2 != 0f && Vector3.Project(RigidBody.velocity, base.transform.forward).sqrMagnitude <
+				if (axisRaw2 != 0f && Vector3.Project(RigidBody.linearVelocity, base.transform.forward).sqrMagnitude <
 				    ((!(_movementAxis.Forward > 0f))
 					    ? (_airSpeeds.BackwardVelocity * _airSpeeds.BackwardVelocity)
 					    : (_airSpeeds.ForwardVelocity * _airSpeeds.ForwardVelocity)))
@@ -950,7 +950,7 @@ namespace ZeroGravity.CharacterMovement
 					RigidBody.AddForce(force, ForceMode.VelocityChange);
 				}
 
-				if (axisRaw3 != 0f && Vector3.Project(RigidBody.velocity, base.transform.right).sqrMagnitude <
+				if (axisRaw3 != 0f && Vector3.Project(RigidBody.linearVelocity, base.transform.right).sqrMagnitude <
 				    _airSpeeds.RightVelocity * _airSpeeds.RightVelocity)
 				{
 					Vector3 force2 = base.transform.right * _airSpeeds.RightVelocity * 0.005f;
@@ -965,7 +965,7 @@ namespace ZeroGravity.CharacterMovement
 			{
 				if (!_isMovementEnabled && _myPlayer.IsLockedToTrigger)
 				{
-					RigidBody.velocity = Vector3.zero;
+					RigidBody.linearVelocity = Vector3.zero;
 					RigidBody.angularVelocity = Vector3.zero;
 				}
 				else
@@ -1137,7 +1137,7 @@ namespace ZeroGravity.CharacterMovement
 				                      (_myPlayer.IsUsingItemInHands &&
 				                       _myPlayer.Inventory.CheckIfItemInHandsIsType<HandDrill>());
 				if (hasToStabilise && _canGrabWall && NearbyVessel != null &&
-				    (NearbyVessel.Velocity - (_myPlayer.Parent.Velocity + RigidBody.velocity.ToVector3D()))
+				    (NearbyVessel.Velocity - (_myPlayer.Parent.Velocity + RigidBody.linearVelocity.ToVector3D()))
 				    .SqrMagnitude < 100.0)
 				{
 					if (_myPlayer.CurrentRoomTrigger == null)
@@ -1150,15 +1150,15 @@ namespace ZeroGravity.CharacterMovement
 
 						if (StickToVessel != null)
 						{
-							RigidBody.velocity = Vector3.Lerp(RigidBody.velocity,
+							RigidBody.linearVelocity = Vector3.Lerp(RigidBody.linearVelocity,
 								(StickToVessel.Velocity - _myPlayer.Parent.Velocity).ToVector3(), 0.1f);
 						}
 					}
 					else
 					{
 						StickToVessel = null;
-						RigidBody.drag = _zgGrabDrag;
-						RigidBody.velocity *= 0.9f;
+						RigidBody.linearDamping = _zgGrabDrag;
+						RigidBody.linearVelocity *= 0.9f;
 					}
 				}
 				else if (_myPlayer.IsInsideSpaceObject && _myPlayer.CurrentRoomTrigger != null &&
@@ -1167,38 +1167,38 @@ namespace ZeroGravity.CharacterMovement
 					StickToVessel = null;
 					StickToVesselTangentialVelocity = Vector3.zero;
 					StickToVesselRotation = Quaternion.identity;
-					RigidBody.drag = _zgAtmosphereDrag;
+					RigidBody.linearDamping = _zgAtmosphereDrag;
 				}
 				else
 				{
 					if (StickToVessel != null)
 					{
-						RigidBody.velocity = StickToVesselTangentialVelocity;
+						RigidBody.linearVelocity = StickToVesselTangentialVelocity;
 					}
 
 					StickToVessel = null;
 					StickToVesselTangentialVelocity = Vector3.zero;
 					StickToVesselRotation = Quaternion.identity;
-					RigidBody.drag = 0f;
+					RigidBody.linearDamping = 0f;
 				}
 
 				// Handle rotation.
 				if (IsJetpackOn)
 				{
-					RigidBody.angularDrag = _zgJetpackAngularDrag;
+					RigidBody.angularDamping = _zgJetpackAngularDrag;
 				}
 				else if (hasToStabilise && _canGrabWall)
 				{
-					RigidBody.angularDrag = _zgGrabAngularDrag;
+					RigidBody.angularDamping = _zgGrabAngularDrag;
 				}
 				else if (_myPlayer.IsInsideSpaceObject && _myPlayer.CurrentRoomTrigger != null &&
 				         _myPlayer.CurrentRoomTrigger.AirPressure > 0.5f)
 				{
-					RigidBody.angularDrag = _zgAtmosphereAngularDrag;
+					RigidBody.angularDamping = _zgAtmosphereAngularDrag;
 				}
 				else
 				{
-					RigidBody.angularDrag = 0f;
+					RigidBody.angularDamping = 0f;
 				}
 
 				if (_movementAxis.Right.IsNotEpsilonZero() || _movementAxis.Forward.IsNotEpsilonZero() ||
@@ -1209,11 +1209,11 @@ namespace ZeroGravity.CharacterMovement
 					                 + _cameraController.transform.right * _movementAxis.Right * _currSpeeds.RightVelocity
 					                 + _cameraController.transform.up * _movementAxis.Up * _currSpeeds.RightVelocity;
 
-					if (!IsJetpackOn && RigidBody.velocity.sqrMagnitude >=
+					if (!IsJetpackOn && RigidBody.linearVelocity.sqrMagnitude >=
 					    _currSpeeds.ForwardVelocity * _currSpeeds.ForwardVelocity)
 					{
-						Vector3 vector2 = Vector3.Project(vector, RigidBody.velocity);
-						if (MathHelper.SameSign(RigidBody.velocity.normalized, vector2.normalized))
+						Vector3 vector2 = Vector3.Project(vector, RigidBody.linearVelocity);
+						if (MathHelper.SameSign(RigidBody.linearVelocity.normalized, vector2.normalized))
 						{
 							vector -= vector2;
 						}
@@ -1295,7 +1295,7 @@ namespace ZeroGravity.CharacterMovement
 					_collider1G.enabled = false;
 					_collider0G.enabled = true;
 					RigidBody.freezeRotation = false;
-					RigidBody.angularDrag = 1.5f;
+					RigidBody.angularDamping = 1.5f;
 					_cameraController.IsZeroG = true;
 					AnimatorHelper.SetParameter(null, false, true, false);
 					_cameraController.LerpCameraControllerBack(1f);
@@ -1306,8 +1306,8 @@ namespace ZeroGravity.CharacterMovement
 					_collider0G.enabled = false;
 					_collider1G.enabled = true;
 					_cameraController.IsZeroG = false;
-					RigidBody.drag = 0f;
-					RigidBody.angularDrag = 0f;
+					RigidBody.linearDamping = 0f;
+					RigidBody.angularDamping = 0f;
 					RigidBody.freezeRotation = true;
 					if (CurrentJetpack != null && CurrentJetpack.IsActive)
 					{
@@ -1332,7 +1332,7 @@ namespace ZeroGravity.CharacterMovement
 				_collider1G.enabled = false;
 				_collider0G.enabled = true;
 				RigidBody.freezeRotation = false;
-				RigidBody.angularDrag = 1.5f;
+				RigidBody.angularDamping = 1.5f;
 				_cameraController.IsZeroG = true;
 				if (_cameraController.transform.localPosition.y.IsNotEpsilonZero())
 				{
@@ -1368,8 +1368,8 @@ namespace ZeroGravity.CharacterMovement
 				_collider0G.enabled = false;
 				_collider1G.enabled = true;
 				_cameraController.IsZeroG = false;
-				RigidBody.drag = 0f;
-				RigidBody.angularDrag = 0f;
+				RigidBody.linearDamping = 0f;
+				RigidBody.angularDamping = 0f;
 				RigidBody.freezeRotation = true;
 				if (CurrentJetpack != null && CurrentJetpack.IsActive)
 				{
@@ -1399,7 +1399,7 @@ namespace ZeroGravity.CharacterMovement
 				if (Vector3.Angle(base.transform.up, -_myPlayer.GravityDirection) > 40f || CheckGravityRagdollDistance())
 				{
 					_gravityChangedRagdoll = true;
-					RagdollChestRigidbody.velocity = RigidBody.velocity;
+					RagdollChestRigidbody.linearVelocity = RigidBody.linearVelocity;
 					_myPlayer.ToggleRagdoll(true);
 				}
 				else if (_myPlayer.OldGravity.IsEpsilonEqual(Vector3.zero))
@@ -1479,7 +1479,7 @@ namespace ZeroGravity.CharacterMovement
 			}
 
 			_lastMovementState = MovementState.Normal;
-			RigidBody.velocity = Vector3.zero;
+			RigidBody.linearVelocity = Vector3.zero;
 			RigidBody.angularVelocity = Vector3.zero;
 			AnimatorHelper.SetParameter(false, null, null, null, null, null, null, null, null, null, 0f, 0f);
 			_myPlayer.ToggleMeshRendereres(enableMesh: true);
@@ -1494,7 +1494,7 @@ namespace ZeroGravity.CharacterMovement
 
 		public void CheckVelocityForLock()
 		{
-			if (RigidBody.velocity.magnitude < 0.1f)
+			if (RigidBody.linearVelocity.magnitude < 0.1f)
 			{
 				_canLockToPoint = true;
 				GrabSlowEnabled = false;
@@ -1637,7 +1637,7 @@ namespace ZeroGravity.CharacterMovement
 		{
 			if (_isGrounded && !IsJump)
 			{
-				RigidBody.velocity = Quaternion.AngleAxis(angle, axis) * RigidBody.velocity;
+				RigidBody.linearVelocity = Quaternion.AngleAxis(angle, axis) * RigidBody.linearVelocity;
 			}
 		}
 
@@ -1784,7 +1784,7 @@ namespace ZeroGravity.CharacterMovement
 			}
 
 			_myPlayer.ToggleRagdoll(true);
-			RagdollChestRigidbody.velocity = _myPlayer.GravityDirection * 0.1f;
+			RagdollChestRigidbody.linearVelocity = _myPlayer.GravityDirection * 0.1f;
 		}
 
 		public void SetHandsBoxCollider(BoxCollider collider)

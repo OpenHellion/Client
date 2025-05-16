@@ -77,7 +77,7 @@ namespace ZeroGravity
 		/// <summary>
 		/// 	Starts loading, and initializes objects for pooling.
 		/// </summary>
-		public void InitializeScenes()
+		public async UniTask InitializeScenes()
 		{
 			if (InitialisingSceneManager.SceneLoadType != InitialisingSceneManager.SceneLoadTypeValue.PreloadWithCopy)
 			{
@@ -98,7 +98,7 @@ namespace ZeroGravity
 				IsPreloading = true;
 
 				// Do the loading.
-				PreLoadScenes().Forget();
+				await PreLoadScenes();
 				Debug.Log("Started preloading...");
 				return;
 			}
@@ -135,7 +135,7 @@ namespace ZeroGravity
 		/// <summary>
 		/// 	Handles the loading of objects to pool.
 		/// </summary>
-		private async UniTaskVoid PreLoadScenes()
+		private async UniTask PreLoadScenes()
 		{
 			float totalNumberOfScenes = _structureScenes.Count + _celestialScenes.Count;
 			float currentSceneNumber = 0f;
@@ -219,10 +219,7 @@ namespace ZeroGravity
 				return;
 			}
 
-			if (_scenesCurrentlyLoading.Contains(sceneId))
-			{
-				await UniTask.WaitWhile(() => _scenesCurrentlyLoading.Contains(sceneId));
-			}
+			await UniTask.WaitWhile(() => _scenesCurrentlyLoading.Contains(sceneId));
 
 			_scenesCurrentlyLoading.Add(sceneId);
 			await SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
@@ -233,8 +230,7 @@ namespace ZeroGravity
 				GameObject[] rootGameObjects = scene.GetRootGameObjects();
 				foreach (GameObject rootObject in rootGameObjects)
 				{
-					var found = rootObject.TryGetComponent(out AsteroidScene sceneScript);
-					if (found)
+					if (rootObject.TryGetComponent(out StructureScene sceneScript))
 					{
 						_loadedSceneReferences.Add(new SceneReference
 						{
@@ -253,8 +249,7 @@ namespace ZeroGravity
 				GameObject[] rootGameObjects = scene.GetRootGameObjects();
 				foreach (GameObject rootObject in rootGameObjects)
 				{
-					var found = rootObject.TryGetComponent(out AsteroidScene sceneScript);
-					if (found)
+					if (rootObject.TryGetComponent(out AsteroidScene sceneScript))
 					{
 						_loadedSceneReferences.Add(new SceneReference
 						{

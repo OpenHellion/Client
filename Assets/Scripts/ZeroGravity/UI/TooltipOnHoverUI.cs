@@ -24,7 +24,7 @@ namespace ZeroGravity.UI
 		private void Awake()
 		{
 			var inWorldPanels = GameObject.Find("/InWorldPanels").GetComponent<InWorldPanels>();
-			if (inWorldPanels is null)
+			if (inWorldPanels == null)
 			{
 				Debug.LogWarning("Tried to get InWorldPanels tooltip, but it couldn't be found. Destroying object. " + gameObject.name);
 				Destroy(gameObject);

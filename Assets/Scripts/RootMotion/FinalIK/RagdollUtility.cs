@@ -66,7 +66,7 @@ namespace RootMotion.FinalIK
 				r.isKinematic = false;
 				if (velocityWeight != 0f)
 				{
-					r.velocity = deltaPosition / deltaTime * velocityWeight;
+					r.linearVelocity = deltaPosition / deltaTime * velocityWeight;
 				}
 
 				if (angularVelocityWeight != 0f)
@@ -352,8 +352,8 @@ namespace RootMotion.FinalIK
 
 		private void LateUpdate()
 		{
-			if (animator.updateMode != AnimatorUpdateMode.AnimatePhysics ||
-			    (animator.updateMode == AnimatorUpdateMode.AnimatePhysics && fixedFrame))
+			if (animator.updateMode != AnimatorUpdateMode.Fixed ||
+			    (animator.updateMode == AnimatorUpdateMode.Fixed && fixedFrame))
 			{
 				AfterAnimation();
 			}
@@ -419,7 +419,7 @@ namespace RootMotion.FinalIK
 			}
 
 			animatorUpdateMode = animator.updateMode;
-			animator.updateMode = AnimatorUpdateMode.AnimatePhysics;
+			animator.updateMode = AnimatorUpdateMode.Fixed;
 			animator.enabled = false;
 			for (int k = 0; k < rigidbones.Length; k++)
 			{

@@ -148,10 +148,10 @@ namespace ZeroGravity.Objects
 
 		public override void Reload(Item newItem)
 		{
-			if (newItem is not null && newItem is Magazine && CanReloadWithType((newItem as Magazine).Type))
+			if (newItem != null && newItem is Magazine && CanReloadWithType((newItem as Magazine).Type))
 			{
 				Magazine newReloadingItem = (Magazine)newItem;
-				if (magazinePos is not null)
+				if (magazinePos != null)
 				{
 					MyPlayer.Instance.ChangeCamerasFov(Globals.Instance.DefaultCameraFov);
 					MyPlayer.Instance.ReloadItem(newReloadingItem, Magazine,

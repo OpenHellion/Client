@@ -103,7 +103,7 @@ public class HelmetRadar : MonoBehaviour
 
 			if (!_world.InGameGUI.ConsoleIsUp)
 			{
-				if (_hoveredTarget is not null && Mouse.current.leftButton.isPressed)
+				if (_hoveredTarget != null && Mouse.current.leftButton.isPressed)
 				{
 					_currentTarget = _hoveredTarget;
 					_currentTarget.IsSelected = true;
@@ -193,7 +193,7 @@ public class HelmetRadar : MonoBehaviour
 		{
 			Vector3 vector = _currentTarget.AB.transform.position - MyPlayer.Instance.transform.position;
 			Vector3 vector2 = (_currentTarget.AB.Velocity - MyPlayer.Instance.Parent.Velocity -
-			                   MyPlayer.Instance.rigidBody.velocity.ToVector3D()).ToVector3();
+			                   MyPlayer.Instance.rigidBody.linearVelocity.ToVector3D()).ToVector3();
 			Vector3 vector3 = Vector3.Project(vector2, vector.normalized);
 			Vector3 vector4 = Vector3.ProjectOnPlane(vector2, vector.normalized);
 			OnSpeedValText.text =

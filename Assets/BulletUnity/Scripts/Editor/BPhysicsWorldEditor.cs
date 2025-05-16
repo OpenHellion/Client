@@ -10,7 +10,7 @@ public class BDynamicsWorldEditor : Editor
     [MenuItem("GameObject/Create Other/BulletForUnity/BulletPhysicsWorld")]  //right click menu
     public static GameObject CreateNew()
     {
-        if (GameObject.FindObjectOfType<BPhysicsWorld>() != null){
+        if (FindFirstObjectByType<BPhysicsWorld>() != null){
             Debug.LogError("The Scene already includes a BulletPhysicsWorld. Not creating.");
             return null;
         }

@@ -214,7 +214,7 @@ namespace ZeroGravity.UI
 			{
 				MyPlayer.Instance.FpsController.ToggleMovement(false);
 			}
-			else if (MyPlayer.Instance.LockedToTrigger is null && !MyPlayer.Instance.InLockState &&
+			else if (MyPlayer.Instance.LockedToTrigger == null && !MyPlayer.Instance.InLockState &&
 			         !MyPlayer.Instance.InInteractState && !MyPlayer.Instance.InLerpingState)
 			{
 				MyPlayer.Instance.FpsController.ToggleMovement(true);
@@ -298,7 +298,7 @@ namespace ZeroGravity.UI
 		public void CloseChat()
 		{
 			ShowChat(false).Forget();
-			if (MyPlayer.Instance.LockedToTrigger is null)
+			if (MyPlayer.Instance.LockedToTrigger == null)
 			{
 				MyPlayer.Instance.FpsController.ToggleMovement(true);
 			}

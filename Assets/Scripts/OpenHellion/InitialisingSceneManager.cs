@@ -26,6 +26,7 @@ using OpenHellion.UI;
 using UnityEngine.SceneManagement;
 using ZeroGravity;
 using ZeroGravity.UI;
+using Cysharp.Threading.Tasks;
 
 namespace OpenHellion
 {
@@ -42,7 +43,7 @@ namespace OpenHellion
 
 		public static SceneLoadTypeValue SceneLoadType = SceneLoadTypeValue.PreloadWithCopy;
 
-		private void Awake()
+		private async UniTaskVoid Awake()
 		{
 			NakamaClient.OnNakamaError += HandleNakamaError;
 
@@ -67,7 +68,7 @@ namespace OpenHellion
 
 			ControlsRebinder.Initialize();
 
-			NakamaClient.Initialise().Forget();
+			await NakamaClient.Initialise();
 		}
 
 		private void OnDestroy()
@@ -75,7 +76,7 @@ namespace OpenHellion
 			NakamaClient.OnNakamaError -= HandleNakamaError;
 		}
 
-		private void Start()
+		private async UniTaskVoid Start()
 		{
 			HiResTime.Start();
 
@@ -89,7 +90,7 @@ namespace OpenHellion
 			}
 			else
 			{
-				Globals.SceneLoader.InitializeScenes();
+				await Globals.SceneLoader.InitializeScenes();
 				StartCoroutine(CheckStartGame());
 			}
 		}

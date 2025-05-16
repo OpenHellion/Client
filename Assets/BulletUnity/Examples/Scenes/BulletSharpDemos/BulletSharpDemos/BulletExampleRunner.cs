@@ -9,10 +9,10 @@ using BulletUnity;
 /*
 WARNING
 
-The DemoFramework that these examples run in is not implemented using good design from a Unity point of view. 
+The DemoFramework that these examples run in is not implemented using good design from a Unity point of view.
 I would not recommend setting up Bullet physics in Unity based on the DemoFramework these examples run in.
 
-This framework is designed to run the demos included in the bullet distribution with minimal modification. 
+This framework is designed to run the demos included in the bullet distribution with minimal modification.
 They are included here as a reference and to make sure things are working correctly.
 */
 public class BulletExampleRunner : MonoBehaviour {
@@ -196,7 +196,7 @@ public class BulletExampleRunner : MonoBehaviour {
     //singleton not sure if it needs to be
     public static BulletExampleRunner Get() {
         if (singleton == null) {
-            BulletExampleRunner[] ws = FindObjectsOfType<BulletExampleRunner>();
+            BulletExampleRunner[] ws = FindObjectsByType<BulletExampleRunner>(FindObjectsSortMode.None);
             if (ws.Length == 1) {
                 singleton = ws[0];
             } else if (ws.Length == 0) {
@@ -264,7 +264,7 @@ public class BulletExampleRunner : MonoBehaviour {
                     ggo.transform.localScale = new Vector3(css.Radius * 2f,css.HalfHeight * 2f,css.Radius * 2f);
                     BulletRigidBodyProxy rbp = go.AddComponent<BulletRigidBodyProxy>();
                     rbp.target = co;
-                } else { 
+                } else {
                     //Debug.Log("Creating " + cs.ShapeType + " for " + co.ToString());
                     go = CreateUnityCollisionObjectProxy(co as CollisionObject);
                 }
@@ -361,7 +361,7 @@ public class BulletExampleRunner : MonoBehaviour {
                 Debug.LogError("Face was not a triangle");
                 continue;
             }
-            for (int j = 0; j < f.Nodes.Count; j++) { 
+            for (int j = 0; j < f.Nodes.Count; j++) {
                 tris.Add( node2vertIdx[f.Nodes[j]]);
             }
         }

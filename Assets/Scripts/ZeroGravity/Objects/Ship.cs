@@ -1563,7 +1563,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			if (SecuritySystem is not null && res.Data != null)
+			if (SecuritySystem != null && res.Data != null)
 			{
 				SceneNameTag[] shipNameTags = SecuritySystem.ShipNameTags;
 				foreach (SceneNameTag sceneNameTag in shipNameTags)
@@ -1584,11 +1584,11 @@ namespace ZeroGravity.Objects
 			sceneRoot.transform.SetParent(rootTransform);
 			sceneRoot.transform.localRotation = Quaternion.identity;
 			RootObject = sceneRoot;
-			if (GeometryRoot is not null)
+			if (GeometryRoot != null)
 			{
 				DestructionEffects =
 					GeometryRoot.GetComponentInChildren<VesselDestructionEffects>(includeInactive: true);
-				if (DestructionEffects is not null)
+				if (DestructionEffects != null)
 				{
 					DestructionEffects.gameObject.SetActive(value: false);
 				}
@@ -1718,7 +1718,7 @@ namespace ZeroGravity.Objects
 			}
 
 			OnSceneLoaded();
-			if (shipObjects is { SecurityData: not null } && SecuritySystem is not null)
+			if (shipObjects is { SecurityData: not null } && SecuritySystem != null)
 			{
 				SecuritySystem.ParseSecurityData(shipObjects.SecurityData);
 			}

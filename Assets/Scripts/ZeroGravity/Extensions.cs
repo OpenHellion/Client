@@ -439,7 +439,7 @@ namespace ZeroGravity
 			foreach (Transform transform in componentsInChildren)
 			{
 				num = 1 << transform.gameObject.layer;
-				if (transform.gameObject is not null && (num & mask) != num)
+				if (transform.gameObject != null && (num & mask) != num)
 				{
 					transform.gameObject.layer = layer;
 				}

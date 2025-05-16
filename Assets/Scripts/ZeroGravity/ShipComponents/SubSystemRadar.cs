@@ -171,7 +171,7 @@ namespace ZeroGravity.ShipComponents
 			if (target.RadarVisibilityType != RadarVisibilityType.Warp && target.Maneuver?.Type == ManeuverType.Warp)
 			{
 				target.RadarVisibilityType = RadarVisibilityType.Warp;
-				if (spaceObjectVessel is not null)
+				if (spaceObjectVessel != null)
 				{
 					spaceObjectVessel.ResetLastKnownMapOrbit();
 				}
@@ -192,7 +192,7 @@ namespace ZeroGravity.ShipComponents
 			if (target.RadarVisibilityType == RadarVisibilityType.Warp && target.Maneuver == null && flag2 && !flag)
 			{
 				target.RadarVisibilityType = RadarVisibilityType.Invisible;
-				if (spaceObjectVessel is not null)
+				if (spaceObjectVessel != null)
 				{
 					spaceObjectVessel.ResetLastKnownMapOrbit();
 				}
@@ -206,7 +206,7 @@ namespace ZeroGravity.ShipComponents
 				if (target.RadarVisibilityType == RadarVisibilityType.Visible && !flag)
 				{
 					target.RadarVisibilityType = RadarVisibilityType.Unknown;
-					if (spaceObjectVessel is not null)
+					if (spaceObjectVessel != null)
 					{
 						spaceObjectVessel.SetLastKnownMapOrbit();
 						if (spaceObjectVessel.VesselData != null && spaceObjectVessel.VesselData.SpawnRuleID != 0)
@@ -236,7 +236,7 @@ namespace ZeroGravity.ShipComponents
 				    (spaceObjectVessel.LastKnownMapOrbit.Position - ParentVessel.Position).Magnitude < num2)
 				{
 					target.RadarVisibilityType = RadarVisibilityType.Invisible;
-					if (spaceObjectVessel is not null)
+					if (spaceObjectVessel != null)
 					{
 						spaceObjectVessel.ResetLastKnownMapOrbit();
 					}

@@ -24,12 +24,15 @@ using Steamworks;
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Net.Sockets;
 using OpenHellion.IO;
 using OpenHellion.Social.RichPresence;
 using ZeroGravity.Network;
 using Cysharp.Threading.Tasks;
+
+#if UNITY_EDITOR
+using System.Linq;
+#endif
 
 namespace OpenHellion.Net
 {
@@ -59,7 +62,7 @@ namespace OpenHellion.Net
 		{
 			get
 			{
-				if (_instance is null)
+				if (_instance == null)
 				{
 					Debug.LogError("Tried to get network controller before it has been initialised.");
 				}
@@ -172,6 +175,18 @@ namespace OpenHellion.Net
 		public static UniTask<NetworkData> SendReceiveAsync(NetworkData data)
 		{
 			return _gameTransport.SendReceiveAsyncInternal(data);
+		}
+
+		/// <summary>
+		/// 	Use request/response-like communication with async support.
+		/// 	A <a cref="TimeoutException"/> is thrown when no response is received within the configured timeframe.
+		/// </summary>
+		/// <param name="data">The data to send.</param>
+		/// <param name="timeout">Milliseconds to wait before timing out.</param>
+		/// <exception cref="TimeoutException"/>
+		public static UniTask<NetworkData> SendReceiveAsync(NetworkData data, int timeout)
+		{
+			return _gameTransport.SendReceiveAsyncInternal(data, timeout);
 		}
 
 		/// <summary>
@@ -303,7 +318,7 @@ namespace OpenHellion.Net
 
 			_getP2PPacketsThreadActive = false;
 		}
-#if UNITY_DEBUG
+#if UNITY_EDITOR
 
 		private void OnGUI()
 		{

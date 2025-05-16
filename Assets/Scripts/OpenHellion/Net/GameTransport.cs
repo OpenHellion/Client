@@ -41,7 +41,7 @@ namespace OpenHellion.Net
 	/// </remarks>
 	internal sealed class GameTransport
 	{
-		private const int TIMEOUT_MS = 2000;
+		private const int TIMEOUT_MS = 4000;
 
 		private const int MAX_MESSAGE_SIZE = 16000000;
 
@@ -86,12 +86,6 @@ namespace OpenHellion.Net
 						if (networkData.SyncRequest)
 						{
 							NetworkData res = await EventSystem.InvokeSyncRequest(networkData);
-
-							if (res is null)
-							{
-								res.Status = NetworkData.MessageStatus.Failure;
-							}
-
 							res.ConversationGuid = networkData.ConversationGuid;
 							res.SyncResponse = true;
 							SendInternal(res).Forget();
@@ -105,16 +99,11 @@ namespace OpenHellion.Net
 							EventSystem.Invoke(networkData);
 						}
 
-						#if UNITY_DEBUG
+						#if UNITY_EDITOR
 						Debug.LogFormat("Received game data of type {0}.", networkData.GetType());
 						NetworkController.LogReceivedNetworkData(networkData.GetType());
 						#endif
 					}
-				}
-				catch (NullReferenceException)
-				{
-					Debug.Log("Socket terminated, disconnecting client.");
-					DisconnectInternal().Forget();
 				}
 				catch (SocketException)
 				{
@@ -151,16 +140,6 @@ namespace OpenHellion.Net
 				Debug.LogWarning("Socket terminated, disconnecting client.");
 				DisconnectInternal().Forget();
 			}
-			catch (NullReferenceException)
-			{
-				Debug.Log("Tried to send data to non-existant client.");
-				DisconnectInternal().Forget();
-			}
-			catch (IOException)
-			{
-				Debug.Log("Socket terminated, disconnecting client.");
-				DisconnectInternal().Forget();
-			}
 			catch (ArgumentNullException)
 			{
 				Debug.LogErrorFormat("Serialized data buffer is null. Type: {0}. Data:\n{1}", data.GetType().ToString(), data);
@@ -171,29 +150,32 @@ namespace OpenHellion.Net
 		/// 	Use request/response-like communication with async support.
 		/// </summary>
 		/// <param name="data">The data to send.</param>
-		internal async UniTask<NetworkData> SendReceiveAsyncInternal(NetworkData data)
+		/// <param name="timeout">Milliseconds to wait before timing out.</param>
+		internal async UniTask<NetworkData> SendReceiveAsyncInternal(NetworkData data, int timeout = TIMEOUT_MS)
 		{
 			try
 			{
 				data.SyncRequest = true;
-				data.ExpirationUtc = DateTime.UtcNow.AddMilliseconds(TIMEOUT_MS);
+				data.ExpirationUtc = DateTime.UtcNow.AddMilliseconds(timeout);
 				var packedData = await ProtoSerialiser.Pack(data);
 
 				NetworkData response = null;
+				CancellationTokenSource responseCancel = new();
 				void responseHandler(NetworkData responseData)
 				{
 					if (data.ConversationGuid == responseData.ConversationGuid)
 					{
 						response = responseData;
+						responseCancel.Cancel();
 					}
 				}
 
 				_syncResponseReceivedEvent += responseHandler;
 
-				await _connectionStream.WriteAsync(packedData);
+				await _connectionStream.WriteAsync(packedData).ConfigureAwait(false);
 				Debug.LogFormat("Sent game data of type {0} with a size of {1} KB.", data.GetType(), (float)packedData.Length / 1000);
 
-				await UniTask.Delay(TIMEOUT_MS, true);
+				await UniTask.Delay(timeout, true, cancellationToken: responseCancel.Token).SuppressCancellationThrow();
 
 				_syncResponseReceivedEvent -= responseHandler;
 
@@ -209,16 +191,6 @@ namespace OpenHellion.Net
 			catch (ProtoException)
 			{
 				Debug.LogWarning("Protobuf encountered an error when reading from stream.");
-			}
-			catch (NullReferenceException)
-			{
-				Debug.Log("Tried to send data to non-existant client.");
-				DisconnectInternal().Forget();
-			}
-			catch (IOException)
-			{
-				Debug.Log("Socket terminated, disconnecting client.");
-				DisconnectInternal().Forget();
 			}
 			catch (SocketException)
 			{

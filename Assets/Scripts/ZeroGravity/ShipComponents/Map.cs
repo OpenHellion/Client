@@ -987,7 +987,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void RemoveManeuverCourse()
 		{
-			if (WarpManeuver is not null)
+			if (WarpManeuver != null)
 			{
 				Destroy(WarpManeuver.gameObject);
 				WarpManeuver = null;

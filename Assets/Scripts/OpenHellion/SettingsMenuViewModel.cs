@@ -197,7 +197,7 @@ namespace OpenHellion
 			_chromaticAberration = true;
 			_qualityIndex = 2;
 			QualitySettings.SetQualityLevel(_qualityIndex, applyExpensiveChanges: false);
-			_textureIndex = QualitySettings.masterTextureLimit;
+			_textureIndex = QualitySettings.globalTextureMipmapLimit;
 			_shadowQualityIndex = (int)QualitySettings.shadows;
 			_antialiasingIndex = 1;
 

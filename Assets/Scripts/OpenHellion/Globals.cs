@@ -90,7 +90,7 @@ namespace OpenHellion
 
 		private void Awake()
 		{
-			if (Instance is not null)
+			if (Instance != null)
 			{
 				Debug.LogError("Two instances of GlobalFunctions found!");
 				Destroy(this);

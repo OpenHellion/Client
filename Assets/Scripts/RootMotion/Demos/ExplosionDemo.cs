@@ -48,7 +48,7 @@ namespace RootMotion.Demos
 				Vector3 vector = r.position - base.transform.position;
 				vector.y = 0f;
 				float num = explosionForceByDistance.Evaluate(vector.magnitude);
-				r.velocity = (vector.normalized + Vector3.up * upForce) * num * forceMlp;
+				r.linearVelocity = (vector.normalized + Vector3.up * upForce) * num * forceMlp;
 			}
 
 			if (weight < 0.5f && character.isGrounded)

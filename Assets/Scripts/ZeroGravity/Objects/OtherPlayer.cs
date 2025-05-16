@@ -276,7 +276,7 @@ namespace ZeroGravity.Objects
 			else if (Parent is SpaceObjectVessel && Parent.Guid != cmm.ParentGUID)
 			{
 				SpaceObjectVessel vessel = World.GetVessel(cmm.ParentGUID);
-				if (vessel is not null)
+				if (vessel != null)
 				{
 					Parent = vessel;
 				}

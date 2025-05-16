@@ -35,7 +35,7 @@ namespace OpenHellion.Social.RichPresence
 		{
 			get
 			{
-				if (_instance is not null) return _instance;
+				if (_instance != null) return _instance;
 
 				return new GameObject("PresenceManager").AddComponent<RichPresenceManager>();
 			}
@@ -48,7 +48,7 @@ namespace OpenHellion.Social.RichPresence
 		void Awake()
 		{
 			// Only one instance can exist at a time.
-			if (_instance is not null)
+			if (_instance != null)
 			{
 				Destroy(gameObject, 0f);
 				Debug.LogError("Tried to create new ProviderManager, but there already exists another manager.");

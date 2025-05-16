@@ -399,7 +399,7 @@ namespace ZeroGravity.Objects
 
 		public new bool IsInsideSpaceObject => Parent is SpaceObjectVessel;
 
-		public Vector3 MyVelocity => rigidBody.velocity;
+		public Vector3 MyVelocity => rigidBody.linearVelocity;
 
 		public SceneTriggerExecutor CancelInteractExecutor { get; set; }
 
@@ -481,7 +481,7 @@ namespace ZeroGravity.Objects
 		{
 			get
 			{
-				if (LockedToTrigger is null)
+				if (LockedToTrigger == null)
 				{
 					return true;
 				}
@@ -693,17 +693,17 @@ namespace ZeroGravity.Objects
 					return !flag && ((flag2 && (playerHit != null || corpseHit)) ||
 									 (!flag2 && playerHit == null && !corpseHit));
 				});
-				if (hit.collider is not null)
+				if (hit.collider != null)
 				{
-					if (playerHit is not null || corpseHit)
+					if (playerHit != null || corpseHit)
 					{
-						if (playerHit is not null && !corpseHit)
+						if (playerHit != null && !corpseHit)
 						{
 							hitGUID = playerHit.Guid;
 						}
 
 						RagdollCollider component = hit.transform.gameObject.GetComponent<RagdollCollider>();
-						if (component is not null)
+						if (component != null)
 						{
 							shotData.colliderType = (byte)component.ColType;
 						}
@@ -716,7 +716,7 @@ namespace ZeroGravity.Objects
 						if (corpseHit)
 						{
 							Rigidbody hitRigidbody = hit.rigidbody;
-							if (hitRigidbody is not null)
+							if (hitRigidbody != null)
 							{
 								hitRigidbody.AddForce(
 									Quaternion.LookRotation(FpsController.MainCamera.transform.forward,
@@ -728,7 +728,7 @@ namespace ZeroGravity.Objects
 					else
 					{
 						DynamicObject componentInChildren = hit.transform.GetComponentInChildren<DynamicObject>();
-						if (componentInChildren is not null)
+						if (componentInChildren != null)
 						{
 							if (!componentInChildren.IsAttached && componentInChildren.IsKinematic)
 							{
@@ -779,7 +779,7 @@ namespace ZeroGravity.Objects
 		{
 			PlayerShootingMessage playerShootingMessage = data as PlayerShootingMessage;
 			OtherPlayer player = World.GetPlayer(playerShootingMessage.GUID);
-			if (player is not null)
+			if (player != null)
 			{
 				Attack(playerShootingMessage.ShotData, player.CurrentActiveItem, 0f, 0f, otherPlayer: true);
 			}
@@ -841,7 +841,7 @@ namespace ZeroGravity.Objects
 					LocalPosition = transform.localPosition.ToArray(),
 					LocalRotation = transform.localRotation.ToArray(),
 					LocalVelocity =
-					(Parent.TransferableObjectsRoot.transform.rotation.Inverse() * rigidBody.velocity).ToArray(),
+					(Parent.TransferableObjectsRoot.transform.rotation.Inverse() * rigidBody.linearVelocity).ToArray(),
 					Timestamp = Time.time,
 					PlatformRelativePos = !(OnPlatform != null)
 					? null
@@ -916,7 +916,7 @@ namespace ZeroGravity.Objects
 				NetworkController.Send(characterMovementMessage);
 			}
 
-			if (FpsController.StickToVessel is not null && CurrentRoomTrigger is null)
+			if (FpsController.StickToVessel != null && CurrentRoomTrigger == null)
 			{
 				Quaternion quaternion = FpsController.StickToVessel.transform.rotation *
 										FpsController.StickToVesselRotation.Inverse();
@@ -1385,7 +1385,7 @@ namespace ZeroGravity.Objects
 			SubSystemRadar subSystemRadar = source.FirstOrDefault((SubSystemRadar m) =>
 				m.ParentVessel != null && m.ParentVessel.VesselBaseSystem.Status == SystemStatus.Online &&
 				m.ParentVessel.IsPlayerAuthorized(this));
-			if (subSystemRadar is not null)
+			if (subSystemRadar != null)
 			{
 				subSystemRadar.PassiveScan();
 			}
@@ -1400,29 +1400,29 @@ namespace ZeroGravity.Objects
 				LookingAtPlayer = hitInfo.collider.GetComponent<Player>();
 				LookingAtItem = hitInfo.collider.GetComponent<Item>();
 				_lookingAtCorpseCollider = hitInfo.collider.GetComponent<RagdollCollider>();
-				if (LookingAtItem is null)
+				if (LookingAtItem == null)
 				{
 					LookingAtTrigger = hitInfo.collider.GetComponent<BaseSceneTrigger>();
-					if (LookingAtTrigger is not null && LookingAtTrigger is SceneTrigger)
+					if (LookingAtTrigger != null && LookingAtTrigger is SceneTrigger)
 					{
 						SceneSpawnPoint componentInChildren = (LookingAtTrigger as SceneTrigger).transform.parent
 							.GetComponentInChildren<SceneSpawnPoint>();
-						if (componentInChildren is not null && componentInChildren.PlayerGUID > 0 &&
+						if (componentInChildren != null && componentInChildren.PlayerGUID > 0 &&
 							componentInChildren.PlayerGUID != Guid)
 						{
 							LookingAtTrigger = null;
 						}
 					}
 
-					if (LookingAtTrigger is not null && LockedToTrigger is null &&
-						LookingAtTrigger.Glossary is not null && Keyboard.current.f1Key.isPressed)
+					if (LookingAtTrigger != null && LockedToTrigger == null &&
+						LookingAtTrigger.Glossary != null && Keyboard.current.f1Key.isPressed)
 					{
 						AbstractGlossaryElement glossary = LookingAtTrigger.Glossary;
 						World.InGameGUI.PlayerOverview.Toggle(val: true, gloss: true);
 						World.InGameGUI.PlayerOverview.Glossary.OpenElement(glossary);
 					}
 
-					if (LookingAtTrigger is not null && LookingAtTrigger.IsNearTrigger &&
+					if (LookingAtTrigger != null && LookingAtTrigger.IsNearTrigger &&
 						hitInfo.distance > NearRaycastDistance)
 					{
 						LookingAtTrigger = null;
@@ -1539,7 +1539,7 @@ namespace ZeroGravity.Objects
 
 			if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.FreeLook))
 			{
-				if (Inventory.ItemInHands is null)
+				if (Inventory.ItemInHands == null)
 				{
 					HighlightAttachPoints();
 				}
@@ -1569,13 +1569,13 @@ namespace ZeroGravity.Objects
 			}
 
 			if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Melee) && animHelper.CanMelee &&
-				(CurrentActiveItem is null || CurrentActiveItem.HasMelee))
+				(CurrentActiveItem == null || CurrentActiveItem.HasMelee))
 			{
 				animHelper.SetParameterTrigger(AnimatorHelper.Triggers.Melee);
 			}
 
 			// Open the in game menu when pressing escape.
-			if (Keyboard.current.escapeKey.wasPressedThisFrame && LockedToTrigger is null &&
+			if (Keyboard.current.escapeKey.wasPressedThisFrame && LockedToTrigger == null &&
 				!World.InGameGUI.IsGameMenuOpen && !World.InGameGUI.ScreenShootMod.activeInHierarchy)
 			{
 				if (World.InGameGUI.IsPlayerOverviewOpen)
@@ -1595,7 +1595,7 @@ namespace ZeroGravity.Objects
 				foreach (Collider collider in array)
 				{
 					GenericItem componentInParent = collider.GetComponentInParent<GenericItem>();
-					if (componentInParent is not null && componentInParent.AttachPoint is null &&
+					if (componentInParent != null && componentInParent.AttachPoint == null &&
 						componentInParent.SubType == GenericItemSubType.BasketBall)
 					{
 						componentInParent.DynamicObj.ToggleKinematic(value: false);
@@ -1603,7 +1603,7 @@ namespace ZeroGravity.Objects
 							ForceMode.VelocityChange);
 						ImpactDetector componentInChildren =
 							componentInParent.DynamicObj.GetComponentInChildren<ImpactDetector>(includeInactive: true);
-						if (componentInChildren is not null)
+						if (componentInChildren != null)
 						{
 							componentInChildren.PlayImpactSound(4f);
 						}
@@ -1619,7 +1619,7 @@ namespace ZeroGravity.Objects
 			{
 				CancelInteract();
 			}
-			else if (LockedToTrigger is null && !InIteractLayer && !InLerpingState &&
+			else if (LockedToTrigger == null && !InIteractLayer && !InLerpingState &&
 					 !Instance.FpsController.IsOnLadder)
 			{
 				if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Journal))
@@ -1671,7 +1671,7 @@ namespace ZeroGravity.Objects
 			{
 				_dropThrowStartTime = Time.time;
 			}
-			else if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Drop) && Inventory.ItemInHands is not null &&
+			else if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Drop) && Inventory.ItemInHands != null &&
 					 animHelper.CanDrop)
 			{
 				if (!World.InGameGUI.ThrowingItem.activeInHierarchy &&
@@ -1783,18 +1783,18 @@ namespace ZeroGravity.Objects
 			}
 
 			// Interact with trigger.
-			if (ControlsSubsystem.GetButtonUp(ControlsSubsystem.ConfigAction.Interact) && LookingAtTrigger is not null &&
-				!_pickingUpItem && LockedToTrigger is null &&
+			if (ControlsSubsystem.GetButtonUp(ControlsSubsystem.ConfigAction.Interact) && LookingAtTrigger != null &&
+				!_pickingUpItem && LockedToTrigger == null &&
 				!LookingAtTrigger.OtherPlayerLockedToTrigger(World) && LookingAtTrigger.IsInteractable &&
 				(FpsController.IsZeroG || FpsController.IsGrounded) &&
 				(LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.DontCheck ||
 				 (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.HandsMustBeEmpty &&
-				  (Inventory == null || Inventory.ItemInHands is null)) ||
+				  (Inventory == null || Inventory.ItemInHands == null)) ||
 				 (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.StoreItemInHands &&
 				  (Inventory == null || Inventory.StoreItemInHands())) ||
 				 (LookingAtTrigger.PlayerHandsCheck == PlayerHandsCheckType.MustHaveItemInHands &&
 				  LookingAtTrigger.PlayerHandsItemType != null && Inventory != null &&
-				  Inventory.ItemInHands is not null &&
+				  Inventory.ItemInHands != null &&
 				  LookingAtTrigger.PlayerHandsItemType.Contains(Inventory.ItemInHands.Type))))
 			{
 				if (LookingAtTrigger.ExclusivePlayerLocking)
@@ -1909,7 +1909,7 @@ namespace ZeroGravity.Objects
 			if (!animHelper.GetParameterBool(AnimatorHelper.Parameter.Reloading) && animHelper.CanSwitchState &&
 				ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.ChangeStance))
 			{
-				if (Inventory.ItemInHands is not null && Inventory.ItemInHands.HasActiveStance)
+				if (Inventory.ItemInHands != null && Inventory.ItemInHands.HasActiveStance)
 				{
 					_currentStance = _currentStance != PlayerStance.Passive ? PlayerStance.Passive : PlayerStance.Active;
 					FpsController.SetStateSpeedMultiplier(_currentStance != PlayerStance.Passive
@@ -1981,7 +1981,7 @@ namespace ZeroGravity.Objects
 			}
 			else if (Mouse.current.rightButton.wasReleasedThisFrame && !_cameraFovLerpValue.IsNotEpsilonZero())
 			{
-				if (Inventory.ItemInHands is not null)
+				if (Inventory.ItemInHands != null)
 				{
 					Inventory.ItemInHands.SecondaryFunction();
 				}
@@ -1992,7 +1992,7 @@ namespace ZeroGravity.Objects
 				ChangeCamerasFov(Globals.Instance.DefaultCameraFov);
 			}
 
-			if (_inventoryUI is not null && Inventory?.Outfit is not null && animHelper.CanDrop)
+			if (_inventoryUI != null && Inventory?.Outfit is not null && animHelper.CanDrop)
 			{
 				if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Quick1))
 				{
@@ -2463,20 +2463,19 @@ namespace ZeroGravity.Objects
 					sceneSpawnPoint = (Parent as Ship).GetStructureObject<SceneSpawnPoint>(s.SpawnPointID);
 				}
 
-				if (sceneSpawnPoint is not null)
+				if (sceneSpawnPoint != null)
 				{
 					transform.SetPositionAndRotation(sceneSpawnPoint.transform.position,
 						sceneSpawnPoint.transform.rotation);
 				}
 				else
 				{
-					Debug.LogError("Cannot find spawn point");
+					Debug.LogErrorFormat("Cannot find spawn point in scene ({0}).", s.SpawnPointID);
 				}
 			}
 			else
 			{
-				transform.localPosition = s.CharacterTransform.LocalPosition.ToVector3();
-				transform.localRotation = s.CharacterTransform.LocalRotation.ToQuaternion();
+				transform.SetLocalPositionAndRotation(s.CharacterTransform.LocalPosition.ToVector3(), s.CharacterTransform.LocalRotation.ToQuaternion());
 			}
 
 			Health = s.Health;
@@ -2491,7 +2490,7 @@ namespace ZeroGravity.Objects
 			AnimatorHelper animatorHelper = animHelper;
 			bool? isZeroG = FpsController.IsZeroG;
 			animatorHelper.SetParameter(null, null, isZeroG);
-			if (sceneSpawnPoint is not null && sceneSpawnPoint.Executor is not null)
+			if (sceneSpawnPoint != null && sceneSpawnPoint.Executor != null)
 			{
 				InIteractLayer = true;
 				sceneSpawnPoint.Executor.SetExecutorDetails(new SceneTriggerExecutorDetails
@@ -2914,7 +2913,7 @@ namespace ZeroGravity.Objects
 				spaceObjectVessel.transform.parent = World.ShipExteriorRoot.transform;
 				spaceObjectVessel.SetTargetPositionAndRotation(null, spaceObjectVessel.Forward, spaceObjectVessel.Up,
 					instant: true);
-				rigidBody.velocity = Vector3.zero;
+				rigidBody.linearVelocity = Vector3.zero;
 			}
 
 			SceneQuestTrigger.OnTriggerInChildren(vessel.GeometryRoot, SceneQuestTriggerEvent.EnterVessel);
@@ -2978,8 +2977,8 @@ namespace ZeroGravity.Objects
 				gameObject3.transform.Reset();
 				_vesselChangeHelperRb = gameObject3.AddComponent<Rigidbody>();
 				_vesselChangeHelperRb.mass = 1f;
-				_vesselChangeHelperRb.drag = 0f;
-				_vesselChangeHelperRb.angularDrag = 0f;
+				_vesselChangeHelperRb.linearDamping = 0f;
+				_vesselChangeHelperRb.angularDamping = 0f;
 				_vesselChangeHelperRb.useGravity = false;
 				_vesselChangeHelperRb.isKinematic = true;
 			}
@@ -2992,9 +2991,9 @@ namespace ZeroGravity.Objects
 			Vector3 relativePointVelocity =
 				_vesselChangeHelperRb.GetRelativePointVelocity(transform.position -
 															  vessel.MainVessel.transform.position);
-			rigidBody.velocity =
+			rigidBody.linearVelocity =
 				Quaternion.LookRotation(vessel.MainVessel.Forward, vessel.MainVessel.Up).Inverse() *
-				rigidBody.velocity - relativePointVelocity;
+				rigidBody.linearVelocity - relativePointVelocity;
 			_vesselChangeHelperRb.gameObject.SetActive(value: false);
 			foreach (ArtificialBody artificialBody in SolarSystem.ArtificialBodyReferences)
 			{
@@ -3055,7 +3054,7 @@ namespace ZeroGravity.Objects
 
 				if (vesselWeAreExiting is Ship)
 				{
-					if (CurrentHelmet is not null)
+					if (CurrentHelmet != null)
 					{
 						CurrentHelmet.HudUI.Radar.CanRadarWork = true;
 						CurrentHelmet.HudUI.Radar.ToggleTargeting(val: true);
@@ -3068,15 +3067,15 @@ namespace ZeroGravity.Objects
 				mainVessel.transform.parent = World.ShipExteriorRoot.transform;
 				mainVessel.SetTargetPositionAndRotation(null, mainVessel.Forward, mainVessel.Up, instant: true);
 				World.ShipExteriorRoot.transform.rotation = Quaternion.identity;
-				if (_vesselChangeHelperRb is null)
+				if (_vesselChangeHelperRb == null)
 				{
 					GameObject vesselChangeHelper = new GameObject("VesselChangeHelper");
 					vesselChangeHelper.transform.parent = null;
 					vesselChangeHelper.transform.Reset();
 					_vesselChangeHelperRb = vesselChangeHelper.AddComponent<Rigidbody>();
 					_vesselChangeHelperRb.mass = 1f;
-					_vesselChangeHelperRb.drag = 0f;
-					_vesselChangeHelperRb.angularDrag = 0f;
+					_vesselChangeHelperRb.linearDamping = 0f;
+					_vesselChangeHelperRb.angularDamping = 0f;
 					_vesselChangeHelperRb.useGravity = false;
 					_vesselChangeHelperRb.isKinematic = true;
 				}
@@ -3088,7 +3087,7 @@ namespace ZeroGravity.Objects
 				_vesselChangeHelperRb.angularVelocity = mainVessel.AngularVelocity * (Mathf.PI / 180f);
 				Vector3 relativePointVelocity =
 					_vesselChangeHelperRb.GetRelativePointVelocity(transform.position - mainVessel.transform.position);
-				rigidBody.velocity = mainVessel.transform.rotation * rigidBody.velocity + relativePointVelocity;
+				rigidBody.linearVelocity = mainVessel.transform.rotation * rigidBody.linearVelocity + relativePointVelocity;
 				_vesselChangeHelperRb.gameObject.SetActive(value: false);
 				Parent = Pivot.Create(SpaceObjectType.PlayerPivot, Guid, mainVessel, isMainObject: true);
 				(Parent as Pivot).Orbit.CopyDataFrom(mainVessel.Orbit, World.SolarSystem.CurrentTime, exactCopy: true);
@@ -3134,7 +3133,7 @@ namespace ZeroGravity.Objects
 			Pivot pivot = Parent as Pivot;
 			Vector3 vector = msg.PivotPositionCorrection.ToVector3();
 			transform.position -= vector;
-			rigidBody.velocity -= msg.PivotVelocityCorrection.ToVector3();
+			rigidBody.linearVelocity -= msg.PivotVelocityCorrection.ToVector3();
 			FpsController.CenterOfMassRigidbody.detectCollisions = false;
 			rigidBody.detectCollisions = false;
 			foreach (ArtificialBody artificialBody in SolarSystem.ArtificialBodyReferences)
@@ -3155,7 +3154,7 @@ namespace ZeroGravity.Objects
 		private void LockToTrigger(BaseSceneTrigger trigger)
 		{
 			LockedToTrigger = trigger;
-			if (FpsController.CurrentJetpack is not null)
+			if (FpsController.CurrentJetpack != null)
 			{
 				_wasJetpackOn = FpsController.CurrentJetpack.IsActive;
 				FpsController.CurrentJetpack.IsActive = false;
@@ -3180,7 +3179,7 @@ namespace ZeroGravity.Objects
 			Globals.ToggleCursor(false);
 			World.InGameGUI.OverlayCanvasIsOn = false;
 			ResetMyRoomTrigger();
-			if (FpsController.CurrentJetpack is not null)
+			if (FpsController.CurrentJetpack != null)
 			{
 				FpsController.CurrentJetpack.IsActive = _wasJetpackOn;
 			}
@@ -3211,7 +3210,7 @@ namespace ZeroGravity.Objects
 			{
 				SpaceObjectVessel spaceObjectVessel =
 					trigger.GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
-				if (spaceObjectVessel is not null)
+				if (spaceObjectVessel != null)
 				{
 					SetMyRoomTrigger(spaceObjectVessel);
 				}
@@ -3241,7 +3240,7 @@ namespace ZeroGravity.Objects
 				animHelper.SetParameter(null, null, null, null, null, null, null, null, false);
 				_isRagdollFinished = false;
 				FpsController.ToggleMovement(false);
-				Vector3 velocity = rigidBody.velocity;
+				Vector3 velocity = rigidBody.linearVelocity;
 				FpsController.ToggleColliders(isEnabled: false);
 				rigidBody.isKinematic = true;
 				ragdollComponent.ToggleRagdoll(enabled: true, this, velocity);
@@ -3891,7 +3890,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			if (LookingAtTrigger is not null && !LookingAtTrigger.Interact(this))
+			if (LookingAtTrigger != null && !LookingAtTrigger.Interact(this))
 			{
 				World.InGameGUI.Alert(Localization.UnauthorizedAccess.ToUpper());
 			}

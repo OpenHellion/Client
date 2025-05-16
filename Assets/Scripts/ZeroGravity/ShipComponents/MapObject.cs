@@ -178,7 +178,7 @@ namespace ZeroGravity.ShipComponents
 			UpdateObject();
 			UpdateOrbitColors();
 			UpdateOrbitPlane();
-			if (NewObjectVisibility is not null)
+			if (NewObjectVisibility != null)
 			{
 				Renderer component = NewObjectVisibility.GetComponent<Renderer>();
 				if (component != null)

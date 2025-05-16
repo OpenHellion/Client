@@ -504,7 +504,7 @@ namespace OpenHellion.Social
 		///		<see cref="JoinChatRoom"/> must be called before this.
 		/// </summary>
 		/// <param name="chatText">The text we want to send.</param>
-		public static async UniTaskVoid SendChat(string chatText)
+		public static async UniTask SendChat(string chatText)
 		{
 			try
 			{
@@ -517,7 +517,7 @@ namespace OpenHellion.Social
 			}
 		}
 
-		public static async UniTaskVoid LogOut()
+		public static async UniTask LogOut()
 		{
 			await _client.SessionLogoutAsync(_session);
 			_socket?.CloseAsync();

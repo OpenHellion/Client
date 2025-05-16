@@ -417,8 +417,8 @@ namespace ZeroGravity.LevelDesign
 				num *= 100f;
 			}
 
-			MyPlayer.Instance.rigidBody.velocity =
-				Vector3.ClampMagnitude(MyPlayer.Instance.rigidBody.velocity + vector2 / num * Time.deltaTime, 10f);
+			MyPlayer.Instance.rigidBody.linearVelocity =
+				Vector3.ClampMagnitude(MyPlayer.Instance.rigidBody.linearVelocity + vector2 / num * Time.deltaTime, 10f);
 		}
 
 		public void OverrideSafety(bool value)

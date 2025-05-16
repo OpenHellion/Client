@@ -262,7 +262,7 @@ namespace ZeroGravity.UI
 			VesselObjectScript value;
 			if (PoVessels.TryGetValue(vessel, out value))
 			{
-				if (value is null)
+				if (value == null)
 				{
 					return;
 				}

@@ -259,7 +259,7 @@ namespace ZeroGravity.Objects
 			{
 				DoTurretRotation();
 				DoTargetting();
-				if (CurrentTarget is not null && CurrentTarget.MainObject is MyPlayer &&
+				if (CurrentTarget != null && CurrentTarget.MainObject is MyPlayer &&
 				    Mathf.Abs(vFrameDifference) < 0.1f && Mathf.Abs(hFrameDifference) < 0.1f &&
 				    animationPercentage_Horizontal.IsEpsilonEqual(oldPercentage_Horizontal, 0.01f) &&
 				    animationPercentage_Vertical.IsEpsilonEqual(oldPercentage_Vertical, 0.01f))
@@ -271,7 +271,7 @@ namespace ZeroGravity.Objects
 					StopShooting();
 				}
 
-				if (CurrentTarget is not null && CurrentTarget.Targetable && CurrentTarget.MainObject is DynamicObject)
+				if (CurrentTarget != null && CurrentTarget.Targetable && CurrentTarget.MainObject is DynamicObject)
 				{
 					targetTimer += Time.deltaTime;
 					if (targetTimer >= LookAtTime)

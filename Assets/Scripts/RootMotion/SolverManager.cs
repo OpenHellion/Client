@@ -30,7 +30,7 @@ namespace RootMotion
 			{
 				if (animator != null)
 				{
-					return animator.updateMode == AnimatorUpdateMode.AnimatePhysics;
+					return animator.updateMode == AnimatorUpdateMode.Fixed;
 				}
 
 				if (legacy != null)

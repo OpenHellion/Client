@@ -22,7 +22,7 @@ public class MiningPointVisual : MonoBehaviour
 	{
 		MiningPointTypeObject miningPointTypeObject =
 			MiningPointTypes.FirstOrDefault((MiningPointTypeObject m) => m.ResourceType == resourceType);
-		if (miningPointTypeObject is null)
+		if (miningPointTypeObject == null)
 		{
 			return;
 		}

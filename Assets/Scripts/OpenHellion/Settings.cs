@@ -70,7 +70,7 @@ namespace OpenHellion
 
 					ControlsSubsystem.RealSensitivity = SettingsData.ControlsSettings.MouseSensitivity;
 					QualitySettings.SetQualityLevel(SettingsData.VideoSettings.QualityIndex, applyExpensiveChanges: true);
-					QualitySettings.masterTextureLimit = SettingsData.VideoSettings.TextureIndex;
+					QualitySettings.globalTextureMipmapLimit = SettingsData.VideoSettings.TextureIndex;
 					QualitySettings.shadows = (ShadowQuality)SettingsData.VideoSettings.ShadowIndex;
 					var resolution = Screen.resolutions[SettingsData.VideoSettings.ResolutionIndex];
 					Screen.SetResolution(resolution.width, resolution.height, SettingsData.VideoSettings.Fullscreen);
@@ -110,7 +110,7 @@ namespace OpenHellion
 
 				ControlsSubsystem.RealSensitivity = SettingsData.ControlsSettings.MouseSensitivity;
 				QualitySettings.SetQualityLevel(SettingsData.VideoSettings.QualityIndex, applyExpensiveChanges: true);
-				QualitySettings.masterTextureLimit = SettingsData.VideoSettings.TextureIndex;
+				QualitySettings.globalTextureMipmapLimit = SettingsData.VideoSettings.TextureIndex;
 				QualitySettings.shadows = (ShadowQuality)SettingsData.VideoSettings.ShadowIndex;
 				var resolution = Screen.resolutions[SettingsData.VideoSettings.ResolutionIndex];
 				Screen.SetResolution(resolution.width, resolution.height, SettingsData.VideoSettings.Fullscreen);

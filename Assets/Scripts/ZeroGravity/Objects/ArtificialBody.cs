@@ -62,7 +62,7 @@ namespace ZeroGravity.Objects
 
 		public virtual double RadarSignature => 0.0;
 
-		public bool IsStabilized => StabilizeToTargetObj is not null;
+		public bool IsStabilized => StabilizeToTargetObj != null;
 
 		public static ArtificialBody CreateDummy(ObjectTransform trans)
 		{
@@ -129,7 +129,7 @@ namespace ZeroGravity.Objects
 			{
 				ArtificialBody artificialBody2 =
 					World.SolarSystem.GetArtificialBody(trans.StabilizeToTargetGUID.Value);
-				if (artificialBody2 is not null)
+				if (artificialBody2 != null)
 				{
 					artificialBody.Orbit.CopyDataFrom(artificialBody2.Orbit, World.SolarSystem.CurrentTime, true);
 				}
@@ -191,7 +191,7 @@ namespace ZeroGravity.Objects
 		public override void DestroyGeometry()
 		{
 			base.DestroyGeometry();
-			if (GeometryRoot is not null)
+			if (GeometryRoot != null)
 			{
 				if (this is SpaceObjectVessel)
 				{
@@ -200,7 +200,7 @@ namespace ZeroGravity.Objects
 
 				foreach (Transform child in GeometryRoot.transform.GetChildren())
 				{
-					if (child is not null)
+					if (child != null)
 					{
 						Destroy(child.gameObject);
 					}
@@ -210,7 +210,7 @@ namespace ZeroGravity.Objects
 				GeometryRoot.transform.Reset();
 			}
 
-			if (ArtificialRigidbody is not null)
+			if (ArtificialRigidbody != null)
 			{
 				Destroy(ArtificialRigidbody);
 			}
@@ -221,7 +221,7 @@ namespace ZeroGravity.Objects
 
 		public void UpdateOrbitPosition(double time, bool resetTime = false)
 		{
-			if (Maneuver != null || StabilizeToTargetObj is not null)
+			if (Maneuver != null || StabilizeToTargetObj != null)
 			{
 				return;
 			}

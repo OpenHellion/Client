@@ -11,9 +11,7 @@ namespace OpenHellion.Net
 {
 	public static class EventSystem
 	{
-		public delegate void NetworkListenerDelegate(NetworkData data);
-
-		private static readonly ConcurrentDictionary<Type, NetworkListenerDelegate> _networkDataListeners = new();
+		private static readonly ConcurrentDictionary<Type, Action<NetworkData>> _networkDataListeners = new();
 		private static readonly ConcurrentDictionary<Type, Func<NetworkData, UniTask<NetworkData>>> _syncRequestListeners = new();
 
 		private static readonly ConcurrentQueue<NetworkData> _networkBuffer = new ConcurrentQueue<NetworkData>();
@@ -39,62 +37,78 @@ namespace OpenHellion.Net
 		/// <summary>
 		/// 	Add listener for custom events.
 		/// </summary>
-		public static void AddListener(Type group, NetworkListenerDelegate function)
+		public static void AddListener(Type group, Action<NetworkData> function)
 		{
-			var result = _networkDataListeners.GetOrAdd(group, function);
-
-			if (result is not null)
+			if (_networkDataListeners.ContainsKey(group))
 			{
 				_networkDataListeners[group] += function;
+			}
+			else
+			{
+				_networkDataListeners[group] = function;
+			}
+		}
+
+		/// <summary>
+		/// 	Add listener for custom events.
+		/// </summary>
+		public static void AddListener<T>(Action<NetworkData> function)
+		{
+			if (_networkDataListeners.ContainsKey(typeof(T)))
+			{
+				_networkDataListeners[typeof(T)] += function;
+			}
+			else
+			{
+				_networkDataListeners[typeof(T)] = function;
 			}
 		}
 
 		/// <summary>
 		/// 	Add listener for sync events.
 		/// </summary>
-		/// <remarks>
-		/// 	May call functions on non-main thread.
-		/// </remarks>
 		public static void AddSyncRequestListener(Type group, Func<NetworkData, UniTask<NetworkData>> function)
 		{
-			var result = _syncRequestListeners.GetOrAdd(group, function);
-
-			if (result is not null)
+			if (_syncRequestListeners.ContainsKey(group))
 			{
 				_syncRequestListeners[group] += function;
+			}
+			else
+			{
+				_syncRequestListeners[group] = function;
 			}
 		}
 
 		/// <summary>
 		/// 	Remove listener for custom events.
 		/// </summary>
-		public static void RemoveListener(Type group, NetworkListenerDelegate function)
+		public static void RemoveListener(Type group, Action<NetworkData> function)
 		{
-			try
+			if (_networkDataListeners.ContainsKey(group))
 			{
 				_networkDataListeners[group] -= function;
 			}
-			catch (KeyNotFoundException e)
+		}
+
+		/// <summary>
+		/// 	Remove listener for custom events.
+		/// </summary>
+		public static void RemoveListener<T>(Action<NetworkData> function)
+		{
+			if (_networkDataListeners.ContainsKey(typeof(T)))
 			{
-				Debug.LogFormat("Tried to remove listener but it doesn't exist: {0}", e.StackTrace);
+				_networkDataListeners[typeof(T)] -= function;
 			}
 		}
 
 		/// <summary>
 		/// 	Remove listener for sync events.
 		/// </summary>
-		/// <remarks>
-		/// 	May call functions on non-main thread.
-		/// </remarks>
 		public static void RemoveSyncRequestListener(Type group, Func<NetworkData, UniTask<NetworkData>> function)
 		{
-			try
+			if (_syncRequestListeners.ContainsKey(group))
 			{
 				_syncRequestListeners[group] -= function;
-			}
-			catch (KeyNotFoundException e)
-			{
-				Debug.LogFormat("Tried to remove listener but it doesn't exist: {0}", e.StackTrace);
 			}
 		}
 
@@ -103,16 +117,9 @@ namespace OpenHellion.Net
 		/// </summary>
 		internal static void Invoke(NetworkData data)
 		{
-			if (_networkDataListeners.ContainsKey(data.GetType()) && _networkDataListeners[data.GetType()] != null)
+			if (_networkDataListeners.ContainsKey(data.GetType()))
 			{
-				if (Thread.CurrentThread.ManagedThreadId == World.MainThreadID)
-				{
-					_networkDataListeners[data.GetType()](data);
-				}
-				else
-				{
-					_networkBuffer.Enqueue(data);
-				}
+				_networkBuffer.Enqueue(data);
 			}
 			else
 			{
@@ -138,7 +145,7 @@ namespace OpenHellion.Net
 					continue;
 				}
 
-				if (_networkDataListeners.TryGetValue(result.GetType(), out NetworkListenerDelegate value) && value != null)
+				if (_networkDataListeners.TryGetValue(result.GetType(), out Action<NetworkData> value))
 				{
 					value(result);
 				}

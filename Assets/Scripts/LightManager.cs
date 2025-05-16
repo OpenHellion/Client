@@ -16,7 +16,7 @@ public class LightManager<T> : MonoBehaviour
 				return s_Instance;
 			}
 
-			s_Instance = (LightManager<T>)Object.FindObjectOfType(typeof(LightManager<T>));
+			s_Instance = (LightManager<T>)FindFirstObjectByType(typeof(LightManager<T>));
 			return s_Instance;
 		}
 	}

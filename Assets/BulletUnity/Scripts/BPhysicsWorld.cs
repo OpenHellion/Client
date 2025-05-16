@@ -46,7 +46,7 @@ namespace BulletUnity
                 {
                     return null;
                 }
-                BPhysicsWorld[] ws = FindObjectsOfType<BPhysicsWorld>();
+                BPhysicsWorld[] ws = FindObjectsByType<BPhysicsWorld>(FindObjectsSortMode.None);
                 if (ws.Length == 1)
                 {
                     singleton = ws[0];
@@ -392,7 +392,7 @@ namespace BulletUnity
                     {
                         AddAction(((BCharacterController)co).GetKinematicCharacterController());
                     }
-                    
+
                 }
                 return true;
             }
@@ -544,10 +544,10 @@ namespace BulletUnity
         /*
         Does not set any local variables. Is safe to use to create duplicate physics worlds for independant simulation.
         */
-        public bool CreatePhysicsWorld( out CollisionWorld world, 
-                                        out CollisionConfiguration collisionConfig, 
-                                        out CollisionDispatcher dispatcher, 
-                                        out BroadphaseInterface broadphase, 
+        public bool CreatePhysicsWorld( out CollisionWorld world,
+                                        out CollisionConfiguration collisionConfig,
+                                        out CollisionDispatcher dispatcher,
+                                        out BroadphaseInterface broadphase,
                                         out SequentialImpulseConstraintSolver solver,
                                         out SoftBodyWorldInfo softBodyWorldInfo)
         {

@@ -294,7 +294,7 @@ namespace OpenHellion.UI
 				StartCoroutine(TakeScreenShoot());
 			}
 
-			if (MyPlayer.Instance is not null && Keyboard.current.f10Key.wasPressedThisFrame)
+			if (MyPlayer.Instance != null && Keyboard.current.f10Key.wasPressedThisFrame)
 			{
 				ToggleScreenShootMod();
 			}
@@ -370,7 +370,7 @@ namespace OpenHellion.UI
 				_world.InWorldPanels.Detach();
 				_showDeadMsgTime = Time.time;
 				DeadScreen.SetActive(value: true);
-				if (MyPlayer.Instance is not null)
+				if (MyPlayer.Instance != null)
 				{
 					MyPlayer.Instance.FpsController.ToggleMovement(false);
 					MyPlayer.Instance.FpsController.ToggleCameraMovement(false);

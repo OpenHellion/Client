@@ -179,7 +179,7 @@ namespace ZeroGravity.Objects
 
 		private static T GetParent<T>(SpaceObject parent) where T : SpaceObject
 		{
-			if (parent is null)
+			if (parent == null)
 			{
 				return null;
 			}
@@ -271,7 +271,7 @@ namespace ZeroGravity.Objects
 				Up = quaternion * Vector3.up;
 			}
 
-			if ((position.HasValue || rotation.HasValue) && ArtificialRigidbody is not null)
+			if ((position.HasValue || rotation.HasValue) && ArtificialRigidbody != null)
 			{
 				UpdateArtificialBodyPosition(updateChildren: true);
 				transform.hasChanged = false;
@@ -280,7 +280,7 @@ namespace ZeroGravity.Objects
 
 		public virtual void UpdateArtificialBodyPosition(bool updateChildren)
 		{
-			if (ArtificialRigidbody is not null && GeometryPlaceholder is not null)
+			if (ArtificialRigidbody != null && GeometryPlaceholder != null)
 			{
 				var position = GeometryPlaceholder.transform.position;
 				var rotation = GeometryPlaceholder.transform.rotation;
@@ -293,7 +293,7 @@ namespace ZeroGravity.Objects
 
 		protected virtual void UpdatePositionAndRotation(bool setLocalPositionAndRotation)
 		{
-			if (ArtificialRigidbody is not null && GeometryPlaceholder is not null && transform.hasChanged)
+			if (ArtificialRigidbody != null && GeometryPlaceholder != null && transform.hasChanged)
 			{
 				ArtificialRigidbody.position = GeometryPlaceholder.transform.position;
 				ArtificialRigidbody.rotation = GeometryPlaceholder.transform.rotation;

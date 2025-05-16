@@ -90,7 +90,7 @@ namespace OpenHellion.UI
 
 		private void Awake()
 		{
-			if (_instance is not null)
+			if (_instance != null)
 			{
 				if (gameObject.name.Equals("GlobalGUI"))
 				{

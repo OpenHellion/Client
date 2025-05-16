@@ -42,12 +42,12 @@ namespace ZeroGravity.Objects
 
 		public new Vector3 Velocity
 		{
-			get => _rigidBody.velocity;
+			get => _rigidBody.linearVelocity;
 			set
 			{
 				if (Master)
 				{
-					_rigidBody.velocity = value;
+					_rigidBody.linearVelocity = value;
 				}
 			}
 		}
@@ -211,7 +211,7 @@ namespace ZeroGravity.Objects
 					{
 						if (dosm.AttachData.Velocity != null)
 						{
-							_rigidBody.velocity = dosm.AttachData.Velocity.ToVector3();
+							_rigidBody.linearVelocity = dosm.AttachData.Velocity.ToVector3();
 						}
 
 						if (dosm.AttachData.Torque != null)
@@ -482,7 +482,7 @@ namespace ZeroGravity.Objects
 				{
 					dynamicObject.transform.localPosition = details.LocalPosition.ToVector3();
 					dynamicObject.transform.localRotation = details.LocalRotation.ToQuaternion();
-					dynamicObject._rigidBody.velocity = details.Velocity.ToVector3();
+					dynamicObject._rigidBody.linearVelocity = details.Velocity.ToVector3();
 					dynamicObject._rigidBody.angularVelocity = details.AngularVelocity.ToVector3();
 				}
 

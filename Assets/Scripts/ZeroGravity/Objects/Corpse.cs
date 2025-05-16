@@ -177,7 +177,7 @@ namespace ZeroGravity.Objects
 			{
 				Vector3 value = component.transform.parent.InverseTransformPoint(component.transform.position);
 				component.Inventory.ItemInHands.DynamicObj.SendAttachMessage(MyPlayer.Instance.Parent, null, value,
-					Quaternion.identity, Vector3.zero, Vector3.zero, MyPlayer.Instance.rigidBody.velocity);
+					Quaternion.identity, Vector3.zero, Vector3.zero, MyPlayer.Instance.rigidBody.linearVelocity);
 			}
 
 			return component;
@@ -214,7 +214,7 @@ namespace ZeroGravity.Objects
 			corpseMovementMessage.GUID = Guid;
 			corpseMovementMessage.LocalPosition = transform.localPosition.ToArray();
 			corpseMovementMessage.LocalRotation = transform.localRotation.ToArray();
-			corpseMovementMessage.Velocity = corpseParts[hipsKey].RBody.velocity.ToArray();
+			corpseMovementMessage.Velocity = corpseParts[hipsKey].RBody.linearVelocity.ToArray();
 			corpseMovementMessage.AngularVelocity = corpseParts[hipsKey].RBody.angularVelocity.ToArray();
 			corpseMovementMessage.Timestamp = Time.time;
 			corpseMovementMessage.IsInsideSpaceObject = IsInsideSpaceObject;
@@ -227,7 +227,7 @@ namespace ZeroGravity.Objects
 				{
 					Position = corpsePart.Trans.localPosition.ToArray(),
 					LocalRotation = corpsePart.Trans.localRotation.ToArray(),
-					Velocity = corpsePart.RBody.velocity.ToArray(),
+					Velocity = corpsePart.RBody.linearVelocity.ToArray(),
 					AngularVelocity = corpsePart.RBody.angularVelocity.ToArray()
 				});
 				corpsePart.Trans.hasChanged = false;
@@ -608,7 +608,7 @@ namespace ZeroGravity.Objects
 			float num = Time.time - movementReceivedTime;
 			if (!IsKinematic)
 			{
-				if (RigidBody.velocity.IsEpsilonEqual(Vector3.zero, 0.1f) &&
+				if (RigidBody.linearVelocity.IsEpsilonEqual(Vector3.zero, 0.1f) &&
 				    RigidBody.angularVelocity.IsEpsilonEqual(Vector3.zero, 0.5f))
 				{
 					velocityCheckTimer += Time.deltaTime;
@@ -633,7 +633,7 @@ namespace ZeroGravity.Objects
 			else if (num > 1f && num - Time.deltaTime <= 1f)
 			{
 				ToggleKinematic(value: false);
-				RigidBody.velocity = movementVelocity;
+				RigidBody.linearVelocity = movementVelocity;
 				RigidBody.angularVelocity = movementAngularVelocity;
 			}
 

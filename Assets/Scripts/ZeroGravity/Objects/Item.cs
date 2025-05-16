@@ -830,7 +830,7 @@ namespace ZeroGravity.Objects
 					{
 						if (data.Velocity != null)
 						{
-							DynamicObj._rigidBody.velocity = data.Velocity.ToVector3();
+							DynamicObj._rigidBody.linearVelocity = data.Velocity.ToVector3();
 						}
 
 						if (data.Torque != null)
@@ -1561,7 +1561,7 @@ namespace ZeroGravity.Objects
 					UnityEngine.Random.Range(-0.1f, 0.1f))
 				: Vector3.zero;
 			DynamicObj.SendAttachMessage(MyPlayer.Instance.Parent, null, value, Quaternion.identity, vector, value2,
-				MyPlayer.Instance.rigidBody.velocity);
+				MyPlayer.Instance.rigidBody.linearVelocity);
 			if (DynamicObj.Parent is MyPlayer)
 			{
 				MyPlayer.Instance.AnimHelper.SetParameterTrigger(AnimatorHelper.Triggers.Drop);
@@ -1614,7 +1614,7 @@ namespace ZeroGravity.Objects
 					swapItem.DynamicObj.SendAttachMessage(slot2.Parent, slot2);
 				}
 			}
-			else if (swapItem is not null && slot2 == null)
+			else if (swapItem != null && slot2 == null)
 			{
 				if (MyPlayer.Instance.Inventory.CanAddToInventory(swapItem))
 				{
@@ -1729,13 +1729,13 @@ namespace ZeroGravity.Objects
 				ItemGUID = GUID,
 				RepairPointIDs = hashSet2.ToArray()
 			});
-			if (ExplosionEffects is not null)
+			if (ExplosionEffects != null)
 			{
 				ExplosionEffects.Play();
 				ExplosionEffects.transform.parent = null;
 			}
 
-			if (ExplosionSound is not null)
+			if (ExplosionSound != null)
 			{
 				ExplosionSound.Play();
 			}
@@ -1768,8 +1768,8 @@ namespace ZeroGravity.Objects
 		private bool CheckDamageables(HashSet<long> hitGUIDs, Collider colliderOverlaped)
 		{
 			Item componentInParent = colliderOverlaped.GetComponentInParent<Item>();
-			if (componentInParent is not null && componentInParent != this &&
-			    (componentInParent.AttachPoint is null || componentInParent.Damageable))
+			if (componentInParent != null && componentInParent != this &&
+			    (componentInParent.AttachPoint == null || componentInParent.Damageable))
 			{
 				foreach (Vector3 target in GetTargets(colliderOverlaped.transform.position, 0.1f))
 				{

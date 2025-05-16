@@ -69,7 +69,7 @@ namespace ZeroGravity.Objects
 			CargoCompartment.Capacity = canisterStats.Capacity;
 			CargoCompartment.Resources = canisterStats.Resources;
 			ResourceBarFiller.fillAmount = ResourcePercentage;
-			if (AttachPoint is not null && MyPlayer.Instance.IsLockedToTrigger &&
+			if (AttachPoint != null && MyPlayer.Instance.IsLockedToTrigger &&
 			    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
 			{
 				SceneTriggerCargoPanel sceneTriggerCargoPanel =
@@ -115,7 +115,7 @@ namespace ZeroGravity.Objects
 		{
 			if (Type == ItemType.AltairResourceContainer)
 			{
-				if (CargoCompartment is not null && CargoCompartment.Resources != null &&
+				if (CargoCompartment != null && CargoCompartment.Resources != null &&
 				    CargoCompartment.Resources.Count != 0 &&
 				    _currentHandDrillResourceIndex < CargoCompartment.Resources.Count)
 				{
@@ -137,7 +137,7 @@ namespace ZeroGravity.Objects
 			}
 			else if (Type == ItemType.AltairHandDrillCanister || Type == ItemType.AltairRefinedCanister)
 			{
-				if (CargoCompartment is not null && CargoCompartment.Resources != null &&
+				if (CargoCompartment != null && CargoCompartment.Resources != null &&
 				    _currentHandDrillResourceIndex < CargoCompartment.Resources.Count &&
 				    CargoCompartment.Resources[_currentHandDrillResourceIndex].Quantity != 0f)
 				{
@@ -159,7 +159,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			if (MyPlayer.Instance is not null && MyPlayer.Instance.Inventory != null &&
+			if (MyPlayer.Instance != null && MyPlayer.Instance.Inventory != null &&
 			    (Slot == MyPlayer.Instance.Inventory.HandsSlot || (DynamicObj.Parent is DynamicObject &&
 			                                                            (DynamicObj.Parent as DynamicObject).Item
 			                                                            .Slot ==
@@ -172,7 +172,7 @@ namespace ZeroGravity.Objects
 		public override bool PrimaryFunction()
 		{
 			if (Type == ItemType.AltairResourceContainer && GetComponentInParent<MyPlayer>() is not null &&
-			    MyPlayer.Instance.FpsController.CurrentJetpack is not null)
+			    MyPlayer.Instance.FpsController.CurrentJetpack != null)
 			{
 				if (MyPlayer.Instance.animHelper.IsConsumableInUse)
 				{

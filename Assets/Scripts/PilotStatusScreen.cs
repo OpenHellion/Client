@@ -83,7 +83,7 @@ public class PilotStatusScreen : MonoBehaviour
 
 	public void UpdateSystemsInfo()
 	{
-		if (ArmorSlot is null)
+		if (ArmorSlot == null)
 		{
 			ArmorSlot = ParentPilot.ParentShip.VesselBaseSystem.MachineryPartSlots
 				.Where((SceneMachineryPartSlot m) => m.Scope == MachineryPartSlotScope.Armor).FirstOrDefault();
@@ -94,7 +94,7 @@ public class PilotStatusScreen : MonoBehaviour
 		HealthValue.text = FormatHelper.Percentage(num);
 		HealthFiller.fillAmount = num;
 		HPDanger.Activate(num < 0.2f);
-		if (ParentPilot.ParentShip.RCS is not null)
+		if (ParentPilot.ParentShip.RCS != null)
 		{
 			float num2 = ParentPilot.ParentShip.RCS.ResourceContainers[0].Compartments[0].Capacity -
 			             ParentPilot.ParentShip.RCS.ResourceContainers[0].Compartments[0].AvailableCapacity;
@@ -108,7 +108,7 @@ public class PilotStatusScreen : MonoBehaviour
 				: Colors.White);
 		}
 
-		if (ParentPilot.ParentShip.Engine is not null)
+		if (ParentPilot.ParentShip.Engine != null)
 		{
 			float num4 = ParentPilot.ParentShip.Engine.ResourceContainers[0].Compartments[0].Capacity -
 			             ParentPilot.ParentShip.Engine.ResourceContainers[0].Compartments[0].AvailableCapacity;
@@ -129,7 +129,7 @@ public class PilotStatusScreen : MonoBehaviour
 			EngineNotAvailable.Activate(value: true);
 		}
 
-		if (ParentPilot.ParentShip.Capacitor is not null)
+		if (ParentPilot.ParentShip.Capacitor != null)
 		{
 			float num5 = ParentPilot.ParentShip.Capacitor.Capacity / ParentPilot.ParentShip.Capacitor.MaxCapacity;
 			PowerValue.text = FormatHelper.Percentage(num5);

@@ -34,7 +34,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			_world ??= GameObject.Find("/World").GetComponent<World>();
 
-			if (_parentShip is null)
+			if (_parentShip == null)
 			{
 				_parentShip = GetComponentInParent<GeometryRoot>().MainObject as Ship;
 			}
@@ -42,7 +42,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void ChangeVesselName(string newName)
 		{
-			if (_parentShip is not null && !newName.IsNullOrEmpty())
+			if (_parentShip != null && !newName.IsNullOrEmpty())
 			{
 				NetworkController.Send(new VesselSecurityRequest
 				{
@@ -81,7 +81,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void Hack()
 		{
-			if (MyPlayer.Instance.CurrentActiveItem is not null &&
+			if (MyPlayer.Instance.CurrentActiveItem != null &&
 			    ItemTypeRange.IsHackingTool(MyPlayer.Instance.CurrentActiveItem.Type))
 			{
 				NetworkController.Send(new VesselSecurityRequest
@@ -92,7 +92,7 @@ namespace ZeroGravity.ShipComponents
 			}
 		}
 
-		public async UniTaskVoid GetPlayersForAuthorization(bool getFriends, bool getPlayerFromServer,
+		public async UniTask GetPlayersForAuthorization(bool getFriends, bool getPlayerFromServer,
 			GetInvitedPlayersDelegate updatePlayerListUI)
 		{
 			if (getFriends)
@@ -135,7 +135,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void ParseSecurityData(VesselSecurityData data)
 		{
-			if (data is null || _parentShip is null)
+			if (data is null || _parentShip == null)
 			{
 				return;
 			}
@@ -226,7 +226,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void UpdateUI()
 		{
-			if (MyPlayer.Instance.LockedToTrigger is not null &&
+			if (MyPlayer.Instance.LockedToTrigger != null &&
 			    MyPlayer.Instance.LockedToTrigger.TriggerType == SceneTriggerType.SecurityScreen)
 			{
 				_world.InWorldPanels.Security.UpdateUI();
@@ -235,7 +235,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void UpdateSelfDestructTimer()
 		{
-			if (MyPlayer.Instance.LockedToTrigger is not null &&
+			if (MyPlayer.Instance.LockedToTrigger != null &&
 			    MyPlayer.Instance.LockedToTrigger.TriggerType == SceneTriggerType.SecurityScreen)
 			{
 				_world.InWorldPanels.Security.RefreshSelfDestructTimer();

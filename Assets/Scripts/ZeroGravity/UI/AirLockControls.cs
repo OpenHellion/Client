@@ -105,7 +105,7 @@ namespace ZeroGravity.UI
 
 		public void UpdateUI()
 		{
-			if (Room is not null)
+			if (Room != null)
 			{
 				RefreshScreenSaver();
 			}

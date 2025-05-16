@@ -36,7 +36,7 @@ public class VesselArmorDecal : MonoBehaviour
 	{
 		float fade = 0f;
 		Color value = Color.black;
-		if (_armorSlot.Item is not null)
+		if (_armorSlot.Item != null)
 		{
 			if ((_armorSlot.Item as MachineryPart).PartType == MachineryPartType.NaniteCore)
 			{
