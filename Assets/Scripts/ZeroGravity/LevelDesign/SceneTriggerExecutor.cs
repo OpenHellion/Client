@@ -81,6 +81,7 @@ namespace ZeroGravity.LevelDesign
 
 			public CharacterInteractionState CharacterPosition;
 
+			[Tooltip("Dependencies determine if changing to this action state was successful. If dependencies return false, this executor will call fail actions, and pass if it returns true.")]
 			[FormerlySerializedAs("Dependencies")] [Space(5f)] public DependencyDelegate Dependency;
 
 			public UnityEvent PassActions;
@@ -155,8 +156,6 @@ namespace ZeroGravity.LevelDesign
 		public SceneTriggerExecutor ChildExecutor => _childExecutor;
 
 		public SceneTriggerExecutor ParentExecutor => _parentExecutor;
-
-		public bool IsMyPlayerInLockedState => MyPlayer.Instance != null && MyPlayer.Instance.InLockState;
 
 		public bool IsMyPlayerTriggered => MyPlayer.Instance != null && MyPlayer.Instance.Guid == _triggeredPlayerGuid; // Used by dependency delegate.
 
@@ -429,12 +428,14 @@ namespace ZeroGravity.LevelDesign
 
 		private void SendPackageToServer(bool isImmediate, bool force = false)
 		{
-			SceneTriggerExecutorDetails sceneTriggerExecutorDetails = new SceneTriggerExecutorDetails();
-			sceneTriggerExecutorDetails.InSceneID = InSceneID;
-			sceneTriggerExecutorDetails.IsImmediate = isImmediate;
-			sceneTriggerExecutorDetails.IsFail = !CheckDependencies(_newState) && !force;
-			sceneTriggerExecutorDetails.CurrentStateID = CurrentStateID;
-			sceneTriggerExecutorDetails.NewStateID = _newState.StateID;
+			SceneTriggerExecutorDetails sceneTriggerExecutorDetails = new SceneTriggerExecutorDetails
+			{
+				InSceneID = InSceneID,
+				IsImmediate = isImmediate,
+				IsFail = !CheckDependencies(_newState) && !force,
+				CurrentStateID = CurrentStateID,
+				NewStateID = _newState.StateID
+			};
 			int? num = _proximityTriggerID;
 			if (num.HasValue)
 			{
@@ -444,9 +445,7 @@ namespace ZeroGravity.LevelDesign
 
 			if (ParentVessel != null)
 			{
-				SpaceObjectVessel parentVessel = ParentVessel;
-				SceneTriggerExecutorDetails sceneTriggerExecutor = sceneTriggerExecutorDetails;
-				parentVessel.ChangeStats(null, null, null, null, null, null, null, null, sceneTriggerExecutor);
+				ParentVessel.ChangeStats(null, null, null, null, null, null, null, null, sceneTriggerExecutorDetails);
 			}
 
 			_proximityTriggerID = null;
@@ -537,6 +536,10 @@ namespace ZeroGravity.LevelDesign
 			{
 				ChangeStateID(_stateNameID[newState], isInstantChange: false);
 			}
+			else
+			{
+				Debug.LogWarningFormat("Executor {0} tried to change state to undefined state {1}.", gameObject.name, newState);
+			}
 		}
 
 		public void ChangeStateImmediate(string newState)
@@ -545,6 +548,10 @@ namespace ZeroGravity.LevelDesign
 			{
 				ChangeStateID(_stateNameID[newState], isInstantChange: true);
 			}
+			else
+			{
+				Debug.LogWarningFormat("Executor {0} tried to change state to undefined state {1}.", gameObject.name, newState);
+			}
 		}
 
 		public void ChangeStateImmediateForce(string newState)
@@ -552,6 +559,10 @@ namespace ZeroGravity.LevelDesign
 			if (_stateNameID.ContainsKey(newState))
 			{
 				ChangeStateID(_stateNameID[newState], isInstantChange: true, force: true);
+			}
+			else
+			{
+				Debug.LogWarningFormat("Executor {0} tried to change state to undefined state {1}.", gameObject.name, newState);
 			}
 		}
 
@@ -584,8 +595,8 @@ namespace ZeroGravity.LevelDesign
 		public void ChangeStateID(int newState, bool isInstantChange, bool force = false)
 		{
 			if (!_states.ContainsKey(newState) || (_currentState.OnlyActivePlayerCanChangeState &&
-			                                      _currentState.TriggeredPlayerGuid != 0 &&
-			                                      _currentState.TriggeredPlayerGuid != MyPlayer.Instance.Guid))
+												  _currentState.TriggeredPlayerGuid != 0 &&
+												  _currentState.TriggeredPlayerGuid != MyPlayer.Instance.Guid))
 			{
 				return;
 			}
@@ -733,8 +744,7 @@ namespace ZeroGravity.LevelDesign
 
 				if (cis.InteractPosition != null)
 				{
-					MyPlayer.Instance.transform.position = cis.InteractPosition.position;
-					MyPlayer.Instance.transform.rotation = cis.InteractPosition.rotation;
+					MyPlayer.Instance.transform.SetPositionAndRotation(cis.InteractPosition.position, cis.InteractPosition.rotation);
 					if (cis.ImmediatePositionChange && cis.ImmediateLockType != 0)
 					{
 						AnimatorHelper animHelper = MyPlayer.Instance.animHelper;

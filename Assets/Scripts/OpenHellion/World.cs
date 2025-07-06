@@ -38,6 +38,7 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
 using Cysharp.Threading.Tasks;
+using System.Net.Sockets;
 
 namespace OpenHellion
 {
@@ -138,7 +139,7 @@ namespace OpenHellion
 
 		public static volatile int MainThreadID;
 
-		private Task _restoreMapDetailsTask;
+		private Action _restoreMapDetails;
 
 		public double ExposureRange;
 
@@ -276,10 +277,10 @@ namespace OpenHellion
 				}
 			}
 
-			if (_restoreMapDetailsTask != null)
+			if (_restoreMapDetails != null)
 			{
-				_restoreMapDetailsTask.RunSynchronously();
-				_restoreMapDetailsTask = null;
+				_restoreMapDetails();
+				_restoreMapDetails = null;
 			}
 		}
 
@@ -943,32 +944,39 @@ namespace OpenHellion
 		{
 			_lastLatencyMessageTime = Time.realtimeSinceStartup;
 
-			int latency = await NetworkController.LatencyTest(MainMenuGUI.LastConnectedServer.IpAddress, MainMenuGUI.LastConnectedServer.StatusPort);
-			_latencyMs = latency;
-
-			if (MyPlayer.Instance.IsAlive)
+			try
 			{
-				if (LatencyMs > 120 && LatencyMs < 150)
+				int latency = await NetworkController.LatencyTest(MainMenuGUI.LastConnectedServer.IpAddress, MainMenuGUI.LastConnectedServer.StatusPort);
+				_latencyMs = latency;
+
+				if (MyPlayer.Instance.IsAlive)
 				{
-					InGameGUI.Latency.color = Colors.SlotGray;
-					InGameGUI.Latency.gameObject.Activate(value: true);
-				}
-				else if (LatencyMs >= 150)
-				{
-					InGameGUI.Latency.color = Colors.PowerRed;
-					InGameGUI.Latency.gameObject.Activate(value: true);
+					if (LatencyMs > 120 && LatencyMs < 150)
+					{
+						InGameGUI.Latency.color = Colors.SlotGray;
+						InGameGUI.Latency.gameObject.Activate(value: true);
+					}
+					else if (LatencyMs >= 150)
+					{
+						InGameGUI.Latency.color = Colors.PowerRed;
+						InGameGUI.Latency.gameObject.Activate(value: true);
+					}
+					else
+					{
+						InGameGUI.Latency.gameObject.Activate(value: false);
+					}
 				}
 				else
 				{
 					InGameGUI.Latency.gameObject.Activate(value: false);
 				}
-			}
-			else
-			{
-				InGameGUI.Latency.gameObject.Activate(value: false);
-			}
 
-			Invoke(nameof(LatencyTestMessage), 1f);
+				Invoke(nameof(LatencyTestMessage), 1f);
+			}
+			catch (SocketException)
+			{
+				ReturnToMainMenu();
+			}
 		}
 
 		public float GetVesselExposureDamage(double distance)
@@ -1111,7 +1119,6 @@ namespace OpenHellion
 
 				LoadingFinishedDelegate = new Action(() =>
 				{
-					Debug.Log("Loading finished task completed.");
 					LoadingFinishedDelegate = null;
 					MyPlayer.Instance.ActivatePlayer(spawnResponse);
 				});
@@ -1161,7 +1168,6 @@ namespace OpenHellion
 				{
 					ReturnToMainMenu();
 					Debug.LogErrorFormat("Unknown player parent {0}, with id {1}.", spawnResponse.ParentType, spawnResponse.ParentID);
-					GlobalGUI.ShowErrorMessage(Localization.SpawnErrorTitle, Localization.SpawnErrorMessage);
 					MainMenuGUI.CanChooseSpawn = true;
 					return false;
 				}
@@ -1190,9 +1196,9 @@ namespace OpenHellion
 
 				if (spawnResponse.NavMapDetails != null)
 				{
-					_restoreMapDetailsTask = new Task(() =>
+					_restoreMapDetails = () =>
 					{
-						foreach (UnknownMapObjectDetails det in spawnResponse.NavMapDetails.Unknown)
+						Parallel.ForEach(spawnResponse.NavMapDetails.Unknown, (UnknownMapObjectDetails det) =>
 						{
 							SpaceObjectVessel spaceObjectVessel = null;
 							if (det.SpawnRuleID != 0)
@@ -1220,10 +1226,10 @@ namespace OpenHellion
 										spaceObjectVessel.LastKnownMapOrbit;
 								}
 							}
-						}
+						});
 
 						SolarSystem.ArtificialBodiesVisibilityModified();
-					});
+					};
 				}
 
 				return true;

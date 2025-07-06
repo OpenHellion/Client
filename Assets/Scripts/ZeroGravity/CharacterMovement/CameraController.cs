@@ -7,7 +7,6 @@ using UnityEngine.InputSystem;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Math;
 using ZeroGravity.Objects;
-using ZeroGravity.UI;
 
 namespace ZeroGravity.CharacterMovement
 {
@@ -469,10 +468,9 @@ namespace ZeroGravity.CharacterMovement
 
 		private void OnApplicationFocus(bool focus)
 		{
-			if (!focus)
+			if (!_autoFreeLook)
 			{
-				_canMoveCamera = !_isFreeLook;
-				_isFreeLook = false;
+				ToggleFreeLook(false);
 			}
 		}
 

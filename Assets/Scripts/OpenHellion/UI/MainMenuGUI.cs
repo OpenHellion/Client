@@ -129,7 +129,7 @@ namespace OpenHellion.UI
 				}
 			}
 
-			Cursor.visible = true;
+			Globals.ToggleCursor(true);
 			Disclamer.SetActive(ShowDisclaimer);
 			if (ShowDisclaimer)
 			{

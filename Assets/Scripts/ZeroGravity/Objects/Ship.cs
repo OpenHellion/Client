@@ -161,7 +161,12 @@ namespace ZeroGravity.Objects
 			_shipStatsChanged = true;
 		}
 
-		private void CreateNewStatsMessage()
+		public override void ChangeStats(Vector3? thrust = null, Vector3? rotation = null,
+			Vector3? autoStabilize = null, float? engineThrustPercentage = null, SubSystemDetails subSystem = null,
+			GeneratorDetails generator = null, RoomDetails roomTrigger = null, DoorDetails door = null,
+			SceneTriggerExecutorDetails sceneTriggerExecutor = null, SceneDockingPortDetails dockingPort = null,
+			AttachPointDetails attachPoint = null, long? stabilizationTarget = null, SpawnPointStats spawnPoint = null,
+			float? selfDestructTime = null, string emblemId = null)
 		{
 			_shipStatsMsg = new ShipStatsMessage
 			{
@@ -178,20 +183,6 @@ namespace ZeroGravity.Objects
 					SpawnPoints = new List<SpawnPointStats>()
 				}
 			};
-			_shipStatsChanged = false;
-		}
-
-		public override void ChangeStats(Vector3? thrust = null, Vector3? rotation = null,
-			Vector3? autoStabilize = null, float? engineThrustPercentage = null, SubSystemDetails subSystem = null,
-			GeneratorDetails generator = null, RoomDetails roomTrigger = null, DoorDetails door = null,
-			SceneTriggerExecutorDetails sceneTriggerExecutor = null, SceneDockingPortDetails dockingPort = null,
-			AttachPointDetails attachPoint = null, long? stabilizationTarget = null, SpawnPointStats spawnPoint = null,
-			float? selfDestructTime = null, string emblemId = null)
-		{
-			if (_shipStatsMsg == null)
-			{
-				CreateNewStatsMessage();
-			}
 
 			if (thrust.HasValue && thrust.Value.IsNotEpsilonZero())
 			{
@@ -400,7 +391,7 @@ namespace ZeroGravity.Objects
 			if (_shipStatsChanged)
 			{
 				NetworkController.Send(_shipStatsMsg);
-				CreateNewStatsMessage();
+				_shipStatsChanged = false;
 			}
 
 			SmoothRotation(Time.fixedDeltaTime);

@@ -25,7 +25,7 @@ public class HelmetOverlayModel : MonoBehaviour
 
 	public void SetAxis(float x, float y, float z)
 	{
-		if (base.gameObject.activeInHierarchy)
+		if (gameObject.activeInHierarchy)
 		{
 			xAxis = Mathf.Lerp(xAxis, x, LerpSpeed * Time.deltaTime);
 			yAxis = Mathf.Lerp(yAxis, y, LerpSpeed * Time.deltaTime);
@@ -38,7 +38,7 @@ public class HelmetOverlayModel : MonoBehaviour
 
 	public void SetMovement(float forwardVelocity, float rightVelocity)
 	{
-		if (base.gameObject.activeInHierarchy)
+		if (gameObject.activeInHierarchy)
 		{
 			forwardAxis = Mathf.Lerp(forwardAxis, forwardVelocity, LerpSpeed * Time.deltaTime);
 			rightAxis = Mathf.Lerp(rightAxis, rightVelocity, LerpSpeed * Time.deltaTime);

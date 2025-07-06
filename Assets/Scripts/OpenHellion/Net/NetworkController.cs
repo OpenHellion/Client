@@ -83,7 +83,7 @@ namespace OpenHellion.Net
 			_instance = this;
 		}
 
-		private void FixedUpdate()
+		private async UniTaskVoid FixedUpdate()
 		{
 			EventSystem.InvokeQueuedData();
 
@@ -94,7 +94,7 @@ namespace OpenHellion.Net
 					GUIDs = new List<long>(_spawnObjectsList)
 				};
 
-				Send(spawnObjectsRequest);
+				await SendAsync(spawnObjectsRequest);
 				_spawnObjectsList.Clear();
 			}
 
@@ -105,7 +105,7 @@ namespace OpenHellion.Net
 					GUIDs = new List<long>(_subscribeToObjectsList)
 				};
 
-				Send(subscribeToObjectsRequest);
+				await SendAsync(subscribeToObjectsRequest);
 				_subscribeToObjectsList.Clear();
 			}
 
@@ -116,7 +116,7 @@ namespace OpenHellion.Net
 					GUIDs = new List<long>(_unsubscribeFromObjectsList)
 				};
 
-				Send(unsubscribeFromObjectsRequest);
+				await SendAsync(unsubscribeFromObjectsRequest);
 				_unsubscribeFromObjectsList.Clear();
 			}
 
@@ -167,6 +167,15 @@ namespace OpenHellion.Net
 		}
 
 		/// <summary>
+		/// 	Send network data to the server and wait for it to complete.
+		/// </summary>
+		/// <param name="data">The data to send.</param>
+		public static UniTask SendAsync(NetworkData data)
+		{
+			return _gameTransport.SendAsyncInternal(data);
+		}
+
+		/// <summary>
 		/// 	Use request/response-like communication with async support.
 		/// 	A <a cref="TimeoutException"/> is thrown when no response is received within the configured timeframe.
 		/// </summary>
@@ -194,37 +203,20 @@ namespace OpenHellion.Net
 		/// </summary>
 		public static async UniTask<int> LatencyTest(string address, int port, bool logException = false)
 		{
-			try
-			{
-				TcpClient tcpClient = new TcpClient(address, port);
+			TcpClient tcpClient = new TcpClient(address, port);
 
-				NetworkStream networkStream = tcpClient.GetStream();
-				networkStream.ReadTimeout = 1000;
-				networkStream.WriteTimeout = 1000;
+			NetworkStream networkStream = tcpClient.GetStream();
+			networkStream.ReadTimeout = 1000;
+			networkStream.WriteTimeout = 1000;
 
-				byte[] rawData = await ProtoSerialiser.Pack(new LatencyTestMessage());
-				DateTime dateTime = DateTime.UtcNow.ToUniversalTime();
+			byte[] rawData = await ProtoSerialiser.Pack(new LatencyTestMessage());
+			DateTime dateTime = DateTime.UtcNow.ToUniversalTime();
 
-				// Send data.
-				await networkStream.WriteAsync(rawData, 0, rawData.Length);
-				await networkStream.FlushAsync();
+			// Send data.
+			await networkStream.WriteAsync(rawData, 0, rawData.Length);
+			await networkStream.FlushAsync();
 
-				return (int)(DateTime.UtcNow - dateTime).TotalMilliseconds;
-			}
-			catch (SocketException)
-			{
-				Disconnect();
-				return -1;
-			}
-			catch (Exception ex)
-			{
-				if (logException)
-				{
-					Debug.LogException(ex);
-				}
-
-				return -1;
-			}
+			return (int)(DateTime.UtcNow - dateTime).TotalMilliseconds;
 		}
 
 		/// <summary>
@@ -271,7 +263,7 @@ namespace OpenHellion.Net
 		}
 
 		/// <summary>
-		/// 	Terminate connection cancelling all queued data.
+		/// 	Disconnect after sending all queued data.
 		/// </summary>
 		public static void Disconnect()
 		{

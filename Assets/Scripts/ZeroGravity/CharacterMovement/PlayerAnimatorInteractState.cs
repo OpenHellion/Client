@@ -7,78 +7,74 @@ namespace ZeroGravity.CharacterMovement
 	{
 		public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
 		{
-			MyPlayer component = animator.transform.parent.gameObject.GetComponent<MyPlayer>();
-			if (component != null)
+			if (animator.transform.parent.gameObject.TryGetComponent<MyPlayer>(out var myPlayer))
 			{
 				if (stateInfo.IsName("Locks"))
 				{
-					component.AnimInteraction_LockExit();
+					myPlayer.AnimInteraction_LockExit();
 				}
 				else if (stateInfo.IsName("Interacts"))
 				{
-					component.AnimInteraction_InteractExit();
+					myPlayer.AnimInteraction_InteractExit();
 				}
 				else
 				{
-					component.AnimInteraction_NoneExit();
+					myPlayer.AnimInteraction_NoneExit();
 				}
 
 				return;
 			}
 
-			OtherPlayer component2 = animator.transform.parent.gameObject.GetComponent<OtherPlayer>();
-			if (component2 != null)
+			if (animator.transform.parent.gameObject.TryGetComponent<OtherPlayer>(out var otherPlayer))
 			{
 				if (stateInfo.IsName("Locks"))
 				{
-					component2.AnimInteraction_LockExit();
+					otherPlayer.AnimInteraction_LockExit();
 				}
 				else if (stateInfo.IsName("Interacts"))
 				{
-					component2.AnimInteraction_InteractExit();
+					otherPlayer.AnimInteraction_InteractExit();
 				}
 				else
 				{
-					component2.AnimInteraction_NoneExit();
+					otherPlayer.AnimInteraction_NoneExit();
 				}
 			}
 		}
 
 		public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
 		{
-			MyPlayer component = animator.transform.parent.gameObject.GetComponent<MyPlayer>();
-			if (component != null)
+			if (animator.transform.parent.gameObject.TryGetComponent<MyPlayer>(out var myPlayer))
 			{
 				if (stateInfo.IsName("Locks"))
 				{
-					component.AnimInteraction_LockEnter();
+					myPlayer.AnimInteraction_LockEnter();
 				}
 				else if (stateInfo.IsName("Interacts"))
 				{
-					component.AnimInteraction_InteractEnter();
+					myPlayer.AnimInteraction_InteractEnter();
 				}
 				else
 				{
-					component.AnimInteraction_NoneEnter();
+					myPlayer.AnimInteraction_NoneEnter();
 				}
 
 				return;
 			}
 
-			OtherPlayer component2 = animator.transform.parent.gameObject.GetComponent<OtherPlayer>();
-			if (component2 != null)
+			if (animator.transform.parent.gameObject.TryGetComponent<OtherPlayer>(out var otherPlayer))
 			{
 				if (stateInfo.IsName("Locks"))
 				{
-					component2.AnimInteraction_LockEnter();
+					otherPlayer.AnimInteraction_LockEnter();
 				}
 				else if (stateInfo.IsName("Interacts"))
 				{
-					component2.AnimInteraction_InteractEnter();
+					otherPlayer.AnimInteraction_InteractEnter();
 				}
 				else
 				{
-					component2.AnimInteraction_NoneEnter();
+					otherPlayer.AnimInteraction_NoneEnter();
 				}
 			}
 		}

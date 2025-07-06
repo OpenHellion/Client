@@ -82,59 +82,50 @@ namespace OpenHellion
 		{
 			GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.ConnectingToMain);
 
-			try
+			// If signing in for the first time this session, get server we should connect to.
+			ServerData connectingServerData = MainMenuGUI.LastConnectedServer;
+			if (!reconnecting)
 			{
-				// If signing in for the first time this session, get server we should connect to.
-				ServerData connectingServerData = MainMenuGUI.LastConnectedServer;
-				if (!reconnecting)
+				// Create socket if we are connecting to the game for the first time this session.
+				if (MainMenuGUI.LastConnectedServer is null)
 				{
-					// Create socket if we are connecting to the game for the first time this session.
-					if (MainMenuGUI.LastConnectedServer is null)
-					{
-						await NakamaClient.CreateSocket();
-					}
-
-					if (_inviteMessage is not null)
-					{
-						connectingServerData = await NakamaClient.GetMatchConnectionInfo(_inviteMessage.ServerId);
-					}
-					else
-					{
-						string[] result;
-						try
-						{
-							Regex regex = new Regex("[^0-9.]");
-							result = await NakamaClient.FindMatches(new FindMatchesRequest()
-							{
-								Version = regex.Replace(Application.version, string.Empty),
-								Hash = Globals.CombinedHash,
-								Location = RegionInfo.CurrentRegion.EnglishName
-							});
-						}
-						catch (WebSocketException ex)
-						{
-							GlobalGUI.ShowMessageBox(Localization.ConnectionError, Localization.VersionError);
-							Debug.LogError("Encountered server error with message: " + ex.Message);
-							Destroy(gameObject);
-							return;
-						}
-
-
-						// TODO: Add selection menu or something.
-						connectingServerData = await NakamaClient.GetMatchConnectionInfo(result[0]);
-					}
+					await NakamaClient.CreateSocket();
 				}
 
-				// Connect to server!
-				MainMenuGUI.LastConnectedServer = connectingServerData;
-				await ConnectToServer(connectingServerData);
+				if (_inviteMessage is not null)
+				{
+					connectingServerData = await NakamaClient.GetMatchConnectionInfo(_inviteMessage.ServerId);
+				}
+				else
+				{
+					string[] result;
+					try
+					{
+						Regex regex = new Regex("[^0-9.]");
+						result = await NakamaClient.FindMatches(new FindMatchesRequest()
+						{
+							Version = regex.Replace(Application.version, string.Empty),
+							Hash = Globals.CombinedHash,
+							Location = RegionInfo.CurrentRegion.EnglishName
+						});
+					}
+					catch (WebSocketException ex)
+					{
+						GlobalGUI.ShowMessageBox(Localization.ConnectionError, Localization.VersionError);
+						Debug.LogError("Encountered server error with message: " + ex.Message);
+						Destroy(gameObject);
+						return;
+					}
+
+
+					// TODO: Add selection menu or something.
+					connectingServerData = await NakamaClient.GetMatchConnectionInfo(result[0]);
+				}
 			}
-			catch (Exception e)
-			{
-				GlobalGUI.ShowMessageBox(Localization.ConnectionError, Localization.NoServerConnection);
-				Debug.LogException(e);
-				Destroy(gameObject);
-			}
+
+			// Connect to server!
+			MainMenuGUI.LastConnectedServer = connectingServerData;
+			await ConnectToServer(connectingServerData);
 		}
 
 		/// <summary>
@@ -149,7 +140,8 @@ namespace OpenHellion
 			_world = GameObject.Find("/World").GetComponent<World>();
 			Debug.Assert(_world != null);
 
-			try {
+			try
+			{
 				await NetworkController.ConnectToGame(server, _world.OnDisconnectedFromServer);
 
 				Debug.Log("Successfully established connection with server.");
@@ -182,17 +174,18 @@ namespace OpenHellion
 
 					if (wasLoginSuccessful)
 					{
+						await UniTask.SwitchToMainThread();
 						AkSoundEngine.SetRTPCValue(SoundManager.InGameVolume, 1f);
-						MyPlayer.Instance.PlayerReady = true;
-						RichPresenceManager.UpdateStatus();
 						MyPlayer.Instance.InitializeCameraEffects();
-
 						Globals.ToggleCursor(false);
 
-						GlobalGUI.CloseLoadingScreen();
+						MyPlayer.Instance.PlayerReady = true;
+						RichPresenceManager.UpdateStatus();
+
 						_world.LoadingFinishedDelegate();
-						await FixPlayerInCryo();
-						NetworkController.Send(new EnvironmentReadyMessage());
+						await FixCryoPodState();
+						GlobalGUI.CloseLoadingScreen();
+						await NetworkController.SendAsync(new EnvironmentReadyMessage());
 					}
 
 					Destroy(gameObject);
@@ -218,22 +211,26 @@ namespace OpenHellion
 			{
 				GlobalGUI.ShowErrorMessage(Localization.ConnectionError, Localization.ConnectionTimedOut);
 			}
+			catch (UnityException ex)
+			{
+				Debug.LogException(ex);
+			}
 
 			GlobalGUI.CloseLoadingScreen();
 			SceneManager.LoadScene(1);
 			Destroy(gameObject);
 		}
 
-		private async UniTask FixPlayerInCryo()
+		private async UniTask FixCryoPodState()
 		{
-			Debug.Log("FixPlayerInCryo");
-			SceneTriggerExecutor exec = MyPlayer.Instance.Parent
-				.GetComponentsInChildren<SceneTriggerExecutor>(includeInactive: true)
-				.FirstOrDefault((SceneTriggerExecutor m) => m.IsMyPlayerInLockedState && m.CurrentState == "spawn");
-			if (exec != null)
+			await UniTask.WaitUntil(() => MyPlayer.Instance.gameObject.activeInHierarchy);
+			SceneTriggerExecutor[] executorsInChildren = MyPlayer.Instance.Parent
+				.GetComponentsInChildren<SceneTriggerExecutor>(includeInactive: true);
+
+			SceneTriggerExecutor exec = executorsInChildren.FirstOrDefault(static (SceneTriggerExecutor m) => m.CurrentState == "spawn");
+			await UniTask.WaitForSeconds(0.5f, true); // Wait for animator to set InLockState to true.
+			if (exec != null && MyPlayer.Instance.InLockState)
 			{
-				await UniTask.WaitUntil(() => MyPlayer.Instance.gameObject.activeInHierarchy);
-				await UniTask.WaitForSeconds(0.5f);
 				exec.ChangeStateImmediateForce("occupied");
 			}
 		}

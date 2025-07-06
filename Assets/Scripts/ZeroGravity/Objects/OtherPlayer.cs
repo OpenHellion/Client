@@ -416,8 +416,7 @@ namespace ZeroGravity.Objects
 
 			if (genderItem == null)
 			{
-				Debug.LogError("AAAAAAAAAAAAAA, trece lice dzenderica prsla");
-				return null;
+				throw new ArgumentNullException();
 			}
 
 			b2 = (byte)(characterDetails.Gender != 0 ? 1 : 0);

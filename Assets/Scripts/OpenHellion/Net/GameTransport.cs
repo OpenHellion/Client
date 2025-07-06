@@ -18,12 +18,10 @@
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using OpenHellion.IO;
-using ProtoBuf;
 using UnityEngine;
 using ZeroGravity.Network;
 using Cysharp.Threading.Tasks;
@@ -48,6 +46,7 @@ namespace OpenHellion.Net
 		private Action _onDisconnected;
 		private Socket _client;
 		private NetworkStream _connectionStream;
+		private bool _isConnectionOpen;
 
 		private Action<NetworkData> _syncResponseReceivedEvent;
 
@@ -70,63 +69,57 @@ namespace OpenHellion.Net
 
 			await _client.ConnectAsync(new IPEndPoint(IPAddress.Parse(ip), port));
 			_connectionStream = new NetworkStream(_client, true);
+			_isConnectionOpen = true;
 
 			UniTask.RunOnThreadPool(() => ListenTask(_cancellationToken.Token), false).Forget();
 		}
 
 		internal async UniTask ListenTask(CancellationToken token)
 		{
-			while (!token.IsCancellationRequested)
+			while (_isConnectionOpen)
 			{
+				token.ThrowIfCancellationRequested();
 				try
 				{
 					if (_connectionStream.DataAvailable)
 					{
 						NetworkData networkData = await ProtoSerialiser.Unpack(_connectionStream, MAX_MESSAGE_SIZE);
-						if (networkData.SyncRequest)
+						if (networkData != null)
 						{
-							NetworkData res = await EventSystem.InvokeSyncRequest(networkData);
-							res.ConversationGuid = networkData.ConversationGuid;
-							res.SyncResponse = true;
-							SendInternal(res).Forget();
+							if (networkData.SyncRequest)
+							{
+								NetworkData res = await EventSystem.InvokeSyncRequest(networkData);
+								res.ConversationGuid = networkData.ConversationGuid;
+								res.SyncResponse = true;
+								SendInternal(res).Forget();
+							}
+							else if (networkData.SyncResponse)
+							{
+								_syncResponseReceivedEvent(networkData);
+							}
+							else if (DateTime.Now <= networkData.ExpirationUtc)
+							{
+								EventSystem.Invoke(networkData);
+							}
+#if UNITY_EDITOR
+							Debug.LogFormat("Received game data of type {0}.", networkData.GetType());
+							NetworkController.LogReceivedNetworkData(networkData.GetType());
+#endif
 						}
-						else if (networkData.SyncResponse)
-						{
-							_syncResponseReceivedEvent(networkData);
-						}
-						else if (DateTime.Now <= networkData.ExpirationUtc)
-						{
-							EventSystem.Invoke(networkData);
-						}
-
-						#if UNITY_EDITOR
-						Debug.LogFormat("Received game data of type {0}.", networkData.GetType());
-						NetworkController.LogReceivedNetworkData(networkData.GetType());
-						#endif
 					}
 				}
 				catch (SocketException)
 				{
 					Debug.Log("Socket terminated, disconnecting client.");
-					DisconnectInternal().Forget();
-				}
-				catch (ProtoException)
-				{
-					Debug.LogWarning("Protobuf encountered an error when reading from stream.");
-				}
-				catch (ArgumentNullException)
-				{
-					Debug.LogErrorFormat("Serialized data buffer is null.");
+					DisconnectInternal();
+					break;
 				}
 			}
 		}
 
-		/// <summary>
-		/// 	Send network data to the server.
-		/// </summary>
-		/// <param name="data">The data to send.</param>
-		internal async UniTaskVoid SendInternal(NetworkData data)
+		internal async UniTask SendAsyncInternal(NetworkData data)
 		{
+			if (!_isConnectionOpen) return;
 			try
 			{
 				data.ExpirationUtc = DateTime.UtcNow.AddMilliseconds(TIMEOUT_MS);
@@ -138,21 +131,32 @@ namespace OpenHellion.Net
 			catch (SocketException)
 			{
 				Debug.LogWarning("Socket terminated, disconnecting client.");
-				DisconnectInternal().Forget();
-			}
-			catch (ArgumentNullException)
-			{
-				Debug.LogErrorFormat("Serialized data buffer is null. Type: {0}. Data:\n{1}", data.GetType().ToString(), data);
+				DisconnectInternal();
 			}
 		}
 
-		/// <summary>
-		/// 	Use request/response-like communication with async support.
-		/// </summary>
-		/// <param name="data">The data to send.</param>
-		/// <param name="timeout">Milliseconds to wait before timing out.</param>
+		internal async UniTaskVoid SendInternal(NetworkData data)
+		{
+			if (!_isConnectionOpen) return;
+			try
+			{
+				data.ExpirationUtc = DateTime.UtcNow.AddMilliseconds(TIMEOUT_MS);
+				var packedData = await ProtoSerialiser.Pack(data);
+				await _connectionStream.WriteAsync(packedData).ConfigureAwait(false);
+
+				Debug.LogFormat("Sent game data of type {0} with a size of {1} KB.", data.GetType(), (float)packedData.Length / 1000);
+			}
+			catch (SocketException)
+			{
+				Debug.LogWarning("Socket terminated, disconnecting client.");
+				DisconnectInternal();
+			}
+		}
+
 		internal async UniTask<NetworkData> SendReceiveAsyncInternal(NetworkData data, int timeout = TIMEOUT_MS)
 		{
+			if (!_isConnectionOpen) return null;
+
 			try
 			{
 				data.SyncRequest = true;
@@ -172,7 +176,7 @@ namespace OpenHellion.Net
 
 				_syncResponseReceivedEvent += responseHandler;
 
-				await _connectionStream.WriteAsync(packedData).ConfigureAwait(false);
+				await _connectionStream.WriteAsync(packedData);
 				Debug.LogFormat("Sent game data of type {0} with a size of {1} KB.", data.GetType(), (float)packedData.Length / 1000);
 
 				await UniTask.Delay(timeout, true, cancellationToken: responseCancel.Token).SuppressCancellationThrow();
@@ -188,67 +192,42 @@ namespace OpenHellion.Net
 					throw new TimeoutException("A response to a synchronous request was not received within the timeout window.");
 				}
 			}
-			catch (ProtoException)
-			{
-				Debug.LogWarning("Protobuf encountered an error when reading from stream.");
-			}
 			catch (SocketException)
 			{
 				Debug.LogWarning("Socket terminated, disconnecting client.");
-				DisconnectInternal().Forget();
-			}
-			catch (ArgumentNullException)
-			{
-				Debug.LogErrorFormat("Serialized data buffer is null. Type: {0}. Data:\n{1}", data.GetType().ToString(), data);
+				DisconnectInternal();
 			}
 
 			return null;
 		}
 
-		/// <summary>
-		/// 	Terminate connection cancelling all queued data.
-		/// </summary>
-		internal async UniTaskVoid DisconnectInternal()
+		internal void DisconnectInternal()
 		{
+			_isConnectionOpen = false;
+			try
+			{
+				_client?.Shutdown(SocketShutdown.Both);
+			}
+			catch (SocketException)
+			{
+				// Ignored.
+			}
+			finally
+			{
+				_connectionStream?.Close();
+			}
 			_cancellationToken.Cancel();
-
-			if (_client != null && _client.Connected)
-			{
-				_client?.Disconnect(false);
-				_client?.Close();
-			}
-			if (_connectionStream != null)
-			{
-				await _connectionStream.DisposeAsync().ConfigureAwait(false);
-			}
 			_client = null;
 			_connectionStream = null;
 			_onDisconnected();
-
-			Debug.Log("Successfully disconnected from server...");
 		}
 
-		/// <summary>
-		/// 	Terminate connection without calling callback.
-		/// </summary>
 		internal void DisconnectImmediateInternal()
 		{
+			_isConnectionOpen = false;
+			_connectionStream.Close();
 			_cancellationToken.Cancel();
-
-			if (_client != null && _client.Connected)
-			{
-				_client?.Disconnect(false);
-				_client?.Close();
-			}
-			if (_connectionStream != null)
-			{
-				_connectionStream.Dispose();
-			}
-
-			_client = null;
-			_connectionStream = null;
-
-			Debug.Log("Successfully disconnected from server...");
+			Debug.Log("Used internal disconnect.");
 		}
 	}
 }

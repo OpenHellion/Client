@@ -1110,7 +1110,6 @@ namespace ZeroGravity.Objects
 			{
 				Quaternion quaternion = Quaternion.LookRotation(Parent.Forward, Parent.Up);
 				Vector3D position = Parent.Position;
-				Vector3D position2 = Parent.Position;
 				if (Parent is SpaceObjectVessel)
 				{
 					SpaceObjectVessel mainVessel = (Parent as SpaceObjectVessel).MainVessel;
@@ -1118,7 +1117,7 @@ namespace ZeroGravity.Objects
 					position = mainVessel.Position;
 				}
 
-				position2 = position + (quaternion * transform.position).ToVector3D();
+				Vector3D position2 = position + (quaternion * transform.position).ToVector3D();
 				SunCameraRoot.position = (position2 / 149597870.7).ToVector3();
 				_sunCamera.localRotation = FpsController.MainCamera.transform.rotation;
 				SunCameraRoot.rotation = quaternion;
@@ -1183,7 +1182,7 @@ namespace ZeroGravity.Objects
 			}
 
 			TriggerRaycast();
-			UpdateInputKeys();
+			UpdateInput();
 			if (_cameraFovLerpValue.IsNotEpsilonZero())
 			{
 				LerpCameraFov();
@@ -1521,7 +1520,7 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		private void UpdateInputKeys()
+		private void UpdateInput()
 		{
 			if (World.InGameGUI.DeadScreen.activeInHierarchy || World.IsChatOpened ||
 				World.InGameGUI.IsInputFieldIsActive || World.InGameGUI.Console.gameObject.activeInHierarchy)
@@ -1565,7 +1564,7 @@ namespace ZeroGravity.Objects
 			}
 			else if (ControlsSubsystem.GetButtonUp(ControlsSubsystem.ConfigAction.FreeLook))
 			{
-				Invoke(nameof(HideHiglightedAttachPoints), 5f);
+				Invoke(nameof(HideHighlightedAttachPoints), 5f);
 			}
 
 			if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Melee) && animHelper.CanMelee &&
@@ -1585,6 +1584,7 @@ namespace ZeroGravity.Objects
 				else
 				{
 					World.InGameGUI.Open();
+					Debug.Log("Opening in game menu");
 				}
 			}
 
@@ -2513,9 +2513,9 @@ namespace ZeroGravity.Objects
 		public static async UniTask SpawnMyPlayer(World world, LogInResponse res)
 		{
 			World = world;
+			GameObject characterObject = Instantiate(Resources.Load("Models/Units/Characters/FirstPersonCharacter")) as GameObject;
+			characterObject.SetActive(false);
 
-			GameObject characterObject =
-				Instantiate(Resources.Load("Models/Units/Characters/FirstPersonCharacter")) as GameObject;
 			GenderSettings genderSettings = characterObject.GetComponent<GenderSettings>();
 			GenderSettings.GenderItem genderItem = null;
 			foreach (GenderSettings.GenderItem setting in genderSettings.settings)
@@ -2532,8 +2532,7 @@ namespace ZeroGravity.Objects
 
 			if (genderItem == null)
 			{
-				Debug.LogError("Player tried to spawn without a gender.");
-				return;
+				throw new ArgumentNullException();
 			}
 
 			InventoryCharacterPreview.Instance.ChangeGender(res.Data.Gender);
@@ -2577,7 +2576,6 @@ namespace ZeroGravity.Objects
 			myPlayer._planetsCamera = World.PlanetsCameraTransform;
 			myPlayer._shipSunLight = World.ShipSunLightTransform;
 			myPlayer._shipExteriorSunLight = World.ShipSunLightTransform.GetComponent<Light>();
-			myPlayer.gameObject.SetActive(false);
 			myPlayer.rigidBody.isKinematic = true;
 			AkSoundEngine.SetRTPCValue(SoundManager.InGameVolume, 0f);
 			NetworkController.Send(new ConsoleMessage
@@ -3775,12 +3773,11 @@ namespace ZeroGravity.Objects
 		public void HighlightAttachPoints(ItemType? item = null, GenericItemSubType? generic = null,
 			MachineryPartType? part = null, int? partTier = null)
 		{
-			BaseSceneAttachPoint baseSceneAttachPoint = null;
 			Collider[] array = Physics.OverlapSphere(transform.position, HighlightAttachPointsRange,
 				_highlightAttachPointMask, QueryTriggerInteraction.Collide);
 			foreach (Collider collider in array)
 			{
-				baseSceneAttachPoint = collider.GetComponentInParent<BaseSceneAttachPoint>();
+				BaseSceneAttachPoint baseSceneAttachPoint = collider.GetComponentInParent<BaseSceneAttachPoint>();
 				if (baseSceneAttachPoint != null && baseSceneAttachPoint.Collider == collider && (!item.HasValue ||
 						baseSceneAttachPoint.CanAttachItemType(item.Value, generic, part, partTier)))
 				{
@@ -3798,7 +3795,7 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public void HideHiglightedAttachPoints()
+		public void HideHighlightedAttachPoints()
 		{
 			foreach (GameObject higlightedAttachPoint in _higlightedAttachPoints)
 			{
@@ -3967,7 +3964,7 @@ namespace ZeroGravity.Objects
 				FpsController.CameraController.ToggleFreeLook(isActive: true);
 			}
 
-			HideHiglightedAttachPoints();
+			HideHighlightedAttachPoints();
 		}
 	}
 }

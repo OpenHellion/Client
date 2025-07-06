@@ -109,8 +109,6 @@ namespace OpenHellion.UI
 
 		public GameObject TrackingQuest;
 
-		private Animator _trackingQuestAnimator;
-
 		public Transform TrackingHolder;
 
 		public TaskUI TrackingTaskPrefab;
@@ -190,13 +188,12 @@ namespace OpenHellion.UI
 		private void Awake()
 		{
 			Settings.OnSaveAction += () => ToggleCrosshair(Settings.SettingsData.GameSettings.ShowCrosshair);
-			ToggleCroshair(false);
+			ToggleCroshair(true);
 		}
 
 		private void Start()
 		{
 			ScreenShootMod.Activate(value: false);
-			_trackingQuestAnimator = TrackingQuest.GetComponent<Animator>();
 			UpdateTooltipKeys();
 			SetCurrentTrackingQuest(_world.Quests.FirstOrDefault((Quest m) => m.Status == QuestStatus.Active));
 			UpdateQuestObjects();
@@ -358,7 +355,7 @@ namespace OpenHellion.UI
 		// Just turn on and of graphical elements.
 		private void ToggleCanvas(bool val)
 		{
-			_world.InWorldPanels.gameObject.SetActive(val);
+			PauseMenu.gameObject.SetActive(val);
 			PauseMenu.MainMenu(val);
 		}
 

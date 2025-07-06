@@ -74,7 +74,7 @@ namespace ZeroGravity.LevelDesign
 				Executor = GetComponentInParent<SceneTriggerExecutor>();
 			}
 
-			if (!(Executor != null))
+			if (Executor == null)
 			{
 				return;
 			}
@@ -124,7 +124,7 @@ namespace ZeroGravity.LevelDesign
 
 			if (interactWithOverlappingTriggers)
 			{
-				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
+				SceneTriggerHelper.InteractWithOverlappingTriggers(gameObject, this, player);
 			}
 
 			return true;
@@ -133,7 +133,7 @@ namespace ZeroGravity.LevelDesign
 		public override void CancelInteract(MyPlayer player)
 		{
 			base.CancelInteract(player);
-			if (!(Executor == null))
+			if (Executor != null)
 			{
 			}
 		}

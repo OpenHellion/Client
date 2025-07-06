@@ -127,6 +127,7 @@ namespace ZeroGravity.Objects
 			}
 		}
 
+		// TODO: Does nothing.
 		public void ArtificialBodiesVisibilityModified()
 		{
 		}
