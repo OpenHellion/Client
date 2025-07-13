@@ -325,7 +325,7 @@ namespace ZeroGravity.UI
 
 		public void ConfirmPlayerPromotion()
 		{
-			NetworkController.Send(new VesselSecurityRequest
+			NetworkController.SendAndForget(new VesselSecurityRequest
 			{
 				VesselGUID = SecuritySystem.ParentShip.Guid,
 				AddPlayerId = _selectedCrewman.PlayerId,
@@ -348,7 +348,7 @@ namespace ZeroGravity.UI
 				m.Rank == AuthorizedPersonRank.CommandingOfficer);
 			if (commandingOfficer == null || commandingOfficer.PlayerId == MyPlayer.Instance.PlayerId)
 			{
-				NetworkController.Send(new VesselSecurityRequest
+				NetworkController.SendAndForget(new VesselSecurityRequest
 				{
 					VesselGUID = SecuritySystem.ParentShip.Guid,
 					AddPlayerId = MyPlayer.Instance.PlayerId,
@@ -388,7 +388,7 @@ namespace ZeroGravity.UI
 			SecuritySystem.RemovePerson(ourPerson);
 			AuthorizedPerson crewman =
 				SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.Rank == AuthorizedPersonRank.Crewman);
-			NetworkController.Send(new VesselSecurityRequest
+			NetworkController.SendAndForget(new VesselSecurityRequest
 			{
 				VesselGUID = SecuritySystem.ParentShip.Guid,
 				AddPlayerId = crewman.PlayerId,

@@ -1723,7 +1723,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			NetworkController.Send(new ExplosionMessage
+			NetworkController.SendAndForget(new ExplosionMessage
 			{
 				AffectedGUIDs = hashSet.ToArray(),
 				ItemGUID = GUID,

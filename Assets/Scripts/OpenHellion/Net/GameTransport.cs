@@ -117,7 +117,7 @@ namespace OpenHellion.Net
 			}
 		}
 
-		internal async UniTask SendAsyncInternal(NetworkData data)
+		internal async UniTaskVoid SendInternal(NetworkData data)
 		{
 			if (!_isConnectionOpen) return;
 			try
@@ -135,7 +135,8 @@ namespace OpenHellion.Net
 			}
 		}
 
-		internal async UniTaskVoid SendInternal(NetworkData data)
+		// Same as SendInternal, but with a async support.
+		internal async UniTask SendAsyncInternal(NetworkData data)
 		{
 			if (!_isConnectionOpen) return;
 			try

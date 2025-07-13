@@ -44,7 +44,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (_parentShip != null && !newName.IsNullOrEmpty())
 			{
-				NetworkController.Send(new VesselSecurityRequest
+				NetworkController.SendAndForget(new VesselSecurityRequest
 				{
 					VesselGUID = _parentShip.Guid,
 					VesselName = newName
@@ -60,7 +60,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void AddPerson(AuthorizedPerson player, AuthorizedPersonRank newRank)
 		{
-			NetworkController.Send(new VesselSecurityRequest
+			NetworkController.SendAndForget(new VesselSecurityRequest
 			{
 				VesselGUID = _parentShip.Guid,
 				AddPlayerId = player.PlayerId,
@@ -71,7 +71,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void RemovePerson(AuthorizedPerson player)
 		{
-			NetworkController.Send(new VesselSecurityRequest
+			NetworkController.SendAndForget(new VesselSecurityRequest
 			{
 				VesselGUID = _parentShip.Guid,
 				RemovePlayerId = player.PlayerId
@@ -84,7 +84,7 @@ namespace ZeroGravity.ShipComponents
 			if (MyPlayer.Instance.CurrentActiveItem != null &&
 			    ItemTypeRange.IsHackingTool(MyPlayer.Instance.CurrentActiveItem.Type))
 			{
-				NetworkController.Send(new VesselSecurityRequest
+				NetworkController.SendAndForget(new VesselSecurityRequest
 				{
 					VesselGUID = _parentShip.Guid,
 					HackPanel = true
@@ -121,7 +121,7 @@ namespace ZeroGravity.ShipComponents
 
 			if (getPlayerFromServer)
 			{
-				NetworkController.Send(new PlayersOnServerRequest
+				NetworkController.SendAndForget(new PlayersOnServerRequest
 				{
 					SecuritySystemID = new VesselObjectID
 					{

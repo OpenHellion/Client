@@ -317,7 +317,7 @@ namespace ZeroGravity.LevelDesign
 
 			if (getPlayerFromServer)
 			{
-				NetworkController.Send(new PlayersOnServerRequest
+				NetworkController.SendAndForget(new PlayersOnServerRequest
 				{
 					SpawnPointID = new VesselObjectID
 					{

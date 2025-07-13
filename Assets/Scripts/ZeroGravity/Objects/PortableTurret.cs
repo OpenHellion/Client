@@ -303,7 +303,7 @@ namespace ZeroGravity.Objects
 		{
 			if (!isShooting)
 			{
-				NetworkController.Send(new PortableTurretShootingMessage
+				NetworkController.SendAndForget(new PortableTurretShootingMessage
 				{
 					IsShooting = true,
 					TurretGUID = GUID
@@ -319,7 +319,7 @@ namespace ZeroGravity.Objects
 			{
 				isShooting = false;
 				shootingSoundPlaying = false;
-				NetworkController.Send(new PortableTurretShootingMessage
+				NetworkController.SendAndForget(new PortableTurretShootingMessage
 				{
 					IsShooting = false,
 					TurretGUID = GUID

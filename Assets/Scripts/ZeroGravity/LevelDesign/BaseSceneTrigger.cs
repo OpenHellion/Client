@@ -80,7 +80,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (!CheckAuthorization())
 			{
-				NetworkController.Send(new LockToTriggerMessage
+				NetworkController.SendAndForget(new LockToTriggerMessage
 				{
 					TriggerID = null
 				});

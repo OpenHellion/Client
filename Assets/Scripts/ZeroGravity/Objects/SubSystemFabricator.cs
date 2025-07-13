@@ -132,7 +132,7 @@ namespace ZeroGravity.Objects
 
 		public void FabricateItem(ItemType type, GenericItemSubType subType, MachineryPartType partType, int tier)
 		{
-			NetworkController.Send(new FabricateItemMessage
+			NetworkController.SendAndForget(new FabricateItemMessage
 			{
 				ID = new VesselObjectID(ParentVessel.Guid, InSceneID),
 				ItemType = new ItemCompoundType
@@ -147,7 +147,7 @@ namespace ZeroGravity.Objects
 
 		public void CancelFabrication(bool currentItemOnly = false)
 		{
-			NetworkController.Send(new CancelFabricationMessage
+			NetworkController.SendAndForget(new CancelFabricationMessage
 			{
 				ID = new VesselObjectID(ParentVessel.Guid, InSceneID),
 				CurrentItemOnly = currentItemOnly

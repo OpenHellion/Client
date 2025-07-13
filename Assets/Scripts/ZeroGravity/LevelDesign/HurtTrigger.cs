@@ -89,7 +89,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (!(duration <= float.Epsilon))
 			{
-				NetworkController.Send(new HurtPlayerMessage
+				NetworkController.SendAndForget(new HurtPlayerMessage
 				{
 					Damage = new PlayerDamage
 					{

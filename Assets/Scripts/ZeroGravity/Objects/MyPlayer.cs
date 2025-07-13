@@ -771,7 +771,7 @@ namespace ZeroGravity.Objects
 					GUID = Guid
 				};
 				PlayerShootingMessage data = playerShootingMessage;
-				NetworkController.Send(data);
+				NetworkController.SendAndForget(data);
 			}
 		}
 
@@ -825,7 +825,7 @@ namespace ZeroGravity.Objects
 					playerStatsMessage.LockedToTriggerID = null;
 				}
 
-				NetworkController.Send(playerStatsMessage);
+				NetworkController.SendAndForget(playerStatsMessage);
 			}
 
 			ResetTriggerBools();
@@ -913,7 +913,7 @@ namespace ZeroGravity.Objects
 					characterMovementMessage.RagdollData = GetRagdollData();
 				}
 
-				NetworkController.Send(characterMovementMessage);
+				NetworkController.SendAndForget(characterMovementMessage);
 			}
 
 			if (FpsController.StickToVessel != null && CurrentRoomTrigger == null)
@@ -1799,7 +1799,7 @@ namespace ZeroGravity.Objects
 			{
 				if (LookingAtTrigger.ExclusivePlayerLocking)
 				{
-					NetworkController.Send(new LockToTriggerMessage
+					NetworkController.SendAndForget(new LockToTriggerMessage
 					{
 						TriggerID = LookingAtTrigger.GetID(),
 						IsPilotingVessel = LookingAtTrigger.TriggerType == SceneTriggerType.ShipControl ||
@@ -2578,7 +2578,7 @@ namespace ZeroGravity.Objects
 			myPlayer._shipExteriorSunLight = World.ShipSunLightTransform.GetComponent<Light>();
 			myPlayer.rigidBody.isKinematic = true;
 			AkSoundEngine.SetRTPCValue(SoundManager.InGameVolume, 0f);
-			NetworkController.Send(new ConsoleMessage
+			NetworkController.SendAndForget(new ConsoleMessage
 			{
 				Text = "god"
 			});
@@ -2600,7 +2600,7 @@ namespace ZeroGravity.Objects
 				playerRoomMessage.ID = null;
 			}
 
-			NetworkController.Send(playerRoomMessage);
+			NetworkController.SendAndForget(playerRoomMessage);
 		}
 
 		protected override void OnDestroy()
@@ -3539,7 +3539,7 @@ namespace ZeroGravity.Objects
 
 		public void Suicide()
 		{
-			NetworkController.Send(new SuicideRequest());
+			NetworkController.SendAndForget(new SuicideRequest());
 		}
 
 		public void CheckCameraShake()

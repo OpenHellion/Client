@@ -103,7 +103,7 @@ namespace ZeroGravity.Objects
 					dynamicObjectStatsMessage.Info.Stats = statsData;
 				}
 
-				NetworkController.Send(dynamicObjectStatsMessage);
+				NetworkController.SendAndForget(dynamicObjectStatsMessage);
 			}
 		}
 
@@ -290,7 +290,7 @@ namespace ZeroGravity.Objects
 				ImpactVelocity = ImpactVelocity,
 				Timestamp = Time.fixedTime
 			};
-			NetworkController.Send(message);
+			NetworkController.SendAndForget(message);
 			ImpactVelocity = 0f;
 			transform.hasChanged = false;
 		}

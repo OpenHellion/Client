@@ -131,9 +131,9 @@ namespace ZeroGravity.Objects
 		}
 
 		private void Update()
-			{
+		{
 			if (MyPlayer.Instance.Parent != null)
-				{
+			{
 				UpdatePositionAndRotation(!IsMainObject && DockedToMainVessel == null);
 			}
 
@@ -146,7 +146,7 @@ namespace ZeroGravity.Objects
 				else
 				{
 					RootObject.SetActive(value: true);
-			}
+				}
 			}
 		}
 
@@ -165,7 +165,7 @@ namespace ZeroGravity.Objects
 			}
 
 			if (MyPlayer.Instance.Parent == this && MyPlayer.Instance.IsDrivingShip && _shipStatsChanged &&
-			    (_shipStatsMsg.Thrust != null || _shipStatsMsg.Rotation != null))
+				(_shipStatsMsg.Thrust != null || _shipStatsMsg.Rotation != null))
 			{
 				ShipStatsMessage shipStatsMessage = new ShipStatsMessage();
 				shipStatsMessage.GUID = Guid;
@@ -181,7 +181,7 @@ namespace ZeroGravity.Objects
 						}
 
 						vector3D = vector3D * (!(RCS != null) ? 0f : RCS.Acceleration * RCS.MaxOperationRate) *
-						           Time.fixedDeltaTime;
+								   Time.fixedDeltaTime;
 						Orbit.RelativePosition += vector3D * Time.fixedDeltaTime;
 						Orbit.RelativeVelocity += vector3D;
 						Orbit.InitFromCurrentStateVectors(World.SolarSystem.CurrentTime);
@@ -200,8 +200,8 @@ namespace ZeroGravity.Objects
 						}
 
 						vector3D2 = vector3D2 *
-						            (!(RCS != null) ? 0f : RCS.RotationAcceleration * RCS.MaxOperationRate) *
-						            Time.fixedDeltaTime;
+									(!(RCS != null) ? 0f : RCS.RotationAcceleration * RCS.MaxOperationRate) *
+									Time.fixedDeltaTime;
 						RotationVec += vector3D2;
 						shipStatsMessage.ThrustStats.RotationTrust = vector3D2.ToFloatArray();
 					}
@@ -212,7 +212,22 @@ namespace ZeroGravity.Objects
 
 			if (_shipStatsChanged)
 			{
-				NetworkController.Send(_shipStatsMsg);
+				NetworkController.SendAndForget(_shipStatsMsg);
+				_shipStatsMsg = new ShipStatsMessage
+				{
+					GUID = Guid,
+					VesselObjects = new VesselObjects
+					{
+						SubSystems = new List<SubSystemDetails>(),
+						Generators = new List<GeneratorDetails>(),
+						RoomTriggers = new List<RoomDetails>(),
+						Doors = new List<DoorDetails>(),
+						SceneTriggerExecutors = new List<SceneTriggerExecutorDetails>(),
+						DockingPorts = new List<SceneDockingPortDetails>(),
+						AttachPoints = new List<AttachPointDetails>(),
+						SpawnPoints = new List<SpawnPointStats>()
+					}
+				};
 				_shipStatsChanged = false;
 			}
 
@@ -229,7 +244,7 @@ namespace ZeroGravity.Objects
 		public Vector3D DampenRotationPrediction(double timeDelta, bool dampen, double stabilizationMultiplier = 1.0)
 		{
 			double num = (!(RCS != null) ? 0f : RCS.RotationStabilization * RCS.MaxOperationRate) *
-			             stabilizationMultiplier * timeDelta;
+						 stabilizationMultiplier * timeDelta;
 			Vector3D rotationVec = RotationVec;
 			if (dampen)
 			{
@@ -275,21 +290,21 @@ namespace ZeroGravity.Objects
 			if (RotationVec.Y.IsNotEpsilonZeroD(1E-05))
 			{
 				_rotPredictionForward = QuaternionD.AngleAxis(RotationVec.Y * Time.deltaTime, _rotPredictionUp) *
-				                       _rotPredictionForward;
+									   _rotPredictionForward;
 			}
 
 			if (RotationVec.X.IsNotEpsilonZeroD(1E-05))
 			{
 				Vector3D vector3D = Vector3D.Cross(-_rotPredictionForward, _rotPredictionUp);
 				_rotPredictionForward = QuaternionD.AngleAxis(RotationVec.X * Time.deltaTime, vector3D) *
-				                       _rotPredictionForward;
+									   _rotPredictionForward;
 				_rotPredictionUp = Vector3D.Cross(_rotPredictionForward, vector3D);
 			}
 
 			if (RotationVec.Z.IsNotEpsilonZeroD(1E-05))
 			{
 				_rotPredictionUp = QuaternionD.AngleAxis(RotationVec.Z * Time.deltaTime, _rotPredictionForward) *
-				                  _rotPredictionUp;
+								  _rotPredictionUp;
 			}
 
 			if (Time.realtimeSinceStartup - _rotationPredictionLastTime > 0.05000000074505806)
@@ -378,7 +393,7 @@ namespace ZeroGravity.Objects
 			{
 				maneuverCourseRequestData.ShipGUID = Guid;
 				maneuverCourseRequestData.Activate = false;
-				NetworkController.Send(maneuverCourseRequestData);
+				NetworkController.SendAndForget(maneuverCourseRequestData);
 			}
 		}
 
@@ -389,7 +404,7 @@ namespace ZeroGravity.Objects
 			if (maneuverCourseRequestData != null)
 			{
 				maneuverCourseRequestData.ShipGUID = Guid;
-				NetworkController.Send(maneuverCourseRequestData);
+				NetworkController.SendAndForget(maneuverCourseRequestData);
 			}
 		}
 
@@ -397,7 +412,7 @@ namespace ZeroGravity.Objects
 		{
 			if (CourseWaitingActivation > 0)
 			{
-				NetworkController.Send(new ManeuverCourseRequest
+				NetworkController.SendAndForget(new ManeuverCourseRequest
 				{
 					CourseGUID = CourseWaitingActivation,
 					ShipGUID = Guid,
@@ -476,7 +491,7 @@ namespace ZeroGravity.Objects
 			{
 				CancelManeuver();
 				if (maneuverCourseResponse.IsFinished.HasValue && maneuverCourseResponse.IsFinished.Value &&
-				    !MyPlayer.Instance.IsInVesselHierarchy(this))
+					!MyPlayer.Instance.IsInVesselHierarchy(this))
 				{
 					WarpEndEffectTask = new Task(delegate
 					{
@@ -638,14 +653,14 @@ namespace ZeroGravity.Objects
 						SubSystem structureObject = GetStructureObject<SubSystem>(subSystem.InSceneID);
 						structureObject.SetDetails(subSystem);
 						if (MyPlayer.Instance.Parent == this && structureObject is VesselBaseSystem &&
-						    MyPlayer.Instance.ShipControlMode == ShipControlMode.Navigation &&
-						    structureObject.Status == SystemStatus.Offline)
+							MyPlayer.Instance.ShipControlMode == ShipControlMode.Navigation &&
+							structureObject.Status == SystemStatus.Offline)
 						{
 							MyPlayer.Instance.ShipControlMode = ShipControlMode.Piloting;
 						}
 
 						if ((structureObject is IPowerConsumer || structureObject is VesselBaseSystem) &&
-						    MyPlayer.Instance.LockedToTrigger is SceneTriggerPowerSupplyPanel)
+							MyPlayer.Instance.LockedToTrigger is SceneTriggerPowerSupplyPanel)
 						{
 							flag2 = true;
 						}
@@ -796,7 +811,7 @@ namespace ZeroGravity.Objects
 						structureObject4.Fire = roomTrigger.Fire;
 						structureObject4.Breach = roomTrigger.Breach;
 						bool flag5 = structureObject4.GravityMalfunction != roomTrigger.GravityMalfunction &&
-						             MyPlayer.Instance.CurrentRoomTrigger == structureObject4;
+									 MyPlayer.Instance.CurrentRoomTrigger == structureObject4;
 						structureObject4.GravityMalfunction = roomTrigger.GravityMalfunction;
 						structureObject4.ExecuteBehaviourScripts();
 						if (flag5)
@@ -805,16 +820,16 @@ namespace ZeroGravity.Objects
 						}
 
 						if (MyPlayer.Instance.IsLockedToTrigger &&
-						    MyPlayer.Instance.LockedToTrigger is SceneTriggerLifeSupportPanel)
+							MyPlayer.Instance.LockedToTrigger is SceneTriggerLifeSupportPanel)
 						{
 							(MyPlayer.Instance.LockedToTrigger as SceneTriggerLifeSupportPanel).MyLifeSupport
 								.UpdateRoom(structureObject4);
 						}
 
 						if (MyPlayer.Instance.CurrentRoomTrigger != null &&
-						    ((MyPlayer.Instance.CurrentRoomTrigger.CompoundRoomID == compoundRoomID &&
-						      compoundRoomID != roomTrigger.CompoundRoomID) ||
-						     MyPlayer.Instance.CurrentRoomTrigger.CompoundRoomID == structureObject4.CompoundRoomID))
+							((MyPlayer.Instance.CurrentRoomTrigger.CompoundRoomID == compoundRoomID &&
+							  compoundRoomID != roomTrigger.CompoundRoomID) ||
+							 MyPlayer.Instance.CurrentRoomTrigger.CompoundRoomID == structureObject4.CompoundRoomID))
 						{
 							flag4 = true;
 						}
@@ -843,7 +858,7 @@ namespace ZeroGravity.Objects
 						float quantity = structureObject5.Quantity;
 						structureObject5.SetDetails(resourceContainer);
 						if (MyPlayer.Instance.IsLockedToTrigger &&
-						    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
+							MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
 						{
 							(MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel).CargoPanel
 								.RefreshSystemObject(structureObject5);
@@ -865,7 +880,7 @@ namespace ZeroGravity.Objects
 						}
 
 						if (MyPlayer.Instance.IsLockedToTrigger &&
-						    MyPlayer.Instance.LockedToTrigger is SceneTriggerPowerSupplyPanel)
+							MyPlayer.Instance.LockedToTrigger is SceneTriggerPowerSupplyPanel)
 						{
 							(MyPlayer.Instance.LockedToTrigger as SceneTriggerPowerSupplyPanel).MyPowerSupply
 								.UpdateGenerator(structureObject5);
@@ -924,7 +939,7 @@ namespace ZeroGravity.Objects
 						SceneDockingPort structureObject8 =
 							GetStructureObject<SceneDockingPort>(dockingPort.ID.InSceneID);
 						if (MyPlayer.Instance.LockedToTrigger is SceneTriggerDockingPanel ||
-						    MyPlayer.Instance.LockedToTrigger is SceneTriggerShipControl)
+							MyPlayer.Instance.LockedToTrigger is SceneTriggerShipControl)
 						{
 							if (structureObject8.DockedToPort == null && dockingPort.DockedToID != null)
 							{
@@ -975,7 +990,7 @@ namespace ZeroGravity.Objects
 				{
 					CargoBay.SetDetails(shipObjects.CargoBay);
 					if (MyPlayer.Instance.IsLockedToTrigger &&
-					    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
+						MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
 					{
 						CargoPanel cargoPanel =
 							(MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel).CargoPanel;
@@ -1009,7 +1024,7 @@ namespace ZeroGravity.Objects
 						{
 							long? playerGUID = spawnPoint.PlayerGUID;
 							if (playerGUID.GetValueOrDefault() == MyPlayer.Instance.Guid && playerGUID.HasValue &&
-							    spawnPoint.NewState == SpawnPointState.Authorized)
+								spawnPoint.NewState == SpawnPointState.Authorized)
 							{
 								SceneQuestTrigger.OnTrigger(structureObject9.gameObject,
 									SceneQuestTriggerEvent.AssignOnCryoPod);
@@ -1078,12 +1093,12 @@ namespace ZeroGravity.Objects
 			if (flag3 && MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
 			{
 				if ((MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel).CargoPanel.RefineryActive
-				    .activeInHierarchy)
+					.activeInHierarchy)
 				{
 					(MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel).CargoPanel.UpdateRefineryResources();
 				}
 				else if ((MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel).CargoPanel.CraftingActive
-				         .activeInHierarchy)
+						 .activeInHierarchy)
 				{
 					(MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel).CargoPanel.UpdateCraftingResources();
 				}
@@ -1171,7 +1186,7 @@ namespace ZeroGravity.Objects
 				}
 
 				foreach (VesselHealthDecal vesselHealthDecal in GeometryRoot.GetComponentsInChildren<VesselHealthDecal>(
-					         includeInactive: true))
+							 includeInactive: true))
 				{
 					vesselHealthDecal.UpdateDecals();
 				}
@@ -1429,7 +1444,7 @@ namespace ZeroGravity.Objects
 				bool flag = source.FirstOrDefault((Collider m) => m.GetComponentInParent<SceneTriggerRoom>()) != null;
 				bool flag2 = MyPlayer.Instance.IsInVesselHierarchy(MainVessel);
 				if ((!item.UseOcclusion || flag2 == flag) &&
-				    (vector - MyPlayer.Instance.transform.position).magnitude <= item.VisibilityThreshold)
+					(vector - MyPlayer.Instance.transform.position).magnitude <= item.VisibilityThreshold)
 				{
 					Transform transform = item.ParentTransform.Find("DamagePointTemp");
 					if (transform == null)
@@ -1782,8 +1797,8 @@ namespace ZeroGravity.Objects
 			SpaceObjectVessel spaceObjectVessel = !dockToShip.IsDocked ? dockToShip : dockToShip.DockedToMainVessel;
 			spaceObjectVessel.RecreateDockedVesselsTree();
 			if (MyPlayer.Instance.Parent is Ship && (MyPlayer.Instance.Parent == DockedToMainVessel ||
-			                                         DockedToMainVessel.AllDockedVessels.Contains(
-				                                         MyPlayer.Instance.Parent as SpaceObjectVessel)))
+													 DockedToMainVessel.AllDockedVessels.Contains(
+														 MyPlayer.Instance.Parent as SpaceObjectVessel)))
 			{
 				MyPlayer.Instance.DisableTransitionTrigger();
 			}
@@ -1808,7 +1823,7 @@ namespace ZeroGravity.Objects
 			foreach (SpaceObjectVessel allDockedVessel in DockedToMainVessel.AllDockedVessels)
 			{
 				if (allDockedVessel != this && allDockedVessel.transform.parent !=
-				    allDockedVessel.DockedToVessel.ConnectedObjectsRoot.transform)
+					allDockedVessel.DockedToVessel.ConnectedObjectsRoot.transform)
 				{
 					allDockedVessel.transform.parent = allDockedVessel.DockedToVessel.ConnectedObjectsRoot.transform;
 				}
@@ -1816,7 +1831,7 @@ namespace ZeroGravity.Objects
 
 			Ship ship = DockedToMainVessel as Ship;
 			Vector3 vector = ship.VesselData.CollidersCenterOffset.ToVector3() -
-			                 details.CollidersCenterOffset.ToVector3();
+							 details.CollidersCenterOffset.ToVector3();
 			Vector3 vector2 = Quaternion.LookRotation(ship.Forward, ship.Up) * vector;
 			ship.ModifyPositionAndRotation(-vector2);
 			ship.VesselData.CollidersCenterOffset = details.CollidersCenterOffset;
@@ -1842,8 +1857,8 @@ namespace ZeroGravity.Objects
 			DockedToMainVessel.Orbit.RelativePosition -= vector2.ToVector3D();
 			DockedToMainVessel.Orbit.InitFromCurrentStateVectors(World.SolarSystem.CurrentTime);
 			if (MyPlayer.Instance.Parent is Ship && (MyPlayer.Instance.Parent == DockedToMainVessel ||
-			                                         DockedToMainVessel.AllDockedVessels.Contains(
-				                                         MyPlayer.Instance.Parent as SpaceObjectVessel)))
+													 DockedToMainVessel.AllDockedVessels.Contains(
+														 MyPlayer.Instance.Parent as SpaceObjectVessel)))
 			{
 				Vector3 localPosition = DockedToMainVessel.transform.localPosition;
 				DockedToMainVessel.transform.SetParent(null);
@@ -1854,8 +1869,8 @@ namespace ZeroGravity.Objects
 				foreach (ArtificialBody artificialBody in SolarSystem.ArtificialBodyReferences)
 				{
 					if (artificialBody != Parent && artificialBody != DockedToMainVessel &&
-					    (!(artificialBody is SpaceObjectVessel) ||
-					     (artificialBody as SpaceObjectVessel).DockedToMainVessel == null))
+						(!(artificialBody is SpaceObjectVessel) ||
+						 (artificialBody as SpaceObjectVessel).DockedToMainVessel == null))
 					{
 						artificialBody.ModifyPositionAndRotation(-localPosition);
 					}
@@ -1872,8 +1887,8 @@ namespace ZeroGravity.Objects
 			else
 			{
 				if (MyPlayer.Instance.Parent is Ship && (MyPlayer.Instance.Parent == DockedToMainVessel ||
-				                                         DockedToMainVessel.AllDockedVessels.Contains(
-					                                         MyPlayer.Instance.Parent as SpaceObjectVessel)))
+														 DockedToMainVessel.AllDockedVessels.Contains(
+															 MyPlayer.Instance.Parent as SpaceObjectVessel)))
 				{
 					transform.SetLocalPositionAndRotation(RelativePosition, RelativeRotation);
 					SetTargetPositionAndRotation(transform.localPosition, transform.forward,
@@ -1921,8 +1936,8 @@ namespace ZeroGravity.Objects
 			while (_lerpTimer < 1f)
 			{
 				if (MyPlayer.Instance.Parent is Ship && (MyPlayer.Instance.Parent == DockedToMainVessel ||
-				                                         DockedToMainVessel.AllDockedVessels.Contains(
-					                                         MyPlayer.Instance.Parent as SpaceObjectVessel)))
+														 DockedToMainVessel.AllDockedVessels.Contains(
+															 MyPlayer.Instance.Parent as SpaceObjectVessel)))
 				{
 					transform.SetLocalPositionAndRotation(
 Vector3.Lerp(startingPosition, targetPos, Mathf.SmoothStep(0f, 1f, _lerpTimer)),
@@ -1945,8 +1960,8 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 			}
 
 			if (MyPlayer.Instance.Parent is Ship && (MyPlayer.Instance.Parent == DockedToMainVessel ||
-			                                         DockedToMainVessel.AllDockedVessels.Contains(
-				                                         MyPlayer.Instance.Parent as SpaceObjectVessel)))
+													 DockedToMainVessel.AllDockedVessels.Contains(
+														 MyPlayer.Instance.Parent as SpaceObjectVessel)))
 			{
 				transform.SetLocalPositionAndRotation(RelativePosition, RelativeRotation);
 			}
@@ -2026,7 +2041,7 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 			foreach (SpaceObjectVessel allDockedVessel in vessel.AllDockedVessels)
 			{
 				if (allDockedVessel != this && allDockedVessel.transform.parent !=
-				    allDockedVessel.DockedToVessel.ConnectedObjectsRoot.transform)
+					allDockedVessel.DockedToVessel.ConnectedObjectsRoot.transform)
 				{
 					allDockedVessel.transform.parent = allDockedVessel.DockedToVessel.ConnectedObjectsRoot.transform;
 				}
@@ -2035,7 +2050,7 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 			foreach (SpaceObjectVessel allDockedVessel2 in vessel2.AllDockedVessels)
 			{
 				if (allDockedVessel2 != this && allDockedVessel2.transform.parent !=
-				    allDockedVessel2.DockedToVessel.ConnectedObjectsRoot.transform)
+					allDockedVessel2.DockedToVessel.ConnectedObjectsRoot.transform)
 				{
 					allDockedVessel2.transform.parent = allDockedVessel2.DockedToVessel.ConnectedObjectsRoot.transform;
 				}
@@ -2091,8 +2106,8 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 					foreach (ArtificialBody artificialBody in SolarSystem.ArtificialBodyReferences)
 					{
 						if (artificialBody != Parent && artificialBody != vessel &&
-						    (!(artificialBody is SpaceObjectVessel) ||
-						     (artificialBody as SpaceObjectVessel).DockedToMainVessel == null))
+							(!(artificialBody is SpaceObjectVessel) ||
+							 (artificialBody as SpaceObjectVessel).DockedToMainVessel == null))
 						{
 							artificialBody.ModifyPositionAndRotation(-localPosition);
 						}
@@ -2108,8 +2123,8 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 					foreach (ArtificialBody artificialBody2 in SolarSystem.ArtificialBodyReferences)
 					{
 						if (artificialBody2 != Parent && artificialBody2 != vessel2 &&
-						    (!(artificialBody2 is SpaceObjectVessel) ||
-						     (artificialBody2 as SpaceObjectVessel).DockedToMainVessel == null))
+							(!(artificialBody2 is SpaceObjectVessel) ||
+							 (artificialBody2 as SpaceObjectVessel).DockedToMainVessel == null))
 						{
 							artificialBody2.ModifyPositionAndRotation(-localPosition2);
 						}
@@ -2200,9 +2215,9 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 			foreach (Collider collider in componentsInChildren)
 			{
 				if (collider.enabled && !collider.CompareTag("Ignore") &&
-				    !(collider.GetComponent<SceneDockingTrigger>() != null) &&
-				    (!(collider.GetComponentInParent<BaseSceneAttachPoint>() != null) ||
-				     !(collider.GetComponentInParent<BaseSceneAttachPoint>().Collider == collider)))
+					!(collider.GetComponent<SceneDockingTrigger>() != null) &&
+					(!(collider.GetComponentInParent<BaseSceneAttachPoint>() != null) ||
+					 !(collider.GetComponentInParent<BaseSceneAttachPoint>().Collider == collider)))
 				{
 					if (!collider.CompareTag("DontOptimize"))
 					{
@@ -2217,9 +2232,9 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 
 			ZeroOcclusion.AddOccludersFrom(this);
 			if (VesselData == null ||
-			    !(VesselData.CreationSolarSystemTime + 30.0 > World.SolarSystem.CurrentTime) ||
-			    !SceneHelper.CompareTags(VesselData.Tag, "_RescueVessel") ||
-			    MyPlayer.Instance.IsInVesselHierarchy(this) || !(_warpEndEffect != null))
+				!(VesselData.CreationSolarSystemTime + 30.0 > World.SolarSystem.CurrentTime) ||
+				!SceneHelper.CompareTags(VesselData.Tag, "_RescueVessel") ||
+				MyPlayer.Instance.IsInVesselHierarchy(this) || !(_warpEndEffect != null))
 			{
 				return;
 			}
@@ -2262,7 +2277,7 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 		{
 			HashSet<SecuritySystem> hashSet = new HashSet<SecuritySystem>();
 			return IsPlayerAuthorized(pl, new HashSet<SpaceObjectVessel>(), hashSet) || hashSet.Count == 0 ||
-			       hashSet.Count((SecuritySystem m) => m.AuthorizedPlayers.Count == 0) == hashSet.Count;
+				   hashSet.Count((SecuritySystem m) => m.AuthorizedPlayers.Count == 0) == hashSet.Count;
 		}
 
 		private bool IsPlayerAuthorized(Player pl, HashSet<SpaceObjectVessel> traversedVessels,
@@ -2280,8 +2295,8 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 
 			// Player is authorised on this ship.
 			bool flag = SecuritySystem != null &&
-			            SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == pl.PlayerId) !=
-			            null;
+						SecuritySystem.AuthorizedPlayers.Find((AuthorizedPerson m) => m.PlayerId == pl.PlayerId) !=
+						null;
 			if (GameScenes.Ranges.IsShip(SceneID) || flag)
 			{
 				return flag;
@@ -2289,7 +2304,7 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 
 			// Player is authorised in docked vessel.
 			if (DockedToVessel != null && DockedToVessel is Ship && !GameScenes.Ranges.IsShip(DockedToVessel.SceneID) &&
-			    (DockedToVessel as Ship).IsPlayerAuthorized(pl, traversedVessels, securitySystems))
+				(DockedToVessel as Ship).IsPlayerAuthorized(pl, traversedVessels, securitySystems))
 			{
 				return true;
 			}
@@ -2297,7 +2312,7 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 			foreach (SpaceObjectVessel dockedVessel in DockedVessels)
 			{
 				if (dockedVessel is Ship && !GameScenes.Ranges.IsShip(dockedVessel.SceneID) &&
-				    (dockedVessel as Ship).IsPlayerAuthorized(pl, traversedVessels, securitySystems))
+					(dockedVessel as Ship).IsPlayerAuthorized(pl, traversedVessels, securitySystems))
 				{
 					return true;
 				}

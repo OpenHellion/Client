@@ -75,7 +75,7 @@ namespace ZeroGravity.UI
 				InSceneID = _currentSceneId
 			};
 			nameTagMessage.NameTagText = CustomInputField.text;
-			NetworkController.Send(nameTagMessage);
+			NetworkController.SendAndForget(nameTagMessage);
 			ToggleNameCanvas(_nameTag, false, _currentParentVessel, _currentSceneId);
 		}
 

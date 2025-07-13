@@ -208,7 +208,7 @@ namespace ZeroGravity.Objects
 							InSceneID = miningPoint.InSceneID,
 							VesselGUID = miningPoint.ParentVessel.Guid
 						};
-						NetworkController.Send(playerDrillingMessage);
+						NetworkController.SendAndForget(playerDrillingMessage);
 						miningTime = 0f;
 					}
 				}
@@ -216,7 +216,7 @@ namespace ZeroGravity.Objects
 				{
 					if (miningTime > 0f)
 					{
-						NetworkController.Send(playerDrillingMessage);
+						NetworkController.SendAndForget(playerDrillingMessage);
 					}
 
 					miningTime = 0f;
@@ -238,7 +238,7 @@ namespace ZeroGravity.Objects
 				if (miningTime > 0.02 || flag)
 				{
 					playerDrillingMessage.MiningTime = miningTime;
-					NetworkController.Send(playerDrillingMessage);
+					NetworkController.SendAndForget(playerDrillingMessage);
 					miningTime = 0f;
 				}
 			}
@@ -497,7 +497,7 @@ namespace ZeroGravity.Objects
 				playerDrillingMessage.isDrilling = false;
 				playerDrillingMessage.dontPlayEffect = true;
 				PlayerDrillingMessage data = playerDrillingMessage;
-				NetworkController.Send(data);
+				NetworkController.SendAndForget(data);
 			}
 
 			UpdateUI();

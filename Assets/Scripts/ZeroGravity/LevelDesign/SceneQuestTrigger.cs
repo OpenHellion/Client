@@ -144,14 +144,14 @@ namespace ZeroGravity.LevelDesign
 				return;
 			}
 
-			NetworkController.Send(new QuestTriggerMessage
+			NetworkController.SendAndForget(new QuestTriggerMessage
 			{
 				QuestID = QuestID,
 				TriggerID = QuestTriggerID
 			});
 			foreach (QuestTaskObject item in AdditionalTasksToComplete)
 			{
-				NetworkController.Send(new QuestTriggerMessage
+				NetworkController.SendAndForget(new QuestTriggerMessage
 				{
 					QuestID = item.QuestID,
 					TriggerID = item.QuestTriggerID

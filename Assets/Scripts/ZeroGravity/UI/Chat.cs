@@ -194,7 +194,7 @@ namespace ZeroGravity.UI
 				TextChatMessage textChatMessage = new TextChatMessage();
 				textChatMessage.MessageText = messageText;
 				textChatMessage.Local = true;
-				NetworkController.Send(textChatMessage);
+				NetworkController.SendAndForget(textChatMessage);
 			}
 			else
 			{

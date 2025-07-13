@@ -358,7 +358,7 @@ namespace OpenHellion
 			if (!_logoutRequestSent)
 			{
 				_logoutRequestSent = true;
-				NetworkController.Send(new LogOutRequest());
+				NetworkController.SendAndForget(new LogOutRequest());
 			}
 		}
 
@@ -590,7 +590,7 @@ namespace OpenHellion
 
 		public void SendVesselRequest(SpaceObjectVessel obj, float time, GameScenes.SceneId sceneID, string tag)
 		{
-			NetworkController.Send(new VesselRequest
+			NetworkController.SendAndForget(new VesselRequest
 			{
 				GUID = obj.Guid,
 				Time = time,
@@ -601,7 +601,7 @@ namespace OpenHellion
 
 		public void SendDistressCall(ArtificialBody body, bool isDistressActive)
 		{
-			NetworkController.Send(new DistressCallRequest
+			NetworkController.SendAndForget(new DistressCallRequest
 			{
 				GUID = body.Guid,
 				IsDistressActive = isDistressActive

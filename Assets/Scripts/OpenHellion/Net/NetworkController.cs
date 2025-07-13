@@ -159,20 +159,23 @@ namespace OpenHellion.Net
 
 		/// <summary>
 		/// 	Send network data to the server.
+		/// 	This method does not wait for the server to receive the data.
+		/// 	Use this for non-critical data that does not require a response.
 		/// </summary>
 		/// <param name="data">The data to send.</param>
-		public static void Send(NetworkData data)
+		public static void SendAndForget(NetworkData data)
 		{
 			_gameTransport.SendInternal(data).Forget();
 		}
 
 		/// <summary>
 		/// 	Send network data to the server and wait for it to complete.
+		/// 	Useful when you need to ensure the data is sent before continuing.
 		/// </summary>
 		/// <param name="data">The data to send.</param>
-		public static UniTask SendAsync(NetworkData data)
+		public static async UniTask SendAsync(NetworkData data)
 		{
-			return _gameTransport.SendAsyncInternal(data);
+			await _gameTransport.SendAsyncInternal(data);
 		}
 
 		/// <summary>
