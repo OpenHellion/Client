@@ -207,7 +207,7 @@ namespace OpenHellion
 			Texture[] emblems = Resources.LoadAll<Texture>("Emblems");
 			SceneVesselEmblem.Textures = emblems.ToDictionary(x => x.name, y => y);
 
-			Globals.Instance.OnHellionQuit = () =>
+			Globals.Instance.OnHellionQuit += () =>
 			{
 				OnDestroy();
 			};
