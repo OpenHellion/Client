@@ -115,14 +115,19 @@ namespace ZeroGravity.UI
 		public void PlayNextElement()
 		{
 			_currentCutSceneElement++;
-			while (_currentCutSceneElement < CurrentCutScene.Elements.Count)
+
+			// Skip elements that have been completed.
+			bool completed = true;
+			while (completed && _currentCutSceneElement < CurrentCutScene.Elements.Count)
 			{
+				completed = false;
 				foreach (QuestCutSceneData.CutSceneDependencyTask taskDependency in CurrentCutScene
-					         .Elements[_currentCutSceneElement].TaskDependencyList)
+							 .Elements[_currentCutSceneElement].TaskDependencyList)
 				{
 					if (taskDependency.Task.QuestTrigger != null &&
-					    taskDependency.Task.QuestTrigger.Status != taskDependency.Status)
+						taskDependency.Task.QuestTrigger.Status != taskDependency.Status)
 					{
+						completed = true;
 						_currentCutSceneElement++;
 						break;
 					}
