@@ -788,7 +788,7 @@ namespace OpenHellion
 								DynamicObject dynamicObject = GetDynamicObject(item2.GUID);
 								if (dynamicObject != null)
 								{
-									dynamicObject.ProcessDynamicObectMovementMessage(item2);
+									dynamicObject.ProcessDynamicObjectMovementMessage(item2);
 								}
 							}
 						}

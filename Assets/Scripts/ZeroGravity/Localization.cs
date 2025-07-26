@@ -2788,7 +2788,7 @@ namespace ZeroGravity
 
 		public static string GetLocalizedField(string fieldName, bool useDefault = false)
 		{
-			var fieldValue = typeof(Localization).GetField(fieldName).GetValue(null).ToString();
+			var fieldValue = typeof(Localization)?.GetField(fieldName)?.GetValue(null)?.ToString();
 
 			if (useDefault && fieldValue == null)
 			{

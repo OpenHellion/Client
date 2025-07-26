@@ -16,13 +16,23 @@ namespace ZeroGravity.Objects
 	{
 		public static float SendMovementInterval = 0.1f;
 
-		public Rigidbody _rigidBody;
+		private float _sendMovementTime;
+
+		[NonSerialized] public Rigidbody RigidBody;
 
 		private GameObject _collisionDetector;
 
 		public bool Master = true;
 
+		private float _velocityCheckTimer;
+
 		private float _takeoverTimer;
+
+		private float _movementReceivedTime = -1f;
+
+		private Vector3 _movementTargetLocalPosition;
+
+		private Quaternion _movementTargetLocalRotation;
 
 		private Vector3 _movementVelocity;
 
@@ -38,33 +48,33 @@ namespace ZeroGravity.Objects
 
 		public float Diameter { get; private set; }
 
-		public float Mass => _rigidBody.mass;
+		public float Mass => RigidBody.mass;
 
 		public new Vector3 Velocity
 		{
-			get => _rigidBody.linearVelocity;
+			get => RigidBody.linearVelocity;
 			set
 			{
 				if (Master)
 				{
-					_rigidBody.linearVelocity = value;
+					RigidBody.linearVelocity = value;
 				}
 			}
 		}
 
 		public new Vector3 AngularVelocity
 		{
-			get => _rigidBody.angularVelocity;
+			get => RigidBody.angularVelocity;
 			set
 			{
 				if (Master)
 				{
-					_rigidBody.angularVelocity = value;
+					RigidBody.angularVelocity = value;
 				}
 			}
 		}
 
-		public bool IsKinematic => _rigidBody.isKinematic;
+		public bool IsKinematic => RigidBody.isKinematic;
 
 		public bool IsAttached =>
 			Item != null && (Item.InvSlot != null || Item.AttachPoint != null || Parent is DynamicObject);
@@ -79,6 +89,79 @@ namespace ZeroGravity.Objects
 				{
 					Master = true;
 				}
+			}
+		}
+
+		private void Awake()
+		{
+			if (TransitionTrigger == null)
+			{
+				TransitionTrigger = GetComponent<TransitionTriggerHelper>();
+			}
+
+			if (TransitionTrigger == null)
+			{
+				Debug.LogError("Transition trigger not set for dynamic object" + name + gameObject.scene);
+			}
+
+			gameObject.SetLayerRecursively(LayerMask.NameToLayer("DynamicObject"), "FirstPerson", "Triggers");
+			RigidBody = GetComponent<Rigidbody>();
+			RigidBody.useGravity = false;
+			RigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+			Item = GetComponent<Item>();
+			EventSystem.AddListener(typeof(DynamicObjectStatsMessage), DynamicObjectStatsMessageListener);
+		}
+
+		private void Update()
+		{
+			float num = Time.realtimeSinceStartup - _movementReceivedTime;
+			if (!IsKinematic)
+			{
+				if (AngularVelocity.IsEpsilonEqual(Vector3.zero, 0.5f) && Velocity.IsEpsilonEqual(Vector3.zero, 0.1f))
+				{
+					_velocityCheckTimer += Time.deltaTime;
+					if (_velocityCheckTimer > 1f)
+					{
+						SendMovementMessage();
+						ToggleKinematic(value: true);
+					}
+				}
+				else
+				{
+					_velocityCheckTimer = 0f;
+				}
+			}
+			else if (_movementReceivedTime > 0f && num < 1f)
+			{
+				transform.SetLocalPositionAndRotation(Vector3.Lerp(transform.localPosition, _movementTargetLocalPosition,
+					Mathf.Pow(num, 0.5f)), Quaternion.Slerp(transform.localRotation,
+					_movementTargetLocalRotation, Mathf.Pow(num, 0.5f)));
+			}
+			else if (num > 1f && num - Time.deltaTime <= 1f)
+			{
+				ForceActivate();
+			}
+
+			_takeoverTimer += Time.deltaTime;
+		}
+
+		private void FixedUpdate()
+		{
+			if (IsDestroying || Guid == 0 || IsAttached)
+			{
+				return;
+			}
+
+			if (Master && _sendMovementTime + SendMovementInterval <= Time.realtimeSinceStartup &&
+				!RigidBody.isKinematic)
+			{
+				_sendMovementTime = Time.realtimeSinceStartup;
+				SendMovementMessage();
+			}
+
+			if (IsInsideSpaceObject && Gravity.IsNotEpsilonZero() && !IsKinematic)
+			{
+				RigidBody.linearVelocity += Gravity * Time.fixedDeltaTime;
 			}
 		}
 
@@ -107,14 +190,17 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public void ProcessDynamicObectMovementMessage(DynamicObjectMovementMessage mm)
+		public void ProcessDynamicObjectMovementMessage(DynamicObjectMovementMessage message)
 		{
 			if (!IsAttached && !(_takeoverTimer < 1f))
 			{
 				Master = false;
 				ToggleKinematic(value: true);
-				_movementVelocity = mm.Velocity.ToVector3();
-				_movementAngularVelocity = mm.AngularVelocity.ToVector3();
+				_movementReceivedTime = Time.realtimeSinceStartup;
+				_movementTargetLocalPosition = message.LocalPosition.ToVector3();
+				_movementTargetLocalRotation = message.LocalRotation.ToQuaternion();
+				_movementVelocity = message.Velocity.ToVector3();
+				_movementAngularVelocity = message.AngularVelocity.ToVector3();
 			}
 		}
 
@@ -211,7 +297,7 @@ namespace ZeroGravity.Objects
 					{
 						if (dosm.AttachData.Velocity != null)
 						{
-							_rigidBody.linearVelocity = dosm.AttachData.Velocity.ToVector3();
+							RigidBody.linearVelocity = dosm.AttachData.Velocity.ToVector3();
 						}
 
 						if (dosm.AttachData.Torque != null)
@@ -313,9 +399,12 @@ namespace ZeroGravity.Objects
 				{
 					Destroy(_takeoverTrigger);
 				}
+
+
+				_velocityCheckTimer = 0f;
 			}
 
-			_rigidBody.isKinematic = value;
+			RigidBody.isKinematic = value;
 		}
 
 		public void ToggleEnabled(bool isEnabled, bool toggleColliders)
@@ -400,7 +489,7 @@ namespace ZeroGravity.Objects
 					ToggleKinematic(value: false);
 				}
 
-				_rigidBody.AddForce(force, forceMode);
+				RigidBody.AddForce(force, forceMode);
 			}
 		}
 
@@ -413,7 +502,7 @@ namespace ZeroGravity.Objects
 					ToggleKinematic(value: false);
 				}
 
-				_rigidBody.AddTorque(torque);
+				RigidBody.AddTorque(torque);
 			}
 		}
 
@@ -421,7 +510,7 @@ namespace ZeroGravity.Objects
 		{
 			if (Master && !IsAttached && !IsKinematic)
 			{
-				_rigidBody.AddTorque(torque, forceMode);
+				RigidBody.AddTorque(torque, forceMode);
 			}
 		}
 
@@ -482,8 +571,8 @@ namespace ZeroGravity.Objects
 				{
 					dynamicObject.transform.localPosition = details.LocalPosition.ToVector3();
 					dynamicObject.transform.localRotation = details.LocalRotation.ToQuaternion();
-					dynamicObject._rigidBody.linearVelocity = details.Velocity.ToVector3();
-					dynamicObject._rigidBody.angularVelocity = details.AngularVelocity.ToVector3();
+					dynamicObject.RigidBody.linearVelocity = details.Velocity.ToVector3();
+					dynamicObject.RigidBody.angularVelocity = details.AngularVelocity.ToVector3();
 				}
 
 				World.AddDynamicObject(dynamicObject.Guid, dynamicObject);
@@ -596,6 +685,27 @@ namespace ZeroGravity.Objects
 						UnityEngine.Random.Range(0.001f, 0.05f)), ForceMode.Impulse);
 				AddTorque(new Vector3(UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f),
 					UnityEngine.Random.Range(0.001f, 0.05f)));
+			}
+		}
+
+		private void OnCollisionEnter(Collision coli)
+		{
+			if (!IsAttached && IsKinematic)
+			{
+				ToggleKinematic(value: false);
+				SpaceObjectTransferable componentInParent =
+					coli.gameObject.GetComponentInParent<SpaceObjectTransferable>();
+				if (componentInParent is MyPlayer)
+				{
+					Master = true;
+					_takeoverTimer = 0f;
+				}
+				else if (componentInParent is DynamicObject && (componentInParent as DynamicObject).Master)
+				{
+					Master = true;
+				}
+
+				AddForce(coli.relativeVelocity, ForceMode.VelocityChange);
 			}
 		}
 

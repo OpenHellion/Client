@@ -46,8 +46,8 @@ namespace ZeroGravity.LevelDesign
 					componentInParent.ToggleKinematic(false);
 				}
 
-				componentInParent._rigidBody.linearVelocity =
-					Vector3.ProjectOnPlane(componentInParent._rigidBody.linearVelocity, base.transform.forward) +
+				componentInParent.RigidBody.linearVelocity =
+					Vector3.ProjectOnPlane(componentInParent.RigidBody.linearVelocity, base.transform.forward) +
 					base.transform.forward * ForceIntensity;
 			}
 		}
@@ -73,8 +73,8 @@ namespace ZeroGravity.LevelDesign
 					componentInParent.ToggleKinematic(false);
 				}
 
-				componentInParent._rigidBody.linearVelocity =
-					Vector3.ProjectOnPlane(componentInParent._rigidBody.linearVelocity, base.transform.forward) +
+				componentInParent.RigidBody.linearVelocity =
+					Vector3.ProjectOnPlane(componentInParent.RigidBody.linearVelocity, base.transform.forward) +
 					base.transform.forward * ForceIntensity;
 			}
 		}

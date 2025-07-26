@@ -1599,7 +1599,7 @@ namespace ZeroGravity.Objects
 						componentInParent.SubType == GenericItemSubType.BasketBall)
 					{
 						componentInParent.DynamicObj.ToggleKinematic(value: false);
-						componentInParent.DynamicObj._rigidBody.AddForce(transform.forward * 4f + transform.up * 2f,
+						componentInParent.DynamicObj.RigidBody.AddForce(transform.forward * 4f + transform.up * 2f,
 							ForceMode.VelocityChange);
 						ImpactDetector componentInChildren =
 							componentInParent.DynamicObj.GetComponentInChildren<ImpactDetector>(includeInactive: true);

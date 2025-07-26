@@ -830,7 +830,7 @@ namespace ZeroGravity.Objects
 					{
 						if (data.Velocity != null)
 						{
-							DynamicObj._rigidBody.linearVelocity = data.Velocity.ToVector3();
+							DynamicObj.RigidBody.linearVelocity = data.Velocity.ToVector3();
 						}
 
 						if (data.Torque != null)
