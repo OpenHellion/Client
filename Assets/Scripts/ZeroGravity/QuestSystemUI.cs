@@ -125,6 +125,7 @@ namespace ZeroGravity
 		public QuestUI CreateQuestUI(Quest quest)
 		{
 			QuestUI questUI = Instantiate(QuestItem, QuestsHolder);
+			QuestUI.Init(_inGameGUI);
 			questUI.transform.Reset();
 			questUI.transform.SetAsFirstSibling();
 			questUI.gameObject.SetActive(value: true);
@@ -132,7 +133,6 @@ namespace ZeroGravity
 			questUI.Quest = quest;
 			questUI.RefreshQuestUI();
 			AllQuests.Add(questUI);
-			QuestUI.Init(_inGameGUI);
 			return questUI;
 		}
 
