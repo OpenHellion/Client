@@ -1,7 +1,9 @@
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using ProtoBuf;
@@ -77,9 +79,17 @@ namespace OpenHellion.IO
 			return networkData;
 		}
 
-		public static async UniTask<NetworkData> Unpack(Stream stream, int maxMessageSize)
+		/// <summary>
+		/// 	Unpack data sent by the server.
+		/// 	Reads the size of the message, then reads the message itself.
+		/// </summary>
+		/// <param name="stream">The stream to read from.</param>
+		/// <param name="maxMessageSize">Max number of bytes to accept.</param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentException">If message is too large.</exception>
+		/// <exception cref="Exception">If message is empty.</exception>
+		public static async UniTask<NetworkData> Unpack(Stream stream, int maxMessageSize, CancellationToken cancellationToken = default)
 		{
-			if (stream == null) throw new ArgumentNullException(nameof(stream));
 			if (!stream.CanRead) throw new ArgumentException("Cannot read from stream.");
 			int dataRead = 0;
 			int readSize;
@@ -88,7 +98,7 @@ namespace OpenHellion.IO
 			byte[] dataLengthBuffer = new byte[4];
 			do
 			{
-				readSize = await stream.ReadAsync(dataLengthBuffer.AsMemory(dataRead, dataLengthBuffer.Length - dataRead));
+				readSize = await stream.ReadAsync(dataLengthBuffer.AsMemory(dataRead, dataLengthBuffer.Length - dataRead), cancellationToken);
 				if (readSize == 0)
 				{
 					throw new Exception("Received zero data message.");
@@ -97,18 +107,21 @@ namespace OpenHellion.IO
 				dataRead += readSize;
 			} while (dataRead < dataLengthBuffer.Length);
 
-			uint dataLength = BitConverter.ToUInt32(dataLengthBuffer, 0);
+			uint dataLength = BinaryPrimitives.ReadUInt32LittleEndian(dataLengthBuffer);
 			if (dataLength > maxMessageSize)
 			{
-				throw new ArgumentException($"Message too large. Payload of {dataLength}.");
+				await SkipAsync(stream, dataLength, cancellationToken);
+
+				throw new ArgumentException($"Message too large. Declared {dataLength}, maximum allowed is {maxMessageSize}.");
 			}
+
 
 			// Read following contents.
 			byte[] buffer = new byte[dataLength];
 			dataRead = 0;
 			do
 			{
-				readSize = await stream.ReadAsync(buffer.AsMemory(dataRead, buffer.Length - dataRead));
+				readSize = await stream.ReadAsync(buffer.AsMemory(dataRead, buffer.Length - dataRead), cancellationToken);
 				if (readSize == 0)
 				{
 					throw new Exception("Received zero data message.");
@@ -122,7 +135,12 @@ namespace OpenHellion.IO
 			return Deserialise(ms);
 		}
 
-		public static async UniTask<byte[]> Pack(NetworkData data)
+		/// <summary>
+		/// 	Pack NetworkData into a binary array.
+		/// </summary>
+		/// <param name="data">NetworkData to serialise.</param>
+		/// <returns>Data as a binary array.</returns>
+		public static async UniTask<byte[]> Pack(NetworkData data, CancellationToken cancellationToken = default)
 		{
 			await using MemoryStream ms = new MemoryStream();
 
@@ -149,10 +167,47 @@ namespace OpenHellion.IO
 			}
 
 			await using MemoryStream outMs = new MemoryStream();
-			await outMs.WriteAsync(BitConverter.GetBytes((uint)ms.Length), 0, 4);
-			await outMs.WriteAsync(ms.ToArray(), 0, (int)ms.Length);
-			await outMs.FlushAsync();
+			await outMs.WriteAsync(BitConverter.GetBytes((uint)ms.Length), 0, 4, cancellationToken);
+			await outMs.WriteAsync(ms.ToArray(), 0, (int)ms.Length, cancellationToken);
+			await outMs.FlushAsync(cancellationToken);
 			return outMs.ToArray();
+		}
+
+		/// <summary>
+		/// 	Skips a specified number of bytes in the stream asynchronously.
+		/// </summary>
+		/// <param name="stream">Stream to skip on.</param>
+		/// <param name="bytesToSkip">Bytes to skip.</param>
+		/// <param name="cancellationToken"></param>
+		/// <exception cref="EndOfStreamException">Stream ended unexpectedly.</exception>
+		public static async Task SkipAsync(Stream stream, long bytesToSkip, CancellationToken cancellationToken = default)
+		{
+			if (bytesToSkip <= 0) return;
+
+			// If the stream supports seeking, do it in one go.
+			if (stream.CanSeek)
+			{
+				long toSkip = Math.Min(stream.Length - stream.Position, bytesToSkip);
+				stream.Seek(toSkip, SeekOrigin.Current);
+				return;
+			}
+
+			// Otherwise, read-and-discard in chunks.
+			const int discardBufferSize = 8192;
+			byte[] discardBuffer = new byte[discardBufferSize];
+			long remaining = bytesToSkip;
+			while (remaining > 0)
+			{
+				int chunk = (int)Math.Min(discardBufferSize, remaining);
+				int read = await stream.ReadAsync(discardBuffer, 0, chunk, cancellationToken);
+				if (read == 0)
+				{
+					// Stream ended unexpectedly.
+					throw new EndOfStreamException(
+						$"Stream ended while skipping {bytesToSkip} bytes (skipped {bytesToSkip - remaining}).");
+				}
+				remaining -= read;
+			}
 		}
 
 		private static void ProcessStatistics(NetworkData data, Stream ms,

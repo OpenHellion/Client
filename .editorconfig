@@ -22,6 +22,9 @@ dotnet_diagnostic.IDE0350.severity = none
 # CS4014: Because this call is not awaited, execution of the current method continues before the call is completed
 dotnet_diagnostic.CS4014.severity = error
 
+# IDE0130: Namespace does not match folder structure
+dotnet_style_namespace_match_folder = false
+
 [**.{cs,shader}]
 indent_style = tab
 indent_size = tab

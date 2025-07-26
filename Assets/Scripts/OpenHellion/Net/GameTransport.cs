@@ -83,7 +83,7 @@ namespace OpenHellion.Net
 				{
 					if (_connectionStream.DataAvailable)
 					{
-						NetworkData networkData = await ProtoSerialiser.Unpack(_connectionStream, MAX_MESSAGE_SIZE);
+						NetworkData networkData = await ProtoSerialiser.Unpack(_connectionStream, MAX_MESSAGE_SIZE, _cancellationToken.Token);
 						if (networkData != null)
 						{
 							if (networkData.SyncRequest)
@@ -97,7 +97,7 @@ namespace OpenHellion.Net
 							{
 								_syncResponseReceivedEvent(networkData);
 							}
-							else if (DateTime.Now <= networkData.ExpirationUtc)
+							else if (DateTime.UtcNow <= networkData.ExpirationUtc)
 							{
 								EventSystem.Invoke(networkData);
 							}
@@ -113,6 +113,10 @@ namespace OpenHellion.Net
 					Debug.Log("Socket terminated, disconnecting client.");
 					DisconnectInternal();
 					break;
+				}
+				catch (ArgumentException ex)
+				{
+					Debug.LogException(ex);
 				}
 			}
 		}

@@ -150,7 +150,7 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		private void FixedUpdate()
+		private async UniTaskVoid FixedUpdate()
 		{
 			if (AutoStabilize.IsNotEpsilonZero() && AngularVelocity != Vector3.zero)
 			{
@@ -212,7 +212,7 @@ namespace ZeroGravity.Objects
 
 			if (_shipStatsChanged)
 			{
-				NetworkController.SendAndForget(_shipStatsMsg);
+				await NetworkController.SendAsync(_shipStatsMsg);
 				_shipStatsMsg = new ShipStatsMessage
 				{
 					GUID = Guid,

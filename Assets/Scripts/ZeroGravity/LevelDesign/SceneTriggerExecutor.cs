@@ -445,7 +445,7 @@ namespace ZeroGravity.LevelDesign
 
 			if (ParentVessel != null)
 			{
-				ParentVessel.ChangeStats(null, null, null, null, null, null, null, null, sceneTriggerExecutorDetails);
+				ParentVessel.ChangeStats(sceneTriggerExecutor: sceneTriggerExecutorDetails);
 			}
 
 			_proximityTriggerID = null;
@@ -612,8 +612,7 @@ namespace ZeroGravity.LevelDesign
 				_triggeredPlayerGuid = MyPlayer.Instance.Guid;
 				if (isInstantChange)
 				{
-					MyPlayer.Instance.transform.position = _newState.CharacterPosition.InteractPosition.position;
-					MyPlayer.Instance.transform.rotation = _newState.CharacterPosition.InteractPosition.rotation;
+					MyPlayer.Instance.transform.SetPositionAndRotation(_newState.CharacterPosition.InteractPosition.position, _newState.CharacterPosition.InteractPosition.rotation);
 					SendPackageToServer(isInstantChange, force);
 				}
 				else

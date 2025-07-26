@@ -188,6 +188,8 @@ namespace OpenHellion
 						await NetworkController.SendAsync(new EnvironmentReadyMessage());
 					}
 
+					await UniTask.SwitchToMainThread();
+
 					Destroy(gameObject);
 					return;
 				}
