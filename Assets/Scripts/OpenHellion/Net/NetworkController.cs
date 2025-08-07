@@ -93,9 +93,9 @@ namespace OpenHellion.Net
 				{
 					GUIDs = new List<long>(_spawnObjectsList)
 				};
+				_spawnObjectsList.Clear();
 
 				await SendAsync(spawnObjectsRequest);
-				_spawnObjectsList.Clear();
 			}
 
 			if (_subscribeToObjectsList.Count > 0)
@@ -104,9 +104,9 @@ namespace OpenHellion.Net
 				{
 					GUIDs = new List<long>(_subscribeToObjectsList)
 				};
+				_subscribeToObjectsList.Clear();
 
 				await SendAsync(subscribeToObjectsRequest);
-				_subscribeToObjectsList.Clear();
 			}
 
 			if (_unsubscribeFromObjectsList.Count > 0)
@@ -115,9 +115,9 @@ namespace OpenHellion.Net
 				{
 					GUIDs = new List<long>(_unsubscribeFromObjectsList)
 				};
+				_unsubscribeFromObjectsList.Clear();
 
 				await SendAsync(unsubscribeFromObjectsRequest);
-				_unsubscribeFromObjectsList.Clear();
 			}
 
 			// Handle Steam P2P packets.

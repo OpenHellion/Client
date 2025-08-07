@@ -151,7 +151,10 @@ namespace ZeroGravity.LevelDesign
 
 		public string CurrentState => _currentState == null ? string.Empty : _currentState.StateName;
 
-		public string AdditionalData { get; set; } // Used by dependency delegate.
+		public string AdditionalData // Used by dependency delegate.
+		{
+			set { }
+		}
 
 		public SceneTriggerExecutor ChildExecutor => _childExecutor;
 
@@ -592,17 +595,21 @@ namespace ZeroGravity.LevelDesign
 			}
 		}
 
-		public void ChangeStateID(int newState, bool isInstantChange, bool force = false)
+		public void ChangeStateID(int newStateId, bool isInstantChange, bool force = false)
 		{
-			if (!_states.ContainsKey(newState) || (_currentState.OnlyActivePlayerCanChangeState &&
+			if (!_states.ContainsKey(newStateId) || (_currentState.OnlyActivePlayerCanChangeState &&
 												  _currentState.TriggeredPlayerGuid != 0 &&
 												  _currentState.TriggeredPlayerGuid != MyPlayer.Instance.Guid))
 			{
 				return;
 			}
 
-			_newState = _states[newState];
-			if (_newState.CharacterPosition != null && _newState.CharacterPosition.InteractPosition != null)
+			_newState = _states[newStateId];
+			if (_newState.CharacterPosition == null || _newState.CharacterPosition.InteractPosition == null)
+			{
+				SendPackageToServer(isInstantChange, force);
+			}
+			else
 			{
 				if (_newState.CharacterPosition.SetColliderToKinematic)
 				{
@@ -621,10 +628,6 @@ namespace ZeroGravity.LevelDesign
 						_newState.CharacterPosition.InteractPosition, _newState.CharacterPosition.InteractLookAt,
 						SendPackageToServer));
 				}
-			}
-			else
-			{
-				SendPackageToServer(isInstantChange, force);
 			}
 		}
 

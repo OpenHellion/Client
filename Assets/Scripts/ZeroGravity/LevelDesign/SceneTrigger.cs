@@ -76,12 +76,12 @@ namespace ZeroGravity.LevelDesign
 
 			if (Executor == null)
 			{
+				Debug.LogWarningFormat("SceneTrigger on object {0} in scene {1} has no executor. Please assign it in the inspector or ensure it is present in the parent object.", gameObject.name, gameObject.scene.name);
 				return;
 			}
 
 			_executorStateID = -1;
-			string[] array = ExecutorStateName.Split(';');
-			foreach (string stateName in array)
+			foreach (string stateName in ExecutorStateName.Split(';'))
 			{
 				int stateID = Executor.GetStateID(stateName);
 				if (_executorStateID == -1)
