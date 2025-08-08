@@ -1,6 +1,6 @@
 // MainMenuGUI.cs
 //
-// Copyright (C) 2024, OpenHellion contributors
+// Copyright (C) 2025, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -64,7 +64,7 @@ namespace OpenHellion.UI
 
 		private static bool ShowDisclaimer = true;
 
-		public Text Version;
+		public TextMeshProUGUI VersionText;
 
 		[Title("Disconnect screen")] public GameObject DisconnectScreen;
 
@@ -96,6 +96,12 @@ namespace OpenHellion.UI
 
 		public GameObject SaveGameOptionUI;
 
+		[Title("Experimental banner")]
+
+		public GameObject ExperimentalBanner;
+
+		public TextMeshProUGUI ExperimentalBannerText;
+
 		public static bool CanChooseSpawn = true;
 
 		private Gender _currentGenderGUI;
@@ -110,9 +116,19 @@ namespace OpenHellion.UI
 				WasDisconnectUncontrolled = false;
 			}
 
-			#if UNITY_DEBUG
+			if (Application.isEditor || Debug.isDebugBuild || Application.version.Contains("rc"))
+			{
+				ExperimentalBanner.SetActive(true);
+				ExperimentalBannerText.text = "EXPERIMENTAL\nBUILD\n" + Application.version;
+			}
+			else
+			{
+				ExperimentalBanner.SetActive(false);
+			}
+
+#if UNITY_DEBUG
 			RichPresenceManager.SetAchievement(AchievementID.other_testing_squad_member);
-			#endif
+#endif
 		}
 
 		private async UniTaskVoid Start()
@@ -140,7 +156,7 @@ namespace OpenHellion.UI
 				DisclaimerAgree();
 			}
 
-			Version.text = string.Format(Localization.ClientVersion, Application.version);
+			VersionText.text = string.Format(Localization.ClientVersion, Application.version);
 			StartingPointData = Resources.LoadAll<StartingPointOptionData>("StartingPoints").ToList();
 
 			var data = await NakamaClient.GetCharacterData();
