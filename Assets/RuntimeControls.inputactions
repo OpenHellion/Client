@@ -9,7 +9,7 @@
                     "name": "Right",
                     "type": "Button",
                     "id": "71ea925e-2372-4cc5-b1d5-40f8c0faae0e",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false

@@ -1,6 +1,6 @@
 ﻿// GlobalGUI.cs
 //
-// Copyright (C) 2024, OpenHellion contributors
+// Copyright (C) 2025, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cysharp.Threading.Tasks;
 using OpenHellion.Data;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
@@ -30,7 +29,7 @@ using ZeroGravity.Math;
 
 namespace OpenHellion.UI
 {
-	[RequireComponent(typeof(UIDocument)), RequireComponent(typeof(SettingsMenuViewModel))]
+	[RequireComponent(typeof(UIDocument))]
 	public class GlobalGUI : MonoBehaviour
 	{
 		public enum LoadingScreenType
@@ -79,13 +78,19 @@ namespace OpenHellion.UI
 		private VisualElement _videoSettingsScreen;
 		private VisualElement _audioSettingsScreen;
 
+
+		private VisualElement _expermientalBanner;
+
+		private Label _experimentalBannerText;
+
+
 		private static GlobalGUI _instance;
 
 		private IEnumerator<string> _shuffledLoadingTexts;
 
 		private float _lastTimeLoadingTipsChanged;
 
-		private SettingsMenuViewModel _settingsViewModel;
+		[SerializeField] private SettingsMenuViewModel _settingsViewModel;
 
 		[SerializeField] private List<PostProcessProfile> _postEffectProfiles;
 
@@ -106,7 +111,6 @@ namespace OpenHellion.UI
 				return;
 			}
 			_instance = this;
-			_settingsViewModel = gameObject.GetComponent<SettingsMenuViewModel>();
 
 			var uiDocument = GetComponent<UIDocument>();
 
@@ -139,6 +143,9 @@ namespace OpenHellion.UI
 			_controlsSettingsScreen = _settingsScreen.Q("ControlsSettings");
 			_videoSettingsScreen = _settingsScreen.Q("VideoSettings");
 			_audioSettingsScreen = _settingsScreen.Q("AudioSettings");
+
+			_expermientalBanner = uiDocument.rootVisualElement.Q("ExperimentalBanner");
+			_experimentalBannerText = _expermientalBanner.Q("ExperimentalBannerText") as Label;
 
 			Debug.Assert(_messageClose != null);
 			_messageClose.clicked += CloseMessageBox;
@@ -177,6 +184,16 @@ namespace OpenHellion.UI
 			//{
 			//	qualitySettingsDropdown.options.Add(new Dropdown.OptionData(text.ToString()));
 			//}
+
+			if (Application.isEditor || Debug.isDebugBuild || Application.version.Contains("rc"))
+			{
+				_expermientalBanner.visible = true;
+				_experimentalBannerText.text = "EXPERIMENTAL\nBUILD " + Application.version;
+			}
+			else
+			{
+				_expermientalBanner.visible = false;
+			}
 		}
 
 		private void OnDisable()
@@ -294,7 +311,7 @@ namespace OpenHellion.UI
 			_instance.CancelInvoke(nameof(RefreshLoadingScreen));
 		}
 
-		public void OpenSettingsScreen()
+		public static void OpenSettingsScreen()
 		{
 			_instance._settingsScreen.visible = true;
 		}
@@ -304,28 +321,28 @@ namespace OpenHellion.UI
 			switch (menu)
 			{
 				case SettingsMenu.Game:
-					_gameSettingsScreen.visible = true;
-					_controlsSettingsScreen.visible = false;
-					_videoSettingsScreen.visible = false;
-					_audioSettingsScreen.visible = false;
+					_gameSettingsScreen.style.display = DisplayStyle.Flex;
+					_controlsSettingsScreen.style.display = DisplayStyle.None;
+					_videoSettingsScreen.style.display = DisplayStyle.None;
+					_audioSettingsScreen.style.display = DisplayStyle.None;
 					break;
 				case SettingsMenu.Controls:
-					_gameSettingsScreen.visible = false;
-					_controlsSettingsScreen.visible = true;
-					_videoSettingsScreen.visible = false;
-					_audioSettingsScreen.visible = false;
+					_gameSettingsScreen.style.display = DisplayStyle.None;
+					_controlsSettingsScreen.style.display = DisplayStyle.Flex;
+					_videoSettingsScreen.style.display = DisplayStyle.None;
+					_audioSettingsScreen.style.display = DisplayStyle.None;
 					break;
 				case SettingsMenu.Video:
-					_gameSettingsScreen.visible = false;
-					_controlsSettingsScreen.visible = false;
-					_videoSettingsScreen.visible = true;
-					_audioSettingsScreen.visible = false;
+					_gameSettingsScreen.style.display = DisplayStyle.None;
+					_controlsSettingsScreen.style.display = DisplayStyle.None;
+					_videoSettingsScreen.style.display = DisplayStyle.Flex;
+					_audioSettingsScreen.style.display = DisplayStyle.None;
 					break;
 				case SettingsMenu.Audio:
-					_gameSettingsScreen.visible = false;
-					_controlsSettingsScreen.visible = false;
-					_videoSettingsScreen.visible = false;
-					_audioSettingsScreen.visible = true;
+					_gameSettingsScreen.style.display = DisplayStyle.None;
+					_controlsSettingsScreen.style.display = DisplayStyle.None;
+					_videoSettingsScreen.style.display = DisplayStyle.None;
+					_audioSettingsScreen.style.display = DisplayStyle.Flex;
 					break;
 			}
 		}

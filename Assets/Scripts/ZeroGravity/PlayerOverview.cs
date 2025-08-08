@@ -28,6 +28,9 @@ namespace ZeroGravity
 			}
 
 			Globals.ToggleCursor(val);
+			MyPlayer.Instance.FpsController.ToggleCameraController(!val);
+			MyPlayer.Instance.FpsController.ToggleCameraMovement(!val);
+			MyPlayer.Instance.FpsController.ToggleMovement(!val);
 
 			if (MyPlayer.Instance.CurrentActiveItem != null)
 			{

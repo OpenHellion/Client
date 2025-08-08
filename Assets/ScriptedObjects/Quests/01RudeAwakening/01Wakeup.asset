@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -15,22 +16,16 @@ MonoBehaviour:
   QuestTriggerID: 1
   Elements:
   - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
-    Dialogue: '...|Can anyone hear me?...|uhm...|this is|Theona Mayers,|
-
-      first
-      officer of Daedalus…|not that it matters anymore…|'
+    Dialogue: "...|Can anyone hear me?...|uhm...|this is|Theona Mayers,|\nfirst officer
+      of Daedalus\u2026|not that it matters anymore\u2026|"
     PlaySound: 1
     DialogueSound: Theona_Log_1_PlayerWakesUp
     SkipInJournal: 0
     TaskDependencyList: []
   - Character: {fileID: 11400000, guid: 42544ef4d9854ef43b0d415ac1e849e0, type: 2}
-    Dialogue: '...But if you can hear me,|I need you to trust me.|
-
-      The station
-      you’re in,|is about to fall from orbit.|And you|
-
-      don’t have much
-      time|so grab your gear and|'
+    Dialogue: "...But if you can hear me,|I need you to trust me.|\nThe station you\u2019re
+      in,|is about to fall from orbit.|And you|\ndon\u2019t have much time|so grab
+      your gear and|"
     PlaySound: 0
     DialogueSound: 
     SkipInJournal: 0

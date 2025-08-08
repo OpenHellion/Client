@@ -1,6 +1,6 @@
 ﻿// SettingsMenuViewModel.cs
 //
-// Copyright (C) 2024, OpenHellion contributors
+// Copyright (C) 2025, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -17,37 +17,37 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using OpenHellion.Data;
 using OpenHellion.IO;
 using UnityEngine;
 
 namespace OpenHellion
 {
-	public class SettingsMenuViewModel : MonoBehaviour
+	[CreateAssetMenu(fileName = "SettingsMenuViewModel", menuName = "OpenHellion/SettingsMenuViewModel", order = 1)]
+	public class SettingsMenuViewModel : ScriptableObject
 	{
 		[Title("The data that corresponds to the currently viewable settings.")]
 		// Game settings
-		[SerializeField]
-		private bool _hideTutorial;
+		[SerializeField] private bool _hideTutorial;
 
-		[SerializeField]
-		private bool _disableChat;
+		[SerializeField] private bool _disableChat;
 
-		[SerializeField]
-		private bool _hideTips;
+		[SerializeField] private bool _hideTips;
 
-		[SerializeField]
-		private bool _showCrosshair;
+		[SerializeField] private bool _showCrosshair;
 
-		[SerializeField]
-		private bool _autoStabilisation;
+		[SerializeField] private bool _autoStabilisation;
 
-		[SerializeField]
-		private float _headBob;
+		[SerializeField] private float _headBob;
 
 		// TODO: Changing this should set Settings.RestartOnSave = true;
-		[SerializeField]
-		private int _languageIndex;
+		[SerializeField] private int _languageIndex;
+
+		//[SuppressMessage("Style", "IDE0052", Justification = "This is used by the UI to display available resolutions. DO NOT REMOVE THIS.")]
+		[SerializeField] private List<string> _languageOptions;
 
 		// Controls settings
 		[SerializeField] private float _mouseSensitivity;
@@ -61,7 +61,13 @@ namespace OpenHellion
 
 		[SerializeField] private int _resolutionIndex;
 
+		[SuppressMessage("Style", "IDE0052", Justification = "This is used by the UI to display available resolutions. DO NOT REMOVE THIS.")]
+		[SerializeField] private List<string> _resolutionOptions;
+
 		[SerializeField] private int _qualityIndex;
+
+		[SuppressMessage("Style", "IDE0052", Justification = "This is used by the UI to display available quality presets. DO NOT REMOVE THIS.")]
+		[SerializeField] private List<string> _qualityOptions;
 
 		[SerializeField] private int _textureIndex;
 
@@ -172,7 +178,9 @@ namespace OpenHellion
 		public void SetVideoSettings(VideoSettingsData data)
 		{
 			_fullScreen = data.Fullscreen;
+			_resolutionOptions = Screen.resolutions.Select(resolution => $"{resolution.width}x{resolution.height} ({resolution.refreshRateRatio}Hz)").ToList();
 			_resolutionIndex = data.ResolutionIndex;
+			_qualityOptions = QualitySettings.names.ToList();
 			_qualityIndex = data.QualityIndex;
 			_textureIndex = data.TextureIndex;
 			_shadowQualityIndex = data.ShadowIndex;
@@ -187,6 +195,7 @@ namespace OpenHellion
 
 		public void ResetVideoSettings()
 		{
+			_resolutionOptions = Screen.resolutions.Select(resolution => $"{resolution.width}x{resolution.height} ({resolution.refreshRateRatio}Hz)").ToList();
 			_resolutionIndex = Screen.resolutions.Length - 1;
 			_fullScreen = true;
 			Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, _fullScreen);
@@ -195,6 +204,7 @@ namespace OpenHellion
 			_eyeAdaptation = true;
 			_bloom = true;
 			_chromaticAberration = true;
+			_qualityOptions = QualitySettings.names.ToList();
 			_qualityIndex = 2;
 			QualitySettings.SetQualityLevel(_qualityIndex, applyExpensiveChanges: false);
 			_textureIndex = QualitySettings.globalTextureMipmapLimit;

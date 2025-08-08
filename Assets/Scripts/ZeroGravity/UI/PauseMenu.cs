@@ -164,6 +164,9 @@ namespace ZeroGravity.UI
 			MainMenu(false);
 			_world.InGameGUI.Close();
 			Globals.ToggleCursor(false);
+			MyPlayer.Instance.FpsController.ToggleCameraController(true);
+			MyPlayer.Instance.FpsController.ToggleCameraMovement(true);
+			MyPlayer.Instance.FpsController.ToggleMovement(true);
 		}
 
 		public void LogoutButton()

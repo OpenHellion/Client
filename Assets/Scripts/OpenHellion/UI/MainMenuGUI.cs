@@ -96,12 +96,6 @@ namespace OpenHellion.UI
 
 		public GameObject SaveGameOptionUI;
 
-		[Title("Experimental banner")]
-
-		public GameObject ExperimentalBanner;
-
-		public TextMeshProUGUI ExperimentalBannerText;
-
 		public static bool CanChooseSpawn = true;
 
 		private Gender _currentGenderGUI;
@@ -114,16 +108,6 @@ namespace OpenHellion.UI
 			{
 				DisconnectScreen.SetActive(value: true);
 				WasDisconnectUncontrolled = false;
-			}
-
-			if (Application.isEditor || Debug.isDebugBuild || Application.version.Contains("rc"))
-			{
-				ExperimentalBanner.SetActive(true);
-				ExperimentalBannerText.text = "EXPERIMENTAL\nBUILD\n" + Application.version;
-			}
-			else
-			{
-				ExperimentalBanner.SetActive(false);
 			}
 
 #if UNITY_DEBUG
@@ -441,6 +425,7 @@ namespace OpenHellion.UI
 		/// </summary>
 		public void SettingsButton()
 		{
+			GlobalGUI.OpenSettingsScreen();
 		}
 
 		/// <summary>

@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ab91a444dbd4010a195cbf03b4e765a, type: 3}
+  m_Name: SettingsMenuViewModel
+  m_EditorClassIdentifier: 
+  _hideTutorial: 0
+  _disableChat: 0
+  _hideTips: 0
+  _showCrosshair: 1
+  _autoStabilisation: 1
+  _headBob: 0
+  _languageIndex: 0
+  _languageOptions: []
+  _mouseSensitivity: 1
+  _invertMouse: 0
+  _invertMouseWhileDriving: 0
+  _fullScreen: 1
+  _resolutionIndex: 19
+  _resolutionOptions:
+  - 640x480 (74.973Hz)
+  - 720x480 (74.973Hz)
+  - 720x576 (74.973Hz)
+  - 800x600 (74.973Hz)
+  - 1024x768 (74.973Hz)
+  - 1152x864 (74.973Hz)
+  - 1176x664 (74.973Hz)
+  - 1280x720 (74.973Hz)
+  - 1280x768 (74.973Hz)
+  - 1280x800 (74.973Hz)
+  - 1280x960 (74.973Hz)
+  - 1280x1024 (74.973Hz)
+  - 1360x768 (74.973Hz)
+  - 1366x768 (74.973Hz)
+  - 1440x900 (74.973Hz)
+  - 1440x1080 (74.973Hz)
+  - 1600x900 (74.973Hz)
+  - 1600x1024 (74.973Hz)
+  - 1680x1050 (74.973Hz)
+  - 1768x992 (74.973Hz)
+  - 1920x1080 (74.973Hz)
+  _qualityIndex: 2
+  _qualityOptions:
+  - Fastest
+  - Fast
+  - Good
+  - Simple
+  - Beautiful
+  - Fantastic
+  _textureIndex: 1
+  _shadowQualityIndex: 2
+  _antialiasingIndex: 1
+  _volumetricLighting: 0
+  _ambientOcclusion: 1
+  _motionBlur: 0
+  _eyeAdaptation: 1
+  _bloom: 1
+  _chromaticAberration: 1
+  _masterVolume: 80
+  _ambienceVolume: 100
+  _voiceVolume: 100
