@@ -101,10 +101,9 @@ namespace OpenHellion
 					string[] result;
 					try
 					{
-						Regex regex = new Regex("[^0-9.]");
 						result = await NakamaClient.FindMatches(new FindMatchesRequest()
 						{
-							Version = regex.Replace(Application.version, string.Empty),
+							Version = Application.version,
 							Hash = Globals.CombinedHash,
 							Location = RegionInfo.CurrentRegion.EnglishName
 						});
