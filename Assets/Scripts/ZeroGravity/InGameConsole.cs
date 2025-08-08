@@ -13,6 +13,7 @@ using ZeroGravity.UI;
 using OpenHellion.Net;
 using OpenHellion.UI;
 using UnityEngine.InputSystem;
+using OpenHellion.IO;
 
 namespace ZeroGravity
 {
@@ -156,7 +157,7 @@ namespace ZeroGravity
 
 			lastSelectedStackItem = null;
 			Canvas.ForceUpdateCanvases();
-			base.gameObject.SetActive(value: true);
+			gameObject.SetActive(value: true);
 			Input.ActivateInputField();
 		}
 
@@ -209,8 +210,7 @@ namespace ZeroGravity
 
 		public void ToggleGodmod()
 		{
-			string empty = string.Empty;
-			empty = ((!GodMode.isOn) ? "0" : "1");
+			string empty = !GodMode.isOn ? "0" : "1";
 			NetworkController.SendAndForget(new ConsoleMessage
 			{
 				Text = "god " + empty
@@ -291,7 +291,7 @@ namespace ZeroGravity
 		{
 			foreach (DynamicObjectData item in list)
 			{
-				GameObject gameObject = UnityEngine.Object.Instantiate(SpawnOptionUI, ItemsHolder);
+				GameObject gameObject = Instantiate(SpawnOptionUI, ItemsHolder);
 				ConsoleSpawnOptionUI component = gameObject.GetComponent<ConsoleSpawnOptionUI>();
 				component.Console = this;
 				if (item.ItemType == ItemType.MachineryPart)
@@ -319,13 +319,13 @@ namespace ZeroGravity
 
 		public void UpdateNewtorking()
 		{
-			NetworkingReceived.text = MyPlayer.Instance.ReceivedPacketStatistics;
-			NetworkingSent.text = MyPlayer.Instance.SentPacketStatistics;
+			NetworkingReceived.text = ProtoSerialiser.ReceivedPacketStatistics;
+			NetworkingSent.text = ProtoSerialiser.SentPacketStatistics;
 		}
 
 		public void RestartNetworking()
 		{
-			MyPlayer.Instance.ResetStatistics();
+			ProtoSerialiser.ResetStatistics();
 		}
 	}
 }

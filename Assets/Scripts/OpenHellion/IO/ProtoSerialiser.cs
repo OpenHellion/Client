@@ -9,7 +9,6 @@ using Cysharp.Threading.Tasks;
 using ProtoBuf;
 using UnityEngine;
 using ZeroGravity.Network;
-using ZeroGravity.Objects;
 
 namespace OpenHellion.IO
 {
@@ -39,13 +38,17 @@ namespace OpenHellion.IO
 
 		private static DateTime _lastStatisticUpdateTime;
 
-		private static readonly double _statisticsLogUpdateTime = 1.0;
-
 		private static readonly Dictionary<Type, StatisticsHelper> _sentStatistics =
 			new Dictionary<Type, StatisticsHelper>();
 
 		private static readonly Dictionary<Type, StatisticsHelper> _receivedStatistics =
 			new Dictionary<Type, StatisticsHelper>();
+
+		public static string SentPacketStatistics { get; private set; }
+
+		public static string ReceivedPacketStatistics { get; private set; }
+
+		private const double StatisticsUpdateInterval = 1.0;
 
 		/// <summary>
 		/// 	For deserialisation of data not sent through network.
@@ -63,16 +66,15 @@ namespace OpenHellion.IO
 				Debug.LogException(ex);
 			}
 
-			if (_statisticsLogUpdateTime > 0.0)
+			if (StatisticsUpdateInterval > 0.0)
 			{
 				try
 				{
 					ProcessStatistics(networkData, ms, _receivedStatistics);
-					return networkData;
 				}
 				catch
 				{
-					return networkData;
+					// Ignored.
 				}
 			}
 
@@ -154,7 +156,7 @@ namespace OpenHellion.IO
 				return null;
 			}
 
-			if (_statisticsLogUpdateTime > 0.0)
+			if (StatisticsUpdateInterval > 0.0)
 			{
 				try
 				{
@@ -225,7 +227,7 @@ namespace OpenHellion.IO
 				stat[type] = new StatisticsHelper(ms.Length);
 			}
 
-			if (!(DateTime.UtcNow.Subtract(_lastStatisticUpdateTime).TotalSeconds >= _statisticsLogUpdateTime))
+			if (!(DateTime.UtcNow.Subtract(_lastStatisticUpdateTime).TotalSeconds >= StatisticsUpdateInterval))
 			{
 				return;
 			}
@@ -250,16 +252,15 @@ namespace OpenHellion.IO
 			text = text2 + "-----------------------------------------\nTotal: " +
 				   (num / 1000f).ToString("##,0") + " kB (avg: " +
 				   (num / timeSpan.TotalSeconds / 1000.0).ToString("##,0") + " kB/s)";
-			if (MyPlayer.Instance != null)
+
+
+			if (stat == _sentStatistics)
 			{
-				if (stat == _sentStatistics)
-				{
-					MyPlayer.Instance.SentPacketStatistics = text;
-				}
-				else
-				{
-					MyPlayer.Instance.ReceivedPacketStatistics = text;
-				}
+				SentPacketStatistics = text;
+			}
+			else
+			{
+				ReceivedPacketStatistics = text;
 			}
 
 			_lastStatisticUpdateTime = DateTime.UtcNow;
@@ -271,6 +272,8 @@ namespace OpenHellion.IO
 			_receivedStatistics.Clear();
 			_statisticUpdateResetTime = DateTime.UtcNow;
 			_lastStatisticUpdateTime = DateTime.UtcNow;
+			SentPacketStatistics = string.Empty;
+			ReceivedPacketStatistics = string.Empty;
 		}
 	}
 }

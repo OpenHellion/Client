@@ -232,12 +232,6 @@ namespace ZeroGravity.Objects
 
 		public bool SendDockUndockMsg;
 
-		[Multiline(20)] [ContextMenuItem("reset", "ResetStatistics")]
-		public string SentPacketStatistics = string.Empty;
-
-		[Multiline(20)] [ContextMenuItem("reset", "ResetStatistics")]
-		public string ReceivedPacketStatistics = string.Empty;
-
 		private GameObject[] _defaultBloodEffects;
 
 		private readonly List<GameObject> _higlightedAttachPoints = new List<GameObject>();
@@ -3945,13 +3939,6 @@ namespace ZeroGravity.Objects
 			{
 				RichPresenceManager.SetAchievement(AchievementID.collection_full_soe_outfit);
 			}
-		}
-
-		public void ResetStatistics()
-		{
-			ProtoSerialiser.ResetStatistics();
-			SentPacketStatistics = string.Empty;
-			ReceivedPacketStatistics = string.Empty;
 		}
 
 		public void OnApplicationFocus(bool focusStatus)

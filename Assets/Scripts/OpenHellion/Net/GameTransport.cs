@@ -34,7 +34,7 @@ namespace OpenHellion.Net
 	/// </summary>
 	/// <remarks>
 	/// 	Largely decoupled from the program, but it does contain some references to <c>EventSystem</c>
-	/// 	to invoke received messages and <c>NetworkController</c> for debug. Might move these into callbacks, but it really isn't necessary.
+	/// 	to invoke received messages. Might move these into callbacks, but it really isn't necessary.
 	/// 	Does not support TLS. Depends upon <c>ProtoSerialiser</c> and <c>NetworkData</c>.
 	/// </remarks>
 	internal sealed class GameTransport
@@ -101,9 +101,6 @@ namespace OpenHellion.Net
 							{
 								EventSystem.Invoke(networkData);
 							}
-#if UNITY_EDITOR
-							NetworkController.LogReceivedNetworkData(networkData.GetType());
-#endif
 						}
 					}
 				}
@@ -128,10 +125,6 @@ namespace OpenHellion.Net
 				data.ExpirationUtc = DateTime.UtcNow.AddMilliseconds(TIMEOUT_MS);
 				var packedData = await ProtoSerialiser.Pack(data);
 				await _connectionStream.WriteAsync(packedData).ConfigureAwait(false);
-
-#if UNITY_EDITOR
-				NetworkController.LogSentNetworkData(data.GetType());
-#endif
 			}
 			catch (SocketException)
 			{
@@ -149,10 +142,6 @@ namespace OpenHellion.Net
 				data.ExpirationUtc = DateTime.UtcNow.AddMilliseconds(TIMEOUT_MS);
 				var packedData = await ProtoSerialiser.Pack(data);
 				await _connectionStream.WriteAsync(packedData).ConfigureAwait(false);
-
-#if UNITY_EDITOR
-				NetworkController.LogSentNetworkData(data.GetType());
-#endif
 			}
 			catch (SocketException)
 			{
@@ -185,10 +174,6 @@ namespace OpenHellion.Net
 				_syncResponseReceivedEvent += responseHandler;
 
 				await _connectionStream.WriteAsync(packedData);
-
-#if UNITY_EDITOR
-				NetworkController.LogSentNetworkData(data.GetType());
-#endif
 
 				await UniTask.Delay(timeout, true, cancellationToken: responseCancel.Token).SuppressCancellationThrow();
 

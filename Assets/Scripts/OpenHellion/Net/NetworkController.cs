@@ -48,14 +48,6 @@ namespace OpenHellion.Net
 
 		private readonly HashSet<long> _unsubscribeFromObjectsList = new HashSet<long>();
 
-		private readonly ConcurrentQueue<Tuple<float, Type>> _sentLog = new ConcurrentQueue<Tuple<float, Type>>();
-
-		private readonly ConcurrentQueue<Tuple<float, Type>> _receivedLog = new ConcurrentQueue<Tuple<float, Type>>();
-
-		private const int MaxNetworkDataLogsSize = 3000;
-
-		private readonly DateTime _clientStartTime = DateTime.UtcNow.ToUniversalTime();
-
 		private static NetworkController _instance;
 
 		public static NetworkController Instance
@@ -313,65 +305,12 @@ namespace OpenHellion.Net
 
 			_getP2PPacketsThreadActive = false;
 		}
-#if UNITY_EDITOR
 
+#if UNITY_EDITOR
 		private void OnGUI()
 		{
-			GUILayout.ExpandHeight(true);
-			GUILayout.ExpandWidth(true);
-			GUILayout.Label(GetNetworkDataLogs());
-		}
-
-		public static void LogReceivedNetworkData(Type type)
-		{
-			Instance._receivedLog.Enqueue(new Tuple<float, Type>(
-				(float)(DateTime.UtcNow.ToUniversalTime() - Instance._clientStartTime).TotalSeconds, type));
-			while (Instance._receivedLog.Count > MaxNetworkDataLogsSize)
-			{
-				Instance._receivedLog.TryDequeue(out _);
-			}
-		}
-
-		public static void LogSentNetworkData(Type type)
-		{
-			Instance._sentLog.Enqueue(new Tuple<float, Type>(
-				(float)(DateTime.UtcNow.ToUniversalTime() - Instance._clientStartTime).TotalSeconds, type));
-			while (Instance._sentLog.Count > MaxNetworkDataLogsSize)
-			{
-				Instance._sentLog.TryDequeue(out var _);
-			}
-		}
-
-		public static string GetNetworkDataLogs()
-		{
-			if (Instance._receivedLog.IsEmpty || Instance._sentLog.IsEmpty) return "";
-
-			Tuple<float, Type>[] source = Instance._receivedLog.ToArray();
-			float lastRecvdTime = source.Last().Item1;
-			IEnumerable<Tuple<float, Type>> recvd =
-				source.Where((Tuple<float, Type> m) => lastRecvdTime - m.Item1 <= 300f);
-			float item = recvd.First().Item1;
-			string text = "Received packets (in last " + (lastRecvdTime - item).ToString("0") + "s):\n";
-			text += string.Join("\n", from z in (from x in recvd.Select((Tuple<float, Type> m) => m.Item2).Distinct()
-					select new Tuple<string, int>(x.Name, recvd.Count((Tuple<float, Type> n) => n.Item2 == x))
-					into y
-					orderby y.Item2
-					select y).Reverse()
-				select z.Item1 + ": " + z.Item2);
-
-			Tuple<float, Type>[] source2 = Instance._sentLog.ToArray();
-			float lastSentTime = source2.Last().Item1;
-			IEnumerable<Tuple<float, Type>> sent =
-				source2.Where((Tuple<float, Type> m) => lastSentTime - m.Item1 <= 300f);
-			float item2 = sent.First().Item1;
-			text = text + "\n\nSent packets (in last " + (lastSentTime - item2).ToString("0") + "s):\n";
-			return text + string.Join("\n",
-				from z in (from x in sent.Select((Tuple<float, Type> m) => m.Item2).Distinct()
-					select new Tuple<string, int>(x.Name, sent.Count((Tuple<float, Type> n) => n.Item2 == x))
-					into y
-					orderby y.Item2
-					select y).Reverse()
-				select z.Item1 + ": " + z.Item2);
+			GUILayout.Label(ProtoSerialiser.SentPacketStatistics + "\n\n\n" + ProtoSerialiser.ReceivedPacketStatistics,
+				GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
 		}
 #endif
 	}
