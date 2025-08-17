@@ -117,9 +117,9 @@ namespace ZeroGravity.UI
 
 		private static World _world;
 
-		public Helmet CurrentHelmet => (!(MyPlayer.Instance != null)) ? null : MyPlayer.Instance.CurrentHelmet;
+		public Helmet CurrentHelmet => MyPlayer.Instance != null ? MyPlayer.Instance.CurrentHelmet : null;
 
-		private float currentPressure
+		private float CurrentPressure
 		{
 			get
 			{
@@ -144,8 +144,8 @@ namespace ZeroGravity.UI
 				if (MyPlayer.Instance.CurrentOutfit != null)
 				{
 					if (MyPlayer.Instance.CurrentOutfit.Armor >
-					    _world.GetPlayerExposureDamage(MyPlayer.Instance.GetParent<SpaceObject>().Position
-						    .Magnitude))
+						_world.GetPlayerExposureDamage(MyPlayer.Instance.Parent.Position
+							.Magnitude))
 					{
 						return true;
 					}
@@ -188,13 +188,13 @@ namespace ZeroGravity.UI
 		private void Update()
 		{
 			if (Radar.CanRadarWork && Radar.AllTargets.Count > 0 &&
-			    ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.HelmetRadar))
+				ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.HelmetRadar))
 			{
 				Radar.ToggleTargeting(!Radar.IsActive);
 			}
 
 			if (MyPlayer.Instance.CurrentRoomTrigger == null &&
-			    (Breach.activeInHierarchy || Fire.activeInHierarchy || Gravity.activeInHierarchy))
+				(Breach.activeInHierarchy || Fire.activeInHierarchy || Gravity.activeInHierarchy))
 			{
 				WarningsUpdate();
 			}
@@ -210,7 +210,7 @@ namespace ZeroGravity.UI
 				JetpackInfo.Activate(value: false);
 				HelmetRoot.Activate(value: false);
 				if (MyPlayer.Instance.FpsController.StarDustParticle != null && MyPlayer.Instance.FpsController
-					    .StarDustParticle.gameObject.activeInHierarchy)
+						.StarDustParticle.gameObject.activeInHierarchy)
 				{
 					TurnOffStardust();
 				}
@@ -251,9 +251,9 @@ namespace ZeroGravity.UI
 					HandsUI();
 					JetpackDetailsUI();
 					WarningsHolder.Activate(BatteryWarning.activeSelf || Breach.activeSelf || Fire.activeSelf ||
-					                        Gravity.activeSelf || DebrisWarning.activeSelf ||
-					                        OxygenWarning.activeSelf || RcsWarning.activeSelf ||
-					                        RadiationWarning.activeSelf);
+											Gravity.activeSelf || DebrisWarning.activeSelf ||
+											OxygenWarning.activeSelf || RcsWarning.activeSelf ||
+											RadiationWarning.activeSelf);
 				}
 				else
 				{
@@ -274,8 +274,8 @@ namespace ZeroGravity.UI
 
 		public void HandsUI()
 		{
-			PressureValue.text = currentPressure.ToString("0.0") + " BAR";
-			if (currentPressure < 0.4f)
+			PressureValue.text = CurrentPressure.ToString("0.0") + " BAR";
+			if (CurrentPressure < 0.4f)
 			{
 				PressureValue.color = Colors.FormatedRed;
 			}
@@ -349,7 +349,7 @@ namespace ZeroGravity.UI
 			}
 
 			if (MyPlayer.Instance.CurrentRoomTrigger != null && MyPlayer.Instance.CurrentRoomTrigger.UseGravity &&
-			    MyPlayer.Instance.CurrentRoomTrigger.GravityForce != Vector3.zero)
+				MyPlayer.Instance.CurrentRoomTrigger.GravityForce != Vector3.zero)
 			{
 				RCSDisabled.text = Localization.Disabled.ToUpper();
 			}
@@ -424,7 +424,7 @@ namespace ZeroGravity.UI
 				if (MyPlayer.Instance.Inventory.ItemInHands.MaxQuantity > 0f)
 				{
 					float num = MyPlayer.Instance.Inventory.ItemInHands.Quantity /
-					            MyPlayer.Instance.Inventory.ItemInHands.MaxQuantity;
+								MyPlayer.Instance.Inventory.ItemInHands.MaxQuantity;
 					QuantityFiller.fillAmount = num;
 					if (num < 0.2f)
 					{
@@ -441,7 +441,7 @@ namespace ZeroGravity.UI
 				else if (MyPlayer.Instance.Inventory.ItemInHands is DisposableHackingTool)
 				{
 					float fillAmount = MyPlayer.Instance.Inventory.ItemInHands.Health /
-					                   MyPlayer.Instance.Inventory.ItemInHands.MaxHealth;
+									   MyPlayer.Instance.Inventory.ItemInHands.MaxHealth;
 					QuantityFiller.fillAmount = fillAmount;
 					ItemInfo.color = Colors.White;
 					ItemInfo.text = MyPlayer.Instance.Inventory.ItemInHands.Health.ToString("0");
@@ -515,9 +515,9 @@ namespace ZeroGravity.UI
 			if (currentRoom != null)
 			{
 				foreach (SceneTriggerRoom item in from m in currentRoom.ParentVessel.MainVessel
-					         .GetComponentsInChildren<SceneTriggerRoom>()
-				         where m.CompoundRoomID == currentRoom.CompoundRoomID
-				         select m)
+							 .GetComponentsInChildren<SceneTriggerRoom>()
+						 where m.CompoundRoomID == currentRoom.CompoundRoomID
+						 select m)
 				{
 					if (item.Breach)
 					{

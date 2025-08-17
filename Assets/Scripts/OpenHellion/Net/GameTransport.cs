@@ -123,7 +123,7 @@ namespace OpenHellion.Net
 			try
 			{
 				data.ExpirationUtc = DateTime.UtcNow.AddMilliseconds(TIMEOUT_MS);
-				var packedData = await ProtoSerialiser.Pack(data);
+				byte[] packedData = await ProtoSerialiser.Pack(data);
 				await _connectionStream.WriteAsync(packedData).ConfigureAwait(false);
 			}
 			catch (SocketException)
@@ -140,7 +140,7 @@ namespace OpenHellion.Net
 			try
 			{
 				data.ExpirationUtc = DateTime.UtcNow.AddMilliseconds(TIMEOUT_MS);
-				var packedData = await ProtoSerialiser.Pack(data);
+				byte[] packedData = await ProtoSerialiser.Pack(data);
 				await _connectionStream.WriteAsync(packedData).ConfigureAwait(false);
 			}
 			catch (SocketException)
@@ -158,7 +158,7 @@ namespace OpenHellion.Net
 			{
 				data.SyncRequest = true;
 				data.ExpirationUtc = DateTime.UtcNow.AddMilliseconds(timeout);
-				var packedData = await ProtoSerialiser.Pack(data);
+				byte[] packedData = await ProtoSerialiser.Pack(data);
 
 				NetworkData response = null;
 				CancellationTokenSource responseCancel = new();

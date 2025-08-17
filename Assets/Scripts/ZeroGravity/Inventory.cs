@@ -165,7 +165,7 @@ namespace ZeroGravity
 				m_parentPlayer.RefreshTargetingPoints();
 			}
 
-			OnOutfitChanged();
+			OnOutfitChanged?.Invoke();
 		}
 
 		public InventorySlot FindEmptyOutfitSlot(Item item, bool museBeEquip = false)

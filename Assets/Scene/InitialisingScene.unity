@@ -304,7 +304,6 @@ GameObject:
   - component: {fileID: 938125015}
   - component: {fileID: 938125014}
   - component: {fileID: 938125016}
-  - component: {fileID: 938125017}
   m_Layer: 5
   m_Name: GlobalGUI
   m_TagString: Untagged
@@ -362,43 +361,6 @@ MonoBehaviour:
   _settingsViewModel: {fileID: 11400000, guid: 8101a0f0150714443a20b8f0a2427377, type: 2}
   _postEffectProfiles:
   - {fileID: 11400000, guid: 2966e7762ff4c6f4dafb3f06b5fb8ac9, type: 2}
---- !u!114 &938125017
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 938125012}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ab91a444dbd4010a195cbf03b4e765a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _hideTutorial: 0
-  _disableChat: 0
-  _hideTips: 0
-  _showCrosshair: 0
-  _autoStabilisation: 0
-  _headBob: 0
-  _languageIndex: 0
-  _mouseSensitivity: 0
-  _invertMouse: 0
-  _invertMouseWhileDriving: 0
-  _fullScreen: 0
-  _resolutionIndex: 0
-  _qualityIndex: 0
-  _textureIndex: 0
-  _shadowQualityIndex: 0
-  _antialiasingIndex: 0
-  _volumetricLighting: 0
-  _ambientOcclusion: 0
-  _motionBlur: 0
-  _eyeAdaptation: 0
-  _bloom: 0
-  _chromaticAberration: 0
-  _masterVolume: 0
-  _ambienceVolume: 0
-  _voiceVolume: 0
 --- !u!1 &1130133856
 GameObject:
   m_ObjectHideFlags: 0

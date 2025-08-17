@@ -102,7 +102,7 @@ namespace ZeroGravity
 
 		public Inventory Inventory => MyPlayer.Instance.Inventory;
 
-		private void Start()
+		private void Awake()
 		{
 			Inventory.OnOutfitChanged += UpdateArmorAndHealth;
 			PlayerName.text = MyPlayer.Instance.PlayerName;
