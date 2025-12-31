@@ -213,7 +213,6 @@ namespace ZeroGravity.CharacterMovement
 		{
 			Collider[] hitColliders = new Collider[2];
 			var size = Physics.OverlapSphereNonAlloc(transform.position, 0.5f, hitColliders, LayerMask.NameToLayer("Default") | LayerMask.NameToLayer("Player"));
-			MyPlayer.Instance.FpsController.ToggleInPlayerCollider(size > 1);
 		}
 
 		private void AuxCheckRoomTriggers()

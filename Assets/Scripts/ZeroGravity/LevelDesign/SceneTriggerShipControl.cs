@@ -32,8 +32,6 @@ namespace ZeroGravity.LevelDesign
 
 		public PilotRadar Radar;
 
-		private static World _world;
-
 		public override bool ExclusivePlayerLocking => true;
 
 		public override SceneTriggerType TriggerType => SceneTriggerType.ShipControl;
@@ -56,11 +54,6 @@ namespace ZeroGravity.LevelDesign
 
 		public override bool CameraMovementAllowed => true;
 
-		private void Awake()
-		{
-			_world ??= GameObject.Find("/World").GetComponent<World>();
-		}
-
 		public override bool CheckAuthorization()
 		{
 			return IsAuthorized;
@@ -73,8 +66,7 @@ namespace ZeroGravity.LevelDesign
 				return false;
 			}
 
-			MyPlayer.Instance.transform.position = CharacterSitPosition.position;
-			MyPlayer.Instance.transform.rotation = CharacterPosition.rotation;
+			MyPlayer.Instance.transform.SetPositionAndRotation(CharacterSitPosition.position, CharacterPosition.rotation);
 			MyPlayer.Instance.FpsController.CameraController.ResetCameraPositionAndRotation();
 			MainCameraDefaultParent = MyPlayer.Instance.FpsController.CameraController.FreelookTransform.parent;
 			MyPlayer.Instance.FpsController.CameraController.FreelookTransform.parent = CameraPosition;
@@ -93,7 +85,7 @@ namespace ZeroGravity.LevelDesign
 				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
 			}
 
-			_world.InWorldPanels.PilotingOptions.gameObject.SetActive(true);
+			World.InWorldPanels.PilotingOptions.gameObject.SetActive(true);
 			if (TargetList != null)
 			{
 				TargetList.ToggleTargetList(false);
@@ -137,7 +129,7 @@ namespace ZeroGravity.LevelDesign
 				null, null, AnimatorHelper.LockType.Chair_StandUp_Idle);
 			player.FpsController.CameraController.DoInertia = false;
 			player.DetachFromPanel();
-			_world.InWorldPanels.PilotingOptions.gameObject.SetActive(false);
+			World.InWorldPanels.PilotingOptions.gameObject.SetActive(false);
 			if (TargetList != null)
 			{
 				TargetList.ToggleTargetList(true);
@@ -164,8 +156,8 @@ namespace ZeroGravity.LevelDesign
 			MyPlayer instance = MyPlayer.Instance;
 			if (instance.LockedToTrigger is SceneTriggerShipControl)
 			{
-				if ((_world.Map.isActiveAndEnabled && ParentShip.NavPanel.InputFocused) ||
-				    _world.InGameGUI.ConsoleIsUp)
+				if ((World.Map.isActiveAndEnabled && ParentShip.NavPanel.InputFocused) ||
+				    World.InGameGUI.ConsoleIsUp)
 				{
 					return;
 				}
@@ -192,8 +184,8 @@ namespace ZeroGravity.LevelDesign
 			UpdateMode();
 			if (Headlights != null)
 			{
-				_world.InWorldPanels.PilotingOptions.Lights.SetActive(Headlights.Status == SystemStatus.Online);
-				_world.InWorldPanels.PilotingOptions.LightsMalfunction.SetActive(Headlights.SecondaryStatus ==
+				World.InWorldPanels.PilotingOptions.Lights.SetActive(Headlights.Status == SystemStatus.Online);
+				World.InWorldPanels.PilotingOptions.LightsMalfunction.SetActive(Headlights.SecondaryStatus ==
 					SystemSecondaryStatus.Defective);
 			}
 		}
@@ -201,42 +193,42 @@ namespace ZeroGravity.LevelDesign
 		private void UpdateMode()
 		{
 			MyPlayer instance = MyPlayer.Instance;
-			if (_world.InWorldPanels.Pilot.isActiveAndEnabled &&
+			if (World.InWorldPanels.Pilot.isActiveAndEnabled &&
 			    instance.ShipControlMode != ShipControlMode.Piloting)
 			{
-				_world.InWorldPanels.Pilot.OnDetach();
+				World.InWorldPanels.Pilot.OnDetach();
 			}
 
-			if (_world.Map.isActiveAndEnabled && instance.ShipControlMode != ShipControlMode.Navigation)
+			if (World.Map.isActiveAndEnabled && instance.ShipControlMode != ShipControlMode.Navigation)
 			{
-				_world.Map.OnDetach();
+				World.Map.OnDetach();
 			}
 
-			if (_world.InWorldPanels.Docking.isActiveAndEnabled &&
+			if (World.InWorldPanels.Docking.isActiveAndEnabled &&
 			    instance.ShipControlMode != ShipControlMode.Docking)
 			{
-				_world.InWorldPanels.Docking.OnDetach();
+				World.InWorldPanels.Docking.OnDetach();
 			}
 
 			if (instance.ShipControlMode == ShipControlMode.Piloting &&
-			    !_world.InWorldPanels.Pilot.isActiveAndEnabled)
+			    !World.InWorldPanels.Pilot.isActiveAndEnabled)
 			{
-				_world.InWorldPanels.Pilot.OnInteract(ParentShip, TargetList, StatusScreen, Radar);
-				_world.InWorldPanels.PilotingOptions.SetPilotingMode(instance.ShipControlMode);
+				World.InWorldPanels.Pilot.OnInteract(ParentShip, TargetList, StatusScreen, Radar);
+				World.InWorldPanels.PilotingOptions.SetPilotingMode(instance.ShipControlMode);
 			}
-			else if (instance.ShipControlMode == ShipControlMode.Navigation && !_world.Map.isActiveAndEnabled)
+			else if (instance.ShipControlMode == ShipControlMode.Navigation && !World.Map.isActiveAndEnabled)
 			{
-				_world.Map.OnInteract(ParentShip);
-				_world.InWorldPanels.PilotingOptions.SetPilotingMode(instance.ShipControlMode);
+				World.Map.OnInteract(ParentShip);
+				World.InWorldPanels.PilotingOptions.SetPilotingMode(instance.ShipControlMode);
 			}
 			else if (instance.ShipControlMode == ShipControlMode.Docking &&
-			         !_world.InWorldPanels.Docking.isActiveAndEnabled)
+			         !World.InWorldPanels.Docking.isActiveAndEnabled)
 			{
-				_world.InWorldPanels.Docking.OnInteract(ParentShip);
-				_world.InWorldPanels.PilotingOptions.SetPilotingMode(instance.ShipControlMode);
+				World.InWorldPanels.Docking.OnInteract(ParentShip);
+				World.InWorldPanels.PilotingOptions.SetPilotingMode(instance.ShipControlMode);
 			}
 
-			_world.InWorldPanels.PilotingOptions.NavigationDisabled.Activate(ParentShip.VesselBaseSystem.Status !=
+			World.InWorldPanels.PilotingOptions.NavigationDisabled.Activate(ParentShip.VesselBaseSystem.Status !=
 				SystemStatus.Online);
 		}
 	}

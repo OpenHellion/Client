@@ -172,7 +172,7 @@ namespace ZeroGravity.ShipComponents
 
 			if (CurrentTargetList.TargetListHolder != null)
 			{
-				CurrentTargetList.UpdateTargetList();
+				CurrentTargetList.UpdateTargetList(_world);
 			}
 
 			if (CurrentRadar != null)
@@ -239,13 +239,13 @@ namespace ZeroGravity.ShipComponents
 						if (axis > 0f)
 						{
 							int num = AllTargets.IndexOf(SelectedTarget);
-							num = ((num - 1 < 0) ? (AllTargets.Count - 1) : (num - 1));
+							num = (num - 1 < 0) ? (AllTargets.Count - 1) : (num - 1);
 							SelectedTarget = AllTargets[num];
 						}
 						else if (axis < 0f)
 						{
 							int num2 = AllTargets.IndexOf(SelectedTarget);
-							num2 = ((AllTargets.Count - 1 > num2) ? (num2 + 1) : 0);
+							num2 = (AllTargets.Count - 1 > num2) ? (num2 + 1) : 0;
 							SelectedTarget = AllTargets[num2];
 						}
 					}
@@ -253,13 +253,13 @@ namespace ZeroGravity.ShipComponents
 					if (AllTargets.Count > 0 && ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.TargetDown))
 					{
 						int num3 = AllTargets.IndexOf(SelectedTarget);
-						num3 = ((AllTargets.Count - 1 > num3) ? (num3 + 1) : 0);
+						num3 = (AllTargets.Count - 1 > num3) ? (num3 + 1) : 0;
 						SelectedTarget = AllTargets[num3];
 					}
 					else if (AllTargets.Count > 0 && ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.TargetUp))
 					{
 						int num4 = AllTargets.IndexOf(SelectedTarget);
-						num4 = ((num4 - 1 < 0) ? (AllTargets.Count - 1) : (num4 - 1));
+						num4 = (num4 - 1 < 0) ? (AllTargets.Count - 1) : (num4 - 1);
 						SelectedTarget = AllTargets[num4];
 					}
 				}
@@ -312,10 +312,10 @@ namespace ZeroGravity.ShipComponents
 			angle = MathHelper.AngleSigned(ParentShip.Up, vec, ParentShip.Forward);
 			distance = Mathf.Abs(vector3.magnitude);
 			onSpeed = 0f - Vector3.Dot(vector2, vector.normalized);
-			TargetDirectional.color = ((!(onSpeed >= 0f)) ? Colors.FormatedRed : Colors.White);
+			TargetDirectional.color = (!(onSpeed >= 0f)) ? Colors.FormatedRed : Colors.White;
 			TargetDirectional.text = onSpeed.ToString("f1") + " m/s";
 			TargetLateral.text = vec.magnitude.ToString("f1") + " m/s";
-			TargetDistance.color = ((!(distance <= 100f)) ? Colors.White : Colors.RadarTarget);
+			TargetDistance.color = (!(distance <= 100f)) ? Colors.White : Colors.RadarTarget;
 			TargetDistance.text = FormatHelper.DistanceFormat(distance);
 			EtaUpdate();
 			OffTargetVelocity();
@@ -462,11 +462,11 @@ namespace ZeroGravity.ShipComponents
 				OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(includeInactive: true);
 			foreach (TargetOverlayUI targetOverlayUI in componentsInChildren)
 			{
-				Vector3 pos = ((!targetOverlayUI.Target.ArtificialBody.IsDummyObject)
+				Vector3 pos = (!targetOverlayUI.Target.ArtificialBody.IsDummyObject)
 					? targetOverlayUI.Target.ArtificialBody.transform.position
 					: (Quaternion.LookRotation(ParentShip.MainVessel.Forward, ParentShip.MainVessel.Up).Inverse() *
 					   (targetOverlayUI.Target.ArtificialBody.Position - ParentShip.Position).ToVector3() +
-					   ParentShip.GeometryRoot.transform.position));
+					   ParentShip.GeometryRoot.transform.position);
 				targetOverlayUI.transform.position = GetPositionOnOverlay(pos, out var arrowUp);
 				targetOverlayUI.transform.rotation = Quaternion.identity;
 				if (!targetOverlayUI.gameObject.activeInHierarchy)
@@ -726,9 +726,9 @@ namespace ZeroGravity.ShipComponents
 			EtaHolder.Activate(onSpeed >= 0f);
 			if (onSpeed > 0f)
 			{
-				float num = ((distance <= 1000f)
+				float num = (distance <= 1000f)
 					? 30f
-					: ((!(distance > 1000f) || !(distance <= 10000f)) ? 300f : 100f));
+					: ((!(distance > 1000f) || !(distance <= 10000f)) ? 300f : 100f);
 				EtaTimeline.text = num.ToString("0") + " s";
 				ETA = Mathf.Abs(distance / onSpeed);
 				if (ParentShip.Engine != null && ParentShip.EngineOnLine)

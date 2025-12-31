@@ -90,17 +90,24 @@ namespace ZeroGravity.Objects
 			return Orbit.IsOrbitValid;
 		}
 
-		public void UpdatePosition(SolarSystem solarSystem, double timeDelta, bool resetTime = false)
+		/// <summary>
+		/// 	Updates the position of the celestial body based on its orbit parameters and the given time.
+		/// 	If resetTime is false, time will be delta time since last update, otherwise it will be solar system time.
+		/// </summary>
+		/// <param name="solarSystem">The system this happens in.</param>
+		/// <param name="time">Delta time if resetTime is false, absolute system time if true.</param>
+		/// <param name="resetTime">Should orbit be reset?</param>
+		public void UpdatePosition(SolarSystem solarSystem, double time, bool resetTime = false)
 		{
 			if (Orbit.IsOrbitValid)
 			{
 				if (resetTime)
 				{
-					Orbit.ResetOrbit(timeDelta);
+					Orbit.ResetOrbit(time);
 				}
 				else
 				{
-					Orbit.UpdateOrbit(timeDelta);
+					Orbit.UpdateOrbit(time);
 				}
 
 				if (PlanetsSpaceGameObjectVisual != null)

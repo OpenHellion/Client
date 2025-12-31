@@ -836,21 +836,19 @@ namespace ZeroGravity.Objects
 					LocalRotation = transform.localRotation.ToArray(),
 					LocalVelocity =
 					(Parent.TransferableObjectsRoot.transform.rotation.Inverse() * rigidBody.linearVelocity).ToArray(),
-					Timestamp = Time.time,
 					PlatformRelativePos = !(OnPlatform != null)
 					? null
 					: (transform.position - OnPlatform.transform.position).ToArray()
 				};
-				CharacterTransformData characterTransformData2 = characterTransformData;
 				if (FpsController.IsFreeLook)
 				{
 					Vector2 freeLookAngle = FpsController.FreeLookAngle;
-					characterTransformData2.FreeLookY = 0f - freeLookAngle.y;
-					characterTransformData2.FreeLookX = 0f - freeLookAngle.x;
+					characterTransformData.FreeLookY = 0f - freeLookAngle.y;
+					characterTransformData.FreeLookX = 0f - freeLookAngle.x;
 				}
 
-				characterTransformData2.MouseLook = FpsController.MouseLookXAngle;
-				characterMovementMessage.TransformData = characterTransformData2;
+				characterTransformData.MouseLook = FpsController.MouseLookXAngle;
+				characterMovementMessage.TransformData = characterTransformData;
 				if (FpsController.StickToVessel != null)
 				{
 					characterMovementMessage.NearestVesselGUID = FpsController.StickToVessel.Guid;
@@ -1517,7 +1515,7 @@ namespace ZeroGravity.Objects
 		private void UpdateInput()
 		{
 			if (World.InGameGUI.DeadScreen.activeInHierarchy || World.IsChatOpened ||
-				World.InGameGUI.IsInputFieldIsActive || World.InGameGUI.Console.gameObject.activeInHierarchy)
+				World.InGameGUI.IsInputFieldIsActive || World.InGameGUI.ConsoleIsUp)
 			{
 				return;
 			}
@@ -1578,7 +1576,6 @@ namespace ZeroGravity.Objects
 				else
 				{
 					World.InGameGUI.Open();
-					Debug.Log("Opening in game menu");
 				}
 			}
 
@@ -3117,12 +3114,11 @@ namespace ZeroGravity.Objects
 
 		public void ProcessMovementMessage(CharacterMovementMessage msg)
 		{
-			if (msg.GUID != Guid || msg == null || !msg.PivotReset || !(Parent is Pivot) || PivotReset)
+			if (msg.GUID != Guid || msg == null || !msg.PivotReset || Parent is not Pivot || PivotReset)
 			{
 				return;
 			}
 
-			Pivot pivot = Parent as Pivot;
 			Vector3 vector = msg.PivotPositionCorrection.ToVector3();
 			transform.position -= vector;
 			rigidBody.linearVelocity -= msg.PivotVelocityCorrection.ToVector3();
@@ -3130,8 +3126,7 @@ namespace ZeroGravity.Objects
 			rigidBody.detectCollisions = false;
 			foreach (ArtificialBody artificialBody in SolarSystem.ArtificialBodyReferences)
 			{
-				if (artificialBody != Parent && (!(artificialBody is SpaceObjectVessel) ||
-												 !(artificialBody as SpaceObjectVessel).IsDocked))
+				if (artificialBody != Parent && artificialBody is SpaceObjectVessel && (artificialBody as SpaceObjectVessel).IsDocked)
 				{
 					artificialBody.SetTargetPositionAndRotation(artificialBody.transform.localPosition - vector, null,
 						instant: true);

@@ -219,6 +219,12 @@ namespace ZeroGravity.Objects
 			IsDummyObject = true;
 		}
 
+		/// <summary>
+		/// 	Updates the position of the artificial body based on its orbit parameters and the given time.
+		/// 	If resetTime is false, time will be delta time since last update, otherwise it will be solar system time.
+		/// </summary>
+		/// <param name="time">Delta time if resetTime is false, absolute system time if true.</param>
+		/// <param name="resetTime">Should orbit be reset?</param>
 		public void UpdateOrbitPosition(double time, bool resetTime = false)
 		{
 			if (Maneuver != null || StabilizeToTargetObj != null)

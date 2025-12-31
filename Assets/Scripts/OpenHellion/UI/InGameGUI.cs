@@ -1,6 +1,6 @@
 ﻿// InGameGUI.cs
 //
-// Copyright (C) 2024, OpenHellion contributors
+// Copyright (C) 2025, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -297,9 +297,9 @@ namespace OpenHellion.UI
 			}
 
 			if (Keyboard.current.f2Key.wasPressedThisFrame && !_world.IsChatOpened &&
-			    !IsInputFieldIsActive && MyPlayer.Instance.IsAdmin)
+			    !IsInputFieldIsActive)
 			{
-				if (Console.gameObject.activeInHierarchy)
+				if (ConsoleIsUp)
 				{
 					Console.Close();
 				}
@@ -388,9 +388,9 @@ namespace OpenHellion.UI
 					ToggleCanvas(val: false);
 				}
 
-				if (Console.gameObject.activeInHierarchy)
+				if (ConsoleIsUp)
 				{
-					Console.gameObject.SetActive(value: false);
+					Console.Close();
 				}
 
 				_world.InWorldPanels.Detach();

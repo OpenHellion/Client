@@ -219,11 +219,10 @@ namespace ZeroGravity.Objects
 			corpseMovementMessage.Timestamp = Time.time;
 			corpseMovementMessage.IsInsideSpaceObject = IsInsideSpaceObject;
 			corpseMovementMessage.RagdollDataList = new Dictionary<byte, RagdollItemData>();
-			CorpseMovementMessage corpseMovementMessage2 = corpseMovementMessage;
 			CorpsePart corpsePart = corpseParts[hipsKey];
 			if (corpsePart.Trans.hasChanged)
 			{
-				corpseMovementMessage2.RagdollDataList.Add(hipsKey, new RagdollItemData
+				corpseMovementMessage.RagdollDataList.Add(hipsKey, new RagdollItemData
 				{
 					Position = corpsePart.Trans.localPosition.ToArray(),
 					LocalRotation = corpsePart.Trans.localRotation.ToArray(),
@@ -233,7 +232,7 @@ namespace ZeroGravity.Objects
 				corpsePart.Trans.hasChanged = false;
 			}
 
-			NetworkController.SendAndForget(corpseMovementMessage2);
+			NetworkController.SendAndForget(corpseMovementMessage);
 		}
 
 		public void CopyPositionFromPlayer(OtherPlayer player)

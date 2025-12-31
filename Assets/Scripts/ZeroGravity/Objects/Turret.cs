@@ -96,14 +96,6 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		private void PlayerShootingMessageListener(NetworkData data)
-		{
-			PlayerShootingMessage playerShootingMessage = data as PlayerShootingMessage;
-			PlayerHitMessage playerHitMessage = new PlayerHitMessage();
-			playerHitMessage.HitIndentifier = playerShootingMessage.HitIndentifier;
-			playerHitMessage.HitSuccessfull = false;
-		}
-
 		private void OnDestroy()
 		{
 			EventSystem.RemoveListener(typeof(TurretShootingMessage), ShootingDataListener);

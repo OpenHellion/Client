@@ -458,14 +458,14 @@ namespace ZeroGravity.CharacterMovement
 
 			if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Sprint))
 			{
-				_canGrabWall = Physics.OverlapSphere(_centerOfMass.position, 0.8f, _collisionLayerMask,
-					QueryTriggerInteraction.Ignore).Length > 0;
+				_canGrabWall = Physics.OverlapSphereNonAlloc(_centerOfMass.position, 0.8f, new Collider[1], _collisionLayerMask,
+					QueryTriggerInteraction.Ignore) > 0;
 			}
 		}
 
 		private void CheckLegDistanceFromFloor()
 		{
-			bool? touchingFloor = Physics.Raycast(base.transform.position, -base.transform.up, LegDistance,
+			bool? touchingFloor = Physics.Raycast(transform.position, -transform.up, LegDistance,
 				_collisionLayerMask);
 			AnimatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
@@ -655,8 +655,8 @@ namespace ZeroGravity.CharacterMovement
 				_currSpeeds.BackwardVelocity -= _currSpeeds.BackwardVelocity * Mathf.Abs(_movementAxis.Right) * 0.25f;
 			}
 
-			_currMovementDirection = _movementAxis.Forward * base.transform.forward;
-			_currMovementDirection += _movementAxis.Right * base.transform.right;
+			_currMovementDirection = _movementAxis.Forward * transform.forward;
+			_currMovementDirection += _movementAxis.Right * transform.right;
 			_currMovementDirection.Normalize();
 		}
 
@@ -676,7 +676,7 @@ namespace ZeroGravity.CharacterMovement
 				}
 				else
 				{
-					_isGrounded = Physics.Raycast(base.transform.position, _myPlayer.GravityDirection, out _groundRayHit,
+					_isGrounded = Physics.Raycast(transform.position, _myPlayer.GravityDirection, out _groundRayHit,
 						1.8f, _collisionLayerMask, QueryTriggerInteraction.Ignore);
 				}
 
@@ -721,7 +721,7 @@ namespace ZeroGravity.CharacterMovement
 			if (_isOnLadder)
 			{
 				float axisRaw = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Forward);
-				base.transform.Translate(base.transform.up * (axisRaw * _ladderVelocity * Time.fixedDeltaTime),
+				transform.Translate(transform.up * (axisRaw * _ladderVelocity * Time.fixedDeltaTime),
 					Space.World);
 				AnimatorHelper animHelper = _myPlayer.animHelper;
 				float? ladderDirection = axisRaw;
@@ -742,7 +742,7 @@ namespace ZeroGravity.CharacterMovement
 						_gravityChangeLerpHelper = 1f;
 					}
 
-					base.transform.rotation = _gravityChangeEndingRotation;
+					transform.rotation = _gravityChangeEndingRotation;
 					if (_collider1G.height < 1.8f)
 					{
 						_collider1G.height = Mathf.Lerp(1f, 1.8f, _gravityChangeLerpHelper);
@@ -775,7 +775,7 @@ namespace ZeroGravity.CharacterMovement
 					_gravityChanged = false;
 					_cameraController.ToggleCameraMovement(true);
 					_gravityChangeLerpHelper = 0f;
-					base.transform.rotation = _gravityChangeEndingRotation;
+					transform.rotation = _gravityChangeEndingRotation;
 					_cameraController.ResetLookAt();
 					return;
 				}
@@ -798,29 +798,30 @@ namespace ZeroGravity.CharacterMovement
 				}
 
 				_currSlopeNormal = _groundRayHit.normal;
-				_currSlopeAngle = Vector3.Angle(_currSlopeNormal, base.transform.up);
+				_currSlopeAngle = Vector3.Angle(_currSlopeNormal, transform.up);
 				if (_currSlopeAngle > 5f)
 				{
 					bool flag = false;
-					RaycastHit[] array = Physics.SphereCastAll(
+					RaycastHit[] hits = Physics.SphereCastAll(
 						_characterRoot.position + _characterRoot.up * (_collider1G.height / 2f), _collider1G.radius - 0.01f,
 						_myPlayer.GravityDirection,
 						_collider1G.height / 2f - (_collider1G.radius - 0.01f) + GroundCheckDistance + 0.02f,
 						_collisionLayerMask);
-					if (array != null && array.Length > 0)
+
+					if (hits.Length > 0)
 					{
-						for (int i = 0; i < array.Length; i++)
+						foreach (RaycastHit hit in hits)
 						{
-							if (array[i].collider.GetComponent<DynamicObject>() == null &&
-							    array[i].collider.GetComponent<MyPlayer>() == null &&
-							    array[i].collider.GetComponent<RagdollCollider>() == null)
+							if (!hit.collider.TryGetComponent<DynamicObject>(out _) &&
+							    !hit.collider.TryGetComponent<MyPlayer>(out _) &&
+							    !hit.collider.TryGetComponent<RagdollCollider>(out _))
 							{
 								flag = false;
-								_groundRayHit = array[i];
+								_groundRayHit = hit;
 								break;
 							}
 
-							if (array[i].collider.GetComponent<RagdollCollider>() != null)
+							if (hit.collider.TryGetComponent<RagdollCollider>(out _))
 							{
 								flag = true;
 							}
@@ -829,13 +830,13 @@ namespace ZeroGravity.CharacterMovement
 
 					if (flag)
 					{
-						_currSlopeNormal = base.transform.up;
+						_currSlopeNormal = transform.up;
 						_currSlopeAngle = 0f;
 					}
 					else
 					{
 						_currSlopeNormal = _groundRayHit.normal;
-						_currSlopeAngle = Vector3.Angle(_currSlopeNormal, base.transform.up);
+						_currSlopeAngle = Vector3.Angle(_currSlopeNormal, transform.up);
 					}
 				}
 
@@ -857,7 +858,7 @@ namespace ZeroGravity.CharacterMovement
 					if (_doJump && !IsCrouch)
 					{
 						float num = Mathf.Sqrt(2f * _jumpHeightMax * _myPlayer.Gravity.magnitude);
-						RigidBody.AddForce(base.transform.up * num, ForceMode.VelocityChange);
+						RigidBody.AddForce(transform.up * num, ForceMode.VelocityChange);
 						_lastMovementState = MovementState.Jump;
 						AnimatorHelper.SetParameterTrigger(AnimatorHelper.Triggers.Jump);
 						_doJump = false;
@@ -895,16 +896,16 @@ namespace ZeroGravity.CharacterMovement
 						}
 					}
 
-					_currForwardAnimationVal = ((!(Mathf.Abs(_movementAxis.Forward) <= float.Epsilon))
+					_currForwardAnimationVal = (!(Mathf.Abs(_movementAxis.Forward) <= float.Epsilon))
 						? Mathf.Clamp(
-							Vector3.Project(_myPlayer.MyVelocity, base.transform.forward).magnitude /
+							Vector3.Project(_myPlayer.MyVelocity, transform.forward).magnitude /
 							_runSpeeds.ForwardVelocity * MathHelper.Sign(_movementAxis.Forward), -1f, 1f)
-						: 0f);
-					_currRightAnimationVal = ((!(Mathf.Abs(_movementAxis.Right) <= float.Epsilon))
+						: 0f;
+					_currRightAnimationVal = (!(Mathf.Abs(_movementAxis.Right) <= float.Epsilon))
 						? Mathf.Clamp(
-							Vector3.Project(_myPlayer.MyVelocity, base.transform.right).magnitude /
+							Vector3.Project(_myPlayer.MyVelocity, transform.right).magnitude /
 							_runSpeeds.RightVelocity * MathHelper.Sign(_movementAxis.Right), -1f, 1f)
-						: 0f);
+						: 0f;
 					float? ladderDirection = _currForwardAnimationVal;
 					float? velocityRight = _currRightAnimationVal;
 					AnimatorHelper.SetParameter(null, null, null, null, null, null, null, null, null, null,
@@ -925,7 +926,7 @@ namespace ZeroGravity.CharacterMovement
 					    ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Jump))
 					{
 						float num2 = Mathf.Sqrt(2f * _jumpHeightMax * _myPlayer.Gravity.magnitude);
-						RigidBody.AddForce(base.transform.up * num2, ForceMode.VelocityChange);
+						RigidBody.AddForce(transform.up * num2, ForceMode.VelocityChange);
 						_lastMovementState = MovementState.Jump;
 						AnimatorHelper.SetParameterTrigger(AnimatorHelper.Triggers.Jump);
 						_doJump = false;
@@ -938,22 +939,22 @@ namespace ZeroGravity.CharacterMovement
 			{
 				float axisRaw2 = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Forward);
 				float axisRaw3 = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Right);
-				if (axisRaw2 != 0f && Vector3.Project(RigidBody.linearVelocity, base.transform.forward).sqrMagnitude <
+				if (axisRaw2 != 0f && Vector3.Project(RigidBody.linearVelocity, transform.forward).sqrMagnitude <
 				    ((!(_movementAxis.Forward > 0f))
 					    ? (_airSpeeds.BackwardVelocity * _airSpeeds.BackwardVelocity)
 					    : (_airSpeeds.ForwardVelocity * _airSpeeds.ForwardVelocity)))
 				{
-					Vector3 force = base.transform.forward *
+					Vector3 force = transform.forward *
 					                ((!(axisRaw2 > 0f))
 						                ? (0f - _airSpeeds.BackwardVelocity)
 						                : _airSpeeds.ForwardVelocity);
 					RigidBody.AddForce(force, ForceMode.VelocityChange);
 				}
 
-				if (axisRaw3 != 0f && Vector3.Project(RigidBody.linearVelocity, base.transform.right).sqrMagnitude <
+				if (axisRaw3 != 0f && Vector3.Project(RigidBody.linearVelocity, transform.right).sqrMagnitude <
 				    _airSpeeds.RightVelocity * _airSpeeds.RightVelocity)
 				{
-					Vector3 force2 = base.transform.right * _airSpeeds.RightVelocity * 0.005f;
+					Vector3 force2 = _airSpeeds.RightVelocity * 0.005f * transform.right;
 					RigidBody.AddForce(force2, ForceMode.VelocityChange);
 				}
 
@@ -1048,10 +1049,10 @@ namespace ZeroGravity.CharacterMovement
 
 		private void Calculate0GAnimatorParams()
 		{
-			Vector3 vector = Vector3.Project(_myPlayer.MyVelocity, base.transform.forward);
-			Vector3 vector2 = Vector3.Project(_myPlayer.MyVelocity, base.transform.right);
-			float f = Vector3.Dot(vector2.normalized, base.transform.right);
-			float num3 = Vector3.Dot(vector.normalized, base.transform.forward);
+			Vector3 vector = Vector3.Project(_myPlayer.MyVelocity, transform.forward);
+			Vector3 vector2 = Vector3.Project(_myPlayer.MyVelocity, transform.right);
+			float f = Vector3.Dot(vector2.normalized, transform.right);
+			float num3 = Vector3.Dot(vector.normalized, transform.forward);
 			float num = Mathf.Min(
 				            MathHelper.ProportionalValue(vector.magnitude, 0f,
 					            (!(num3 > 1f)) ? _animatorBackwardMaxVelocity : _animatorForwardMaxVelocity, 0f, 1f),
@@ -1105,7 +1106,7 @@ namespace ZeroGravity.CharacterMovement
 			if (_isOnLadder)
 			{
 				float axisRaw = ControlsSubsystem.GetAxisRaw(ControlsSubsystem.ConfigAction.Forward);
-				base.transform.Translate(base.transform.up * (axisRaw * _ladderVelocity * Time.fixedDeltaTime),
+				transform.Translate(transform.up * (axisRaw * _ladderVelocity * Time.fixedDeltaTime),
 					Space.World);
 				AnimatorHelper animHelper = _myPlayer.animHelper;
 				float? ladderDirection = axisRaw;
@@ -1204,10 +1205,9 @@ namespace ZeroGravity.CharacterMovement
 				if (_movementAxis.Right.IsNotEpsilonZero() || _movementAxis.Forward.IsNotEpsilonZero() ||
 				    _movementAxis.Up.IsNotEpsilonZero())
 				{
-					Vector3 vector = _cameraController.transform.forward * _movementAxis.Forward *
-					                 _currSpeeds.ForwardVelocity
-					                 + _cameraController.transform.right * _movementAxis.Right * _currSpeeds.RightVelocity
-					                 + _cameraController.transform.up * _movementAxis.Up * _currSpeeds.RightVelocity;
+					Vector3 vector = _currSpeeds.ForwardVelocity * _movementAxis.Forward * _cameraController.transform.forward
+					                 + _currSpeeds.RightVelocity * _movementAxis.Right * _cameraController.transform.right
+					                 + _currSpeeds.RightVelocity * _movementAxis.Up * _cameraController.transform.up;
 
 					if (!IsJetpackOn && RigidBody.linearVelocity.sqrMagnitude >=
 					    _currSpeeds.ForwardVelocity * _currSpeeds.ForwardVelocity)
@@ -1258,7 +1258,7 @@ namespace ZeroGravity.CharacterMovement
 					_lockLerp += LockSpeed * Time.deltaTime;
 				}
 
-				base.transform.position = Vector3.Lerp(base.transform.position, AttachPointSaved.position,
+				transform.position = Vector3.Lerp(transform.position, AttachPointSaved.position,
 					Mathf.Clamp01(_lockLerp));
 			}
 			else
@@ -1281,7 +1281,7 @@ namespace ZeroGravity.CharacterMovement
 
 		public void SetGravity(Vector3 newGravity)
 		{
-			if (!base.isActiveAndEnabled && !_gravityChangedRagdoll)
+			if (!isActiveAndEnabled && !_gravityChangedRagdoll)
 			{
 				return;
 			}
@@ -1337,7 +1337,7 @@ namespace ZeroGravity.CharacterMovement
 				if (_cameraController.transform.localPosition.y.IsNotEpsilonZero())
 				{
 					ReparentCenterOfMass(isInChest: false);
-					base.transform.position += base.transform.up * _cameraController.transform.localPosition.y;
+					transform.position += transform.up * _cameraController.transform.localPosition.y;
 					_lastMovementState = MovementState.Normal;
 					_crouchLerpHelper = 1f;
 					_collider1G.height = _normalColliderHeight;
@@ -1389,14 +1389,14 @@ namespace ZeroGravity.CharacterMovement
 				_gravityChangeLerpHelper = 0f;
 				_gravityChangeRagdollTimer = 0f;
 				_cameraController.ToggleCameraMovement(false);
-				Vector3 vector = Vector3.ProjectOnPlane(base.transform.forward, -_myPlayer.GravityDirection).normalized;
+				Vector3 vector = Vector3.ProjectOnPlane(transform.forward, -_myPlayer.GravityDirection).normalized;
 				if (!vector.IsNotEpsilonZero())
 				{
 					vector = Vector3.forward;
 				}
 
 				_gravityChangeEndingRotation = Quaternion.LookRotation(vector, -_myPlayer.GravityDirection);
-				if (Vector3.Angle(base.transform.up, -_myPlayer.GravityDirection) > 40f || CheckGravityRagdollDistance())
+				if (Vector3.Angle(transform.up, -_myPlayer.GravityDirection) > 40f || CheckGravityRagdollDistance())
 				{
 					_gravityChangedRagdoll = true;
 					RagdollChestRigidbody.linearVelocity = RigidBody.linearVelocity;
@@ -1404,13 +1404,13 @@ namespace ZeroGravity.CharacterMovement
 				}
 				else if (_myPlayer.OldGravity.IsEpsilonEqual(Vector3.zero))
 				{
-					if (Physics.SphereCast(base.transform.position, _collider1G.radius - 0.05f,
-						    _myPlayer.GravityDirection, out var _, 1.34f - _collider1G.radius, _collisionLayerMask))
+					if (Physics.SphereCast(transform.position, _collider1G.radius - 0.05f,
+						    _myPlayer.GravityDirection, out _, 1.34f - _collider1G.radius, _collisionLayerMask))
 					{
 						_gravityChanged = false;
-						base.transform.rotation = _gravityChangeEndingRotation;
+						transform.rotation = _gravityChangeEndingRotation;
 						_cameraController.ToggleCameraMovement(true);
-						base.transform.position += base.transform.up * (0f - CrouchColliderCenter + 0.05f);
+						transform.position += transform.up * (0f - CrouchColliderCenter + 0.05f);
 						_crouchLerpHelper = 0f;
 						_collider1G.height = CrouchColliderHeight;
 						_collider1G.center = new Vector3(0f, CrouchColliderCenter, 0f);
@@ -1432,7 +1432,7 @@ namespace ZeroGravity.CharacterMovement
 		private bool CheckGravityRagdollDistance()
 		{
 			RaycastHit[] array =
-				(from h in Physics.RaycastAll(base.transform.position, _myPlayer.GravityDirection, 4f,
+				(from h in Physics.RaycastAll(transform.position, _myPlayer.GravityDirection, 4f,
 						_collisionLayerMask)
 					orderby h.distance
 					select h).ToArray();
@@ -1567,7 +1567,7 @@ namespace ZeroGravity.CharacterMovement
 				_isOnLadder = !_isOnLadder;
 			}
 
-			LockedToLadder = ((!_isOnLadder) ? null : ladder);
+			LockedToLadder = (!_isOnLadder) ? null : ladder;
 		}
 
 		public void ToggleJetPack(bool? isOn = null)
@@ -1592,13 +1592,6 @@ namespace ZeroGravity.CharacterMovement
 				{
 					RefreshMaxAngularVelocity();
 				}
-			}
-		}
-
-		public void ToggleInPlayerCollider(bool? isInTrigger = null)
-		{
-			if (!(_myPlayer.CurrentRoomTrigger == null))
-			{
 			}
 		}
 
@@ -1679,7 +1672,7 @@ namespace ZeroGravity.CharacterMovement
 
 		public void ToggleKinematic(bool? isKinematic = null)
 		{
-			bool flag = ((!isKinematic.HasValue) ? (!RigidBody.isKinematic) : isKinematic.Value);
+			bool flag = (!isKinematic.HasValue) ? (!RigidBody.isKinematic) : isKinematic.Value;
 			_collider0G.enabled = !flag && _isZeroG;
 			_collider1G.enabled = !flag && !_isZeroG;
 			RigidBody.isKinematic = flag;
@@ -1722,8 +1715,8 @@ namespace ZeroGravity.CharacterMovement
 			ResetVelocity();
 			ToggleMovement(false);
 			ToggleCameraMovement(false);
-			Vector3 startingPosition = base.transform.position;
-			Quaternion startingRotation = base.transform.rotation;
+			Vector3 startingPosition = transform.position;
+			Quaternion startingRotation = transform.rotation;
 			Vector3 startingLookAt = _mainCamera.transform.position + _mainCamera.transform.forward;
 			_translateLerpHelper = 0f;
 			_myPlayer.InLerpingState = true;
@@ -1753,8 +1746,8 @@ namespace ZeroGravity.CharacterMovement
 			}
 
 			_myPlayer.InLerpingState = false;
-			base.transform.position = position.position;
-			base.transform.rotation = position.rotation;
+			transform.position = position.position;
+			transform.rotation = position.rotation;
 			ToggleCameraMovement(true);
 			if (lookAt != null)
 			{

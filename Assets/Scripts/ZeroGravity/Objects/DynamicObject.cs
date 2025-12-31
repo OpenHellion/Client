@@ -606,7 +606,7 @@ namespace ZeroGravity.Objects
 			base.OnDestroy();
 			EventSystem.RemoveListener(typeof(DynamicObjectStatsMessage), DynamicObjectStatsMessageListener);
 			World.RemoveDynamicObject(Guid);
-			if (MyPlayer.Instance.Inventory != null &&
+			if (MyPlayer.Instance != null && MyPlayer.Instance.Inventory != null &&
 			    ((object)Item != null ? Item.Slot : null) == MyPlayer.Instance.Inventory.HandsSlot)
 			{
 				World.InGameGUI.HelmetHud.HandsSlotUpdate();

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using OpenHellion;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using ZeroGravity;
 using ZeroGravity.ShipComponents;
@@ -19,9 +18,6 @@ public class PilotTargetList : MonoBehaviour
 
 	public GameObject NotActive;
 
-	[FormerlySerializedAs("_worldState")] [SerializeField] private World _world;
-
-	private PilotOverlayUI ParentPilot => _world.InWorldPanels.Pilot;
 
 	private void Start()
 	{
@@ -31,7 +27,7 @@ public class PilotTargetList : MonoBehaviour
 
 	public void CreateTargetInList(TargetObject target)
 	{
-		TargetInListUI targetInListUI = Object.Instantiate(TargetListUI, TargetListHolder);
+		TargetInListUI targetInListUI = Instantiate(TargetListUI, TargetListHolder);
 		targetInListUI.gameObject.transform.localScale = Vector3.one;
 		targetInListUI.gameObject.SetActive(true);
 		targetInListUI.Target = target;
@@ -40,7 +36,7 @@ public class PilotTargetList : MonoBehaviour
 		targetInListUI.Icon.sprite = target.Icon;
 	}
 
-	public void UpdateTargetList()
+	public void UpdateTargetList(World world)
 	{
 		List<TargetInListUI> list = new List<TargetInListUI>();
 		TargetInListUI[] componentsInChildren = TargetListHolder.GetComponentsInChildren<TargetInListUI>(true);
@@ -51,26 +47,26 @@ public class PilotTargetList : MonoBehaviour
 
 		foreach (TargetInListUI item2 in list)
 		{
-			if (ParentPilot.SelectedTarget != null)
+			if (world.InWorldPanels.Pilot.SelectedTarget != null)
 			{
-				item2.Selected.SetActive(ParentPilot.SelectedTarget.ArtificialBody == item2.AB);
+				item2.Selected.SetActive(world.InWorldPanels.Pilot.SelectedTarget.ArtificialBody == item2.AB);
 			}
 
 			item2.Distance.text = FormatHelper.DistanceFormat(item2.Target.Distance);
 		}
 
-		GoToCurrentElement();
+		GoToCurrentElement(world);
 	}
 
-	public void GoToCurrentElement()
+	private void GoToCurrentElement(World world)
 	{
-		int num = ParentPilot.AllTargets.IndexOf(ParentPilot.SelectedTarget);
-		if (ParentPilot.AllTargets.Count > 6)
+		int num = world.InWorldPanels.Pilot.AllTargets.IndexOf(world.InWorldPanels.Pilot.SelectedTarget);
+		if (world.InWorldPanels.Pilot.AllTargets.Count > 6)
 		{
 			float y = 70f * num;
 			TargetListHolder.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, y);
 		}
-		else if (ParentPilot.AllTargets.Count == 0)
+		else if (world.InWorldPanels.Pilot.AllTargets.Count == 0)
 		{
 			TargetListHolder.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, 0f);
 		}

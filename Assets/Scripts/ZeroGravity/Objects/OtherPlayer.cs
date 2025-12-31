@@ -48,8 +48,6 @@ namespace ZeroGravity.Objects
 
 		private Quaternion movementTargetLocalRotation;
 
-		private float movementTimestamp = -1f;
-
 		private Vector3 movementLocalVelocity;
 
 		private Vector3 movementLocalVelocityCorrection;
@@ -80,20 +78,17 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public void SetMovementData(Vector3 localPosition, Quaternion localRotation, Vector3 localVelocity,
-			float timestamp)
+		public void SetMovementData(Vector3 localPosition, Quaternion localRotation, Vector3 localVelocity)
 		{
+			float num = movementReceivedTime;
 			movementReceivedTime = Time.time;
-			float num = movementTimestamp;
 			Vector3 vector = movementTargetLocalPosition;
 			Quaternion quaternion = movementTargetLocalRotation;
 			Vector3 vector2 = movementLocalVelocity;
-			movementTimestamp = timestamp;
-			float num2 = !(num > 0f) ? 0f : movementTimestamp - num;
+			float num2 = num > 0f ? movementReceivedTime - num : 0f;
 			movementTargetLocalPosition = localPosition;
 			movementLocalVelocity = localVelocity;
-			movementLocalVelocityCorrection =
-				!(num2 < 1f) ? Vector3.zero : (vector - transform.localPosition) * num2;
+			movementLocalVelocityCorrection = num2 < 1f ? (vector - transform.localPosition) * num2 : Vector3.zero;
 			movementTargetLocalRotation = localRotation;
 			if (movementLocalVelocity == Vector3.zero ||
 			    Vector3.Dot(movementLocalVelocity.normalized, vector2.normalized) < 0f)

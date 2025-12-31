@@ -147,7 +147,7 @@ namespace OpenHellion
 
 		private float[] _playerExposureValues;
 
-		[NonSerialized] public Action LoadingFinishedDelegate;
+		[NonSerialized] public Action ActivatePlayerDelegate;
 
 		[NonSerialized] public bool IsChatOpened;
 
@@ -663,7 +663,7 @@ namespace OpenHellion
 		// Caution: Executed very often.
 		private void MovementMessageListener(NetworkData data)
 		{
-			if (MyPlayer.Instance == null)
+			if (MyPlayer.Instance == null || !MyPlayer.Instance.PlayerReady)
 			{
 				return;
 			}
@@ -687,8 +687,8 @@ namespace OpenHellion
 					{
 						case null when objectTransform.GUID == MyPlayer.Instance.Guid:
 							continue;
-						case null when objectTransform.Orbit is not null || objectTransform.Realtime is not null ||
-						               objectTransform.StabilizeToTargetGUID is > 0:
+						case null when objectTransform.Orbit != null || objectTransform.Realtime != null ||
+						               objectTransform.StabilizeToTargetGUID > 0:
 							artificialBody = ArtificialBody.CreateDummy(objectTransform);
 							isArtificialBodyNew = true;
 							break;
@@ -1117,9 +1117,9 @@ namespace OpenHellion
 					return false;
 				}
 
-				LoadingFinishedDelegate = new Action(() =>
+				ActivatePlayerDelegate = new Action(() =>
 				{
-					LoadingFinishedDelegate = null;
+					ActivatePlayerDelegate = null;
 					MyPlayer.Instance.ActivatePlayer(spawnResponse);
 				});
 
@@ -1136,6 +1136,7 @@ namespace OpenHellion
 				{
 					Ship ship = Ship.Create(spawnResponse.MainVesselID, spawnResponse.VesselData, spawnResponse.ParentTransform, isMainObject: true);
 					ship.gameObject.SetActive(true);
+					MyPlayer.Instance.Parent = ship;
 					if (spawnResponse.DockedVessels is { Count: > 0 })
 					{
 						foreach (DockedVesselData dockedVessel in spawnResponse.DockedVessels)
@@ -1147,7 +1148,6 @@ namespace OpenHellion
 						}
 					}
 
-					MyPlayer.Instance.Parent = GetVessel(spawnResponse.ParentID);
 					Debug.Log("Starting main scene load of type ship.");
 					await LoadMainSceneShip(spawnResponse, ship, spawnResponse.VesselObjects);
 				}

@@ -180,8 +180,9 @@ namespace OpenHellion
 
 						MyPlayer.Instance.PlayerReady = true;
 						RichPresenceManager.UpdateStatus();
+						_world.ActivatePlayerDelegate();
 
-						_world.LoadingFinishedDelegate();
+						_world.InGameGUI.HelmetHud.gameObject.Activate(true);
 						await FixCryoPodState();
 						GlobalGUI.CloseLoadingScreen();
 						await NetworkController.SendAsync(new EnvironmentReadyMessage());

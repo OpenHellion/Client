@@ -1272,7 +1272,7 @@ public class AnimatorHelper : MonoBehaviour
 			}
 		}
 
-		if (velocityForward.HasValue && _player is MyPlayer)
+		if (velocityForward.HasValue && _player is MyPlayer && _world != null && _world.InGameGUI.HelmetOverlayModel != null)
 		{
 			if (!_animatorIsZeroG)
 			{

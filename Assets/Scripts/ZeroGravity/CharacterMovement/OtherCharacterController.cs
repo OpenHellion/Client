@@ -28,8 +28,6 @@ namespace ZeroGravity.CharacterMovement
 
 		private float _targetMouseLookUpPos;
 
-		private float _targetIkLookPos;
-
 		private string _playerName;
 
 		private bool _isMouseLook;
@@ -302,10 +300,6 @@ namespace ZeroGravity.CharacterMovement
 			}
 		}
 
-		public void ModifyTransformDataList(Vector3 positionCorrection)
-		{
-		}
-
 		public void MovementMessageReceived(CharacterMovementMessage cmm)
 		{
 			if (player == null)
@@ -345,7 +339,7 @@ namespace ZeroGravity.CharacterMovement
 			}
 
 			player.SetMovementData(transformData.LocalPosition.ToVector3(), transformData.LocalRotation.ToQuaternion(),
-				transformData.LocalVelocity.ToVector3(), transformData.Timestamp);
+				transformData.LocalVelocity.ToVector3());
 			player.SetGravity(cmm.Gravity.ToVector3());
 			_targetMouseLookUpPos = transformData.MouseLook;
 			_targetFreeLookUpPos = transformData.FreeLookX;

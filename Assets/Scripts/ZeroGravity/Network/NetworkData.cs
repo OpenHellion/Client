@@ -37,7 +37,6 @@ namespace ZeroGravity.Network
 	[ProtoInclude(303, typeof(DestroyObjectMessage))]
 	[ProtoInclude(304, typeof(PlayerStatsMessage))]
 	[ProtoInclude(305, typeof(PlayerShootingMessage))]
-	[ProtoInclude(306, typeof(PlayerHitMessage))]
 	[ProtoInclude(307, typeof(DynamicObjectMovementMessage))]
 	[ProtoInclude(308, typeof(MovementMessage))]
 	[ProtoInclude(309, typeof(ShipStatsMessage))]

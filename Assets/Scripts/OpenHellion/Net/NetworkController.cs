@@ -305,13 +305,5 @@ namespace OpenHellion.Net
 
 			_getP2PPacketsThreadActive = false;
 		}
-
-#if UNITY_EDITOR
-		private void OnGUI()
-		{
-			GUILayout.Label(ProtoSerialiser.SentPacketStatistics + "\n\n\n" + ProtoSerialiser.ReceivedPacketStatistics,
-				GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
-		}
-#endif
 	}
 }

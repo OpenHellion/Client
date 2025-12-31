@@ -64,7 +64,7 @@ namespace ZeroGravity.UI
 			if (!Settings.SettingsData.GameSettings.DisableChat)
 			{
 				if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Chat) && !ChatInputBox.activeInHierarchy &&
-				    !_world.InGameGUI.Console.gameObject.activeInHierarchy &&
+				    !_world.InGameGUI.ConsoleIsUp &&
 				    !_world.InGameGUI.IsInputFieldIsActive && !_world.InGameGUI.OverlayCanvasIsOn &&
 				    !ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Drop))
 				{

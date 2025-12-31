@@ -38,9 +38,9 @@ namespace ZeroGravity.LevelDesign
 
 		[SerializeField] private bool _disablePlayerInsideOccluder;
 
-		[HideInInspector] public SpaceObjectVessel ParentVessel;
+		[NonSerialized] public SpaceObjectVessel ParentVessel;
 
-		[HideInInspector] public List<SceneDoor> Doors;
+		[NonSerialized] public readonly List<SceneDoor> Doors = new List<SceneDoor>();
 
 		[Tooltip("Actual volume in cubic meters. ")]
 		public float Volume = 1f;
@@ -74,11 +74,9 @@ namespace ZeroGravity.LevelDesign
 
 		[Title("SOUND")] public List<SoundEffect> PressurizationSounds;
 
-		[HideInInspector] public string EnvironmentReverb = string.Empty;
+		public string EnvironmentReverb = string.Empty;
 
-		[HideInInspector] public uint EnvironmentReverbId;
-
-		[HideInInspector] public string Ambience = string.Empty;
+		public string Ambience = string.Empty;
 
 		[NonSerialized] public bool Fire;
 
@@ -174,7 +172,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			foreach (MonoBehaviour behaviourScript in BehaviourScripts)
 			{
-				if (!(behaviourScript == null))
+				if (behaviourScript != null)
 				{
 					if (behaviourScript is SceneDoor)
 					{
@@ -415,10 +413,6 @@ namespace ZeroGravity.LevelDesign
 				AirFiltering = ((!enabled.HasValue) ? (!AirFiltering) : (enabled == true))
 			};
 			parentVessel.ChangeStats(null, null, null, null, null, null, roomTrigger);
-		}
-
-		private void Update()
-		{
 		}
 
 		private void OnDisable()

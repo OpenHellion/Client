@@ -20,7 +20,6 @@ namespace ZeroGravity.CharacterMovement
 
 			if (characterController != null && characterController.isActiveAndEnabled)
 			{
-				characterController.ToggleInPlayerCollider(true);
 				SpaceObjectVessel spaceObjectVessel =
 					coli.GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
 				characterController.NearbyVessel = ((!(spaceObjectVessel.DockedToMainVessel != null))
@@ -40,7 +39,6 @@ namespace ZeroGravity.CharacterMovement
 			{
 				if (characterController != null && characterController.isActiveAndEnabled)
 				{
-					characterController.ToggleInPlayerCollider(false);
 					characterController.NearbyVessel = null;
 				}
 				else if (otherCharacterController != null && otherCharacterController.isActiveAndEnabled)
