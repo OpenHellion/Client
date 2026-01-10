@@ -1,6 +1,6 @@
 // RichPresenceManager.cs
 //
-// Copyright (C) 2023, OpenHellion contributors
+// Copyright (C) 2026, OpenHellion contributors
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,99 +17,109 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using ZeroGravity;
+using ZeroGravity.Network;
+using ZeroGravity.Objects;
 
 namespace OpenHellion.Social.RichPresence
 {
 	/// <summary>
 	/// 	Manages rich presence on Steam and Discord.
-	///		TODO: Support Steam.
 	/// </summary>
 	/// <seealso cref="DiscordProvider"/>
 	/// <seealso cref="SteamProvider"/>
-	/// <seealso cref="IRichPresenceProvider"/>
-	internal class RichPresenceManager : MonoBehaviour
+	public static class RichPresenceManager
 	{
-		private static RichPresenceManager _instance;
-
-		private static RichPresenceManager Instance
+		public struct ActivityStatus
 		{
-			get
-			{
-				if (_instance != null) return _instance;
-
-				return new GameObject("PresenceManager").AddComponent<RichPresenceManager>();
-			}
+			public string State;
+			public string Details;
+			public string LargeImageId;
+			public string LargeText;
+			public string SmallImageId;
+			public string SmallText;
+			public string JoinSecret;
+			public int PlayerCount;
+			public int MaxPlayers;
 		}
+
+		private static readonly Dictionary<long, string> Planets = new()
+		{
+			{ 1L, "Hellion" },
+			{ 2L, "Nimath" },
+			{ 3L, "Athnar" },
+			{ 4L, "Ulgorat" },
+			{ 5L, "Tasciana" },
+			{ 6L, "Hirath" },
+			{ 7L, "Calipso" },
+			{ 8L, "Iblith" },
+			{ 9L, "Enigma" },
+			{ 10L, "Eridil" },
+			{ 11L, "Arhlan" },
+			{ 12L, "Teiora" },
+			{ 13L, "Sinha" },
+			{ 14L, "Bethyr" },
+			{ 15L, "Burner" },
+			{ 16L, "Broken marble" },
+			{ 17L, "Everest station" },
+			{ 18L, "Askatar" },
+			{ 19L, "Ia" }
+		};
+
+		private static readonly List<string> Descriptions = new()
+		{
+			"Building station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job",
+			"Repairing a hull breach"
+		};
 
 		public static bool HasSteam { get; private set; }
 
-		private List<IRichPresenceProvider> _providers;
+		public static bool HasDiscord { get; private set; }
 
-		void Awake()
+		private static SteamProvider _steam;
+
+		private static DiscordProvider _discord;
+
+		public static void Initialise()
 		{
-			// Only one instance can exist at a time.
-			if (_instance != null)
+			_steam = new SteamProvider();
+			_discord = new DiscordProvider();
+
+			HasSteam = _steam.Initialise();
+			HasDiscord = _discord.Initialise();
+
+			if (HasSteam)
 			{
-				Destroy(gameObject, 0f);
-				Debug.LogError("Tried to create new ProviderManager, but there already exists another manager.");
-			}
-
-			_instance = this;
-
-			DontDestroyOnLoad(gameObject);
-
-			_providers = new()
-			{
-				new SteamProvider(),
-				new DiscordProvider()
-			};
-
-			// Initialise our providers.
-			// Loop backwards to prevent an InvalidOperationException.
-			for (int i = _providers.Count - 1; i >= 0; i--)
-			{
-				// Remove the provider if it doesn't start properly.
-				if (!_providers[i].Initialise())
-				{
-					_providers.RemoveAt(i);
-				}
-			}
-
-			// Find our main provider, Steam is preferable.
-			foreach (IRichPresenceProvider provider in _providers)
-			{
-				if (provider is SteamProvider)
-				{
-					HasSteam = true;
-					break;
-				}
+				_steam.Enable();
 			}
 		}
 
-		void Start()
+		public static void Update()
 		{
-			// Enable our providers.
-			foreach (IRichPresenceProvider provider in _providers)
+			if (HasSteam)
 			{
-				provider.Enable();
+				_steam.Update();
+			}
+
+			if (HasDiscord)
+			{
+				_discord.Update();
 			}
 		}
 
-		void Update()
+		// Because of Steam, this should be called on either OnDestroy or OnDisable.
+		public static void Shutdown()
 		{
-			// Update our providers.
-			foreach (IRichPresenceProvider provider in _providers)
+			if (HasSteam)
 			{
-				provider.Update();
+				_steam.Shutdown();
+				HasSteam = false;
 			}
-		}
 
-		void OnDestroy()
-		{
-			// Destroy our providers.
-			foreach (IRichPresenceProvider provider in _providers)
+			if (HasDiscord)
 			{
-				provider.Destroy();
+				_discord.Shutdown();
+				HasDiscord = false;
 			}
 		}
 
@@ -118,19 +128,77 @@ namespace OpenHellion.Social.RichPresence
 		/// </summary>
 		public static void UpdateStatus()
 		{
-			// Update rich presence for all providers.
-			foreach (IRichPresenceProvider provider in Instance._providers)
+			ActivityStatus activityStatus;
+			if (MyPlayer.Instance != null && MyPlayer.Instance.PlayerReady)
 			{
-				provider.UpdateStatus();
+				activityStatus = new()
+				{
+					JoinSecret = Globals.GetInviteString(null),
+					LargeText = Localization.InGameDescription,
+					Details = Descriptions[Random.Range(0, Descriptions.Count - 1)],
+					SmallImageId = Gender.Male.ToLocalizedString().ToLower(),
+					SmallText = MyPlayer.Instance.PlayerName,
+					PlayerCount = 0, // TODO: Get player count and max players from server.
+					MaxPlayers = 0
+				};
+
+				if (MyPlayer.Instance.Parent is ArtificialBody { ParentCelestialBody: not null } artificialBody)
+				{
+					if (Planets.TryGetValue(artificialBody.ParentCelestialBody.Guid, out var value))
+					{
+						activityStatus.LargeImageId = artificialBody.ParentCelestialBody.Guid.ToString();
+					}
+					else
+					{
+						activityStatus.LargeImageId = "default";
+						value = artificialBody.ParentCelestialBody.Name;
+					}
+
+					if (artificialBody is Ship { IsWarpOnline: true })
+					{
+						activityStatus.State = Localization.WarpingNear + " " + value.ToUpper();
+					}
+					else if (artificialBody is Pivot)
+					{
+						activityStatus.State = Localization.FloatingFreelyNear + " " + value.ToUpper();
+					}
+					else
+					{
+						activityStatus.State = Localization.OrbitingNear + " " + value.ToUpper();
+					}
+				}
+			}
+			else
+			{
+				activityStatus = new()
+				{
+					State = "In Menus",
+					Details = "Launch Sequence Initiated",
+					LargeImageId = "cover"
+				};
+			}
+
+			if (HasSteam)
+			{
+				_steam.UpdateStatus(activityStatus);
+			}
+
+			if (HasDiscord)
+			{
+				_discord.UpdateStatus(activityStatus);
 			}
 		}
 
 		/// <summary>
 		/// 	Get if we have achieved a specific achievement.
 		/// </summary>
-		public static bool GetAchievement(AchievementID id, out bool achieved)
+		public static bool GetAchievement(AchievementID id)
 		{
-			achieved = false;
+			if (HasSteam)
+			{
+				return _steam.GetAchievement(id);
+			}
+
 			return false;
 		}
 
@@ -139,6 +207,39 @@ namespace OpenHellion.Social.RichPresence
 		/// </summary>
 		public static void SetAchievement(AchievementID id)
 		{
+			if (HasSteam)
+			{
+				_steam.SetAchievement(id);
+			}
+		}
+
+		public static string GetUsername()
+		{
+			if (HasSteam)
+			{
+				return _steam.GetUsername();
+			}
+
+			if (HasDiscord)
+			{
+				return _discord.GetUsername();
+			}
+
+			return null;
+		}
+
+		public static void InviteUser(ulong steamId, long discordId, VesselObjectID spawnPointId)
+		{
+			string inviteString = Globals.GetInviteString(spawnPointId);
+			if (HasSteam)
+			{
+				_steam.InviteUser(steamId, inviteString);
+			}
+
+			if (HasDiscord)
+			{
+				_discord.InviteUser(discordId, inviteString);
+			}
 		}
 
 		/// <summary>

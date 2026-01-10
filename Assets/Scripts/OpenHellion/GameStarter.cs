@@ -1,6 +1,6 @@
 ﻿// GameStarter.cs
 //
-// Copyright (C) 2024, OpenHellion contributors
+// Copyright (C) 2026, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -177,8 +177,8 @@ namespace OpenHellion
 						Globals.ToggleCursor(false);
 
 						MyPlayer.Instance.PlayerReady = true;
-						RichPresenceManager.UpdateStatus();
 						_world.ActivatePlayerDelegate();
+						RichPresenceManager.UpdateStatus();
 
 						_world.InGameGUI.HelmetHud.gameObject.Activate(true);
 						await FixCryoPodState();

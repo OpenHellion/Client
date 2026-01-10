@@ -1,22 +1,3 @@
-// MainMenuGUI.cs
-//
-// Copyright (C) 2025, OpenHellion contributors
-//
-// SPDX-License-Identifier: GPL-3.0-or-later
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -150,6 +131,8 @@ namespace OpenHellion.UI
 				CharacterInputField.text = await NakamaClient.GetDisplayName();
 				SwitchCurrentGender();
 			}
+
+			RichPresenceManager.UpdateStatus();
 		}
 
 		private void Update()
@@ -196,6 +179,8 @@ namespace OpenHellion.UI
 					ExitStartingPointScreen();
 				}
 			}
+
+			RichPresenceManager.Update();
 		}
 
 		public void DisclaimerAgree()
@@ -233,7 +218,7 @@ namespace OpenHellion.UI
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start1));
 			});
 
-			RichPresenceManager.GetAchievement(AchievementID.quest_sound_of_silence, out var achieved);
+			bool achieved = RichPresenceManager.GetAchievement(AchievementID.quest_sound_of_silence);
 			StartingPointOptionUI strandedMinerUI = Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			strandedMinerUI.Type = StartingPointOption.StrandedMiner;
 			strandedMinerUI.Data = StartingPointData.FirstOrDefault(m => m.Type == StartingPointOption.StrandedMiner);
@@ -243,7 +228,7 @@ namespace OpenHellion.UI
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start2));
 			});
 
-			RichPresenceManager.GetAchievement(AchievementID.quest_shattered_dreams, out achieved);
+			achieved = RichPresenceManager.GetAchievement(AchievementID.quest_shattered_dreams);
 			StartingPointOptionUI evaUI = Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			evaUI.Type = StartingPointOption.Eva;
 			evaUI.Data = StartingPointData.FirstOrDefault(m => m.Type == StartingPointOption.Eva);
@@ -253,7 +238,7 @@ namespace OpenHellion.UI
 				SplashScreen.FreshStart(CreateFreshStartTask(SpawnSetupType.Start3));
 			});
 
-			RichPresenceManager.GetAchievement(AchievementID.quest_heart_of_stone, out achieved);
+			achieved = RichPresenceManager.GetAchievement(AchievementID.quest_heart_of_stone);
 			StartingPointOptionUI soeUI = Instantiate(StartingPointUI, FreshStartSpawnOptions);
 			soeUI.Type = StartingPointOption.Soe;
 			soeUI.Data = StartingPointData.FirstOrDefault(m => m.Type == StartingPointOption.Soe);

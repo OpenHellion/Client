@@ -1,6 +1,6 @@
 // DiscordProvider.cs
 //
-// Copyright (C) 2024, OpenHellion contributors
+// Copyright (C) 2026, OpenHellion contributors
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,63 +16,28 @@
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using Discord;
 using OpenHellion.IO;
 using OpenHellion.Social.Message;
 using UnityEngine;
-using ZeroGravity;
-using ZeroGravity.Network;
-using ZeroGravity.Objects;
+using static OpenHellion.Social.RichPresence.RichPresenceManager;
 
 namespace OpenHellion.Social.RichPresence
 {
-	/// <summary>
-	/// 	This class handles everything related to Discord. Acts as a bridge between the game and the API.
-	/// </summary>
 	/// <seealso cref="SteamProvider"/>
-	internal class DiscordProvider : IRichPresenceProvider
+	internal class DiscordProvider
 	{
-		private static readonly Dictionary<long, string> Planets = new()
-		{
-			{ 1L, "Hellion" },
-			{ 2L, "Nimath" },
-			{ 3L, "Athnar" },
-			{ 4L, "Ulgorat" },
-			{ 5L, "Tasciana" },
-			{ 6L, "Hirath" },
-			{ 7L, "Calipso" },
-			{ 8L, "Iblith" },
-			{ 9L, "Enigma" },
-			{ 10L, "Eridil" },
-			{ 11L, "Arhlan" },
-			{ 12L, "Teiora" },
-			{ 13L, "Sinha" },
-			{ 14L, "Bethyr" },
-			{ 15L, "Burner" },
-			{ 16L, "Broken marble" },
-			{ 17L, "Everest station" },
-			{ 18L, "Askatar" },
-			{ 19L, "Ia" }
-		};
-
-		private static readonly List<string> Descriptions = new()
-		{
-			"Building station", "Mining asteroids", "In a salvaging mission", "Doing a piracy job",
-			"Repairing a hull breach"
-		};
-
 		private const long ClientId = 349114016968474626L;
 		private const uint OptionalSteamId = 588210;
 
 		private Discord.Discord _discord;
 		private ActivityManager _activityManager;
 		private UserManager _userManager;
+		private OverlayManager _overlayManager;
 
-		private User _joinUser;
 		private Activity _activity;
 
-		bool IRichPresenceProvider.Initialise()
+		internal bool Initialise()
 		{
 			// Init Discord API.
 			try
@@ -99,20 +64,14 @@ namespace OpenHellion.Social.RichPresence
 			_activityManager.OnActivityJoinRequest += OnJoinRequestReceived;
 
 			_userManager = _discord.GetUserManager();
-
-			Debug.Log("Discord API initialised.");
+			_overlayManager = _discord.GetOverlayManager();
 
 			_discord.RunCallbacks();
 
 			return true;
 		}
 
-		void IRichPresenceProvider.Enable()
-		{
-			UpdateStatus();
-		}
-
-		void IRichPresenceProvider.Update()
+		internal void Update()
 		{
 			_discord.RunCallbacks();
 		}
@@ -153,76 +112,43 @@ namespace OpenHellion.Social.RichPresence
 			});
 		}
 
-		void IRichPresenceProvider.Destroy()
+		internal void Shutdown()
 		{
-			Debug.Log("Discord: Shutdown");
 			_discord?.Dispose();
 		}
 
-		/// <inheritdoc/>
-		public void UpdateStatus()
+		internal void UpdateStatus(ActivityStatus status)
 		{
-			try
+			_activity = new Activity
 			{
-				if (MyPlayer.Instance != null && MyPlayer.Instance.PlayerReady)
+				State = status.State,
+				Details = status.Details,
+				Assets = new()
 				{
-					_activity.Secrets.Join = Globals.GetInviteString(null);
-					_activity.Assets.LargeText = Localization.InGameDescription;
-					_activity.Details = Descriptions[UnityEngine.Random.Range(0, Descriptions.Count - 1)];
-					if (MyPlayer.Instance.Parent is ArtificialBody { ParentCelestialBody: not null } artificialBody)
+					LargeImage = status.LargeImageId,
+					LargeText = status.LargeText,
+					SmallImage = status.SmallImageId,
+					SmallText = status.SmallText,
+				},
+				Secrets = new()
+				{
+					Join = status.JoinSecret,
+				},
+				Party = new()
+				{
+					Id = string.Empty,
+					Privacy = ActivityPartyPrivacy.Public,
+					Size = new()
 					{
-						if (Planets.TryGetValue(artificialBody.ParentCelestialBody.Guid, out var value))
-						{
-							_activity.Assets.LargeImage = artificialBody.ParentCelestialBody.Guid.ToString();
-						}
-						else
-						{
-							_activity.Assets.LargeImage = "default";
-							value = artificialBody.ParentCelestialBody.Name;
-						}
-
-						if (artificialBody is Ship { IsWarpOnline: true })
-						{
-							_activity.State = Localization.WarpingNear + " " + value.ToUpper();
-						}
-						else if (artificialBody is Pivot)
-						{
-							_activity.State = Localization.FloatingFreelyNear + " " + value.ToUpper();
-						}
-						else
-						{
-							_activity.State = Localization.OrbitingNear + " " + value.ToUpper();
-						}
+						CurrentSize = status.PlayerCount,
+						MaxSize = status.MaxPlayers,
 					}
-
-					_activity.Assets.SmallImage = Gender.Male.ToLocalizedString().ToLower();
-					_activity.Assets.SmallText = MyPlayer.Instance.PlayerName;
-					_activity.Party.Id = string.Empty;
 				}
-				else
-				{
-					_activity.State = "In Menus";
-					_activity.Details = "Launch Sequence Initiated";
-					_activity.Assets.LargeImage = "cover";
-					_activity.Assets.LargeText = string.Empty;
-					_activity.Assets.SmallImage = string.Empty;
-					_activity.Assets.SmallText = string.Empty;
-					_activity.Secrets.Join = string.Empty;
-					_activity.Party.Size.CurrentSize = 0;
-					_activity.Party.Size.MaxSize = 0;
-					_activity.Party.Id = string.Empty;
-				}
-
-				_activityManager.UpdateActivity(_activity, result => { });
-			}
-			catch (Exception ex)
-			{
-				Debug.LogException(ex);
-			}
+			};
+			_activityManager?.UpdateActivity(_activity, result => { });
 		}
 
-		/// <inheritdoc/>
-		public string GetUsername()
+		internal string GetUsername()
 		{
 			User user;
 			try
@@ -238,23 +164,15 @@ namespace OpenHellion.Social.RichPresence
 			return user.Username;
 		}
 
-		/// <inheritdoc/>
-		public void InviteUser(string id, string secret)
+		internal void InviteUser(long id, string secret)
 		{
-			// Check for correct prefix.
-			if (!id.StartsWith("d"))
-			{
-				return;
-			}
-
 			Debug.Log("Inviting user through Discord.");
 
 			_activity.Secrets.Join = secret;
-			_activity.Secrets.Spectate = secret;
 			_activityManager.UpdateActivity(_activity, result => { });
 
 			// Read the id without the prefix.
-			_activityManager.SendInvite(long.Parse(id[1..]), ActivityActionType.Join,
+			_activityManager.SendInvite(id, ActivityActionType.Join,
 				"You have been invited to play Hellion!", result =>
 				{
 					if (result == Result.Ok)

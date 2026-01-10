@@ -1,6 +1,6 @@
 // SteamProvider.cs
 //
-// Copyright (C) 2024, OpenHellion contributors
+// Copyright (C) 2026, OpenHellion contributors
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,60 +21,50 @@ using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using OpenHellion.IO;
 using OpenHellion.Social.Message;
+using static OpenHellion.Social.RichPresence.RichPresenceManager;
 
 namespace OpenHellion.Social.RichPresence
 {
 	/// <seealso cref="DiscordProvider"/>
-	internal class SteamProvider : IRichPresenceProvider
+	internal class SteamProvider
 	{
 		private bool _currentStatsRequested;
 		private bool _userStatsReceived;
 		private bool _storeStats;
 		private readonly ConcurrentQueue<Task> _pendingTasks = new ConcurrentQueue<Task>();
 
-		private SteamAPIWarningMessageHook_t _steamAPIWarningMessageHook;
-
-		[AOT.MonoPInvokeCallback(typeof(SteamAPIWarningMessageHook_t))]
-		protected static void SteamAPIDebugTextHook(int nSeverity, System.Text.StringBuilder pchDebugText)
-		{
-			Debug.LogWarning(pchDebugText);
-		}
-
-		bool IRichPresenceProvider.Initialise()
+		internal bool Initialise()
 		{
 			if (!Packsize.Test())
 			{
 				Debug.LogError(
-					"[Steamworks.NET] Packsize Test returned false, the wrong version of Steamworks.NET is being run in this platform.");
+					"Steam: Packsize Test returned false, the wrong version of Steamworks.NET is being run in this platform.");
 			}
 
 			if (!DllCheck.Test())
 			{
 				Debug.LogError(
-					"[Steamworks.NET] DllCheck Test returned false, One or more of the Steamworks binaries seems to be the wrong version.");
+					"Steam: DllCheck Test returned false, One or more of the Steamworks binaries seems to be the wrong version.");
 			}
 
 			// https://partner.steamgames.com/doc/sdk/api#initialization_and_shutdown
 			bool success = SteamAPI.Init();
 
-			if (success)
-			{
-				Debug.Log("Steam: API initialised.");
-			}
-
 			return success;
 		}
 
 		// This should only ever get called on first load and after an Assembly reload, You should never Disable the Steamworks Manager yourself.
-		void IRichPresenceProvider.Enable()
+		internal void Enable()
 		{
-			if (_steamAPIWarningMessageHook == null)
+			[AOT.MonoPInvokeCallback(typeof(SteamAPIWarningMessageHook_t))]
+			static void SteamAPIDebugTextHook(int nSeverity, System.Text.StringBuilder pchDebugText)
 			{
-				// Set up our callback to receive warning messages from Steam.
-				// You must launch with "-debug_steamapi" in the launch args to receive warnings.
-				_steamAPIWarningMessageHook = new SteamAPIWarningMessageHook_t(SteamAPIDebugTextHook);
-				SteamClient.SetWarningMessageHook(_steamAPIWarningMessageHook);
+				Debug.LogWarning(pchDebugText);
 			}
+
+			// Set up our callback to receive warning messages from Steam.
+			// You must launch with "-debug_steamapi" in the launch args to receive warnings.
+			SteamClient.SetWarningMessageHook(new SteamAPIWarningMessageHook_t(SteamAPIDebugTextHook));
 
 			if (_currentStatsRequested)
 			{
@@ -87,13 +77,12 @@ namespace OpenHellion.Social.RichPresence
 		// OnApplicationQuit gets called too early to shutdown the SteamAPI.
 		// Because the SteamManager should be persistent and never disabled or destroyed we can shutdown the SteamAPI here.
 		// Thus it is not recommended to perform any Steamworks work in other OnDestroy functions as the order of execution can not be garenteed upon Shutdown. Prefer OnDisable().
-		void IRichPresenceProvider.Destroy()
+		internal void Shutdown()
 		{
-			Debug.Log("Steam: Shutdown");
 			SteamAPI.Shutdown();
 		}
 
-		void IRichPresenceProvider.Update()
+		internal void Update()
 		{
 			// Run Steam client callbacks
 			SteamAPI.RunCallbacks();
@@ -129,19 +118,18 @@ namespace OpenHellion.Social.RichPresence
 			gameStarter.FindServerAndConnect().Forget();
 		}
 
-		/// <inheritdoc/>
-		public void UpdateStatus()
+		internal void UpdateStatus(ActivityStatus status)
 		{
+			// TODO: Figue out a way to display rich presence info on steam.
 		}
 
-		/// <inheritdoc/>
-		public bool GetAchievement(AchievementID id, out bool achieved)
+		internal bool GetAchievement(AchievementID id)
 		{
-			return SteamUserStats.GetAchievement(id.ToString(), out achieved);
+			SteamUserStats.GetAchievement(id.ToString(), out bool achieved);
+			return achieved;
 		}
 
-		/// <inheritdoc/>
-		public void SetAchievement(AchievementID id)
+		internal void SetAchievement(AchievementID id)
 		{
 			_pendingTasks.Enqueue(new Task(delegate
 			{
@@ -150,25 +138,17 @@ namespace OpenHellion.Social.RichPresence
 			}));
 		}
 
-		/// <inheritdoc/>
-		public string GetUsername()
+		internal string GetUsername()
 		{
 			return SteamFriends.GetFriendPersonaName(SteamUser.GetSteamID());
 		}
 
-		/// <inheritdoc/>
-		public void InviteUser(string id, string secret)
+		internal void InviteUser(ulong id, string secret)
 		{
-			// Check for correct prefix.
-			if (!id.StartsWith("s"))
-			{
-				return;
-			}
-
 			Debug.Log("Inviting user through Steam.");
 
 			// Read the id without the prefix.
-			SteamFriends.InviteUserToGame(new CSteamID(ulong.Parse(id[1..])), secret);
+			SteamFriends.InviteUserToGame(new CSteamID(id), secret);
 		}
 	}
 }

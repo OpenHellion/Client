@@ -68,7 +68,7 @@ namespace ZeroGravity.Objects
 			QuestObject.Quest = this;
 			if (QuestObject != null && QuestObject.Achivement != 0)
 			{
-				RichPresenceManager.GetAchievement(QuestObject.Achivement, out CanSkip);
+				CanSkip = RichPresenceManager.GetAchievement(QuestObject.Achivement);
 			}
 		}
 

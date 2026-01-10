@@ -1,6 +1,6 @@
 // InitialisingSceneManager.cs
 //
-// Copyright (C) 2024, OpenHellion contributors
+// Copyright (C) 2026, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -19,7 +19,6 @@
 
 using UnityEngine;
 using System;
-using System.Collections;
 using OpenHellion.IO;
 using OpenHellion.Social;
 using OpenHellion.UI;
@@ -27,6 +26,7 @@ using UnityEngine.SceneManagement;
 using ZeroGravity;
 using ZeroGravity.UI;
 using Cysharp.Threading.Tasks;
+using OpenHellion.Social.RichPresence;
 
 namespace OpenHellion
 {
@@ -69,6 +69,9 @@ namespace OpenHellion
 			ControlsRebinder.Initialize();
 
 			await NakamaClient.Initialise();
+
+			RichPresenceManager.Initialise();
+			RichPresenceManager.UpdateStatus();
 		}
 
 		private void OnDestroy()
@@ -91,15 +94,9 @@ namespace OpenHellion
 			else
 			{
 				await Globals.SceneLoader.InitializeScenes();
-				StartCoroutine(CheckStartGame());
+				await UniTask.WaitWhile(() => Globals.SceneLoader.IsPreloading || !NakamaClient.HasAuthenticated);
+				await SceneManager.LoadSceneAsync(1, LoadSceneMode.Single);
 			}
-		}
-
-		// Start game when we are done preloading and we have authenticated with Nakama.
-		private IEnumerator CheckStartGame()
-		{
-			yield return new WaitWhile(() => Globals.SceneLoader.IsPreloading || !NakamaClient.HasAuthenticated);
-			SceneManager.LoadScene(1, LoadSceneMode.Single);
 		}
 
 		private void HandleNakamaError(string text, Action action)

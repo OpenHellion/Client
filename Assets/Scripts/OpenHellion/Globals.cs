@@ -1,6 +1,6 @@
 ﻿// Globals.cs
 //
-// Copyright (C) 2024, OpenHellion contributors
+// Copyright (C) 2026, OpenHellion contributors
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
@@ -21,6 +21,7 @@ using System;
 using OpenHellion.IO;
 using OpenHellion.Net;
 using OpenHellion.Social.Message;
+using OpenHellion.Social.RichPresence;
 using OpenHellion.UI;
 using UnityEditor;
 using UnityEngine;
@@ -104,6 +105,11 @@ namespace OpenHellion
 
 		}
 
+		private void OnDisable()
+		{
+			RichPresenceManager.Shutdown();
+		}
+
 		private void OnApplicationQuit()
 		{
 			OnHellionQuit?.Invoke();
@@ -134,7 +140,7 @@ namespace OpenHellion
 		///		Get an invite string that other players can use to connect to our game.
 		/// </summary>
 		/// <param name="spawnPointId">The spawn point to join. Leave as null to just invite to session.</param>
-		/// <returns></returns>
+		/// <returns>Secret to join.</returns>
 		public static string GetInviteString(VesselObjectID spawnPointId)
 		{
 			InviteMessage inviteMessage = new InviteMessage
