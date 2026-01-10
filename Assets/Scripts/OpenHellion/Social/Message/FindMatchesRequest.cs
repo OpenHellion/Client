@@ -1,6 +1,6 @@
-// DataPacket.cs
+﻿// FindMatchesRequest.cs
 //
-// Copyright (C) 2023, OpenHellion contributors
+// Copyright (C) 2026, OpenHellion contributors
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,20 +13,19 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-using OpenHellion.IO;
+using System;
+using Newtonsoft.Json;
 
-namespace OpenHellion.Net.Message
+namespace OpenHellion.Social.Message
 {
-	/// <summary>
-	/// 	Object that can be sent and received by the main server API.
-	/// </summary>
-	public class DataPacket
+	[Serializable]
+	[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+	public class FindMatchesRequest
 	{
-		public override string ToString()
-		{
-			return JsonSerialiser.Serialize(this, JsonSerialiser.Formatting.None);
-		}
+		public string Version;
+		public string Location;
+		public uint Hash;
 	}
 }

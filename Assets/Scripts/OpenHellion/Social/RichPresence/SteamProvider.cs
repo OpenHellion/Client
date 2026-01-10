@@ -20,7 +20,7 @@ using Steamworks;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using OpenHellion.IO;
-using OpenHellion.Net.Message;
+using OpenHellion.Social.Message;
 
 namespace OpenHellion.Social.RichPresence
 {

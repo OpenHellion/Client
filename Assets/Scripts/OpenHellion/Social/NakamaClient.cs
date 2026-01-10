@@ -25,7 +25,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using OpenHellion.IO;
 using OpenHellion.Net;
-using OpenHellion.Social.NakamaRpc;
+using OpenHellion.Social.Message;
 using UnityEngine;
 using ZeroGravity;
 using ZeroGravity.Network;

@@ -20,7 +20,7 @@
 using System;
 using OpenHellion.IO;
 using OpenHellion.Net;
-using OpenHellion.Net.Message;
+using OpenHellion.Social.Message;
 using OpenHellion.UI;
 using UnityEditor;
 using UnityEngine;

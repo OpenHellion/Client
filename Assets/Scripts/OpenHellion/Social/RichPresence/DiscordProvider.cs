@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using Discord;
 using OpenHellion.IO;
-using OpenHellion.Net.Message;
+using OpenHellion.Social.Message;
 using UnityEngine;
 using ZeroGravity;
 using ZeroGravity.Network;
