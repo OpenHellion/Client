@@ -41,6 +41,14 @@ public class QuestIndicators : MonoBehaviour
 
 	public void AddQuestIndicator(SceneQuestTrigger sceneQuestTrigger)
 	{
+		// A missing marker prefab must not abort World.OnLogin: the exception propagates out
+		// of the login handler and leaves the client stuck on the loading screen forever.
+		if (IndicatorPrefab == null)
+		{
+			Debug.LogError("QuestIndicators.IndicatorPrefab is not assigned; skipping quest indicator.");
+			return;
+		}
+
 		if (!SceneQuestTriggers.ContainsKey(sceneQuestTrigger) && sceneQuestTrigger.Visibility != 0 &&
 		    sceneQuestTrigger.gameObject.activeInHierarchy)
 		{

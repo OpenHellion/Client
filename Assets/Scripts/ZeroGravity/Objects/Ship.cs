@@ -152,6 +152,9 @@ namespace ZeroGravity.Objects
 
 		private async UniTaskVoid FixedUpdate()
 		{
+			// Captured up front: the await below can resume on a worker thread, and Unity only
+			// allows Time.fixedDeltaTime to be read on the main thread.
+			float fixedDeltaTime = Time.fixedDeltaTime;
 			if (AutoStabilize.IsNotEpsilonZero() && AngularVelocity != Vector3.zero)
 			{
 				Vector3? autoStabilize = AutoStabilize;
@@ -231,7 +234,7 @@ namespace ZeroGravity.Objects
 				_shipStatsChanged = false;
 			}
 
-			SmoothRotation(Time.fixedDeltaTime);
+			SmoothRotation(fixedDeltaTime);
 		}
 
 		public void SetRotationPredictionValues(Vector3D forward, Vector3D up)
