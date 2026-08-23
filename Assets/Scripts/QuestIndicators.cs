@@ -42,6 +42,12 @@ public class QuestIndicators : MonoBehaviour
 
 	public void AddQuestIndicator(SceneQuestTrigger sceneQuestTrigger)
 	{
+		if (IndicatorPrefab == null)
+		{
+			Debug.LogWarning("QuestIndicators.IndicatorPrefab is not assigned; skipping quest indicator.");
+			return;
+		}
+		
 		if (!SceneQuestTriggers.ContainsKey(sceneQuestTrigger) && sceneQuestTrigger.Visibility != 0 &&
 		    sceneQuestTrigger.gameObject.activeInHierarchy)
 		{
@@ -60,6 +66,12 @@ public class QuestIndicators : MonoBehaviour
 
 	public void AddAvailableQuestIndicator(SceneQuestTrigger sceneQuestTrigger)
 	{
+		if (NewQuestIndicatorPrefab == null)
+		{
+			Debug.LogWarning("QuestIndicators.NewQuestIndicatorPrefab is not assigned; skipping it.");
+			return;
+		}
+
 		if (!SceneQuestTriggers.ContainsKey(sceneQuestTrigger) && sceneQuestTrigger.Visibility != 0 &&
 		    sceneQuestTrigger.gameObject.activeInHierarchy)
 		{

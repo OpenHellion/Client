@@ -216,7 +216,6 @@ namespace ZeroGravity.Objects
 				};
 				_shipStatsChanged = false;
 			}
-
 		}
 
 		public Vector3 DampenRotationPrediction(float timeDelta, bool dampen, float stabilizationMultiplier = 1.0f)
