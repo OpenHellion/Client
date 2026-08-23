@@ -46,7 +46,7 @@ namespace OpenHellion
 		// TODO: Changing this should set Settings.RestartOnSave = true;
 		[SerializeField] private int _languageIndex;
 
-		//[SuppressMessage("Style", "IDE0052", Justification = "This is used by the UI to display available resolutions. DO NOT REMOVE THIS.")]
+		//[SuppressMessage("Style", "IDE0052", Justification = "This is used by the UI to display available resolutions.")]
 		[SerializeField] private List<string> _languageOptions;
 
 		// Controls settings
@@ -61,12 +61,12 @@ namespace OpenHellion
 
 		[SerializeField] private int _resolutionIndex;
 
-		[SuppressMessage("Style", "IDE0052", Justification = "This is used by the UI to display available resolutions. DO NOT REMOVE THIS.")]
+		[SuppressMessage("Style", "IDE0052", Justification = "This is used by the UI to display available resolutions.")]
 		[SerializeField] private List<string> _resolutionOptions;
 
 		[SerializeField] private int _qualityIndex;
 
-		[SuppressMessage("Style", "IDE0052", Justification = "This is used by the UI to display available quality presets. DO NOT REMOVE THIS.")]
+		[SuppressMessage("Style", "IDE0052", Justification = "This is used by the UI to display available quality presets.")]
 		[SerializeField] private List<string> _qualityOptions;
 
 		[SerializeField] private int _textureIndex;

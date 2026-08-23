@@ -22,7 +22,7 @@ namespace ZeroGravity
 
 			if (lerpValue <= 0f)
 			{
-				base.gameObject.Activate(false);
+				gameObject.Activate(false);
 			}
 		}
 
@@ -49,7 +49,7 @@ namespace ZeroGravity
 				}
 			}
 
-			base.gameObject.Activate(true);
+			gameObject.Activate(true);
 		}
 	}
 }

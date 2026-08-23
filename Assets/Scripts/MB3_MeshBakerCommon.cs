@@ -26,10 +26,10 @@ public abstract class MB3_MeshBakerCommon : MB3_MeshBakerRoot
 	{
 		if (useObjsToMeshFromTexBaker)
 		{
-			MB3_TextureBaker component = base.gameObject.GetComponent<MB3_TextureBaker>();
+			MB3_TextureBaker component = gameObject.GetComponent<MB3_TextureBaker>();
 			if (component == null)
 			{
-				component = base.gameObject.transform.parent.GetComponent<MB3_TextureBaker>();
+				component = gameObject.transform.parent.GetComponent<MB3_TextureBaker>();
 			}
 
 			if (component != null)
@@ -98,9 +98,9 @@ public abstract class MB3_MeshBakerCommon : MB3_MeshBakerRoot
 			return component;
 		}
 
-		if (base.transform.parent != null)
+		if (transform.parent != null)
 		{
-			return base.transform.parent.GetComponent<MB3_TextureBaker>();
+			return transform.parent.GetComponent<MB3_TextureBaker>();
 		}
 
 		return null;
@@ -114,7 +114,7 @@ public abstract class MB3_MeshBakerCommon : MB3_MeshBakerRoot
 
 	public virtual void Apply(MB3_MeshCombiner.GenerateUV2Delegate uv2GenerationMethod = null)
 	{
-		meshCombiner.name = base.name + "-mesh";
+		meshCombiner.name = name + "-mesh";
 		meshCombiner.Apply(uv2GenerationMethod);
 	}
 
@@ -122,7 +122,7 @@ public abstract class MB3_MeshBakerCommon : MB3_MeshBakerRoot
 		bool uv4, bool colors, bool bones = false, bool blendShapesFlag = false,
 		MB3_MeshCombiner.GenerateUV2Delegate uv2GenerationMethod = null)
 	{
-		meshCombiner.name = base.name + "-mesh";
+		meshCombiner.name = name + "-mesh";
 		meshCombiner.Apply(triangles, vertices, normals, tangents, uvs, uv2, uv3, uv4, colors, bones, blendShapesFlag,
 			uv2GenerationMethod);
 	}
@@ -136,7 +136,7 @@ public abstract class MB3_MeshBakerCommon : MB3_MeshBakerRoot
 		bool updateNormals = true, bool updateTangents = true, bool updateUV = false, bool updateUV1 = false,
 		bool updateUV2 = false, bool updateColors = false, bool updateSkinningInfo = false)
 	{
-		meshCombiner.name = base.name + "-mesh";
+		meshCombiner.name = name + "-mesh";
 		meshCombiner.UpdateGameObjects(gos, recalcBounds, updateVertices, updateNormals, updateTangents, updateUV,
 			updateUV1, updateUV2, updateColors, updateSkinningInfo);
 	}

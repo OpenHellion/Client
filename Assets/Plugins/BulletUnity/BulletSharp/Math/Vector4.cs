@@ -1,16 +1,16 @@
 ﻿/*
 * Copyright (c) 2007-2010 SlimDX Group
-* 
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 * copies of the Software, and to permit persons to whom the Software is
 * furnished to do so, subject to the following conditions:
-* 
+*
 * The above copyright notice and this permission notice shall be included in
 * all copies or substantial portions of the Software.
-* 
+*
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -181,14 +181,14 @@ namespace BulletSharp.Math
             get { return (X * X) + (Y * Y) + (Z * Z) + (W * W); }
         }
 
-        /// <summary>
-        /// Gets or sets the component at the specified index.
-        /// </summary>
-        /// <value>The value of the X, Y, Z, or W component, depending on the index.</value>
-        /// <param name="index">The index of the component to access. Use 0 for the X component, 1 for the Y component, 2 for the Z component, and 3 for the W component.</param>
-        /// <returns>The value of the component at the specified index.</returns>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="index"/> is out of the range [0, 3].</exception>
-        public float this[int index]
+		/// <summary>
+		/// Gets or sets the component at the specified index.
+		/// </summary>
+		/// <value>The value of the X, Y, Z, or W component, depending on the index.</value>
+		/// <param name="index">The index of the component to access. Use 0 for the X component, 1 for the Y component, 2 for the Z component, and 3 for the W component.</param>
+		/// <returns>The value of the component at the specified index.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="index"/> is out of the range [0, 3].</exception>
+		public float this[int index]
         {
             get
             {
@@ -731,11 +731,11 @@ namespace BulletSharp.Math
         /// <param name="value1">The first vector.</param>
         /// <param name="value2">The second vector.</param>
         /// <param name="result">When the method completes, contains the squared distance between the two vectors.</param>
-        /// <remarks>Distance squared is the value before taking the square root. 
-        /// Distance squared can often be used in place of distance if relative comparisons are being made. 
-        /// For example, consider three points A, B, and C. To determine whether B or C is further from A, 
-        /// compare the distance between A and B to the distance between A and C. Calculating the two distances 
-        /// involves two square roots, which are computationally expensive. However, using distance squared 
+        /// <remarks>Distance squared is the value before taking the square root.
+        /// Distance squared can often be used in place of distance if relative comparisons are being made.
+        /// For example, consider three points A, B, and C. To determine whether B or C is further from A,
+        /// compare the distance between A and B to the distance between A and C. Calculating the two distances
+        /// involves two square roots, which are computationally expensive. However, using distance squared
         /// provides the same information and avoids calculating two square roots.
         /// </remarks>
         public static void DistanceSquared(ref Vector4 value1, ref Vector4 value2, out float result)
@@ -754,11 +754,11 @@ namespace BulletSharp.Math
         /// <param name="value1">The first vector.</param>
         /// <param name="value2">The second vector.</param>
         /// <returns>The squared distance between the two vectors.</returns>
-        /// <remarks>Distance squared is the value before taking the square root. 
-        /// Distance squared can often be used in place of distance if relative comparisons are being made. 
-        /// For example, consider three points A, B, and C. To determine whether B or C is further from A, 
-        /// compare the distance between A and B to the distance between A and C. Calculating the two distances 
-        /// involves two square roots, which are computationally expensive. However, using distance squared 
+        /// <remarks>Distance squared is the value before taking the square root.
+        /// Distance squared can often be used in place of distance if relative comparisons are being made.
+        /// For example, consider three points A, B, and C. To determine whether B or C is further from A,
+        /// compare the distance between A and B to the distance between A and C. Calculating the two distances
+        /// involves two square roots, which are computationally expensive. However, using distance squared
         /// provides the same information and avoids calculating two square roots.
         /// </remarks>
         public static float DistanceSquared(Vector4 value1, Vector4 value2)
@@ -826,7 +826,7 @@ namespace BulletSharp.Math
         /// <remarks>
         /// This method performs the linear interpolation based on the following formula.
         /// <code>start + (end - start) * amount</code>
-        /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
+        /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned.
         /// </remarks>
         public static void Lerp(ref Vector4 start, ref Vector4 end, float amount, out Vector4 result)
         {
@@ -846,7 +846,7 @@ namespace BulletSharp.Math
         /// <remarks>
         /// This method performs the linear interpolation based on the following formula.
         /// <code>start + (end - start) * amount</code>
-        /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
+        /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned.
         /// </remarks>
         public static Vector4 Lerp(Vector4 start, Vector4 end, float amount)
         {
@@ -1443,7 +1443,7 @@ namespace BulletSharp.Math
         /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode()
         {

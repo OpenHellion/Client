@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,7 +7,7 @@ using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
-using Object = UnityEngine.Object;
+using OpenHellion.Map;
 
 public class QuestIndicators : MonoBehaviour
 {
@@ -31,12 +30,14 @@ public class QuestIndicators : MonoBehaviour
 		new Dictionary<QuestTrigger, ZeroGravity.Helpers.Tuple<MapObject, QuestIndicatorUI>>();
 
 	private World _world;
-	private static Camera _mainCamera;
+
+	private Camera _uiCamera;
 
 	private void Awake()
 	{
-		_mainCamera ??= Camera.main;
-		_world ??= GameObject.Find("/World").GetComponent<World>();
+		Canvas canvas = IndicatorParent.GetComponentInParent<Canvas>(includeInactive: true).rootCanvas;
+		_uiCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+		_world = _world != null ? _world : GameObject.Find("/World").GetComponent<World>();
 	}
 
 	public void AddQuestIndicator(SceneQuestTrigger sceneQuestTrigger)
@@ -139,21 +140,16 @@ public class QuestIndicators : MonoBehaviour
 			{
 				MapObject value = _world.Map.AllMapObjects.FirstOrDefault(
 						(KeyValuePair<IMapMainObject, MapObject> m) =>
-							(m.Key is Ship && (m.Key as Ship).CustomName == trigger.TaskObject.Location.Name) ||
-							(m.Key is Asteroid && (m.Key as Asteroid).CustomName == trigger.TaskObject.Location.Name))
+							m.Key is MapItemData item && item.Name == trigger.TaskObject.Location.Name)
 					.Value;
-				if (value != null)
+				if (value != null && !MapQuestIndicators.ContainsKey(trigger))
 				{
-					(value.MainObject as ArtificialBody).RadarVisibilityType = RadarVisibilityType.AlwaysVisible;
-					if (!MapQuestIndicators.ContainsKey(trigger))
-					{
-						QuestIndicatorUI component = Object.Instantiate(MapQuestIndicatorPrefab, IndicatorParent)
-							.GetComponent<QuestIndicatorUI>();
-						component.TaskName.text = trigger.Name;
-						ZeroGravity.Helpers.Tuple<MapObject, QuestIndicatorUI> value2 =
-							new ZeroGravity.Helpers.Tuple<MapObject, QuestIndicatorUI>(value, component);
-						MapQuestIndicators[trigger] = value2;
-					}
+					QuestIndicatorUI component = Instantiate(MapQuestIndicatorPrefab, IndicatorParent)
+						.GetComponent<QuestIndicatorUI>();
+					component.TaskName.text = trigger.Name;
+					ZeroGravity.Helpers.Tuple<MapObject, QuestIndicatorUI> value2 =
+						new ZeroGravity.Helpers.Tuple<MapObject, QuestIndicatorUI>(value, component);
+					MapQuestIndicators[trigger] = value2;
 				}
 			}
 			else if (trigger.TaskObject.Celestial != 0)
@@ -163,7 +159,7 @@ public class QuestIndicators : MonoBehaviour
 						(m.Key as CelestialBody).Guid == (long)trigger.TaskObject.Celestial).Value;
 				if (value3 != null && !MapQuestIndicators.ContainsKey(trigger))
 				{
-					QuestIndicatorUI component2 = Object.Instantiate(MapQuestIndicatorPrefab, IndicatorParent)
+					QuestIndicatorUI component2 = Instantiate(MapQuestIndicatorPrefab, IndicatorParent)
 						.GetComponent<QuestIndicatorUI>();
 					component2.TaskName.text = trigger.Name;
 					ZeroGravity.Helpers.Tuple<MapObject, QuestIndicatorUI> value4 =
@@ -179,14 +175,14 @@ public class QuestIndicators : MonoBehaviour
 				}
 
 				List<IMapMainObject> list = _world.Map.AllMapObjects.Keys.Where((IMapMainObject m) =>
-					m is SpaceObjectVessel && (m as SpaceObjectVessel).SceneID == trigger.TaskObject.SceneID &&
-					SceneHelper.CompareTags((m as SpaceObjectVessel).VesselData.Tag, trigger.Tag)).ToList();
+					m is SpaceObjectVessel && (m as SpaceObjectVessel).SceneId == trigger.TaskObject.SceneID &&
+					SceneHelper.CompareTags((m as SpaceObjectVessel).Tag, trigger.Tag)).ToList();
 				foreach (IMapMainObject item in list)
 				{
 					MapObject mapObject = _world.Map.AllMapObjects[item];
 					if (mapObject != null && !MapQuestIndicators.ContainsKey(trigger))
 					{
-						QuestIndicatorUI component3 = Object.Instantiate(MapQuestIndicatorPrefab, IndicatorParent)
+						QuestIndicatorUI component3 = Instantiate(MapQuestIndicatorPrefab, IndicatorParent)
 							.GetComponent<QuestIndicatorUI>();
 						component3.TaskName.text = trigger.Name;
 						ZeroGravity.Helpers.Tuple<MapObject, QuestIndicatorUI> value5 =
@@ -244,7 +240,7 @@ public class QuestIndicators : MonoBehaviour
 				}
 
 				Vector2 localPoint;
-				RectTransformUtility.ScreenPointToLocalPointInRectangle(IndicatorParent, vector, _mainCamera,
+				RectTransformUtility.ScreenPointToLocalPointInRectangle(IndicatorParent, vector, _uiCamera,
 					out localPoint);
 				bool flag = false;
 				if (vector.z < 0f)
@@ -303,7 +299,7 @@ public class QuestIndicators : MonoBehaviour
 			Vector3 vector2 =
 				_world.Map.MapCamera.WorldToScreenPoint(MapQuestIndicators[key2].Item1.Position.transform
 					.position);
-			RectTransformUtility.ScreenPointToLocalPointInRectangle(IndicatorParent, vector2, _mainCamera,
+			RectTransformUtility.ScreenPointToLocalPointInRectangle(IndicatorParent, vector2, _uiCamera,
 				out var localPoint2);
 			bool flag2 = false;
 			if (vector2.z < 0f)

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Video;
@@ -27,7 +26,7 @@ namespace ZeroGravity
 
 		private SoundEffect m_soundEffect;
 
-		private Task m_videoEndTask;
+		private Action m_videoEndTask;
 
 		private void EndReached(VideoPlayer vp)
 		{
@@ -82,7 +81,7 @@ namespace ZeroGravity
 			}
 		}
 
-		public void FreshStart(Task tsk)
+		public void FreshStart(Action tsk)
 		{
 			m_videoEndTask = tsk;
 			StartVideo(1);
@@ -93,7 +92,7 @@ namespace ZeroGravity
 			// Run video end task.
 			if (m_videoEndTask != null)
 			{
-				m_videoEndTask.RunSynchronously();
+				m_videoEndTask();
 				m_videoEndTask = null;
 			}
 

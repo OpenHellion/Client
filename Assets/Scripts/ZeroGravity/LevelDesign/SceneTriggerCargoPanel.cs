@@ -51,10 +51,10 @@ namespace ZeroGravity.LevelDesign
 
 			if (interactWithOverlappingTriggers)
 			{
-				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
+				SceneTriggerHelper.InteractWithOverlappingTriggers(gameObject, this, player);
 			}
 
-			CargoPanel.AttachPoint = base.transform.parent.GetComponentInChildren<SceneResourcesTransferPoint>();
+			CargoPanel.AttachPoint = transform.parent.GetComponentInChildren<SceneResourcesTransferPoint>();
 			player.AttachToPanel(this);
 			CargoPanel.OnInteract();
 			return true;

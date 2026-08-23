@@ -204,7 +204,7 @@ namespace ZeroGravity.Objects
 
 				ReparentCurrentOutfit();
 				myPlayer.CurrentOutfit = this;
-				SetOutfitParent(OutfitTrans.GetChildren(), myPlayer.Outfit, activateGeometry: true);
+				SetOutfitParent(OutfitTrans.GetChildren(), myPlayer.Outfit);
 				myPlayer.RefreshOutfitData();
 				myPlayer.Inventory.SetOutfit(this);
 				myPlayer.FpsController.RefreshMaxAngularVelocity();
@@ -252,7 +252,7 @@ namespace ZeroGravity.Objects
 			if (instance.CurrentOutfit != null)
 			{
 				instance.CurrentOutfit.SetOutfitParent(instance.Outfit.GetChildren(),
-					instance.CurrentOutfit.OutfitTrans, activateGeometry: false);
+					instance.CurrentOutfit.OutfitTrans);
 				instance.CurrentOutfit.FoldedOutfitTrans.gameObject.SetActive(value: true);
 				return;
 			}
@@ -264,7 +264,7 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public void SetOutfitParent(List<Transform> children, Transform parentTransform, bool activateGeometry)
+		public void SetOutfitParent(List<Transform> children, Transform parentTransform)
 		{
 			foreach (Transform child in children)
 			{
@@ -272,10 +272,6 @@ namespace ZeroGravity.Objects
 				child.localScale = Vector3.one;
 				child.localPosition = Vector3.zero;
 				child.localRotation = !(child.name == "Root") ? Quaternion.identity : rootRotation;
-				if (!child.GetComponent<Item>())
-				{
-					child.gameObject.SetActive(activateGeometry);
-				}
 			}
 		}
 

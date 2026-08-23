@@ -101,10 +101,10 @@ namespace ZeroGravity.ShipComponents
 			Position.position = ObjectPosition;
 			Orbits.localScale = Vector3.one * (float)ObjectScale;
 			LongitudeOfAscendingNodePlane.localScale = Vector3.one * ((float)(Orbit.Parent.Radius * ObjectScale) *
-			                                                          IndicatorsScale *
-			                                                          Mathf.Clamp(
+																	  IndicatorsScale *
+																	  Mathf.Clamp(
 				                                                          (float)(orbit.PeriapsisDistance /
-					                                                          orbit.Parent.Radius) / 2f, 1f, 100f));
+																			  orbit.Parent.Radius) / 2f, 1f, 100f));
 			UpdateOrbitIndicators();
 		}
 

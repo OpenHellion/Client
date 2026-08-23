@@ -6,9 +6,9 @@ using Cysharp.Threading.Tasks;
 using OpenHellion;
 using OpenHellion.IO;
 using OpenHellion.Net;
+using OpenHellion.Net.Message;
 using OpenHellion.Social;
 using OpenHellion.Social.RichPresence;
-using OpenHellion.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -28,14 +28,6 @@ namespace ZeroGravity.Objects
 	{
 		public delegate void InteractLockDelegate();
 
-		public enum IKHandsInUse
-		{
-			LeftHand = -1,
-			BothHands,
-			RightHand,
-			None
-		}
-
 		public enum HandAnimationStates
 		{
 			Clear,
@@ -45,13 +37,6 @@ namespace ZeroGravity.Objects
 			Back,
 			Top,
 			Bottom
-		}
-
-		public enum IKType
-		{
-			None,
-			Walls,
-			Weapon
 		}
 
 		public enum PlayerStance
@@ -65,7 +50,9 @@ namespace ZeroGravity.Objects
 
 		private float _sendMovementTime;
 
-		private Rigidbody _vesselChangeHelperRb;
+		/// <summary>Set by <see cref="MyCharacterController"/> on the frame a debris field particle hits the player;
+		/// consumed and cleared by the next <see cref="MoveObjectRequest"/>.</summary>
+		internal bool DebrisFieldImpactPending;
 
 		[HideInInspector] public InteractLockDelegate OnIteractStart;
 
@@ -99,12 +86,6 @@ namespace ZeroGravity.Objects
 
 		private Transform _planetsCamera;
 
-		private Transform _shipExteriorCameraRoot;
-
-		private Transform _shipExteriorCamera;
-
-		private Transform _shipSunLight;
-
 		[NonSerialized] public BaseSceneTrigger LookingAtTrigger;
 
 		public HealthPostEffect healthEffect;
@@ -121,7 +102,7 @@ namespace ZeroGravity.Objects
 
 		private float _shipRotationStrength = 0.01f;
 
-		private float _shipThrustStrength = 0.01f;
+		private float _shipThrustStrength;
 
 		[NonSerialized] public Player LookingAtPlayer;
 
@@ -218,21 +199,11 @@ namespace ZeroGravity.Objects
 
 		private static MyPlayer _instance;
 
-		public bool PivotReset;
-
-		private float _timeCorr;
-
 		private int _prevStatsMask;
-
-		public SpaceObjectVessel NearestVessel;
-
-		public float NearestVesselSqDistance;
 
 		public long HomeStationGUID = -1L;
 
 		public bool SendDockUndockMsg;
-
-		private GameObject[] _defaultBloodEffects;
 
 		private readonly List<GameObject> _higlightedAttachPoints = new List<GameObject>();
 
@@ -262,33 +233,15 @@ namespace ZeroGravity.Objects
 
 		private float _lastShipRotationCursorChangeTime;
 
-		private UpdateTimer _passiveScanTimer = new UpdateTimer(10f);
-
-		private List<DynamicObjectDetails> _equipSpawnDynamicObjects;
-
-		private Item _itemToPickup;
-
-		private Item _itemToDrop;
-
-		private bool _itemToDropIsThrow;
-
-		private bool _itemToDropIsResetStance;
-
 		private readonly Queue<string> _shotDebugList = new Queue<string>();
 
 		private float _healthLerpHelper;
-
-		private float _healthStartVal;
-
-		private float _healthEndVal;
 
 		public static bool IsAudioDebug;
 
 		private Item _newReloadingItem;
 
 		private Item _currentReloadingItem;
-
-		private ItemType _reloadItemType;
 
 		private bool _changeEngineThrust;
 
@@ -297,12 +250,6 @@ namespace ZeroGravity.Objects
 		[SerializeField] private int _showSystemsDetails;
 
 		public bool ShowGUIElements;
-
-		private bool _allowVesselChange = true;
-
-		private SpaceObjectVessel _vesselChangeQueue;
-
-		private bool _vesselChangeIsEnter;
 
 		private Vector3? _cameraLerpPosFrom;
 
@@ -324,13 +271,13 @@ namespace ZeroGravity.Objects
 
 		private OcSector _currOcSector;
 
-		private bool _low;
-
-		private bool _high;
-
-		private float _prevTimeStamp;
-
 		private SpaceObjectVessel _prevStickToVessel;
+
+		private Vector3 _lastSentPosition;
+
+		private Quaternion _lastSentRotation;
+
+		private Vector3 _lastSentVelocity;
 
 		[NonSerialized] public bool IsAlive = true;
 
@@ -402,10 +349,23 @@ namespace ZeroGravity.Objects
 			get => base.Parent;
 			set
 			{
-				bool flag = !(Parent is SpaceObjectVessel) || !(value is SpaceObjectVessel) ||
-							!((Parent as SpaceObjectVessel).MainVessel == (value as SpaceObjectVessel).MainVessel);
+				SpaceObject previousParent = base.Parent;
+				bool parentChanged = previousParent is not SpaceObjectVessel
+					|| value is not SpaceObjectVessel
+					|| !((previousParent as SpaceObjectVessel).MainVessel == (value as SpaceObjectVessel).MainVessel);
 				base.Parent = value;
-				if (flag)
+
+				if (PlayerReady && previousParent != null && value != null && previousParent != value)
+				{
+					NetworkController.SendAndForget(new ChangeParentMessage
+					{
+						Guid = Guid,
+						ParentGuid = value.Guid,
+						PreviousParentGuid = previousParent.Guid
+					});
+				}
+
+				if (parentChanged)
 				{
 					RichPresenceManager.UpdateStatus();
 				}
@@ -422,12 +382,12 @@ namespace ZeroGravity.Objects
 					DockingPanel docking = World.InWorldPanels.Docking;
 					Transform cameraPosition = docking.DockingPort.CameraPosition;
 					SpaceObjectVessel mainVessel = (Parent as SpaceObjectVessel).MainVessel;
-					return Quaternion.LookRotation(mainVessel.Forward, mainVessel.Up) *
-						   Quaternion.LookRotation(cameraPosition.forward, cameraPosition.up) * Vector3.forward *
+					return mainVessel.transform.rotation *
+						   cameraPosition.rotation * Vector3.forward *
 						   docking.ThrustModifier;
 				}
 
-				return Parent.Forward;
+				return Parent.transform.forward;
 			}
 		}
 
@@ -441,12 +401,12 @@ namespace ZeroGravity.Objects
 					DockingPanel docking = World.InWorldPanels.Docking;
 					Transform cameraPosition = docking.DockingPort.CameraPosition;
 					SpaceObjectVessel mainVessel = (Parent as SpaceObjectVessel).MainVessel;
-					return Quaternion.LookRotation(mainVessel.Forward, mainVessel.Up) *
-						   Quaternion.LookRotation(cameraPosition.forward, cameraPosition.up) * Vector3.up *
+					return mainVessel.transform.rotation *
+						   cameraPosition.rotation * Vector3.up *
 						   docking.ThrustModifier;
 				}
 
-				return Parent.Up;
+				return Parent.transform.up;
 			}
 		}
 
@@ -460,12 +420,12 @@ namespace ZeroGravity.Objects
 					DockingPanel docking = World.InWorldPanels.Docking;
 					Transform cameraPosition = docking.DockingPort.CameraPosition;
 					SpaceObjectVessel mainVessel = (Parent as SpaceObjectVessel).MainVessel;
-					return Quaternion.LookRotation(mainVessel.Forward, mainVessel.Up) *
-						   Quaternion.LookRotation(cameraPosition.forward, cameraPosition.up) *
+					return mainVessel.transform.rotation *
+						   cameraPosition.rotation *
 						   Vector3.Cross(-Vector3.forward, Vector3.up).normalized * docking.ThrustModifier;
 				}
 
-				return Vector3.Cross(-Parent.Forward, Parent.Up).normalized;
+				return Parent.transform.right;
 			}
 		}
 
@@ -482,11 +442,6 @@ namespace ZeroGravity.Objects
 
 				return LockedToTrigger.CameraMovementAllowed;
 			}
-		}
-
-		public GameObject GetDefaultBlood()
-		{
-			return _defaultBloodEffects[Random.Range(0, _defaultBloodEffects.Length - 1)];
 		}
 
 		private void Awake()
@@ -519,8 +474,6 @@ namespace ZeroGravity.Objects
 			EventSystem.AddListener(typeof(LockToTriggerMessage), LockToTriggerMessageListener);
 			EventSystem.AddListener(typeof(QuestStatsMessage), QuestStatsMessageListener);
 			EventSystem.AddListener(typeof(UpdateBlueprintsMessage), UpdateBlueprintsMessageListener);
-
-			_defaultBloodEffects = Resources.LoadAll<GameObject>("Effects/DefaultBloodEffects/");
 		}
 
 		private void TextChatMessageListener(NetworkData data)
@@ -541,7 +494,6 @@ namespace ZeroGravity.Objects
 		protected void Start()
 		{
 			InitializeInventory();
-			EquipSpawnDynamicObjects();
 			if (CurrentHelmet != null && (Parent is Pivot || Parent is Asteroid))
 			{
 				CurrentHelmet.HudUI.Radar.CanRadarWork = true;
@@ -573,38 +525,12 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		private void EquipSpawnDynamicObjects()
+		private void SpawnInventory(DynamicObjectDetails[] dynamicObjects)
 		{
-			if (_equipSpawnDynamicObjects == null)
+			foreach (DynamicObjectDetails details in dynamicObjects ?? Array.Empty<DynamicObjectDetails>())
 			{
-				return;
+				DynamicObject.CreateDynamicObject(details, this);
 			}
-
-			DynamicObjectDetails dynamicObjectDetails = _equipSpawnDynamicObjects.Find((DynamicObjectDetails x) =>
-				x.AttachData.IsAttached && x.AttachData.InventorySlotID == -2);
-			if (dynamicObjectDetails != null)
-			{
-				DynamicObject dynamicObject = DynamicObject.SpawnDynamicObject(dynamicObjectDetails, this);
-				(dynamicObject.Item as Outfit).EquipOutfit(this, checkHands: false);
-			}
-
-			foreach (DynamicObjectDetails equipSpawnDynamicObject in _equipSpawnDynamicObjects)
-			{
-				try
-				{
-					if (equipSpawnDynamicObject != dynamicObjectDetails)
-					{
-						DynamicObject.SpawnDynamicObject(equipSpawnDynamicObject, this);
-					}
-				}
-				catch (Exception ex)
-				{
-					Debug.LogException(ex);
-				}
-			}
-
-			_equipSpawnDynamicObjects.Clear();
-			_equipSpawnDynamicObjects = null;
 		}
 
 		public void ItemAddedToHands(Item item)
@@ -641,13 +567,13 @@ namespace ZeroGravity.Objects
 				shotData.IsMeleeAttack = true;
 			}
 
-			SpaceObject @object = World.GetObject(shotData.parentGUID, shotData.parentType);
+			SpaceObject parentSpaceObject = World.GetObject(shotData.parentGUID, shotData.parentType);
 			SpaceObject spaceObject =
-				!(Parent is SpaceObjectVessel) ? Parent : (Parent as SpaceObjectVessel).MainVessel;
+				Parent is not SpaceObjectVessel ? Parent : (Parent as SpaceObjectVessel).MainVessel;
 			Vector3 vector =
-				Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up).Inverse() * shotData.Position.ToVector3() +
-				@object.transform.position;
-			Vector3 vector2 = Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up).Inverse() *
+				spaceObject.transform.rotation.Inverse() * shotData.Position.ToVector3() +
+				parentSpaceObject.transform.position;
+			Vector3 vector2 = spaceObject.transform.rotation.Inverse() *
 							  shotData.Orientation.ToVector3();
 			float range = shotData.Range;
 			if (!UseGravity)
@@ -781,7 +707,7 @@ namespace ZeroGravity.Objects
 
 		private void FixedUpdate()
 		{
-			if (!PlayerReady)
+			if (!PlayerReady || !IsAlive)
 			{
 				return;
 			}
@@ -823,75 +749,57 @@ namespace ZeroGravity.Objects
 			}
 
 			ResetTriggerBools();
-			if (PivotReset || ImpactVelocity > 0f || SendDockUndockMsg ||
-				(FpsController.StickToVessel != null && _prevStickToVessel != FpsController.StickToVessel) ||
-				_sendMovementTime + SendMovementInterval <= Time.fixedTime)
+			bool stickToVesselChanged = _prevStickToVessel != FpsController.StickToVessel;
+			if (stickToVesselChanged || _sendMovementTime + SendMovementInterval <= Time.fixedTime)
 			{
 				_sendMovementTime = Time.fixedTime;
 				_prevStickToVessel = FpsController.StickToVessel;
-				CharacterMovementMessage characterMovementMessage = new CharacterMovementMessage();
-				CharacterTransformData characterTransformData = new CharacterTransformData
+
+				Vector3 reportedPosition = transform.position;
+				Quaternion reportedRotation = transform.rotation;
+				Vector3 reportedVelocity = rigidBody.linearVelocity;
+
+				bool moved = reportedPosition != _lastSentPosition
+					|| reportedRotation != _lastSentRotation
+					|| reportedVelocity != _lastSentVelocity;
+
+				if (moved || stickToVesselChanged || DebrisFieldImpactPending)
 				{
-					LocalPosition = transform.localPosition.ToArray(),
-					LocalRotation = transform.localRotation.ToArray(),
-					LocalVelocity =
-					(Parent.TransferableObjectsRoot.transform.rotation.Inverse() * rigidBody.linearVelocity).ToArray(),
-					PlatformRelativePos = !(OnPlatform != null)
-					? null
-					: (transform.position - OnPlatform.transform.position).ToArray()
+					_lastSentPosition = reportedPosition;
+					_lastSentRotation = reportedRotation;
+					_lastSentVelocity = reportedVelocity;
+
+					MoveObjectRequest moveRequest = new MoveObjectRequest
+					{
+						Guid = Guid,
+						AnchorGuid = World.AnchorGuid,
+						Position = reportedPosition.ToArray(),
+						Rotation = reportedRotation.ToArray(),
+						Velocity = reportedVelocity.ToArray(),
+						StabiliseToTargetGuid = FpsController.StickToVessel != null ? FpsController.StickToVessel.Guid : 0L,
+						HitDebrisField = DebrisFieldImpactPending
+					};
+					DebrisFieldImpactPending = false;
+					NetworkController.SendAndForget(moveRequest);
+				}
+
+				// Cosmetic state the server only relays to other players (never affects legality).
+				CharacterAnimationMessage animationMessage = new CharacterAnimationMessage
+				{
+					Guid = Guid,
+					AnimationData = animationData,
+					MouseLook = FpsController.MouseLookXAngle
 				};
 				if (FpsController.IsFreeLook)
 				{
 					Vector2 freeLookAngle = FpsController.FreeLookAngle;
-					characterTransformData.FreeLookY = 0f - freeLookAngle.y;
-					characterTransformData.FreeLookX = 0f - freeLookAngle.x;
+					animationMessage.FreeLookY = 0f - freeLookAngle.y;
+					animationMessage.FreeLookX = 0f - freeLookAngle.x;
 				}
 
-				characterTransformData.MouseLook = FpsController.MouseLookXAngle;
-				characterMovementMessage.TransformData = characterTransformData;
-				if (FpsController.StickToVessel != null)
-				{
-					characterMovementMessage.NearestVesselGUID = FpsController.StickToVessel.Guid;
-					characterMovementMessage.NearestVesselDistance = 0f;
-					characterMovementMessage.StickToVessel = true;
-				}
-				else
-				{
-					characterMovementMessage.NearestVesselGUID =
-						!(NearestVessel != null) ? -1 : NearestVessel.Guid;
-					characterMovementMessage.NearestVesselDistance = Mathf.Sqrt(NearestVesselSqDistance);
-					characterMovementMessage.StickToVessel = false;
-				}
-
-				if (PivotReset)
-				{
-					characterMovementMessage.PivotReset = true;
-					PivotReset = false;
-				}
-
-				if (Parent != null)
-				{
-					characterMovementMessage.ParentGUID = Parent.Guid;
-					characterMovementMessage.ParentType = Parent.Type;
-				}
-
-				if (SendDockUndockMsg)
-				{
-					characterMovementMessage.DockUndockMsg = true;
-					SendDockUndockMsg = false;
-				}
-
-				if (ImpactVelocity > 0f)
-				{
-					characterMovementMessage.ImpactVelocity = ImpactVelocity;
-					ImpactVelocity = 0f;
-				}
-
-				characterMovementMessage.Gravity = Gravity.ToArray();
-				characterMovementMessage.AnimationData = animationData;
 				if (FpsController.IsZeroG && FpsController.IsJetpackOn)
 				{
-					characterMovementMessage.JetpackDirection = new sbyte[4]
+					animationMessage.JetpackDirection = new sbyte[4]
 					{
 						FpsController.CurrentJetpack.NozzleDir[0],
 						FpsController.CurrentJetpack.NozzleDir[1],
@@ -902,10 +810,10 @@ namespace ZeroGravity.Objects
 
 				if (!_isRagdollFinished)
 				{
-					characterMovementMessage.RagdollData = GetRagdollData();
+					animationMessage.RagdollData = GetRagdollData();
 				}
 
-				NetworkController.SendAndForget(characterMovementMessage);
+				NetworkController.SendAndForget(animationMessage);
 			}
 
 			if (FpsController.StickToVessel != null && CurrentRoomTrigger == null)
@@ -1083,7 +991,7 @@ namespace ZeroGravity.Objects
 			if (num9 > float.Epsilon)
 			{
 				burningEffect.BurnEffect(3f);
-				healthEffect.LowPressureHit(num7 * 2f);
+				healthEffect.LowPressureHit(num9 * 2f);
 				HealthSounds.Play(3);
 			}
 
@@ -1096,24 +1004,18 @@ namespace ZeroGravity.Objects
 			}
 		}
 
+		/// <summary>
+		/// 	Updates the positions of the cameras looking at planets, essentially moving where the planets are in the skybox.
+		/// </summary>
 		public void UpdateCameraPositions()
 		{
-			if (!(Parent == null))
+			if (Parent != null)
 			{
-				Quaternion quaternion = Quaternion.LookRotation(Parent.Forward, Parent.Up);
-				Vector3D position = Parent.Position;
-				if (Parent is SpaceObjectVessel)
-				{
-					SpaceObjectVessel mainVessel = (Parent as SpaceObjectVessel).MainVessel;
-					quaternion = Quaternion.LookRotation(mainVessel.Forward, mainVessel.Up);
-					position = mainVessel.Position;
-				}
-
-				Vector3D position2 = position + (quaternion * transform.position).ToVector3D();
-				SunCameraRoot.position = (position2 / 149597870.7).ToVector3();
+				Vector3D currentWorldPosition = World.LocalToWorldPosition(transform.position);
+				SunCameraRoot.position = (currentWorldPosition / 149597870.7).ToVector3();
 				_sunCamera.localRotation = FpsController.MainCamera.transform.rotation;
-				SunCameraRoot.rotation = quaternion;
-				_planetsCamera.localPosition = (new Vector3D(transform.position) / 1000000.0).ToVector3();
+				SunCameraRoot.rotation = Quaternion.identity;
+				_planetsCamera.localPosition = transform.position / 1000000.0f;
 				if (CurrentStance == PlayerStance.Special && Inventory.ItemInHands is Weapon &&
 					(Inventory.ItemInHands as Weapon).CanZoom)
 				{
@@ -1125,14 +1027,11 @@ namespace ZeroGravity.Objects
 					_planetsCamera.localRotation = FpsController.MainCamera.transform.rotation;
 				}
 
-				World.ShipExteriorRoot.transform.rotation = Quaternion.Inverse(quaternion);
-				World.PlanetsRootTransform.rotation = Quaternion.Inverse(quaternion);
-				World.PlanetsSunLightTransform.forward =
-					World.PlanetsRootTransform.TransformDirection(position2.Normalized.ToVector3());
-				World.ShipSunLightTransform.forward =
-					World.PlanetsRootTransform.TransformDirection(position2.Normalized.ToVector3());
+				World.PlanetsRootTransform.rotation = Quaternion.identity;
+				World.PlanetsSunLightTransform.forward = currentWorldPosition.Normalized.ToVector3();
+				World.ShipSunLightTransform.forward = currentWorldPosition.Normalized.ToVector3();
 				World.ShipSunLightTransform.position = transform.position;
-				UpdateSunFlareAndItensity(quaternion, position2);
+				UpdateSunFlareAndItensity(Quaternion.identity, currentWorldPosition);
 			}
 		}
 
@@ -1175,6 +1074,7 @@ namespace ZeroGravity.Objects
 
 			TriggerRaycast();
 			UpdateInput();
+			UpdateShipInput();
 			if (_cameraFovLerpValue.IsNotEpsilonZero())
 			{
 				LerpCameraFov();
@@ -1216,9 +1116,8 @@ namespace ZeroGravity.Objects
 
 					// Must be the same as the other mouse delta.
 					Vector2 mouseDelta = Mouse.current.delta.ReadValue() * 0.05f;
-					ShipRotationCursor.x += Settings.SettingsData.ControlsSettings.InvertMouseWhileDriving
-						? 1
-						: -1 * mouseDelta.y;
+					ShipRotationCursor.x +=
+						(Settings.SettingsData.ControlsSettings.InvertMouseWhileDriving ? 1 : -1) * mouseDelta.y;
 					ShipRotationCursor.y += mouseDelta.x;
 
 					// Stabilise rotation cursor.
@@ -1254,7 +1153,7 @@ namespace ZeroGravity.Objects
 					else
 					{
 						ShipRotationCursor = Vector3.Lerp(ShipRotationCursor,
-							Quaternion.LookRotation(spaceObjectVessel.Forward, spaceObjectVessel.Up).Inverse() *
+							spaceObjectVessel.transform.rotation.Inverse() *
 							spaceObjectVessel.MainVessel.AngularVelocity,
 							(Time.realtimeSinceStartup - _lastShipRotationCursorChangeTime) / 5f);
 						ShipRotationCursor.z = 0f;
@@ -1266,17 +1165,17 @@ namespace ZeroGravity.Objects
 					{
 						if (ShipControlMode == ShipControlMode.Piloting &&
 							World.InWorldPanels.Pilot.SelectedTarget != null &&
-							Mathf.Abs(Vector3.Dot(_shipThrust.normalized, spaceObjectVessel.Forward)) > 0.9f &&
-							World.OffSpeedHelper)
+							Mathf.Abs(Vector3.Dot(_shipThrust.normalized, spaceObjectVessel.transform.forward)) > 0.9f &&
+							spaceObjectVessel.OffSpeedHelper)
 						{
 							Vector3 positionChange =
-								(World.InWorldPanels.Pilot.SelectedTarget.ArtificialBody.Position -
-								 spaceObjectVessel.Position).ToVector3();
+								World.InWorldPanels.Pilot.SelectedTarget.ArtificialBody.transform.position -
+								 spaceObjectVessel.transform.position;
 							Vector3 velocityChange =
-								(World.InWorldPanels.Pilot.SelectedTarget.ArtificialBody.Velocity -
-								 spaceObjectVessel.Velocity).ToVector3();
+								World.InWorldPanels.Pilot.SelectedTarget.ArtificialBody.Velocity -
+								 spaceObjectVessel.Velocity;
 							Vector3 vector3 = Vector3.ProjectOnPlane(velocityChange, positionChange.normalized);
-							float num = Vector3.Angle(positionChange, spaceObjectVessel.Forward);
+							float num = Vector3.Angle(positionChange, spaceObjectVessel.transform.forward);
 							if (num <= 3f)
 							{
 								_shipThrust += 0.1f * MathHelper.Clamp(1f - num / 3f, 0f, 1f) * vector3;
@@ -1353,32 +1252,6 @@ namespace ZeroGravity.Objects
 			else if (Pressure != 0f)
 			{
 				Pressure = 0f;
-			}
-
-			if (_passiveScanTimer.Update())
-			{
-				DoPassiveScan();
-			}
-
-			Debug.DrawRay(Vector3.zero,
-				World.ShipExteriorRoot.transform.rotation * DebrisFieldVelocityDirection.ToVector3() * 200f,
-				Color.magenta);
-		}
-
-		public void DoPassiveScan()
-		{
-			IEnumerable<SubSystemRadar> source = (from m in World.ActiveVessels.Values
-				where m.RadarSystem != null
-				select m.RadarSystem
-				into m
-				orderby m.PassiveScanSensitivity
-				select m).Reverse();
-			SubSystemRadar subSystemRadar = source.FirstOrDefault((SubSystemRadar m) =>
-				m.ParentVessel != null && m.ParentVessel.VesselBaseSystem.Status == SystemStatus.Online &&
-				m.ParentVessel.IsPlayerAuthorized(this));
-			if (subSystemRadar != null)
-			{
-				subSystemRadar.PassiveScan();
 			}
 		}
 
@@ -1519,9 +1392,6 @@ namespace ZeroGravity.Objects
 			{
 				return;
 			}
-
-			_shipThrust = Vector3.zero;
-			_shipRotation = Vector3.zero;
 
 			if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.ToggleJetpack))
 			{
@@ -2011,9 +1881,21 @@ namespace ZeroGravity.Objects
 					}));
 				}
 			}
+		}
+
+		private void UpdateShipInput()
+		{
+			if (World.InGameGUI.DeadScreen.activeInHierarchy || World.IsChatOpened ||
+				World.InGameGUI.IsInputFieldIsActive || World.InGameGUI.ConsoleIsUp)
+			{
+				return;
+			}
+
+			_shipThrust = Vector3.zero;
+			_shipRotation = Vector3.zero;
 
 			// If parent object isn't a ship, or we aren't locked to any trigger.
-			if (!(Parent is Ship) || LockedToTrigger == null ||
+			if (Parent is not Ship || LockedToTrigger == null ||
 				(LockedToTrigger.TriggerType != SceneTriggerType.ShipControl &&
 				 LockedToTrigger.TriggerType != SceneTriggerType.Turret &&
 				 LockedToTrigger.TriggerType != SceneTriggerType.DockingPanel))
@@ -2049,9 +1931,7 @@ namespace ZeroGravity.Objects
 				Vector2 mouseDelta = Mouse.current.delta.ReadValue() * 0.05f;
 				if (FpsController.MouseUpAxis.IsNotEpsilonZero())
 				{
-					pitch = Settings.SettingsData.ControlsSettings.InvertMouseWhileDriving
-						? 1
-						: -1 * mouseDelta.y;
+					pitch = (Settings.SettingsData.ControlsSettings.InvertMouseWhileDriving ? 1 : -1) * mouseDelta.y;
 				}
 
 				if (FpsController.MouseRightAxis.IsNotEpsilonZero())
@@ -2444,36 +2324,28 @@ namespace ZeroGravity.Objects
 			_quickSwitchItemRunning = false;
 		}
 
-		public bool ActivatePlayer(PlayerSpawnResponse s)
+		public bool ActivatePlayer(PlayerSpawnResponse spawnResponse)
 		{
+			transform.SetPositionAndRotation(spawnResponse.Position.ToVector3(), spawnResponse.Rotation.ToQuaternion());
+
 			SceneSpawnPoint sceneSpawnPoint = null;
-			if (s.SpawnPointID > 0)
+			if (spawnResponse.SpawnPointId > 0)
 			{
 				if (Parent is Ship)
 				{
-					sceneSpawnPoint = (Parent as Ship).GetStructureObject<SceneSpawnPoint>(s.SpawnPointID);
+					sceneSpawnPoint = (Parent as Ship).GetStructureObject<SceneSpawnPoint>(spawnResponse.SpawnPointId);
 				}
 
-				if (sceneSpawnPoint != null)
+				if (sceneSpawnPoint == null)
 				{
-					transform.SetPositionAndRotation(sceneSpawnPoint.transform.position,
-						sceneSpawnPoint.transform.rotation);
+					Debug.LogErrorFormat("Cannot find spawn point in scene ({0}).", spawnResponse.SpawnPointId);
 				}
-				else
-				{
-					Debug.LogErrorFormat("Cannot find spawn point in scene ({0}).", s.SpawnPointID);
-				}
-			}
-			else
-			{
-				transform.SetLocalPositionAndRotation(s.CharacterTransform.LocalPosition.ToVector3(), s.CharacterTransform.LocalRotation.ToQuaternion());
 			}
 
-			Health = s.Health;
-			IsAdmin = s.IsAdmin;
+			Health = spawnResponse.Health;
+			IsAdmin = spawnResponse.IsAdmin;
 			healthEffect.Health = Health;
 			AkSoundEngine.SetRTPCValue(SoundManager.Health, Health);
-			_equipSpawnDynamicObjects = s.DynamicObjects;
 			gameObject.SetActive(value: true);
 			rigidBody.isKinematic = false;
 			FpsController.ResetVelocity();
@@ -2494,6 +2366,8 @@ namespace ZeroGravity.Objects
 					NewStateID = sceneSpawnPoint.Executor.GetStateID(sceneSpawnPoint.ExecutorState)
 				}, isInstant: false, checkCurrentState: false);
 			}
+
+			SpawnInventory(spawnResponse.DynamicObjects);
 
 			return true;
 		}
@@ -2565,7 +2439,6 @@ namespace ZeroGravity.Objects
 			myPlayer._sunCamera = World.SunCameraTransform;
 			myPlayer.PlanetsCameraRoot = World.PlanetsCameraRootTransform;
 			myPlayer._planetsCamera = World.PlanetsCameraTransform;
-			myPlayer._shipSunLight = World.ShipSunLightTransform;
 			myPlayer._shipExteriorSunLight = World.ShipSunLightTransform.GetComponent<Light>();
 			myPlayer.rigidBody.isKinematic = true;
 			AkSoundEngine.SetRTPCValue(SoundManager.InGameVolume, 0f);
@@ -2760,7 +2633,7 @@ namespace ZeroGravity.Objects
 			{
 				Ship ship = Parent as Ship;
 				GUILayout.BeginArea(new Rect(Screen.width - 200, 55f, 450f, 300f));
-				GUILayout.Label($"Velocity: {ship.Velocity.Magnitude:0.00}");
+				GUILayout.Label($"Velocity: {ship.Velocity.magnitude:0.00}");
 				GUILayout.Label(
 					$"Rotation: {ship.AngularVelocity.x:0.00}, {ship.AngularVelocity.y:0.00}, {ship.AngularVelocity.z:0.00}");
 				GUILayout.Label(string.Format("Engine: {0}, Perc: {1}", !ship.EngineOnLine ? "Off" : "On",
@@ -2848,26 +2721,6 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		private IEnumerator VesselChangeCoutdown()
-		{
-			yield return new WaitForSeconds(0.5f);
-			_allowVesselChange = true;
-			if (_vesselChangeQueue != null)
-			{
-				if (_vesselChangeIsEnter && Parent != _vesselChangeQueue && CurrentRoomTrigger != null)
-				{
-					EnterVessel(_vesselChangeQueue);
-				}
-				else if (!_vesselChangeIsEnter && Parent is SpaceObjectVessel && Parent == _vesselChangeQueue &&
-						 CurrentRoomTrigger == null)
-				{
-					ExitVessel(forceExit: false);
-				}
-
-				_vesselChangeQueue = null;
-			}
-		}
-
 		public override void EnterVessel(SpaceObjectVessel vessel)
 		{
 			if (vessel == null)
@@ -2875,34 +2728,17 @@ namespace ZeroGravity.Objects
 				return;
 			}
 
-			if (!_allowVesselChange)
-			{
-				_vesselChangeQueue = vessel;
-				_vesselChangeIsEnter = true;
-				return;
-			}
-
 			SpaceObjectVessel spaceObjectVessel =
-				!(Parent is SpaceObjectVessel) || !(Parent as SpaceObjectVessel).IsDocked
+				Parent is not SpaceObjectVessel || !(Parent as SpaceObjectVessel).IsDocked
 					? Parent as SpaceObjectVessel
 					: (Parent as SpaceObjectVessel).DockedToMainVessel;
 			SpaceObjectVessel spaceObjectVessel2 = !vessel.IsDocked ? vessel : vessel.DockedToMainVessel;
-			Vector3D vector3D = !(spaceObjectVessel != null) ? Parent.Position : spaceObjectVessel.Position;
-			Vector3D position = spaceObjectVessel2.Position;
 			if (Parent is Pivot)
 			{
-				World.SolarSystem.RemoveArtificialBody(Parent as Pivot);
+				World.RemoveArtificialBody(Parent.Guid);
 				Destroy(Parent.gameObject);
 				SceneQuestTrigger.OnTriggerInChildren(vessel.MainVessel.gameObject,
 					SceneQuestTriggerEvent.EnterStation);
-			}
-			else if (spaceObjectVessel != null && spaceObjectVessel != spaceObjectVessel2 &&
-					 spaceObjectVessel.transform.parent != World.ShipExteriorRoot.transform)
-			{
-				spaceObjectVessel.transform.parent = World.ShipExteriorRoot.transform;
-				spaceObjectVessel.SetTargetPositionAndRotation(null, spaceObjectVessel.Forward, spaceObjectVessel.Up,
-					instant: true);
-				rigidBody.linearVelocity = Vector3.zero;
 			}
 
 			SceneQuestTrigger.OnTriggerInChildren(vessel.GeometryRoot, SceneQuestTriggerEvent.EnterVessel);
@@ -2928,73 +2764,6 @@ namespace ZeroGravity.Objects
 				allDockedVessel2.ToggleOptimization(optimizationEnabled: false);
 			}
 
-			GameObject lerpFrom = null;
-			GameObject lerpTo = null;
-			if (_cameraLerpHelper < 1f && !_cameraLerpLocal && _cameraLerpPosFrom.HasValue &&
-				_cameraLerpRotFrom.HasValue)
-			{
-				lerpFrom = new GameObject();
-				lerpFrom.transform.SetParent(vessel.transform);
-				lerpFrom.transform.position = _cameraLerpPosFrom.Value;
-				lerpFrom.transform.rotation = _cameraLerpRotFrom.Value;
-				lerpTo = new GameObject();
-				lerpTo.transform.SetParent(vessel.transform);
-				lerpTo.transform.position = _cameraLerpPosTo.Value;
-				lerpTo.transform.rotation = _cameraLerpRotTo.Value;
-			}
-
-			spaceObjectVessel2.transform.SetParent(null);
-			spaceObjectVessel2.SetTargetPositionAndRotation(Vector3.zero, spaceObjectVessel2.Forward,
-				spaceObjectVessel2.Up, instant: true);
-			spaceObjectVessel2.transform.Reset();
-			if (lerpFrom != null && lerpTo != null)
-			{
-				lerpFrom.transform.SetParent(null);
-				lerpTo.transform.SetParent(null);
-				_cameraLerpPosFrom = lerpFrom.transform.position;
-				_cameraLerpRotFrom = lerpFrom.transform.rotation;
-				_cameraLerpPosTo = lerpTo.transform.position;
-				_cameraLerpRotTo = lerpTo.transform.rotation;
-			}
-			DestroyImmediate(lerpFrom);
-			DestroyImmediate(lerpTo);
-
-			if (_vesselChangeHelperRb == null)
-			{
-				GameObject gameObject3 = new GameObject("VesselChangeHelper");
-				gameObject3.transform.parent = null;
-				gameObject3.transform.Reset();
-				_vesselChangeHelperRb = gameObject3.AddComponent<Rigidbody>();
-				_vesselChangeHelperRb.mass = 1f;
-				_vesselChangeHelperRb.linearDamping = 0f;
-				_vesselChangeHelperRb.angularDamping = 0f;
-				_vesselChangeHelperRb.useGravity = false;
-				_vesselChangeHelperRb.isKinematic = true;
-			}
-
-			_vesselChangeHelperRb.gameObject.SetActive(value: true);
-			_vesselChangeHelperRb.transform.position = Vector3.zero;
-			_vesselChangeHelperRb.transform.rotation = Quaternion.identity;
-			_vesselChangeHelperRb.isKinematic = false;
-			_vesselChangeHelperRb.angularVelocity = vessel.MainVessel.AngularVelocity * (Mathf.PI / 180f);
-			Vector3 relativePointVelocity =
-				_vesselChangeHelperRb.GetRelativePointVelocity(transform.position -
-															  vessel.MainVessel.transform.position);
-			rigidBody.linearVelocity =
-				Quaternion.LookRotation(vessel.MainVessel.Forward, vessel.MainVessel.Up).Inverse() *
-				rigidBody.linearVelocity - relativePointVelocity;
-			_vesselChangeHelperRb.gameObject.SetActive(value: false);
-			foreach (ArtificialBody artificialBody in SolarSystem.ArtificialBodyReferences)
-			{
-				if (!artificialBody.IsMainObject && (artificialBody is not SpaceObjectVessel objectVessel ||
-													 objectVessel.DockedToMainVessel == null))
-				{
-					artificialBody.ModifyPositionAndRotation((vector3D - position).ToVector3());
-				}
-
-				artificialBody.UpdateArtificialBodyPosition(updateChildren: false);
-			}
-
 			World.SolarSystem.CenterPlanets();
 			UpdateCameraPositions();
 			World.CubemapRenderer.RenderCubemapForReflectionProbe();
@@ -3017,125 +2786,99 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			_allowVesselChange = false;
-			StartCoroutine(VesselChangeCoutdown());
 		}
 
+		/// <summary>
+		/// 	Leaves the current vessel onto a freshly created pivot.
+		/// </summary>
 		public override void ExitVessel(bool forceExit)
 		{
-			if (!_allowVesselChange)
+			if (Parent is not SpaceObjectVessel vesselWeAreExiting)
 			{
-				if (Parent is SpaceObjectVessel)
-				{
-					_vesselChangeQueue = Parent as SpaceObjectVessel;
-					_vesselChangeIsEnter = false;
-				}
-
 				return;
 			}
 
-			if (Parent is SpaceObjectVessel vesselWeAreExiting)
+			SceneQuestTrigger.OnTriggerInChildren(vesselWeAreExiting.GeometryRoot,
+				SceneQuestTriggerEvent.ExitVessel);
+			SceneQuestTrigger.OnTriggerInChildren(vesselWeAreExiting.MainVessel.gameObject,
+				SceneQuestTriggerEvent.ExitStation);
+
+			if (vesselWeAreExiting is Ship)
 			{
-				SceneQuestTrigger.OnTriggerInChildren(vesselWeAreExiting.GeometryRoot,
-					SceneQuestTriggerEvent.ExitVessel);
-				SceneQuestTrigger.OnTriggerInChildren(vesselWeAreExiting.MainVessel.gameObject,
-					SceneQuestTriggerEvent.ExitStation);
-
-				if (vesselWeAreExiting is Ship)
+				if (CurrentHelmet != null)
 				{
-					if (CurrentHelmet != null)
-					{
-						CurrentHelmet.HudUI.Radar.CanRadarWork = true;
-						CurrentHelmet.HudUI.Radar.ToggleTargeting(val: true);
-					}
-
-					Instance.FpsController.CameraController.cameraShakeController.Stop();
+					CurrentHelmet.HudUI.Radar.CanRadarWork = true;
+					CurrentHelmet.HudUI.Radar.ToggleTargeting(val: true);
 				}
 
-				SpaceObjectVessel mainVessel = vesselWeAreExiting.MainVessel;
-				mainVessel.transform.parent = World.ShipExteriorRoot.transform;
-				mainVessel.SetTargetPositionAndRotation(null, mainVessel.Forward, mainVessel.Up, instant: true);
-				World.ShipExteriorRoot.transform.rotation = Quaternion.identity;
-				if (_vesselChangeHelperRb == null)
-				{
-					GameObject vesselChangeHelper = new GameObject("VesselChangeHelper");
-					vesselChangeHelper.transform.parent = null;
-					vesselChangeHelper.transform.Reset();
-					_vesselChangeHelperRb = vesselChangeHelper.AddComponent<Rigidbody>();
-					_vesselChangeHelperRb.mass = 1f;
-					_vesselChangeHelperRb.linearDamping = 0f;
-					_vesselChangeHelperRb.angularDamping = 0f;
-					_vesselChangeHelperRb.useGravity = false;
-					_vesselChangeHelperRb.isKinematic = true;
-				}
+				Instance.FpsController.CameraController.cameraShakeController.Stop();
+			}
 
-				_vesselChangeHelperRb.gameObject.SetActive(value: true);
-				_vesselChangeHelperRb.transform.position = Vector3.zero;
-				_vesselChangeHelperRb.transform.rotation = Quaternion.identity;
-				_vesselChangeHelperRb.isKinematic = false;
-				_vesselChangeHelperRb.angularVelocity = mainVessel.AngularVelocity * (Mathf.PI / 180f);
-				Vector3 relativePointVelocity =
-					_vesselChangeHelperRb.GetRelativePointVelocity(transform.position - mainVessel.transform.position);
-				rigidBody.linearVelocity = mainVessel.transform.rotation * rigidBody.linearVelocity + relativePointVelocity;
-				_vesselChangeHelperRb.gameObject.SetActive(value: false);
-				Parent = Pivot.Create(SpaceObjectType.PlayerPivot, Guid, mainVessel, isMainObject: true);
-				(Parent as Pivot).Orbit.CopyDataFrom(mainVessel.Orbit, World.SolarSystem.CurrentTime, exactCopy: true);
-				Parent.SetTargetPositionAndRotation(Vector3.zero, Quaternion.identity, instant: true);
-				World.SolarSystem.CenterPlanets();
-				UpdateCameraPositions();
-				World.CubemapRenderer.RenderCubemapForReflectionProbe();
-				World.CubemapRenderer.RenderCubemapForDockingPort();
-				foreach (SpaceObjectVessel item in SolarSystem.ArtificialBodyReferences.Where((ArtificialBody m) =>
-							 m is SpaceObjectVessel))
-				{
-					item.ToggleOptimization(optimizationEnabled: true);
-					item.UpdateArtificialBodyPosition(updateChildren: false);
-				}
+			SpaceObjectVessel mainVessel = vesselWeAreExiting.MainVessel;
+			Pivot pivot = Pivot.Create(SpaceObjectType.PlayerPivot, Guid, mainVessel, isMainObject: true);
 
-				if (_isRagdolled)
-				{
-					ToggleRagdoll(false);
-				}
+			Parent = pivot;
 
-				_allowVesselChange = false;
-				StartCoroutine(VesselChangeCoutdown());
-				if (mainVessel != null)
-				{
-					return;
-				}
+			World.SolarSystem.CenterPlanets();
+			UpdateCameraPositions();
+			World.CubemapRenderer.RenderCubemapForReflectionProbe();
+			World.CubemapRenderer.RenderCubemapForDockingPort();
 
-				ZeroOcclusion.CheckOcclusionFor(mainVessel, onlyCheckDistance: false);
-				foreach (SpaceObjectVessel allDockedVessel in mainVessel.AllDockedVessels)
-				{
-					ZeroOcclusion.CheckOcclusionFor(allDockedVessel, onlyCheckDistance: false);
-				}
+			foreach (SpaceObjectVessel vessel in World.AllArtificialBodies.OfType<SpaceObjectVessel>())
+			{
+				vessel.ToggleOptimization(optimizationEnabled: true);
+				vessel.UpdateArtificialBodyPosition(updateChildren: false);
+			}
+
+			if (_isRagdolled)
+			{
+				ToggleRagdoll(false);
+			}
+
+			ZeroOcclusion.CheckOcclusionFor(mainVessel, onlyCheckDistance: false);
+			foreach (SpaceObjectVessel dockedVessel in mainVessel.AllDockedVessels)
+			{
+				ZeroOcclusion.CheckOcclusionFor(dockedVessel, onlyCheckDistance: false);
 			}
 		}
 
-		public void ProcessMovementMessage(CharacterMovementMessage msg)
+		public void ProcessMovementMessage(Vector3? position, Quaternion? rotation, Vector3? linearVelocity,
+			CharacterAnimationData? animationData)
 		{
-			if (msg.GUID != Guid || msg == null || !msg.PivotReset || Parent is not Pivot || PivotReset)
+			if (animationData.HasValue)
+			{
+				animHelper.ParseData(animationData.Value);
+			}
+
+			if (position.HasValue)
+			{
+				transform.position = position.Value;
+			}
+
+			if (rotation.HasValue)
+			{
+				transform.rotation = rotation.Value;
+			}
+
+			if (rigidBody.isKinematic)
 			{
 				return;
 			}
 
-			Vector3 vector = msg.PivotPositionCorrection.ToVector3();
-			transform.position -= vector;
-			rigidBody.linearVelocity -= msg.PivotVelocityCorrection.ToVector3();
-			FpsController.CenterOfMassRigidbody.detectCollisions = false;
-			rigidBody.detectCollisions = false;
-			foreach (ArtificialBody artificialBody in SolarSystem.ArtificialBodyReferences)
+			if (position.HasValue)
 			{
-				if (artificialBody != Parent && artificialBody is SpaceObjectVessel && (artificialBody as SpaceObjectVessel).IsDocked)
-				{
-					artificialBody.SetTargetPositionAndRotation(artificialBody.transform.localPosition - vector, null,
-						instant: true);
-				}
+				rigidBody.position = transform.position;
 			}
 
-			FpsController.CenterOfMassRigidbody.detectCollisions = true;
-			rigidBody.detectCollisions = true;
-			PivotReset = true;
+			if (rotation.HasValue)
+			{
+				rigidBody.rotation = transform.rotation;
+			}
+
+			if (linearVelocity.HasValue)
+			{
+				rigidBody.linearVelocity = linearVelocity.Value;
+			}
 		}
 
 		private void LockToTrigger(BaseSceneTrigger trigger)
@@ -3523,6 +3266,7 @@ namespace ZeroGravity.Objects
 		public override void RoomChanged(SceneTriggerRoom prevRoomTrigger)
 		{
 			base.RoomChanged(prevRoomTrigger);
+
 			SendPlayerRoomMessage();
 		}
 
@@ -3796,22 +3540,21 @@ namespace ZeroGravity.Objects
 
 		public void MeleeAttack()
 		{
-			SpaceObject spaceObject = !(Instance.Parent is SpaceObjectVessel)
+			SpaceObject parent = Instance.Parent is not SpaceObjectVessel
 				? Instance.Parent
 				: (Instance.Parent as SpaceObjectVessel).MainVessel;
 			ShotData shotData = new ShotData
 			{
-				Position = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) *
+				Position = (parent.transform.rotation *
 								 Instance.FpsController.MainCamera.transform.position).ToArray(),
-				Orientation = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) *
+				Orientation = (parent.transform.rotation *
 									Instance.FpsController.MainCamera.transform.forward.normalized).ToArray(),
-				parentGUID = spaceObject.Guid,
-				parentType = spaceObject.Type,
+				parentGUID = parent.Guid,
+				parentType = parent.Type,
 				Range = MeleeRange,
 				IsMeleeAttack = true
 			};
-			ShotData shotData2 = shotData;
-			Attack(shotData2, CurrentActiveItem, 0f, 0f);
+			Attack(shotData, CurrentActiveItem, 0f, 0f);
 		}
 
 		private IEnumerator DebrisFieldCheckCoroutine()
@@ -3828,7 +3571,7 @@ namespace ZeroGravity.Objects
 						{
 							inDebrisField = debrisField;
 							World.DebrisEffect.UpdateEffect(playStop: true,
-								World.ShipExteriorRoot.transform.rotation * orbitVelocity.ToVector3(),
+								orbitVelocity.ToVector3(),
 								debrisField.FragmentsDensity, debrisField.FragmentsVelocity);
 							break;
 						}

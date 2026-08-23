@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using OpenHellion;
-using OpenHellion.Net;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -10,13 +8,10 @@ using ZeroGravity.Network;
 
 namespace ZeroGravity.Objects
 {
+	// TODO test if asteroid data is updated when needed
 	public class Asteroid : SpaceObjectVessel
 	{
 		public Dictionary<int, AsteroidMiningPoint> MiningPoints = new Dictionary<int, AsteroidMiningPoint>();
-
-		private List<ResourceType> level1Resources;
-
-		private bool sceneLoadStarted;
 
 		public override SpaceObjectType Type => SpaceObjectType.Asteroid;
 
@@ -32,87 +27,48 @@ namespace ZeroGravity.Objects
 		public override void DestroyGeometry()
 		{
 			base.DestroyGeometry();
-			IsDummyObject = true;
-			sceneLoadStarted = false;
 			SceneObjectsLoaded = false;
 		}
 
-		public static Asteroid Create(ObjectTransform trans, VesselData data, bool isMainObject)
+		/// <summary>
+		/// Creates and loads an asteroid asyncronously.
+		/// </summary>
+		public static async UniTask<Asteroid> Create(long guid, Vector3 position, Quaternion rotation, string vesselRegistration,
+			string vesselName, string tag, GameScenes.SceneId sceneId, bool isDebrisFragment, bool isAlwaysVisible, double radius,
+			AsteroidMiningPointDetails[] miningPoints, bool isMainObject)
 		{
-			Asteroid asteroid =
-				ArtificialBody.CreateImpl(SpaceObjectType.Asteroid, trans.GUID, trans, isMainObject) as Asteroid;
-			if (data != null)
-			{
-				asteroid.VesselData = data;
-			}
-
-			asteroid.Radius = 1000.0;
-			asteroid.IsDummyObject = true;
+			Asteroid asteroid = InitialiseArtificialBody(guid, SpaceObjectType.Asteroid, position, rotation) as Asteroid;
+			asteroid.VesselRegistration = vesselRegistration;
+			asteroid.VesselName = vesselName;
+			asteroid.Tag = tag;
+			asteroid.SceneId = sceneId;
+			asteroid.IsDebrisFragment = isDebrisFragment;
+			asteroid.IsAlwaysVisible = isAlwaysVisible;
+			asteroid.Radius = radius;
 			asteroid.SceneObjectsLoaded = false;
-			World.Map.InitialiseMapObject(asteroid);
+			asteroid.gameObject.SetActive(true);
+			await asteroid.LoadInternalAsync(miningPoints);
 			return asteroid;
 		}
 
-		private void Start()
+		private void Update()
 		{
-			ConnectMessageListeners();
-		}
-
-		private void FixedUpdate()
-		{
-			SmoothRotation(Time.fixedDeltaTime);
 		}
 
 		private void OnDestroy()
 		{
-			DisconnectMessageListeners();
-			World.SolarSystem.RemoveArtificialBody(this);
-			World.Map.RemoveMapObject(this);
+			World.RemoveArtificialBody(Guid);
 			SceneHelper.RemoveCubemapProbes(gameObject, World);
-			World.ActiveVessels.Remove(Guid);
+			World.ActiveVessels.TryRemove(Guid, out _);
 		}
 
-		public void ConnectMessageListeners()
+		private async UniTask LoadInternalAsync(AsteroidMiningPointDetails[] miningPoints)
 		{
-			EventSystem.AddListener(typeof(InitializeSpaceObjectMessage), InitializeSpaceObjectMessageListener);
-		}
-
-		public void DisconnectMessageListeners()
-		{
-			EventSystem.RemoveListener(typeof(InitializeSpaceObjectMessage), InitializeSpaceObjectMessageListener);
-		}
-
-		private void InitializeSpaceObjectMessageListener(NetworkData data)
-		{
-			InitializeSpaceObjectMessage initializeSpaceObjectMessage = data as InitializeSpaceObjectMessage;
-			if (initializeSpaceObjectMessage.GUID == Guid)
-			{
-				UpdateDynamicObjects(initializeSpaceObjectMessage.DynamicObjects);
-				UpdateCharacters(initializeSpaceObjectMessage.Characters);
-				UpdateCorpses(initializeSpaceObjectMessage.Corpses);
-			}
-		}
-
-		public override void ParseSpawnData(SpawnObjectResponseData data)
-		{
-			base.ParseSpawnData(data);
-			SpawnAsteroidResponseData spawnAsteroidResponseData = data as SpawnAsteroidResponseData;
-			VesselData = spawnAsteroidResponseData.Data;
-			Radius = spawnAsteroidResponseData.Radius;
-			if (!sceneLoadStarted && !SceneObjectsLoaded && !IsDummyObject)
-			{
-				sceneLoadStarted = true;
-				gameObject.SetActive(true);
-				LoadAsync(spawnAsteroidResponseData.MiningPoints).Forget();
-			}
-		}
-
-		private async UniTask LoadAsteroidsAsync(Transform rootTransform)
-		{
-			await Globals.SceneLoader.LoadSceneAsync(SceneLoader.SceneType.CelestialBody, (long)SceneID);
+			World.InGameGUI.ToggleBusyLoading(true);
+			await Globals.SceneLoader.LoadSceneAsync(SceneLoader.SceneType.CelestialBody, (long)SceneId);
 			GameObject sceneRoot =
-				Globals.SceneLoader.GetLoadedScene(SceneLoader.SceneType.CelestialBody, SceneID);
-			sceneRoot.transform.SetParent(rootTransform);
+				Globals.SceneLoader.GetLoadedScene(SceneLoader.SceneType.CelestialBody, SceneId);
+			sceneRoot.transform.SetParent(GeometryRoot.transform);
 			sceneRoot.transform.Reset();
 			RootObject = sceneRoot;
 			if (GeometryRoot != null)
@@ -128,38 +84,13 @@ namespace ZeroGravity.Objects
 			{
 				SetTargetPositionAndRotation(null, TargetRotation.Value, true);
 			}
-
-			sceneRoot.GetComponentInParent<SpaceObjectVessel>().ActivateGeometry = true;
-			World.ActiveVessels[Guid] = this;
-			sceneRoot.SetActive(true);
+			World.ActiveVessels.TryAdd(Guid, this);
 			sceneRoot.SetActive(true);
 			SceneHelper.FillCubemapProbes(sceneRoot, World);
-			SceneHelper.CheckTags(sceneRoot, VesselData == null ? string.Empty : VesselData.Tag);
-		}
-
-		public async UniTask LoadAsync(List<AsteroidMiningPointDetails> miningPoints)
-		{
-			World.InGameGUI.ToggleBusyLoading(true);
-			await LoadAsteroidsAsync(GeometryRoot.transform);
+			SceneHelper.CheckTags(sceneRoot, Tag);
 			SceneHelper.FillMiningPoints(this, gameObject, MiningPoints, miningPoints);
-			IsDummyObject = false;
 			SceneObjectsLoaded = true;
 			World.InGameGUI.ToggleBusyLoading(false);
-		}
-
-		private void Update()
-		{
-			if (ActivateGeometry)
-			{
-				if (RootObject.activeInHierarchy)
-				{
-					ActivateGeometry = false;
-				}
-				else
-				{
-					RootObject.SetActive(true);
-				}
-			}
 		}
 	}
 }

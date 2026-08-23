@@ -121,6 +121,7 @@ namespace ZeroGravity.ShipComponents
 
 			if (getPlayerFromServer)
 			{
+				// TODO use sync message instead
 				NetworkController.SendAndForget(new PlayersOnServerRequest
 				{
 					SecuritySystemID = new VesselObjectID
@@ -141,15 +142,10 @@ namespace ZeroGravity.ShipComponents
 			}
 
 			AuthorizedPersonRank originalRank = GetPlayerRank(MyPlayer.Instance);
-			if (_parentShip.VesselData is null)
-			{
-				_parentShip.VesselData = new VesselData();
-			}
 
-			if (!data.VesselName.IsNullOrEmpty() && data.VesselName != _parentShip.VesselData.VesselName)
+			if (!data.VesselName.IsNullOrEmpty() && data.VesselName != _parentShip.VesselName)
 			{
-				_parentShip.VesselData.VesselName = data.VesselName;
-				_world.Map.InitialiseMapObject(_parentShip);
+				_parentShip.VesselName = data.VesselName; // TODO move this into ship somehow.
 			}
 
 			AuthorizedPlayers.Clear();

@@ -27,14 +27,14 @@ public class MB3_MeshBaker : MB3_MeshBakerCommon
 
 	public override bool AddDeleteGameObjects(GameObject[] gos, GameObject[] deleteGOs, bool disableRendererInSource)
 	{
-		_meshCombiner.name = base.name + "-mesh";
+		_meshCombiner.name = name + "-mesh";
 		return _meshCombiner.AddDeleteGameObjects(gos, deleteGOs, disableRendererInSource);
 	}
 
 	public override bool AddDeleteGameObjectsByID(GameObject[] gos, int[] deleteGOinstanceIDs,
 		bool disableRendererInSource)
 	{
-		_meshCombiner.name = base.name + "-mesh";
+		_meshCombiner.name = name + "-mesh";
 		return _meshCombiner.AddDeleteGameObjectsByID(gos, deleteGOinstanceIDs, disableRendererInSource);
 	}
 }

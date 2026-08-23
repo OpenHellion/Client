@@ -467,6 +467,7 @@ namespace OpenHellion.Social
 		///		<see cref="CreateSocket"/> must be called before this method.
 		/// </summary>
 		/// <param name="chatState">The type of chat we are looking for.</param>
+		// TODO: See GitHub issue about chat.
 		public static async UniTask<bool> JoinChatRoom(Chat.ChatState chatState)
 		{
 			string id;
@@ -478,7 +479,6 @@ namespace OpenHellion.Social
 					id = "global";
 					channelType = ChannelType.Group;
 					break;
-				// TODO: Implement this.
 				case Chat.ChatState.Party:
 					throw new NotImplementedException();
 				default:

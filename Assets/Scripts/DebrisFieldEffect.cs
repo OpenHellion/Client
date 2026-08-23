@@ -56,7 +56,7 @@ public class DebrisFieldEffect : MonoBehaviour
 
 		if (direction.magnitude != 0f)
 		{
-			base.transform.rotation = Quaternion.FromToRotation(Vector3.forward, direction);
+			transform.rotation = Quaternion.FromToRotation(Vector3.forward, direction);
 		}
 
 		density = Mathf.Lerp(density, dens, 0.05f);

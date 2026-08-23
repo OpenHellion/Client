@@ -12,15 +12,15 @@ public class ManipulatorSingle : MonoBehaviour
 
 	private void Start()
 	{
-		parentGO = base.transform.parent.gameObject;
+		parentGO = transform.parent.gameObject;
 		lineRend = GetComponent<LineRenderer>();
-		loptica = base.transform.Find("Sphere").gameObject;
-		boxCollider = base.transform.Find("Collider").GetComponent<BoxCollider>();
+		loptica = transform.Find("Sphere").gameObject;
+		boxCollider = transform.Find("Collider").GetComponent<BoxCollider>();
 	}
 
 	private void Update()
 	{
-		float num = Vector3.Distance(base.transform.localPosition, loptica.transform.localPosition);
+		float num = Vector3.Distance(transform.localPosition, loptica.transform.localPosition);
 		Vector3[] positions = new Vector3[2]
 		{
 			new Vector3(0f, 0f, 0f),

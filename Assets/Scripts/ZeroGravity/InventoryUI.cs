@@ -135,7 +135,7 @@ namespace ZeroGravity
 		public void Toggle(bool val)
 		{
 			InitializeSlots();
-			base.gameObject.SetActive(val);
+			gameObject.SetActive(val);
 			if (val)
 			{
 				ClearOther();
@@ -272,8 +272,8 @@ namespace ZeroGravity
 
 		public void InitializeSlots()
 		{
-			base.transform.DestroyAll<InventorySlotUI>();
-			base.transform.DestroyAll<InventoryGroupUI>();
+			transform.DestroyAll<InventorySlotUI>();
+			transform.DestroyAll<InventoryGroupUI>();
 			AllSlots.Clear();
 			foreach (InventorySlot.Group item in Inventory.GetAllSlots().Values.Select((InventorySlot m) => m.SlotGroup)
 				         .Distinct())

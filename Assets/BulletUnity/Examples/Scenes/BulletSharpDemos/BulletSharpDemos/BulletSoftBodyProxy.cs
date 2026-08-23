@@ -5,11 +5,11 @@ using BulletUnity;
 
 public class BulletSoftBodyProxy : MonoBehaviour {
     public SoftBody target;
-    public UnityEngine.Vector3[] verts;
-    public UnityEngine.Vector3[] norms;
+    public Vector3[] verts;
+    public Vector3[] norms;
     public int[] tris;
     public Mesh mesh;
-    
+
     void Start() {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;

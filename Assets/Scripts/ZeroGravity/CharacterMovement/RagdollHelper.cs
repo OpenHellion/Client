@@ -196,7 +196,7 @@ namespace ZeroGravity.CharacterMovement
 				}
 
 				wasRagdolled = false;
-				base.enabled = false;
+				enabled = false;
 			}
 		}
 
@@ -300,7 +300,7 @@ namespace ZeroGravity.CharacterMovement
 			Ragdolled = false;
 			ragdollState = RagdollState.Animated;
 			SetKinematic(true);
-			Rigidbody[] componentsInChildren = base.transform.GetComponentsInChildren<Rigidbody>(true);
+			Rigidbody[] componentsInChildren = transform.GetComponentsInChildren<Rigidbody>(true);
 			foreach (Rigidbody rigidbody in componentsInChildren)
 			{
 				rigidbody.linearVelocity = Vector3.zero;
@@ -308,7 +308,7 @@ namespace ZeroGravity.CharacterMovement
 				rigidbody.useGravity = false;
 			}
 
-			Collider[] componentsInChildren2 = base.transform.GetComponentsInChildren<Collider>(true);
+			Collider[] componentsInChildren2 = transform.GetComponentsInChildren<Collider>(true);
 			foreach (Collider collider in componentsInChildren2)
 			{
 				collider.isTrigger = true;
@@ -316,7 +316,7 @@ namespace ZeroGravity.CharacterMovement
 
 			animHelper.ToggleMainAnimator(true);
 			wasRagdolled = false;
-			base.enabled = false;
+			enabled = false;
 		}
 
 		public void RestorePositions()

@@ -5,7 +5,7 @@ using BulletSharp.Math;
 using BulletSharp;
 
 namespace BulletUnity {
-    [System.Serializable]
+    [Serializable]
     public abstract class BCollisionShape : MonoBehaviour, IDisposable {
         public enum CollisionShapeType {
             // dynamic

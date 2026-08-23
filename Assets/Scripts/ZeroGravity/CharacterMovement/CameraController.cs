@@ -352,7 +352,7 @@ namespace ZeroGravity.CharacterMovement
 		{
 			_freeLookAngleY = Mathf.Clamp(_freeLookAngleY + yRotation, 0f - maxFreeLookRightAngle,
 				maxFreeLookRightAngle);
-			freeLookYTransform.rotation = Quaternion.AngleAxis(_freeLookAngleY, base.transform.up) *
+			freeLookYTransform.rotation = Quaternion.AngleAxis(_freeLookAngleY, transform.up) *
 			                              mouseLookXTransform.transform.rotation;
 			_freeLookAngleX = Mathf.Clamp(_freeLookAngleX + xRotation,
 				0f - Mathf.Max(freeLookMaxUpAngle + ((!(_angleX > 0f)) ? _angleX : 0f), 0f),
@@ -440,7 +440,7 @@ namespace ZeroGravity.CharacterMovement
 			spineTransform = animatorHelper.GetBone(AnimatorHelper.HumanBones.Spine2);
 			if (_isCameraAttachedToHeadBone)
 			{
-				base.transform.parent = characterController.HeadCameraParent;
+				transform.parent = characterController.HeadCameraParent;
 			}
 		}
 
@@ -504,11 +504,11 @@ namespace ZeroGravity.CharacterMovement
 
 			if (flag)
 			{
-				base.transform.parent = characterController.HeadCameraParent;
+				transform.parent = characterController.HeadCameraParent;
 			}
 			else
 			{
-				base.transform.parent = characterController.transform;
+				transform.parent = characterController.transform;
 			}
 
 			mouseLookXTransform.parent = mouseLookYTransform;

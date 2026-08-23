@@ -23,7 +23,7 @@ public class EngineThrusters : MonoBehaviour
 			onOff = value;
 			if (value)
 			{
-				base.gameObject.SetActive(true);
+				gameObject.SetActive(true);
 			}
 		}
 	}
@@ -82,7 +82,7 @@ public class EngineThrusters : MonoBehaviour
 
 		if (LerpValue < 0f)
 		{
-			base.gameObject.SetActive(false);
+			gameObject.SetActive(false);
 		}
 	}
 }

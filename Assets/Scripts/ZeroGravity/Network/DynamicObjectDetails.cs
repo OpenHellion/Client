@@ -10,6 +10,10 @@ namespace ZeroGravity.Network
 
 		public short ItemID;
 
+		public DynamicObjectAttachData AttachData;
+
+		public DynamicObjectStats StatsData;
+
 		public float[] LocalPosition;
 
 		public float[] LocalRotation;
@@ -18,10 +22,6 @@ namespace ZeroGravity.Network
 
 		public float[] AngularVelocity;
 
-		public DynamicObjectAttachData AttachData;
-
-		public DynamicObjectStats StatsData;
-
-		public List<DynamicObjectDetails> ChildObjects;
+		public DynamicObjectDetails[] ChildObjects;
 	}
 }

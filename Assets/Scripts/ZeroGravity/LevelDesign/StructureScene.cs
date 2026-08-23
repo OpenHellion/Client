@@ -147,7 +147,7 @@ namespace ZeroGravity.LevelDesign
 		public float GetMass()
 		{
 			float num = 0f;
-			SceneTriggerRoom[] componentsInChildren = base.gameObject.GetComponentsInChildren<SceneTriggerRoom>();
+			SceneTriggerRoom[] componentsInChildren = gameObject.GetComponentsInChildren<SceneTriggerRoom>();
 			foreach (SceneTriggerRoom sceneTriggerRoom in componentsInChildren)
 			{
 				num += sceneTriggerRoom.Volume;
@@ -167,7 +167,7 @@ namespace ZeroGravity.LevelDesign
 			if (num2 <= float.Epsilon || num2 < num)
 			{
 				SceneColliderShipCollision[] componentsInChildren2 =
-					base.gameObject.GetComponentsInChildren<SceneColliderShipCollision>();
+					gameObject.GetComponentsInChildren<SceneColliderShipCollision>();
 				foreach (SceneColliderShipCollision sceneColliderShipCollision in componentsInChildren2)
 				{
 					num2 += SceneHelper.VolumeOfGameObject(sceneColliderShipCollision.gameObject);
@@ -236,7 +236,7 @@ namespace ZeroGravity.LevelDesign
 				Statistic.Reset();
 			}
 
-			IEnumerator enumerator = base.transform.GetEnumerator();
+			IEnumerator enumerator = transform.GetEnumerator();
 			try
 			{
 				while (enumerator.MoveNext())

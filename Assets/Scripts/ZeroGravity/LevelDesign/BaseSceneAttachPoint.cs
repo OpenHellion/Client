@@ -302,7 +302,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (Item != null && Item != item)
 			{
-				Debug.LogWarningFormat("Cannot attach two items on same attach point {0} and {1}. Original item name {2}.", Item, item, base.name);
+				Debug.LogWarningFormat("Cannot attach two items on same attach point {0} and {1}. Original item name {2}.", Item, item, name);
 			}
 			else
 			{

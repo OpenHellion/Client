@@ -132,3 +132,4 @@ EditorBuildSettings:
     path: Assets/Scene/Environment/SolarSystem/Asteroids/Asteroid08/Asteroid08.unity
     guid: baa2ae3971de57d4a808b31d1f58da19
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0

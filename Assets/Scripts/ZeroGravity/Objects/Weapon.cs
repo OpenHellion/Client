@@ -187,23 +187,21 @@ namespace ZeroGravity.Objects
 							fpsController.MouseLookXTransform.forward * CurrentWeaponMod.Range +
 							CalculateRecoil(CurrentRecoil.x, CurrentRecoil.y) - TipOfItem.position;
 					}
-					else
-					{
-						Vector3 vector = TipOfItem.forward;
-					}
 
-					SpaceObject spaceObject = !(MyPlayer.Instance.Parent is SpaceObjectVessel)
+					SpaceObject spaceObject = MyPlayer.Instance.Parent is not SpaceObjectVessel
 						? MyPlayer.Instance.Parent
 						: (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel;
-					ShotData shotData = new ShotData();
-					shotData.Position = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) *
-					                     MyPlayer.Instance.FpsController.MainCamera.transform.position).ToArray();
-					shotData.Orientation = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) *
-					                        MyPlayer.Instance.FpsController.MainCamera.transform.forward.normalized)
-						.ToArray();
-					shotData.parentGUID = spaceObject.Guid;
-					shotData.parentType = spaceObject.Type;
-					shotData.Range = Range;
+					ShotData shotData = new ShotData
+					{
+						Position = (spaceObject.transform.rotation *
+											 MyPlayer.Instance.FpsController.MainCamera.transform.position).ToArray(),
+						Orientation = (spaceObject.transform.rotation *
+												MyPlayer.Instance.FpsController.MainCamera.transform.forward.normalized)
+							.ToArray(),
+						parentGUID = spaceObject.Guid,
+						parentType = spaceObject.Type,
+						Range = Range
+					};
 					ShotData shotData2 = shotData;
 					MyPlayer.Instance.Attack(shotData2, this, CurrentWeaponMod.ThrustPerShot,
 						CurrentWeaponMod.RotationPerShot);

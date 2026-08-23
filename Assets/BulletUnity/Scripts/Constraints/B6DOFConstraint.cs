@@ -127,7 +127,7 @@ namespace BulletUnity {
             {
                 world.AddRigidBody(targetRigidBodyA);
             }
-            
+
             RigidBody rba = (RigidBody) targetRigidBodyA.GetCollisionObject();
             if (rba == null) {
                 Debug.LogError("Constraint could not get bullet RigidBody from target rigid body");
@@ -165,7 +165,7 @@ namespace BulletUnity {
             } else
             {
                 //TODO think about this
-                BM.Matrix frameInA = BulletSharp.Math.Matrix.Identity;
+                BM.Matrix frameInA = BM.Matrix.Identity;
                 m_constraintPtr = new Generic6DofConstraint(rba, frameInA, false);
             }
             m_constraintPtr.Userobject = this;

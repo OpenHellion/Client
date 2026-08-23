@@ -14,7 +14,7 @@ public class LocationObject : ScriptableObject
 				return LocationName;
 			}
 
-			return base.name;
+			return name;
 		}
 	}
 

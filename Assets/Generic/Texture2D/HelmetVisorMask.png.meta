@@ -116,13 +116,13 @@ TextureImporter:
       name: HelmetVisorMask_0
       rect:
         serializedVersion: 2
-        x: 496.05133
-        y: 164.07613
-        width: 1055.8975
-        height: 859.9239
-      alignment: 9
-      pivot: {x: 0.49999994, y: 0.40459847}
-      border: {x: 513.94867, y: 446.4239, z: 511.4488, w: 386}
+        x: 496
+        y: 164
+        width: 1055
+        height: 860
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 514, y: 446, z: 511, w: 386}
       customData: 
       outline:
       - - {x: -317.00006, y: 105.961945}
@@ -422,7 +422,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 3e66a7b0cff15de43aaa72cb6c28630c
     internalID: 0
     vertices: []
     indices: 

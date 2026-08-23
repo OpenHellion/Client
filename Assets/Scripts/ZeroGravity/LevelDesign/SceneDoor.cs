@@ -23,6 +23,10 @@ namespace ZeroGravity.LevelDesign
 
 		[SerializeField] private bool _isOpen;
 
+		public bool LockedAutoToggle;
+
+		public float PassageArea = 2f;
+
 		public SceneTriggerRoom Room1;
 
 		public SceneTriggerRoom Room2;
@@ -252,7 +256,7 @@ namespace ZeroGravity.LevelDesign
 
 		private void AffectOutsideCorpses(float fIntensity)
 		{
-			foreach (Corpse item in _world.Corpses.Values.Where((Corpse m) => m.Parent is Pivot))
+			foreach (Corpse item in _world.AllCorpses.Where((Corpse m) => m.Parent is Pivot))
 			{
 				if (!item.IsKinematic)
 				{
@@ -308,7 +312,7 @@ namespace ZeroGravity.LevelDesign
 
 		private void AffectOutsideDynamicObjects(float fIntensity)
 		{
-			foreach (DynamicObject item in _world.DynamicObjects.Values.Where((DynamicObject m) =>
+			foreach (DynamicObject item in _world.AllDynamicObjects.Where((DynamicObject m) =>
 				         m.Parent is Pivot))
 			{
 				if (!item.IsKinematic)
@@ -317,8 +321,8 @@ namespace ZeroGravity.LevelDesign
 					if (vector.sqrMagnitude < 25f)
 					{
 						Vector3 vector2 = vector.normalized * fIntensity;
-						float num = ((!(item.Mass > 0f)) ? 10f : item.Mass);
-						item.Velocity = Vector3.ClampMagnitude(item.Velocity + vector2 / num * Time.deltaTime, 10f);
+						float num = item.Mass > 0f ? item.Mass : 10f;
+						item.RigidBody.linearVelocity = Vector3.ClampMagnitude(item.Velocity + vector2 / num * Time.deltaTime, 10f);
 					}
 				}
 			}
@@ -360,8 +364,8 @@ namespace ZeroGravity.LevelDesign
 						vector2 += 0.1f * fIntensity * -vector4;
 					}
 
-					float num = ((!(dynamicObject.Mass > 0f)) ? 10f : dynamicObject.Mass);
-					dynamicObject.Velocity =
+					float num = dynamicObject.Mass > 0f ? dynamicObject.Mass : 10f;
+					dynamicObject.RigidBody.linearVelocity =
 						Vector3.ClampMagnitude(dynamicObject.Velocity + vector2 / num * Time.deltaTime, 10f);
 				}
 			}
@@ -473,7 +477,7 @@ namespace ZeroGravity.LevelDesign
 
 		public void UpdateDoorUI()
 		{
-			if (!(MyPlayer.Instance == null) && base.isActiveAndEnabled && DoorUI != null)
+			if (!(MyPlayer.Instance == null) && isActiveAndEnabled && DoorUI != null)
 			{
 				if (Locked != null)
 				{

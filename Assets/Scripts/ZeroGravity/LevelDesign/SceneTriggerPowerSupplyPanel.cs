@@ -45,7 +45,7 @@ namespace ZeroGravity.LevelDesign
 
 			if (interactWithOverlappingTriggers)
 			{
-				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
+				SceneTriggerHelper.InteractWithOverlappingTriggers(gameObject, this, player);
 			}
 
 			player.AttachToPanel(this);

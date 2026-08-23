@@ -94,7 +94,7 @@ namespace ZeroGravity.UI
 
 		private void Awake()
 		{
-			_world ??= GameObject.Find("/World").GetComponent<World>();
+			_world = _world != null ? _world : GameObject.Find("/World").GetComponent<World>();
 		}
 
 		private void Start()
@@ -338,25 +338,24 @@ namespace ZeroGravity.UI
 
 		public void UpdateArmor()
 		{
-			float num = 0f;
-			float num2 = 0f;
+			float cumulativeHealth = 0f;
+			float cumulativeMaxHealth = 0f;
 			foreach (SceneMachineryPartSlot armorSlot in ArmorSlots)
 			{
 				if (armorSlot.Item != null)
 				{
-					num += armorSlot.Item.Health;
-					num2 += armorSlot.Item.MaxHealth;
+					cumulativeHealth += armorSlot.Item.Health;
+					cumulativeMaxHealth += armorSlot.Item.MaxHealth;
 				}
 			}
 
 			if (Room.ParentVessel.Armor > 0f)
 			{
-				NaniteHealth.fillAmount = num / num2;
-				NaniteHealthValue.text = FormatHelper.CurrentMax(num, num2);
-				float num3 = 0f;
-				num3 = ((!(Degradation > Room.ParentVessel.Armor))
-					? (num / Degradation)
-					: (num / Room.ParentVessel.Armor));
+				NaniteHealth.fillAmount = cumulativeHealth / cumulativeMaxHealth;
+				NaniteHealthValue.text = FormatHelper.CurrentMax(cumulativeHealth, cumulativeMaxHealth);
+				float num3 = Degradation > Room.ParentVessel.Armor
+					? (cumulativeHealth / Room.ParentVessel.Armor)
+					: (cumulativeHealth / Degradation);
 				SafeTime.text = FormatHelper.PeriodFormat(num3);
 			}
 			else

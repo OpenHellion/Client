@@ -12,8 +12,6 @@ namespace ZeroGravity.Data
 
 		public float Capacity;
 
-		public string Name;
-
 		public CargoCompartmentType Type;
 
 		public List<CargoResourceData> Resources;

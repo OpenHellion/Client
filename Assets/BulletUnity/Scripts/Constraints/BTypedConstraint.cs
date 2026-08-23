@@ -6,7 +6,7 @@ using BM = BulletSharp.Math;
 
 namespace BulletUnity {
 
-    [System.Serializable]
+    [Serializable]
     public abstract class BTypedConstraint : MonoBehaviour, IDisposable {
         protected bool m_startWasCalled = false;
 
@@ -221,11 +221,11 @@ namespace BulletUnity {
             Gizmos.DrawLine(pivotWorld, pivotWorld + zWorld);
         }
 
-        public bool CreateFrame(UnityEngine.Vector3 forward, UnityEngine.Vector3 up, UnityEngine.Vector3 constraintPoint, ref BulletSharp.Math.Matrix m, ref string errorMsg)
+        public bool CreateFrame(Vector3 forward, Vector3 up, Vector3 constraintPoint, ref BM.Matrix m, ref string errorMsg)
         {
-            BulletSharp.Math.Vector4 x;
-            BulletSharp.Math.Vector4 y;
-            BulletSharp.Math.Vector4 z;
+			BM.Vector4 x;
+			BM.Vector4 y;
+			BM.Vector4 z;
             if (forward == Vector3.zero)
             {
                 errorMsg = "forward vector must not be zero";
@@ -260,7 +260,7 @@ namespace BulletUnity {
         // Object A has the constraint compontent and is constrainted to object B
         // The constraint frame is defined relative to A by three vectors.
         // This method calculates the frames A and B that need to be passed to bullet
-        public bool CreateFramesA_B(UnityEngine.Vector3 forwardInA, UnityEngine.Vector3 upInA, UnityEngine.Vector3 constraintPivotInA, out BM.Matrix frameInA, out BM.Matrix frameInB, ref string errorMsg)
+        public bool CreateFramesA_B(Vector3 forwardInA, Vector3 upInA, Vector3 constraintPivotInA, out BM.Matrix frameInA, out BM.Matrix frameInB, ref string errorMsg)
         {
             frameInA = BM.Matrix.Identity;
             if (!CreateFrame(forwardInA, upInA, constraintPivotInA, ref frameInA, ref errorMsg))

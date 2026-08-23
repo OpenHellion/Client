@@ -76,13 +76,13 @@ public class TubeLight : MonoBehaviour
 
 		m_ProxyMaterial = new Material(m_ProxyShader);
 		m_ProxyMaterial.hideFlags = HideFlags.HideAndDontSave;
-		m_SourceMesh = Object.Instantiate(m_Capsule);
+		m_SourceMesh = Instantiate(m_Capsule);
 		m_SourceMesh.hideFlags = HideFlags.HideAndDontSave;
-		MeshFilter component = base.gameObject.GetComponent<MeshFilter>();
+		MeshFilter component = gameObject.GetComponent<MeshFilter>();
 		component.sharedMesh = m_SourceMesh;
-		m_SourceRenderer = base.gameObject.GetComponent<MeshRenderer>();
+		m_SourceRenderer = gameObject.GetComponent<MeshRenderer>();
 		m_SourceRenderer.enabled = true;
-		m_SourceTransform = base.transform;
+		m_SourceTransform = transform;
 		m_Initialized = true;
 		return true;
 	}
@@ -122,12 +122,12 @@ public class TubeLight : MonoBehaviour
 	{
 		if (m_ProxyMaterial != null)
 		{
-			Object.DestroyImmediate(m_ProxyMaterial);
+			DestroyImmediate(m_ProxyMaterial);
 		}
 
 		if (m_SourceMesh != null)
 		{
-			Object.DestroyImmediate(m_SourceMesh);
+			DestroyImmediate(m_SourceMesh);
 		}
 
 		Cleanup();
@@ -233,7 +233,7 @@ public class TubeLight : MonoBehaviour
 		if (!m_Cameras.ContainsKey(current))
 		{
 			commandBuffer = new CommandBuffer();
-			commandBuffer.name = base.gameObject.name;
+			commandBuffer.name = gameObject.name;
 			m_Cameras[current] = commandBuffer;
 			current.AddCommandBuffer(kCameraEvent, commandBuffer);
 			current.depthTextureMode |= DepthTextureMode.Depth;

@@ -103,6 +103,8 @@ namespace ZeroGravity.LevelDesign
 
 		public string Tags;
 
+		public Transform MergePivot;
+
 		[SerializeField] private int _inSceneID;
 
 		[SerializeField] private string _defaultState = string.Empty;
@@ -816,7 +818,6 @@ namespace ZeroGravity.LevelDesign
 				    (!player.transform.position.IsEpsilonEqual(cis.InteractPosition.position, 0.01f) ||
 				     !player.transform.rotation.IsEpsilonEqual(cis.InteractPosition.rotation, 0.01f)))
 				{
-					player.tpsController.UpdateMovementPosition = false;
 					_interactionToSetAfterTranslate = cis;
 					_interactionToSetAfterTranslateGuid = _triggeredPlayerGuid;
 					StartCoroutine(player.tpsController.TranslateTo(cis.InteractPosition, OnTranslateFinished));
@@ -832,11 +833,6 @@ namespace ZeroGravity.LevelDesign
 						AnimatorHelper.InteractType? interactType = cis.InteractType;
 						animHelper4.SetParameter(null, null, null, null, null, null, null, null, null, null, null, null,
 							null, null, null, null, null, null, null, null, null, null, null, null, null, interactType);
-					}
-
-					if (cis.InteractType != 0 || cis.LockType != 0)
-					{
-						player.tpsController.UpdateMovementPosition = false;
 					}
 				}
 
@@ -937,7 +933,6 @@ namespace ZeroGravity.LevelDesign
 			OtherPlayer player = _world.GetPlayer(_triggeredPlayerGuid);
 			if (player != null)
 			{
-				player.tpsController.UpdateMovementPosition = true;
 				player.tpsController.animHelper.ResetParameterTrigger(AnimatorHelper.Triggers.LockImmediate);
 				if (player.tpsController.animHelper.IsCurrentAnimState(
 					    AnimatorHelper.AnimatorLayers_TPS.InteractionLayer, "Locks"))

@@ -84,9 +84,9 @@ public class HealthPostEffect : MonoBehaviour
 		}
 		else
 		{
-			Debug.LogWarning(base.gameObject.name + ": Shader is not assigned. Disabling image effect.",
-				base.gameObject);
-			base.enabled = false;
+			Debug.LogWarning(gameObject.name + ": Shader is not assigned. Disabling image effect.",
+				gameObject);
+			enabled = false;
 		}
 	}
 
@@ -114,7 +114,7 @@ public class HealthPostEffect : MonoBehaviour
 	{
 		if ((bool)material)
 		{
-			UnityEngine.Object.DestroyImmediate(material);
+			DestroyImmediate(material);
 		}
 	}
 

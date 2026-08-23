@@ -1,38 +1,18 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using ZeroGravity.Network;
 
 namespace OpenHellion.Net
 {
+	/// <summary>
+	/// 	Registry of listeners and dispatcher for received network data.
+	/// </summary>
 	public static class EventSystem
 	{
 		private static readonly ConcurrentDictionary<Type, Action<NetworkData>> _networkDataListeners = new();
 		private static readonly ConcurrentDictionary<Type, Func<NetworkData, UniTask<NetworkData>>> _syncRequestListeners = new();
-
-		private static readonly ConcurrentQueue<NetworkData> _networkBuffer = new ConcurrentQueue<NetworkData>();
-
-		private static readonly Dictionary<Type, int> _avgPacketCounter = new Dictionary<Type, int>();
-		private static readonly Dictionary<Type, int> _packetCounter = new Dictionary<Type, int>();
-
-		private static bool _dbgPacketCount = false;
-
-		public static bool DebugPacketCount
-		{
-			get => _dbgPacketCount;
-			set
-			{
-				_dbgPacketCount = value;
-				if (!value)
-				{
-					_packetCounter.Clear();
-				}
-			}
-		}
 
 		/// <summary>
 		/// 	Add listener for custom events.
@@ -84,21 +64,25 @@ namespace OpenHellion.Net
 		/// </summary>
 		public static void RemoveListener(Type group, Action<NetworkData> function)
 		{
-			if (_networkDataListeners.ContainsKey(group))
+			if (!_networkDataListeners.TryGetValue(group, out Action<NetworkData> listeners))
 			{
-				_networkDataListeners[group] -= function;
+				return;
+			}
+
+			listeners -= function;
+			if (listeners == null)
+			{
+				_networkDataListeners.TryRemove(group, out _);
+			}
+			else
+			{
+				_networkDataListeners[group] = listeners;
 			}
 		}
-
-		/// <summary>
-		/// 	Remove listener for custom events.
-		/// </summary>
+		
 		public static void RemoveListener<T>(Action<NetworkData> function)
 		{
-			if (_networkDataListeners.ContainsKey(typeof(T)))
-			{
-				_networkDataListeners[typeof(T)] -= function;
-			}
+			RemoveListener(typeof(T), function);
 		}
 
 		/// <summary>
@@ -106,20 +90,30 @@ namespace OpenHellion.Net
 		/// </summary>
 		public static void RemoveSyncRequestListener(Type group, Func<NetworkData, UniTask<NetworkData>> function)
 		{
-			if (_syncRequestListeners.ContainsKey(group))
+			if (!_syncRequestListeners.TryGetValue(group, out Func<NetworkData, UniTask<NetworkData>> handlers))
 			{
-				_syncRequestListeners[group] -= function;
+				return;
+			}
+
+			handlers -= function;
+			if (handlers == null)
+			{
+				_syncRequestListeners.TryRemove(group, out _);
+			}
+			else
+			{
+				_syncRequestListeners[group] = handlers;
 			}
 		}
 
 		/// <summary>
-		/// 	Execute corresponding code for request.
+		/// 	Invoke the listener registered for a received message. Must be called on the main thread.
 		/// </summary>
-		internal static void Invoke(NetworkData data)
+		internal static void Dispatch(NetworkData data)
 		{
-			if (_networkDataListeners.ContainsKey(data.GetType()))
+			if (_networkDataListeners.TryGetValue(data.GetType(), out Action<NetworkData> listener))
 			{
-				_networkBuffer.Enqueue(data);
+				listener(data);
 			}
 			else
 			{
@@ -127,53 +121,18 @@ namespace OpenHellion.Net
 			}
 		}
 
+		/// <summary>
+		/// 	Invoke the handler for a server-initiated sync request and produce its response.
+		/// </summary>
 		internal static UniTask<NetworkData> InvokeSyncRequest(NetworkData data)
 		{
-			return _syncRequestListeners[data.GetType()](data);
-		}
-
-		/// <summary>
-		/// 	Execute code for requests stored in queue.
-		/// </summary>
-		internal static void InvokeQueuedData()
-		{
-			_packetCounter.Clear();
-			while (_networkBuffer.Count > 0)
+			if (_syncRequestListeners.TryGetValue(data.GetType(), out Func<NetworkData, UniTask<NetworkData>> handler))
 			{
-				if (!_networkBuffer.TryDequeue(out NetworkData result))
-				{
-					continue;
-				}
-
-				if (_networkDataListeners.TryGetValue(result.GetType(), out Action<NetworkData> value))
-				{
-					value(result);
-				}
-
-				if (DebugPacketCount)
-				{
-					if (result is DynamicObjectStatsMessage)
-					{
-						if (_avgPacketCounter.ContainsKey(result.GetType()))
-						{
-							_avgPacketCounter[result.GetType()]++;
-						}
-						else
-						{
-							_avgPacketCounter.Add(result.GetType(), 1);
-						}
-					}
-				}
-
-				if (_packetCounter.ContainsKey(result.GetType()))
-				{
-					_packetCounter[result.GetType()]++;
-				}
-				else
-				{
-					_packetCounter.Add(result.GetType(), 1);
-				}
+				return handler(data);
 			}
+
+			Debug.LogError("Sync request listener was not registered for data:" + data.GetType() + data);
+			return UniTask.FromResult<NetworkData>(null);
 		}
 	}
 }

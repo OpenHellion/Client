@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using ProtoBuf;
 using UnityEngine;
@@ -103,7 +102,9 @@ namespace OpenHellion.IO
 				readSize = await stream.ReadAsync(dataLengthBuffer.AsMemory(dataRead, dataLengthBuffer.Length - dataRead), cancellationToken);
 				if (readSize == 0)
 				{
-					throw new Exception("Received zero data message.");
+					throw new Exception(dataRead == 0
+						? "Peer closed the connection between messages."
+						: $"Peer closed the connection inside a message header, after {dataRead} of 4 bytes.");
 				}
 
 				dataRead += readSize;
@@ -126,7 +127,8 @@ namespace OpenHellion.IO
 				readSize = await stream.ReadAsync(buffer.AsMemory(dataRead, buffer.Length - dataRead), cancellationToken);
 				if (readSize == 0)
 				{
-					throw new Exception("Received zero data message.");
+					throw new Exception(
+						$"Peer closed the connection inside a message body, after {dataRead} of {dataLength} bytes.");
 				}
 
 				dataRead += readSize;
@@ -182,7 +184,7 @@ namespace OpenHellion.IO
 		/// <param name="bytesToSkip">Bytes to skip.</param>
 		/// <param name="cancellationToken"></param>
 		/// <exception cref="EndOfStreamException">Stream ended unexpectedly.</exception>
-		public static async Task SkipAsync(Stream stream, long bytesToSkip, CancellationToken cancellationToken = default)
+		public static async UniTask SkipAsync(Stream stream, long bytesToSkip, CancellationToken cancellationToken = default)
 		{
 			if (bytesToSkip <= 0) return;
 

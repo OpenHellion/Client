@@ -12,15 +12,15 @@ public class Projectile : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		base.transform.Translate(targetDirection * speed * Time.deltaTime);
+		transform.Translate(targetDirection * speed * Time.deltaTime);
 		range -= speed * Time.deltaTime;
 		if (range <= 0f)
 		{
-			Object.Destroy(base.gameObject);
+			Destroy(gameObject);
 		}
 
 		RaycastHit hitInfo;
-		if (!Physics.Raycast(base.transform.position, targetDirection, out hitInfo, speed * Time.deltaTime))
+		if (!Physics.Raycast(transform.position, targetDirection, out hitInfo, speed * Time.deltaTime))
 		{
 		}
 	}

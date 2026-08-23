@@ -368,12 +368,10 @@ namespace ZeroGravity.Objects
 				OxygenCompartment.Resources.Add(jetpackStats.Oxygen);
 			}
 
-			if (AttachPoint != null && MyPlayer.Instance.IsLockedToTrigger &&
-			    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
+			if (AttachPoint != null && MyPlayer.Instance != null &&
+			    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel cargoPanel)
 			{
-				SceneTriggerCargoPanel sceneTriggerCargoPanel =
-					MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel;
-				sceneTriggerCargoPanel.CargoPanel.CreateAttachItemUI();
+				cargoPanel.CargoPanel.CreateAttachItemUI();
 			}
 
 			if (Helmet != null)

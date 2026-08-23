@@ -44,7 +44,7 @@ namespace ZeroGravity.LevelDesign
 			player.LockedToTrigger = player.LookingAtTrigger;
 			if (interactWithOverlappingTriggers)
 			{
-				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
+				SceneTriggerHelper.InteractWithOverlappingTriggers(gameObject, this, player);
 			}
 
 			return true;

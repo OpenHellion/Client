@@ -2,11 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using OpenHellion;
 using OpenHellion.IO;
 using OpenHellion.Net;
-using OpenHellion.UI;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;
@@ -511,13 +510,13 @@ namespace ZeroGravity.Objects
 			BaseSceneAttachPoint attachPoint, bool hideObject, bool sendAttachMessage)
 		{
 			bool flag = DynamicObj.Parent is Player && (DynamicObj.Parent as Player).Inventory.ItemInHands == this;
-			Task task = new Task(delegate
+			Action task = new Action(delegate
 			{
 				IItemSlot slot2 = Slot;
 				bool flag2 = attachToTrans != null;
 				if (DynamicObj.Parent is Pivot && DynamicObj.Parent != obj)
 				{
-					World.SolarSystem.RemoveArtificialBody(DynamicObj.Parent as Pivot);
+					World.RemoveArtificialBody(DynamicObj.Parent.Guid, DynamicObj);
 					Destroy(DynamicObj.Parent.gameObject);
 				}
 
@@ -581,6 +580,7 @@ namespace ZeroGravity.Objects
 
 				SpaceObject parent = DynamicObj.Parent;
 				DynamicObj.Parent = obj;
+				DynamicObj.SetSimulated(obj is ArtificialBody); // TODO: This marks the type of dynamic object dirty. Has to exist because inventory still uses dynamic objects.
 				DynamicObj.ResetRoomTriggers();
 				DynamicObj.ToggleKinematic(flag2 || parent is OtherPlayer);
 				DynamicObj.ToggleActive(!hideObject);
@@ -661,7 +661,7 @@ namespace ZeroGravity.Objects
 			}
 			else
 			{
-				task.RunSynchronously();
+				task();
 			}
 
 			if (sendAttachMessage)
@@ -694,7 +694,7 @@ namespace ZeroGravity.Objects
 		{
 			SpaceObject spaceObject = Slot is InventorySlot && InvSlot.Outfit != null
 				? InvSlot.Outfit.DynamicObj.Parent
-				: !(Slot is ItemSlot) ? DynamicObj.Parent : Slot.Parent;
+				: Slot is not ItemSlot ? DynamicObj.Parent : Slot.Parent;
 			return spaceObject.Type == data.ParentType && spaceObject.Guid == data.ParentGUID && Slot is ItemSlot &&
 			       (Slot as ItemSlot).ID == data.ItemSlotID && DynamicObj.IsAttached == data.IsAttached &&
 			       InvSlotID == data.InventorySlotID && ((AttachPoint == null && data.APDetails == null) ||
@@ -704,15 +704,15 @@ namespace ZeroGravity.Objects
 
 		public void ProcessAttachData(DynamicObjectAttachData data, SpaceObject prevParent = null)
 		{
-			SpaceObject @object = World.GetObject(data.ParentGUID, data.ParentType);
-			if (@object == null)
+			SpaceObject spaceObject = World.GetObject(data.ParentGUID, data.ParentType);
+			if (spaceObject == null)
 			{
 				Debug.LogErrorFormat("Could not find space object to attach item to. {0}, {1}, {2}", name, data.ParentGUID,
 					data.ParentType);
 				return;
 			}
 
-			if (@object is OtherPlayer)
+			if (spaceObject is OtherPlayer)
 			{
 				DynamicObj.Master = false;
 				DynamicObj.ToggleKinematic(value: true);
@@ -723,21 +723,21 @@ namespace ZeroGravity.Objects
 				(Slot as ItemSlot).RemoveItem();
 			}
 
-			if (this is Outfit && (InvSlotID != data.InventorySlotID || DynamicObj.Parent != @object))
+			if (this is Outfit && (InvSlotID != data.InventorySlotID || DynamicObj.Parent != spaceObject))
 			{
 				if (data.InventorySlotID == -2)
 				{
-					if (@object is MyPlayer)
+					if (spaceObject is MyPlayer)
 					{
 						(this as Outfit).EquipOutfit(MyPlayer.Instance, checkHands: false);
 					}
-					else if (@object is OtherPlayer)
+					else if (spaceObject is OtherPlayer)
 					{
-						(@object as OtherPlayer).EquipOutfit(this as Outfit);
+						(spaceObject as OtherPlayer).EquipOutfit(this as Outfit);
 					}
-					else if (@object is Corpse)
+					else if (spaceObject is Corpse)
 					{
-						(@object as Corpse).EquipOutfit(this as Outfit);
+						(spaceObject as Corpse).EquipOutfit(this as Outfit);
 					}
 
 					return;
@@ -764,17 +764,17 @@ namespace ZeroGravity.Objects
 			if (data.InventorySlotID != -1111 && data.InventorySlotID != -2)
 			{
 				InventorySlot inventorySlot = null;
-				if (@object is Player)
+				if (spaceObject is Player)
 				{
-					inventorySlot = (@object as Player).Inventory.GetSlotByID(data.InventorySlotID);
+					inventorySlot = (spaceObject as Player).Inventory.GetSlotByID(data.InventorySlotID);
 				}
-				else if (@object is DynamicObject && (@object as DynamicObject).Item is Outfit)
+				else if (spaceObject is DynamicObject && (spaceObject as DynamicObject).Item is Outfit)
 				{
-					inventorySlot = ((@object as DynamicObject).Item as Outfit).GetSlotByID(data.InventorySlotID);
+					inventorySlot = ((spaceObject as DynamicObject).Item as Outfit).GetSlotByID(data.InventorySlotID);
 				}
-				else if (@object is Corpse && (@object as Corpse).Inventory != null)
+				else if (spaceObject is Corpse && (spaceObject as Corpse).Inventory != null)
 				{
-					inventorySlot = (@object as Corpse).Inventory.GetSlotByID(data.InventorySlotID);
+					inventorySlot = (spaceObject as Corpse).Inventory.GetSlotByID(data.InventorySlotID);
 				}
 
 				if (inventorySlot != null)
@@ -784,10 +784,10 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			if (data.APDetails != null && @object is SpaceObjectVessel)
+			if (data.APDetails != null && spaceObject is SpaceObjectVessel)
 			{
 				BaseSceneAttachPoint structureObject =
-					(@object as SpaceObjectVessel).GetStructureObject<BaseSceneAttachPoint>(data.APDetails.InSceneID);
+					(spaceObject as SpaceObjectVessel).GetStructureObject<BaseSceneAttachPoint>(data.APDetails.InSceneID);
 				if (structureObject != null)
 				{
 					AttachToObject(structureObject, hideObject: false, sendAttachMessage: false);
@@ -795,21 +795,21 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			if (@object is DynamicObject && (@object as DynamicObject).Item != null)
+			if (spaceObject is DynamicObject && (spaceObject as DynamicObject).Item != null)
 			{
-				if ((@object as DynamicObject).Item.Slots.Count > 0 &&
-				    (@object as DynamicObject).Item.Slots.TryGetValue(data.ItemSlotID, out var value))
+				if ((spaceObject as DynamicObject).Item.Slots.Count > 0 &&
+				    (spaceObject as DynamicObject).Item.Slots.TryGetValue(data.ItemSlotID, out var value))
 				{
 					AttachToObject(value, sendAttachMessage: false);
 				}
 
-				(@object as DynamicObject).Item.UpdateUI();
+				(spaceObject as DynamicObject).Item.UpdateUI();
 				return;
 			}
 
-			AttachToObject(@object, sendAttachMessage: false);
+			AttachToObject(spaceObject, sendAttachMessage: false);
 			bool myPlayerIsParent = DynamicObj.Parent is MyPlayer;
-			Task task = new Task(delegate
+			Action task = new Action(delegate
 			{
 				if (!DynamicObj.IsAttached)
 				{
@@ -870,7 +870,7 @@ namespace ZeroGravity.Objects
 			}
 			else
 			{
-				task.RunSynchronously();
+				task();
 			}
 		}
 
@@ -951,14 +951,8 @@ namespace ZeroGravity.Objects
 				TakeDamage(dos.Damages);
 			}
 
-			if (Slot == MyPlayer.Instance.Inventory?.HandsSlot || (DynamicObj.Parent is DynamicObject &&
-			                                                       (DynamicObj.Parent as DynamicObject).Item.Slot ==
-			                                                       MyPlayer.Instance.Inventory.HandsSlot))
-			{
-				World.InGameGUI.HelmetHud.HandsSlotUpdate();
-			}
-
-			if (Slot is BaseSceneAttachPoint && MyPlayer.Instance.IsLockedToTrigger &&
+			World.InGameGUI.HelmetHud.HandsSlotUpdate();
+			if (Slot is BaseSceneAttachPoint && MyPlayer.Instance != null &&
 			    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
 			{
 				StartCoroutine(CheckQuantityCoroutine());
@@ -1208,20 +1202,21 @@ namespace ZeroGravity.Objects
 
 		public virtual void AttackWithItem()
 		{
-			SpaceObject spaceObject = !(MyPlayer.Instance.Parent is SpaceObjectVessel)
+			SpaceObject parentSpaceObject = MyPlayer.Instance.Parent is not SpaceObjectVessel
 				? MyPlayer.Instance.Parent
 				: (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel;
-			ShotData shotData = new ShotData();
-			shotData.Position = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) *
-			                     MyPlayer.Instance.FpsController.MainCamera.transform.position).ToArray();
-			shotData.Orientation = (Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up) *
-			                        MyPlayer.Instance.FpsController.MainCamera.transform.forward.normalized).ToArray();
-			shotData.parentGUID = spaceObject.Guid;
-			shotData.parentType = spaceObject.Type;
-			shotData.Range = MeleeRange;
-			shotData.IsMeleeAttack = true;
-			ShotData shotData2 = shotData;
-			MyPlayer.Instance.Attack(shotData2, this, 0f, 0f);
+			ShotData shotData = new ShotData
+			{
+				Position = (parentSpaceObject.transform.rotation *
+									 MyPlayer.Instance.FpsController.MainCamera.transform.position).ToArray(),
+				Orientation = (parentSpaceObject.transform.rotation *
+										MyPlayer.Instance.FpsController.MainCamera.transform.forward.normalized).ToArray(),
+				parentGUID = parentSpaceObject.Guid,
+				parentType = parentSpaceObject.Type,
+				Range = MeleeRange,
+				IsMeleeAttack = true
+			};
+			MyPlayer.Instance.Attack(shotData, this, 0f, 0f);
 		}
 
 		public virtual void OnAttach(bool isAttached, bool isOnPlayer)

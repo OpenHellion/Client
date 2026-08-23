@@ -14,13 +14,13 @@ public class SinMove : MonoBehaviour
 
 	private void Start()
 	{
-		_basePosition = base.transform.position;
+		_basePosition = transform.position;
 		_totalTime = Offset;
 	}
 
 	private void Update()
 	{
 		_totalTime += Time.deltaTime * Speed;
-		base.transform.position = _basePosition + Distance * Vector3.up * Mathf.Sin(_totalTime);
+		transform.position = _basePosition + Distance * Vector3.up * Mathf.Sin(_totalTime);
 	}
 }

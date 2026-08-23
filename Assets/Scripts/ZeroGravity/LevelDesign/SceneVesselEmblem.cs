@@ -32,7 +32,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			EmblemId = emblemId;
 			decal = GetComponent<Decalicious>();
-			matInstance = Object.Instantiate(decal.Material);
+			matInstance = Instantiate(decal.Material);
 			decal.Material = matInstance;
 			if (decal != null && matInstance != null)
 			{
@@ -81,7 +81,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (matInstance != null)
 			{
-				Object.Destroy(matInstance);
+				Destroy(matInstance);
 			}
 		}
 	}

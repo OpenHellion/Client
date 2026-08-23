@@ -104,7 +104,7 @@ public class ScrollList : MonoBehaviour
 
 	public GameObject MakeMember(string text)
 	{
-		GameObject gameObject = Object.Instantiate(MemberPref, base.transform.position, base.transform.rotation);
+		GameObject gameObject = Instantiate(MemberPref, transform.position, transform.rotation);
 		gameObject.transform.SetParent(ListContent);
 		gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
 		gameObject.SetActive(true);
@@ -182,7 +182,7 @@ public class ScrollList : MonoBehaviour
 	{
 		foreach (GameObject item in listGO)
 		{
-			Object.Destroy(item);
+			Destroy(item);
 		}
 
 		listGO.Clear();

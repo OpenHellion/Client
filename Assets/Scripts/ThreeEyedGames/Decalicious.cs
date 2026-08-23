@@ -125,7 +125,7 @@ namespace ThreeEyedGames
 
 		private void OnDrawGizmos()
 		{
-			Gizmos.matrix = base.transform.localToWorldMatrix;
+			Gizmos.matrix = transform.localToWorldMatrix;
 			Gizmos.color = Color.clear;
 			Gizmos.DrawCube(Vector3.zero, Vector3.one);
 			Gizmos.color = Color.white * 0.2f;
@@ -134,7 +134,7 @@ namespace ThreeEyedGames
 
 		private void OnDrawGizmosSelected()
 		{
-			Gizmos.matrix = base.transform.localToWorldMatrix;
+			Gizmos.matrix = transform.localToWorldMatrix;
 			Gizmos.color = Color.white * 0.5f;
 			Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
 		}

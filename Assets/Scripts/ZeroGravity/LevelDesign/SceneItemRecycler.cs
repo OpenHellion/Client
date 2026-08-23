@@ -93,7 +93,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				NetworkController.SendAndForget(new RecycleItemMessage
 				{
-					ID = new VesselObjectID(ParentVessel.Guid, base.InSceneID),
+					ID = new VesselObjectID(ParentVessel.Guid, InSceneID),
 					GUID = Item.GUID,
 					RecycleMode = RecycleMode
 				});
@@ -178,7 +178,7 @@ namespace ZeroGravity.LevelDesign
 			RecyclerUI.ShowResults(item);
 			NetworkController.SendAndForget(new RecycleItemMessage
 			{
-				ID = new VesselObjectID(ParentVessel.Guid, base.InSceneID),
+				ID = new VesselObjectID(ParentVessel.Guid, InSceneID),
 				GUID = item.GUID
 			});
 

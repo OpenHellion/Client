@@ -24,11 +24,11 @@ public class SceneToggleObjectBasedOnPower : MonoBehaviour, IVesselSystemAccesso
 	{
 		if (BaseVesselSystem.Status == SystemStatus.Online)
 		{
-			base.gameObject.SetActive(!Reverse);
+			gameObject.SetActive(!Reverse);
 		}
 		else
 		{
-			base.gameObject.SetActive(Reverse);
+			gameObject.SetActive(Reverse);
 		}
 	}
 }

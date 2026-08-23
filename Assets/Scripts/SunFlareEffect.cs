@@ -8,7 +8,7 @@ public class SunFlareEffect : MonoBehaviour
 
 	public void UpdateFlareBrightness(float Value)
 	{
-		IEnumerator enumerator = base.transform.GetEnumerator();
+		IEnumerator enumerator = transform.GetEnumerator();
 		try
 		{
 			while (enumerator.MoveNext())

@@ -23,7 +23,7 @@ public class Reflection : MonoBehaviour
 
 	public void OnWillRenderObject()
 	{
-		if (!base.enabled || !GetComponent<Renderer>() || !GetComponent<Renderer>().sharedMaterial ||
+		if (!enabled || !GetComponent<Renderer>() || !GetComponent<Renderer>().sharedMaterial ||
 		    !GetComponent<Renderer>().enabled)
 		{
 			return;
@@ -38,8 +38,8 @@ public class Reflection : MonoBehaviour
 		s_InsideRendering = true;
 		Camera reflectionCamera;
 		CreateMirrorObjects(current, out reflectionCamera);
-		Vector3 position = base.transform.position;
-		Vector3 up = base.transform.up;
+		Vector3 position = transform.position;
+		Vector3 up = transform.up;
 		int pixelLightCount = QualitySettings.pixelLightCount;
 		if (m_DisablePixelLights)
 		{
@@ -79,8 +79,8 @@ public class Reflection : MonoBehaviour
 
 		Matrix4x4 matrix4x = Matrix4x4.TRS(new Vector3(0.5f, 0.5f, 0.5f), Quaternion.identity,
 			new Vector3(0.5f, 0.5f, 0.5f));
-		Vector3 lossyScale = base.transform.lossyScale;
-		Matrix4x4 matrix4x2 = base.transform.localToWorldMatrix *
+		Vector3 lossyScale = transform.lossyScale;
+		Matrix4x4 matrix4x2 = transform.localToWorldMatrix *
 		                      Matrix4x4.Scale(new Vector3(1f / lossyScale.x, 1f / lossyScale.y, 1f / lossyScale.z));
 		matrix4x2 = matrix4x * current.projectionMatrix * current.worldToCameraMatrix * matrix4x2;
 		Material[] array2 = sharedMaterials;
@@ -101,7 +101,7 @@ public class Reflection : MonoBehaviour
 	{
 		if ((bool)m_ReflectionTexture)
 		{
-			UnityEngine.Object.DestroyImmediate(m_ReflectionTexture);
+			DestroyImmediate(m_ReflectionTexture);
 			m_ReflectionTexture = null;
 		}
 
@@ -110,7 +110,7 @@ public class Reflection : MonoBehaviour
 		{
 			while (enumerator.MoveNext())
 			{
-				UnityEngine.Object.DestroyImmediate(((Camera)((DictionaryEntry)enumerator.Current).Value).gameObject);
+				DestroyImmediate(((Camera)((DictionaryEntry)enumerator.Current).Value).gameObject);
 			}
 		}
 		finally
@@ -164,7 +164,7 @@ public class Reflection : MonoBehaviour
 		{
 			if ((bool)m_ReflectionTexture)
 			{
-				UnityEngine.Object.DestroyImmediate(m_ReflectionTexture);
+				DestroyImmediate(m_ReflectionTexture);
 			}
 
 			m_ReflectionTexture = new RenderTexture(m_TextureSize, m_TextureSize, 16);
@@ -182,8 +182,8 @@ public class Reflection : MonoBehaviour
 					typeof(Camera), typeof(Skybox));
 			reflectionCamera = gameObject.GetComponent<Camera>();
 			reflectionCamera.enabled = false;
-			reflectionCamera.transform.position = base.transform.position;
-			reflectionCamera.transform.rotation = base.transform.rotation;
+			reflectionCamera.transform.position = transform.position;
+			reflectionCamera.transform.rotation = transform.rotation;
 			reflectionCamera.gameObject.AddComponent<FlareLayer>();
 			gameObject.hideFlags = HideFlags.HideAndDontSave;
 			m_ReflectionCameras[currentCamera] = reflectionCamera;

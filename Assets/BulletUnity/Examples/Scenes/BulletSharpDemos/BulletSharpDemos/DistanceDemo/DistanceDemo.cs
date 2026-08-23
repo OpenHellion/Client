@@ -83,7 +83,7 @@ namespace DistanceDemo
             GjkPairDetector detector = new GjkPairDetector(colShape0, colShape1, sGjkSimplexSolver, null);
             detector.CachedSeparatingAxis = new Vector3(0.00000000f, 0.059727669f, 0.29259586f);
 
-            GjkPairDetector.ClosestPointInput input = new GjkPairDetector.ClosestPointInput();
+			DiscreteCollisionDetectorInterface.ClosestPointInput input = new DiscreteCollisionDetectorInterface.ClosestPointInput();
             input.TransformA = rotBody.CenterOfMassTransform;
             input.TransformB = body2Position;
 

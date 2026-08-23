@@ -14,7 +14,7 @@ public static class OfflineBallSimulation {
 
 		//Create a World
 		Debug.Log("Initialize physics");
-        
+
 		CollisionConfiguration CollisionConf;
 		CollisionDispatcher Dispatcher;
 	    BroadphaseInterface Broadphase;
@@ -31,8 +31,8 @@ public static class OfflineBallSimulation {
         // IMPORTANT rigidbodies must be added to the offline world in the same order that they are in the source world
         // this is because collisions must be resolved in the same order for the sim to be deterministic
         DiscreteDynamicsWorld sourceWorld = (DiscreteDynamicsWorld) bw.world;
-		BulletSharp.RigidBody bulletBallRb = null;
-        BulletSharp.Math.Matrix mm = BulletSharp.Math.Matrix.Identity;
+		RigidBody bulletBallRb = null;
+		Matrix mm = Matrix.Identity;
 		for(int i = 0; i < sourceWorld.NumCollisionObjects; i++)
 		{
             CollisionObject co = sourceWorld.CollisionObjectArray[i];
@@ -56,7 +56,7 @@ public static class OfflineBallSimulation {
                 rb.CreateOrConfigureRigidBody(ref bulletRB, ref localInertia, shape, null);
                 BulletSharp.Math.Vector3 pos = rb.GetCollisionObject().WorldTransform.Origin;
                 BulletSharp.Math.Quaternion rot = rb.GetCollisionObject().WorldTransform.GetOrientation();
-                BulletSharp.Math.Matrix.AffineTransformation(1f, ref rot, ref pos, out mm);
+				Matrix.AffineTransformation(1f, ref rot, ref pos, out mm);
                 bulletRB.WorldTransform = mm;
                 World.AddRigidBody(bulletRB, rb.groupsIBelongTo, rb.collisionMask);
                 if (rb == ballRb)
@@ -74,7 +74,7 @@ public static class OfflineBallSimulation {
 			ballPositions.Add(bulletBallRb.WorldTransform.Origin.ToUnity());
         }
 
-		UnityEngine.Debug.Log("ExitPhysics");
+		Debug.Log("ExitPhysics");
 		if (World != null)
 		{
 			//remove/dispose constraints

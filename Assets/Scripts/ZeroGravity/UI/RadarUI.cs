@@ -42,7 +42,7 @@ namespace ZeroGravity.UI
 		public GameObject RadarCroshair;
 
 		[FormerlySerializedAs("_worldState")] [SerializeField] private World _world;
-		private Camera _mainCamera;
+		private Camera _uiCamera;
 
 		public int CurrentRadarRange => (int)(10000f * (MyPlayer.Instance.CurrentHelmet == null
 			? 1f
@@ -50,7 +50,8 @@ namespace ZeroGravity.UI
 
 		private void Awake()
 		{
-			_mainCamera = Camera.main;
+			Canvas canvas = OverlayTargets.GetComponentInParent<Canvas>(includeInactive: true).rootCanvas;
+			_uiCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
 		}
 
 		private void Start()
@@ -117,7 +118,7 @@ namespace ZeroGravity.UI
 
 		public void UpdateRadarList()
 		{
-			Vector3D myPos = MyPlayer.Instance.Parent.Position + MyPlayer.Instance.transform.position.ToVector3D();
+			Vector3 myPos = MyPlayer.Instance.Parent.transform.position + MyPlayer.Instance.transform.position;
 			List<TargetObject> list2 = AllTargets.Where((TargetObject m) =>
 				m.ArtificialBody == null || m.ArtificialBody is not SpaceObjectVessel ||
 				!(m.ArtificialBody as SpaceObjectVessel).IsMainVessel || m.Distance > CurrentRadarRange).ToList();
@@ -137,10 +138,10 @@ namespace ZeroGravity.UI
 			}
 
 			List<ArtificialBody> list = AllTargets.Select((TargetObject m) => m.ArtificialBody).ToList();
-			foreach (ArtificialBody item2 in SolarSystem.ArtificialBodyReferences.Where((ArtificialBody m) =>
-				         m is SpaceObjectVessel && (m as SpaceObjectVessel).VesselData != null &&
+			foreach (ArtificialBody item2 in _world.AllArtificialBodies.Where((ArtificialBody m) =>
+				         m is SpaceObjectVessel &&
 				         (m as SpaceObjectVessel).IsMainVessel && !(m as SpaceObjectVessel).IsWarpOnline &&
-				         (myPos - m.Position).Magnitude <= CurrentRadarRange && !list.Contains(m)))
+				         (myPos - m.transform.position).magnitude <= CurrentRadarRange && !list.Contains(m)))
 			{
 				TargetObject targetObject = new TargetObject
 				{
@@ -175,15 +176,12 @@ namespace ZeroGravity.UI
 					targetOverlayUI.Name.text = targetOverlayUI.Target.Name;
 				}
 
-				Vector3 pos = !targetOverlayUI.Target.ArtificialBody.IsDummyObject
-					? targetOverlayUI.Target.ArtificialBody.transform.position
-					: ((targetOverlayUI.Target.ArtificialBody.Position - MyPlayer.Instance.Parent.Position)
-						.ToVector3() - MyPlayer.Instance.transform.position);
+				Vector3 pos = targetOverlayUI.Target.ArtificialBody.transform.position;
 				Vector2 localPoint = Vector2.zero;
 				Vector3 arrowUp;
 				Vector3 positionOnOverlay = GetPositionOnOverlay(pos, out arrowUp);
 				RectTransformUtility.ScreenPointToLocalPointInRectangle(OverlayTargets.GetComponent<RectTransform>(),
-					positionOnOverlay, _mainCamera, out localPoint);
+					positionOnOverlay, _uiCamera, out localPoint);
 				targetOverlayUI.transform.localPosition = localPoint;
 				targetOverlayUI.transform.rotation = Quaternion.identity;
 				if (!targetOverlayUI.gameObject.activeInHierarchy)
@@ -244,8 +242,7 @@ namespace ZeroGravity.UI
 				}
 
 				targetOverlayUI.Distance.text = FormatHelper.DistanceFormat(
-					((targetOverlayUI.Target.ArtificialBody.Position - MyPlayer.Instance.Parent.Position).ToVector3() -
-					 MyPlayer.Instance.transform.position).magnitude);
+					(targetOverlayUI.Target.ArtificialBody.transform.position - MyPlayer.Instance.transform.position).magnitude);
 			}
 		}
 
@@ -285,13 +282,10 @@ namespace ZeroGravity.UI
 					ParametersHolder.SetActive(value: true);
 				}
 
-				Vector3 vector =
-					(SelectedTarget.ArtificialBody.Position - MyPlayer.Instance.Parent.Position).ToVector3() -
-					MyPlayer.Instance.transform.position;
+				Vector3 vector = SelectedTarget.ArtificialBody.transform.position - MyPlayer.Instance.transform.position;
 				Vector3 vector2 =
-					(SelectedTarget.ArtificialBody.Velocity - MyPlayer.Instance.Parent.Velocity).ToVector3() -
+					SelectedTarget.ArtificialBody.Velocity - MyPlayer.Instance.Parent.Velocity -
 					MyPlayer.Instance.rigidBody.linearVelocity;
-				Vector3 vector3 = Vector3.Project(vector2, vector.normalized);
 				Vector3 vector4 = Vector3.ProjectOnPlane(vector2, vector.normalized);
 				float magnitude = vector.magnitude;
 				float num = 0f - Vector3.Dot(vector2, vector.normalized);

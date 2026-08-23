@@ -65,7 +65,7 @@ public class SceneTextLabel : MonoBehaviour
 	{
 		if (matInstance == null && comp != null)
 		{
-			matInstance = Object.Instantiate(sourceMat);
+			matInstance = Instantiate(sourceMat);
 			if (comp is MeshRenderer)
 			{
 				(comp as MeshRenderer).material = matInstance;

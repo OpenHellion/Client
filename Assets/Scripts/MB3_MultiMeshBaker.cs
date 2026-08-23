@@ -14,10 +14,10 @@ public class MB3_MultiMeshBaker : MB3_MeshBakerCommon
 	{
 		if (_meshCombiner.resultSceneObject == null)
 		{
-			_meshCombiner.resultSceneObject = new GameObject("CombinedMesh-" + base.name);
+			_meshCombiner.resultSceneObject = new GameObject("CombinedMesh-" + name);
 		}
 
-		meshCombiner.name = base.name + "-mesh";
+		meshCombiner.name = name + "-mesh";
 		return _meshCombiner.AddDeleteGameObjects(gos, deleteGOs, disableRendererInSource);
 	}
 
@@ -25,10 +25,10 @@ public class MB3_MultiMeshBaker : MB3_MeshBakerCommon
 	{
 		if (_meshCombiner.resultSceneObject == null)
 		{
-			_meshCombiner.resultSceneObject = new GameObject("CombinedMesh-" + base.name);
+			_meshCombiner.resultSceneObject = new GameObject("CombinedMesh-" + name);
 		}
 
-		meshCombiner.name = base.name + "-mesh";
+		meshCombiner.name = name + "-mesh";
 		return _meshCombiner.AddDeleteGameObjectsByID(gos, deleteGOs, disableRendererInSource);
 	}
 }

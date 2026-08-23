@@ -26,9 +26,9 @@ public class TestingMeshGeneration : MonoBehaviour
 		{
 		}
 
-		float x = base.transform.position.x;
-		float y = base.transform.position.y;
-		float z = base.transform.position.z;
+		float x = transform.position.x;
+		float y = transform.position.y;
+		float z = transform.position.z;
 		newVertices.Add(new Vector3(x, y, z));
 		newVertices.Add(new Vector3(x + 1f, y, z));
 		newVertices.Add(new Vector3(x + 1f, y - 1f, z));

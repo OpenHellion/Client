@@ -21,8 +21,6 @@ namespace ZeroGravity.ShipComponents
 
 		private int currentRadarRange;
 
-		private float drawDistance = 100f;
-
 		public List<TargetObject> AllTargets = new List<TargetObject>();
 
 		public TargetObject SelectedTarget;
@@ -85,15 +83,11 @@ namespace ZeroGravity.ShipComponents
 
 		private float onSpeed;
 
-		private float angle;
-
 		private float stabilizeRotationTreshold = 0.8f;
 
 		private float StabilizeRotationTimer;
 
-		private Vector3D currentShipRotation;
-
-		private Vector3D targetShipRotation;
+		private Vector3 _currentShipRotation;
 
 		public RectTransform RotationIndicator;
 
@@ -177,7 +171,7 @@ namespace ZeroGravity.ShipComponents
 
 			if (CurrentRadar != null)
 			{
-				CurrentRadar.UpdateRadar();
+				CurrentRadar.UpdateRadar(SelectedTarget);
 			}
 
 			if (SelectedTarget != null && CentralPanel.activeInHierarchy)
@@ -191,7 +185,7 @@ namespace ZeroGravity.ShipComponents
 			}
 
 			if (!AllTargets.Contains(SelectedTarget) || SelectedTarget == null ||
-			    (SelectedTarget.ArtificialBody.Position - ParentShip.Position).Magnitude >
+			    (SelectedTarget.ArtificialBody.transform.position - ParentShip.transform.position).magnitude >
 			    RadarRange[RadarRange.Count - 1])
 			{
 				if (AllTargets.Count > 0)
@@ -208,7 +202,7 @@ namespace ZeroGravity.ShipComponents
 			{
 				if (Keyboard.current.tKey.isPressed)
 				{
-					_world.OffSpeedHelper = !_world.OffSpeedHelper;
+					ParentShip.OffSpeedHelper = !ParentShip.OffSpeedHelper;
 				}
 
 				if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Equip) &&
@@ -267,7 +261,7 @@ namespace ZeroGravity.ShipComponents
 
 			if (CurrentStatusScreen != null)
 			{
-				CurrentStatusScreen.UpdateSystemsInfo();
+				CurrentStatusScreen.UpdateSystemsInfo(ParentShip);
 			}
 
 			EngineHud.SetActive(ParentShip.Engine != null && ParentShip.EngineOnLine);
@@ -290,26 +284,10 @@ namespace ZeroGravity.ShipComponents
 
 		private void CalculateScaleAndRotation()
 		{
-			Vector3 vector = (SelectedTarget.ArtificialBody.Position - ParentShip.Position).ToVector3();
-			Vector3 vector2 = (SelectedTarget.ArtificialBody.Velocity - ParentShip.Velocity).ToVector3();
-			Vector3 vector3 = Quaternion.LookRotation(ParentShip.Forward, ParentShip.Up).Inverse() * vector;
-			Vector3 vector4 = Quaternion.LookRotation(ParentShip.Forward, ParentShip.Up).Inverse() * vector2;
-			Vector3 vector5 = Quaternion.LookRotation(ParentShip.transform.forward, ParentShip.transform.up) * vector3 -
-			                  (MyPlayer.Instance.FpsController.MainCamera.transform.position -
-			                   ParentShip.transform.position);
-			float num = vector5.magnitude - (float)SelectedTarget.ArtificialBody.Radius;
-			if (num > drawDistance)
-			{
-				vector5 = vector5.normalized * drawDistance;
-			}
-			else
-			{
-				vector5 = vector5.normalized * (vector5.magnitude - (float)SelectedTarget.ArtificialBody.Radius);
-			}
-
-			Vector3 vector6 = Vector3.Project(vector2, vector.normalized);
+			Vector3 vector = SelectedTarget.ArtificialBody.transform.position - ParentShip.transform.position;
+			Vector3 vector2 = SelectedTarget.ArtificialBody.Velocity - ParentShip.Velocity;
+			Vector3 vector3 = ParentShip.transform.rotation.Inverse() * vector;
 			Vector3 vec = Vector3.ProjectOnPlane(vector2, vector.normalized);
-			angle = MathHelper.AngleSigned(ParentShip.Up, vec, ParentShip.Forward);
 			distance = Mathf.Abs(vector3.magnitude);
 			onSpeed = 0f - Vector3.Dot(vector2, vector.normalized);
 			TargetDirectional.color = (!(onSpeed >= 0f)) ? Colors.FormatedRed : Colors.White;
@@ -372,7 +350,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void UpdateRadarList()
 		{
-			Vector3D myPos = MyPlayer.Instance.Parent.Position;
+			Vector3 myPos = MyPlayer.Instance.Parent.transform.position;
 			List<TargetObject> list2 = AllTargets.Where((TargetObject m) => m.ArtificialBody == null ||
 			                                                                !(m.ArtificialBody is SpaceObjectVessel) ||
 			                                                                !(m.ArtificialBody as SpaceObjectVessel)
@@ -423,11 +401,11 @@ namespace ZeroGravity.ShipComponents
 			}
 
 			List<ArtificialBody> list = AllTargets.Select((TargetObject m) => m.ArtificialBody).ToList();
-			foreach (ArtificialBody item2 in SolarSystem.ArtificialBodyReferences.Where((ArtificialBody m) =>
-				         (m as SpaceObjectVessel)?.VesselData != null &&
+			foreach (ArtificialBody item2 in _world.AllArtificialBodies.Where((ArtificialBody m) =>
+				         m is SpaceObjectVessel &&
 				         ((SpaceObjectVessel)m).IsMainVessel && !((SpaceObjectVessel)m).IsWarpOnline &&
 				         ParentShip.MainVessel != ((SpaceObjectVessel)m).MainVessel &&
-				         (myPos - m.Position).Magnitude <= RadarRange[currentRadarRange] && !list.Contains(m) &&
+				         (myPos - m.transform.position).magnitude <= RadarRange[currentRadarRange] && !list.Contains(m) &&
 				         (SpaceObjectVessel)m != ParentShip))
 			{
 				TargetObject targetObject = new TargetObject
@@ -443,7 +421,7 @@ namespace ZeroGravity.ShipComponents
 
 				if (CurrentRadar != null)
 				{
-					CurrentRadar.CreateRadarTarget(targetObject);
+					CurrentRadar.CreateRadarTarget(this, targetObject);
 				}
 			}
 		}
@@ -462,11 +440,7 @@ namespace ZeroGravity.ShipComponents
 				OverlayTargets.GetComponentsInChildren<TargetOverlayUI>(includeInactive: true);
 			foreach (TargetOverlayUI targetOverlayUI in componentsInChildren)
 			{
-				Vector3 pos = (!targetOverlayUI.Target.ArtificialBody.IsDummyObject)
-					? targetOverlayUI.Target.ArtificialBody.transform.position
-					: (Quaternion.LookRotation(ParentShip.MainVessel.Forward, ParentShip.MainVessel.Up).Inverse() *
-					   (targetOverlayUI.Target.ArtificialBody.Position - ParentShip.Position).ToVector3() +
-					   ParentShip.GeometryRoot.transform.position);
+				Vector3 pos = targetOverlayUI.Target.ArtificialBody.transform.position;
 				targetOverlayUI.transform.position = GetPositionOnOverlay(pos, out var arrowUp);
 				targetOverlayUI.transform.rotation = Quaternion.identity;
 				if (!targetOverlayUI.gameObject.activeInHierarchy)
@@ -533,8 +507,8 @@ namespace ZeroGravity.ShipComponents
 					targetOverlayUI.NameHolder.SetActive(value: false);
 				}
 
-				Vector3 vector = (targetOverlayUI.AB.Position - ParentShip.Position).ToVector3();
-				Vector3 vector2 = Quaternion.LookRotation(ParentShip.Forward, ParentShip.Up).Inverse() * vector;
+				Vector3 vector = targetOverlayUI.AB.transform.position - ParentShip.transform.position;
+				Vector3 vector2 = ParentShip.transform.rotation.Inverse() * vector;
 				targetOverlayUI.Distance.text = FormatHelper.DistanceFormat(vector2.magnitude);
 			}
 		}
@@ -553,38 +527,26 @@ namespace ZeroGravity.ShipComponents
 
 		private void UpdateSelectedMapObject()
 		{
-			if (SelectedMapObject != null && !ManeuverObject.gameObject.activeInHierarchy)
-			{
-				if (SelectedMapObject.MainObject != null)
-				{
-					Vector3 pos =
-						Quaternion.LookRotation(ParentShip.MainVessel.Forward, ParentShip.MainVessel.Up).Inverse() *
-						(SelectedMapObject.MainObject.Position - ParentShip.Position).ToVector3() +
-						ParentShip.GeometryRoot.transform.position;
-					double magnitude = (SelectedMapObject.MainObject.Position - ParentShip.MainVessel.Position)
-						.Magnitude;
-					MapObject.transform.position = GetPositionOnOverlay(pos, out var _);
-					MapObjectName.text = SelectedMapObject.Name.ToUpper();
-					MapObjectDistance.text = FormatHelper.DistanceFormat(magnitude);
-					MapObject.Activate(value: true);
-				}
-				else
-				{
-					Vector3D position = SelectedMapObject.Orbit.Position;
-					Vector3 pos2 =
-						Quaternion.LookRotation(ParentShip.MainVessel.Forward, ParentShip.MainVessel.Up).Inverse() *
-						(position - ParentShip.Position).ToVector3() + ParentShip.GeometryRoot.transform.position;
-					double magnitude2 = (position - ParentShip.MainVessel.Position).Magnitude;
-					MapObject.transform.position = GetPositionOnOverlay(pos2, out var _);
-					MapObjectName.text = SelectedMapObject.Name.ToUpper();
-					MapObjectDistance.text = FormatHelper.DistanceFormat(magnitude2);
-					MapObject.Activate(value: true);
-				}
-			}
-			else
+			if (SelectedMapObject == null || ManeuverObject.gameObject.activeInHierarchy)
 			{
 				MapObject.Activate(value: false);
+				return;
 			}
+
+			// The map works in solar-system space; the overlay is drawn in client space. The offset from
+			// the ship has to cross that boundary before it can be added to anything on screen.
+			Vector3D targetPosition = SelectedMapObject.MainObject != null
+				? SelectedMapObject.MainObject.Position
+				: SelectedMapObject.Orbit.Position;
+			Vector3 offsetFromShip =
+				(targetPosition - _world.LocalToWorldPosition(ParentShip.transform.position)).ToVector3();
+
+			MapObject.transform.position = GetPositionOnOverlay(
+				offsetFromShip + ParentShip.GeometryRoot.transform.position, out var _);
+			MapObjectName.text = SelectedMapObject.Name.ToUpper();
+			MapObjectDistance.text = FormatHelper.DistanceFormat(
+				(targetPosition - _world.LocalToWorldPosition(ParentShip.MainVessel.transform.position)).Magnitude);
+			MapObject.Activate(value: true);
 		}
 
 		private void UpdateManeuverTarget()
@@ -614,9 +576,7 @@ namespace ZeroGravity.ShipComponents
 					ManeuverTimer.text = string.Empty;
 				}
 
-				Vector3 pos =
-					Quaternion.LookRotation(ParentShip.MainVessel.Forward, ParentShip.MainVessel.Up).Inverse() *
-					ParentShip.CourseStartDirection * 10000f + ParentShip.GeometryRoot.transform.position;
+				Vector3 pos = ParentShip.CourseStartDirection * 10000f + ParentShip.GeometryRoot.transform.position;
 				ManeuverObject.transform.position = GetPositionOnOverlay(pos, out var arrowUp);
 				if (arrowUp != Vector3.zero)
 				{
@@ -628,7 +588,7 @@ namespace ZeroGravity.ShipComponents
 					ManeuverOffScreen.gameObject.Activate(value: false);
 				}
 
-				if (Vector3.Angle(ParentShip.Forward, ParentShip.CourseStartDirection) < 5f)
+				if (Vector3.Angle(ParentShip.transform.forward, ParentShip.CourseStartDirection) < 5f)
 				{
 					ManeuverObject.color = Colors.Green;
 				}
@@ -672,13 +632,13 @@ namespace ZeroGravity.ShipComponents
 
 		private void RotationIndicatorUpdate()
 		{
-			targetShipRotation =
-				((!ParentShip.TargetRotation.HasValue)
+			Vector3 targetShipRotation =
+				(!ParentShip.TargetRotation.HasValue
 					? Quaternion.LookRotation(ParentShip.transform.forward, ParentShip.transform.up)
-					: (Quaternion.LookRotation(ParentShip.Forward, ParentShip.Up).Inverse() *
-					   ParentShip.TargetRotation.Value)).ToQuaternionD().Inverse() *
-				Vector3D.ProjectOnPlane(ParentShip.MainVessel.RotationVec, ParentShip.transform.forward.ToVector3D());
-			currentShipRotation = Vector3D.Lerp(currentShipRotation, targetShipRotation, Time.deltaTime * 4f);
+					: (ParentShip.transform.rotation.Inverse() *
+					   ParentShip.TargetRotation.Value)).Inverse() *
+				Vector3.ProjectOnPlane(ParentShip.MainVessel.RotationVec, Vector3.forward);
+			_currentShipRotation = Vector3.Lerp(_currentShipRotation, targetShipRotation, Time.deltaTime * 4f);
 			Vector3 shipRotationCursor = MyPlayer.Instance.ShipRotationCursor;
 			if (shipRotationCursor.magnitude > 0.01f)
 			{
@@ -781,8 +741,8 @@ namespace ZeroGravity.ShipComponents
 		{
 			if (SelectedTarget != null)
 			{
-				Vector3 vector = Quaternion.LookRotation(ParentShip.Forward, ParentShip.Up).Inverse() *
-				                 (ParentShip.Velocity - SelectedTarget.ArtificialBody.Velocity).ToVector3();
+				Vector3 vector = ParentShip.transform.rotation.Inverse() *
+				                 (ParentShip.Velocity - SelectedTarget.ArtificialBody.Velocity);
 				Vector3 vector2 = Vector3.ProjectOnPlane(vector, Vector3.forward);
 				Vector3 vector3 = vector2;
 				if (vector3.x < 0f)
@@ -819,9 +779,9 @@ namespace ZeroGravity.ShipComponents
 		private void CheckTargetStabilization()
 		{
 			if (ParentShip.MainVessel.IsStabilized || SelectedTarget == null ||
-			    (SelectedTarget.ArtificialBody.Velocity - ParentShip.Velocity).Magnitude >
+			    (SelectedTarget.ArtificialBody.Velocity - ParentShip.Velocity).magnitude >
 			    stabilizeToTargetMaxVelocityDiff ||
-			    (SelectedTarget.ArtificialBody.Position - ParentShip.Position).Magnitude -
+			    (SelectedTarget.ArtificialBody.transform.position - ParentShip.transform.position).magnitude -
 			    SelectedTarget.ArtificialBody.Radius > stabilizeToTargetMaxPositionDiff)
 			{
 				CanMatchTarget.SetActive(value: false);

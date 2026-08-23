@@ -1,10 +1,12 @@
 using System;
-using OpenHellion.Social.RichPresence;
 using UnityEngine;
 using ZeroGravity.LevelDesign;
 
 namespace ZeroGravity.Objects
 {
+	/// <summary>
+	/// 	Base class for player, see <c>MyPlayer</c> and <c>OtherPlayer</c>.
+	/// </summary>
 	public abstract class Player : SpaceObjectTransferable
 	{
 		[NonSerialized] public string PlayerName;

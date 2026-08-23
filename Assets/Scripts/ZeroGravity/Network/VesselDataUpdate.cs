@@ -5,7 +5,7 @@ namespace ZeroGravity.Network
 	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 	public class VesselDataUpdate
 	{
-		public long GUID;
+		public long Guid;
 
 		public string VesselRegistration;
 
@@ -16,5 +16,7 @@ namespace ZeroGravity.Network
 		public bool? IsDistressSignalActive;
 
 		public bool? IsAlwaysVisible;
+
+		public float ExposureDamage;
 	}
 }

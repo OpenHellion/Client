@@ -38,7 +38,12 @@ namespace ZeroGravity.ShipComponents
 
 		public override void SetOrbit()
 		{
-			List<Vector3D> flightPathPositions = Orbit.GetFlightPathPositions(World, NumberOfOrbitPositions, 60.0, out _);
+			if (Orbit == null)
+			{
+				return;
+			}
+
+			List<Vector3D> flightPathPositions = base.Orbit.GetFlightPathPositions(World, NumberOfOrbitPositions, 60.0, out _);
 			MyOrbitRenderer.positionCount = flightPathPositions.Count;
 			if (flightPathPositions.Count > 0)
 			{

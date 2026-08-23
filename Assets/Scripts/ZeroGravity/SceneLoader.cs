@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenHellion;
 using OpenHellion.IO;
@@ -161,7 +159,7 @@ namespace ZeroGravity
 			Debug.Log("Done preloading.");
 		}
 
-		public void LoadScenesWithIDs(List<GameScenes.SceneId> sceneIDs)
+		public async UniTask LoadScenesWithIDs(List<GameScenes.SceneId> sceneIDs)
 		{
 			if (sceneIDs == null || sceneIDs.Count == 0)
 			{
@@ -170,18 +168,15 @@ namespace ZeroGravity
 
 			foreach (GameScenes.SceneId sceneID in sceneIDs)
 			{
-				KeyValuePair<long, string> scene =
-					_structureScenes.FirstOrDefault((KeyValuePair<long, string> m) => m.Key == (long)sceneID);
-				if (scene.Key != 0)
+				if (_structureScenes.ContainsKey((long)sceneID) && sceneID != 0)
 				{
-					LoadSceneAsync(SceneType.Structure, scene.Key).Forget();
-					continue;
+					await LoadSceneAsync(SceneType.Structure, (long)sceneID);
 				}
 
-				scene = _celestialScenes.FirstOrDefault((KeyValuePair<long, string> m) => m.Key == (long)sceneID);
-				if (scene.Key != 0)
+
+				if (_celestialScenes.ContainsKey((long)sceneID) && (long)sceneID != 0)
 				{
-					LoadSceneAsync(SceneType.CelestialBody, scene.Key).Forget();
+					await LoadSceneAsync(SceneType.CelestialBody, (long)sceneID);
 				}
 			}
 		}
@@ -265,6 +260,8 @@ namespace ZeroGravity
 			}
 
 			_scenesCurrentlyLoading.Remove(sceneId);
+
+			Debug.LogFormat("Loaded scene {0} from disk.", ((GameScenes.SceneId)sceneId).ToString());
 		}
 	}
 }

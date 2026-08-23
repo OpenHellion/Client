@@ -8,6 +8,6 @@ public class MB_ExampleMover : MonoBehaviour
 	{
 		Vector3 position = new Vector3(5f, 5f, 5f);
 		position[axis] *= Mathf.Sin(Time.time);
-		base.transform.position = position;
+		transform.position = position;
 	}
 }

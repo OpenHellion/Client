@@ -88,9 +88,9 @@ namespace BulletUnity {
             {
                 return;
             }
-            UnityEngine.Vector3 position = transform.position;
-            UnityEngine.Quaternion rotation = transform.rotation;
-            UnityEngine.Vector3 scale = m_localScaling;
+			Vector3 position = transform.position;
+			Quaternion rotation = transform.rotation;
+			Vector3 scale = m_localScaling;
             if (upAxis == CapsuleAxis.x)
             {
                 rotation = Quaternion.AngleAxis(90, transform.forward) * rotation;

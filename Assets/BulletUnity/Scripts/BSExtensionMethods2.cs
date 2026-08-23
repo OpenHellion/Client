@@ -7,23 +7,23 @@ using System.Reflection;
 namespace BulletUnity {
     public static class BSExtensionMethods2 {
 
-        public static BulletSharp.Math.Quaternion ToBullet(this UnityEngine.Quaternion v) {
+        public static BulletSharp.Math.Quaternion ToBullet(this Quaternion v) {
             return new BulletSharp.Math.Quaternion(v.x, v.y, v.z, v.w);
         }
 
-        public static UnityEngine.Quaternion ToUnity(this BulletSharp.Math.Quaternion v) {
-            return new UnityEngine.Quaternion(v.X, v.Y, v.Z, v.W);
+        public static Quaternion ToUnity(this BulletSharp.Math.Quaternion v) {
+            return new Quaternion(v.X, v.Y, v.Z, v.W);
         }
 
-        public static BulletSharp.Math.Vector3 ToBullet(this UnityEngine.Vector3 v) {
+        public static BulletSharp.Math.Vector3 ToBullet(this Vector3 v) {
             return new BulletSharp.Math.Vector3(v.x, v.y, v.z);
         }
 
-        public static UnityEngine.Vector3 ToUnity(this BulletSharp.Math.Vector3 v) {
-            return new UnityEngine.Vector3(v.X, v.Y, v.Z);
+        public static Vector3 ToUnity(this BulletSharp.Math.Vector3 v) {
+            return new Vector3(v.X, v.Y, v.Z);
         }
 
-        public static UnityEngine.Matrix4x4 ToUnity(this BulletSharp.Math.Matrix bm) {
+        public static Matrix4x4 ToUnity(this BulletSharp.Math.Matrix bm) {
             Matrix4x4 um = new Matrix4x4();
             um[0, 0] = bm[0, 0];
             um[0, 1] = bm[1, 0];
@@ -90,9 +90,9 @@ namespace BulletUnity {
 
                 //Scaling is the length of the rows.
                 BulletSharp.Math.Vector3 scale;
-                scale.X = (float)System.Math.Sqrt((bm.M11 * bm.M11) + (bm.M12 * bm.M12) + (bm.M13 * bm.M13));
-                scale.Y = (float)System.Math.Sqrt((bm.M21 * bm.M21) + (bm.M22 * bm.M22) + (bm.M23 * bm.M23));
-                scale.Z = (float)System.Math.Sqrt((bm.M31 * bm.M31) + (bm.M32 * bm.M32) + (bm.M33 * bm.M33));
+                scale.X = (float)Math.Sqrt((bm.M11 * bm.M11) + (bm.M12 * bm.M12) + (bm.M13 * bm.M13));
+                scale.Y = (float)Math.Sqrt((bm.M21 * bm.M21) + (bm.M22 * bm.M22) + (bm.M23 * bm.M23));
+                scale.Z = (float)Math.Sqrt((bm.M31 * bm.M31) + (bm.M32 * bm.M32) + (bm.M33 * bm.M33));
 
                 //The rotation is the left over matrix after dividing out the scaling.
                 float mm11 = bm.M11 / scale.X;
@@ -115,7 +115,7 @@ namespace BulletUnity {
                 BulletSharp.Math.Quaternion result = new BulletSharp.Math.Quaternion();
                 if (trace > 0.0f)
                 {
-                    sqrt = (float)UnityEngine.Mathf.Sqrt(trace + 1.0f);
+                    sqrt = (float)Mathf.Sqrt(trace + 1.0f);
                     result.W = sqrt * 0.5f;
                     sqrt = 0.5f / sqrt;
 
@@ -125,7 +125,7 @@ namespace BulletUnity {
                 }
                 else if ((mm11 >= mm22) && (mm11 >= mm33))
                 {
-                    sqrt = (float)UnityEngine.Mathf.Sqrt(1.0f + mm11 - mm22 - mm33);
+                    sqrt = (float)Mathf.Sqrt(1.0f + mm11 - mm22 - mm33);
                     half = 0.5f / sqrt;
 
                     result.X = 0.5f * sqrt;
@@ -135,7 +135,7 @@ namespace BulletUnity {
                 }
                 else if (mm22 > mm33)
                 {
-                    sqrt = (float)UnityEngine.Mathf.Sqrt(1.0f + mm22 - mm11 - mm33);
+                    sqrt = (float)Mathf.Sqrt(1.0f + mm22 - mm11 - mm33);
                     half = 0.5f / sqrt;
 
                     result.X = (mm21 + mm12) * half;
@@ -145,7 +145,7 @@ namespace BulletUnity {
                 }
                 else
                 {
-                    sqrt = (float)UnityEngine.Mathf.Sqrt(1.0f + mm33 - mm11 - mm22);
+                    sqrt = (float)Mathf.Sqrt(1.0f + mm33 - mm11 - mm22);
                     half = 0.5f / sqrt;
 
                     result.X = (mm31 + mm13) * half;
@@ -194,13 +194,13 @@ namespace BulletUnity {
                 bm.M33 = 1.0f - (2.0f * (yy + xx));
         }
 
-        public static BulletSharp.Math.Matrix ToBullet(this UnityEngine.Matrix4x4 um) {
+        public static BulletSharp.Math.Matrix ToBullet(this Matrix4x4 um) {
             BulletSharp.Math.Matrix bm = new BulletSharp.Math.Matrix();
             um.ToBullet(ref bm);
             return bm;
         }
 
-        public static void ToBullet(this UnityEngine.Matrix4x4 um, ref BulletSharp.Math.Matrix bm) {
+        public static void ToBullet(this Matrix4x4 um, ref BulletSharp.Math.Matrix bm) {
             bm[0, 0] = um[0, 0];
             bm[0, 1] = um[1, 0];
             bm[0, 2] = um[2, 0];
@@ -222,8 +222,8 @@ namespace BulletUnity {
             bm[3, 3] = um[3, 3];
         }
 
-        public static void SetTransformationFromBulletMatrix(this UnityEngine.Transform transform, BulletSharp.Math.Matrix bm) {
-            UnityEngine.Matrix4x4 matrix = bm.ToUnity();  //creates new Unity Matrix4x4
+        public static void SetTransformationFromBulletMatrix(this Transform transform, BulletSharp.Math.Matrix bm) {
+			Matrix4x4 matrix = bm.ToUnity();  //creates new Unity Matrix4x4
             transform.localPosition = ExtractTranslationFromMatrix(ref matrix);
             transform.localRotation = ExtractRotationFromMatrix(ref matrix);
             transform.localScale = ExtractScaleFromMatrix(ref matrix);

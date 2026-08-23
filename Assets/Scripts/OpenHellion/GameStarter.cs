@@ -1,4 +1,4 @@
-﻿// GameStarter.cs
+// GameStarter.cs
 //
 // Copyright (C) 2026, OpenHellion contributors
 //
@@ -171,22 +171,19 @@ namespace OpenHellion
 
 					if (wasLoginSuccessful)
 					{
-						await UniTask.SwitchToMainThread();
 						AkSoundEngine.SetRTPCValue(SoundManager.InGameVolume, 1f);
 						MyPlayer.Instance.InitializeCameraEffects();
 						Globals.ToggleCursor(false);
 
-						MyPlayer.Instance.PlayerReady = true;
 						_world.ActivatePlayerDelegate();
-						RichPresenceManager.UpdateStatus();
+						await NetworkController.SendAsync(new EnvironmentReadyMessage());
+						MyPlayer.Instance.PlayerReady = true;
+						RichPresenceManager.UpdateStatus(_world);
 
 						_world.InGameGUI.HelmetHud.gameObject.Activate(true);
 						await FixCryoPodState();
 						GlobalGUI.CloseLoadingScreen();
-						await NetworkController.SendAsync(new EnvironmentReadyMessage());
 					}
-
-					await UniTask.SwitchToMainThread();
 
 					Destroy(gameObject);
 					return;
@@ -228,10 +225,19 @@ namespace OpenHellion
 				.GetComponentsInChildren<SceneTriggerExecutor>(includeInactive: true);
 
 			SceneTriggerExecutor exec = executorsInChildren.FirstOrDefault(static (SceneTriggerExecutor m) => m.CurrentState == "spawn");
-			await UniTask.WaitForSeconds(0.5f, true); // Wait for animator to set InLockState to true.
-			if (exec != null && MyPlayer.Instance.InLockState)
+			if (exec == null)
 			{
+				return;
+			}
+
+			try
+			{
+				await UniTask.WaitUntil(() => MyPlayer.Instance.InLockState).Timeout(TimeSpan.FromSeconds(2));
 				exec.ChangeStateImmediateForce("occupied");
+			}
+			catch (TimeoutException)
+			{
+				Debug.LogWarning("Cryo pod lock animation event did not fire within the timeout; leaving player in spawn state.");
 			}
 		}
 	}

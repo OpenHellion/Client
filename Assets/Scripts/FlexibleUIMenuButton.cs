@@ -25,8 +25,8 @@ public class FlexibleUIMenuButton : FlexibleUI
 	{
 		base.OnSkinUI();
 		image = GetComponent<Image>();
-		hover = base.transform.Find("Hover").GetComponent<Image>();
-		icon = base.transform.Find("Icon").GetComponent<Image>();
+		hover = transform.Find("Hover").GetComponent<Image>();
+		icon = transform.Find("Icon").GetComponent<Image>();
 		button = GetComponent<Button>();
 		button.transition = Selectable.Transition.ColorTint;
 		button.targetGraphic = hover;

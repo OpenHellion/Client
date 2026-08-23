@@ -138,7 +138,7 @@ namespace BulletSharp
                     }
                     btDynamicsWorld_addRigidBody(_collisionWorld._native, item._native);
                 }
-                else if (item is BulletSharp.SoftBody.SoftBody)
+                else if (item is SoftBody.SoftBody)
                 {
                     btSoftRigidDynamicsWorld_addSoftBody(_collisionWorld._native, item._native);
                 }
@@ -165,7 +165,7 @@ namespace BulletSharp
                 }
                 btDynamicsWorld_addRigidBody2(_collisionWorld._native, item._native, group, mask);
             }
-            else if (item is BulletSharp.SoftBody.SoftBody)
+            else if (item is SoftBody.SoftBody)
             {
                 btSoftRigidDynamicsWorld_addSoftBody3(_collisionWorld._native, item._native, group, mask);
             }
@@ -236,7 +236,7 @@ namespace BulletSharp
             {
                 if (_backingList[i]._native == itemPtr)
                 {
-                    if (item is BulletSharp.SoftBody.SoftBody)
+                    if (item is SoftBody.SoftBody)
                     {
                         btSoftRigidDynamicsWorld_removeSoftBody(_collisionWorld._native, itemPtr);
                     }

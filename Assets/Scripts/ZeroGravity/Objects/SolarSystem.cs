@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using OpenHellion;
 using OpenHellion.IO;
-using Unity.Collections;
-using Unity.Jobs;
 using UnityEngine;
 using ZeroGravity.Data;
 using ZeroGravity.Math;
@@ -14,19 +10,9 @@ namespace ZeroGravity.Objects
 {
 	public class SolarSystem : MonoBehaviour
 	{
-		private struct UpdateAbPositionParallelJob : IJobParallelFor
-		{
-			[NonSerialized] public double TimeDelta;
+		public const double VisibilityLimitDestroySqr = 225000000.0; // 15km
 
-			public void Execute(int i)
-			{
-				ArtificialBodyReferences[i].UpdateOrbitPosition(TimeDelta);
-			}
-		}
-
-		public const double VisibilityLimitDestroySqr = 225000000.0;
-
-		public const double VisibilityLimitLoadSqr = 100000000.0;
+		public const double VisibilityLimitLoadSqr = 100000000.0; // 10km
 
 		public const double DetailsLimitUnsubscribe = 6250000.0;
 
@@ -52,10 +38,9 @@ namespace ZeroGravity.Objects
 
 		[SerializeField] private Map _map;
 
-		private readonly List<CelestialBody> _celestialBodyReferences = new List<CelestialBody>();
+		private World _world;
 
-		// Is static because it is used in UpdateAbPositionParallelJob. Can this be done in any other way?
-		public static readonly List<ArtificialBody> ArtificialBodyReferences = new List<ArtificialBody>();
+		private readonly List<CelestialBody> _celestialBodyReferences = new List<CelestialBody>();
 
 		public double CurrentTime => _currentTime;
 
@@ -96,42 +81,6 @@ namespace ZeroGravity.Objects
 			return result;
 		}
 
-		public void AddArtificialBody(ArtificialBody body)
-		{
-			if (!ArtificialBodyReferences.Contains(body))
-			{
-				ArtificialBodyReferences.Add(body);
-			}
-			else
-			{
-				Debug.LogWarning("Tried to add reference to artificial body to system, but a reference already exists.");
-			}
-		}
-
-		public ArtificialBody GetArtificialBody(long guid)
-		{
-			return ArtificialBodyReferences.FirstOrDefault((ArtificialBody m) => m.Guid == guid);
-		}
-
-		public void RemoveArtificialBody(long guid)
-		{
-			if (ArtificialBodyReferences.RemoveAll((ArtificialBody m) => m.Guid == guid) > 0)
-			{
-			}
-		}
-
-		public void RemoveArtificialBody(ArtificialBody body)
-		{
-			if (body != null && ArtificialBodyReferences.Remove(body))
-			{
-			}
-		}
-
-		// TODO: Does nothing.
-		public void ArtificialBodiesVisibilityModified()
-		{
-		}
-
 		public List<CelestialBody> GetCelestialBodies()
 		{
 			return _celestialBodyReferences;
@@ -144,11 +93,6 @@ namespace ZeroGravity.Objects
 			foreach (CelestialBody celestialBody in _celestialBodyReferences)
 			{
 				celestialBody.UpdatePosition(this, time, resetTime: true);
-			}
-
-			foreach (ArtificialBody artificialBody in ArtificialBodyReferences)
-			{
-				artificialBody.UpdateOrbitPosition(time, resetTime: true);
 			}
 		}
 
@@ -163,18 +107,44 @@ namespace ZeroGravity.Objects
 				celestialBody.UpdatePlanetSpacePosition((float)deltaTime);
 				celestialBody.UpdatePosition(this, deltaTime);
 			}
-
-			UpdateAbPositionParallelJob jobData = default(UpdateAbPositionParallelJob);
-			jobData.TimeDelta = deltaTime;
-			jobData.Schedule(ArtificialBodyReferences.Count, 10).Complete();
 		}
 
-		public void Set(Transform sunRoot, Transform planetsRoot, double time)
+		public void Set(World world, Transform sunRoot, Transform planetsRoot, double time)
 		{
+			_world = world;
 			_sunRoot = sunRoot;
 			_planetsRoot = planetsRoot;
 			_currentTime = time;
 			_timeCorrection = HiResTime.Milliseconds / 1000.0 - time;
+		}
+
+		/// <summary>
+		/// 	Gets the most local or nearest celestial body based on our solar system position.
+		/// </summary>
+		public CelestialBody GetParentCelestialBody(Vector3D worldPosition)
+		{
+			CelestialBody dominant = null;
+			double dominantInfluence = double.PositiveInfinity;
+			CelestialBody nearest = null;
+			double nearestDistance = double.PositiveInfinity;
+			foreach (CelestialBody celestialBody in _celestialBodyReferences)
+			{
+				double distance = (worldPosition - celestialBody.Position).Magnitude;
+				if (distance < nearestDistance)
+				{
+					nearestDistance = distance;
+					nearest = celestialBody;
+				}
+
+				double influence = celestialBody.Orbit.GravityInfluenceRadius;
+				if (distance <= influence && influence < dominantInfluence)
+				{
+					dominantInfluence = influence;
+					dominant = celestialBody;
+				}
+			}
+
+			return dominant ?? nearest;
 		}
 
 		public void CenterPlanets()
@@ -186,7 +156,7 @@ namespace ZeroGravity.Objects
 				return;
 			}
 
-			Vector3D playerVesselPosition = playerVessel.Position;
+			Vector3D playerVesselPosition = _world.LocalToWorldPosition(playerVessel.transform.position);
 			if (_celestialBodyReferences.Count > 0)
 			{
 				foreach (CelestialBody celestialBody in _celestialBodyReferences)
@@ -211,92 +181,6 @@ namespace ZeroGravity.Objects
 						celestialBody.DestroyPlanetsSpaceGameObject();
 					}
 				}
-			}
-
-			foreach (ArtificialBody artificialBody in ArtificialBodyReferences)
-			{
-				if (artificialBody == null || artificialBody.IsMainObject ||
-				    artificialBody is SpaceObjectVessel { IsMainVessel: false })
-				{
-					continue;
-				}
-
-				Vector3D value = artificialBody.Position - playerVesselPosition;
-				double sqrMagnitude = value.SqrMagnitude;
-				if (sqrMagnitude < 2250000.0 && !artificialBody.IsSubscribedTo && artificialBody.SceneObjectsLoaded)
-				{
-					if (!artificialBody.DelayedSubscribeRequested && artificialBody.SceneObjectsLoaded)
-					{
-						artificialBody.DelayedSubscribeRequested = true;
-						artificialBody.Invoke(artificialBody.Subscribe, MathHelper.RandomRange(0f, 3f));
-					}
-				}
-				else if (sqrMagnitude > 6250000.0 && artificialBody.IsSubscribedTo)
-				{
-					artificialBody.Unsubscribe();
-				}
-				else if (sqrMagnitude < 100000000.0 && artificialBody.IsDummyObject)
-				{
-					artificialBody.LoadGeometry();
-				}
-				else if (sqrMagnitude > 225000000.0 && !artificialBody.IsDummyObject)
-				{
-					artificialBody.DestroyGeometry();
-				}
-
-				if (sqrMagnitude < 225000000.0)
-				{
-					if (!artificialBody.gameObject.activeInHierarchy)
-					{
-						artificialBody.gameObject.SetActive(value: true);
-					}
-
-					Vector3 vector = value.ToVector3();
-					if ((vector - artificialBody.transform.localPosition).sqrMagnitude < 10000f)
-					{
-						if (World.VESSEL_TRANSLATION_LERP_UNCLAMPED)
-						{
-							var localPosition = artificialBody.transform.localPosition;
-							localPosition = Vector3.Lerp(
-								Vector3.LerpUnclamped(vector, localPosition, Time.deltaTime),
-								Vector3.LerpUnclamped(localPosition, vector, Time.deltaTime),
-								World.VESSEL_TRANSLATION_LERP_VALUE);
-							artificialBody.transform.localPosition = localPosition;
-						}
-						else
-						{
-							var localPosition = artificialBody.transform.localPosition;
-							localPosition = Vector3.Lerp(
-								Vector3.Lerp(vector, localPosition, Time.deltaTime),
-								Vector3.Lerp(localPosition, vector, Time.deltaTime),
-								World.VESSEL_TRANSLATION_LERP_VALUE);
-							artificialBody.transform.localPosition = localPosition;
-						}
-					}
-					else
-					{
-						artificialBody.transform.localPosition = vector;
-					}
-
-					if (artificialBody is Ship { WarpEndEffectTask: not null } ship)
-					{
-						ship.WarpEndEffectTask.RunSynchronously();
-					}
-				}
-				else if (artificialBody.IsInVisibilityRange)
-				{
-					if (artificialBody.gameObject.activeInHierarchy)
-					{
-						artificialBody.gameObject.SetActive(value: false);
-					}
-
-					artificialBody.IsInVisibilityRange = false;
-				}
-			}
-
-			if (playerVessel.ManeuverExited)
-			{
-				playerVessel.ManeuverExited = false;
 			}
 		}
 
@@ -332,11 +216,6 @@ namespace ZeroGravity.Objects
 			}
 
 			CalculatePositionsAfterTime(CurrentTime);
-		}
-
-		private void OnDestroy()
-		{
-			ArtificialBodyReferences.Clear();
 		}
 	}
 }

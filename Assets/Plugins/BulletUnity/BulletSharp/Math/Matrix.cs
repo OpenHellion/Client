@@ -1,16 +1,16 @@
 ﻿/*
 * Copyright (c) 2007-2010 SlimDX Group
-* 
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 * copies of the Software, and to permit persons to whom the Software is
 * furnished to do so, subject to the following conditions:
-* 
+*
 * The above copyright notice and this permission notice shall be included in
 * all copies or substantial portions of the Software.
-* 
+*
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -316,7 +316,7 @@ namespace BulletSharp.Math
             set { M41 = value.X; M42 = value.Y; M43 = value.Z; }
         }
 
-        public BulletSharp.Math.Quaternion Orientation
+        public Quaternion Orientation
         {
             get
             {
@@ -350,7 +350,7 @@ namespace BulletSharp.Math
                     temp[j] = (this[j,i] + this[i,j]) * s;
                     temp[k] = (this[k,i] + this[i,k]) * s;
                 }
-                return new BulletSharp.Math.Quaternion(temp[0], temp[1], temp[2], temp[3]);
+                return new Quaternion(temp[0], temp[1], temp[2], temp[3]);
             }
             set
             {
@@ -409,14 +409,14 @@ namespace BulletSharp.Math
             }
         }
 
-        /// <summary>
-        /// Gets or sets the component at the specified index.
-        /// </summary>
-        /// <value>The value of the matrix component, depending on the index.</value>
-        /// <param name="index">The zero-based index of the component to access.</param>
-        /// <returns>The value of the component at the specified index.</returns>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="index"/> is out of the range [0, 15].</exception>
-        public float this[int index]
+		/// <summary>
+		/// Gets or sets the component at the specified index.
+		/// </summary>
+		/// <value>The value of the matrix component, depending on the index.</value>
+		/// <param name="index">The zero-based index of the component to access.</param>
+		/// <returns>The value of the component at the specified index.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="index"/> is out of the range [0, 15].</exception>
+		public float this[int index]
         {
             get
             {
@@ -468,15 +468,15 @@ namespace BulletSharp.Math
             }
         }
 
-        /// <summary>
-        /// Gets or sets the component at the specified index.
-        /// </summary>
-        /// <value>The value of the matrix component, depending on the index.</value>
-        /// <param name="row">The row of the matrix to access.</param>
-        /// <param name="column">The column of the matrix to access.</param>
-        /// <returns>The value of the component at the specified index.</returns>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="row"/> or <paramref name="column"/>is out of the range [0, 3].</exception>
-        public float this[int row, int column]
+		/// <summary>
+		/// Gets or sets the component at the specified index.
+		/// </summary>
+		/// <value>The value of the matrix component, depending on the index.</value>
+		/// <param name="row">The row of the matrix to access.</param>
+		/// <param name="column">The column of the matrix to access.</param>
+		/// <returns>The value of the component at the specified index.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="row"/> or <paramref name="column"/>is out of the range [0, 3].</exception>
+		public float this[int row, int column]
         {
             get
             {
@@ -523,12 +523,12 @@ namespace BulletSharp.Math
             Transpose(ref this, out this);
         }
 
-        /// <summary>
-        /// Performs the exponential operation on a matrix.
-        /// </summary>
-        /// <param name="exponent">The exponent to raise the matrix to.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="exponent"/> is negative.</exception>
-        public void Exponent(int exponent)
+		/// <summary>
+		/// Performs the exponential operation on a matrix.
+		/// </summary>
+		/// <param name="exponent">The exponent to raise the matrix to.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="exponent"/> is negative.</exception>
+		public void Exponent(int exponent)
         {
             Exponent(ref this, exponent, out this);
         }
@@ -715,7 +715,7 @@ namespace BulletSharp.Math
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="firstColumn"></param>
         /// <param name="secondColumn"></param>
@@ -995,14 +995,14 @@ namespace BulletSharp.Math
             return result;
         }
 
-        /// <summary>
-        /// Performs the exponential operation on a matrix.
-        /// </summary>
-        /// <param name="value">The matrix to perform the operation on.</param>
-        /// <param name="exponent">The exponent to raise the matrix to.</param>
-        /// <param name="result">When the method completes, contains the exponential matrix.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="exponent"/> is negative.</exception>
-        public static void Exponent(ref Matrix value, int exponent, out Matrix result)
+		/// <summary>
+		/// Performs the exponential operation on a matrix.
+		/// </summary>
+		/// <param name="value">The matrix to perform the operation on.</param>
+		/// <param name="exponent">The exponent to raise the matrix to.</param>
+		/// <param name="result">When the method completes, contains the exponential matrix.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="exponent"/> is negative.</exception>
+		public static void Exponent(ref Matrix value, int exponent, out Matrix result)
         {
             //Source: http://rosettacode.org
             //Refrence: http://rosettacode.org/wiki/Matrix-exponentiation_operator
@@ -1041,14 +1041,14 @@ namespace BulletSharp.Math
             result = identity;
         }
 
-        /// <summary>
-        /// Performs the exponential operation on a matrix.
-        /// </summary>
-        /// <param name="value">The matrix to perform the operation on.</param>
-        /// <param name="exponent">The exponent to raise the matrix to.</param>
-        /// <returns>The exponential matrix.</returns>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="exponent"/> is negative.</exception>
-        public static Matrix Exponent(Matrix value, int exponent)
+		/// <summary>
+		/// Performs the exponential operation on a matrix.
+		/// </summary>
+		/// <param name="value">The matrix to perform the operation on.</param>
+		/// <param name="exponent">The exponent to raise the matrix to.</param>
+		/// <returns>The exponential matrix.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="exponent"/> is negative.</exception>
+		public static Matrix Exponent(Matrix value, int exponent)
         {
             Matrix result;
             Exponent(ref value, exponent, out result);
@@ -1102,7 +1102,7 @@ namespace BulletSharp.Math
         /// <remarks>
         /// This method performs the linear interpolation based on the following formula.
         /// <code>start + (end - start) * amount</code>
-        /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
+        /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned.
         /// </remarks>
         public static void Lerp(ref Matrix start, ref Matrix end, float amount, out Matrix result)
         {
@@ -1134,7 +1134,7 @@ namespace BulletSharp.Math
         /// <remarks>
         /// This method performs the linear interpolation based on the following formula.
         /// <code>start + (end - start) * amount</code>
-        /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
+        /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned.
         /// </remarks>
         public static Matrix Lerp(Matrix start, Matrix end, float amount)
         {
@@ -2891,7 +2891,7 @@ namespace BulletSharp.Math
         /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode()
         {

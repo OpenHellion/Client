@@ -42,11 +42,12 @@ namespace ZeroGravity.UI
 
 		[SerializeField] private Text LongDescriptionDescription;
 
-		private Camera _mainCamera;
+		private Camera _uiCamera;
 
 		private void Awake()
 		{
-			_mainCamera = Camera.main;
+			Canvas canvas = GetComponentInParent<Canvas>(includeInactive: true).rootCanvas;
+			_uiCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
 		}
 
 		private void Start()
@@ -142,9 +143,8 @@ namespace ZeroGravity.UI
 				if (componentInParent != null)
 				{
 					RectTransform component = TooltipPanel.GetComponent<RectTransform>();
-					Vector2 localPoint = Vector2.zero;
 					RectTransformUtility.ScreenPointToLocalPointInRectangle(GetComponent<RectTransform>(),
-						Mouse.current.position.ReadValue(), _mainCamera, out localPoint);
+						Mouse.current.position.ReadValue(), _uiCamera, out Vector2 localPoint);
 					component.transform.localPosition = localPoint;
 					TooltipText.text = componentInParent.GlossaryItm.DescriptionShort;
 					TooltipPanel.SetActive(value: true);

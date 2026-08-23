@@ -30,7 +30,7 @@ public class Lens : MonoBehaviour
 	{
 		if ((bool)_material)
 		{
-			Object.DestroyImmediate(_material);
+			DestroyImmediate(_material);
 		}
 	}
 
@@ -44,7 +44,7 @@ public class Lens : MonoBehaviour
 					vector.y / GetComponent<Camera>().pixelHeight));
 			material.SetFloat("_Ratio", ratio);
 			material.SetFloat("_Rad", (!(vector.z > 0f)) ? 0f : radius);
-			material.SetFloat("_Distance", Vector3.Distance(BH.transform.position, base.transform.position));
+			material.SetFloat("_Distance", Vector3.Distance(BH.transform.position, transform.position));
 			Graphics.Blit(source, destination, material);
 		}
 	}

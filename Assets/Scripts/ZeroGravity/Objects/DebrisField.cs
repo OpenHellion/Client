@@ -41,10 +41,11 @@ namespace ZeroGravity.Objects
 
 		public Vector3D Position => Orbit.Position;
 
-		public bool IsDummyObject => false;
+		private readonly World _world;
 
 		public DebrisField(World world, DebrisFieldDetails data)
 		{
+			_world = world;
 			Orbit = new OrbitParameters();
 			Orbit.ParseNetworkData(world, data.Orbit);
 			Name = data.Name;
@@ -67,7 +68,8 @@ namespace ZeroGravity.Objects
 		public bool CheckObject(ArtificialBody ab, out Vector3D orbitVelocity)
 		{
 			orbitVelocity = Vector3D.Zero;
-			if (ab.Orbit.Parent != Orbit.Parent)
+			Vector3D abWorldPosition = _world.LocalToWorldPosition(ab.transform.position);
+			if (_world.SolarSystem.GetParentCelestialBody(abWorldPosition) != Orbit.Parent.CelestialBody)
 			{
 				return false;
 			}
@@ -75,7 +77,7 @@ namespace ZeroGravity.Objects
 			QuaternionD rotation;
 			Vector3D centerPosition;
 			Orbit.GetOrbitPlaneData(out rotation, out centerPosition);
-			Vector3D vector3D = ab.Position - (Orbit.Parent.Position + centerPosition);
+			Vector3D vector3D = abWorldPosition - (Orbit.Parent.Position + centerPosition);
 			Vector3D vector3D2 = Vector3D.ProjectOnPlane(vector3D, rotation * Vector3D.Up);
 			Vector3D vector3D3 = vector3D2.Normalized * Orbit.SemiMajorAxis;
 			if ((vector3D3 - vector3D).SqrMagnitude <= radiusSq)

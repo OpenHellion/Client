@@ -63,7 +63,7 @@ namespace ZeroGravity.LevelDesign
 
 		public static bool OtherPlayerLockedToTrigger(this BaseSceneTrigger trigger, World state)
 		{
-			return state.Players.Values.FirstOrDefault((OtherPlayer m) => m.LockedToTrigger == trigger) != null;
+			return state.AllPlayers.FirstOrDefault((OtherPlayer m) => m.LockedToTrigger == trigger) != null;
 		}
 	}
 }

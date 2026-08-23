@@ -31,7 +31,7 @@ namespace ThreeEyedGames.DecaliciousExample
 			RaycastHit hitInfo;
 			if (Physics.Raycast(GetComponent<Camera>().ViewportPointToRay(Vector3.one * 0.5f), out hitInfo))
 			{
-				Transform transform = Object.Instantiate(DecalPrefab, hitInfo.collider.transform, true).transform;
+				Transform transform = Instantiate(DecalPrefab, hitInfo.collider.transform, true).transform;
 				transform.position = hitInfo.point;
 				transform.up = hitInfo.normal;
 				transform.Rotate(Vector3.up, Random.Range(0, 360), Space.Self);

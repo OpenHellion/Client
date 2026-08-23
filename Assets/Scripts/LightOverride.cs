@@ -29,7 +29,7 @@ public abstract class LightOverride : MonoBehaviour
 	{
 		get
 		{
-			if (!base.isActiveAndEnabled)
+			if (!isActiveAndEnabled)
 			{
 				return false;
 			}

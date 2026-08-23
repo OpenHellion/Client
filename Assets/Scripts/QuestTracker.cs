@@ -45,7 +45,7 @@ public class QuestTracker : MonoBehaviour
 		{
 			if (questTrigger.Type != QuestTriggerType.Activate)
 			{
-				TaskUI taskUI = Object.Instantiate(TaskUIPrefab, Content);
+				TaskUI taskUI = Instantiate(TaskUIPrefab, Content);
 				taskUI.transform.Reset();
 				taskUI.transform.SetAsLastSibling();
 				taskUI.Name.text = questTrigger.Name;

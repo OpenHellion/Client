@@ -1,16 +1,38 @@
 using ProtoBuf;
-using ZeroGravity.Objects;
+using ZeroGravity.Data;
 
 namespace ZeroGravity.Network
 {
 	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 	public class DockedVesselData
 	{
-		public long GUID;
+		public long Guid;
 
-		public SpaceObjectType Type;
+		public float[] Position;
 
-		public VesselData Data;
+		public float[] Rotation;
+
+		public string VesselRegistration;
+
+		public string VesselName;
+
+		public string Tag;
+
+		public long SpawnRuleId;
+
+		public GameScenes.SceneId SceneId;
+
+		public float[] CollidersCenterOffset;
+
+		public bool IsDebrisFragment;
+
+		public double CreationSolarSystemTime;
+
+		public double RadarSignature;
+
+		public bool IsDistressSignalActive;
+
+		public bool IsAlwaysVisible;
 
 		public VesselObjects VesselObjects;
 

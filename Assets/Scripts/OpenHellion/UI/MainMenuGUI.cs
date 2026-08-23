@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using OpenHellion.Net;
 using OpenHellion.Social;
 using OpenHellion.Social.RichPresence;
@@ -193,7 +192,7 @@ namespace OpenHellion.UI
 
 		public void DiscordButton()
 		{
-			Application.OpenURL("https://discord.gg/qZKJS5R");
+			Application.OpenURL("https://discord.gg/9nGWgQ8Uyf");
 		}
 
 		public void GamepediaButton()
@@ -249,9 +248,9 @@ namespace OpenHellion.UI
 			});
 		}
 
-		private Task CreateFreshStartTask(SpawnSetupType tip)
+		private Action CreateFreshStartTask(SpawnSetupType tip)
 		{
-			return new Task(delegate
+			return new Action(delegate
 			{
 				SendSpawnRequest(new SpawnPointDetails
 				{
@@ -262,7 +261,8 @@ namespace OpenHellion.UI
 			});
 		}
 
-		public static void SendSpawnRequest(SpawnPointDetails details)
+		[Obsolete]
+		public static void SendSpawnRequest(SpawnPointDetails details) // TODO this is left over from the spawn rewrite (remove)
 		{
 			if (CanChooseSpawn)
 			{

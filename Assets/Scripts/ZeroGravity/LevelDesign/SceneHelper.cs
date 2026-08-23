@@ -276,7 +276,7 @@ namespace ZeroGravity.LevelDesign
 		}
 
 		public static void FillMiningPoints(Asteroid asteroid, GameObject sceneRoot,
-			Dictionary<int, AsteroidMiningPoint> repairPoints, List<AsteroidMiningPointDetails> miningPointsDetails)
+			Dictionary<int, AsteroidMiningPoint> repairPoints, AsteroidMiningPointDetails[] miningPointsDetails)
 		{
 			AsteroidMiningPoint[] componentsInChildren =
 				sceneRoot.GetComponentsInChildren<AsteroidMiningPoint>(includeInactive: true);
@@ -287,7 +287,7 @@ namespace ZeroGravity.LevelDesign
 				if (miningPointsDetails != null)
 				{
 					AsteroidMiningPointDetails asteroidMiningPointDetails =
-						miningPointsDetails.Find((AsteroidMiningPointDetails m) => m.InSceneID == obj.InSceneID);
+						miningPointsDetails.FirstOrDefault((AsteroidMiningPointDetails m) => m.InSceneID == obj.InSceneID);
 					if (asteroidMiningPointDetails != null)
 					{
 						obj.SetDetails(asteroidMiningPointDetails);
@@ -552,7 +552,7 @@ namespace ZeroGravity.LevelDesign
 					});
 				}
 
-				GameObject.Destroy(sceneDamagePoint.gameObject);
+				UnityEngine.Object.Destroy(sceneDamagePoint.gameObject);
 			}
 		}
 

@@ -8,7 +8,7 @@ public class DestroyParticleWhenFinished : MonoBehaviour
 
 	private void OnTransformParentChanged()
 	{
-		if (base.transform.parent == null)
+		if (transform.parent == null)
 		{
 			canDestroy = true;
 		}
@@ -23,7 +23,7 @@ public class DestroyParticleWhenFinished : MonoBehaviour
 	{
 		if (canDestroy && ps.isStopped)
 		{
-			Object.Destroy(base.gameObject);
+			Destroy(gameObject);
 		}
 	}
 }

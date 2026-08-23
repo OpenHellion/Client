@@ -1,16 +1,16 @@
 ﻿/*
 * Copyright (c) 2007-2010 SlimDX Group
-* 
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 * copies of the Software, and to permit persons to whom the Software is
 * furnished to do so, subject to the following conditions:
-* 
+*
 * The above copyright notice and this permission notice shall be included in
 * all copies or substantial portions of the Software.
-* 
+*
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -130,38 +130,38 @@ namespace BulletSharp.Math
             get { return System.Math.Abs((X * X) + (Y * Y) + (Z * Z) - 1f) < Utilities.ZeroTolerance; }
         }
 
-        /// <summary>
-        /// Calculates the length of the vector.
-        /// </summary>
-        /// <remarks>
-        /// <see cref="Vector3.LengthSquared"/> may be preferred when only the relative length is needed
-        /// and speed is of the essence.
-        /// </remarks>
-        public float Length
+		/// <summary>
+		/// Calculates the length of the vector.
+		/// </summary>
+		/// <remarks>
+		/// <see cref="LengthSquared"/> may be preferred when only the relative length is needed
+		/// and speed is of the essence.
+		/// </remarks>
+		public float Length
         {
             get { return (float)System.Math.Sqrt((X * X) + (Y * Y) + (Z * Z)); }
         }
 
-        /// <summary>
-        /// Calculates the squared length of the vector.
-        /// </summary>
-        /// <remarks>
-        /// This property may be preferred to <see cref="Vector3.Length"/> when only a relative length is needed
-        /// and speed is of the essence.
-        /// </remarks>
-        public float LengthSquared
+		/// <summary>
+		/// Calculates the squared length of the vector.
+		/// </summary>
+		/// <remarks>
+		/// This property may be preferred to <see cref="Length"/> when only a relative length is needed
+		/// and speed is of the essence.
+		/// </remarks>
+		public float LengthSquared
         {
             get { return (X * X) + (Y * Y) + (Z * Z); }
         }
 
-        /// <summary>
-        /// Gets or sets the component at the specified index.
-        /// </summary>
-        /// <value>The value of the X, Y, or Z component, depending on the index.</value>
-        /// <param name="index">The index of the component to access. Use 0 for the X component, 1 for the Y component, and 2 for the Z component.</param>
-        /// <returns>The value of the component at the specified index.</returns>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="index"/> is out of the range [0, 2].</exception>
-        public float this[int index]
+		/// <summary>
+		/// Gets or sets the component at the specified index.
+		/// </summary>
+		/// <value>The value of the X, Y, or Z component, depending on the index.</value>
+		/// <param name="index">The index of the component to access. Use 0 for the X component, 1 for the Y component, and 2 for the Z component.</param>
+		/// <returns>The value of the component at the specified index.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="index"/> is out of the range [0, 2].</exception>
+		public float this[int index]
         {
             get
             {
@@ -705,17 +705,17 @@ namespace BulletSharp.Math
             return result;
         }
 
-        /// <summary>
-        /// Calculates the distance between two vectors.
-        /// </summary>
-        /// <param name="value1">The first vector.</param>
-        /// <param name="value2">The second vector.</param>
-        /// <param name="result">When the method completes, contains the distance between the two vectors.</param>
-        /// <remarks>
-        /// <see cref="Vector3.DistanceSquared(ref Vector3, ref Vector3, out float)"/> may be preferred when only the relative distance is needed
-        /// and speed is of the essence.
-        /// </remarks>
-        public static void Distance(ref Vector3 value1, ref Vector3 value2, out float result)
+		/// <summary>
+		/// Calculates the distance between two vectors.
+		/// </summary>
+		/// <param name="value1">The first vector.</param>
+		/// <param name="value2">The second vector.</param>
+		/// <param name="result">When the method completes, contains the distance between the two vectors.</param>
+		/// <remarks>
+		/// <see cref="DistanceSquared(ref Vector3, ref Vector3, out float)"/> may be preferred when only the relative distance is needed
+		/// and speed is of the essence.
+		/// </remarks>
+		public static void Distance(ref Vector3 value1, ref Vector3 value2, out float result)
         {
             float x = value1.X - value2.X;
             float y = value1.Y - value2.Y;
@@ -724,17 +724,17 @@ namespace BulletSharp.Math
             result = (float)System.Math.Sqrt((x * x) + (y * y) + (z * z));
         }
 
-        /// <summary>
-        /// Calculates the distance between two vectors.
-        /// </summary>
-        /// <param name="value1">The first vector.</param>
-        /// <param name="value2">The second vector.</param>
-        /// <returns>The distance between the two vectors.</returns>
-        /// <remarks>
-        /// <see cref="Vector3.DistanceSquared(Vector3, Vector3)"/> may be preferred when only the relative distance is needed
-        /// and speed is of the essence.
-        /// </remarks>
-        public static float Distance(Vector3 value1, Vector3 value2)
+		/// <summary>
+		/// Calculates the distance between two vectors.
+		/// </summary>
+		/// <param name="value1">The first vector.</param>
+		/// <param name="value2">The second vector.</param>
+		/// <returns>The distance between the two vectors.</returns>
+		/// <remarks>
+		/// <see cref="DistanceSquared(Vector3, Vector3)"/> may be preferred when only the relative distance is needed
+		/// and speed is of the essence.
+		/// </remarks>
+		public static float Distance(Vector3 value1, Vector3 value2)
         {
             float x = value1.X - value2.X;
             float y = value1.Y - value2.Y;
@@ -749,11 +749,11 @@ namespace BulletSharp.Math
         /// <param name="value1">The first vector.</param>
         /// <param name="value2">The second vector.</param>
         /// <param name="result">When the method completes, contains the squared distance between the two vectors.</param>
-        /// <remarks>Distance squared is the value before taking the square root. 
-        /// Distance squared can often be used in place of distance if relative comparisons are being made. 
-        /// For example, consider three points A, B, and C. To determine whether B or C is further from A, 
-        /// compare the distance between A and B to the distance between A and C. Calculating the two distances 
-        /// involves two square roots, which are computationally expensive. However, using distance squared 
+        /// <remarks>Distance squared is the value before taking the square root.
+        /// Distance squared can often be used in place of distance if relative comparisons are being made.
+        /// For example, consider three points A, B, and C. To determine whether B or C is further from A,
+        /// compare the distance between A and B to the distance between A and C. Calculating the two distances
+        /// involves two square roots, which are computationally expensive. However, using distance squared
         /// provides the same information and avoids calculating two square roots.
         /// </remarks>
         public static void DistanceSquared(ref Vector3 value1, ref Vector3 value2, out float result)
@@ -771,11 +771,11 @@ namespace BulletSharp.Math
         /// <param name="value1">The first vector.</param>
         /// <param name="value2">The second vector.</param>
         /// <returns>The squared distance between the two vectors.</returns>
-        /// <remarks>Distance squared is the value before taking the square root. 
-        /// Distance squared can often be used in place of distance if relative comparisons are being made. 
-        /// For example, consider three points A, B, and C. To determine whether B or C is further from A, 
-        /// compare the distance between A and B to the distance between A and C. Calculating the two distances 
-        /// involves two square roots, which are computationally expensive. However, using distance squared 
+        /// <remarks>Distance squared is the value before taking the square root.
+        /// Distance squared can often be used in place of distance if relative comparisons are being made.
+        /// For example, consider three points A, B, and C. To determine whether B or C is further from A,
+        /// compare the distance between A and B to the distance between A and C. Calculating the two distances
+        /// involves two square roots, which are computationally expensive. However, using distance squared
         /// provides the same information and avoids calculating two square roots.
         /// </remarks>
         public static float DistanceSquared(Vector3 value1, Vector3 value2)
@@ -861,7 +861,7 @@ namespace BulletSharp.Math
         /// <remarks>
         /// This method performs the linear interpolation based on the following formula.
         /// <code>start + (end - start) * amount</code>
-        /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
+        /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned.
         /// </remarks>
         public static void Lerp(ref Vector3 start, ref Vector3 end, float amount, out Vector3 result)
         {
@@ -880,7 +880,7 @@ namespace BulletSharp.Math
         /// <remarks>
         /// This method performs the linear interpolation based on the following formula.
         /// <code>start + (end - start) * amount</code>
-        /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
+        /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned.
         /// </remarks>
         public static Vector3 Lerp(Vector3 start, Vector3 end, float amount)
         {
@@ -1055,7 +1055,7 @@ namespace BulletSharp.Math
         }
 
         /// <summary>
-        /// Projects a 3D vector from object space into screen space. 
+        /// Projects a 3D vector from object space into screen space.
         /// </summary>
         /// <param name="vector">The vector to project.</param>
         /// <param name="x">The X position of the viewport.</param>
@@ -1075,7 +1075,7 @@ namespace BulletSharp.Math
         }
 
         /// <summary>
-        /// Projects a 3D vector from object space into screen space. 
+        /// Projects a 3D vector from object space into screen space.
         /// </summary>
         /// <param name="vector">The vector to project.</param>
         /// <param name="x">The X position of the viewport.</param>
@@ -1094,7 +1094,7 @@ namespace BulletSharp.Math
         }
 
         /// <summary>
-        /// Projects a 3D vector from screen space into object space. 
+        /// Projects a 3D vector from screen space into object space.
         /// </summary>
         /// <param name="vector">The vector to project.</param>
         /// <param name="x">The X position of the viewport.</param>
@@ -1119,7 +1119,7 @@ namespace BulletSharp.Math
         }
 
         /// <summary>
-        /// Projects a 3D vector from screen space into object space. 
+        /// Projects a 3D vector from screen space into object space.
         /// </summary>
         /// <param name="vector">The vector to project.</param>
         /// <param name="x">The X position of the viewport.</param>
@@ -1138,12 +1138,12 @@ namespace BulletSharp.Math
         }
 
         /// <summary>
-        /// Returns the reflection of a vector off a surface that has the specified normal. 
+        /// Returns the reflection of a vector off a surface that has the specified normal.
         /// </summary>
         /// <param name="vector">The source vector.</param>
         /// <param name="normal">Normal of the surface.</param>
         /// <param name="result">When the method completes, contains the reflected vector.</param>
-        /// <remarks>Reflect only gives the direction of a reflection off a surface, it does not determine 
+        /// <remarks>Reflect only gives the direction of a reflection off a surface, it does not determine
         /// whether the original vector was close enough to the surface to hit it.</remarks>
         public static void Reflect(ref Vector3 vector, ref Vector3 normal, out Vector3 result)
         {
@@ -1155,12 +1155,12 @@ namespace BulletSharp.Math
         }
 
         /// <summary>
-        /// Returns the reflection of a vector off a surface that has the specified normal. 
+        /// Returns the reflection of a vector off a surface that has the specified normal.
         /// </summary>
         /// <param name="vector">The source vector.</param>
         /// <param name="normal">Normal of the surface.</param>
         /// <returns>The reflected vector.</returns>
-        /// <remarks>Reflect only gives the direction of a reflection off a surface, it does not determine 
+        /// <remarks>Reflect only gives the direction of a reflection off a surface, it does not determine
         /// whether the original vector was close enough to the surface to hit it.</remarks>
         public static Vector3 Reflect(Vector3 vector, Vector3 normal)
         {
@@ -1792,7 +1792,7 @@ namespace BulletSharp.Math
         /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode()
         {

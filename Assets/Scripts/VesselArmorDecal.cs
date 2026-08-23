@@ -24,7 +24,7 @@ public class VesselArmorDecal : MonoBehaviour
 		Decalicious[] componentsInChildren = GetComponentsInChildren<Decalicious>();
 		foreach (Decalicious decalicious in componentsInChildren)
 		{
-			decalicious.Material = Object.Instantiate(decalicious.Material);
+			decalicious.Material = Instantiate(decalicious.Material);
 			Decals.Add(decalicious);
 		}
 

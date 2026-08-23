@@ -234,13 +234,13 @@ namespace ZeroGravity.ShipComponents
 			SceneDockingPort dockingPort = DockingPort;
 			if (TargetDockingPort != null && dockingPort != null)
 			{
-				Vector3 vector = (TargetDockingPort.ParentShip.Position - dockingPort.ParentShip.Position).ToVector3();
+				Vector3 vector = TargetDockingPort.ParentShip.transform.position - dockingPort.ParentShip.transform.position;
 				Vector3 vector2 =
-					Quaternion.LookRotation(dockingPort.ParentShip.Forward, dockingPort.ParentShip.Up).Inverse() *
-					(dockingPort.ParentShip.Velocity - TargetDockingPort.ParentShip.Velocity).ToVector3();
+					dockingPort.ParentShip.transform.rotation.Inverse() *
+					dockingPort.ParentShip.Velocity - TargetDockingPort.ParentShip.Velocity;
 				Vector3 vector3 =
 					Vector3.Project(
-						(dockingPort.ParentShip.Velocity - TargetDockingPort.ParentShip.Velocity).ToVector3(),
+						dockingPort.ParentShip.Velocity - TargetDockingPort.ParentShip.Velocity,
 						dockingPort.CameraPosition.forward);
 				Vector3 vector4 = dockingPort.CameraPosition.rotation.Inverse() *
 				                  Vector3.ProjectOnPlane(vector2, dockingPort.CameraPosition.forward);
@@ -521,7 +521,7 @@ namespace ZeroGravity.ShipComponents
 		{
 			_dockingPorts.Clear();
 			if (MyPlayer.Instance.Parent is SpaceObjectVessel &&
-			    (MyPlayer.Instance.Parent as SpaceObjectVessel).SceneID == GameScenes.SceneId.AltCorp_Shuttle_CECA &&
+			    (MyPlayer.Instance.Parent as SpaceObjectVessel).SceneId == GameScenes.SceneId.AltCorp_Shuttle_CECA &&
 			    MyPlayer.Instance.ShipControlMode == ShipControlMode.Docking)
 			{
 				foreach (SceneDockingPort value in _parentShip.MainVessel.DockingPorts.Values)
@@ -628,10 +628,10 @@ namespace ZeroGravity.ShipComponents
 		private void ReloadRadarElements()
 		{
 			List<Ship> list = new List<Ship>(AvailableTargetShips);
-			foreach (ArtificialBody ab in SolarSystem.ArtificialBodyReferences.Where((ArtificialBody m) =>
+			foreach (ArtificialBody ab in _world.AllArtificialBodies.Where((ArtificialBody m) =>
 				         m is SpaceObjectVessel && (m as SpaceObjectVessel).MainVessel != _parentShip.MainVessel))
 			{
-				float num = (float)(_parentShip.Position - ab.Position).Magnitude;
+				float num = (_parentShip.transform.position - ab.transform.position).magnitude;
 				Ship ship = AvailableTargetShips.Find((Ship m) => m == ab as Ship);
 				if (ab is Ship && num < RadarScanningRange)
 				{
@@ -735,7 +735,7 @@ namespace ZeroGravity.ShipComponents
 			dockingPanelUIItem.gameObject.SetActive(!port.IgnoreThisDockingPort);
 			dockingPanelUIItem.IsSelected = false;
 			dockingPanelUIItem.NameText.text = ((!(port.ParentShip == _parentShip))
-				? (GameScenes.GetShortVesselClassName(port.ParentShip.SceneID) + "-")
+				? (GameScenes.GetShortVesselClassName(port.ParentShip.SceneId) + "-")
 				: string.Empty) + port.Name;
 			dockingPanelUIItem.DistanceText.text = string.Empty;
 			return dockingPanelUIItem;
@@ -808,7 +808,7 @@ namespace ZeroGravity.ShipComponents
 			dockingPanelUIItem.gameObject.SetActive(value: true);
 			dockingPanelUIItem.IsSelected = false;
 			dockingPanelUIItem.NameText.text = ((!(port.ParentShip == _parentShip))
-				? (GameScenes.GetShortVesselClassName(port.ParentShip.SceneID) + "-")
+				? (GameScenes.GetShortVesselClassName(port.ParentShip.SceneId) + "-")
 				: string.Empty) + port.Name;
 			dockingPanelUIItem.DistanceText.text = string.Empty;
 			return dockingPanelUIItem;

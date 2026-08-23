@@ -122,7 +122,7 @@ public class BSoftBodyPartOnSkinnedMesh : BSoftBody
 
     //used for debugging if I want to display the the mesh distortions
     //can't use verts and norms because
-    Mesh myMesh; 
+    Mesh myMesh;
     Vector3[] localVerts;
     Vector3[] localNorms;
 
@@ -337,7 +337,7 @@ public class BSoftBodyPartOnSkinnedMesh : BSoftBody
                         Gizmos.DrawRay(bone2idxMap[i].bone.position, bone2idxMap[i].bone.up);
                         Gizmos.color = Color.blue;
                         Gizmos.DrawRay(bone2idxMap[i].bone.position, bone2idxMap[i].bone.forward);
-                        
+
                         Gizmos.color = Color.red * .6f;
                         Gizmos.DrawRay(bone2idxMap[i].bone.position, bone2idxMap[i].bindBoneRotation * Vector3.forward);
                         Gizmos.color = Color.green * .6f; ;
@@ -345,8 +345,8 @@ public class BSoftBodyPartOnSkinnedMesh : BSoftBody
                         Gizmos.color = Color.blue * .6f;
                         Gizmos.DrawRay(bone2idxMap[i].bone.position, bone2idxMap[i].bindBoneRotation * Vector3.right);
                         */
-                        
-                        
+
+
                     }
                 }
         }
@@ -443,7 +443,7 @@ public class BSoftBodyPartOnSkinnedMesh : BSoftBody
         {
             bone2idxMap[i].bindNormal = norms[bone2idxMap[i].nodeIdx];
             bone2idxMap[i].bindBoneRotation = bone2idxMap[i].bone.rotation;
-            
+
             for (int j = 0; j < bone2idxMap[i].edges.Length; j++)
             {
                 bone2idxMap[i].edges[j].bindEdgeXnorm = Vector3.Cross(verts[bone2idxMap[i].edges[j].nodeIdx] - verts[bone2idxMap[i].nodeIdx], norms[bone2idxMap[i].nodeIdx]).normalized;
@@ -494,7 +494,7 @@ public class BSoftBodyPartOnSkinnedMesh : BSoftBody
                 edgeXnorm.Normalize();
                 Quaternion q = WahbasSolution(bn.bindNormal, bn.edges[0].bindEdgeXnorm,
                                               norms[bn.nodeIdx], edgeXnorm);
-            
+
                 bone2idxMap[i].bone.rotation = q * bn.bindBoneRotation;
             }
 
@@ -502,7 +502,7 @@ public class BSoftBodyPartOnSkinnedMesh : BSoftBody
             {
                 if (myMesh == null)
                 {
-                    myMesh = GameObject.Instantiate<Mesh>(physicsSimMesh.sharedMesh);
+                    myMesh = Instantiate(physicsSimMesh.sharedMesh);
                     MeshFilter mf = physicsSimMesh.GetComponent<MeshFilter>();
                     mf.sharedMesh = myMesh;
                 }

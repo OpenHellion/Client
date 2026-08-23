@@ -1,6 +1,6 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
-using ZeroGravity;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
 
@@ -12,7 +12,7 @@ public class HelmetRadarTargetElement : MonoBehaviour
 
 	public GameObject NameSelected;
 
-	public ArtificialBody AB;
+	[FormerlySerializedAs("AB")] public ArtificialBody ArtificialBody;
 
 	public GameObject TargetMarker;
 
@@ -61,8 +61,7 @@ public class HelmetRadarTargetElement : MonoBehaviour
 	{
 		get
 		{
-			return ((AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() -
-			        MyPlayer.Instance.transform.position).magnitude;
+			return (ArtificialBody.transform.position - MyPlayer.Instance.transform.position).magnitude;
 		}
 	}
 
@@ -71,8 +70,7 @@ public class HelmetRadarTargetElement : MonoBehaviour
 		get
 		{
 			Vector3 forward = MyPlayer.Instance.FpsController.MainCamera.transform.forward;
-			Vector3 from = (AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() -
-			               MyPlayer.Instance.transform.position;
+			Vector3 from = ArtificialBody.transform.position - MyPlayer.Instance.transform.position;
 			return Vector3.Angle(from, forward);
 		}
 	}

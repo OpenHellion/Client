@@ -659,16 +659,16 @@ namespace Ikari.VertexPainter
                     GUILayout.Label("Paint Layers: ", GUILayout.ExpandWidth(false));
 
                     //Red Channel Toggle
-                    IVPInterface.DrawColorToggle(IVPMethods.Reflection.GetFieldName<IVPController>((IVPController x) => x.rChannel), "Red Channel", "R", rChannel, Color.red);
+                    IVPInterface.DrawColorToggle(IVPMethods.Reflection.GetFieldName((IVPController x) => x.rChannel), "Red Channel", "R", rChannel, Color.red);
 
                     //Green Channel Toggle
-                    IVPInterface.DrawColorToggle(IVPMethods.Reflection.GetFieldName<IVPController>((IVPController x) => x.gChannel), "Green Channel", "G", gChannel, Color.green);
+                    IVPInterface.DrawColorToggle(IVPMethods.Reflection.GetFieldName((IVPController x) => x.gChannel), "Green Channel", "G", gChannel, Color.green);
 
                     //Blue Channel Toggle
-                    IVPInterface.DrawColorToggle(IVPMethods.Reflection.GetFieldName<IVPController>((IVPController x) => x.bChannel), "Blue Channel", "B", bChannel, Color.blue);
+                    IVPInterface.DrawColorToggle(IVPMethods.Reflection.GetFieldName((IVPController x) => x.bChannel), "Blue Channel", "B", bChannel, Color.blue);
 
                     //Alpha Channel Toggle
-                    IVPInterface.DrawColorToggle(IVPMethods.Reflection.GetFieldName<IVPController>((IVPController x) => x.aChannel), "Alpha Channel", "A", aChannel, Color.grey);
+                    IVPInterface.DrawColorToggle(IVPMethods.Reflection.GetFieldName((IVPController x) => x.aChannel), "Alpha Channel", "A", aChannel, Color.grey);
 
                     GUILayout.EndHorizontal();
                 }

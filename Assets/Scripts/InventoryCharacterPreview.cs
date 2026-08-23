@@ -223,7 +223,7 @@ public class InventoryCharacterPreview : MonoBehaviour
 		foreach (PreviewCharacterSlots item3 in Slots.Where((PreviewCharacterSlots m) =>
 			         m.SlotGroup == inventorySlotGroup && m.AttachedObject != null))
 		{
-			GameObject.Destroy(item3.AttachedObject);
+			Destroy(item3.AttachedObject);
 		}
 
 		RecreateHierarchy(item.transform, gameObject5.transform);
@@ -239,12 +239,12 @@ public class InventoryCharacterPreview : MonoBehaviour
 		{
 			if (slot.Point != null)
 			{
-				GameObject.Destroy(slot.Point.gameObject);
+				Destroy(slot.Point.gameObject);
 			}
 
 			if (slot.AttachedObject != null)
 			{
-				GameObject.Destroy(slot.AttachedObject);
+				Destroy(slot.AttachedObject);
 			}
 		}
 
@@ -255,14 +255,14 @@ public class InventoryCharacterPreview : MonoBehaviour
 		}
 
 		Slots.Clear();
-		GameObject.Destroy(OutfitItem);
+		Destroy(OutfitItem);
 	}
 
 	public void RemoveItemInHands()
 	{
 		if (ItemInHands != null)
 		{
-			GameObject.Destroy(ItemInHands);
+			Destroy(ItemInHands);
 		}
 
 		Animator.SetLayerWeight(1, 0f);

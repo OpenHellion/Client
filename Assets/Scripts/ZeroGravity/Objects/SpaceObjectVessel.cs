@@ -12,7 +12,7 @@ using ZeroGravity.ShipComponents;
 
 namespace ZeroGravity.Objects
 {
-	public abstract class SpaceObjectVessel : ArtificialBody, IMapMainObject
+	public abstract class SpaceObjectVessel : ArtificialBody
 	{
 		public enum VesselObjectType
 		{
@@ -95,31 +95,33 @@ namespace ZeroGravity.Objects
 
 		public VesselBaseSystem VesselBaseSystem;
 
-		public List<DockedVesselData> DummyDockedVessels = new List<DockedVesselData>();
-
 		public static double VesselDecayRateMultiplier = 1.0;
 
 		protected List<Collider> OptimizationColliders;
 
 		protected List<Collider> DontOptimizeColliders;
 
-		public Quaternion RotationCorrection = Quaternion.identity;
-
 		public bool DockingControlsDisabled;
 
 		public bool SecurityPanelsLocked;
 
-		public OrbitParameters LastKnownMapOrbit;
+		public string VesselRegistration;
 
-		public VesselData VesselData;
+		public string VesselName;
 
-		public bool ActivateGeometry;
+		public string Tag;
+
+		public long SpawnRuleId;
+
+		public GameScenes.SceneId SceneId;
+
+		public bool IsDebrisFragment;
 
 		private float posDifferenceCheck = 3.33E-05f;
 
 		private float rotDifferenceCheck = 1E-08f;
 
-		public GameScenes.SceneId SceneID => VesselData == null ? GameScenes.SceneId.None : VesselData.SceneID;
+		internal bool OffSpeedHelper = true;
 
 		public float MaxHealth { get; protected set; }
 
@@ -139,24 +141,22 @@ namespace ZeroGravity.Objects
 
 		public SpaceObjectVessel MainVessel => !(DockedToMainVessel != null) ? this : DockedToMainVessel;
 
-		public override CelestialBody ParentCelestialBody => base.ParentCelestialBody;
-
-		public virtual string Name => VesselData == null
+		public virtual string Name => VesselRegistration.IsNullOrEmpty()
 			? name
-			: VesselData.VesselRegistration + " " + VesselData.VesselName;
+			: VesselRegistration + " " + VesselName;
 
 		public virtual string CustomName
 		{
 			get
 			{
-				if (VesselData != null)
+				if (!VesselName.IsNullOrEmpty())
 				{
-					if (VesselData.VesselName.IsNullOrEmpty())
-					{
-						return VesselData.VesselRegistration;
-					}
+					return VesselName;
+				}
 
-					return VesselData.VesselName;
+				if (!VesselRegistration.IsNullOrEmpty())
+				{
+					return VesselRegistration;
 				}
 
 				return Localization.UnknownObject;
@@ -167,47 +167,15 @@ namespace ZeroGravity.Objects
 		{
 			get
 			{
-				VesselData commandVesselData = CommandVesselData;
-				if (commandVesselData != null)
+				SpaceObjectVessel commandVessel =
+					MainVessel.AllDockedVessels.FirstOrDefault((SpaceObjectVessel m) =>
+						m.SceneId == GameScenes.SceneId.AltCorp_Command_Module);
+				if (commandVessel != null)
 				{
-					if (commandVesselData.VesselName.IsNullOrEmpty())
-					{
-						return commandVesselData.VesselRegistration;
-					}
-
-					return commandVesselData.VesselName;
+					return commandVessel.CustomName;
 				}
 
-				return Localization.UnknownObject;
-			}
-		}
-
-		public VesselData CommandVesselData
-		{
-			get
-			{
-				if (MainVessel.IsDummyObject)
-				{
-					DockedVesselData dockedVesselData =
-						MainVessel.DummyDockedVessels.FirstOrDefault((DockedVesselData m) =>
-							m.Data.SceneID == GameScenes.SceneId.AltCorp_Command_Module);
-					if (dockedVesselData != null)
-					{
-						return dockedVesselData.Data;
-					}
-				}
-				else
-				{
-					SpaceObjectVessel spaceObjectVessel =
-						MainVessel.AllDockedVessels.FirstOrDefault((SpaceObjectVessel m) =>
-							m.SceneID == GameScenes.SceneId.AltCorp_Command_Module);
-					if (spaceObjectVessel != null)
-					{
-						return spaceObjectVessel.VesselData;
-					}
-				}
-
-				return MainVessel.VesselData;
+				return MainVessel.CustomName;
 			}
 		}
 
@@ -222,112 +190,14 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public CelestialBody ParentCelesitalBody { get; }
-
-		public override Vector3D Position
-		{
-			get
-			{
-				if (IsMainVessel)
-				{
-					return base.Position;
-				}
-
-				return MainVessel.Position +
-				       Quaternion.LookRotation(MainVessel.Forward, MainVessel.Up).ToQuaternionD() *
-				       (transform.position - MainVessel.transform.position).ToVector3D();
-			}
-		}
-
-		public override Vector3D Velocity
-		{
-			get
-			{
-				if (IsMainVessel)
-				{
-					return base.Velocity;
-				}
-
-				return MainVessel.Velocity;
-			}
-		}
-
-		public override bool IsDistressSignalActive =>
-			VesselData != null && VesselData.IsDistressSignalActive ? true : false;
-
-		public override bool IsAlwaysVisible => VesselData != null && VesselData.IsAlwaysVisible ? true : false;
-
-		public bool IsDebrisFragment
-		{
-			get
-			{
-				if (VesselData == null)
-				{
-					return true;
-				}
-
-				return VesselData.IsDebrisFragment;
-			}
-		}
-
-		public override Vector3 Forward
-		{
-			get => base.Forward;
-			set
-			{
-				base.Forward = value;
-				if (!IsMainVessel)
-				{
-					return;
-				}
-
-				foreach (SpaceObjectVessel allDockedVessel in AllDockedVessels)
-				{
-					if (allDockedVessel?.gameObject != null)
-					{
-						allDockedVessel.Forward = Quaternion.LookRotation(Forward, Up) *
-						                          Quaternion.LookRotation(allDockedVessel.transform.forward,
-							                          allDockedVessel.transform.up) * Vector3.forward;
-					}
-				}
-			}
-		}
-
-		public override Vector3 Up
-		{
-			get => base.Up;
-			set
-			{
-				base.Up = value;
-				if (!IsMainVessel)
-				{
-					return;
-				}
-
-				foreach (SpaceObjectVessel allDockedVessel in AllDockedVessels)
-				{
-					if (allDockedVessel?.gameObject != null)
-					{
-						allDockedVessel.Up = Quaternion.LookRotation(Forward, Up) *
-						                     Quaternion.LookRotation(allDockedVessel.transform.forward,
-							                     allDockedVessel.transform.up) * Vector3.up;
-					}
-				}
-			}
-		}
+		public override Vector3 Velocity => IsMainVessel ? base.Velocity : MainVessel.Velocity;
 
 		public bool IsStation
 		{
 			get
 			{
-				if (IsDummyObject)
-				{
-					return DummyDockedVessels.Count > 0 && DummyDockedVessels.FirstOrDefault((DockedVesselData m) =>
-						m.Data.SceneID == GameScenes.SceneId.AltCorp_Command_Module) != null;
-				}
-
 				return AllDockedVessels.Count > 0 && AllDockedVessels.FirstOrDefault((SpaceObjectVessel m) =>
-					m.SceneID == GameScenes.SceneId.AltCorp_Command_Module) != null;
+					m.SceneId == GameScenes.SceneId.AltCorp_Command_Module) != null;
 			}
 		}
 
@@ -335,21 +205,16 @@ namespace ZeroGravity.Objects
 		{
 			get
 			{
-				if (IsDummyObject)
-				{
-					return DummyDockedVessels.Count > 0 && DummyDockedVessels.FirstOrDefault((DockedVesselData m) =>
-						m.Data.SceneID == GameScenes.SceneId.AltCorp_Command_Module) == null;
-				}
-
 				return AllDockedVessels.Count > 0 && AllDockedVessels.FirstOrDefault((SpaceObjectVessel m) =>
-					m.SceneID == GameScenes.SceneId.AltCorp_Command_Module) == null;
+					m.SceneId == GameScenes.SceneId.AltCorp_Command_Module) == null;
 			}
 		}
 
-		public bool IsOutpostOrStation => (IsDummyObject && DummyDockedVessels.Count > 0) ||
-		                                  (!IsDummyObject && AllDockedVessels.Count > 0);
+		public bool IsOutpostOrStation => AllDockedVessels.Count > 0;
 
-		public float ExposureDamage => World.GetVesselExposureDamage(MainVessel.Orbit.Position.Magnitude);
+		public float ExposureDamage { get; internal set; }
+
+		private double _radarSignatureInternal;
 
 		public override double RadarSignature
 		{
@@ -360,35 +225,15 @@ namespace ZeroGravity.Objects
 					return MainVessel.RadarSignature;
 				}
 
-				if (VesselData == null)
-				{
-					return 0.0;
-				}
-
-				double num = 1.0;
-				for (OrbitParameters parent = Orbit.Parent; parent != null; parent = parent.Parent)
-				{
-					CelestialBody celestialBody = parent.CelestialBody;
-					num *= celestialBody.GetRadarSignatureModifier(World, this);
-				}
-
-				foreach (DebrisField debrisField in World.DebrisFields)
-				{
-					if (debrisField.CheckObject(this))
-					{
-						num *= debrisField.RadarSignatureMultiplier;
-					}
-				}
-
-				return VesselData.RadarSignature * num;
+				return _radarSignatureInternal;
+			}
+			set
+			{
+				_radarSignatureInternal = value;
 			}
 		}
 
-		protected override bool ShouldSetLocalTransform => !IsDocked && (MyPlayer.Instance == null ||
-		                                                                 !(MyPlayer.Instance
-			                                                                 .Parent is SpaceObjectVessel) ||
-		                                                                 (MyPlayer.Instance.Parent as SpaceObjectVessel)
-		                                                                 .MainVessel != this);
+		protected override bool ShouldSetLocalTransform => !IsDocked && base.ShouldSetLocalTransform;
 
 		protected override bool ShouldUpdateTransform => !IsDocked;
 
@@ -592,206 +437,8 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public void AllowOtherCharacterMovement()
-		{
-			SpaceObjectVessel spaceObjectVessel = this;
-			if (spaceObjectVessel.DockedToMainVessel != null)
-			{
-				spaceObjectVessel = spaceObjectVessel.DockedToMainVessel;
-			}
-
-			OtherPlayer[] componentsInChildren =
-				spaceObjectVessel.TransferableObjectsRoot.GetComponentsInChildren<OtherPlayer>();
-			foreach (OtherPlayer otherPlayer in componentsInChildren)
-			{
-				otherPlayer.tpsController.UpdateMovementPosition = true;
-			}
-
-			foreach (SpaceObjectVessel allDockedVessel in spaceObjectVessel.AllDockedVessels)
-			{
-				OtherPlayer[] componentsInChildren2 =
-					allDockedVessel.TransferableObjectsRoot.GetComponentsInChildren<OtherPlayer>();
-				foreach (OtherPlayer otherPlayer2 in componentsInChildren2)
-				{
-					otherPlayer2.tpsController.UpdateMovementPosition = true;
-				}
-			}
-		}
-
-		protected void UpdateDynamicObjects(List<DynamicObjectDetails> dynamicObjectDetails)
-		{
-			if (dynamicObjectDetails == null)
-			{
-				return;
-			}
-
-			List<GameObject> list = new List<GameObject>();
-			foreach (DynamicObject obj in from m in TransferableObjectsRoot.GetComponentsInChildren<DynamicObject>()
-			         where m.Parent == this
-			         select m)
-			{
-				if (obj != null)
-				{
-					DynamicObjectDetails dynamicObjectDetails2 =
-						dynamicObjectDetails.Find((DynamicObjectDetails m) => m.GUID == obj.Guid);
-					if (dynamicObjectDetails2 != null)
-					{
-						dynamicObjectDetails.Remove(dynamicObjectDetails2);
-					}
-					else
-					{
-						list.Add(obj.gameObject);
-					}
-				}
-			}
-
-			if (list.Count > 0)
-			{
-				foreach (GameObject item in list)
-				{
-					Destroy(item);
-				}
-			}
-
-			if (dynamicObjectDetails.Count <= 0)
-			{
-				return;
-			}
-
-			foreach (DynamicObjectDetails dynamicObjectDetail in dynamicObjectDetails)
-			{
-				if (World.GetDynamicObject(dynamicObjectDetail.GUID) == null)
-				{
-					DynamicObject.SpawnDynamicObject(dynamicObjectDetail, this);
-				}
-			}
-		}
-
-		protected virtual void UpdateCharacters(List<CharacterDetails> characterDetails)
-		{
-			if (characterDetails == null)
-			{
-				return;
-			}
-
-			List<GameObject> list = new List<GameObject>();
-			OtherPlayer[] componentsInChildren = TransferableObjectsRoot.GetComponentsInChildren<OtherPlayer>();
-			foreach (OtherPlayer opl in componentsInChildren)
-			{
-				if (opl != null)
-				{
-					CharacterDetails characterDetails2 =
-						characterDetails.Find((CharacterDetails m) => m.GUID == opl.Guid);
-					if (characterDetails2 != null)
-					{
-						characterDetails.Remove(characterDetails2);
-					}
-					else
-					{
-						list.Add(opl.gameObject);
-					}
-				}
-			}
-
-			if (list.Count > 0)
-			{
-				foreach (GameObject item in list)
-				{
-					Destroy(item);
-				}
-			}
-
-			if (characterDetails.Count <= 0)
-			{
-				return;
-			}
-
-			foreach (CharacterDetails characterDetail in characterDetails)
-			{
-				if (World.GetPlayer(characterDetail.GUID) == null)
-				{
-					OtherPlayer.SpawnPlayer(characterDetail, this);
-				}
-			}
-		}
-
-		protected void UpdateCorpses(List<CorpseDetails> corpseDetails)
-		{
-			if (corpseDetails == null)
-			{
-				return;
-			}
-
-			List<GameObject> list = new List<GameObject>();
-			Corpse[] componentsInChildren = TransferableObjectsRoot.GetComponentsInChildren<Corpse>();
-			foreach (Corpse obj in componentsInChildren)
-			{
-				if (obj != null)
-				{
-					CorpseDetails corpseDetails2 = corpseDetails.Find((CorpseDetails m) => m.GUID == obj.Guid);
-					if (corpseDetails2 != null)
-					{
-						corpseDetails.Remove(corpseDetails2);
-					}
-					else
-					{
-						list.Add(obj.gameObject);
-					}
-				}
-			}
-
-			if (list.Count > 0)
-			{
-				foreach (GameObject item in list)
-				{
-					Destroy(item);
-				}
-			}
-
-			if (corpseDetails.Count <= 0)
-			{
-				return;
-			}
-
-			foreach (CorpseDetails corpseDetail in corpseDetails)
-			{
-				if (World.GetCorpse(corpseDetail.GUID) == null)
-				{
-					Corpse.SpawnCorpse(corpseDetail, null);
-				}
-			}
-		}
-
 		public virtual void OnSceneLoaded()
 		{
-		}
-
-		public override void Unsubscribe()
-		{
-			base.Unsubscribe();
-			if (!IsMainVessel)
-			{
-				return;
-			}
-
-			foreach (SpaceObjectVessel allDockedVessel in AllDockedVessels)
-			{
-				allDockedVessel.Unsubscribe();
-			}
-		}
-
-		public override void Subscribe()
-		{
-			base.Subscribe();
-			if (!IsMainVessel)
-			{
-				return;
-			}
-
-			foreach (SpaceObjectVessel allDockedVessel in AllDockedVessels)
-			{
-				allDockedVessel.Subscribe();
-			}
 		}
 
 		public virtual bool IsPlayerAuthorized(Player pl)
@@ -901,15 +548,6 @@ namespace ZeroGravity.Objects
 			ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null, null, -1f);
 		}
 
-		public override void LoadGeometry()
-		{
-			IsDummyObject = false;
-			if (VesselData == null || IsMainVessel)
-			{
-				RequestSpawn();
-			}
-		}
-
 		public override void DestroyGeometry()
 		{
 			base.DestroyGeometry();
@@ -954,15 +592,15 @@ namespace ZeroGravity.Objects
 		public string GetDescription()
 		{
 			SpaceObjectVessel mainVessel = MainVessel;
-			int num = !IsDummyObject ? mainVessel.AllDockedVessels.Count : DummyDockedVessels.Count;
+			int num = mainVessel.AllDockedVessels.Count;
 			if (num == 0)
 			{
-				if (GameScenes.Ranges.IsShip(mainVessel.SceneID))
+				if (GameScenes.Ranges.IsShip(mainVessel.SceneId))
 				{
-					return Localization.Ship + " - " + mainVessel.SceneID.ToLocalizedString();
+					return Localization.Ship + " - " + mainVessel.SceneId.ToLocalizedString();
 				}
 
-				return Localization.Module + " - " + mainVessel.SceneID.ToLocalizedString();
+				return Localization.Module + " - " + mainVessel.SceneId.ToLocalizedString();
 			}
 
 			if (IsStation)
@@ -993,66 +631,10 @@ namespace ZeroGravity.Objects
 			return Localization.LargeOutpost;
 		}
 
-		protected void SmoothRotation(float deltaTime)
-		{
-			SpaceObject spaceObject = !(MyPlayer.Instance.Parent is SpaceObjectVessel)
-				? MyPlayer.Instance.Parent
-				: (MyPlayer.Instance.Parent as SpaceObjectVessel).MainVessel;
-			if (TargetRotation.HasValue)
-			{
-				Quaternion quaternion = Quaternion.LookRotation(Forward, Up);
-				Quaternion quaternion2;
-				if (!ShouldSetLocalTransform)
-				{
-					quaternion2 = !World.VESSEL_ROTATION_LERP_UNCLAMPED
-						? Quaternion.Slerp(Quaternion.Slerp(TargetRotation.Value, quaternion, deltaTime),
-							Quaternion.Slerp(quaternion, TargetRotation.Value, deltaTime),
-							World.VESSEL_ROTATION_LERP_VALUE)
-						: Quaternion.Slerp(Quaternion.SlerpUnclamped(TargetRotation.Value, quaternion, deltaTime),
-							Quaternion.SlerpUnclamped(quaternion, TargetRotation.Value, deltaTime),
-							World.VESSEL_ROTATION_LERP_VALUE);
-				}
-				else
-				{
-					float num = Quaternion.Angle(quaternion, TargetRotation.Value);
-					quaternion2 = quaternion * Quaternion.Euler(RotationVec.ToVector3() * deltaTime);
-					float num2 = Quaternion.Angle(quaternion2, TargetRotation.Value);
-					quaternion2 = quaternion * Quaternion.Euler(RotationVec.ToVector3() * (deltaTime * (1f + (!(num < num2) ? 1 : -1) * num /
-						100f)));
-				}
-
-				Forward = quaternion2 * Vector3.forward;
-				Up = quaternion2 * Vector3.up;
-				if (ShouldSetLocalTransform)
-				{
-					transform.rotation = Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up).Inverse() *
-					                          Quaternion.LookRotation(Forward, Up);
-					Debug.DrawRay(transform.position, transform.rotation * Vector3.forward * 50f, Color.blue);
-					Debug.DrawRay(transform.position,
-						Quaternion.LookRotation(spaceObject.Forward, spaceObject.Up).Inverse() * TargetRotation.Value *
-						Vector3.forward * 50f, Color.red);
-				}
-				else
-				{
-					MyPlayer.Instance.UpdateCameraPositions();
-				}
-			}
-		}
 
 		public double GetCompoundMass()
 		{
 			return MainVessel.AllVessels.Sum((SpaceObjectVessel m) => m.Mass);
-		}
-
-		public void SetLastKnownMapOrbit()
-		{
-			LastKnownMapOrbit = new OrbitParameters();
-			LastKnownMapOrbit.CopyDataFrom(Orbit, World.SolarSystem.CurrentTime, exactCopy: true);
-		}
-
-		public void ResetLastKnownMapOrbit()
-		{
-			LastKnownMapOrbit = null;
 		}
 	}
 }

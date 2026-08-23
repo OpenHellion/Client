@@ -100,7 +100,7 @@ namespace ZeroGravity
 				         Item.GetCraftingResources(m.CompoundType) != null && m.DefaultAuxData.Category == cat))
 			{
 				ItemCompoundType compoundType = item.CompoundType;
-				GameObject gameObject = GameObject.Instantiate(BlueprintUI, BlueprintsHolder);
+				GameObject gameObject = Instantiate(BlueprintUI, BlueprintsHolder);
 				gameObject.transform.localScale = Vector3.one;
 				BlueprintItemUI component = gameObject.GetComponent<BlueprintItemUI>();
 				component.Screen = this;

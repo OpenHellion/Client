@@ -173,7 +173,6 @@ namespace ZeroGravity.Objects
 
 		private ICargo _ParentCargo;
 
-		[CompilerGenerated] private static Func<CargoResourceData, float> _003C_003Ef__am_0024cache0;
 
 		public CargoCompartmentType CompartmentType
 		{
@@ -240,17 +239,10 @@ namespace ZeroGravity.Objects
 				{
 					return Capacity;
 				}
-
-				float capacity = Capacity;
-				List<CargoResourceData> resources = Resources;
-				if (_003C_003Ef__am_0024cache0 == null)
-				{
-					_003C_003Ef__am_0024cache0 = _003Cget_AvailableCapacity_003Em__0;
-				}
-
-				return capacity - resources.Sum(_003C_003Ef__am_0024cache0);
+				return Capacity - Resources.Sum((CargoResourceData m) => m.Quantity);
 			}
 		}
+
 
 		public static bool IsRawResource(ResourceType resourceType)
 		{
@@ -279,14 +271,15 @@ namespace ZeroGravity.Objects
 
 		public CargoCompartmentData GetData()
 		{
-			CargoCompartmentData cargoCompartmentData = new CargoCompartmentData();
-			cargoCompartmentData.Type = CompartmentType;
-			cargoCompartmentData.ID = ID;
-			cargoCompartmentData.Capacity = Capacity;
-			cargoCompartmentData.Name = Name;
-			cargoCompartmentData.AllowedResources = allowedResources;
-			cargoCompartmentData.AllowOnlyOneType = AllowOnlyOneType;
-			cargoCompartmentData.Resources = Resources;
+			CargoCompartmentData cargoCompartmentData = new CargoCompartmentData
+			{
+				Type = CompartmentType,
+				ID = ID,
+				Capacity = Capacity,
+				AllowedResources = allowedResources,
+				AllowOnlyOneType = AllowOnlyOneType,
+				Resources = Resources
+			};
 			return cargoCompartmentData;
 		}
 
@@ -298,12 +291,6 @@ namespace ZeroGravity.Objects
 		public static bool IsAllowed(ResourceType resourceType, CargoCompartmentType compartmentType)
 		{
 			return allowedResourcesDict[compartmentType].Contains(resourceType);
-		}
-
-		[CompilerGenerated]
-		private static float _003Cget_AvailableCapacity_003Em__0(CargoResourceData m)
-		{
-			return m.Quantity;
 		}
 	}
 }

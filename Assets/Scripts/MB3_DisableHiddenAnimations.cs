@@ -9,7 +9,7 @@ public class MB3_DisableHiddenAnimations : MonoBehaviour
 	{
 		if (GetComponent<SkinnedMeshRenderer>() == null)
 		{
-			Debug.LogError("The MB3_CullHiddenAnimations script was placed on and object " + base.name +
+			Debug.LogError("The MB3_CullHiddenAnimations script was placed on and object " + name +
 			               " which has no SkinnedMeshRenderer attached");
 		}
 	}

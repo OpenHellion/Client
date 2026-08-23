@@ -11,6 +11,6 @@ public class lineEdit : MonoBehaviour
 
 	private void Update()
 	{
-		base.gameObject.GetComponent<LineRenderer>().material.SetFloat("_Speed", Speed);
+		gameObject.GetComponent<LineRenderer>().material.SetFloat("_Speed", Speed);
 	}
 }

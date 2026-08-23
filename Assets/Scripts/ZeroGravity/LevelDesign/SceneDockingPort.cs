@@ -42,7 +42,13 @@ namespace ZeroGravity.LevelDesign
 
 		public bool Locked;
 
+		[FormerlySerializedAs("mergeExecuters")] public List<SceneTriggerExecutor> MergeExecutors;
+
+		[FormerlySerializedAs("mergeExecutersDistance")] public float MergeExecutorDistance = 1f;
+
 		[Space(5f)] public List<SceneDoor> Doors;
+
+		public float DoorPairingDistance = 0.5f;
 
 		public List<SceneDockingPortController> portControllers = new List<SceneDockingPortController>();
 
@@ -101,6 +107,8 @@ namespace ZeroGravity.LevelDesign
 
 		public void SetDetails(SceneDockingPortDetails details, bool isInitialize)
 		{
+			isInitialize |= details.IsImmediate is true;
+
 			Locked = details.Locked;
 			if (details.DockedToID == null)
 			{
@@ -122,8 +130,8 @@ namespace ZeroGravity.LevelDesign
 					return;
 				}
 
-				DockedToPort = ship.GetStructureObject<SceneDockingPort>(details.DockedToID.InSceneID);
-				if (DockedToPort == null)
+				SceneDockingPort dockedToPort = ship.GetStructureObject<SceneDockingPort>(details.DockedToID.InSceneID);
+				if (dockedToPort == null)
 				{
 					if (!isInitialize)
 					{
@@ -133,6 +141,23 @@ namespace ZeroGravity.LevelDesign
 					return;
 				}
 
+				if (DockedToPort == dockedToPort && dockedToPort.DockedToPort == this &&
+				    ParentShip.MainVessel == ship.MainVessel)
+				{
+					Debug.LogWarningFormat("Docking Port: ignored a re-dock of an already docked pair. Child ship: {0}, port: {1}, Parent ship: {2}, port: {3}, Immediate: {4}",
+						ParentShip.Guid, InSceneID, ship.Guid, dockedToPort.InSceneID, details.IsImmediate is true);
+
+					dockedToPort.Locked = Locked;
+					if (details.RelativePosition != null && details.RelativeRotation != null)
+					{
+						ParentShip.RelativePosition = details.RelativePosition.ToVector3();
+						ParentShip.RelativeRotation = details.RelativeRotation.ToQuaternion();
+					}
+
+					return;
+				}
+
+				DockedToPort = dockedToPort;
 				DockedToPort.Locked = Locked;
 				DockedToPort.DockedToPort = this;
 				ParentShip.OnDockCompleted = OnDockCompleted;
@@ -322,7 +347,7 @@ namespace ZeroGravity.LevelDesign
 					SceneDockingTriggerTrans.GetComponent<BoxCollider>().size);
 			}
 
-			Gizmos.matrix = base.transform.localToWorldMatrix;
+			Gizmos.matrix = transform.localToWorldMatrix;
 			Gizmos.DrawLine(Vector3.zero, Vector3.forward);
 			Gizmos.DrawLine(Vector3.forward, new Vector3(-0.2f, 0f, 0.8f));
 			Gizmos.DrawLine(new Vector3(-0.2f, 0f, 0.8f), new Vector3(0.2f, 0f, 0.8f));
@@ -342,6 +367,7 @@ namespace ZeroGravity.LevelDesign
 		private void OnDestroy()
 		{
 			if ((bool)GetComponentInChildren<Camera>() &&
+			    MyPlayer.Instance != null &&
 			    MyPlayer.Instance.LockedToTrigger is SceneTriggerShipControl &&
 			    MyPlayer.Instance.ShipControlMode == ShipControlMode.Docking)
 			{

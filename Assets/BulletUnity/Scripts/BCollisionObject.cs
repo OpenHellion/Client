@@ -15,12 +15,12 @@ namespace BulletUnity
         }
 
 
-        //This is used to handle a design problem. 
+        //This is used to handle a design problem.
         //We want OnEnable to add physics object to world and OnDisable to remove.
         //We also want user to be able to in script: AddComponent<CollisionObject>, configure it, add it to world, potentialy disable to delay it being added to world
         //Problem is OnEnable gets called before Start so that developer has no chance to configure object before it is added to world or prevent
         //It from being added.
-        //Solution is not to add object to the world until after Start has been called. Start will do the first add to world. 
+        //Solution is not to add object to the world until after Start has been called. Start will do the first add to world.
         protected bool m_startHasBeenCalled = false;
 
         protected CollisionObject m_collisionObject;
@@ -29,9 +29,9 @@ namespace BulletUnity
         [SerializeField]
         protected BulletSharp.CollisionFlags m_collisionFlags = BulletSharp.CollisionFlags.None;
         [SerializeField]
-        protected BulletSharp.CollisionFilterGroups m_groupsIBelongTo = BulletSharp.CollisionFilterGroups.DefaultFilter; // A bitmask
+        protected CollisionFilterGroups m_groupsIBelongTo = CollisionFilterGroups.DefaultFilter; // A bitmask
         [SerializeField]
-        protected BulletSharp.CollisionFilterGroups m_collisionMask = BulletSharp.CollisionFilterGroups.AllFilter; // A colliding object must match this mask in order to collide with me.
+        protected CollisionFilterGroups m_collisionMask = CollisionFilterGroups.AllFilter; // A colliding object must match this mask in order to collide with me.
 
         public virtual BulletSharp.CollisionFlags collisionFlags
         {
@@ -48,7 +48,7 @@ namespace BulletUnity
             }
         }
 
-        public BulletSharp.CollisionFilterGroups groupsIBelongTo
+        public CollisionFilterGroups groupsIBelongTo
         {
             get { return m_groupsIBelongTo; }
             set
@@ -56,14 +56,14 @@ namespace BulletUnity
                 if (m_collisionObject != null && value != m_groupsIBelongTo)
                 {
                     Debug.LogError("Cannot change the collision group once a collision object has been created");
-                } else 
+                } else
                 {
                     m_groupsIBelongTo = value;
                 }
             }
         }
 
-        public BulletSharp.CollisionFilterGroups collisionMask
+        public CollisionFilterGroups collisionMask
         {
             get { return m_collisionMask; }
             set
@@ -90,7 +90,7 @@ namespace BulletUnity
             if (m_onCollisionCallback != null)
             {
                 Debug.LogErrorFormat("BCollisionObject {0} already has a collision callback. You must remove it before adding another. ", name);
-                
+
             }
             m_onCollisionCallback = myCallback;
             bhw.RegisterCollisionCallbackListener(m_onCollisionCallback);
@@ -120,7 +120,7 @@ namespace BulletUnity
                 }
             }
 
-            if (transform.localScale != UnityEngine.Vector3.one)
+            if (transform.localScale != Vector3.one)
             {
                 Debug.LogError("The local scale on this collision shape is not one. Bullet physics does not support scaling on a rigid body world transform. Instead alter the dimensions of the CollisionShape.");
             }
@@ -190,8 +190,8 @@ namespace BulletUnity
             BPhysicsWorld.Get().RemoveCollisionObject(this);
         }
 
-        
-        // Add this object to the world on Start. We are doing this so that scripts which add this componnet to 
+
+        // Add this object to the world on Start. We are doing this so that scripts which add this componnet to
         // game objects have a chance to configure them before the object is added to the bullet world.
         // Be aware that Start is not affected by script execution order so objects such as constraints should
         // make sure that objects they depend on have been added to the world before they add themselves.
@@ -205,7 +205,7 @@ namespace BulletUnity
             }
         }
 
-        //OnEnable and OnDisable are called when a game object is Activated and Deactivated. 
+        //OnEnable and OnDisable are called when a game object is Activated and Deactivated.
         //Unfortunately the first call comes before Awake and Start. We suppress this call so that the component
         //has a chance to initialize itself. Objects that depend on other objects such as constraints should make
         //sure those objects have been added to the world first.
@@ -218,7 +218,7 @@ namespace BulletUnity
             }
         }
 
-        // when scene is closed objects, including the physics world, are destroyed in random order. 
+        // when scene is closed objects, including the physics world, are destroyed in random order.
         // There is no way to distinquish between scene close destruction and normal gameplay destruction.
         // Objects cannot depend on world existing when they Dispose of themselves. World may have been destroyed first.
         protected virtual void OnDisable()
@@ -252,7 +252,7 @@ namespace BulletUnity
             }
             if (m_collisionObject != null)
             {
-               
+
                 m_collisionObject.Dispose();
                 m_collisionObject = null;
             }

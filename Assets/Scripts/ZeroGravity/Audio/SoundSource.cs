@@ -57,7 +57,7 @@ namespace ZeroGravity.Audio
 		{
 			if ((bool)CloseSound)
 			{
-				CloseAudioSource = base.gameObject.AddComponent<AudioSource>();
+				CloseAudioSource = gameObject.AddComponent<AudioSource>();
 				CloseAudioSource.clip = CloseSound;
 				CloseAudioSource.outputAudioMixerGroup = CloseMixerGroup;
 				CloseAudioSource.playOnAwake = PlayOnAwake;
@@ -73,7 +73,7 @@ namespace ZeroGravity.Audio
 
 			if ((bool)DistantSound)
 			{
-				DistantAudioSource = base.gameObject.AddComponent<AudioSource>();
+				DistantAudioSource = gameObject.AddComponent<AudioSource>();
 				DistantAudioSource.clip = DistantSound;
 				DistantAudioSource.outputAudioMixerGroup = DistantMixerGroup;
 				DistantAudioSource.playOnAwake = PlayOnAwake;
@@ -89,7 +89,7 @@ namespace ZeroGravity.Audio
 
 			if ((bool)ObscuredSound)
 			{
-				ObscuredAudioSource = base.gameObject.AddComponent<AudioSource>();
+				ObscuredAudioSource = gameObject.AddComponent<AudioSource>();
 				ObscuredAudioSource.clip = ObscuredSound;
 				ObscuredAudioSource.outputAudioMixerGroup = ObscuredMixerGroup;
 				ObscuredAudioSource.playOnAwake = PlayOnAwake;

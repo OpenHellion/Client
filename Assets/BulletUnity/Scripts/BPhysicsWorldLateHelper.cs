@@ -32,15 +32,15 @@ namespace BulletUnity
 
         void Awake()
         {
-            m_lastSimulationStepTime = UnityEngine.Time.time;
+            m_lastSimulationStepTime = Time.time;
         }
 
         protected virtual void FixedUpdate()
         {
-            
+
             if (m_ddWorld != null)
             {
-                float deltaTime = UnityEngine.Time.time - m_lastSimulationStepTime;
+                float deltaTime = Time.time - m_lastSimulationStepTime;
                 if (deltaTime > 0f)
                 {
                     ///stepSimulation proceeds the simulation over 'timeStep', units in preferably in seconds.
@@ -50,7 +50,7 @@ namespace BulletUnity
                     int numSteps = m_ddWorld.StepSimulation(deltaTime, m_maxSubsteps, m_fixedTimeStep);
                     m__frameCount += numSteps;
                     //Debug.Log("FixedUpdate " + numSteps);
-                    m_lastSimulationStepTime = UnityEngine.Time.time;
+                    m_lastSimulationStepTime = Time.time;
                 }
             }
 
@@ -64,13 +64,13 @@ namespace BulletUnity
         //This is needed for rigidBody interpolation. The motion states will update the positions of the rigidbodies
         protected virtual void Update()
         {
-            float deltaTime = UnityEngine.Time.time - m_lastSimulationStepTime;
+            float deltaTime = Time.time - m_lastSimulationStepTime;
             if (deltaTime > 0f)
             {
                 int numSteps = m_ddWorld.StepSimulation(deltaTime, m_maxSubsteps, m_fixedTimeStep);
                 m__frameCount += numSteps;
                 //Debug.Log("Update " + numSteps);
-                m_lastSimulationStepTime = UnityEngine.Time.time;
+                m_lastSimulationStepTime = Time.time;
             }
         }
     }

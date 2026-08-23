@@ -426,7 +426,7 @@ namespace ZeroGravity.CharacterMovement
 			if (_myPlayer.Parent is Pivot && RigidBody.linearDamping.IsNotEpsilonZero() && NearbyVessel != null)
 			{
 				Pivot pivot = _myPlayer.Parent as Pivot;
-				RigidBody.linearVelocity -= ((pivot.Velocity - NearbyVessel.Velocity) * Time.deltaTime).ToVector3();
+				RigidBody.linearVelocity -= (pivot.Velocity - NearbyVessel.Velocity) * Time.deltaTime;
 			}
 		}
 
@@ -449,18 +449,15 @@ namespace ZeroGravity.CharacterMovement
 						_myPlayer.GravityDirection);
 					if (num > 7f)
 					{
-						Tumble(RigidBody.linearVelocity);
+						Tumble();
 					}
 				}
 
 				Update1GMovement();
 			}
 
-			if (ControlsSubsystem.GetButton(ControlsSubsystem.ConfigAction.Sprint))
-			{
-				_canGrabWall = Physics.OverlapSphereNonAlloc(_centerOfMass.position, 0.8f, new Collider[1], _collisionLayerMask,
-					QueryTriggerInteraction.Ignore) > 0;
-			}
+			_canGrabWall = Physics.CheckSphere(_centerOfMass.position, 0.8f, _collisionLayerMask,
+				QueryTriggerInteraction.Ignore);
 		}
 
 		private void CheckLegDistanceFromFloor()
@@ -1138,8 +1135,8 @@ namespace ZeroGravity.CharacterMovement
 				                      (_myPlayer.IsUsingItemInHands &&
 				                       _myPlayer.Inventory.CheckIfItemInHandsIsType<HandDrill>());
 				if (hasToStabilise && _canGrabWall && NearbyVessel != null &&
-				    (NearbyVessel.Velocity - (_myPlayer.Parent.Velocity + RigidBody.linearVelocity.ToVector3D()))
-				    .SqrMagnitude < 100.0)
+				    (NearbyVessel.Velocity - (_myPlayer.Parent.Velocity + RigidBody.linearVelocity))
+				    .sqrMagnitude < 100.0)
 				{
 					if (_myPlayer.CurrentRoomTrigger == null)
 					{
@@ -1152,7 +1149,7 @@ namespace ZeroGravity.CharacterMovement
 						if (StickToVessel != null)
 						{
 							RigidBody.linearVelocity = Vector3.Lerp(RigidBody.linearVelocity,
-								(StickToVessel.Velocity - _myPlayer.Parent.Velocity).ToVector3(), 0.1f);
+								StickToVessel.Velocity - _myPlayer.Parent.Velocity, 0.1f);
 						}
 					}
 					else
@@ -1479,8 +1476,11 @@ namespace ZeroGravity.CharacterMovement
 			}
 
 			_lastMovementState = MovementState.Normal;
-			RigidBody.linearVelocity = Vector3.zero;
-			RigidBody.angularVelocity = Vector3.zero;
+			if (!RigidBody.isKinematic)
+			{
+				RigidBody.linearVelocity = Vector3.zero;
+				RigidBody.angularVelocity = Vector3.zero;
+			}
 			AnimatorHelper.SetParameter(false, null, null, null, null, null, null, null, null, null, 0f, 0f);
 			_myPlayer.ToggleMeshRendereres(enableMesh: true);
 		}
@@ -1757,7 +1757,7 @@ namespace ZeroGravity.CharacterMovement
 			actionToCall();
 		}
 
-		public void Tumble(Vector3? tumbleVelocity = null)
+		public void Tumble()
 		{
 			HasTumbled = true;
 			_gravityChanged = true;
@@ -1765,17 +1765,6 @@ namespace ZeroGravity.CharacterMovement
 			_gravityChangeLerpHelper = 0f;
 			_gravityChangeRagdollTimer = 0f;
 			_cameraController.ToggleCameraMovement(false);
-			if (tumbleVelocity.HasValue)
-			{
-				float num = tumbleVelocity.Value.magnitude;
-				if (num < _playerImpactVelocityTreshold)
-				{
-					num = _playerImpactVelocityTreshold + 1f;
-				}
-
-				_myPlayer.ImpactVelocity = num;
-			}
-
 			_myPlayer.ToggleRagdoll(true);
 			RagdollChestRigidbody.linearVelocity = _myPlayer.GravityDirection * 0.1f;
 		}
@@ -1812,8 +1801,8 @@ namespace ZeroGravity.CharacterMovement
 		{
 			if ((bool)other.GetComponentInParent<DebrisFieldEffect>())
 			{
-				_myPlayer.ImpactVelocity = 9f;
 				CameraController.cameraShakeController.CamShake(0.2f, 0.05f, 15f, 15f);
+				_myPlayer.DebrisFieldImpactPending = true;
 			}
 		}
 

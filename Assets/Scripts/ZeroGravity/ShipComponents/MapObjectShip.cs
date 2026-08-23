@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using OpenHellion.Map;
 using UnityEngine;
 using ZeroGravity.Math;
 using ZeroGravity.Objects;
@@ -29,39 +30,21 @@ namespace ZeroGravity.ShipComponents
 
 		[NonSerialized] public float ScanningConeAngle = 45f;
 
-		public override string Name => (MainObject as Ship).CommandVesselName;
+		private SubSystemRadar MyRadar =>
+			(Map != null && Map.MyShip == this) ? Map.ParentShip != null ? Map.ParentShip.RadarSystem : null : null;
+
+		public override string Name => MainObject.Name;
 
 		public override Sprite Icon
 		{
-			get
-			{
-				if (Map != null && this == Map.MyShip)
-				{
-					return SpriteManager.Instance.GetSprite(MainObject as SpaceObjectVessel);
-				}
-
-				return SpriteManager.Instance.GetSprite(MainObject as SpaceObjectVessel, true);
-			}
+			get => SpriteManager.Instance.GetSprite((MainObject as MapItemData)?.Type ?? SpaceObjectType.Ship);
 			set { }
 		}
 
 		public override string Description
 		{
-			get => (MainObject as SpaceObjectVessel).GetDescription();
+			get => (MainObject as MapItemData)?.Description;
 			set { }
-		}
-
-		public override OrbitParameters Orbit
-		{
-			get
-			{
-				if ((MainObject as SpaceObjectVessel).LastKnownMapOrbit != null)
-				{
-					return (MainObject as SpaceObjectVessel).LastKnownMapOrbit;
-				}
-
-				return base.Orbit;
-			}
 		}
 
 		public override void CreateVisual()
@@ -72,12 +55,6 @@ namespace ZeroGravity.ShipComponents
 				SetOrbit();
 				UpdateOrbitPlane();
 				SetIcon();
-				if ((MainObject as Ship)?.RadarSystem == null)
-				{
-					Destroy(ScanningCone);
-					Destroy(ScanningEffectCone);
-					Destroy(Yaw);
-				}
 			}
 
 			int renderQueue = MathHelper.RandomRange(0, 2000);
@@ -108,21 +85,20 @@ namespace ZeroGravity.ShipComponents
 			}
 
 			ScanningCone.Activate(_scanningConeActive && !ScanningEffectCone.activeSelf);
-			if (ScanningCone.activeSelf && (MainObject as Ship).RadarSystem != null)
+			if (ScanningCone.activeSelf && MyRadar != null)
 			{
 				if (ScanningConeAngle < 1f)
 				{
 					ScanningConeAngle = 1f;
 				}
 
-				double num = (MainObject as Ship).RadarSystem.SignalAmplification *
-				             (MainObject as Ship).RadarSystem.GetCelestialSensitivityModifier();
+				double num = MyRadar.SignalAmplification * MyRadar.GetCelestialSensitivityModifier();
 				if (MyPlayer.Instance.InDebrisField != null)
 				{
 					num *= MyPlayer.Instance.InDebrisField.ScanningSensitivityMultiplier;
 				}
 
-				float num2 = (float)((MainObject as Ship).RadarSystem.ActiveScanFuzzySensitivity * 1000.0 /
+				float num2 = (float)(MyRadar.ActiveScanFuzzySensitivity * 1000.0 /
 					ScanningConeAngle * ReferentRadarSignature * num);
 				float num3 = (float)(2.0 * System.Math.Tan(ScanningConeAngle * (System.Math.PI / 180.0) / 2.0));
 				ScanningCone.transform.localScale =
@@ -142,7 +118,7 @@ namespace ZeroGravity.ShipComponents
 			}
 
 			List<Vector3D> flightPathPositions =
-				Orbit.GetFlightPathPositions(World, NumberOfOrbitPositions, 60.0, out var parentChanged);
+				base.Orbit.GetFlightPathPositions(World, NumberOfOrbitPositions, 60.0, out var parentChanged);
 			MyOrbitRenderer.positionCount = flightPathPositions.Count;
 			if (flightPathPositions.Count > 0)
 			{

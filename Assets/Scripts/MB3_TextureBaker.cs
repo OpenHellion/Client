@@ -180,7 +180,7 @@ public class MB3_TextureBaker : MB3_MeshBakerRoot
 		}
 
 		MB2_ValidationLevel vl = (Application.isPlaying ? MB2_ValidationLevel.quick : MB2_ValidationLevel.robust);
-		if (!MB3_MeshBakerRoot.DoCombinedValidate(this, MB_ObjsToCombineTypes.dontCare, null, vl))
+		if (!DoCombinedValidate(this, MB_ObjsToCombineTypes.dontCare, null, vl))
 		{
 			coroutineResult.isFinished = true;
 			yield break;

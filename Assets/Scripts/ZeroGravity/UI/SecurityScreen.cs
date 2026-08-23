@@ -194,18 +194,18 @@ namespace ZeroGravity.UI
 
 		private void SetShipName()
 		{
-			if (SecuritySystem.ParentShip.VesselData.VesselName.IsNullOrEmpty())
+			if (SecuritySystem.ParentShip.VesselName.IsNullOrEmpty())
 			{
 				CustomShipName.text = Localization.UnnamedVessel.ToUpper();
 			}
 			else
 			{
-				CustomShipName.text = SecuritySystem.ParentShip.VesselData.VesselName.ToUpper();
+				CustomShipName.text = SecuritySystem.ParentShip.VesselName.ToUpper();
 			}
 
-			if (SecuritySystem.ParentShip.VesselData.VesselRegistration != null)
+			if (SecuritySystem.ParentShip.VesselRegistration != null)
 			{
-				DefaultShipName.text = SecuritySystem.ParentShip.VesselData.VesselRegistration.ToUpper();
+				DefaultShipName.text = SecuritySystem.ParentShip.VesselRegistration.ToUpper();
 			}
 
 			UpdateShipNameTags();

@@ -83,7 +83,7 @@ namespace BulletSharp
 
         public class TypeDecl
         {
-            public Dna.StructDecl Struct { get; set; }
+            public StructDecl Struct { get; set; }
             public short Length { get; set; }
             public string Name { get; private set; }
 
@@ -146,7 +146,7 @@ namespace BulletSharp
             {
                 Name = name;
                 IsPointer = name[0] == '*' || name[1] == '*';
-                
+
                 int bp = name.IndexOf('[') + 1;
                 if (bp == 0)
                 {
@@ -355,7 +355,7 @@ namespace BulletSharp
 
             for (int i = 0; i < _structs.Length; i++)
             {
-                Dna.StructDecl oldStruct = _structs[i];
+				StructDecl oldStruct = _structs[i];
                 int oldLookup = GetReverseType(oldStruct.Type.Name);
                 if (oldLookup == -1)
                 {
@@ -365,7 +365,7 @@ namespace BulletSharp
 
                 if (oldLookup < memoryDna._structs.Length)
                 {
-                    Dna.StructDecl curStruct = memoryDna.GetStruct(oldLookup);
+					StructDecl curStruct = memoryDna.GetStruct(oldLookup);
 
                     _cmpFlags[i] = oldStruct.Equals(curStruct) ? FileDnaFlags.StructEqual : FileDnaFlags.StructNotEqual;
                 }
@@ -382,14 +382,14 @@ namespace BulletSharp
         }
 
         // Structs containing non-equal structs are also non-equal
-        private void InitRecurseCmpFlags(Dna.StructDecl iter)
+        private void InitRecurseCmpFlags(StructDecl iter)
         {
             for (int i = 0; i < _structs.Length; i++)
             {
-                Dna.StructDecl curStruct = _structs[i];
+				StructDecl curStruct = _structs[i];
                 if (curStruct != iter && _cmpFlags[i] == FileDnaFlags.StructEqual)
                 {
-                    foreach (Dna.ElementDecl element in curStruct.Elements)
+                    foreach (ElementDecl element in curStruct.Elements)
                     {
                         if (curStruct.Type == iter.Type && element.Name.IsPointer)
                         {

@@ -28,7 +28,7 @@ public class FlexibleUIButton : FlexibleUI
 	{
 		base.OnSkinUI();
 		image = GetComponent<Image>();
-		hover = base.transform.Find("Hover").GetComponent<Image>();
+		hover = transform.Find("Hover").GetComponent<Image>();
 		button = GetComponent<Button>();
 		button.transition = Selectable.Transition.ColorTint;
 		button.targetGraphic = hover;
@@ -47,12 +47,12 @@ public class FlexibleUIButton : FlexibleUI
 				break;
 			case ButtonType.Confirm:
 				hover.color = skinData.confirmColor;
-				text = base.transform.Find("Text").GetComponent<Text>();
+				text = transform.Find("Text").GetComponent<Text>();
 				text.text = Localization.Confirm.ToUpper();
 				break;
 			case ButtonType.Decline:
 				hover.color = skinData.declineColor;
-				text = base.transform.Find("Text").GetComponent<Text>();
+				text = transform.Find("Text").GetComponent<Text>();
 				text.text = Localization.Cancel.ToUpper();
 				break;
 			case ButtonType.Action:

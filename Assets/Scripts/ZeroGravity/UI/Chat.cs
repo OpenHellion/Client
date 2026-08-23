@@ -159,7 +159,6 @@ namespace ZeroGravity.UI
 
 		private void ReceiveMessage(string username, string messageText)
 		{
-			// TODO: Workaround. All chat states should be supported.
 			CreateMessageElement(username, messageText, _chatState is ChatState.Local);
 		}
 
@@ -191,14 +190,16 @@ namespace ZeroGravity.UI
 		{
 			if (_chatState is ChatState.Local)
 			{
-				TextChatMessage textChatMessage = new TextChatMessage();
-				textChatMessage.MessageText = messageText;
-				textChatMessage.Local = true;
+				TextChatMessage textChatMessage = new TextChatMessage
+				{
+					MessageText = messageText,
+					Local = true
+				};
 				NetworkController.SendAndForget(textChatMessage);
 			}
 			else
 			{
-				// TODO: Do this through nakama.
+				// TODO: See GitHub issue.
 			}
 		}
 

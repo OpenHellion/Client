@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using OpenHellion;
 using ZeroGravity;
@@ -8,10 +7,65 @@ using ZeroGravity.Data;
 using ZeroGravity.Math;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
-using OpenHellion.Net;
 
 public class AnimatorHelper : MonoBehaviour
 {
+	private static readonly int UseSwayHash = Animator.StringToHash("UseSway");
+	private static readonly int BusyEquippingHash = Animator.StringToHash("BusyEquipping");
+	private static readonly int GrabHandleHash = Animator.StringToHash("GrabHandle");
+	private static readonly int IsFallingHash = Animator.StringToHash("IsFalling");
+	private static readonly int WeaponCheckLockHash = Animator.StringToHash("WeaponCheckLock");
+	private static readonly int WeaponCheckToggleHash = Animator.StringToHash("WeaponCheckToggle");
+	private static readonly int LockTypeHash = Animator.StringToHash("LockType");
+	private static readonly int GravityInteractParamHash = Animator.StringToHash("GravityInteractParam");
+	private static readonly int ReloadTypeHash = Animator.StringToHash("ReloadType");
+	private static readonly int RotationDirectionRightHash = Animator.StringToHash("RotationDirectionRight");
+	private static readonly int RotationDirectionForwardHash = Animator.StringToHash("RotationDirectionForward");
+	private static readonly int IsGroundedHash = Animator.StringToHash("IsGrounded");
+	private static readonly int WeaponBobStrengthHash = Animator.StringToHash("WeaponBobStrength");
+	private static readonly int HeadBobStrengthHash = Animator.StringToHash("HeadBobStrength");
+	private static readonly int HorizontalRollDirectionHash = Animator.StringToHash("HorizontalRollDirection");
+	private static readonly int RotateDirectionHash = Animator.StringToHash("RotateDirection");
+	private static readonly int ZeroGHandStateHash = Animator.StringToHash("ZeroGHandState");
+	private static readonly int StanceSwitchesHash = Animator.StringToHash("StanceSwitches");
+	private static readonly int PlayerStancePreviousHash = Animator.StringToHash("PlayerStancePrevious");
+	private static readonly int RollParamHash = Animator.StringToHash("RollParam");
+	private static readonly int HeadRightPosHash = Animator.StringToHash("HeadRightPos");
+	private static readonly int HeadUpPosHash = Animator.StringToHash("HeadUpPos");
+	private static readonly int CanTouchWallHash = Animator.StringToHash("CanTouchWall");
+	private static readonly int TurningHash = Animator.StringToHash("Turning");
+	private static readonly int RotateUpHash = Animator.StringToHash("RotateUp");
+	private static readonly int RotateDownHash = Animator.StringToHash("RotateDown");
+	private static readonly int IsMovingZeroGHash = Animator.StringToHash("isMovingZeroG");
+	private static readonly int IsMovingHash = Animator.StringToHash("isMoving");
+	private static readonly int WeaponActivatedHash = Animator.StringToHash("WeaponActivated");
+	private static readonly int UsingLadderHash = Animator.StringToHash("UsingLadder");
+	private static readonly int EmoteHash = Animator.StringToHash("Emote");
+	private static readonly int UsingToolHash = Animator.StringToHash("UsingTool");
+	private static readonly int TouchingFloorHash = Animator.StringToHash("TouchingFloor");
+	private static readonly int BaseDisabledHash = Animator.StringToHash("BaseDisabled");
+	private static readonly int VelocityForwardHash = Animator.StringToHash("VelocityForward");
+	private static readonly int VelocityRightHash = Animator.StringToHash("VelocityRight");
+	private static readonly int ZeroGForwardHash = Animator.StringToHash("ZeroGForward");
+	private static readonly int ZeroGRightHash = Animator.StringToHash("ZeroGRight");
+	private static readonly int InteractTypeHash = Animator.StringToHash("InteractType");
+	private static readonly int AirTimeHash = Animator.StringToHash("AirTime");
+	private static readonly int FireModeHash = Animator.StringToHash("FireMode");
+	private static readonly int GetUpTypeHash = Animator.StringToHash("GetUpType");
+	private static readonly int PlayerStanceFloatHash = Animator.StringToHash("PlayerStanceFloat");
+	private static readonly int LadderDirectionHash = Animator.StringToHash("LadderDirection");
+	private static readonly int MeleeAttackTypeHash = Animator.StringToHash("MeleeAttackType");
+	private static readonly int ReloadItemTypeHash = Animator.StringToHash("ReloadItemType");
+	private static readonly int EmoteTypeHash = Animator.StringToHash("EmoteType");
+	private static readonly int EquipItemIdHash = Animator.StringToHash("EquipItemId");
+	private static readonly int EquipOrDeEquipHash = Animator.StringToHash("EquipOrDeEquip");
+	private static readonly int TurningDirectionHash = Animator.StringToHash("TurningDirection");
+	private static readonly int ReloadingHash = Animator.StringToHash("Reloading");
+	private static readonly int InStanceHash = Animator.StringToHash("InStance");
+	private static readonly int PlayerStanceHash = Animator.StringToHash("PlayerStance");
+	private static readonly int IsZeroGHash = Animator.StringToHash("isZeroG");
+	private static readonly int CrouchHash = Animator.StringToHash("Crouch");
+
 	public class AnimationData
 	{
 		public float VelocityForward;
@@ -362,9 +416,9 @@ public class AnimatorHelper : MonoBehaviour
 
 	[SerializeField] private Animator animBob;
 
-	public Task DropTask;
+	public Action DropTask;
 
-	public Task AfterDropTask;
+	public Action AfterDropTask;
 
 	private readonly List<AnimatorParameterData> _parameters = new List<AnimatorParameterData>();
 
@@ -404,20 +458,18 @@ public class AnimatorHelper : MonoBehaviour
 
 	private bool _oldReload;
 
-	private bool _wantsToReload;
-
 	private bool _canPlayLand;
 
 	private float _playerStancePrevious;
 
 	private bool _animatorIsZeroG;
 
-	public bool CanRun => animMain.GetInteger("PlayerStance") < 3;
+	public bool CanRun => animMain.GetInteger(PlayerStanceHash) < 3;
 
 	public bool CanSwitchState => !animMain.GetCurrentAnimatorStateInfo(12).IsName("Pickup") &&
 	                              !animMain.GetCurrentAnimatorStateInfo(12).IsName("Drop");
 
-	public bool IsSpecialStance => animMain.GetInteger("PlayerStance") == 3;
+	public bool IsSpecialStance => animMain.GetInteger(PlayerStanceHash) == 3;
 
 	public bool IsConsumableInUse => _consumableLock;
 
@@ -443,43 +495,40 @@ public class AnimatorHelper : MonoBehaviour
 
 	public void ParseData(CharacterAnimationData data)
 	{
-		if (data != null)
-		{
-			animationData.VelocityForward = MathHelper.ProportionalValue(data.VelocityForward, 0f, 255f, -1f, 1f);
-			animationData.VelocityRight = MathHelper.ProportionalValue(data.VelocityRight, 0f, 255f, -1f, 1f);
-			animationData.ZeroGForward = !animationData.IsZeroG
-				? 0f
-				: MathHelper.ProportionalValue(data.ZeroGForward, 0f, 255f, -1f, 1f);
-			animationData.ZeroGRight = !animationData.IsZeroG
-				? 0f
-				: MathHelper.ProportionalValue(data.ZeroGRight, 0f, 255f, -1f, 1f);
-			animationData.InteractType = data.InteractType;
-			animationData.PlayerStance = data.PlayerStance;
-			animationData.TurningDirection = data.TurningDirection;
-			animationData.EquipOrDeEquip = data.EquipOrDeEquip;
-			animationData.EquipItemId = data.EquipItemId;
-			animationData.EmoteType = data.EmoteType;
-			animationData.ReloadItemType = data.ReloadItemType;
-			animationData.MeleeAttackType = data.MeleeAttackType;
-			animationData.LadderDirection = data.LadderDirection;
-			animationData.PlayerStanceFloat = data.PlayerStanceFloat;
-			animationData.GetUpType = data.GetUpType;
-			animationData.FireMode = data.FireMode;
-			animationData.AirTime = data.AirTime;
-			animationData.IsMoving =
-				(!animationData.IsZeroG && animationData.VelocityForward.IsNotEpsilonZero(0.01f)) ||
-				animationData.VelocityRight.IsNotEpsilonZero(0.01f);
-			animationData.IsMovingZeroG =
-				(animationData.IsZeroG && animationData.ZeroGForward.IsNotEpsilonZero(0.01f)) ||
-				animationData.ZeroGRight.IsNotEpsilonZero(0.01f);
-		}
+		animationData.VelocityForward = MathHelper.ProportionalValue(data.VelocityForward, 0f, 255f, -1f, 1f);
+		animationData.VelocityRight = MathHelper.ProportionalValue(data.VelocityRight, 0f, 255f, -1f, 1f);
+		animationData.ZeroGForward = !animationData.IsZeroG
+			? 0f
+			: MathHelper.ProportionalValue(data.ZeroGForward, 0f, 255f, -1f, 1f);
+		animationData.ZeroGRight = !animationData.IsZeroG
+			? 0f
+			: MathHelper.ProportionalValue(data.ZeroGRight, 0f, 255f, -1f, 1f);
+		animationData.InteractType = data.InteractType;
+		animationData.PlayerStance = data.PlayerStance;
+		animationData.TurningDirection = data.TurningDirection;
+		animationData.EquipOrDeEquip = data.EquipOrDeEquip;
+		animationData.EquipItemId = data.EquipItemId;
+		animationData.EmoteType = data.EmoteType;
+		animationData.ReloadItemType = data.ReloadItemType;
+		animationData.MeleeAttackType = data.MeleeAttackType;
+		animationData.LadderDirection = data.LadderDirection;
+		animationData.PlayerStanceFloat = data.PlayerStanceFloat;
+		animationData.GetUpType = data.GetUpType;
+		animationData.FireMode = data.FireMode;
+		animationData.AirTime = data.AirTime;
+		animationData.IsMoving =
+			(!animationData.IsZeroG && animationData.VelocityForward.IsNotEpsilonZero(0.01f)) ||
+			animationData.VelocityRight.IsNotEpsilonZero(0.01f);
+		animationData.IsMovingZeroG =
+			(animationData.IsZeroG && animationData.ZeroGForward.IsNotEpsilonZero(0.01f)) ||
+			animationData.ZeroGRight.IsNotEpsilonZero(0.01f);
 	}
 
 	public CharacterAnimationData GetAnimationData(bool isJump, bool isDraw, bool isHolster, bool cancelInteract,
 		float airTime, bool isEquippingItem, bool isMelee, bool useConsumable, out int AnimationStatsMask)
 	{
 		int num = 0;
-		if (animMain.GetBool("Crouch"))
+		if (animMain.GetBool(CrouchHash))
 		{
 			num |= 1;
 		}
@@ -489,17 +538,17 @@ public class AnimatorHelper : MonoBehaviour
 			num |= 2;
 		}
 
-		if (animMain.GetBool("isZeroG"))
+		if (animMain.GetBool(IsZeroGHash))
 		{
 			num |= 4;
 		}
 
-		if (animMain.GetBool("InStance"))
+		if (animMain.GetBool(InStanceHash))
 		{
 			num |= 8;
 		}
 
-		if (animMain.GetBool("Reloading"))
+		if (animMain.GetBool(ReloadingHash))
 		{
 			num |= 0x10;
 		}
@@ -534,22 +583,22 @@ public class AnimatorHelper : MonoBehaviour
 			num |= 0x800;
 		}
 
-		if (animMain.GetBool("TouchingFloor"))
+		if (animMain.GetBool(TouchingFloorHash))
 		{
 			num |= 0x1000;
 		}
 
-		if (animMain.GetBool("UsingTool"))
+		if (animMain.GetBool(UsingToolHash))
 		{
 			num |= 0x2000;
 		}
 
-		if (animMain.GetBool("Emote"))
+		if (animMain.GetBool(EmoteHash))
 		{
 			num |= 0x4000;
 		}
 
-		if (animMain.GetBool("UsingLadder"))
+		if (animMain.GetBool(UsingLadderHash))
 		{
 			num |= 0x10000;
 		}
@@ -564,27 +613,42 @@ public class AnimatorHelper : MonoBehaviour
 			num |= 0x20000;
 		}
 
-		if (animMain.GetBool("WeaponActivated"))
+		if (animMain.GetBool(WeaponActivatedHash))
 		{
 			num |= 0x40000;
 		}
 
 		AnimationStatsMask = num;
-		return new CharacterAnimationData(animMain.GetFloat("VelocityForward"), animMain.GetFloat("VelocityRight"),
-			animMain.GetFloat("ZeroGForward"), animMain.GetFloat("ZeroGRight"), animMain.GetFloat("InteractType"),
-			animMain.GetInteger("PlayerStance"), animMain.GetInteger("TurningDirection"),
-			animMain.GetFloat("EquipOrDeEquip"), animMain.GetFloat("EquipItemId"), animMain.GetFloat("EmoteType"),
-			animMain.GetFloat("ReloadItemType"), animMain.GetFloat("MeleeAttackType"),
-			animMain.GetFloat("LadderDirection"), animMain.GetFloat("PlayerStanceFloat"),
-			animMain.GetFloat("GetUpType"), animMain.GetFloat("FireMode"), animMain.GetFloat("AirTime"));
+		return new CharacterAnimationData()
+		{
+			VelocityForward = (byte)MathHelper.ProportionalValue(animMain.GetFloat(VelocityForwardHash), -1f, 1f, 0f, 255f),
+			VelocityRight = (byte)MathHelper.ProportionalValue(animMain.GetFloat(VelocityRightHash), -1f, 1f, 0f, 255f),
+			ZeroGForward = (byte)MathHelper.ProportionalValue(animMain.GetFloat(ZeroGForwardHash), -1f, 1f, 0f, 255f),
+			ZeroGRight = (byte)MathHelper.ProportionalValue(animMain.GetFloat(ZeroGRightHash), -1f, 1f, 0f, 255f),
+			InteractType = (byte)animMain.GetFloat(InteractTypeHash),
+			PlayerStance = (byte)animMain.GetInteger(PlayerStanceHash),
+			TurningDirection = (byte)animMain.GetInteger(TurningDirectionHash),
+			EquipOrDeEquip = (byte)animMain.GetFloat(EquipOrDeEquipHash),
+			EquipItemId = (byte)animMain.GetFloat(EquipItemIdHash),
+			EmoteType = (byte)animMain.GetFloat(EmoteTypeHash),
+			ReloadItemType = (byte)animMain.GetFloat(ReloadItemTypeHash),
+			MeleeAttackType = (byte)animMain.GetFloat(MeleeAttackTypeHash),
+			LadderDirection = (sbyte)animMain.GetFloat(LadderDirectionHash),
+			PlayerStanceFloat = (byte)animMain.GetFloat(PlayerStanceFloatHash),
+			GetUpType = (byte)animMain.GetFloat(GetUpTypeHash),
+			FireMode = (byte)animMain.GetFloat(FireModeHash),
+			AirTime = animMain.GetFloat(AirTimeHash),
+		};
 	}
 
 	private void Awake()
 	{
-		_world ??= GameObject.Find("/World").GetComponent<World>();
+		_world = _world != null ? _world : GameObject.Find("/World").GetComponent<World>();
 		CreateRig();
-		_animOverride = new AnimatorOverrideController();
-		_animOverride.runtimeAnimatorController = animMain.runtimeAnimatorController;
+		_animOverride = new AnimatorOverrideController
+		{
+			runtimeAnimatorController = animMain.runtimeAnimatorController
+		};
 	}
 
 	private void Start()
@@ -609,61 +673,61 @@ public class AnimatorHelper : MonoBehaviour
 
 	public void CreateRig()
 	{
-		_bones[HumanBones.Hips] = base.transform.Find("Root/Hips");
-		_bones[HumanBones.Spine1] = base.transform.Find("Root/Hips/Spine1");
-		_bones[HumanBones.Spine2] = base.transform.Find("Root/Hips/Spine1/Spine2");
-		_bones[HumanBones.Neck] = base.transform.Find("Root/Hips/Spine1/Spine2/Neck");
-		_bones[HumanBones.Head] = base.transform.Find("Root/Hips/Spine1/Spine2/Neck/Head");
-		_bones[HumanBones.LeftUpLeg] = base.transform.Find("Root/Hips/LeftUpLeg");
-		_bones[HumanBones.LeftLeg] = base.transform.Find("Root/Hips/LeftUpLeg/LeftUpLegRoll/LeftLeg");
+		_bones[HumanBones.Hips] = transform.Find("Root/Hips");
+		_bones[HumanBones.Spine1] = transform.Find("Root/Hips/Spine1");
+		_bones[HumanBones.Spine2] = transform.Find("Root/Hips/Spine1/Spine2");
+		_bones[HumanBones.Neck] = transform.Find("Root/Hips/Spine1/Spine2/Neck");
+		_bones[HumanBones.Head] = transform.Find("Root/Hips/Spine1/Spine2/Neck/Head");
+		_bones[HumanBones.LeftUpLeg] = transform.Find("Root/Hips/LeftUpLeg");
+		_bones[HumanBones.LeftLeg] = transform.Find("Root/Hips/LeftUpLeg/LeftUpLegRoll/LeftLeg");
 		_bones[HumanBones.LeftFoot] =
-			base.transform.Find("Root/Hips/LeftUpLeg/LeftUpLegRoll/LeftLeg/LeftLegRoll/LeftFoot");
-		_bones[HumanBones.RightUpLeg] = base.transform.Find("Root/Hips/RightUpLeg");
-		_bones[HumanBones.RightLeg] = base.transform.Find("Root/Hips/RightUpLeg/RightUpLegRoll/RightLeg");
+			transform.Find("Root/Hips/LeftUpLeg/LeftUpLegRoll/LeftLeg/LeftLegRoll/LeftFoot");
+		_bones[HumanBones.RightUpLeg] = transform.Find("Root/Hips/RightUpLeg");
+		_bones[HumanBones.RightLeg] = transform.Find("Root/Hips/RightUpLeg/RightUpLegRoll/RightLeg");
 		_bones[HumanBones.RightFoot] =
-			base.transform.Find("Root/Hips/RightUpLeg/RightUpLegRoll/RightLeg/RightLegRoll/RightFoot");
-		_bones[HumanBones.LeftShoulder] = base.transform.Find("Root/Hips/Spine1/Spine2/LeftShoulder");
-		_bones[HumanBones.LeftArm] = base.transform.Find("Root/Hips/Spine1/Spine2/LeftShoulder/LeftArm");
+			transform.Find("Root/Hips/RightUpLeg/RightUpLegRoll/RightLeg/RightLegRoll/RightFoot");
+		_bones[HumanBones.LeftShoulder] = transform.Find("Root/Hips/Spine1/Spine2/LeftShoulder");
+		_bones[HumanBones.LeftArm] = transform.Find("Root/Hips/Spine1/Spine2/LeftShoulder/LeftArm");
 		_bones[HumanBones.LeftForearm] =
-			base.transform.Find("Root/Hips/Spine1/Spine2/LeftShoulder/LeftArm/LeftArmRoll/LeftForearm");
+			transform.Find("Root/Hips/Spine1/Spine2/LeftShoulder/LeftArm/LeftArmRoll/LeftForearm");
 		_bones[HumanBones.LeftHand] =
-			base.transform.Find(
+			transform.Find(
 				"Root/Hips/Spine1/Spine2/LeftShoulder/LeftArm/LeftArmRoll/LeftForearm/LeftForearmRoll/LeftHand");
-		_bones[HumanBones.RightShoulder] = base.transform.Find("Root/Hips/Spine1/Spine2/RightShoulder");
-		_bones[HumanBones.RightArm] = base.transform.Find("Root/Hips/Spine1/Spine2/RightShoulder/RightArm");
+		_bones[HumanBones.RightShoulder] = transform.Find("Root/Hips/Spine1/Spine2/RightShoulder");
+		_bones[HumanBones.RightArm] = transform.Find("Root/Hips/Spine1/Spine2/RightShoulder/RightArm");
 		_bones[HumanBones.RightForearm] =
-			base.transform.Find("Root/Hips/Spine1/Spine2/RightShoulder/RightArm/RightArmRoll/RightForearm");
+			transform.Find("Root/Hips/Spine1/Spine2/RightShoulder/RightArm/RightArmRoll/RightForearm");
 		_bones[HumanBones.RightHand] =
-			base.transform.Find(
+			transform.Find(
 				"Root/Hips/Spine1/Spine2/RightShoulder/RightArm/RightArmRoll/RightForearm/RightForearmRoll/RightHand");
 		_bones[HumanBones.LeftToe] =
-			base.transform.Find("Root/Hips/LeftUpLeg/LeftUpLegRoll/LeftLeg/LeftLegRoll/LeftFoot/LeftToe");
+			transform.Find("Root/Hips/LeftUpLeg/LeftUpLegRoll/LeftLeg/LeftLegRoll/LeftFoot/LeftToe");
 		_bones[HumanBones.RightToe] =
-			base.transform.Find("Root/Hips/RightUpLeg/RightUpLegRoll/RightLeg/RightLegRoll/RightFoot/RightToe");
-		_bones[HumanBones.RightInteractBone] = base.transform.Find(
+			transform.Find("Root/Hips/RightUpLeg/RightUpLegRoll/RightLeg/RightLegRoll/RightFoot/RightToe");
+		_bones[HumanBones.RightInteractBone] = transform.Find(
 			"Root/Hips/Spine1/Spine2/RightShoulder/RightArm/RightArmRoll/RightForearm/RightForearmRoll/RightHand/RIGHT INTERACT");
-		_bones[HumanBones.LeftInteractBone] = base.transform.Find(
+		_bones[HumanBones.LeftInteractBone] = transform.Find(
 			"Root/Hips/Spine1/Spine2/LeftShoulder/LeftArm/LeftArmRoll/LeftForearm/LeftForearmRoll/LeftHand/LEFT INTERACT");
-		_bones[HumanBones.Root] = base.transform.Find("Root");
-		_bones[HumanBones.LeftUpLegRoll] = base.transform.Find("Root/Hips/LeftUpLeg/LeftUpLegRoll");
-		_bones[HumanBones.LeftLegRoll] = base.transform.Find("Root/Hips/LeftUpLeg/LeftUpLegRoll/LeftLeg/LeftLegRoll");
+		_bones[HumanBones.Root] = transform.Find("Root");
+		_bones[HumanBones.LeftUpLegRoll] = transform.Find("Root/Hips/LeftUpLeg/LeftUpLegRoll");
+		_bones[HumanBones.LeftLegRoll] = transform.Find("Root/Hips/LeftUpLeg/LeftUpLegRoll/LeftLeg/LeftLegRoll");
 		_bones[HumanBones.LeftToe_END] =
-			base.transform.Find("Root/Hips/LeftUpLeg/LeftUpLegRoll/LeftLeg/LeftLegRoll/LeftFoot/LeftToe/LeftToe_END");
-		_bones[HumanBones.RightUpLegRoll] = base.transform.Find("Root/Hips/RightUpLeg/RightUpLegRoll");
+			transform.Find("Root/Hips/LeftUpLeg/LeftUpLegRoll/LeftLeg/LeftLegRoll/LeftFoot/LeftToe/LeftToe_END");
+		_bones[HumanBones.RightUpLegRoll] = transform.Find("Root/Hips/RightUpLeg/RightUpLegRoll");
 		_bones[HumanBones.RightLegRoll] =
-			base.transform.Find("Root/Hips/RightUpLeg/RightUpLegRoll/RightLeg/RightLegRoll");
+			transform.Find("Root/Hips/RightUpLeg/RightUpLegRoll/RightLeg/RightLegRoll");
 		_bones[HumanBones.RightToe_END] =
-			base.transform.Find(
+			transform.Find(
 				"Root/Hips/RightUpLeg/RightUpLegRoll/RightLeg/RightLegRoll/RightFoot/RightToe/RightToe_END");
 		_bones[HumanBones.LeftArmRoll] =
-			base.transform.Find("Root/Hips/Spine1/Spine2/LeftShoulder/LeftArm/LeftArmRoll");
+			transform.Find("Root/Hips/Spine1/Spine2/LeftShoulder/LeftArm/LeftArmRoll");
 		_bones[HumanBones.LeftForearmRoll] =
-			base.transform.Find("Root/Hips/Spine1/Spine2/LeftShoulder/LeftArm/LeftArmRoll/LeftForearm/LeftForearmRoll");
-		_bones[HumanBones.Head_END] = base.transform.Find("Root/Hips/Spine1/Spine2/Neck/Head/Head_END");
+			transform.Find("Root/Hips/Spine1/Spine2/LeftShoulder/LeftArm/LeftArmRoll/LeftForearm/LeftForearmRoll");
+		_bones[HumanBones.Head_END] = transform.Find("Root/Hips/Spine1/Spine2/Neck/Head/Head_END");
 		_bones[HumanBones.RightArmRoll] =
-			base.transform.Find("Root/Hips/Spine1/Spine2/RightShoulder/RightArm/RightArmRoll");
+			transform.Find("Root/Hips/Spine1/Spine2/RightShoulder/RightArm/RightArmRoll");
 		_bones[HumanBones.RightForearmRoll] =
-			base.transform.Find(
+			transform.Find(
 				"Root/Hips/Spine1/Spine2/RightShoulder/RightArm/RightArmRoll/RightForearm/RightForearmRoll");
 	}
 
@@ -729,11 +793,11 @@ public class AnimatorHelper : MonoBehaviour
 		{
 			if (needsFullOverride)
 			{
-				animMain.SetInteger("BaseDisabled", 1);
+				animMain.SetInteger(BaseDisabledHash, 1);
 			}
 			else
 			{
-				animMain.SetInteger("BaseDisabled", 0);
+				animMain.SetInteger(BaseDisabledHash, 0);
 			}
 
 			if (item is Weapon)
@@ -1171,73 +1235,73 @@ public class AnimatorHelper : MonoBehaviour
 	{
 		if (isCrouch.HasValue)
 		{
-			animMain.SetBool("Crouch", isCrouch.Value);
+			animMain.SetBool(CrouchHash, isCrouch.Value);
 			if (animBob != null)
 			{
-				animBob.SetBool("Crouch", isCrouch.Value);
+				animBob.SetBool(CrouchHash, isCrouch.Value);
 			}
 		}
 
 		if (isMoving.HasValue)
 		{
-			animMain.SetBool("isMoving", isMoving.Value);
+			animMain.SetBool(IsMovingHash, isMoving.Value);
 			if (animBob != null)
 			{
-				animBob.SetBool("isMoving", isMoving.Value);
+				animBob.SetBool(IsMovingHash, isMoving.Value);
 			}
 		}
 
 		if (isZeroG.HasValue)
 		{
-			animMain.SetBool("isZeroG", isZeroG.Value);
+			animMain.SetBool(IsZeroGHash, isZeroG.Value);
 			_animatorIsZeroG = isZeroG.Value;
 			if (animBob != null)
 			{
-				animBob.SetBool("isZeroG", isZeroG.Value);
+				animBob.SetBool(IsZeroGHash, isZeroG.Value);
 			}
 		}
 
 		if (isMovingZeroG.HasValue)
 		{
-			animMain.SetBool("isMovingZeroG", isMovingZeroG.Value);
+			animMain.SetBool(IsMovingZeroGHash, isMovingZeroG.Value);
 			if (animBob != null)
 			{
-				animBob.SetBool("isMovingZeroG", isMovingZeroG.Value);
+				animBob.SetBool(IsMovingZeroGHash, isMovingZeroG.Value);
 			}
 		}
 
 		if (rotateUp.HasValue)
 		{
-			animMain.SetBool("RotateUp", rotateUp.Value);
+			animMain.SetBool(RotateUpHash, rotateUp.Value);
 		}
 
 		if (rotateDown.HasValue)
 		{
-			animMain.SetBool("RotateDown", rotateDown.Value);
+			animMain.SetBool(RotateDownHash, rotateDown.Value);
 		}
 
 		if (isTurning.HasValue)
 		{
-			animMain.SetBool("Turning", isTurning.Value);
+			animMain.SetBool(TurningHash, isTurning.Value);
 			if (animBob != null)
 			{
-				animBob.SetBool("Turning", isTurning.Value);
+				animBob.SetBool(TurningHash, isTurning.Value);
 			}
 		}
 
 		if (canTouchWall.HasValue)
 		{
-			animMain.SetBool("CanTouchWall", canTouchWall.Value);
+			animMain.SetBool(CanTouchWallHash, canTouchWall.Value);
 		}
 
 		if (inStance.HasValue)
 		{
-			animMain.SetBool("InStance", inStance.Value);
+			animMain.SetBool(InStanceHash, inStance.Value);
 		}
 
 		if (reload.HasValue)
 		{
-			animMain.SetBool("Reloading", reload.Value);
+			animMain.SetBool(ReloadingHash, reload.Value);
 			if (_player is MyPlayer && !reload.Value && _currentPlayerStance == MyPlayer.PlayerStance.Special)
 			{
 				(_player as MyPlayer).ChangeCamerasFov(Globals.Instance.SpecialCameraFov);
@@ -1256,19 +1320,19 @@ public class AnimatorHelper : MonoBehaviour
 
 		if (velocityRight.HasValue)
 		{
-			animMain.SetFloat("VelocityRight", velocityRight.Value);
+			animMain.SetFloat(VelocityRightHash, velocityRight.Value);
 			if (animBob != null)
 			{
-				animBob.SetFloat("VelocityRight", velocityRight.Value);
+				animBob.SetFloat(VelocityRightHash, velocityRight.Value);
 			}
 		}
 
 		if (velocityForward.HasValue)
 		{
-			animMain.SetFloat("VelocityForward", velocityForward.Value);
+			animMain.SetFloat(VelocityForwardHash, velocityForward.Value);
 			if (animBob != null)
 			{
-				animBob.SetFloat("VelocityForward", velocityForward.Value);
+				animBob.SetFloat(VelocityForwardHash, velocityForward.Value);
 			}
 		}
 
@@ -1286,27 +1350,27 @@ public class AnimatorHelper : MonoBehaviour
 
 		if (headUpPos.HasValue)
 		{
-			animMain.SetFloat("HeadUpPos", headUpPos.Value);
+			animMain.SetFloat(HeadUpPosHash, headUpPos.Value);
 		}
 
 		if (headRightPos.HasValue)
 		{
-			animMain.SetFloat("HeadRightPos", headRightPos.Value);
+			animMain.SetFloat(HeadRightPosHash, headRightPos.Value);
 		}
 
 		if (zeroGForward.HasValue)
 		{
-			animMain.SetFloat("ZeroGForward", zeroGForward.Value);
+			animMain.SetFloat(ZeroGForwardHash, zeroGForward.Value);
 		}
 
 		if (zeroGRight.HasValue)
 		{
-			animMain.SetFloat("ZeroGRight", zeroGRight.Value);
+			animMain.SetFloat(ZeroGRightHash, zeroGRight.Value);
 		}
 
 		if (rollParam.HasValue)
 		{
-			animMain.SetFloat("RollParam", rollParam.Value);
+			animMain.SetFloat(RollParamHash, rollParam.Value);
 		}
 
 		if (playerStance.HasValue && _currentPlayerStance != playerStance.Value)
@@ -1324,54 +1388,54 @@ public class AnimatorHelper : MonoBehaviour
 					float num = ((!_animatorIsZeroG)
 						? animMain.GetCurrentAnimatorStateInfo(3).normalizedTime
 						: animMain.GetCurrentAnimatorStateInfo(4).normalizedTime);
-					animMain.CrossFade("StanceSwitches", 0f, (!_animatorIsZeroG) ? 3 : 4, 1f - num % 1f);
+					animMain.CrossFade(StanceSwitchesHash, 0f, (!_animatorIsZeroG) ? 3 : 4, 1f - num % 1f);
 				}
 				else
 				{
 					SetParameterTrigger(Triggers.WantsToSwitchStance);
 				}
 
-				animMain.SetFloat("PlayerStancePrevious", (float)_currentPlayerStance);
+				animMain.SetFloat(PlayerStancePreviousHash, (float)_currentPlayerStance);
 			}
 
 			_currentPlayerStance = playerStance.Value;
-			animMain.SetFloat("PlayerStanceFloat", (float)_currentPlayerStance);
-			animMain.SetInteger("PlayerStance", (int)_currentPlayerStance);
+			animMain.SetFloat(PlayerStanceFloatHash, (float)_currentPlayerStance);
+			animMain.SetInteger(PlayerStanceHash, (int)_currentPlayerStance);
 		}
 
 		if (turningDirection.HasValue)
 		{
-			animMain.SetInteger("TurningDirection", turningDirection.Value);
+			animMain.SetInteger(TurningDirectionHash, turningDirection.Value);
 		}
 
 		if (zeroGHandState.HasValue)
 		{
-			animMain.SetInteger("ZeroGHandState", zeroGHandState.Value);
+			animMain.SetInteger(ZeroGHandStateHash, zeroGHandState.Value);
 		}
 
 		if (rotateDirection.HasValue)
 		{
-			animMain.SetInteger("RotateDirection", rotateDirection.Value);
+			animMain.SetInteger(RotateDirectionHash, rotateDirection.Value);
 		}
 
 		if (horizontalRollDirection.HasValue)
 		{
-			animMain.SetInteger("HorizontalRollDirection", horizontalRollDirection.Value);
+			animMain.SetInteger(HorizontalRollDirectionHash, horizontalRollDirection.Value);
 		}
 
 		if (animBob != null && headBobStrength.HasValue)
 		{
-			animBob.SetFloat("HeadBobStrength", headBobStrength.Value);
+			animBob.SetFloat(HeadBobStrengthHash, headBobStrength.Value);
 		}
 
 		if (animBob != null && weaponBobStrength.HasValue)
 		{
-			animBob.SetFloat("WeaponBobStrength", weaponBobStrength.Value);
+			animBob.SetFloat(WeaponBobStrengthHash, weaponBobStrength.Value);
 		}
 
 		if (isGrounded.HasValue)
 		{
-			animMain.SetBool("IsGrounded", isGrounded.Value);
+			animMain.SetBool(IsGroundedHash, isGrounded.Value);
 			if (_wasInAir && isGrounded.Value)
 			{
 				if (_canPlayLand)
@@ -1384,53 +1448,53 @@ public class AnimatorHelper : MonoBehaviour
 
 			if (animBob != null)
 			{
-				animBob.SetBool("IsGrounded", isGrounded.Value);
+				animBob.SetBool(IsGroundedHash, isGrounded.Value);
 			}
 		}
 
 		if (interactType.HasValue)
 		{
-			animMain.SetFloat("InteractType", (float)interactType.Value);
+			animMain.SetFloat(InteractTypeHash, (float)interactType.Value);
 		}
 
 		if (rotationDirectionForward.HasValue)
 		{
-			animMain.SetFloat("RotationDirectionForward", rotationDirectionForward.Value);
+			animMain.SetFloat(RotationDirectionForwardHash, rotationDirectionForward.Value);
 		}
 
 		if (rotationDirectionRight.HasValue)
 		{
-			animMain.SetFloat("RotationDirectionRight", rotationDirectionRight.Value);
+			animMain.SetFloat(RotationDirectionRightHash, rotationDirectionRight.Value);
 		}
 
 		if (reloadType.HasValue)
 		{
-			animMain.SetFloat("ReloadType", (float)reloadType.Value);
+			animMain.SetFloat(ReloadTypeHash, (float)reloadType.Value);
 		}
 
 		if (gravityParam.HasValue)
 		{
-			animMain.SetFloat("GravityInteractParam", (float)gravityParam.Value);
+			animMain.SetFloat(GravityInteractParamHash, (float)gravityParam.Value);
 		}
 
 		if (lockType.HasValue)
 		{
-			animMain.SetFloat("LockType", (float)lockType.Value);
+			animMain.SetFloat(LockTypeHash, (float)lockType.Value);
 		}
 
 		if (weaponCheckToggle.HasValue)
 		{
-			animMain.SetBool("WeaponCheckToggle", weaponCheckToggle.Value);
+			animMain.SetBool(WeaponCheckToggleHash, weaponCheckToggle.Value);
 		}
 
 		if (weaponCheckLock.HasValue)
 		{
-			animMain.SetBool("WeaponCheckLock", weaponCheckLock.Value);
+			animMain.SetBool(WeaponCheckLockHash, weaponCheckLock.Value);
 		}
 
 		if (airTime.HasValue)
 		{
-			animMain.SetFloat("AirTime", airTime.Value);
+			animMain.SetFloat(AirTimeHash, airTime.Value);
 			if (airTime.Value > 0.3f)
 			{
 				_wasInAir = true;
@@ -1438,105 +1502,97 @@ public class AnimatorHelper : MonoBehaviour
 
 			if (animBob != null)
 			{
-				animBob.SetFloat("AirTime", airTime.Value);
+				animBob.SetFloat(AirTimeHash, airTime.Value);
 			}
 		}
 
 		if (isFalling.HasValue)
 		{
-			animMain.SetBool("IsFalling", isFalling.Value);
+			animMain.SetBool(IsFallingHash, isFalling.Value);
 		}
 
 		if (grabHandle.HasValue)
 		{
-			animMain.SetBool("GrabHandle", grabHandle.Value);
+			animMain.SetBool(GrabHandleHash, grabHandle.Value);
 		}
 
 		if (equipItemId.HasValue)
 		{
 			if (_player is MyPlayer)
 			{
-				animMain.SetFloat("EquipItemId", GetFloatFromItemType(equipItemId.Value));
+				animMain.SetFloat(EquipItemIdHash, GetFloatFromItemType(equipItemId.Value));
 			}
 			else
 			{
-				animMain.SetFloat("EquipItemId", (float)equipItemId.Value);
+				animMain.SetFloat(EquipItemIdHash, (float)equipItemId.Value);
 			}
 		}
 
 		if (busyEquipping.HasValue)
 		{
-			animMain.SetBool("BusyEquipping", busyEquipping.Value);
+			animMain.SetBool(BusyEquippingHash, busyEquipping.Value);
 		}
 
 		if (equipOrDeEquip.HasValue)
 		{
-			animMain.SetFloat("EquipOrDeEquip", (float)equipOrDeEquip.Value);
+			animMain.SetFloat(EquipOrDeEquipHash, (float)equipOrDeEquip.Value);
 		}
 
 		if (touchingFloor.HasValue)
 		{
-			animMain.SetBool("TouchingFloor", touchingFloor.Value);
+			animMain.SetBool(TouchingFloorHash, touchingFloor.Value);
 		}
 
 		if (usingTool.HasValue)
 		{
-			animMain.SetBool("UsingTool", usingTool.Value);
-		}
-
-		if (emoteType.HasValue)
-		{
-		}
-
-		if (emote.HasValue)
-		{
+			animMain.SetBool(UsingToolHash, usingTool.Value);
 		}
 
 		if (reloadItemType.HasValue)
 		{
 			if (_player is MyPlayer)
 			{
-				animMain.SetFloat("ReloadItemType", GetFloatFromItemType(reloadItemType.Value));
+				animMain.SetFloat(ReloadItemTypeHash, GetFloatFromItemType(reloadItemType.Value));
 			}
 			else
 			{
-				animMain.SetFloat("ReloadItemType", (float)reloadItemType.Value);
+				animMain.SetFloat(ReloadItemTypeHash, (float)reloadItemType.Value);
 			}
 		}
 
 		if (meleeAttackType.HasValue)
 		{
-			animMain.SetFloat("MeleeAttackType", meleeAttackType.Value);
+			animMain.SetFloat(MeleeAttackTypeHash, meleeAttackType.Value);
 		}
 
 		if (usingLadder.HasValue)
 		{
-			animMain.SetBool("UsingLadder", usingLadder.Value);
+			animMain.SetBool(UsingLadderHash, usingLadder.Value);
 		}
 
 		if (ladderDirection.HasValue)
 		{
-			animMain.SetFloat("LadderDirection", ladderDirection.Value);
+			animMain.SetFloat(LadderDirectionHash, ladderDirection.Value);
 		}
 
 		if (getUpType.HasValue)
 		{
-			animMain.SetFloat("GetUpType", getUpType.Value);
+			animMain.SetFloat(GetUpTypeHash, getUpType.Value);
 		}
 
 		if (fireMode.HasValue)
 		{
-			animMain.SetFloat("FireMode", fireMode.Value);
+			animMain.SetFloat(FireModeHash, fireMode.Value);
 		}
 
 		if (useSway.HasValue)
 		{
-			animMain.SetBool("UseSway", useSway.Value);
+			animMain.SetBool(UseSwayHash, useSway.Value);
 		}
 
 		if (weaponActivated.HasValue)
 		{
-			animMain.SetBool("WeaponActivated", weaponActivated.Value);
+			animMain.SetBool(WeaponActivatedHash, weaponActivated.Value);
 		}
 	}
 
@@ -1716,17 +1772,17 @@ public class AnimatorHelper : MonoBehaviour
 		if (DropTask != null && _player is MyPlayer)
 		{
 			this.CancelInvoke(DropEvent);
-			DropTask.RunSynchronously();
+			DropTask();
 			DropTask = null;
 			if (AfterDropTask != null)
 			{
-				AfterDropTask.RunSynchronously();
+				AfterDropTask();
 				AfterDropTask = null;
 			}
 		}
 	}
 
-	public void SetDropTask(Task task)
+	public void SetDropTask(Action task)
 	{
 		DropTask = task;
 		this.Invoke(DropEvent, 1f);
@@ -1766,9 +1822,9 @@ public class AnimatorHelper : MonoBehaviour
 
 	private void EquipEnd(int equipping)
 	{
-		if (_player is MyPlayer)
+		if (_player is MyPlayer player)
 		{
-			((MyPlayer) _player).EquipAnimationEnd(equipping);
+			player.EquipAnimationEnd(equipping);
 		}
 	}
 

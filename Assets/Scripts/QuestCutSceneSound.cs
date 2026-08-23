@@ -20,15 +20,15 @@ public class QuestCutSceneSound : MonoBehaviour
 			{
 				ulong[] array = new ulong[1]
 					{ AkSoundEngine.GetAkGameObjectID(MyPlayer.Instance.FpsController.MainCamera.gameObject) };
-				AkSoundEngine.SetListeners(base.gameObject, array, (uint)array.Length);
+				AkSoundEngine.SetListeners(gameObject, array, (uint)array.Length);
 			}
 			else
 			{
 				ulong[] array2 = new ulong[1] { AkSoundEngine.GetAkGameObjectID(Listener.gameObject) };
-				AkSoundEngine.SetListeners(base.gameObject, array2, (uint)array2.Length);
+				AkSoundEngine.SetListeners(gameObject, array2, (uint)array2.Length);
 			}
 
-			AkSoundEngine.PostEvent(eventString, base.gameObject, 5u, OnCutSceneSoundEventEnd, eventString);
+			AkSoundEngine.PostEvent(eventString, gameObject, 5u, OnCutSceneSoundEventEnd, eventString);
 			IsPlaying = true;
 		}
 	}
@@ -37,7 +37,7 @@ public class QuestCutSceneSound : MonoBehaviour
 	{
 		if (IsPlaying)
 		{
-			AkSoundEngine.PostEvent("StopQuestAudio", base.gameObject);
+			AkSoundEngine.PostEvent("StopQuestAudio", gameObject);
 		}
 	}
 
