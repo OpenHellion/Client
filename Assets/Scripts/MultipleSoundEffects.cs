@@ -11,7 +11,7 @@ public class MultipleSoundEffects : MonoBehaviour
 	{
 		if (SoundSourceObject == null)
 		{
-			SoundSourceObject = base.gameObject;
+			SoundSourceObject = gameObject;
 		}
 	}
 

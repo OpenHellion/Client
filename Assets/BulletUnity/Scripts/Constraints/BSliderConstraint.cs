@@ -21,7 +21,7 @@ namespace BulletUnity {
             get { return m_lowerLinearLimit; }
             set
             {
-                
+
                 if (m_constraintPtr != null)
                 {
                     ((SliderConstraint)m_constraintPtr).LowerLinearLimit = value;
@@ -133,7 +133,7 @@ namespace BulletUnity {
                 }
             } else
             {
-                BulletSharp.Math.Matrix frameInA = BM.Matrix.Identity;
+				BM.Matrix frameInA = BM.Matrix.Identity;
                 string errormsg = "";
                 if (CreateFrame(m_localConstraintAxisX, m_localConstraintAxisY, m_localConstraintPoint, ref frameInA, ref errormsg))
                 {
@@ -144,7 +144,7 @@ namespace BulletUnity {
                     return false;
                 }
             }
-            SliderConstraint sl = (SliderConstraint)m_constraintPtr;  
+            SliderConstraint sl = (SliderConstraint)m_constraintPtr;
             sl.LowerLinearLimit = m_lowerLinearLimit;
             sl.UpperLinearLimit = m_upperLinearLimit;
 

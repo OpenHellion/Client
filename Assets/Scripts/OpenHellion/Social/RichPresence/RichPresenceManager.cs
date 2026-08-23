@@ -126,7 +126,7 @@ namespace OpenHellion.Social.RichPresence
 		/// <summary>
 		/// 	Used to update rich presence.
 		/// </summary>
-		public static void UpdateStatus()
+		public static void UpdateStatus(World world = null)
 		{
 			ActivityStatus activityStatus;
 			if (MyPlayer.Instance != null && MyPlayer.Instance.PlayerReady)
@@ -138,27 +138,29 @@ namespace OpenHellion.Social.RichPresence
 					Details = Descriptions[Random.Range(0, Descriptions.Count - 1)],
 					SmallImageId = Gender.Male.ToLocalizedString().ToLower(),
 					SmallText = MyPlayer.Instance.PlayerName,
-					PlayerCount = 0, // TODO: Get player count and max players from server.
-					MaxPlayers = 0
+					//PlayerCount = 0, // TODO: Get player count and max players from server.
+					//MaxPlayers = 0
 				};
 
-				if (MyPlayer.Instance.Parent is ArtificialBody { ParentCelestialBody: not null } artificialBody)
+				if (world != null && MyPlayer.Instance.Parent
+				    && world.SolarSystem.GetParentCelestialBody(
+					    world.LocalToWorldPosition(MyPlayer.Instance.Parent.transform.position)) is var parentCelestialBody)
 				{
-					if (Planets.TryGetValue(artificialBody.ParentCelestialBody.Guid, out var value))
+					if (Planets.TryGetValue(parentCelestialBody.Guid, out var value))
 					{
-						activityStatus.LargeImageId = artificialBody.ParentCelestialBody.Guid.ToString();
+						activityStatus.LargeImageId = parentCelestialBody.Guid.ToString();
 					}
 					else
 					{
 						activityStatus.LargeImageId = "default";
-						value = artificialBody.ParentCelestialBody.Name;
+						value = parentCelestialBody.Name;
 					}
 
-					if (artificialBody is Ship { IsWarpOnline: true })
+					if (MyPlayer.Instance.Parent is Ship { IsWarpOnline: true })
 					{
 						activityStatus.State = Localization.WarpingNear + " " + value.ToUpper();
 					}
-					else if (artificialBody is Pivot)
+					else if (MyPlayer.Instance.Parent is Ship Pivot)
 					{
 						activityStatus.State = Localization.FloatingFreelyNear + " " + value.ToUpper();
 					}

@@ -94,7 +94,7 @@ namespace OpenHellion.Social.RichPresence
 		// When we get an invite to a game.
 		private void OnInviteReceived(ActivityActionType type, ref User user, ref Activity activity2)
 		{
-			// TODO: Make this safer.
+			// TODO: Implement this.
 			//_activityManager.AcceptInvite(user.Id, result => { Debug.LogFormat("AcceptInvite {0}", result); });
 		}
 

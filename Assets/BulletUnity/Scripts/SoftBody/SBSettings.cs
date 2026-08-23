@@ -79,7 +79,7 @@ namespace BulletUnity
 
             if (randomizeConstraints)
                 softBody.RandomizeConstraints();
-            
+
             if (generateClusters)
                 softBody.GenerateClusters(0);
 
@@ -349,12 +349,12 @@ namespace BulletUnity
         public AeroModel aeroModel = AeroModel.VertexPoint;
 
         // V_Point,			///Vertex normals are oriented toward velocity
-        //V_TwoSided,			///Vertex normals are flipped to match velocity	
+        //V_TwoSided,			///Vertex normals are flipped to match velocity
         //V_TwoSidedLiftDrag, ///Vertex normals are flipped to match velocity and lift and drag forces are applied
-        //V_OneSided,			///Vertex normals are taken as it is	
+        //V_OneSided,			///Vertex normals are taken as it is
         //F_TwoSided,			///Face normals are flipped to match velocity
-        //F_TwoSidedLiftDrag,	///Face normals are flipped to match velocity and lift and drag forces are applied 
-        //F_OneSided,			///Face normals are taken as it is	
+        //F_TwoSidedLiftDrag,	///Face normals are flipped to match velocity and lift and drag forces are applied
+        //F_OneSided,			///Face normals are taken as it is
 
         [Tooltip("Drag coefficient; For aerodynamics computations. See wikipedia “Drag coefficient”. 0 = no drag.")]
         [Range(0f, 10f)]
@@ -390,21 +390,21 @@ namespace BulletUnity
         [Range(0f, 1f)]
         public float SoftSoftImpulseSplit = 0.5f;
 
-        public void CopyToBulletSBConfig(BulletSharp.SoftBody.Config sBConfig)
+        public void CopyToBulletSBConfig(Config sBConfig)
         {
 
             sBConfig.DynamicFriction = DynamicFriction;
             sBConfig.Damping = Damping;
             sBConfig.VolumeConversation = VolumeConversation;
             sBConfig.Pressure = Pressure;
-            sBConfig.AnchorHardness = AnchorHardness;    
+            sBConfig.AnchorHardness = AnchorHardness;
             sBConfig.Collisions = Collisions;
             sBConfig.MaxVolume = MaxVolume;
             sBConfig.PoseMatching = PoseMatching;
             sBConfig.VelocityCorrectionFactor = VelocityCorrectionFactor;
             sBConfig.Timescale = Timescale;
-            sBConfig.RigidContactHardness = RigidContactHardness; 
-            sBConfig.KineticContactHardness = KineticContactHardness;   
+            sBConfig.RigidContactHardness = RigidContactHardness;
+            sBConfig.KineticContactHardness = KineticContactHardness;
             sBConfig.PositionIterations = PositionIterations;
             sBConfig.DriftIterations = DriftIterations;
             sBConfig.VelocityIterations = VelocityIterations;
@@ -414,9 +414,9 @@ namespace BulletUnity
             sBConfig.Lift = Lift;
             sBConfig.SoftRigidHardness = SoftRigidHardness;
             sBConfig.SoftKineticHardness = SoftKineticHardness;
-            sBConfig.SoftSoftHardness = SoftSoftHardness; 
+            sBConfig.SoftSoftHardness = SoftSoftHardness;
             sBConfig.SoftRigidImpulseSplit = SoftRigidImpulseSplit;
-            sBConfig.SoftKineticImpulseSplit = SoftKineticImpulseSplit; 
+            sBConfig.SoftKineticImpulseSplit = SoftKineticImpulseSplit;
             sBConfig.SoftSoftImpulseSplit = SoftSoftImpulseSplit;
 
 
@@ -447,8 +447,8 @@ namespace BulletUnity
         public float VolumeStiffness = 1f;
 
         [Tooltip("See: fMaterial::Default")]
-        public BulletSharp.SoftBody.MaterialFlags Flags = MaterialFlags.Default;
-       
+        public MaterialFlags Flags = MaterialFlags.Default;
+
 
         /// <summary>
         /// Set SoftBody material properties

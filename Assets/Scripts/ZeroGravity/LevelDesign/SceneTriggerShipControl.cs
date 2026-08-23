@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using OpenHellion;
 using OpenHellion.IO;
@@ -72,7 +71,6 @@ namespace ZeroGravity.LevelDesign
 			MyPlayer.Instance.FpsController.CameraController.FreelookTransform.parent = CameraPosition;
 			MyPlayer.Instance.FpsController.CameraController.FreelookTransform.Reset();
 			MyPlayer.Instance.ShipControlMode = ShipControlMode.Piloting;
-			UpdateMode();
 			MyPlayer.Instance.FpsController.CameraController.ToggleCameraAttachToHeadBone(true);
 			MyPlayer.Instance.animHelper.SetParameterTrigger(AnimatorHelper.Triggers.LockImmediate);
 			MyPlayer.Instance.animHelper.SetParameter(null, null, null, null, null, null, null, null, null, null, null,
@@ -82,7 +80,7 @@ namespace ZeroGravity.LevelDesign
 			player.FpsController.CameraController.DoInertia = true;
 			if (interactWithOverlappingTriggers)
 			{
-				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
+				SceneTriggerHelper.InteractWithOverlappingTriggers(gameObject, this, player);
 			}
 
 			World.InWorldPanels.PilotingOptions.gameObject.SetActive(true);
@@ -167,7 +165,7 @@ namespace ZeroGravity.LevelDesign
 					instance.ShipControlMode = ShipControlMode.Piloting;
 				}
 				else if (ControlsSubsystem.GetButtonDown(ControlsSubsystem.ConfigAction.Quick2) &&
-				         base.ParentShip.VesselBaseSystem.Status == SystemStatus.Online)
+						 ParentShip.VesselBaseSystem.Status == SystemStatus.Online)
 				{
 					instance.ShipControlMode = ShipControlMode.Navigation;
 				}

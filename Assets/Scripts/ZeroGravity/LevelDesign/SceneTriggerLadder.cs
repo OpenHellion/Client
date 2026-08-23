@@ -90,7 +90,7 @@ namespace ZeroGravity.LevelDesign
 			LadderAttach(player);
 			if (interactWithOverlappingTriggers)
 			{
-				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
+				SceneTriggerHelper.InteractWithOverlappingTriggers(gameObject, this, player);
 			}
 
 			return true;

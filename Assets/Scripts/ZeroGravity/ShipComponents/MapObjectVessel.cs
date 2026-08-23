@@ -1,3 +1,4 @@
+using OpenHellion.Map;
 using UnityEngine;
 using ZeroGravity.Objects;
 
@@ -16,13 +17,13 @@ namespace ZeroGravity.ShipComponents
 
 		public virtual double RadarSignature
 		{
-			get { return (MainObject == null) ? 0.0 : (MainObject as SpaceObjectVessel).RadarSignature; }
+			get { return (MainObject as MapItemData)?.RadarSignature ?? 0.0; }
 		}
 
 		public override void UpdateVisibility()
 		{
 			base.UpdateVisibility();
-			if (!(MainObject is SpaceObjectVessel))
+			if (MainObject is not MapItemData)
 			{
 				return;
 			}
@@ -37,24 +38,16 @@ namespace ZeroGravity.ShipComponents
 				return;
 			}
 
-			long num = 0L;
-			SpaceObjectVessel obj = MainObject as SpaceObjectVessel;
-			if ((((object)obj != null) ? obj.VesselData : null) != null)
-			{
-				num = (MainObject as SpaceObjectVessel).VesselData.SpawnRuleID;
-			}
+			long num = (MainObject as MapItemData).SpawnRuleId;
 
-			if (Map.IsInitializing || (num != 0 &&
-			                                Map.KnownSpawnRuleIDs.Contains((MainObject as SpaceObjectVessel)
-				                                .VesselData.SpawnRuleID)))
+			if (Map.IsInitializing || (num != 0 && Map.KnownSpawnRuleIDs.Contains(num)))
 			{
 				Destroy(NewObjectVisibility);
 			}
 			else
 			{
 				NewObjectVisibility.Activate(true);
-				Renderer component = NewObjectVisibility.GetComponent<Renderer>();
-				if (component != null)
+				if (NewObjectVisibility.TryGetComponent<Renderer>(out var component))
 				{
 					Color color = component.material.GetColor("_Tint");
 					NewObjectColorFadeIncrement = color / NewObjectVisibilityDuration;

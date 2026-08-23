@@ -26,6 +26,6 @@ public class MapDebrisFieldEffect : MonoBehaviour
 
 	private void OnDrawGizmos()
 	{
-		Gizmos.DrawWireSphere(base.transform.position, Radius);
+		Gizmos.DrawWireSphere(transform.position, Radius);
 	}
 }

@@ -8,7 +8,7 @@ public class DestroyAfterTime : MonoBehaviour
 	{
 		if (timeToDestroy <= 0f)
 		{
-			Object.Destroy(base.gameObject);
+			Destroy(gameObject);
 		}
 
 		timeToDestroy -= Time.deltaTime;

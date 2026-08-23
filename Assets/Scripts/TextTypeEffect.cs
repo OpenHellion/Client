@@ -69,7 +69,7 @@ public class TextTypeEffect : MonoBehaviour
 		TextField.text = string.Empty;
 		LastPause = 0;
 		Pause = false;
-		base.enabled = false;
+		enabled = false;
 		TextMarkerReached = 0;
 		VoiceMarkerReached = 0;
 	}
@@ -79,7 +79,7 @@ public class TextTypeEffect : MonoBehaviour
 		TextField.text = string.Empty;
 		LastPause = 0;
 		Pause = false;
-		base.enabled = false;
+		enabled = false;
 		TextMarkerReached = 0;
 		VoiceMarkerReached = 0;
 	}

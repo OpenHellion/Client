@@ -26,10 +26,6 @@ public class ImpactDetector : MonoBehaviour
 		{
 			lastImpactTime = Time.time;
 			PlayImpactSound(magnitude);
-			if (refObject != null && (!(refObject is DynamicObject) || !(refObject as DynamicObject).IsKinematic))
-			{
-				refObject.ImpactVelocity = magnitude;
-			}
 		}
 	}
 

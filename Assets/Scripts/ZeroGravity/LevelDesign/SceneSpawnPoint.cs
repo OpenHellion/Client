@@ -41,6 +41,8 @@ namespace ZeroGravity.LevelDesign
 
 		[FormerlySerializedAs("ExecuterState")] public string ExecutorState;
 
+		[FormerlySerializedAs("ExecuterOccupiedStates")] public string ExecutorOccupiedStates;
+
 		[HideInInspector] public SpaceObjectVessel ParentVessel;
 
 		public GameObject StatusMesh;
@@ -157,7 +159,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (ParentVessel == null)
 			{
-				Debug.LogError("LockSpawnPoint, Spawn point vessel is NULL " + base.name + InSceneID);
+				Debug.LogError("LockSpawnPoint, Spawn point vessel is NULL " + name + InSceneID);
 			}
 			else if (SpawnType != 0 && State != SpawnPointState.Locked && State != SpawnPointState.Authorized)
 			{
@@ -177,7 +179,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (ParentVessel == null)
 			{
-				Debug.LogError("UnlockSpawnPoint, Spawn point vessel is NULL" + base.name + InSceneID);
+				Debug.LogError("UnlockSpawnPoint, Spawn point vessel is NULL" + name + InSceneID);
 			}
 			else if (SpawnType != 0 && State != 0 && State != SpawnPointState.Authorized &&
 			         PlayerGUID == MyPlayer.Instance.Guid)
@@ -198,7 +200,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (ParentVessel == null)
 			{
-				Debug.LogError("AuthorizeToSpawnPoint, Spawn point vessel is NULL" + base.name + InSceneID);
+				Debug.LogError("AuthorizeToSpawnPoint, Spawn point vessel is NULL" + name + InSceneID);
 			}
 			else if (SpawnType != 0 && State != SpawnPointState.Authorized)
 			{
@@ -219,7 +221,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (ParentVessel == null)
 			{
-				Debug.LogError("HackSpawnPoint, Spawn point vessel is NULL" + base.name + InSceneID);
+				Debug.LogError("HackSpawnPoint, Spawn point vessel is NULL" + name + InSceneID);
 			}
 			else if (SpawnType != 0 && State != 0 && State != SpawnPointState.Authorized &&
 			         PlayerGUID != MyPlayer.Instance.Guid)
@@ -241,7 +243,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (ParentVessel == null)
 			{
-				Debug.LogError("InvitePlayer, Spawn point vessel is NULL" + base.name + InSceneID);
+				Debug.LogError("InvitePlayer, Spawn point vessel is NULL" + name + InSceneID);
 			}
 			else
 			{

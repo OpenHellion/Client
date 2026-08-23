@@ -1,13 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using OpenHellion;
-using OpenHellion.Net;
-using OpenHellion.UI;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
-using ZeroGravity.Objects;
 
 namespace ZeroGravity.UI
 {
@@ -74,9 +67,7 @@ namespace ZeroGravity.UI
 			ReportReason.RefreshShownValue();
 		}
 
-		/// <summary>
-		/// 	TODO: The server is down, so this has to be rewritten eventually.
-		/// </summary>
+		// TODO: The ZG server is down, so this has to be rewritten eventually.
 		public void SendReport()
 		{
 			/*string text = "http://api.playhellion.com/add-report.php?";

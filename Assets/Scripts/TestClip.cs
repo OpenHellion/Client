@@ -9,7 +9,7 @@ public class TestClip : MonoBehaviour
 
 	private void Awake()
 	{
-		Decalicious.Material = Object.Instantiate(Decalicious.Material);
+		Decalicious.Material = Instantiate(Decalicious.Material);
 	}
 
 	private void Update()

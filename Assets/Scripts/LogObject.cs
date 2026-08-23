@@ -18,7 +18,7 @@ public class LogObject : ScriptableObject
 		{
 			if (Title == string.Empty)
 			{
-				return base.name;
+				return name;
 			}
 
 			return Title;

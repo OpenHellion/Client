@@ -42,12 +42,6 @@ namespace OpenHellion.Net
 
 		private bool _getP2PPacketsThreadActive;
 
-		private readonly HashSet<long> _spawnObjectsList = new HashSet<long>();
-
-		private readonly HashSet<long> _subscribeToObjectsList = new HashSet<long>();
-
-		private readonly HashSet<long> _unsubscribeFromObjectsList = new HashSet<long>();
-
 		private static NetworkController _instance;
 
 		public static NetworkController Instance
@@ -75,65 +69,15 @@ namespace OpenHellion.Net
 			_instance = this;
 		}
 
-		private async UniTaskVoid FixedUpdate()
+		private void Update()
 		{
-			EventSystem.InvokeQueuedData();
-
-			if (_spawnObjectsList.Count > 0)
-			{
-				SpawnObjectsRequest spawnObjectsRequest = new SpawnObjectsRequest
-				{
-					GUIDs = new List<long>(_spawnObjectsList)
-				};
-				_spawnObjectsList.Clear();
-
-				await SendAsync(spawnObjectsRequest);
-			}
-
-			if (_subscribeToObjectsList.Count > 0)
-			{
-				SubscribeToObjectsRequest subscribeToObjectsRequest = new SubscribeToObjectsRequest
-				{
-					GUIDs = new List<long>(_subscribeToObjectsList)
-				};
-				_subscribeToObjectsList.Clear();
-
-				await SendAsync(subscribeToObjectsRequest);
-			}
-
-			if (_unsubscribeFromObjectsList.Count > 0)
-			{
-				UnsubscribeFromObjectsRequest unsubscribeFromObjectsRequest = new UnsubscribeFromObjectsRequest
-				{
-					GUIDs = new List<long>(_unsubscribeFromObjectsList)
-				};
-				_unsubscribeFromObjectsList.Clear();
-
-				await SendAsync(unsubscribeFromObjectsRequest);
-			}
+			_gameTransport?.Pump();
 
 			// Handle Steam P2P packets.
 			if (RichPresenceManager.HasSteam && !_getP2PPacketsThreadActive)
 			{
 				//UniTask.Void(P2PPacketListener);
 			}
-		}
-
-		public void RequestObjectSpawn(long guid)
-		{
-			_spawnObjectsList.Add(guid);
-		}
-
-		public void RequestObjectSubscribe(long guid)
-		{
-			_subscribeToObjectsList.Add(guid);
-			_unsubscribeFromObjectsList.Remove(guid);
-		}
-
-		public void RequestObjectUnsubscribe(long guid)
-		{
-			_unsubscribeFromObjectsList.Add(guid);
-			_subscribeToObjectsList.Remove(guid);
 		}
 
 		public async static UniTask ConnectToGame(ServerData serverData, Action onDisconnected)
@@ -157,6 +101,7 @@ namespace OpenHellion.Net
 		/// <param name="data">The data to send.</param>
 		public static void SendAndForget(NetworkData data)
 		{
+			if (_gameTransport == null) return;
 			_gameTransport.SendInternal(data).Forget();
 		}
 
@@ -167,6 +112,7 @@ namespace OpenHellion.Net
 		/// <param name="data">The data to send.</param>
 		public static async UniTask SendAsync(NetworkData data)
 		{
+			if (_gameTransport == null) return;
 			await _gameTransport.SendAsyncInternal(data);
 		}
 
@@ -294,7 +240,7 @@ namespace OpenHellion.Net
 					Debug.Log(networkData);
 					if (networkData is ISteamP2PMessage)
 					{
-						EventSystem.Invoke(networkData);
+						EventSystem.Dispatch(networkData);
 					}
 				}
 			}

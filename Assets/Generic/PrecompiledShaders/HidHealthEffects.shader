@@ -86,7 +86,7 @@ Shader "Hid/HealthEffects" {
                 tmp0 = tex2D(_Vignette, inp.texcoord.xy);
                 tmp0.y = _BlurAmount > 0.0;
                 if (tmp0.y) {
-                    tmp0.y = asint(_BlurIterations);
+                    tmp0.y = _BlurIterations;
                     tmp0.z = _BlurAmount * 0.2;
                     tmp0.w = 1.0 - tmp0.x;
                     tmp1.x = tmp0.w * tmp0.z;

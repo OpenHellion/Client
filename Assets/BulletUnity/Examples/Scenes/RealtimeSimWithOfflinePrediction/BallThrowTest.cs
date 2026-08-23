@@ -49,7 +49,7 @@ public class BallThrowTest : MonoBehaviour
 
             for (int i = 0; i < ballPositionsOfflineSim.Count; i++)
             {
-                Instantiate<GameObject>(ballGhostPrefab).transform.position = ballPositionsOfflineSim[i];
+				Instantiate(ballGhostPrefab).transform.position = ballPositionsOfflineSim[i];
             }
         }
         else if (simulationStarted && ballPositionsRealtime.Count < 500)

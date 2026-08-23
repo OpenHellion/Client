@@ -10,7 +10,6 @@ using UnityEngine;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
-using ZeroGravity.UI;
 using OpenHellion.Social.RichPresence;
 using OpenHellion.IO;
 using UnityEngine.Serialization;
@@ -18,7 +17,6 @@ using Cysharp.Threading.Tasks;
 
 namespace ZeroGravity.Audio
 {
-	// TODO: Make this use Nakama instead.
 	public class VoiceCommTransmitter : MonoBehaviour
 	{
 		private AudioClip _inAudioClip;
@@ -202,7 +200,7 @@ namespace ZeroGravity.Audio
 		{
 			float num = radius * radius;
 			HashSet<OtherPlayer> hashSet = new HashSet<OtherPlayer>();
-			foreach (OtherPlayer value in _world.Players.Values)
+			foreach (OtherPlayer value in _world.AllPlayers)
 			{
 				if ((value.transform.position - position).sqrMagnitude < num)
 				{

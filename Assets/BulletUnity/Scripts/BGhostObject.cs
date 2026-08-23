@@ -10,7 +10,7 @@ namespace BulletUnity
     {
 
         private GhostObject m_ghostObject{
-            get { return (GhostObject) m_collisionObject; }   
+            get { return (GhostObject) m_collisionObject; }
         }
 
         internal override bool _BuildCollisionObject()
@@ -24,7 +24,7 @@ namespace BulletUnity
                 }
             }
 
-            if (transform.localScale != UnityEngine.Vector3.one)
+            if (transform.localScale != Vector3.one)
             {
                 Debug.LogError("The local scale on this collision shape is not one. Bullet physics does not support scaling on a rigid body world transform. Instead alter the dimensions of the CollisionShape.");
             }
@@ -42,7 +42,7 @@ namespace BulletUnity
 
             if (m_collisionObject == null)
             {
-                m_collisionObject = new BulletSharp.GhostObject();
+                m_collisionObject = new GhostObject();
                 m_collisionObject.CollisionShape = cs;
                 BulletSharp.Math.Matrix worldTrans;
                 BulletSharp.Math.Quaternion q = transform.rotation.ToBullet();
@@ -98,17 +98,17 @@ namespace BulletUnity
 
         public virtual void BOnTriggerEnter(CollisionObject other, AlignedManifoldArray details)
         {
-            
+
         }
 
         public virtual void BOnTriggerStay(CollisionObject other, AlignedManifoldArray details)
         {
-           
+
         }
 
         public virtual void BOnTriggerExit(CollisionObject other)
         {
-            
+
         }
     }
 }

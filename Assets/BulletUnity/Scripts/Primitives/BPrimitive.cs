@@ -12,7 +12,7 @@ namespace BulletUnity.Primitives
     /// </summary>
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
-    [System.Serializable]
+    [Serializable]
     public abstract class BPrimitive : MonoBehaviour
     {
         public string info = "Information about this BPriitive";  //display in inspector
@@ -34,7 +34,7 @@ namespace BulletUnity.Primitives
             go.transform.rotation = rotation;
 
             MeshRenderer meshRenderer = go.GetComponent<MeshRenderer>();
-            UnityEngine.Material material = new UnityEngine.Material(Shader.Find("Standard"));
+			Material material = new Material(Shader.Find("Standard"));
             meshRenderer.sharedMaterial = material;
         }
 

@@ -12,7 +12,7 @@ public class LookAtTest : MonoBehaviour
 	{
 		if (LookAt != null)
 		{
-			base.transform.LookAt(LookAt);
+			transform.LookAt(LookAt);
 		}
 	}
 }

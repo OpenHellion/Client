@@ -14,8 +14,6 @@ namespace ZeroGravity.Objects
 
 		private Vector3 _gravity;
 
-		[NonSerialized] public float ImpactVelocity;
-
 		private SceneTriggerRoom _currentRoomTrigger;
 
 		public SceneTriggerRoom EnterVesselRoomTrigger;
@@ -86,7 +84,7 @@ namespace ZeroGravity.Objects
 
 		public void SetGravity(Vector3 newGravity)
 		{
-			if (!_gravitySet || !Gravity.IsEpsilonEqual(newGravity, 0.0001f))
+			if (!_gravitySet || !_gravity.IsEpsilonEqual(newGravity, 0.0001f))
 			{
 				_gravitySet = true;
 				Vector3 gravity = _gravity;
@@ -97,6 +95,9 @@ namespace ZeroGravity.Objects
 
 		public abstract void EnterVessel(SpaceObjectVessel vessel);
 
+		/// <summary>
+		/// 	Trigger response for leaving a vessel's room triggers.
+		/// </summary>
 		public abstract void ExitVessel(bool forceExit);
 
 		public abstract void DockedVesselParentChanged(SpaceObjectVessel vessel);

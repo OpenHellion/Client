@@ -1,0 +1,90 @@
+Spawn:
+[x] Simplify PlayerSpawnResponse and make spawning of nearby artifical bodies use ObjectsInfoRequest
+[x] PlayerSpawnResponse do not send child docked vessels in station
+[x] Spawn docked vessels and add them to artificial bodies array
+[x] Load all docked vessel data from server
+[x] Implement ObjectsInfoRequest and response on server
+[x] Figure out how to properly spawn pivots
+[x] Create new flow for map spawning
+[x] Spawn corpse on server
+[ ] Fix map not being intitialised correctly
+
+Movement:
+[x] Made world use local space, derived from anchor
+[x] Remove orbit calculations from space objects
+[x] Implement ImpactVelocity calculation on server
+[x] Player knows its global position
+[x] Create new flow for map movement, stream map objects separately
+[x] Properly set velocity for all objects in MovementMessage (some variables in the message are not read)
+[x] Delete objects far away by using new spawn mechanic
+[x] Link velocity to actual rigidbody velocty for all space objects
+[x] Fix sticking to vessel when in EVA makes you permanentely stuck
+[x] Fix rebasing from EVA back to vessel adds significant velocity relative to vessel
+[x] Fix ship controls visibly doing nothing (then exiting ship pilot seat putting you sideways/upside down)
+[ ] Make ship controls smooth
+[ ] Fix ejection bug from ship when piloting by making position in MovementMessage parent-relative instead of anchor relative.
+[ ] Fix changing parent deals damage (~3 hp each)
+[ ] Fix snap when flying back into range of a vessel
+[ ] Fix items, corpses and other players sliding when the anchor changes
+[ ] Moving from 0g to 1g fast might cause you to go trough the wall and fall forever, crashing the game
+
+Short-term:
+[x] Update to Unity 6.3
+[x] Fix steam rich presence
+[x] Fix discord rich presence
+[x] Fix player position is too low in CryoPod
+[x] Collect all network messages and flush on tick
+[x] Fix quest indicators and other indicators that do not work (always work fine second time logging in on same session)
+[x] Fix all sound located at 0, 0, 0.
+[x] Fix inventory disappearing when EVAing
+[x] Fix that the in space overlay is only enabled after walking out of ship and in again, being enabled at the wrong place
+[x] Fix player health is always 0
+[x] Send child dynamic objects (especially inventory of the player) as properties of its parent instead of as independent objects
+[x] Fix picking up suit in fresh start failing
+[x] Fix circular reference breaking ClassHasher
+[ ] Fix differences between GameTransport on client and server
+[ ] Test if new other character controller works.
+[ ] Fix spawn setup station falling into planet ejects player and crashes server on disconnect
+[ ] Not possible to drop items
+[ ] Make map support fuzzy objects
+
+Later:
+[ ] Set up a proper test framework
+[ ] Organise client code into assemblies
+[ ] Find areas where risk of race conditions are high
+[ ] Fix planets on map having no texture
+[ ] Fix sounds playing based on selected target when EVAing.
+[ ] Fix alarm not running and sounds playing in ships where they should not
+[ ] Sound does not mute when in 0G
+[ ] Make ambience sound persist between main menu and world menu
+[ ] Fix server constantly being over tick time budget.
+[ ] Fix client CPU hog
+[ ] Merge similar network messages in same tick
+[ ] Rewrite EventSystem to fix weaknesses
+[ ] Remove GameStarter.FixCryoPodState
+[ ] Fix logging in on same session breaking scene loading
+[ ] Create custom testing-spawn for faster debugging.
+[ ] Fix slow interaction
+[ ] Fix audio continuing after exiting game
+[ ] Remove ImpactDetector.cs
+[ ] Figure out what Effects/DefaultBloodEffects can be used for.
+[ ] Split world into correct classes
+[ ] Figure out what to do with spawn rules
+[ ] Automatically generate data files from scene state
+[ ] Saving scene generates new static data
+[ ] Add hashing to static data
+[ ] Fix settings menu (especially controls binding)
+[ ] Readd sound effect to RepairPointParticleEffect.cs (serialised property removed in scene data)
+[ ] Search through all used scripts on monobehaviours and see if they have been deleted accidentaly
+[ ] Enable helmet shader
+[ ] Rewrite quest system to be data-oriented
+[ ] Add automatic retry to initialising menu
+[ ] See if auto sync transforms in physics settings can be turned off
+[ ] New space object hirearchy
+[ ] Inventory should not rely on dynamic objects
+[ ] Remove pivots
+[ ] Remove VoiceCommTransmitter and linked files and add github issue about voice chat in the future
+[ ] Finish StructureDataGenerator for all types of scene data
+[ ] Remove lineEdit.cs
+[ ] Remove FakeGuid on player
+[ ] Fix warping

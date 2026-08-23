@@ -1337,11 +1337,6 @@
 								<RandomSequenceContainer Name="Space" ID="{4A08C6E9-6935-4042-ADF2-FBA741780F65}" ShortID="514447690">
 									<PropertyList>
 										<Property Name="PlayMechanismLoop" Type="bool" Value="True"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>12</Value>
-											</ValueList>
-										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -12625,6 +12620,11 @@
 								<Sound Name="DistressCall_Received_Alarm" ID="{949C2020-CE6A-486B-8CA0-54D7007BDA41}" ShortID="295590330">
 									<PropertyList>
 										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-10</Value>
+											</ValueList>
+										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">

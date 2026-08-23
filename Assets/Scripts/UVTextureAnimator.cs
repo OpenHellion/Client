@@ -149,7 +149,7 @@ internal class UVTextureAnimator : MonoBehaviour
 	{
 		if (instanceMaterial != null)
 		{
-			UnityEngine.Object.Destroy(instanceMaterial);
+			Destroy(instanceMaterial);
 			instanceMaterial = null;
 		}
 	}

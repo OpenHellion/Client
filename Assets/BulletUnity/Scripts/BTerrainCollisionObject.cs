@@ -5,10 +5,10 @@ using BulletSharp;
 
 namespace BulletUnity
 {
-    /* 
+    /*
     Custom verson of the collision object for handling heightfields to deal with some issues matching terrains to heighfields
     1) Unity heitfiels have pivot at corner. Bullet heightfields have pivot at center
-    2) Can't rotate unity heightfields        
+    2) Can't rotate unity heightfields
     */
     public class BTerrainCollisionObject : BCollisionObject
     {
@@ -43,7 +43,7 @@ namespace BulletUnity
                 }
             }
 
-            if (transform.localScale != UnityEngine.Vector3.one)
+            if (transform.localScale != Vector3.one)
             {
                 Debug.LogError("The local scale on this collision shape is not one. Bullet physics does not support scaling on a rigid body world transform. Instead alter the dimensions of the CollisionShape.");
             }

@@ -7,14 +7,9 @@ namespace ZeroGravity
 {
 	public static class ClassHasher
 	{
-		public static uint GetClassHashCode(Type type, string nspace = null)
+		public static uint GetClassHashCode(Type type)
 		{
-			if (nspace == null)
-			{
-				nspace = type.Namespace;
-			}
-
-			HashSet<Type> hashSet = new HashSet<Type>();
+			HashSet<Type> classes = new HashSet<Type>();
 			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 			foreach (Assembly assembly in assemblies)
 			{
@@ -22,33 +17,30 @@ namespace ZeroGravity
 				foreach (Type type2 in types)
 				{
 					if ((type.IsClass && type2.IsSubclassOf(type)) ||
-					    (type.IsInterface && type2.GetInterfaces().Contains(type)))
+						(type.IsInterface && type2.GetInterfaces().Contains(type)))
 					{
-						AddClass(type2, hashSet, nspace);
+						AddClass(type2, classes, type.Namespace);
 					}
 				}
 			}
-
-			Type[] array = new Type[hashSet.Count];
-			hashSet.CopyTo(array);
+			Type[] array = new Type[classes.Count];
+			classes.CopyTo(array);
 			Array.Sort(array, (Type x, Type y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
 			string text = string.Empty;
 			Type[] array2 = array;
 			foreach (Type type3 in array2)
 			{
 				text = text + type3.Name + ":";
-				AddHashingData(type3, ref text, nspace);
+				AddHashingData(type3, ref text, type.Namespace, new HashSet<Type>());
 				text += "\r\n";
 			}
-
-			uint num = 744748791u;
-			for (int l = 0; l < text.Length; l++)
+			uint hashedValue = 744748791u;
+			for (int i = 0; i < text.Length; i++)
 			{
-				num += text[l];
-				num *= 3045351289u;
+				hashedValue += text[i];
+				hashedValue *= 3045351289u;
 			}
-
-			return num;
+			return hashedValue;
 		}
 
 		private static void AddClass(Type type, HashSet<Type> classes, string nspace)
@@ -57,12 +49,10 @@ namespace ZeroGravity
 			{
 				return;
 			}
-
 			if (type.IsArray)
 			{
 				type = type.GetElementType();
 			}
-
 			if (type.IsInterface)
 			{
 				Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -88,7 +78,6 @@ namespace ZeroGravity
 				{
 					return;
 				}
-
 				MemberInfo[] members = type.GetMembers();
 				foreach (MemberInfo memberInfo in members)
 				{
@@ -120,8 +109,12 @@ namespace ZeroGravity
 			}
 		}
 
-		private static void AddHashingData(Type type, ref string str, string nspace)
+		private static void AddHashingData(Type type, ref string str, string nspace, HashSet<Type> visited)
 		{
+			if (!visited.Add(type))
+			{
+				return;
+			}
 			if (type.IsEnum)
 			{
 				string[] names = Enum.GetNames(type);
@@ -129,10 +122,8 @@ namespace ZeroGravity
 				{
 					str = str + text + "|";
 				}
-
 				return;
 			}
-
 			MemberInfo[] members = type.GetMembers();
 			Array.Sort(members,
 				(MemberInfo x, MemberInfo y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
@@ -144,24 +135,23 @@ namespace ZeroGravity
 				{
 					continue;
 				}
-
 				string name = memberInfo.Name;
 				if (memberInfo.MemberType == MemberTypes.Field)
 				{
-					AddHashingDataMember((memberInfo as FieldInfo).FieldType, ref str, nspace);
+					AddHashingDataMember((memberInfo as FieldInfo).FieldType, ref str, nspace, visited);
 				}
 				else if (memberInfo.MemberType == MemberTypes.Property)
 				{
-					AddHashingDataMember((memberInfo as PropertyInfo).PropertyType, ref str, nspace);
+					AddHashingDataMember((memberInfo as PropertyInfo).PropertyType, ref str, nspace, visited);
 				}
 				else if (memberInfo.MemberType == MemberTypes.Method)
 				{
 					str = str + " " + (memberInfo as MethodInfo).ReturnType.ToString();
 					ParameterInfo[] parameters = (memberInfo as MethodInfo).GetParameters();
-					foreach (ParameterInfo parameterInfo in parameters)
+					foreach (ParameterInfo par2 in parameters)
 					{
-						str = str + " " + parameterInfo.Name;
-						AddHashingDataMember(parameterInfo.ParameterType, ref str, nspace);
+						str = str + " " + par2.Name;
+						AddHashingDataMember(par2.ParameterType, ref str, nspace, visited);
 					}
 				}
 				else if (memberInfo.MemberType == MemberTypes.Constructor)
@@ -170,30 +160,27 @@ namespace ZeroGravity
 					{
 						continue;
 					}
-
 					ParameterInfo[] parameters2 = (memberInfo as ConstructorInfo).GetParameters();
 					foreach (ParameterInfo parameterInfo2 in parameters2)
 					{
 						str = str + " " + parameterInfo2.Name;
-						AddHashingDataMember(parameterInfo2.ParameterType, ref str, nspace);
+						AddHashingDataMember(parameterInfo2.ParameterType, ref str, nspace, visited);
 					}
 				}
-
 				str = str + (flag ? " " : ", ") + name;
 				flag = false;
 			}
 		}
 
-		private static void AddHashingDataMember(Type t, ref string str, string nspace)
+		private static void AddHashingDataMember(Type t, ref string str, string nspace, HashSet<Type> visited)
 		{
 			if (t.IsPrimitive)
 			{
 				str = str + " " + t.Name;
 			}
-
 			if (t.IsClass && !t.IsNested && t.Namespace == nspace)
 			{
-				AddHashingData(t, ref str, nspace);
+				AddHashingData(t, ref str, nspace, visited);
 			}
 		}
 	}

@@ -212,7 +212,7 @@ namespace ZeroGravity
 			{
 				if (@object != null && @object.Obj != null)
 				{
-					UnityEngine.Object.Destroy(@object.Obj);
+					Destroy(@object.Obj);
 				}
 			}
 		}

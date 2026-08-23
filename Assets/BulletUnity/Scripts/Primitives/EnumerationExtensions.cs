@@ -16,7 +16,7 @@ public static class EnumerationExtensions
     /// <param name="type"></param>
     /// <param name="flage"></param>
     /// <returns></returns>
-    public static bool CompareFlags(this System.Enum type, System.Enum flag)
+    public static bool CompareFlags(this Enum type, Enum flag)
     {
         if (((int)(object)type & (int)(object)flag) == (int)(object)flag)
         {
@@ -34,7 +34,7 @@ public static class EnumerationExtensions
     /// <param name="type"></param>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static bool Has<T>(this System.Enum type, T value)
+    public static bool Has<T>(this Enum type, T value)
     {
         try
         {
@@ -53,7 +53,7 @@ public static class EnumerationExtensions
     /// <param name="type"></param>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static bool Is<T>(this System.Enum type, T value)
+    public static bool Is<T>(this Enum type, T value)
     {
         try
         {
@@ -72,7 +72,7 @@ public static class EnumerationExtensions
     /// <param name="type"></param>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static T Add<T>(this System.Enum type, T value)
+    public static T Add<T>(this Enum type, T value)
     {
         try
         {
@@ -89,7 +89,7 @@ public static class EnumerationExtensions
     }
 
     //completely removes the value
-    public static T Remove<T>(this System.Enum type, T value)
+    public static T Remove<T>(this Enum type, T value)
     {
         try
         {
@@ -111,7 +111,7 @@ public static class EnumerationExtensions
         if (!typeof(T).IsEnum) throw new ArgumentException(String.Format("Argumnent {0} is not an Enum", typeof(T).FullName));
 
         T[] Arr = (T[])Enum.GetValues(src.GetType());
-        int j = Array.IndexOf<T>(Arr, src) + 1;
+        int j = Array.IndexOf(Arr, src) + 1;
         return (Arr.Length == j) ? Arr[0] : Arr[j];
     }
 

@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using ZeroGravity.LevelDesign;
-using ZeroGravity.Math;
 using ZeroGravity.Network;
-using ZeroGravity.ShipComponents;
 
 namespace ZeroGravity.Objects
 {
@@ -16,74 +14,34 @@ namespace ZeroGravity.Objects
 
 		public VesselDestructionEffects DestructionEffects;
 
-		private RadarVisibilityType _radarVisibilityType;
+		public Rigidbody ArtificialRigidbody;
 
 		[NonSerialized] public ArtificialBody StabilizeToTargetObj;
 
-		[NonSerialized] public Vector3D StabilizationOffset;
+		[NonSerialized] public Vector3 StabilizationOffset;
 
 		public readonly HashSet<ArtificialBody> StabilizedChildren = new HashSet<ArtificialBody>();
 
-		public virtual OrbitParameters Orbit { get; set; }
-
-		public virtual CelestialBody ParentCelestialBody => Orbit.Parent.CelestialBody;
-
 		public double Radius { get; protected set; }
 
-		public override Vector3D Velocity => Orbit.Velocity;
+		[NonSerialized] private Vector3 _velocity;
 
-		public override Vector3D Position => Orbit.Position;
+		[NonSerialized] private Vector3 _angularVelocity;
 
-		public RadarVisibilityType RadarVisibilityType
-		{
-			get
-			{
-				if (IsAlwaysVisible)
-				{
-					return RadarVisibilityType.AlwaysVisible;
-				}
+		public override Vector3 Velocity => _velocity;
 
-				return !IsDistressSignalActive ? _radarVisibilityType : RadarVisibilityType.Distress;
-			}
-			set
-			{
-				_radarVisibilityType = value;
-				if (this is IMapMainObject &&
-				    World.Map.AllMapObjects.TryGetValue(this as IMapMainObject, out MapObject value2))
-				{
-					value2.UpdateVisibility();
-				}
-			}
-		}
+		public Vector3 AngularVelocity => _angularVelocity;
 
-		public virtual bool IsDistressSignalActive => false;
+		public virtual bool IsDistressSignalActive { get; internal set; }
 
-		public virtual bool IsAlwaysVisible => false;
+		public virtual bool IsAlwaysVisible { get; internal set; }
 
-		public virtual double RadarSignature => 0.0;
+		public virtual double RadarSignature { get; set; } = 0.0;
 
 		public bool IsStabilized => StabilizeToTargetObj != null;
 
-		public static ArtificialBody CreateDummy(ObjectTransform trans)
-		{
-			switch (trans.Type)
-			{
-				case SpaceObjectType.Ship:
-					return Ship.Create(trans.GUID, null, trans, false);
-				case SpaceObjectType.PlayerPivot:
-				case SpaceObjectType.DynamicObjectPivot:
-				case SpaceObjectType.CorpsePivot:
-					return Pivot.Create(trans.Type, trans, false);
-				case SpaceObjectType.Asteroid:
-					return Asteroid.Create(trans, null, false);
-				default:
-					Debug.LogError("Unknown artificial body type " + trans.Type + " " + trans.GUID);
-					return null;
-			}
-		}
-
-		// Called by the Ship, Asteroid, and Pivot classes. The actual creating is done here.
-		protected static ArtificialBody CreateImpl(SpaceObjectType type, long guid, ObjectTransform trans, bool isMainObject)
+		// Called by the Ship, Asteroid, and Pivot classes by their Create methods.
+		protected static ArtificialBody InitialiseArtificialBody(long guid, SpaceObjectType type, Vector3 position, Quaternion rotation)
 		{
 			GameObject gameObject = new GameObject(type + "_" + guid);
 			ArtificialBody artificialBody;
@@ -114,33 +72,7 @@ namespace ZeroGravity.Objects
 			}
 
 			artificialBody.Guid = guid;
-			artificialBody.Orbit = new OrbitParameters();
-			artificialBody.Orbit.SetArtificialBody(artificialBody);
 			artificialBody.Radius = 30.0;
-			if (trans.Orbit != null)
-			{
-				artificialBody.Orbit.ParseNetworkData(World, trans.Orbit);
-			}
-			else if (trans.Realtime != null)
-			{
-				artificialBody.Orbit.ParseNetworkData(World, trans.Realtime);
-			}
-			else if (trans.StabilizeToTargetGUID is > 0)
-			{
-				ArtificialBody artificialBody2 =
-					World.SolarSystem.GetArtificialBody(trans.StabilizeToTargetGUID.Value);
-				if (artificialBody2 != null)
-				{
-					artificialBody.Orbit.CopyDataFrom(artificialBody2.Orbit, World.SolarSystem.CurrentTime, true);
-				}
-			}
-			else
-			{
-				Debug.LogError("Artificial bodies should always have orbit or realtime data.");
-			}
-
-			artificialBody.Forward = trans.Forward?.ToVector3() ?? Vector3.forward;
-			artificialBody.Up = trans.Up?.ToVector3() ?? Vector3.up;
 			artificialBody.TransferableObjectsRoot = new GameObject("TransferableObjectsRoot");
 			artificialBody.TransferableObjectsRoot.transform.parent = artificialBody.transform;
 			artificialBody.TransferableObjectsRoot.transform.Reset();
@@ -157,34 +89,19 @@ namespace ZeroGravity.Objects
 				artificialBody.GeometryRoot.transform.parent = artificialBody.GeometryPlaceholder.transform;
 				artificialBody.GeometryRoot.transform.Reset();
 				geometryRoot.MainObject = artificialBody;
+				artificialBody.ArtificialRigidbody = artificialBody.GeometryRoot.AddComponent<Rigidbody>();
+				artificialBody.ArtificialRigidbody.isKinematic = true;
+				artificialBody.ArtificialRigidbody.useGravity = false;
 				artificialBody.TransferableObjectsRoot.transform.parent = artificialBody.GeometryPlaceholder.transform;
 				artificialBody.TransferableObjectsRoot.transform.Reset();
 			}
 
-			if (isMainObject)
-			{
-				artificialBody.transform.parent = null;
-				artificialBody.SetTargetPositionAndRotation(Vector3.zero, artificialBody.Forward, artificialBody.Up,
-					true);
-				artificialBody.transform.Reset();
-			}
-			else
-			{
-				artificialBody.transform.parent = World.ShipExteriorRoot.transform;
-				artificialBody.SetTargetPositionAndRotation(
-					(artificialBody.Position - MyPlayer.Instance.Parent.Position).ToVector3(), artificialBody.Forward,
-					artificialBody.Up, true);
-				if ((artificialBody.Position - MyPlayer.Instance.Parent.Position).SqrMagnitude < 100000000.0)
-				{
-					artificialBody.LoadGeometry();
-				}
-				else if (type is SpaceObjectType.Asteroid or SpaceObjectType.Ship or SpaceObjectType.Station)
-				{
-					artificialBody.RequestSpawn();
-				}
-			}
+			// The anchor sits at the origin and is exempt from positioning.
+			artificialBody.transform.parent = World.ShipExteriorRoot.transform;
+			artificialBody.transform.localPosition = Vector3.zero;
+			artificialBody.SetTargetPositionAndRotation(position, rotation, true);
 
-			World.SolarSystem.AddArtificialBody(artificialBody);
+			World.AddArtificialBody(artificialBody);
 			return artificialBody;
 		}
 
@@ -216,66 +133,134 @@ namespace ZeroGravity.Objects
 			}
 
 			ArtificialRigidbody = null;
-			IsDummyObject = true;
+		}
+
+		public virtual void UpdateArtificialBodyPosition(bool updateChildren)
+		{
+			if (ArtificialRigidbody != null && GeometryPlaceholder != null)
+			{
+				var position = GeometryPlaceholder.transform.position;
+				var rotation = GeometryPlaceholder.transform.rotation;
+				GeometryRoot.transform.position = position;
+				GeometryRoot.transform.rotation = rotation;
+				ArtificialRigidbody.position = position;
+				ArtificialRigidbody.rotation = rotation;
+			}
+		}
+
+		protected virtual void UpdatePositionAndRotation(bool setLocalPositionAndRotation)
+		{
+			if (ArtificialRigidbody != null && GeometryPlaceholder != null && transform.hasChanged)
+			{
+				ArtificialRigidbody.position = GeometryPlaceholder.transform.position;
+				ArtificialRigidbody.rotation = GeometryPlaceholder.transform.rotation;
+				transform.hasChanged = false;
+			}
+		}
+
+		public override void ModifyPositionAndRotation(Vector3? position = null, Quaternion? rotation = null)
+		{
+			base.ModifyPositionAndRotation(position, rotation);
+			if (IsInVisibilityRange && (position.HasValue || rotation.HasValue) && ArtificialRigidbody != null)
+			{
+				UpdateArtificialBodyPosition(updateChildren: true);
+				transform.hasChanged = false;
+			}
+		}
+
+		public void SetVelocity(Vector3 velocity, Vector3 angularVelocity)
+		{
+			_velocity = velocity;
+			_angularVelocity = angularVelocity;
+		}
+
+		protected virtual void FixedUpdate()
+		{
+			bool moved = SmoothPosition();
+			bool rotated = SmoothRotation();
+
+			// Smoothing moves the transform every step, so the geometry and colliders have to come along
+			// every step.
+			if (moved || rotated)
+			{
+				UpdateArtificialBodyPosition(updateChildren: true);
+			}
 		}
 
 		/// <summary>
-		/// 	Updates the position of the artificial body based on its orbit parameters and the given time.
-		/// 	If resetTime is false, time will be delta time since last update, otherwise it will be solar system time.
+		/// 	Eases towards the position the last movement message asked for.
 		/// </summary>
-		/// <param name="time">Delta time if resetTime is false, absolute system time if true.</param>
-		/// <param name="resetTime">Should orbit be reset?</param>
-		public void UpdateOrbitPosition(double time, bool resetTime = false)
+		private bool SmoothPosition()
 		{
-			if (Maneuver != null || StabilizeToTargetObj != null)
+			if (!TargetPosition.HasValue)
 			{
-				return;
+				return false;
 			}
 
-			if (resetTime)
+			// The anchor is pinned at the origin and a docked vessel is placed by whatever it is docked to.
+			// Neither may be driven from here, and any target they were still carrying is stale.
+			if (!ShouldSetLocalTransform)
 			{
-				Orbit.ResetOrbit(time);
-			}
-			else
-			{
-				Orbit.UpdateOrbit(time);
-			}
-
-			if (StabilizedChildren is not { Count: > 0 })
-			{
-				return;
+				TargetPosition = null;
+				return false;
 			}
 
-			foreach (ArtificialBody stabilizedChild in StabilizedChildren)
-			{
-				stabilizedChild.UpdateStabilizedPosition();
-			}
+			Vector3 step = Velocity * Time.fixedDeltaTime;
+			TargetPosition += step;
+
+			transform.localPosition = OpenHellion.World.VESSEL_TRANSLATION_LERP_UNCLAMPED
+				? Vector3.LerpUnclamped(transform.localPosition + step, TargetPosition.Value,
+					OpenHellion.World.VESSEL_TRANSLATION_LERP_VALUE)
+				: Vector3.Lerp(transform.localPosition + step, TargetPosition.Value,
+					OpenHellion.World.VESSEL_TRANSLATION_LERP_VALUE);
+
+			return true;
 		}
 
-		public override void OnSubscribe()
+		/// <summary>
+		/// 	Eases towards the rotation the last movement message asked for.
+		/// </summary>
+		private bool SmoothRotation()
 		{
+			if (!TargetRotation.HasValue)
+			{
+				return false;
+			}
+
+			Quaternion step = Quaternion.Euler(AngularVelocity * (Mathf.Rad2Deg * Time.fixedDeltaTime));
+			TargetRotation = step * TargetRotation.Value;
+
+			transform.localRotation = Quaternion.Slerp(step * transform.localRotation, TargetRotation.Value,
+				OpenHellion.World.VESSEL_ROTATION_LERP_VALUE);
+
+			if (!ShouldSetLocalTransform && MyPlayer.Instance != null)
+			{
+				MyPlayer.Instance.UpdateCameraPositions();
+			}
+
+			return true;
 		}
 
-		public override void OnUnsubscribe()
-		{
-			TransferableObjectsRoot.DestroyAll(true);
-		}
-
+		/// <summary>
+		/// 	Repositions this body to follow the body it is stabilised to, keeping a fixed local-space
+		/// 	offset.
+		/// </summary>
 		public void UpdateStabilizedPosition()
 		{
-			if (!(StabilizeToTargetObj == null))
+			if (StabilizeToTargetObj == null)
 			{
-				Orbit.CopyDataFrom(StabilizeToTargetObj.Orbit, World.SolarSystem.CurrentTime, true);
-				Orbit.RelativePosition += StabilizationOffset;
-				Orbit.InitFromCurrentStateVectors(World.SolarSystem.CurrentTime);
+				return;
 			}
+
+			SetTargetPositionAndRotation(
+				StabilizeToTargetObj.transform.position + StabilizationOffset, null, instant: true);
 		}
 
 		public virtual void OnStabilizationChanged(bool isStabilized)
 		{
 		}
 
-		public void StabilizeToTarget(long guid, Vector3D stabilizationOffset)
+		public void StabilizeToTarget(long guid, Vector3 stabilizationOffset)
 		{
 			if (StabilizeToTargetObj != null && StabilizeToTargetObj.Guid != guid)
 			{
@@ -285,7 +270,8 @@ namespace ZeroGravity.Objects
 			StabilizeToTargetObj = null;
 			if (guid > 0)
 			{
-				StabilizeToTargetObj = World.SolarSystem.GetArtificialBody(guid);
+				World.TryGetSpaceObject(guid, out ArtificialBody target);
+				StabilizeToTargetObj = target;
 			}
 
 			if (StabilizeToTargetObj != null)
@@ -293,6 +279,7 @@ namespace ZeroGravity.Objects
 				StabilizationOffset = stabilizationOffset;
 				StabilizeToTargetObj.StabilizedChildren.Add(this);
 				OnStabilizationChanged(true);
+				UpdateStabilizedPosition();
 			}
 		}
 

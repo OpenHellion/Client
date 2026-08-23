@@ -87,7 +87,7 @@ namespace ZeroGravity
 					{
 						if (questTrigger.Status != 0 && questTrigger.Type != QuestTriggerType.Activate)
 						{
-							TaskUI taskUI = Object.Instantiate(TaskItem, DescriptionHolder);
+							TaskUI taskUI = Instantiate(TaskItem, DescriptionHolder);
 							taskUI.transform.Reset();
 							if (questTrigger.Status == QuestStatus.Completed)
 							{
@@ -187,7 +187,7 @@ namespace ZeroGravity
 
 		private void CreateLogItem(QuestCutSceneData.QuestCutSceneElement element)
 		{
-			QuestCutSceneUI questCutSceneUI = Object.Instantiate(LogUI, LogHolder);
+			QuestCutSceneUI questCutSceneUI = Instantiate(LogUI, LogHolder);
 			questCutSceneUI.transform.Reset();
 			questCutSceneUI.transform.SetAsLastSibling();
 			questCutSceneUI.GetComponent<Animator>().enabled = false;

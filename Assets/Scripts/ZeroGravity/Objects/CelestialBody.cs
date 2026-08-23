@@ -123,7 +123,7 @@ namespace ZeroGravity.Objects
 		{
 			try
 			{
-				GameObject gameObject = GameObject.Instantiate(Resources.Load(PrefabPath) as GameObject);
+				GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load(PrefabPath) as GameObject);
 				gameObject.transform.SetParent(sunRoot);
 				gameObject.SetLayerRecursively("Sun");
 				gameObject.name = Name;
@@ -141,7 +141,7 @@ namespace ZeroGravity.Objects
 			try
 			{
 				GameObject parent = new GameObject(Name);
-				GameObject child = GameObject.Instantiate(Resources.Load(PrefabPath) as GameObject);
+				GameObject child = UnityEngine.Object.Instantiate(Resources.Load(PrefabPath) as GameObject);
 				child.transform.parent = parent.transform;
 				parent.SetLayerRecursively("Planets");
 				parent.transform.SetParent(planetsRoot);
@@ -159,14 +159,14 @@ namespace ZeroGravity.Objects
 
 		public void DestroyPlanetsSpaceGameObject()
 		{
-			GameObject.Destroy(PlanetsSpaceGameObject);
+			UnityEngine.Object.Destroy(PlanetsSpaceGameObject);
 			PlanetsSpaceGameObject = null;
 			PlanetsSpaceGameObjectVisual = null;
 		}
 
 		public void SetPlanetSpacePosition(Vector3 position, bool forceChange)
 		{
-			if (!(PlanetsSpaceGameObject == null))
+			if (PlanetsSpaceGameObject != null)
 			{
 				if (forceChange)
 				{
@@ -189,20 +189,6 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public float GetRadarSignatureModifier(World world, ArtificialBody ab)
-		{
-			if (RadarSignatureModifierValues == null)
-			{
-				return 1f;
-			}
-
-			double magnitude = (ab.Position - Position).Magnitude;
-			double num = Orbit.GravityInfluenceRadius != double.PositiveInfinity
-				? Orbit.GravityInfluenceRadius
-				: world.ExposureRange;
-			return RadarSignatureModifierValues[(int)(MathHelper.Clamp(magnitude / num, 0.0, 1.0) * 99.0)];
-		}
-
 		public float GetScanningSensitivityModifier(World world, ArtificialBody ab)
 		{
 			if (ScanningSensitivityModifierValues == null)
@@ -210,7 +196,7 @@ namespace ZeroGravity.Objects
 				return 1f;
 			}
 
-			double magnitude = (ab.Position - Position).Magnitude;
+			double magnitude = (world.LocalToWorldPosition(ab.transform.position) - Position).Magnitude;
 			double num = Orbit.GravityInfluenceRadius != double.PositiveInfinity
 				? Orbit.GravityInfluenceRadius
 				: world.ExposureRange;

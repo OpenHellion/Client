@@ -229,7 +229,7 @@ public class MB2_TextureBakeResults : ScriptableObject
 	public static MB2_TextureBakeResults CreateForMaterialsOnRenderer(Renderer r)
 	{
 		MB2_TextureBakeResults mB2_TextureBakeResults =
-			(MB2_TextureBakeResults)ScriptableObject.CreateInstance(typeof(MB2_TextureBakeResults));
+			(MB2_TextureBakeResults)CreateInstance(typeof(MB2_TextureBakeResults));
 		List<MB_MaterialAndUVRect> list = new List<MB_MaterialAndUVRect>();
 		for (int i = 0; i < r.sharedMaterials.Length; i++)
 		{

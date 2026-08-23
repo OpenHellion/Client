@@ -208,7 +208,7 @@ namespace BulletSharp
             : base(compoundShape, 0)
         {
         }
-        
+
         public void Add(CompoundShapeChild item)
         {
             throw new NotSupportedException();
@@ -232,7 +232,7 @@ namespace BulletSharp
             // Add the child to the backing store.
             int childIndex = _count;
             _count++;
-            Array.Resize<CompoundShapeChild>(ref _backingArray, _count);
+            Array.Resize(ref _backingArray, _count);
             _backingArray[childIndex] = new CompoundShapeChild(btCompoundShapeChild_array_at(childList, childIndex), shape);
         }
 

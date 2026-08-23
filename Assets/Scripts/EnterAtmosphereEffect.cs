@@ -1,5 +1,7 @@
 using System.Collections;
+using OpenHellion;
 using UnityEngine;
+using ZeroGravity.Math;
 using ZeroGravity.Objects;
 
 [ExecuteInEditMode]
@@ -22,19 +24,28 @@ public class EnterAtmosphereEffect : MonoBehaviour
 
 	public bool Burning;
 
+	private World _world;
+
+	private void Awake()
+	{
+		_world = GameObject.Find("/World").GetComponent<World>();
+	}
+
 	private void OnEnable()
 	{
 		if ((bool)shader)
 		{
-			mat = new Material(shader);
-			mat.name = "ImageEffectMaterial";
-			mat.hideFlags = HideFlags.HideAndDontSave;
+			mat = new Material(shader)
+			{
+				name = "ImageEffectMaterial",
+				hideFlags = HideFlags.HideAndDontSave
+			};
 		}
 		else
 		{
-			Debug.LogWarning(base.gameObject.name + ": Shader is not assigned. Disabling image effect.",
-				base.gameObject);
-			base.enabled = false;
+			Debug.LogWarning(gameObject.name + ": Shader is not assigned. Disabling image effect.",
+				gameObject);
+			enabled = false;
 		}
 	}
 
@@ -57,7 +68,7 @@ public class EnterAtmosphereEffect : MonoBehaviour
 	{
 		if ((bool)mat)
 		{
-			Object.DestroyImmediate(mat);
+			DestroyImmediate(mat);
 		}
 	}
 
@@ -68,8 +79,9 @@ public class EnterAtmosphereEffect : MonoBehaviour
 			try
 			{
 				ArtificialBody artificialBody = MyPlayer.Instance.Parent as ArtificialBody;
-				CelestialBody parentCelesitalBody = artificialBody.ParentCelestialBody;
-				float num = (float)((artificialBody.Position - parentCelesitalBody.Position).Magnitude -
+				Vector3D worldPosition = _world.LocalToWorldPosition(artificialBody.transform.position);
+				CelestialBody parentCelesitalBody = _world.SolarSystem.GetParentCelestialBody(worldPosition);
+				float num = (float)((worldPosition - parentCelesitalBody.Position).Magnitude -
 				                    parentCelesitalBody.Radius);
 				Intensity = 1f - Mathf.Clamp01((num - MinDistance) / (MaxDistance - MinDistance));
 			}

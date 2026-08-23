@@ -467,7 +467,7 @@ namespace DigitalOpus.MB.Core
 
 			if (resultSceneObject == null)
 			{
-				resultSceneObject = new GameObject("CombinedMesh-" + base.name);
+				resultSceneObject = new GameObject("CombinedMesh-" + name);
 			}
 
 			for (int i = 0; i < meshCombiners.Count; i++)

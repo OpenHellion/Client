@@ -4,8 +4,8 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using OpenHellion;
+using OpenHellion.Map;
 using UnityEngine;
 using UnityEngine.UI;
 using ZeroGravity.Data;
@@ -14,7 +14,7 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.UI;
 using OpenHellion.Net;
-using OpenHellion.UI;
+using OpenHellion.Net.Message;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
@@ -712,35 +712,18 @@ namespace ZeroGravity.ShipComponents
 
 			foreach (MapObject value in Map.AllMapObjects.Values)
 			{
-				SpaceObjectVessel spaceObjectVessel = value.MainObject as SpaceObjectVessel;
-				if (!(spaceObjectVessel != null) || !spaceObjectVessel.IsMainVessel)
+				if (value.MainObject is not MapItemData item || !avr.GUIDs.Contains(item.Guid))
 				{
 					continue;
 				}
 
-				List<long> list = new List<long>();
-				list.Add(spaceObjectVessel.Guid);
-				List<long> list2 = list;
-				if (spaceObjectVessel.IsDummyObject && spaceObjectVessel.DummyDockedVessels.Count > 0)
-				{
-					list2.AddRange(spaceObjectVessel.DummyDockedVessels.Select((DockedVesselData m) => m.GUID));
-				}
-				else
-				{
-					list2.AddRange(spaceObjectVessel.AllDockedVessels.Select((SpaceObjectVessel m) => m.Guid));
-				}
-
-				if (list2.FirstOrDefault((long m) => avr.GUIDs.Contains(m)) != 0)
-				{
-					MapObjectUI mapObjectUI = Instantiate(MapObjectPrefab, AuthorizedItemsHolder);
-					mapObjectUI.gameObject.SetActive(value: true);
-					mapObjectUI.gameObject.transform.Reset();
-					mapObjectUI.gameObject.transform.localScale = Vector3.one;
-					mapObjectUI.MapObj = value;
-					spaceObjectVessel.RadarVisibilityType = RadarVisibilityType.AlwaysVisible;
-					mapObjectUI.UpdateUI();
-					num++;
-				}
+				MapObjectUI mapObjectUI = Instantiate(MapObjectPrefab, AuthorizedItemsHolder);
+				mapObjectUI.gameObject.SetActive(value: true);
+				mapObjectUI.gameObject.transform.Reset();
+				mapObjectUI.gameObject.transform.localScale = Vector3.one;
+				mapObjectUI.MapObj = value;
+				mapObjectUI.UpdateUI();
+				num++;
 			}
 
 			AuthorizedVesselsValue.text = num.ToString("0");
@@ -871,11 +854,12 @@ namespace ZeroGravity.ShipComponents
 			if (ParentVessel.RadarSystem != null && (ParentVessel.RadarSystem.Status == SystemStatus.Offline ||
 			                                         ParentVessel.RadarSystem.Status == SystemStatus.Cooldown))
 			{
-				ParentVessel.RadarSystem.ActiveScanTask = new Task(delegate
+				ParentVessel.RadarSystem.ActiveScanPending = true;
+				NetworkController.SendAndForget(new ScanForObjectsRequest
 				{
-					ParentVessel.RadarSystem.ActiveScan(mos.ScanningConeAngle, mos.ScanningCone.transform.forward);
+					ScanDirection = mos.ScanningCone.transform.forward.ToArray(),
+					ScanAngle = mos.ScanningConeAngle
 				});
-				ParentVessel.RadarSystem.SwitchOn();
 			}
 		}
 
@@ -1149,7 +1133,7 @@ namespace ZeroGravity.ShipComponents
 			Map.RemoveManeuverCourse();
 			ManeuverInProgress.SetActive(value: false);
 			ActivateOther(0);
-			(Map.MyShip.MainObject as Ship).CancelManeuver();
+			ParentVessel.CancelManeuver();
 		}
 
 		public void CancelWarp()

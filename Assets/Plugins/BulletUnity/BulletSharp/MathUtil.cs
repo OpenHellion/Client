@@ -7,11 +7,11 @@
 // * This software is provided 'as-is', without any express or implied warranty.
 // * In no event will the authors be held liable for any damages arising from
 // * the use of this software.
-// * 
-// * Permission is granted to anyone to use this software for any purpose, 
+// *
+// * Permission is granted to anyone to use this software for any purpose,
 // * including commercial applications, and to alter it and redistribute it
 // * freely, subject to the following restrictions:
-// * 
+// *
 // * 1. The origin of this software must not be misrepresented; you must not
 // *    claim that you wrote the original software. If you use this software
 // *    in a product, an acknowledgment in the product documentation would be
@@ -686,7 +686,7 @@ namespace BulletSharp
         {
             // Set testNz to 0xFFFFFFFF if condition is nonzero, 0x00000000 if condition is zero
             // Rely on positive value or'ed with its negative having sign bit on
-            // and zero value or'ed with its negative (which is still zero) having sign bit off 
+            // and zero value or'ed with its negative (which is still zero) having sign bit off
             // Use arithmetic shift right, shifting the sign bit through all 32 bits
             uint testNz = (uint)(((int)condition | -(int)condition) >> 31);
             uint testEqz = ~testNz;
@@ -773,12 +773,12 @@ namespace BulletSharp
 
         //      /**@brief diagonalizes this matrix by the Jacobi method.
         //       * @param rot stores the rotation from the coordinate system in which the matrix is diagonal to the original
-        //       * coordinate system, i.e., old_this = rot * new_this * rot^T. 
+        //       * coordinate system, i.e., old_this = rot * new_this * rot^T.
         //       * @param threshold See iteration
-        //       * @param iteration The iteration stops when all off-diagonal elements are less than the threshold multiplied 
-        //       * by the sum of the absolute values of the diagonal, or when maxSteps have been executed. 
-        //       * 
-        //       * Note that this matrix is assumed to be symmetric. 
+        //       * @param iteration The iteration stops when all off-diagonal elements are less than the threshold multiplied
+        //       * by the sum of the absolute values of the diagonal, or when maxSteps have been executed.
+        //       *
+        //       * Note that this matrix is assumed to be symmetric.
         //       */
         //        public static void Diagonalize(ref Matrix inMatrix,ref Matrix rot, float threshold, int maxSteps)
         //        {
@@ -817,7 +817,7 @@ namespace BulletSharp
         //                   step = 1;
         //                }
 
-        //                // compute Jacobi rotation J which leads to a zero for element [p][q] 
+        //                // compute Jacobi rotation J which leads to a zero for element [p][q]
         //                float mpq = MathUtil.MatrixComponent(ref inMatrix,p,q);
         //                float theta = (MathUtil.MatrixComponent(ref inMatrix,q,q)-MathUtil.MatrixComponent(ref inMatrix,p,p)) / (2 * mpq);
         //                float theta2 = theta * theta;
@@ -984,7 +984,7 @@ namespace BulletSharp
         //            return quaternionToEuler(ref rotate);
         //        }
 
-        //        // Taken from Fabian Vikings post at : http://forums.xna.com/forums/p/4574/23763.aspx  
+        //        // Taken from Fabian Vikings post at : http://forums.xna.com/forums/p/4574/23763.aspx
         //        public static Vector3 quaternionToEuler(ref Quaternion q)
         //        {
         //            Vector3 v = Vector3.Zero;
@@ -1150,8 +1150,8 @@ namespace BulletSharp
         }
 
         public static T Clamp<T>(T value, T min, T max)
-         where T : System.IComparable<T>
-        {
+         where T : IComparable<T>
+		{
             T result = value;
             if (value.CompareTo(max) > 0)
                 result = max;

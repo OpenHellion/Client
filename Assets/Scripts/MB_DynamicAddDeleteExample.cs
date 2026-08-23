@@ -21,7 +21,7 @@ public class MB_DynamicAddDeleteExample : MonoBehaviour
 		{
 			for (int j = 0; j < num; j++)
 			{
-				GameObject gameObject = Object.Instantiate(prefab);
+				GameObject gameObject = Instantiate(prefab);
 				array[i * num + j] = gameObject.GetComponentInChildren<MeshRenderer>().gameObject;
 				gameObject.transform.position = new Vector3(9f * i, 0f, 9f * j);
 				if ((i * num + j) % 3 == 0)

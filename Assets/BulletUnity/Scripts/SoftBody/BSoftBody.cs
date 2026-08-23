@@ -45,8 +45,8 @@ namespace BulletUnity
         }
 
         //for converting to/from unity mesh
-        protected UnityEngine.Vector3[] verts = new UnityEngine.Vector3[0];
-        protected UnityEngine.Vector3[] norms = new UnityEngine.Vector3[0];
+        protected Vector3[] verts = new Vector3[0];
+        protected Vector3[] norms = new Vector3[0];
         protected int[] tris = new int[1];
 
         protected override void Awake()
@@ -121,7 +121,7 @@ namespace BulletUnity
         }
 
         /// <summary>
-        /// Update Mesh (or line renderer) at runtime, call from Update 
+        /// Update Mesh (or line renderer) at runtime, call from Update
         /// </summary>
         public virtual void UpdateMesh()
         {

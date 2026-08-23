@@ -113,7 +113,8 @@ namespace ZeroGravity.UI
 		[Title("Targeting")] public GameObject TargetInfo;
 
 		public Text TargetInfoName;
-		private Camera _mainCamera;
+
+		private Camera _uiCamera;
 
 		private static World _world;
 
@@ -144,8 +145,8 @@ namespace ZeroGravity.UI
 				if (MyPlayer.Instance.CurrentOutfit != null)
 				{
 					if (MyPlayer.Instance.CurrentOutfit.Armor >
-						_world.GetPlayerExposureDamage(MyPlayer.Instance.Parent.Position
-							.Magnitude))
+						_world.GetPlayerExposureDamage(
+							_world.LocalToWorldPosition(MyPlayer.Instance.transform.position).Magnitude))
 					{
 						return true;
 					}
@@ -157,25 +158,15 @@ namespace ZeroGravity.UI
 			}
 		}
 
-		public Item CurrentItem
-		{
-			get
-			{
-				if (MyPlayer.Instance.Inventory.HandsSlot.Item == null)
-				{
-					return null;
-				}
-
-				return MyPlayer.Instance.Inventory.HandsSlot.Item;
-			}
-		}
+		public Item CurrentItem => MyPlayer.Instance.Inventory.ItemInHands;
 
 		public bool UiActive => !MyPlayer.Instance.IsLockedToTrigger;
 
 		private void Awake()
 		{
-			_world ??= GameObject.Find("/World").GetComponent<World>();
-			_mainCamera = Camera.main;
+			_world = _world != null ? _world : GameObject.Find("/World").GetComponent<World>();
+			Canvas canvas = TargetInfo.GetComponentInParent<Canvas>(includeInactive: true).rootCanvas;
+			_uiCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
 		}
 
 		private void Start()
@@ -387,7 +378,7 @@ namespace ZeroGravity.UI
 						target.transform.up * 0.14f);
 				Vector2 localPoint = Vector2.zero;
 				RectTransformUtility.ScreenPointToLocalPointInRectangle(
-					TargetInfo.transform.parent.GetComponent<RectTransform>(), vector, _mainCamera, out localPoint);
+					TargetInfo.transform.parent.GetComponent<RectTransform>(), vector, _uiCamera, out localPoint);
 				TargetInfo.transform.localPosition = localPoint;
 				TargetInfo.transform.rotation = Quaternion.identity;
 				TargetInfo.SetActive(value: true);
@@ -417,50 +408,39 @@ namespace ZeroGravity.UI
 
 		public void HandsSlotUpdate()
 		{
-			if (CurrentItem != null)
-			{
-				HandsSlotIcon.color = Colors.White;
-				HandsSlotIcon.sprite = MyPlayer.Instance.Inventory.ItemInHands.Icon;
-				if (MyPlayer.Instance.Inventory.ItemInHands.MaxQuantity > 0f)
-				{
-					float num = MyPlayer.Instance.Inventory.ItemInHands.Quantity /
-								MyPlayer.Instance.Inventory.ItemInHands.MaxQuantity;
-					QuantityFiller.fillAmount = num;
-					if (num < 0.2f)
-					{
-						ItemInfo.color = Colors.FormatedRed;
-					}
-					else
-					{
-						ItemInfo.color = Colors.White;
-					}
-
-					ItemInfo.text = MyPlayer.Instance.Inventory.ItemInHands.Quantity.ToString("0");
-					ItemQuantity.Activate(value: true);
-				}
-				else if (MyPlayer.Instance.Inventory.ItemInHands is DisposableHackingTool)
-				{
-					float fillAmount = MyPlayer.Instance.Inventory.ItemInHands.Health /
-									   MyPlayer.Instance.Inventory.ItemInHands.MaxHealth;
-					QuantityFiller.fillAmount = fillAmount;
-					ItemInfo.color = Colors.White;
-					ItemInfo.text = MyPlayer.Instance.Inventory.ItemInHands.Health.ToString("0");
-					ItemQuantity.Activate(value: true);
-				}
-				else
-				{
-					ItemQuantity.Activate(value: false);
-				}
-
-				CheckFireMod();
-			}
-			else
+			Item itemInHands = MyPlayer.Instance == null ? null : MyPlayer.Instance.Inventory?.ItemInHands;
+			if (itemInHands == null)
 			{
 				HandsSlotIcon.color = Colors.WhiteHalfTransparent;
 				HandsSlotIcon.sprite = HandsSlotSprite;
 				ItemQuantity.Activate(value: false);
 				WeaponInfo.Activate(value: false);
+				return;
 			}
+
+			HandsSlotIcon.color = Colors.White;
+			HandsSlotIcon.sprite = itemInHands.Icon;
+			if (itemInHands.MaxQuantity > 0f)
+			{
+				float quantityFraction = itemInHands.Quantity / itemInHands.MaxQuantity;
+				QuantityFiller.fillAmount = quantityFraction;
+				ItemInfo.color = quantityFraction < 0.2f ? Colors.FormatedRed : Colors.White;
+				ItemInfo.text = itemInHands.Quantity.ToString("0");
+				ItemQuantity.Activate(value: true);
+			}
+			else if (itemInHands is DisposableHackingTool)
+			{
+				QuantityFiller.fillAmount = itemInHands.Health / itemInHands.MaxHealth;
+				ItemInfo.color = Colors.White;
+				ItemInfo.text = itemInHands.Health.ToString("0");
+				ItemQuantity.Activate(value: true);
+			}
+			else
+			{
+				ItemQuantity.Activate(value: false);
+			}
+
+			CheckFireMod();
 		}
 
 		public void UpdateQuickSlots()

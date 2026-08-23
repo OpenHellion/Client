@@ -28,7 +28,7 @@ public class HelmetRadarIndicator : MonoBehaviour
 	{
 		if (!visibleIndicator)
 		{
-			base.gameObject.SetActive(active);
+			gameObject.SetActive(active);
 			return;
 		}
 
@@ -38,6 +38,6 @@ public class HelmetRadarIndicator : MonoBehaviour
 			Arrow_Right.SetActive(active);
 		}
 
-		base.gameObject.SetActive(active);
+		gameObject.SetActive(active);
 	}
 }

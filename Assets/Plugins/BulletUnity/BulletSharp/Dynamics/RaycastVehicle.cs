@@ -25,7 +25,7 @@ namespace BulletSharp
             MaxSuspensionForce = 6000.0f;
         }
     }
-    
+
     public class RaycastVehicle : IAction
 	{
         WheelInfo[] wheelInfo = new WheelInfo[0];
@@ -137,7 +137,7 @@ namespace BulletSharp
             ci.MaxSuspensionTravelCm = tuning.MaxSuspensionTravelCm;
             ci.MaxSuspensionForce = tuning.MaxSuspensionForce;
 
-            Array.Resize<WheelInfo>(ref wheelInfo, wheelInfo.Length + 1);
+            Array.Resize(ref wheelInfo, wheelInfo.Length + 1);
             WheelInfo wheel = new WheelInfo(ci);
             wheelInfo[wheelInfo.Length - 1] = wheel;
 
@@ -373,10 +373,10 @@ namespace BulletSharp
             if (numWheel == 0)
                 return;
 
-            Array.Resize<Vector3>(ref forwardWS, numWheel);
-            Array.Resize<Vector3>(ref axle, numWheel);
-            Array.Resize<float>(ref forwardImpulse, numWheel);
-            Array.Resize<float>(ref sideImpulse, numWheel);
+            Array.Resize(ref forwardWS, numWheel);
+            Array.Resize(ref axle, numWheel);
+            Array.Resize(ref forwardImpulse, numWheel);
+            Array.Resize(ref sideImpulse, numWheel);
 
             int numWheelsOnGround = 0;
 
@@ -614,7 +614,7 @@ namespace BulletSharp
             // Simulate suspension
             for (int i = 0; i < wheelInfo.Length; i++)
             {
-                //float depth = 
+                //float depth =
                 RayCast(wheelInfo[i]);
             }
 

@@ -4,6 +4,7 @@ using UnityEngine.Playables;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
+using OpenHellion;
 using OpenHellion.Net;
 
 namespace ZeroGravity.LevelDesign
@@ -15,6 +16,8 @@ namespace ZeroGravity.LevelDesign
 		[SerializeField] private float size = 1f;
 
 		[NonSerialized] public SpaceObjectVessel ParentVessel;
+
+		private World _world;
 
 		public ResourceType ResourceType;
 
@@ -38,7 +41,7 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (ampd.MaxQuantity <= float.Epsilon)
 			{
-				UnityEngine.Object.Destroy(base.gameObject);
+				Destroy(gameObject);
 				return;
 			}
 
@@ -50,9 +53,14 @@ namespace ZeroGravity.LevelDesign
 
 			MaxQuantity = ampd.MaxQuantity;
 			HurtTrigger[] componentsInChildren = GetComponentsInChildren<HurtTrigger>(true);
-			foreach (HurtTrigger hurtTrigger in componentsInChildren)
+			CelestialBody parentCelestialBody = _world.SolarSystem.GetParentCelestialBody(
+				_world.LocalToWorldPosition(ParentVessel.transform.position));
+			if (parentCelestialBody != null)
 			{
-				hurtTrigger.Damage *= ParentVessel.Orbit.Parent.CelestialBody.AsteroidGasBurstDmgMultiplier;
+				foreach (HurtTrigger hurtTrigger in componentsInChildren)
+				{
+					hurtTrigger.Damage *= parentCelestialBody.AsteroidGasBurstDmgMultiplier;
+				}
 			}
 
 			SetValues(ampd.Quantity, null);
@@ -63,12 +71,13 @@ namespace ZeroGravity.LevelDesign
 			AsteroidMiningPointData asteroidMiningPointData = new AsteroidMiningPointData();
 			asteroidMiningPointData.InSceneID = InSceneID;
 			asteroidMiningPointData.Size = size;
-			asteroidMiningPointData.Position = base.transform.localPosition.ToArray();
+			asteroidMiningPointData.Position = transform.localPosition.ToArray();
 			return asteroidMiningPointData;
 		}
 
 		private void Awake()
 		{
+			_world ??= GameObject.Find("/World").GetComponent<World>();
 			EventSystem.AddListener(typeof(MiningPointStatsMessage), MiningPointStatsMessageListener);
 		}
 

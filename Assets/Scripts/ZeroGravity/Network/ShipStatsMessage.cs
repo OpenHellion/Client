@@ -5,7 +5,7 @@ namespace ZeroGravity.Network
 	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 	public class ShipStatsMessage : NetworkData
 	{
-		public long GUID;
+		public long Guid;
 
 		public float[] Thrust;
 
@@ -27,14 +27,6 @@ namespace ZeroGravity.Network
 
 		public float? SelfDestructTime;
 
-		public long? TargetStabilizationGUID;
-
-		public bool? GatherAtmosphere;
-
-		public short[] index;
-
-		public short? lvl;
-
-		public float[] debugRes;
+		public long? TargetStabilizationGuid;
 	}
 }

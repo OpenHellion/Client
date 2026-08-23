@@ -119,3 +119,7 @@ GeneratedSoundBanks**
 UpgradeLog.htm
 
 /Assets/Packages
+
+output_log.txt
+*.slnx
+CLAUDE.md

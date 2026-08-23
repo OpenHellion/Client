@@ -124,7 +124,7 @@ namespace ZeroGravity.LevelDesign
 
 		private void Awake()
 		{
-			foreach (Transform item in base.transform)
+			foreach (Transform item in transform)
 			{
 				RepairPointParticleEffect component = item.gameObject.GetComponent<RepairPointParticleEffect>();
 				if (component != null && item.gameObject.activeInHierarchy && !DamageEffects.Contains(component) &&
@@ -408,7 +408,7 @@ namespace ZeroGravity.LevelDesign
 				if (ParentVessel.DockedToVessel != null || ParentVessel.DockedVessels.Count is not 0)
 				{
 					fullMessage = string.Format(Localization.RepairPointMessageVesselRoom, damageText.ToUpper(),
-						ParentVessel.VesselData.VesselRegistration,
+						ParentVessel.VesselRegistration,
 						!External ? Room.RoomName.ToUpper() : Localization.Hull.ToUpper());
 				}
 				else

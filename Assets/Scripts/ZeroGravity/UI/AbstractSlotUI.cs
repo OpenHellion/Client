@@ -133,9 +133,8 @@ namespace ZeroGravity.UI
 				InventoryUI.DraggingObject.GetComponent<Image>().sprite = Icon.sprite;
 				InventoryUI.IsDragging = true;
 				RectTransform component = InventoryUI.DraggingObject.GetComponent<RectTransform>();
-				Vector2 localPoint = Vector2.zero;
 				RectTransformUtility.ScreenPointToLocalPointInRectangle(InventoryUI.GetComponent<RectTransform>(),
-					Mouse.current.position.ReadValue(), Camera.main, out localPoint);
+					Mouse.current.position.ReadValue(), eventData.pressEventCamera, out Vector2 localPoint);
 				component.transform.localPosition = localPoint;
 				InventoryUI.DraggingObject.SetActive(true);
 			}

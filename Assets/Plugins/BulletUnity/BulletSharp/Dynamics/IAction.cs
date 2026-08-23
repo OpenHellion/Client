@@ -17,13 +17,13 @@ namespace BulletSharp
         IAction _actionInterface;
         DynamicsWorld _world;
 
-        [UnmanagedFunctionPointerAttribute(Native.Conv), SuppressUnmanagedCodeSecurity]
+        [UnmanagedFunctionPointer(Native.Conv), SuppressUnmanagedCodeSecurity]
         delegate void DebugDrawUnmanagedDelegate(IntPtr iaPtrThis, IntPtr debugDrawer);
-        [UnmanagedFunctionPointerAttribute(Native.Conv), SuppressUnmanagedCodeSecurity]
+        [UnmanagedFunctionPointer(Native.Conv), SuppressUnmanagedCodeSecurity]
         delegate void UpdateActionUnmanagedDelegate(IntPtr iaPtrThis, IntPtr collisionWorld, float deltaTimeStep);
 
         DebugDrawUnmanagedDelegate _debugDraw;
-        UpdateActionUnmanagedDelegate _updateAction; 
+        UpdateActionUnmanagedDelegate _updateAction;
 
         public ActionInterfaceWrapper(IAction actionInterface, DynamicsWorld world)
         {

@@ -34,7 +34,7 @@ public class MainMenuSceneController : MonoBehaviour
 	{
 		StartCoroutine(FadeIn());
 		DepthOfField outSetting;
-		PostProcessProfile.TryGetSettings<DepthOfField>(out outSetting);
+		PostProcessProfile.TryGetSettings(out outSetting);
 		if (FocusState)
 		{
 			outSetting.focusDistance.value = ChangeFocusCurve.Evaluate(0f);
@@ -72,7 +72,7 @@ public class MainMenuSceneController : MonoBehaviour
 	{
 		float focusTime = ChangeFocusTime;
 		DepthOfField dof;
-		PostProcessProfile.TryGetSettings<DepthOfField>(out dof);
+		PostProcessProfile.TryGetSettings(out dof);
 		while (focusTime > 0f)
 		{
 			dof.focusDistance.value = ChangeFocusCurve.Evaluate(Mathf.Clamp01(focusTime / ChangeFocusTime));
@@ -87,7 +87,7 @@ public class MainMenuSceneController : MonoBehaviour
 	{
 		float focusTime = ChangeFocusTime;
 		DepthOfField dof;
-		PostProcessProfile.TryGetSettings<DepthOfField>(out dof);
+		PostProcessProfile.TryGetSettings(out dof);
 		while (focusTime > 0f)
 		{
 			dof.focusDistance.value = ChangeFocusCurve.Evaluate(1f - Mathf.Clamp01(focusTime / ChangeFocusTime));
@@ -102,7 +102,7 @@ public class MainMenuSceneController : MonoBehaviour
 	{
 		float fadeTime = FadeInTime;
 		ColorGrading colorGrading;
-		PostProcessProfile.TryGetSettings<ColorGrading>(out colorGrading);
+		PostProcessProfile.TryGetSettings(out colorGrading);
 		while (fadeTime > 0f)
 		{
 			colorGrading.postExposure.value = FadeInCurve.Evaluate(1f - Mathf.Clamp01(fadeTime / FadeInTime));
@@ -117,7 +117,7 @@ public class MainMenuSceneController : MonoBehaviour
 	{
 		float fadeTime = FadeOutTime;
 		ColorGrading colorGrading;
-		PostProcessProfile.TryGetSettings<ColorGrading>(out colorGrading);
+		PostProcessProfile.TryGetSettings(out colorGrading);
 		while (fadeTime > 0f)
 		{
 			colorGrading.postExposure.value = FadeOutCurve.Evaluate(1f - Mathf.Clamp01(fadeTime / FadeOutTime));
@@ -126,6 +126,6 @@ public class MainMenuSceneController : MonoBehaviour
 		}
 
 		colorGrading.postExposure.value = FadeOutCurve.Evaluate(1f);
-		base.gameObject.SetActive(false);
+		gameObject.SetActive(false);
 	}
 }

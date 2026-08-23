@@ -26,7 +26,7 @@ namespace BulletUnity
                 }
             }
 
-            if (transform.localScale != UnityEngine.Vector3.one)
+            if (transform.localScale != Vector3.one)
             {
                 Debug.LogError("The local scale on this collision shape is not one. Bullet physics does not support scaling on a rigid body world transform. Instead alter the dimensions of the CollisionShape.");
             }
@@ -44,7 +44,7 @@ namespace BulletUnity
 
             if (m_collisionObject == null)
             {
-                m_collisionObject = new BulletSharp.PairCachingGhostObject();
+                m_collisionObject = new PairCachingGhostObject();
                 m_collisionObject.CollisionShape = cs;
                 BulletSharp.Math.Matrix worldTrans;
                 BulletSharp.Math.Quaternion q = transform.rotation.ToBullet();
@@ -150,7 +150,7 @@ namespace BulletUnity
             objsIWasInContactWithLastFrame = objsCurrentlyInContactWith;
             objsCurrentlyInContactWith = temp;
         }
-         
+
         public override void BOnTriggerEnter(CollisionObject other, AlignedManifoldArray manifoldArray)
         {
             Debug.Log("Enter with " + other.UserObject + " fixedFrame " + BPhysicsWorld.Get().frameCount);

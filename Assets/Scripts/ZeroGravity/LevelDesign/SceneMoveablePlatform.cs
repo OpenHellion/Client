@@ -15,7 +15,7 @@ namespace ZeroGravity.LevelDesign
 
 		private void Awake()
 		{
-			oldPosition = base.transform.position;
+			oldPosition = transform.position;
 			GetComponent<Rigidbody>().isKinematic = true;
 		}
 
@@ -75,14 +75,14 @@ namespace ZeroGravity.LevelDesign
 
 		private void LateUpdate()
 		{
-			if (!base.transform.hasChanged)
+			if (!transform.hasChanged)
 			{
 				return;
 			}
 
 			if (objectOnPlatform.Count > 0)
 			{
-				Vector3 vector = base.transform.position - oldPosition;
+				Vector3 vector = transform.position - oldPosition;
 				foreach (SpaceObjectTransferable item in objectOnPlatform)
 				{
 					if (item is OtherPlayer)
@@ -96,7 +96,7 @@ namespace ZeroGravity.LevelDesign
 				}
 			}
 
-			oldPosition = base.transform.position;
+			oldPosition = transform.position;
 		}
 	}
 }

@@ -104,7 +104,7 @@ namespace ZeroGravity
 
 		public void Toggle(bool val, int option = 1)
 		{
-			base.gameObject.SetActive(val);
+			gameObject.SetActive(val);
 			if (val)
 			{
 				CurrentHolder.Activate(Current != null);

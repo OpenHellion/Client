@@ -18,7 +18,7 @@ They are included here as a reference and to make sure things are working correc
 public class BulletExampleRunner : MonoBehaviour {
     protected static BulletExampleRunner singleton;
     public BulletSharpExamples.Graphics graphics;
-    public DemoFramework.Demo demo;
+    public Demo demo;
     public Material mat;
     public Material groundMat;
     public GameObject cubePrefab;
@@ -205,7 +205,7 @@ public class BulletExampleRunner : MonoBehaviour {
                 Debug.LogError("Found more than one dynamics world.");
                 singleton = ws[0];
                 for (int i = 1; i < ws.Length; i++) {
-                    GameObject.Destroy(ws[i].gameObject);
+					Destroy(ws[i].gameObject);
                 }
             }
         }
@@ -232,7 +232,7 @@ public class BulletExampleRunner : MonoBehaviour {
                     go = new GameObject("Compund Shape");
                     BulletRigidBodyProxy rbp = go.AddComponent<BulletRigidBodyProxy>();
                     rbp.target = co as RigidBody;
-                    foreach (BulletSharp.CompoundShapeChild child in (cs as CompoundShape).ChildList) {
+                    foreach (CompoundShapeChild child in (cs as CompoundShape).ChildList) {
                         BulletSharp.Math.Matrix childTransform = child.Transform;
                         GameObject ggo = new GameObject(child.ToString());
                         MeshFilter mf = ggo.AddComponent<MeshFilter>();
@@ -340,7 +340,7 @@ public class BulletExampleRunner : MonoBehaviour {
     public GameObject CreateUnitySoftBodyRope(BulletSharp.SoftBody.SoftBody body) {
         //determine what kind of soft body it is
         //rope
-        GameObject rope = Instantiate<GameObject>(ropePrefab);
+        GameObject rope = Instantiate(ropePrefab);
         LineRenderer lr = rope.GetComponent<LineRenderer>();
         lr.positionCount = body.Nodes.Count;
         BulletRopeProxy ropeProxy = rope.GetComponent<BulletRopeProxy>();
@@ -365,7 +365,7 @@ public class BulletExampleRunner : MonoBehaviour {
                 tris.Add( node2vertIdx[f.Nodes[j]]);
             }
         }
-        GameObject go = Instantiate<GameObject>(softBodyPrefab);
+        GameObject go = Instantiate(softBodyPrefab);
         BulletSoftBodyProxy sbp = go.GetComponent<BulletSoftBodyProxy>();
         List<int> trisRev = new List<int>();
         for (int i = 0; i < tris.Count; i+=3) {
@@ -381,7 +381,7 @@ public class BulletExampleRunner : MonoBehaviour {
     }
 
     public void CreateUnityMultiBodyLinkColliderProxy(MultiBodyLinkCollider body) {
-        GameObject cube = Instantiate<GameObject>(cubePrefab);
+        GameObject cube = Instantiate(cubePrefab);
         CollisionShape cs = body.CollisionShape;
         if (cs is BoxShape) {
             BoxShape bxcs = cs as BoxShape;

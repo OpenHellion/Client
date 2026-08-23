@@ -28,15 +28,15 @@ namespace ZeroGravity.Effects
 
 		public bool IsOn
 		{
-			get { return base.gameObject.activeInHierarchy; }
-			set { base.gameObject.SetActive(value); }
+			get { return gameObject.activeInHierarchy; }
+			set { gameObject.SetActive(value); }
 		}
 
 		private void Awake()
 		{
 			if (CenterOfMass == null)
 			{
-				CenterOfMass = base.transform;
+				CenterOfMass = transform;
 			}
 
 			if (MoveCamera == null)
@@ -52,7 +52,7 @@ namespace ZeroGravity.Effects
 			ExhaustScript[] componentsInChildren = GetComponentsInChildren<ExhaustScript>(true);
 			foreach (ExhaustScript exhaustScript in componentsInChildren)
 			{
-				if (exhaustScript.transform.parent == base.transform)
+				if (exhaustScript.transform.parent == transform)
 				{
 					Thrusters.Add(exhaustScript);
 					exhaustScript.cameraToLookAt = MoveCamera;
@@ -63,16 +63,16 @@ namespace ZeroGravity.Effects
 
 		public void SetRotateVector(Vector3 rotation)
 		{
-			rotateVector.x = ((rotation.x > rotateEpsilon) ? 1 : ((rotation.x < 0f - rotateEpsilon) ? (-1) : 0));
-			rotateVector.y = ((rotation.y > rotateEpsilon) ? 1 : ((rotation.y < 0f - rotateEpsilon) ? (-1) : 0));
-			rotateVector.z = ((rotation.z > rotateEpsilon) ? 1 : ((rotation.z < 0f - rotateEpsilon) ? (-1) : 0));
+			rotateVector.x = (rotation.x > rotateEpsilon) ? 1 : ((rotation.x < 0f - rotateEpsilon) ? (-1) : 0);
+			rotateVector.y = (rotation.y > rotateEpsilon) ? 1 : ((rotation.y < 0f - rotateEpsilon) ? (-1) : 0);
+			rotateVector.z = (rotation.z > rotateEpsilon) ? 1 : ((rotation.z < 0f - rotateEpsilon) ? (-1) : 0);
 		}
 
 		public void SetMoveVector(Vector3 move)
 		{
-			moveVector.x = ((move.x > moveEpsilon) ? 1 : ((move.x < 0f - moveEpsilon) ? (-1) : 0));
-			moveVector.y = ((move.y > moveEpsilon) ? 1 : ((move.y < 0f - moveEpsilon) ? (-1) : 0));
-			moveVector.z = ((move.z > moveEpsilon) ? 1 : ((move.z < 0f - moveEpsilon) ? (-1) : 0));
+			moveVector.x = (move.x > moveEpsilon) ? 1 : ((move.x < 0f - moveEpsilon) ? (-1) : 0);
+			moveVector.y = (move.y > moveEpsilon) ? 1 : ((move.y < 0f - moveEpsilon) ? (-1) : 0);
+			moveVector.z = (move.z > moveEpsilon) ? 1 : ((move.z < 0f - moveEpsilon) ? (-1) : 0);
 		}
 
 		public void UpdateThrusters()

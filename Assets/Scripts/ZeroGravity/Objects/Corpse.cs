@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenHellion.Net;
 using UnityEngine;
 using ZeroGravity.CharacterMovement;
 using ZeroGravity.LevelDesign;
+using ZeroGravity.Math;
 using ZeroGravity.Network;
 
 namespace ZeroGravity.Objects
@@ -17,10 +17,6 @@ namespace ZeroGravity.Objects
 
 			public Transform Trans;
 		}
-
-		public static float SendMovementInterval = 0.1f;
-
-		private float sendMovementTime;
 
 		public Inventory Inventory;
 
@@ -36,25 +32,19 @@ namespace ZeroGravity.Objects
 
 		[SerializeField] private Transform centerOfMass;
 
-		private Collider takeoverTrigger;
-
 		private byte hipsKey = byte.MaxValue;
 
 		private Dictionary<byte, CorpsePart> corpseParts = new Dictionary<byte, CorpsePart>();
 
-		private float velocityCheckTimer;
+		private float _movementReceivedTime = -1f;
 
-		private float takeoverTimer;
+		private Vector3 _movementTargetPosition;
 
-		private float movementReceivedTime = -1f;
+		private Quaternion _movementTargetRotation;
 
-		private Vector3 movementTargetLocalPosition;
+		private Vector3 _movementTargetVelocity;
 
-		private Quaternion movementTargetLocalRotation;
-
-		private Vector3 movementVelocity;
-
-		private Vector3 movementAngularVelocity;
+		private Vector3 _movementTargetAngularVelocity;
 
 		private Gender Gender;
 
@@ -76,13 +66,7 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public static Corpse SpawnCorpse(SpawnObjectResponseData data)
-		{
-			SpawnCorpseResponseData spawnCorpseResponseData = data as SpawnCorpseResponseData;
-			return SpawnCorpse(spawnCorpseResponseData.Details, null);
-		}
-
-		public static Corpse SpawnCorpse(Corpse template)
+		public static Corpse Create(Corpse template)
 		{
 			GameObject gameObject = template.Gender != 0
 				? Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpseFemale"),
@@ -99,8 +83,7 @@ namespace ZeroGravity.Objects
 			component.gameObject.name = "Corpse_" + component.Guid;
 			World.AddCorpse(component.Guid, component);
 			component.Parent = template.Parent;
-			component.transform.position = template.transform.position;
-			component.transform.rotation = template.transform.rotation;
+			component.transform.SetPositionAndRotation(template.transform.position, template.transform.rotation);
 			foreach (KeyValuePair<AnimatorHelper.HumanBones, Transform> bone in template.animHelper.GetBones())
 			{
 				if (component.corpseParts.ContainsKey((byte)bone.Key))
@@ -115,136 +98,65 @@ namespace ZeroGravity.Objects
 			return component;
 		}
 
-		public static Corpse SpawnCorpse(CorpseDetails details, OtherPlayer playerThatDied)
+		public static Corpse Create(long guid, Vector3 position, Quaternion rotation, long parentGUID, Gender gender,
+			DynamicObjectDetails[] dynamicObjects)
 		{
-			if (World.GetCorpse(details.GUID) != null)
+			if (World.GetCorpse(guid) != null)
 			{
 				return null;
 			}
 
-			SpaceObject spaceObject = World.GetObject(details.ParentGUID, details.ParentType);
-			if (spaceObject == null)
+			if (!World.TryGetSpaceObject(parentGUID, out SpaceObject spaceObject))
 			{
-				Debug.LogError("Cannot spawn corpse because there is no corpse parent" + details.GUID + details.ParentGUID + details.ParentType);
+				Debug.LogErrorFormat("Cannot spawn corpse (guid: {0}) because there is no corpse parent (guid: {1}).", guid, parentGUID);
 				return null;
 			}
 
-			GameObject corpseObj = details.Gender == 0
+			GameObject corpseGameObject = gender == 0
 				? Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpse"),
 					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject
 				: Instantiate(Resources.Load("Models/Units/Characters/CharacterCorpseFemale"),
 					new Vector3(20000f, 20000f, 20000f), Quaternion.identity) as GameObject;
-			corpseObj.SetActive(value: false);
-			Corpse component = corpseObj.GetComponent<Corpse>();
-			component.Gender = details.Gender;
-			component.Guid = details.GUID;
-			component.animHelper.CreateRig();
-			component.InitializeInventory();
-			component.ReconnectAllBones();
-			component.gameObject.name = "Corpse_" + component.Guid;
-			World.AddCorpse(component.Guid, component);
-			if (details.DynamicObjectData != null && details.DynamicObjectData.Count > 0)
-			{
-				DynamicObjectDetails dynamicObjectDetails = details.DynamicObjectData.Find((DynamicObjectDetails x) =>
-					x.AttachData.IsAttached && x.AttachData.InventorySlotID == -2);
-				if (dynamicObjectDetails != null)
-				{
-					DynamicObject.SpawnDynamicObject(dynamicObjectDetails, component);
-				}
+			corpseGameObject.SetActive(value: false);
+			Corpse corpse = corpseGameObject.GetComponent<Corpse>();
+			corpse.Gender = gender;
+			corpse.Guid = guid;
+			corpse.animHelper.CreateRig();
+			corpse.InitializeInventory();
+			corpse.ReconnectAllBones();
+			corpse.gameObject.name = "Corpse_" + corpse.Guid;
+			corpse.Parent = spaceObject;
+			corpse.transform.SetLocalPositionAndRotation(position, rotation);
+			corpse.SetKinematic(toggle: false);
+			corpseGameObject.SetActive(value: true);
+			corpse.ragdollComponent.ToggleRagdoll(enabled: true, corpse);
 
-				foreach (DynamicObjectDetails dynamicObjectDatum in details.DynamicObjectData)
-				{
-					if (dynamicObjectDatum != dynamicObjectDetails)
-					{
-						DynamicObject.SpawnDynamicObject(dynamicObjectDatum, component);
-					}
-				}
-			}
+			// Register before spawning the loot: each item's attach data names this corpse as its parent
+			// and is resolved through World.GetCorpse during ProcessAttachData.
+			World.AddCorpse(corpse.Guid, corpse);
+			corpse.SpawnInventory(dynamicObjects);
 
-			component.Parent = spaceObject;
-			component.transform.localPosition = details.LocalPosition.ToVector3();
-			component.transform.localRotation = details.LocalRotation.ToQuaternion();
-			if (playerThatDied != null)
+			if (corpse.Inventory.ItemInHands != null)
 			{
-				component.CopyPositionFromPlayer(playerThatDied);
-				component.SetGravity(playerThatDied.Gravity);
-			}
-
-			component.SetKinematic(toggle: false);
-			corpseObj.SetActive(value: true);
-			component.ragdollComponent.ToggleRagdoll(enabled: true, component);
-			if (component.Inventory.ItemInHands != null)
-			{
-				Vector3 value = component.transform.parent.InverseTransformPoint(component.transform.position);
-				component.Inventory.ItemInHands.DynamicObj.SendAttachMessage(MyPlayer.Instance.Parent, null, value,
+				Vector3 value = corpse.transform.parent.InverseTransformPoint(corpse.transform.position);
+				corpse.Inventory.ItemInHands.DynamicObj.SendAttachMessage(MyPlayer.Instance.Parent, null, value,
 					Quaternion.identity, Vector3.zero, Vector3.zero, MyPlayer.Instance.rigidBody.linearVelocity);
 			}
 
-			return component;
+			return corpse;
 		}
 
-		public void Connect()
+		private void SpawnInventory(DynamicObjectDetails[] dynamicObjects)
 		{
-			EventSystem.AddListener(typeof(CorpseStatsMessage), CorpseStatsMessageListener);
-		}
-
-		public void Disconnect()
-		{
-			EventSystem.RemoveListener(typeof(CorpseStatsMessage), CorpseStatsMessageListener);
+			foreach (DynamicObjectDetails details in dynamicObjects ?? Array.Empty<DynamicObjectDetails>())
+			{
+				DynamicObject.CreateDynamicObject(details, this);
+			}
 		}
 
 		private void Awake()
 		{
 			InitializeInventory();
-			Connect();
-		}
-
-		private void FixedUpdate()
-		{
-			if (!IsDestroying && !IsKinematic && sendMovementTime + SendMovementInterval <= Time.fixedTime)
-			{
-				sendMovementTime = Time.fixedTime;
-				SendMovementMessage();
-			}
-		}
-
-		private void SendMovementMessage()
-		{
-			CorpseMovementMessage corpseMovementMessage = new CorpseMovementMessage();
-			corpseMovementMessage.GUID = Guid;
-			corpseMovementMessage.LocalPosition = transform.localPosition.ToArray();
-			corpseMovementMessage.LocalRotation = transform.localRotation.ToArray();
-			corpseMovementMessage.Velocity = corpseParts[hipsKey].RBody.linearVelocity.ToArray();
-			corpseMovementMessage.AngularVelocity = corpseParts[hipsKey].RBody.angularVelocity.ToArray();
-			corpseMovementMessage.Timestamp = Time.time;
-			corpseMovementMessage.IsInsideSpaceObject = IsInsideSpaceObject;
-			corpseMovementMessage.RagdollDataList = new Dictionary<byte, RagdollItemData>();
-			CorpsePart corpsePart = corpseParts[hipsKey];
-			if (corpsePart.Trans.hasChanged)
-			{
-				corpseMovementMessage.RagdollDataList.Add(hipsKey, new RagdollItemData
-				{
-					Position = corpsePart.Trans.localPosition.ToArray(),
-					LocalRotation = corpsePart.Trans.localRotation.ToArray(),
-					Velocity = corpsePart.RBody.linearVelocity.ToArray(),
-					AngularVelocity = corpsePart.RBody.angularVelocity.ToArray()
-				});
-				corpsePart.Trans.hasChanged = false;
-			}
-
-			NetworkController.SendAndForget(corpseMovementMessage);
-		}
-
-		public void CopyPositionFromPlayer(OtherPlayer player)
-		{
-			foreach (KeyValuePair<AnimatorHelper.HumanBones, Transform> bone in player.AnimHelper.GetBones())
-			{
-				if (corpseParts.ContainsKey((byte)bone.Key))
-				{
-					corpseParts[(byte)bone.Key].Trans.position = bone.Value.position;
-					corpseParts[(byte)bone.Key].Trans.rotation = bone.Value.rotation;
-				}
-			}
 		}
 
 		public void InitializeInventory()
@@ -327,8 +239,7 @@ namespace ZeroGravity.Objects
 		{
 			if (CurrentOutfit != null)
 			{
-				CurrentOutfit.SetOutfitParent(outfitTransform.GetChildren(), CurrentOutfit.OutfitTrans,
-					activateGeometry: false);
+				CurrentOutfit.SetOutfitParent(outfitTransform.GetChildren(), CurrentOutfit.OutfitTrans);
 				CurrentOutfit.FoldedOutfitTrans.gameObject.SetActive(value: true);
 				return;
 			}
@@ -369,7 +280,7 @@ namespace ZeroGravity.Objects
 			ragdollComponent.ToggleRagdoll(enabled: false, this);
 			RemoveOutfit();
 			Destroy(gameObject);
-			SpawnCorpse(this);
+			Create(this);
 		}
 
 		private void RefreshHeadBones()
@@ -394,18 +305,6 @@ namespace ZeroGravity.Objects
 			centerOfMass.transform.localPosition = new Vector3(-0.133f, 0.014f, 0.001f);
 			centerOfMass.transform.localRotation = Quaternion.Euler(97.33099f, -90f, 0.2839966f);
 			RefreshHeadBones();
-		}
-
-		private void SendStatsMessage()
-		{
-			CorpseStatsMessage corpseStatsMessage = new CorpseStatsMessage();
-			corpseStatsMessage.GUID = Guid;
-			corpseStatsMessage.ParentGUID = Parent.Guid;
-			corpseStatsMessage.ParentType = Parent.Type;
-			corpseStatsMessage.LocalPosition = transform.localPosition.ToArray();
-			corpseStatsMessage.LocalRotation = transform.localRotation.ToArray();
-			CorpseStatsMessage data = corpseStatsMessage;
-			NetworkController.SendAndForget(data);
 		}
 
 		public InventorySlot GetInventorySlot(short attachedToID)
@@ -444,87 +343,26 @@ namespace ZeroGravity.Objects
 		protected override void OnDestroy()
 		{
 			base.OnDestroy();
-			Disconnect();
 			World.RemoveCorpse(Guid);
 		}
 
-		public void ProcessMoveCorpseObectMessage(CorpseMovementMessage mm)
+		public void ProcessMovementMessage(Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity)
 		{
 			ToggleKinematic(value: true);
-			movementReceivedTime = Time.time;
-			movementTargetLocalPosition = mm.LocalPosition.ToVector3();
-			movementTargetLocalRotation = mm.LocalRotation.ToQuaternion();
-			movementVelocity = mm.Velocity.ToVector3();
-			movementAngularVelocity = mm.AngularVelocity.ToVector3();
-		}
-
-		private void CorpseStatsMessageListener(NetworkData data)
-		{
-			CorpseStatsMessage corpseStatsMessage = data as CorpseStatsMessage;
-			if (corpseStatsMessage.GUID != Guid)
-			{
-				return;
-			}
-
-			if (corpseStatsMessage.DestroyCorpse)
-			{
-				Destroy(gameObject);
-			}
-			else if (!(Parent is Pivot) && corpseStatsMessage.ParentType == SpaceObjectType.CorpsePivot)
-			{
-				ArtificialBody artificialBody = Parent as ArtificialBody;
-				if (artificialBody == null)
-				{
-					Debug.LogError("Corpse exited vessel but we don't know from where." + Guid + Parent +
-						corpseStatsMessage.ParentType + corpseStatsMessage.ParentGUID);
-				}
-				else
-				{
-					Pivot pivot = World.SolarSystem.GetArtificialBody(Guid) as Pivot;
-					if (pivot == null)
-					{
-						pivot = Pivot.Create(SpaceObjectType.CorpsePivot, Guid, artificialBody,
-							isMainObject: false);
-					}
-
-					Parent = pivot;
-				}
-			}
-			else if (Parent is Pivot && (corpseStatsMessage.ParentType == SpaceObjectType.Ship ||
-			                             corpseStatsMessage.ParentType == SpaceObjectType.Station ||
-			                             corpseStatsMessage.ParentType == SpaceObjectType.Asteroid))
-			{
-				World.SolarSystem.RemoveArtificialBody(Parent as Pivot);
-				Destroy(Parent.gameObject);
-				Parent = World.GetVessel(corpseStatsMessage.ParentGUID);
-				TransitionTrigger.ResetTriggers();
-			}
-		}
-
-		public override void OnGravityChanged(Vector3 oldGravity)
-		{
-			if (!(oldGravity != Vector3.zero) || !Gravity.IsEpsilonEqual(Vector3.zero))
-			{
-				return;
-			}
-
-			foreach (KeyValuePair<byte, CorpsePart> corpsePart in corpseParts)
-			{
-				if (corpsePart.Value.RBody != null)
-				{
-					corpsePart.Value.RBody.AddForce(
-						new Vector3(UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f),
-							UnityEngine.Random.Range(0.001f, 0.05f)), ForceMode.Impulse);
-					corpsePart.Value.RBody.AddTorque(new Vector3(UnityEngine.Random.Range(0.001f, 0.05f),
-						UnityEngine.Random.Range(0.001f, 0.05f), UnityEngine.Random.Range(0.001f, 0.05f)));
-				}
-			}
+			_movementReceivedTime = Time.time;
+			_movementTargetPosition = position;
+			_movementTargetRotation = rotation;
+			_movementTargetVelocity = velocity;
+			_movementTargetAngularVelocity = angularVelocity;
 		}
 
 		public override void DockedVesselParentChanged(SpaceObjectVessel vessel)
 		{
 			Parent = vessel;
-			SendStatsMessage();
+		}
+
+		public override void OnGravityChanged(Vector3 oldGravity)
+		{
 		}
 
 		public override void RoomChanged(SceneTriggerRoom prevRoomTrigger)
@@ -538,20 +376,20 @@ namespace ZeroGravity.Objects
 			{
 				if (Parent is Pivot && Parent != vessel)
 				{
-					World.SolarSystem.RemoveArtificialBody(Parent as Pivot);
+					World.RemoveArtificialBody(Parent.Guid, this);
 					Destroy(Parent.gameObject);
 				}
 
 				Parent = vessel;
-				SendStatsMessage();
 			}
 		}
 
+		/// <inheritdoc/>
 		public override void ExitVessel(bool forceExit)
 		{
 			if (!IsKinematic)
 			{
-				ArtificialBody artificialBody = !(Parent is SpaceObjectVessel)
+				ArtificialBody artificialBody = Parent is not SpaceObjectVessel
 					? Parent as ArtificialBody
 					: (Parent as SpaceObjectVessel).MainVessel;
 				if (artificialBody == null)
@@ -560,9 +398,7 @@ namespace ZeroGravity.Objects
 				}
 				else
 				{
-					Pivot pivot = (Pivot)(Parent = Pivot.Create(SpaceObjectType.CorpsePivot, Guid, artificialBody,
-						isMainObject: false));
-					SendStatsMessage();
+					Parent = Pivot.Create(SpaceObjectType.CorpsePivot, Guid, artificialBody, isMainObject: false);
 				}
 			}
 		}
@@ -604,61 +440,23 @@ namespace ZeroGravity.Objects
 			transform.position = corpseParts[hipsKey].Trans.position;
 			transform.rotation = corpseParts[hipsKey].Trans.rotation;
 			corpseParts[hipsKey].Trans.parent = parent;
-			float num = Time.time - movementReceivedTime;
-			if (!IsKinematic)
-			{
-				if (RigidBody.linearVelocity.IsEpsilonEqual(Vector3.zero, 0.1f) &&
-				    RigidBody.angularVelocity.IsEpsilonEqual(Vector3.zero, 0.5f))
-				{
-					velocityCheckTimer += Time.deltaTime;
-					if (velocityCheckTimer > 1f)
-					{
-						SendMovementMessage();
-						ToggleKinematic(value: true);
-					}
-				}
-				else
-				{
-					velocityCheckTimer = 0f;
-				}
-			}
-			else if (movementReceivedTime > 0f && num < 1f)
-			{
-				transform.localPosition = Vector3.Lerp(transform.localPosition, movementTargetLocalPosition,
-					Mathf.Pow(num, 0.5f));
-				transform.localRotation = Quaternion.Slerp(transform.localRotation,
-					movementTargetLocalRotation, Mathf.Pow(num, 0.5f));
-			}
-			else if (num > 1f && num - Time.deltaTime <= 1f)
-			{
-				ToggleKinematic(value: false);
-				RigidBody.linearVelocity = movementVelocity;
-				RigidBody.angularVelocity = movementAngularVelocity;
-			}
 
-			takeoverTimer += Time.deltaTime;
+			float num = Time.time - _movementReceivedTime;
+			if (_movementReceivedTime > 0f && num < 1f)
+			{
+				transform.position = Vector3.Lerp(transform.position, _movementTargetPosition,
+					Mathf.Pow(num, 0.5f));
+				transform.rotation = Quaternion.Slerp(transform.rotation,
+					_movementTargetRotation, Mathf.Pow(num, 0.5f));
+				RigidBody.linearVelocity = Vector3.Lerp(RigidBody.linearVelocity, _movementTargetVelocity,
+					Mathf.Pow(num, 0.5f));
+				RigidBody.angularVelocity = Vector3.Lerp(RigidBody.angularVelocity, _movementTargetAngularVelocity,
+					Mathf.Pow(num, 0.5f));
+			}
 		}
 
 		public void ToggleKinematic(bool value)
 		{
-			if (value)
-			{
-				if (takeoverTrigger == null)
-				{
-					takeoverTrigger = gameObject.AddComponent<SphereCollider>();
-					takeoverTrigger.isTrigger = true;
-				}
-			}
-			else
-			{
-				if (takeoverTrigger != null)
-				{
-					Destroy(takeoverTrigger);
-				}
-
-				velocityCheckTimer = 0f;
-			}
-
 			RigidBody.isKinematic = value;
 		}
 
@@ -666,7 +464,6 @@ namespace ZeroGravity.Objects
 		{
 			if (IsKinematic)
 			{
-				takeoverTimer = 0f;
 				AddForce(relativeVelocity, ForceMode.VelocityChange);
 			}
 		}
@@ -697,11 +494,13 @@ namespace ZeroGravity.Objects
 			InventorySlot inventorySlot2 =
 				CurrentOutfit.InventorySlots.Values.FirstOrDefault((InventorySlot m) =>
 					m.SlotGroup == InventorySlot.Group.Helmet);
-			Dictionary<short, InventorySlot> dictionary = new Dictionary<short, InventorySlot>();
-			dictionary.Add(-1, Inventory.HandsSlot);
-			dictionary.Add(-2, Inventory.OutfitSlot);
-			dictionary.Add(inventorySlot.SlotID, inventorySlot);
-			dictionary.Add(inventorySlot2.SlotID, inventorySlot2);
+			Dictionary<short, InventorySlot> dictionary = new Dictionary<short, InventorySlot>
+			{
+				{ -1, Inventory.HandsSlot },
+				{ -2, Inventory.OutfitSlot },
+				{ inventorySlot.SlotID, inventorySlot },
+				{ inventorySlot2.SlotID, inventorySlot2 }
+			};
 			return dictionary;
 		}
 

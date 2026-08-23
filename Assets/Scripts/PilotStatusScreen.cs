@@ -1,8 +1,6 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using OpenHellion;
-using UnityEngine.Serialization;
 using ZeroGravity;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -70,10 +68,6 @@ public class PilotStatusScreen : MonoBehaviour
 
 	public GameObject System;
 
-	[FormerlySerializedAs("_worldState")] [SerializeField] private World _world;
-
-	private PilotOverlayUI ParentPilot => _world.InWorldPanels.Pilot;
-
 	private void Start()
 	{
 		NotActive.SetActive(value: true);
@@ -81,46 +75,46 @@ public class PilotStatusScreen : MonoBehaviour
 		EngNotAvailableLabel.text = Localization.EngineNotAvailable.ToUpper();
 	}
 
-	public void UpdateSystemsInfo()
+	public void UpdateSystemsInfo(Ship parentShip)
 	{
 		if (ArmorSlot == null)
 		{
-			ArmorSlot = ParentPilot.ParentShip.VesselBaseSystem.MachineryPartSlots
-				.Where((SceneMachineryPartSlot m) => m.Scope == MachineryPartSlotScope.Armor).FirstOrDefault();
+			ArmorSlot = parentShip.VesselBaseSystem.MachineryPartSlots
+				.FirstOrDefault((SceneMachineryPartSlot m) => m.Scope == MachineryPartSlotScope.Armor);
 		}
 
-		OffTargetAssistant.Activate(_world.OffSpeedHelper);
-		float num = ParentPilot.ParentShip.Health / ParentPilot.ParentShip.MaxHealth;
+		OffTargetAssistant.Activate(parentShip.OffSpeedHelper);
+		float num = parentShip.Health / parentShip.MaxHealth;
 		HealthValue.text = FormatHelper.Percentage(num);
 		HealthFiller.fillAmount = num;
 		HPDanger.Activate(num < 0.2f);
-		if (ParentPilot.ParentShip.RCS != null)
+		if (parentShip.RCS != null)
 		{
-			float num2 = ParentPilot.ParentShip.RCS.ResourceContainers[0].Compartments[0].Capacity -
-			             ParentPilot.ParentShip.RCS.ResourceContainers[0].Compartments[0].AvailableCapacity;
-			float capacity = ParentPilot.ParentShip.RCS.ResourceContainers[0].Compartments[0].Capacity;
+			float num2 = parentShip.RCS.ResourceContainers[0].Compartments[0].Capacity -
+			             parentShip.RCS.ResourceContainers[0].Compartments[0].AvailableCapacity;
+			float capacity = parentShip.RCS.ResourceContainers[0].Compartments[0].Capacity;
 			float num3 = num2 / capacity;
 			RCSValue.text = FormatHelper.Percentage(num3);
 			RCSFuel.fillAmount = num3;
-			RCSFuel.color = ((!(num3 < 0.2f)) ? Colors.Orange : Colors.Red);
-			RCSStatus.color = ((ParentPilot.ParentShip.RCS.Status != SystemStatus.Online)
+			RCSFuel.color = num3 < 0.2f ? Colors.Red : Colors.Orange;
+			RCSStatus.color = parentShip.RCS.Status != SystemStatus.Online
 				? Colors.GrayDefault
-				: Colors.White);
+				: Colors.White;
 		}
 
-		if (ParentPilot.ParentShip.Engine != null)
+		if (parentShip.Engine != null)
 		{
-			float num4 = ParentPilot.ParentShip.Engine.ResourceContainers[0].Compartments[0].Capacity -
-			             ParentPilot.ParentShip.Engine.ResourceContainers[0].Compartments[0].AvailableCapacity;
-			float capacity2 = ParentPilot.ParentShip.Engine.ResourceContainers[0].Compartments[0].Capacity;
+			float num4 = parentShip.Engine.ResourceContainers[0].Compartments[0].Capacity -
+			             parentShip.Engine.ResourceContainers[0].Compartments[0].AvailableCapacity;
+			float capacity2 = parentShip.Engine.ResourceContainers[0].Compartments[0].Capacity;
 			float val = num4 / capacity2;
 			EngineValue.text = FormatHelper.Percentage(val);
-			EngineStatus.text = ParentPilot.ParentShip.Engine.GetStatus(out var color);
+			EngineStatus.text = parentShip.Engine.GetStatus(out var color);
 			EngineStatus.color = color;
-			ENGStatus.color = ((ParentPilot.ParentShip.Engine.Status != SystemStatus.Online)
+			ENGStatus.color = (parentShip.Engine.Status != SystemStatus.Online)
 				? Colors.GrayDefault
-				: Colors.White);
-			EngPowerUp.SetActive(ParentPilot.ParentShip.Engine.Status == SystemStatus.Powerup);
+				: Colors.White;
+			EngPowerUp.SetActive(parentShip.Engine.Status == SystemStatus.Powerup);
 			EngineNotAvailable.Activate(value: false);
 		}
 		else
@@ -129,17 +123,17 @@ public class PilotStatusScreen : MonoBehaviour
 			EngineNotAvailable.Activate(value: true);
 		}
 
-		if (ParentPilot.ParentShip.Capacitor != null)
+		if (parentShip.Capacitor != null)
 		{
-			float num5 = ParentPilot.ParentShip.Capacitor.Capacity / ParentPilot.ParentShip.Capacitor.MaxCapacity;
+			float num5 = parentShip.Capacitor.Capacity / parentShip.Capacitor.MaxCapacity;
 			PowerValue.text = FormatHelper.Percentage(num5);
 			Power.fillAmount = num5;
 			PowerDanger.SetActive(num5 < 0.2f);
 		}
 
-		WarningsUpdate();
-		if (ParentPilot.ParentShip.ExposureDamage * SpaceObjectVessel.VesselDecayRateMultiplier * 3600.0 >
-		    ParentPilot.ParentShip.Armor * 3600f)
+		WarningsUpdate(parentShip);
+		if (parentShip.ExposureDamage * SpaceObjectVessel.VesselDecayRateMultiplier * 3600.0 >
+		    parentShip.Armor * 3600f)
 		{
 			Armor.color = Colors.FormatedRed;
 		}
@@ -148,7 +142,7 @@ public class PilotStatusScreen : MonoBehaviour
 			Armor.color = Colors.ArmorActive;
 		}
 
-		if ((((object)ArmorSlot != null) ? ArmorSlot.Item : null) is not null)
+		if (((ArmorSlot is not null) ? ArmorSlot.Item : null) is not null)
 		{
 			NaniteFiller.fillAmount = ArmorSlot.Item.Health / ArmorSlot.Item.MaxHealth;
 		}
@@ -163,16 +157,16 @@ public class PilotStatusScreen : MonoBehaviour
 		NotActive.SetActive(toggle);
 	}
 
-	public void WarningsUpdate()
+	public void WarningsUpdate(Ship parentShip)
 	{
 		Breach.Activate(value: false);
 		Fire.Activate(value: false);
 		Gravity.Activate(value: false);
-		CheckSystems();
-		if (ParentPilot.ParentShip != null)
+		CheckSystems(parentShip);
+		if (parentShip != null)
 		{
 			SceneTriggerRoom[] componentsInChildren =
-				ParentPilot.ParentShip.MainVessel.GetComponentsInChildren<SceneTriggerRoom>();
+				parentShip.MainVessel.GetComponentsInChildren<SceneTriggerRoom>();
 			foreach (SceneTriggerRoom sceneTriggerRoom in componentsInChildren)
 			{
 				if (sceneTriggerRoom.Breach)
@@ -205,10 +199,10 @@ public class PilotStatusScreen : MonoBehaviour
 		}
 	}
 
-	public void CheckSystems()
+	public void CheckSystems(Ship parentShip)
 	{
 		bool value = false;
-		foreach (SubSystem value2 in ParentPilot.ParentShip.SubSystems.Values)
+		foreach (SubSystem value2 in parentShip.SubSystems.Values)
 		{
 			if (value2.SecondaryStatus == SystemSecondaryStatus.Defective)
 			{
@@ -216,7 +210,7 @@ public class PilotStatusScreen : MonoBehaviour
 			}
 		}
 
-		foreach (Generator value3 in ParentPilot.ParentShip.Generators.Values)
+		foreach (Generator value3 in parentShip.Generators.Values)
 		{
 			if (value3.SecondaryStatus == SystemSecondaryStatus.Defective)
 			{

@@ -1,11 +1,6 @@
 using System;
-using System.Collections;
-using System.Linq;
 using OpenHellion;
-using OpenHellion.Net;
 using UnityEngine;
-using ZeroGravity.Math;
-using ZeroGravity.Network;
 
 namespace ZeroGravity.Objects
 {
@@ -19,25 +14,15 @@ namespace ZeroGravity.Objects
 
 		[NonSerialized] public GameObject GeometryRoot;
 
-		[NonSerialized] public GameObject GeometryPlaceholder;
-
-		protected Rigidbody ArtificialRigidbody;
+		[NonSerialized] public GameObject GeometryPlaceholder; // TODO remove this if possible
 
 		public bool IsInVisibilityRange = true;
 
 		public Quaternion? TargetRotation;
 
-		[NonSerialized] public bool DelayedSubscribeRequested;
+		public Vector3? TargetPosition;
 
-		private GameObject _otherCharacterGeometryRoot;
-
-		private bool _isDummyObject;
-
-		private Vector3 _forward = Vector3.forward;
-
-		private Vector3 _up = Vector3.up;
-
-		public Vector3D RotationVec = Vector3D.Zero;
+		public Vector3 RotationVec = Vector3.zero;
 
 		public long Guid { get; set; }
 
@@ -45,136 +30,25 @@ namespace ZeroGravity.Objects
 
 		public virtual SpaceObject Parent { get; set; }
 
-		public bool IsSubscribedTo { get; private set; }
+		public virtual Vector3 Velocity => Vector3.zero;
 
 		public bool SceneObjectsLoaded { get; protected set; }
-
-		private bool SpawnRequested { get; set; }
-
-		public bool IsDummyObject
-		{
-			get => _isDummyObject;
-			protected set
-			{
-				if (_isDummyObject == value)
-				{
-					return;
-				}
-
-				if (this is SpaceObjectVessel && !_isDummyObject && value)
-				{
-					SpaceObjectVessel spaceObjectVessel = this as SpaceObjectVessel;
-					spaceObjectVessel!.DummyDockedVessels = spaceObjectVessel.AllDockedVessels.Select(
-						(SpaceObjectVessel m) => new DockedVesselData
-						{
-							GUID = m.Guid,
-							Type = m.Type,
-							Data = m.VesselData,
-							VesselObjects = null
-						}).ToList();
-				}
-
-				_isDummyObject = value;
-			}
-		}
-
-		public virtual Vector3D Position => Vector3D.Zero;
-
-		public virtual Vector3D Velocity => Vector3D.Zero;
-
-		public virtual Vector3 Forward
-		{
-			get => _forward;
-			set => _forward = !value.IsEpsilonEqual(Vector3.zero, 1E-10f) ? value : _forward;
-		}
-
-		public virtual Vector3 Up
-		{
-			get => _up;
-			set => _up = !value.IsEpsilonEqual(Vector3.zero, 1E-10f) ? value : _up;
-		}
 
 		public bool IsMainObject => MyPlayer.Instance != null && (MyPlayer.Instance.Parent == this ||
 		                                                          MyPlayer.Instance.IsInVesselHierarchy(
 			                                                          this as SpaceObjectVessel));
 
-		public Vector3 AngularVelocity { get; set; } = Vector3.zero;
-
-		protected virtual bool ShouldSetLocalTransform => MyPlayer.Instance == null ||
-		                                                  MyPlayer.Instance.Parent != this ||
-		                                                  MyPlayer.Instance.Parent is Pivot;
+		protected virtual bool ShouldSetLocalTransform => World == null || World.AnchorGuid != Guid;
 
 		protected virtual bool ShouldUpdateTransform => true;
 
 		private void Awake()
 		{
-			World ??= GameObject.Find("/World").GetComponent<World>();
+			World = World != null ? World : GameObject.Find("/World").GetComponent<World>();
 		}
 
 		public virtual void DestroyGeometry()
 		{
-			IsDummyObject = true;
-			SpawnRequested = false;
-		}
-
-		public virtual void LoadGeometry()
-		{
-			IsDummyObject = false;
-			RequestSpawn();
-		}
-
-		public virtual void OnSubscribe()
-		{
-		}
-
-		public virtual void OnUnsubscribe()
-		{
-		}
-
-		public virtual void OnRequestSpawn()
-		{
-		}
-
-		public virtual void Subscribe()
-		{
-			if (!IsSubscribedTo)
-			{
-				StartCoroutine(SubscribeCoroutine());
-			}
-		}
-
-		private IEnumerator SubscribeCoroutine()
-		{
-			yield return new WaitUntil(() => SceneObjectsLoaded);
-			DelayedSubscribeRequested = false;
-			NetworkController.Instance.RequestObjectSubscribe(Guid);
-			IsSubscribedTo = true;
-			OnSubscribe();
-		}
-
-		public virtual void Unsubscribe()
-		{
-			if (IsSubscribedTo)
-			{
-				NetworkController.Instance.RequestObjectUnsubscribe(Guid);
-				IsSubscribedTo = false;
-				OnUnsubscribe();
-			}
-		}
-
-		public void RequestSpawn()
-		{
-			if (!SpawnRequested)
-			{
-				NetworkController.Instance.RequestObjectSpawn(Guid);
-				SpawnRequested = true;
-				OnRequestSpawn();
-			}
-		}
-
-		public virtual void ParseSpawnData(SpawnObjectResponseData data)
-		{
-			SpawnRequested = false;
 		}
 
 		private static T GetParent<T>(SpaceObject parent) where T : SpaceObject
@@ -203,12 +77,20 @@ namespace ZeroGravity.Objects
 		}
 
 		public virtual void SetTargetPositionAndRotation(Vector3? localPosition, Quaternion? localRotation,
-			bool instant = false, double time = -1.0)
+			bool instant = false)
 		{
 			IsInVisibilityRange = true;
 			if (localPosition.HasValue && ShouldSetLocalTransform)
 			{
-				transform.localPosition = localPosition.Value;
+				if (instant)
+				{
+					transform.localPosition = localPosition.Value;
+					TargetPosition = null;
+				}
+				else
+				{
+					TargetPosition = localPosition.Value;
+				}
 			}
 
 			if (!localRotation.HasValue)
@@ -218,13 +100,7 @@ namespace ZeroGravity.Objects
 
 			if (instant)
 			{
-				Forward = localRotation.Value * Vector3.forward;
-				Up = localRotation.Value * Vector3.up;
-				if (ShouldSetLocalTransform)
-				{
-					transform.localRotation = localRotation.Value;
-				}
-
+				transform.localRotation = localRotation.Value;
 				TargetRotation = null;
 			}
 			else
@@ -233,23 +109,9 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public virtual void SetTargetPositionAndRotation(Vector3? localPosition, Vector3? forward, Vector3? up,
-			bool instant = false, double time = -1.0)
-		{
-			if (forward.HasValue && up.HasValue)
-			{
-				SetTargetPositionAndRotation(localPosition, Quaternion.LookRotation(forward.Value, up.Value), instant,
-					time);
-			}
-			else
-			{
-				SetTargetPositionAndRotation(localPosition, null, instant, time);
-			}
-		}
-
 		public virtual void ModifyPositionAndRotation(Vector3? position = null, Quaternion? rotation = null)
 		{
-			if (IsDummyObject || !IsInVisibilityRange)
+			if (!IsInVisibilityRange)
 			{
 				return;
 			}
@@ -257,47 +119,15 @@ namespace ZeroGravity.Objects
 			if (position.HasValue && ShouldSetLocalTransform)
 			{
 				transform.localPosition += position.Value;
+				if (TargetPosition.HasValue)
+				{
+					TargetPosition += position.Value;
+				}
 			}
 
 			if (rotation.HasValue)
 			{
-				if (ShouldSetLocalTransform)
-				{
-					transform.localRotation *= rotation.Value;
-				}
-
-				Quaternion quaternion = Quaternion.LookRotation(Forward, Up) * rotation.Value;
-				Forward = quaternion * Vector3.forward;
-				Up = quaternion * Vector3.up;
-			}
-
-			if ((position.HasValue || rotation.HasValue) && ArtificialRigidbody != null)
-			{
-				UpdateArtificialBodyPosition(updateChildren: true);
-				transform.hasChanged = false;
-			}
-		}
-
-		public virtual void UpdateArtificialBodyPosition(bool updateChildren)
-		{
-			if (ArtificialRigidbody != null && GeometryPlaceholder != null)
-			{
-				var position = GeometryPlaceholder.transform.position;
-				var rotation = GeometryPlaceholder.transform.rotation;
-				GeometryRoot.transform.position = position;
-				GeometryRoot.transform.rotation = rotation;
-				ArtificialRigidbody.position = position;
-				ArtificialRigidbody.rotation = rotation;
-			}
-		}
-
-		protected virtual void UpdatePositionAndRotation(bool setLocalPositionAndRotation)
-		{
-			if (ArtificialRigidbody != null && GeometryPlaceholder != null && transform.hasChanged)
-			{
-				ArtificialRigidbody.position = GeometryPlaceholder.transform.position;
-				ArtificialRigidbody.rotation = GeometryPlaceholder.transform.rotation;
-				transform.hasChanged = false;
+				transform.localRotation *= rotation.Value;
 			}
 		}
 	}

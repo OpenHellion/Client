@@ -53,7 +53,7 @@ namespace ZeroGravity.LevelDesign
 		public CargoBayData GetData()
 		{
 			CargoBayData cargoBayData = new CargoBayData();
-			cargoBayData.InSceneID = base.InSceneID;
+			cargoBayData.InSceneID = InSceneID;
 			cargoBayData.CargoCompartments = new List<CargoCompartmentData>
 				{ (!(CargoBayResources == null)) ? CargoBayResources.GetData() : null };
 			return cargoBayData;

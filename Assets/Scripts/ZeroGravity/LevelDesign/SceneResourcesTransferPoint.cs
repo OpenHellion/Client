@@ -32,12 +32,12 @@ namespace ZeroGravity.LevelDesign
 				{
 					new AttachPointTransformData
 					{
-						AttachPoint = base.transform,
+						AttachPoint = transform,
 						ItemType = ItemType.AltairPressurisedJetpack
 					},
 					new AttachPointTransformData
 					{
-						AttachPoint = base.transform,
+						AttachPoint = transform,
 						ItemType = ItemType.AltairHandDrillCanister
 					}
 				};

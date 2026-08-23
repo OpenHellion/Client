@@ -7,7 +7,7 @@ using BulletUnity.Debugging;
 
 namespace BulletUnity {
     /*
-        todo 
+        todo
         continuous collision detection ccd
         */
 	[AddComponentMenu("Physics Bullet/RigidBody")]
@@ -154,7 +154,7 @@ namespace BulletUnity {
                 }
                 _angularSleepingThreshold = value; }
         }
-        
+
         [SerializeField]
         bool _additionalDamping = false;
         public bool additionalDamping
@@ -319,7 +319,7 @@ namespace BulletUnity {
         public BDebug.DebugType debugType;
 
         /**
-        Creates or configures a RigidBody based on the current settings. Does not alter the internal state of this component in any way. 
+        Creates or configures a RigidBody based on the current settings. Does not alter the internal state of this component in any way.
         Can be used to create copies of this BRigidBody for use in other physics simulations.
         */
         public bool CreateOrConfigureRigidBody(ref RigidBody rb, ref BulletSharp.Math.Vector3 localInertia, CollisionShape cs, MotionState motionState)
@@ -371,7 +371,7 @@ namespace BulletUnity {
 
             rb.AngularVelocity = angularVelocity.ToBullet();
             rb.LinearVelocity = velocity.ToBullet();
-            
+
             rb.CollisionFlags = m_collisionFlags;
             rb.LinearFactor = _linearFactor.ToBullet();
             rb.AngularFactor = _angularFactor.ToBullet();
@@ -399,7 +399,7 @@ namespace BulletUnity {
                 isInWorld = false;
                 world.RemoveRigidBody(m_rigidBody);
             }
-            
+
             if (transform.localScale != UnityEngine.Vector3.one) {
 				Debug.LogErrorFormat("The local scale on {0} rigid body is not one. Bullet physics does not support scaling on a rigid body world transform. Instead alter the dimensions of the CollisionShape.", name);
             }
@@ -416,7 +416,7 @@ namespace BulletUnity {
                 m_motionState = new BGameObjectMotionState(transform);
             }
 
-            BulletSharp.RigidBody rb = (BulletSharp.RigidBody) m_collisionObject;
+			RigidBody rb = (RigidBody) m_collisionObject;
             CreateOrConfigureRigidBody(ref rb, ref _localInertia, cs, m_motionState);
             m_collisionObject = rb;
             m_collisionObject.UserObject = this;
@@ -513,7 +513,7 @@ namespace BulletUnity {
         /**
         Warning for single pulses use AddImpulse. AddForce should only be used over a period of time (several fixedTimeSteps or longer)
         The force accumulator is cleared after every StepSimulation call including interpolation StepSimulation calls which clear the force
-        accumulator and do nothing. 
+        accumulator and do nothing.
         */
         public void AddForce(UnityEngine.Vector3 force) {
             if (isInWorld) {
@@ -524,7 +524,7 @@ namespace BulletUnity {
         /**
          Warning for single pulses use AddImpulse. AddForce should only be used over a period of time (several fixedTimeSteps or longer)
          The force accumulator is cleared after every StepSimulation call including interpolation StepSimulation calls which clear the force
-         accumulator and do nothing. 
+         accumulator and do nothing.
          */
         public void AddForceAtPosition(UnityEngine.Vector3 force, UnityEngine.Vector3 relativePostion) {
             if (isInWorld) {
@@ -535,7 +535,7 @@ namespace BulletUnity {
         /**
          Warning for single pulses use AddImpulse. AddForce should only be used over a period of time (several fixedTimeSteps or longer)
          The force accumulator is cleared after every StepSimulation call including interpolation StepSimulation calls which clear the force
-         accumulator and do nothing. 
+         accumulator and do nothing.
          */
         public void AddTorque(UnityEngine.Vector3 torque) {
             if (isInWorld) {

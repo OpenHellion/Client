@@ -40,9 +40,9 @@ public class GlassPostEffect : MonoBehaviour
 		}
 		else
 		{
-			Debug.LogWarning(base.gameObject.name + ": Shader is not assigned. Disabling image effect.",
-				base.gameObject);
-			base.enabled = false;
+			Debug.LogWarning(gameObject.name + ": Shader is not assigned. Disabling image effect.",
+				gameObject);
+			enabled = false;
 		}
 
 		LowerVisor = 0f;
@@ -74,7 +74,7 @@ public class GlassPostEffect : MonoBehaviour
 	{
 		if ((bool)mat)
 		{
-			Object.DestroyImmediate(mat);
+			DestroyImmediate(mat);
 		}
 	}
 

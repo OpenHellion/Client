@@ -65,9 +65,9 @@ namespace BulletUnity
             {
                 return;
             }
-            UnityEngine.Vector3 position = transform.position;
-            UnityEngine.Quaternion rotation = transform.rotation;
-            UnityEngine.Vector3 scale = m_localScaling;
+			Vector3 position = transform.position;
+			Quaternion rotation = transform.rotation;
+			Vector3 scale = m_localScaling;
             BUtility.DebugDrawCone(position, rotation, scale, radius, height, 1, Color.yellow);
         }
 

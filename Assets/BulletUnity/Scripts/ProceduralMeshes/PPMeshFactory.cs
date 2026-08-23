@@ -42,7 +42,7 @@ namespace BulletUnity
                 return null;
             }
 
-            Mesh mesh = (Mesh)GameObject.Instantiate(UserMesh);  //create a copy of UserMesh, dont overwrite prefabs
+            Mesh mesh = (Mesh)UnityEngine.Object.Instantiate(UserMesh);  //create a copy of UserMesh, dont overwrite prefabs
 
             mesh.ApplyMeshPostProcessing(autoWeldVertices, autoWeldThreshold, addBackFaceTriangles,
                  recalculateNormals, recalculateBounds, optimize);
@@ -213,7 +213,7 @@ namespace BulletUnity
                         Debug.Log("Must provide a mesh for UserDefinedMesh setting.");
                     }
 
-                    mesh = (Mesh)GameObject.Instantiate(settings.userMesh);
+                    mesh = (Mesh)UnityEngine.Object.Instantiate(settings.userMesh);
                     break;
                 case PrimitiveMeshOptions.Box:
                     mesh = ProceduralPrimitives.CreateMeshBox(settings.extents.x, settings.extents.y, settings.extents.z);

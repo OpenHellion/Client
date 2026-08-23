@@ -113,11 +113,12 @@ namespace ZeroGravity.Objects
 			StationMainVesselGUID = details.StationMainVesselGUID;
 		}
 
-		public bool CheckLocation(SpaceObjectVessel vessel)
+		public bool CheckLocation(World world, SpaceObjectVessel vessel)
 		{
 			return (!checkStation || (checkStation && StationMainVesselGUID == vessel.MainVessel.Guid)) &&
-			       (!checkCelestial || (checkCelestial && vessel.ParentCelestialBody.Guid == (long)CelestialGUID)) &&
-			       (!checkTag || (checkTag && SceneHelper.CompareTags(vessel.VesselData.Tag, Tag)));
+			       (!checkCelestial || world.SolarSystem.GetParentCelestialBody(
+				       world.LocalToWorldPosition(vessel.transform.position))?.Guid == (long)CelestialGUID) &&
+			       (!checkTag || (checkTag && SceneHelper.CompareTags(vessel.Tag, Tag)));
 		}
 	}
 }

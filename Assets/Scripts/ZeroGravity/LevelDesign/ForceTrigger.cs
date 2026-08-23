@@ -34,7 +34,7 @@ namespace ZeroGravity.LevelDesign
 
 			if (coli.gameObject == MyPlayer.Instance.gameObject)
 			{
-				MyPlayer.Instance.rigidBody.AddForce(base.transform.forward * ForceIntensity, ForceMode.VelocityChange);
+				MyPlayer.Instance.rigidBody.AddForce(transform.forward * ForceIntensity, ForceMode.VelocityChange);
 				return;
 			}
 
@@ -47,8 +47,8 @@ namespace ZeroGravity.LevelDesign
 				}
 
 				componentInParent.RigidBody.linearVelocity =
-					Vector3.ProjectOnPlane(componentInParent.RigidBody.linearVelocity, base.transform.forward) +
-					base.transform.forward * ForceIntensity;
+					Vector3.ProjectOnPlane(componentInParent.RigidBody.linearVelocity, transform.forward) +
+					transform.forward * ForceIntensity;
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace ZeroGravity.LevelDesign
 
 			if (coli.gameObject == MyPlayer.Instance.gameObject)
 			{
-				MyPlayer.Instance.rigidBody.AddForce(base.transform.forward * ForceIntensity, ForceMode.VelocityChange);
+				MyPlayer.Instance.rigidBody.AddForce(transform.forward * ForceIntensity, ForceMode.VelocityChange);
 				return;
 			}
 
@@ -74,8 +74,8 @@ namespace ZeroGravity.LevelDesign
 				}
 
 				componentInParent.RigidBody.linearVelocity =
-					Vector3.ProjectOnPlane(componentInParent.RigidBody.linearVelocity, base.transform.forward) +
-					base.transform.forward * ForceIntensity;
+					Vector3.ProjectOnPlane(componentInParent.RigidBody.linearVelocity, transform.forward) +
+					transform.forward * ForceIntensity;
 			}
 		}
 	}

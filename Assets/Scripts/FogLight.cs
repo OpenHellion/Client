@@ -50,7 +50,7 @@ public class FogLight : LightOverride
 
 	private bool directionalShadow
 	{
-		get { return m_Shadows && base.type == Type.Directional; }
+		get { return m_Shadows && type == Type.Directional; }
 	}
 
 	public override bool GetForceOn()

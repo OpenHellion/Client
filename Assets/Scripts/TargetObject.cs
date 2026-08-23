@@ -54,23 +54,15 @@ public class TargetObject
 		}
 	}
 
-	public float Distance => (float)(MyPlayer.Instance.Parent.Position - ArtificialBody.Position).Magnitude;
-
-	public float DistanceFromCamera => ((ArtificialBody.Position - MyPlayer.Instance.Parent.Position).ToVector3() -
-	                                    Quaternion.LookRotation(MyPlayer.Instance.Parent.Forward,
-		                                    MyPlayer.Instance.Parent.Up) *
-	                                    MyPlayer.Instance.FpsController.MainCamera.transform.position).magnitude;
+	public float Distance => (float)(MyPlayer.Instance.Parent.transform.position - ArtificialBody.transform.position).magnitude;
 
 	public float AngleFromCameraForward
 	{
 		get
 		{
-			Quaternion quaternion =
-				Quaternion.LookRotation(MyPlayer.Instance.Parent.Forward, MyPlayer.Instance.Parent.Up);
-			Vector3 to = quaternion * MyPlayer.Instance.FpsController.MainCamera.transform.forward;
+			Vector3 to = MyPlayer.Instance.transform.rotation * MyPlayer.Instance.FpsController.MainCamera.transform.forward;
 			return Vector3.Angle(
-				((ArtificialBody.Position - MyPlayer.Instance.Parent.Position).ToVector3() -
-				 quaternion * MyPlayer.Instance.FpsController.MainCamera.transform.position).normalized, to);
+				(ArtificialBody.transform.position - MyPlayer.Instance.transform.rotation * MyPlayer.Instance.FpsController.MainCamera.transform.position).normalized, to);
 		}
 	}
 }

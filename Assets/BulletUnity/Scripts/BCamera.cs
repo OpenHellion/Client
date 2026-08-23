@@ -8,7 +8,7 @@ public class BCamera {
 
     public static CollisionObject ScreenPointToRay (Camera cam, Vector3 inputScreenCoords, CollisionFilterGroups rayFilterGroup, CollisionFilterGroups rayFilterMask) {
         /* Returns the first CollisionObject the ray hits.
-         * Requires as Input: 
+         * Requires as Input:
          * - Camera cam, UnityCamera from which the ray should be cast, e.g. Camera.main
          * - Vector3 inputScreenCoords, the screenpoint through which the ray should be cast. E.g. mousepointer Input.mousePosition
          * - CollisionFilterGroups rayFilterGroup, of which FilterGroup the ray belongs to
@@ -21,7 +21,7 @@ public class BCamera {
         BulletSharp.Math.Vector3 rayFrom = cam.transform.position.ToBullet();
         BulletSharp.Math.Vector3 rayTo = cam.ScreenToWorldPoint(new Vector3(inputScreenCoords.x, inputScreenCoords.y, cam.farClipPlane)).ToBullet();
 
-        BulletSharp.ClosestRayResultCallback rayCallBack = new BulletSharp.ClosestRayResultCallback(ref rayFrom, ref rayTo);
+		ClosestRayResultCallback rayCallBack = new ClosestRayResultCallback(ref rayFrom, ref rayTo);
         rayCallBack.CollisionFilterGroup = (short)rayFilterGroup;
         rayCallBack.CollisionFilterMask = (short)rayFilterMask;
         //BulletSharp.AllHitsRayResultCallback rayCallBack = new BulletSharp.AllHitsRayResultCallback(rayFrom, rayTo);

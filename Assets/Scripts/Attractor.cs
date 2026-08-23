@@ -22,7 +22,7 @@ public class Attractor : MonoBehaviour
 		if (m_Particles.Length >= 1)
 		{
 			int particles = pSys.GetParticles(m_Particles);
-			Vector3 position = base.transform.position;
+			Vector3 position = transform.position;
 			if (!worldSpaceParticles)
 			{
 				position -= pSys.transform.position;

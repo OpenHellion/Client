@@ -9,7 +9,7 @@ public class PowerSupplyPanelUIHelper : MonoBehaviour
 
 	private void Start()
 	{
-		GameObject gameObject = Object.Instantiate(PowerSupplyPanelPrefab, PowerSupplyPanelRoot.transform);
+		GameObject gameObject = Instantiate(PowerSupplyPanelPrefab, PowerSupplyPanelRoot.transform);
 		gameObject.transform.Reset();
 		gameObject.transform.localScale = Vector3.one;
 	}

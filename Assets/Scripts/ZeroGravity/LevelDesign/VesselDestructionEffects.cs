@@ -53,7 +53,7 @@ namespace ZeroGravity.LevelDesign
 			if (flag)
 			{
 				isActive = false;
-				Object.Destroy(base.gameObject);
+				Destroy(gameObject);
 			}
 		}
 	}

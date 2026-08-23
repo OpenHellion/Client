@@ -189,11 +189,11 @@ public class HelmetRadar : MonoBehaviour
 			return;
 		}
 
-		if (radarItems.Count > 0 && _currentTarget != null && _currentTarget.AB != null)
+		if (radarItems.Count > 0 && _currentTarget != null && _currentTarget.ArtificialBody != null)
 		{
-			Vector3 vector = _currentTarget.AB.transform.position - MyPlayer.Instance.transform.position;
-			Vector3 vector2 = (_currentTarget.AB.Velocity - MyPlayer.Instance.Parent.Velocity -
-			                   MyPlayer.Instance.rigidBody.linearVelocity.ToVector3D()).ToVector3();
+			Vector3 vector = _currentTarget.ArtificialBody.transform.position - MyPlayer.Instance.transform.position;
+			Vector3 vector2 = _currentTarget.ArtificialBody.Velocity - MyPlayer.Instance.Parent.Velocity -
+			                   MyPlayer.Instance.rigidBody.linearVelocity;
 			Vector3 vector3 = Vector3.Project(vector2, vector.normalized);
 			Vector3 vector4 = Vector3.ProjectOnPlane(vector2, vector.normalized);
 			OnSpeedValText.text =
@@ -233,10 +233,9 @@ public class HelmetRadar : MonoBehaviour
 
 	private void ReloadRadarElements()
 	{
-		Vector3 position = MyPlayer.Instance.FpsController.MainCamera.transform.position;
 		List<HelmetRadarTargetElement> list2 = radarItems.Where((HelmetRadarTargetElement m) =>
-			m.AB == null || !m.AB.gameObject.activeInHierarchy || !(m.AB is SpaceObjectVessel) ||
-			!(m.AB as SpaceObjectVessel).IsMainVessel || (MyPlayer.Instance.Parent.Position - m.AB.Position).Magnitude >
+			m.ArtificialBody == null || !m.ArtificialBody.gameObject.activeInHierarchy || m.ArtificialBody is not SpaceObjectVessel ||
+			!(m.ArtificialBody as SpaceObjectVessel).IsMainVessel || (MyPlayer.Instance.Parent.transform.position - m.ArtificialBody.transform.position).magnitude >
 			RadarScanningRange).ToList();
 		foreach (HelmetRadarTargetElement item in list2)
 		{
@@ -252,10 +251,10 @@ public class HelmetRadar : MonoBehaviour
 			_currentTarget.IsSelected = true;
 		}
 
-		List<ArtificialBody> list = radarItems.Select((HelmetRadarTargetElement m) => m.AB).ToList();
-		foreach (ArtificialBody item2 in SolarSystem.ArtificialBodyReferences.Where((ArtificialBody m) =>
+		List<ArtificialBody> list = radarItems.Select((HelmetRadarTargetElement m) => m.ArtificialBody).ToList();
+		foreach (ArtificialBody item2 in _world.AllArtificialBodies.Where((ArtificialBody m) =>
 			         m is SpaceObjectVessel && (m as SpaceObjectVessel).IsMainVessel &&
-			         (MyPlayer.Instance.Parent.Position - m.Position).Magnitude <= RadarScanningRange &&
+			         (MyPlayer.Instance.Parent.transform.position - m.transform.position).magnitude <= RadarScanningRange &&
 			         !list.Contains(m)))
 		{
 			CreateUIElement(item2);
@@ -265,11 +264,11 @@ public class HelmetRadar : MonoBehaviour
 		{
 			radarItems[i].transform.SetSiblingIndex(i);
 			float distance = Vector3.Distance(MyPlayer.Instance.FpsController.MainCamera.transform.position,
-				radarItems[i].AB.transform.position);
+				radarItems[i].ArtificialBody.transform.position);
 			radarItems[i].Distance = distance;
-			if (radarItems[i].AB is Ship)
+			if (radarItems[i].ArtificialBody is Ship)
 			{
-				radarItems[i].Name = (radarItems[i].AB as Ship).CustomName.ToUpper();
+				radarItems[i].Name = (radarItems[i].ArtificialBody as Ship).CustomName.ToUpper();
 			}
 		}
 
@@ -301,14 +300,13 @@ public class HelmetRadar : MonoBehaviour
 				radarItem.IsSelected = false;
 			}
 
-			Vector3 position2 = (radarItem.AB.Position - MyPlayer.Instance.Parent.Position).ToVector3() -
-			                    MyPlayer.Instance.FpsController.MainCamera.transform.position;
+			Vector3 position2 = radarItem.ArtificialBody.transform.position - MyPlayer.Instance.FpsController.MainCamera.transform.position;
 			if (position2.magnitude < 1000f)
 			{
-				position2 = radarItem.AB.transform.position;
-				if (radarItem.AB is Pivot)
+				position2 = radarItem.ArtificialBody.transform.position;
+				if (radarItem.ArtificialBody is Pivot)
 				{
-					Pivot pivot = radarItem.AB as Pivot;
+					Pivot pivot = radarItem.ArtificialBody as Pivot;
 					if (pivot.ChildType == SpaceObjectType.Player)
 					{
 						Player player = _world.GetPlayer(pivot.Guid);
@@ -353,7 +351,7 @@ public class HelmetRadar : MonoBehaviour
 			gameObject.SetActive(value: true);
 			HelmetRadarTargetElement component = gameObject.GetComponent<HelmetRadarTargetElement>();
 			component.IsSelected = false;
-			component.AB = ab;
+			component.ArtificialBody = ab;
 			if (_currentTarget == null)
 			{
 				_currentTarget = component;
@@ -387,17 +385,17 @@ public class HelmetRadar : MonoBehaviour
 
 	private void SetTargetSprite(HelmetRadarTargetElement target)
 	{
-		if (target.AB is Asteroid)
+		if (target.ArtificialBody is Asteroid)
 		{
-			target.Icon.sprite = SpriteManager.Instance.GetSprite((target.AB as Asteroid).Type);
+			target.Icon.sprite = SpriteManager.Instance.GetSprite((target.ArtificialBody as Asteroid).Type);
 		}
-		else if (target.AB is Pivot)
+		else if (target.ArtificialBody is Pivot)
 		{
-			target.Icon.sprite = SpriteManager.Instance.GetSprite((target.AB as Pivot).Type);
+			target.Icon.sprite = SpriteManager.Instance.GetSprite((target.ArtificialBody as Pivot).Type);
 		}
-		else if (target.AB is SpaceObjectVessel)
+		else if (target.ArtificialBody is SpaceObjectVessel)
 		{
-			target.Icon.sprite = SpriteManager.Instance.GetSprite(target.AB as SpaceObjectVessel, checkDocked: true);
+			target.Icon.sprite = SpriteManager.Instance.GetSprite(target.ArtificialBody as SpaceObjectVessel, checkDocked: true);
 		}
 	}
 
@@ -439,7 +437,7 @@ public class HelmetRadar : MonoBehaviour
 
 	private void SetTarget(HelmetRadarTargetElement target = null)
 	{
-		if (target != null && target.AB != null)
+		if (target != null && target.ArtificialBody != null)
 		{
 			TargetNameText.text = target.Name;
 			HasTargetPanel.SetActive(value: true);
@@ -483,7 +481,7 @@ public class HelmetRadar : MonoBehaviour
 			if (RadarActive && radarItems.Count > 0)
 			{
 				ParticleSystem.MainModule main = MyPlayer.Instance.FpsController.StarDustParticle.main;
-				main.customSimulationSpace = radarItems[_currTargetIndex].AB.transform;
+				main.customSimulationSpace = radarItems[_currTargetIndex].ArtificialBody.transform;
 				MyPlayer.Instance.FpsController.StarDustParticle.gameObject.SetActive(value: true);
 				MyPlayer.Instance.FpsController.StarDustParticle.Play();
 			}

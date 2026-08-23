@@ -27,6 +27,6 @@ public class Rotate : MonoBehaviour
 
 	public virtual void Update()
 	{
-		base.transform.Rotate(rotation * Time.deltaTime, local ? Space.Self : Space.World);
+		transform.Rotate(rotation * Time.deltaTime, local ? Space.Self : Space.World);
 	}
 }

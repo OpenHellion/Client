@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using OpenHellion.Net;
 using OpenHellion.Social;
 using OpenHellion.Social.RichPresence;
@@ -13,12 +11,15 @@ using UnityEngine.InputSystem;
 using ZeroGravity;
 using ZeroGravity.Data;
 using ZeroGravity.Effects;
+using ZeroGravity.Math;
 using ZeroGravity.LevelDesign;
 using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
 using Cysharp.Threading.Tasks;
 using System.Net.Sockets;
+using OpenHellion.Net.Message;
+using System.Collections.Concurrent;
 
 namespace OpenHellion
 {
@@ -54,9 +55,7 @@ namespace OpenHellion
 
 		public List<DebrisField> DebrisFields = new List<DebrisField>();
 
-		public Texture2D DefaultCursor;
-
-		[Title("Object references")]
+		[Title("Solar system and prefabs")]
 		private SolarSystem _solarSystem;
 
 		public GameObject SolarSystemRoot;
@@ -77,34 +76,45 @@ namespace OpenHellion
 
 		public Transform PlanetsSunLightTransform;
 
+		public Vector3D OriginWorldPosition { get; private set; }
+
+		public long AnchorGuid { get; private set; }
+
 		public RenderToCubeMap CubemapRenderer;
 
-		public Map Map;
+		public ZeroGravity.ShipComponents.Map Map;
 
 		public DebrisFieldEffect DebrisEffect;
 
 		public EffectPrefabs EffectPrefabs;
 
+		public Texture2D DefaultCursor;
+
+		[Title("Quests")]
 		public QuestCollectionObject QuestCollection;
-
-		private volatile bool _logoutRequestSent;
-
-		[NonSerialized] public readonly Dictionary<long, OtherPlayer> Players = new Dictionary<long, OtherPlayer>();
-
-		[NonSerialized]
-		public readonly Dictionary<long, DynamicObject> DynamicObjects = new Dictionary<long, DynamicObject>();
-
-		[NonSerialized] public readonly Dictionary<long, Corpse> Corpses = new Dictionary<long, Corpse>();
-
-		[NonSerialized]
-		public readonly Dictionary<long, SpaceObjectVessel> ActiveVessels = new Dictionary<long, SpaceObjectVessel>();
-
-		[NonSerialized] public List<ItemIngredientsData> ItemsIngredients;
 
 		[NonSerialized] public List<Quest> Quests = new List<Quest>();
 
-		// TODO: Move to correct class.
-		[NonSerialized] public bool OffSpeedHelper = true;
+		private volatile bool _logoutRequestSent;
+
+		public IEnumerable<OtherPlayer> AllPlayers => _spaceObjects.Values.OfType<OtherPlayer>();
+
+		public IEnumerable<DynamicObject> AllDynamicObjects => _spaceObjects.Values.OfType<DynamicObject>();
+
+		public IEnumerable<Corpse> AllCorpses => _spaceObjects.Values.OfType<Corpse>();
+
+		[NonSerialized] public readonly ConcurrentDictionary<long, SpaceObjectVessel> ActiveVessels = new();
+
+		public IEnumerable<ArtificialBody> AllArtificialBodies => _spaceObjects.Values.OfType<ArtificialBody>();
+
+		private readonly ConcurrentDictionary<long, SpaceObject> _spaceObjects = new();
+
+		private readonly HashSet<long> _pendingSpawn = new();
+		private readonly HashSet<long> _spawnInFlight = new();
+		private readonly Dictionary<long, float> _failedSpawnTimes = new();
+		private const float SpawnRetryCooldown = 5f;
+
+		[NonSerialized] public List<ItemIngredientsData> ItemsIngredients;
 
 		private bool _openMainSceneStarted;
 
@@ -113,13 +123,12 @@ namespace OpenHellion
 
 		[NonSerialized] public DateTime? ServerRestartTime;
 
-		// Can't these two be done with the underlying network transport?
+		// TODO move to NetworkController
 		private float _lastLatencyMessageTime = -1f;
 		private volatile int _latencyMs;
 
-		public static volatile int MainThreadID;
+		private long _lastAppliedParentGuid;
 
-		private Action _restoreMapDetails;
 
 		public double ExposureRange;
 
@@ -180,9 +189,11 @@ namespace OpenHellion
 
 			StaticData.LoadData();
 			Application.runInBackground = true;
-			MainThreadID = Thread.CurrentThread.ManagedThreadId;
 			_openMainSceneStarted = false;
 			_solarSystem = GetComponent<SolarSystem>();
+
+			ShipExteriorRoot.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+			ShipExteriorRoot.transform.localScale = Vector3.one;
 
 			Texture[] emblems = Resources.LoadAll<Texture>("Emblems");
 			SceneVesselEmblem.Textures = emblems.ToDictionary(x => x.name, y => y);
@@ -200,68 +211,13 @@ namespace OpenHellion
 			EventSystem.AddListener(typeof(KillPlayerMessage), KillPlayerMessageListener);
 			EventSystem.AddListener(typeof(LogOutResponse), LogOutResponseListener);
 			EventSystem.AddListener(typeof(DestroyObjectMessage), DestroyObjectMessageListener);
-			EventSystem.AddListener(typeof(SpawnObjectsResponse), SpawnObjectsResponseListener);
 			EventSystem.AddListener(typeof(MovementMessage), MovementMessageListener);
-			EventSystem.AddListener(typeof(DynamicObjectsInfoMessage), DynamicObjectsInfoMessageListener);
 			EventSystem.AddListener<PlayersOnServerResponse>(PlayersOnServerResponseListener);
 			EventSystem.AddListener(typeof(ConsoleMessage), ConsoleMessageListener);
 			EventSystem.AddListener(typeof(ShipCollisionMessage), ShipCollisionMessageListener);
 			EventSystem.AddListener(typeof(UpdateVesselDataMessage), UpdateVesselDataMessageListener);
 
 			Settings.LoadSettings(Settings.SettingsType.Game);
-		}
-
-		private void DynamicObjectsInfoMessageListener(NetworkData data)
-		{
-			DynamicObjectsInfoMessage dynamicObjectsInfoMessage = data as DynamicObjectsInfoMessage;
-			Debug.Assert(dynamicObjectsInfoMessage != null, nameof(dynamicObjectsInfoMessage) + " != null");
-			foreach (DynamicObjectInfo info in dynamicObjectsInfoMessage.Infos)
-			{
-				DynamicObject dynamicObject = GetObject(info.GUID, SpaceObjectType.DynamicObject) as DynamicObject;
-				if (dynamicObject != null && dynamicObject.Item != null)
-				{
-					dynamicObject.Item.ProcesStatsData(info.Stats);
-				}
-			}
-		}
-
-		private void SpawnObjectsResponseListener(NetworkData data)
-		{
-			SpawnObjectsResponse spawnObjectsData = data as SpawnObjectsResponse;
-			foreach (SpawnObjectResponseData objectToSpawn in spawnObjectsData.Data)
-			{
-				if (objectToSpawn.Type is SpaceObjectType.Ship or SpaceObjectType.Asteroid)
-				{
-					SpaceObjectVessel spaceObjectVessel = GetObject(objectToSpawn.GUID, objectToSpawn.Type) as SpaceObjectVessel;
-					spaceObjectVessel.ParseSpawnData(objectToSpawn);
-					if (spaceObjectVessel.IsMainVessel && spaceObjectVessel.Orbit.Parent != null)
-					{
-						Map.InitialiseMapObject(spaceObjectVessel);
-					}
-				}
-				else if (objectToSpawn.Type is SpaceObjectType.DynamicObject && GetDynamicObject(objectToSpawn.GUID) is null)
-				{
-					DynamicObject.SpawnDynamicObject(objectToSpawn);
-				}
-				else if (objectToSpawn.Type is SpaceObjectType.Corpse && GetCorpse(objectToSpawn.GUID) is null)
-				{
-					Corpse.SpawnCorpse(objectToSpawn);
-				}
-				else if (objectToSpawn.Type is SpaceObjectType.Player && GetPlayer(objectToSpawn.GUID) is null)
-				{
-					OtherPlayer.SpawnPlayer(objectToSpawn);
-				}
-				else
-				{
-					Debug.LogWarningFormat("Tried to spawn unimplemented space object with type {0}.", objectToSpawn.Type);
-				}
-			}
-
-			if (_restoreMapDetails != null)
-			{
-				_restoreMapDetails();
-				_restoreMapDetails = null;
-			}
 		}
 
 		private void ShipCollisionMessageListener(NetworkData data)
@@ -310,24 +266,12 @@ namespace OpenHellion
 		{
 			DestroyObjectMessage destroyObjectMessage = data as DestroyObjectMessage;
 			SpaceObject obj = GetObject(destroyObjectMessage.ID, destroyObjectMessage.ObjectType);
-			if (obj != null && obj.Type != SpaceObjectType.PlayerPivot &&
-			    obj.Type != SpaceObjectType.DynamicObjectPivot && obj.Type != SpaceObjectType.CorpsePivot)
+			if (obj == null || obj.Type is SpaceObjectType.PlayerPivot
+				or SpaceObjectType.DynamicObjectPivot or SpaceObjectType.CorpsePivot)
 			{
-				obj.DestroyGeometry();
-				if (obj is DynamicObject && (obj as DynamicObject).Item != null &&
-				    (obj as DynamicObject).Item.AttachPoint != null)
-				{
-					(obj as DynamicObject).Item.AttachPoint.DetachItem((obj as DynamicObject).Item);
-				}
-
-				if (MyPlayer.Instance != null && MyPlayer.Instance.CurrentActiveItem != null &&
-				    MyPlayer.Instance.CurrentActiveItem.GUID == obj.Guid)
-				{
-					MyPlayer.Instance.Inventory.RemoveItemFromHands(resetStance: true);
-				}
-
-				Destroy(obj.gameObject);
+				return;
 			}
+			DespawnObject(obj);
 		}
 
 		// Starts logging out.
@@ -381,47 +325,49 @@ namespace OpenHellion
 
 		private void KillPlayerMessageListener(NetworkData data)
 		{
-			KillPlayerMessage killPlayerMessage = data as KillPlayerMessage;
-			if (killPlayerMessage.GUID != MyPlayer.Instance.Guid)
+			KillPlayerMessage message = data as KillPlayerMessage;
+			if (message.Guid != MyPlayer.Instance.Guid)
 			{
 				return;
 			}
 
 			MyPlayer.Instance.IsAlive = false;
-
 			InGameGUI.ToggleDeadMsg(val: true);
-			if (killPlayerMessage.CauseOfDeath == HurtType.Shipwreck && killPlayerMessage.VesselDamageType != 0)
+			if (message.CauseOfDeath == HurtType.Shipwreck && message.VesselDamageType != 0)
 			{
-				InGameGUI.DeadMsgText.text = killPlayerMessage.VesselDamageType.ToLocalizedString().ToUpper();
+				InGameGUI.DeadMsgText.text = message.VesselDamageType.ToLocalizedString().ToUpper();
 			}
 			else
 			{
-				InGameGUI.DeadMsgText.text = killPlayerMessage.CauseOfDeath.ToLocalizedString().ToUpper();
+				InGameGUI.DeadMsgText.text = message.CauseOfDeath.ToLocalizedString().ToUpper();
 			}
+		}
+
+		public bool TryGetSpaceObject<T>(long guid, out T spaceObject) where T : SpaceObject
+		{
+			if (_spaceObjects.TryGetValue(guid, out SpaceObject found) && found != null && found is T typed)
+			{
+				spaceObject = typed;
+				return true;
+			}
+
+			spaceObject = null;
+			return false;
 		}
 
 		public void AddPlayer(long guid, OtherPlayer pl)
 		{
-			Players[guid] = pl;
-			RefreshMovementIntervals();
-		}
-
-		private void RefreshMovementIntervals()
-		{
-			MyPlayer.SendMovementInterval = Players.Count <= 0 ? 1f : 0.1f;
-			DynamicObject.SendMovementInterval = Players.Count <= 0 ? 1f : 0.1f;
-			Corpse.SendMovementInterval = Players.Count <= 0 ? 1f : 0.1f;
+			_spaceObjects.TryAdd(guid, pl);
 		}
 
 		public void RemovePlayer(long guid)
 		{
-			Players.Remove(guid);
-			RefreshMovementIntervals();
+			_spaceObjects.TryRemove(guid, out _);
 		}
 
 		public OtherPlayer GetPlayer(long guid)
 		{
-			if (Players.TryGetValue(guid, out var player))
+			if (_spaceObjects.TryGetValue(guid, out var value) && value is OtherPlayer player)
 			{
 				return player;
 			}
@@ -435,6 +381,7 @@ namespace OpenHellion
 				{
 					if (otherPlayer.Guid == guid)
 					{
+						Debug.LogWarning("Player not stored in space objects array, but exists in game: " + guid);
 						AddPlayer(otherPlayer.Guid, otherPlayer);
 						return otherPlayer;
 					}
@@ -446,73 +393,47 @@ namespace OpenHellion
 			{
 				if (otherPlayer2.Guid == guid)
 				{
+					Debug.LogWarning("Player not stored in space objects array, but exists in game: " + guid);
 					AddPlayer(otherPlayer2.Guid, otherPlayer2);
 					return otherPlayer2;
 				}
 			}
+
+			Debug.LogWarning("Could not find player in world with guid: " + guid);
 
 			return null;
 		}
 
 		public void AddDynamicObject(long guid, DynamicObject obj)
 		{
-			DynamicObjects[guid] = obj;
+			_spaceObjects.TryAdd(guid, obj);
 		}
 
 		public void RemoveDynamicObject(long guid)
 		{
-			DynamicObjects.Remove(guid);
+			_spaceObjects.TryRemove(guid, out _);
 		}
 
 		public DynamicObject GetDynamicObject(long guid)
 		{
-			if (DynamicObjects.TryGetValue(guid, out var value))
-			{
-				return value;
-			}
-
-			if (MyPlayer.Instance != null && MyPlayer.Instance.Parent != null)
-			{
-				DynamicObject[] componentsInChildren =
-					MyPlayer.Instance.Parent.GetComponentsInChildren<DynamicObject>();
-				foreach (DynamicObject dynamicObject in componentsInChildren)
-				{
-					if (dynamicObject.Guid == guid)
-					{
-						AddDynamicObject(dynamicObject.Guid, dynamicObject);
-						return dynamicObject;
-					}
-				}
-			}
-
-			DynamicObject[] componentsInChildren2 = ShipExteriorRoot.GetComponentsInChildren<DynamicObject>();
-			foreach (DynamicObject dynamicObject2 in componentsInChildren2)
-			{
-				if (dynamicObject2.Guid == guid)
-				{
-					AddDynamicObject(dynamicObject2.Guid, dynamicObject2);
-					return dynamicObject2;
-				}
-			}
-
-			return null;
+			return _spaceObjects.TryGetValue(guid, out var value) ? value as DynamicObject : null;
 		}
 
 		public void AddCorpse(long guid, Corpse obj)
 		{
-			Corpses[guid] = obj;
+			_spaceObjects.TryAdd(guid, obj);
 		}
 
 		public void RemoveCorpse(long guid)
 		{
-			Corpses.Remove(guid);
+			_spaceObjects.TryRemove(guid, out _);
 		}
 
 		public Corpse GetCorpse(long guid)
 		{
-			if (Corpses.TryGetValue(guid, out var corpse))
+			if (_spaceObjects.TryGetValue(guid, out var corpse) && corpse is Corpse corpseObject)
 			{
-				return corpse;
+				return corpseObject;
 			}
 
 			if (MyPlayer.Instance != null && MyPlayer.Instance.Parent != null)
@@ -522,6 +443,7 @@ namespace OpenHellion
 				{
 					if (corpseInGame.Guid == guid)
 					{
+						Debug.LogWarning("Corpse not stored in space objects array, but exists in game: " + guid);
 						AddCorpse(corpseInGame.Guid, corpseInGame);
 						return corpseInGame;
 					}
@@ -533,25 +455,44 @@ namespace OpenHellion
 			{
 				if (corpse2.Guid == guid)
 				{
+					Debug.LogWarning("Corpse not stored in space objects array, but exists in game: " + guid);
 					AddCorpse(corpse2.Guid, corpse2);
 					return corpse2;
 				}
 			}
 
+			Debug.Log("Could not find corpse in world with guid: " + guid);
+
 			return null;
+		}
+
+		public void AddArtificialBody(ArtificialBody body)
+		{
+			// A pivot shares the guid of the object it contains, so it displaces that object here.
+			_spaceObjects.TryRemove(body.Guid, out _);
+			_spaceObjects.TryAdd(body.Guid, body);
+		}
+
+		/// <summary>
+		/// 	Drops an artificial body from the index. Pass <paramref name="restoreContained" /> when a
+		/// 	pivot dissolves, so the object it wrapped reclaims the guid slot they share.
+		/// </summary>
+		/// TODO: restoreContained has to exist as long as pivots use the same guid as the objects they contain.
+		public void RemoveArtificialBody(long guid, SpaceObject restoreContained = null)
+		{
+			_spaceObjects.TryRemove(guid, out _);
+
+			if (restoreContained != null)
+			{
+				_spaceObjects.TryAdd(guid, restoreContained);
+			}
 		}
 
 		public SpaceObjectVessel GetVessel(long guid)
 		{
-			if (ActiveVessels.TryGetValue(guid, out var value))
+			if (_spaceObjects.TryGetValue(guid, out SpaceObject value) && value is SpaceObjectVessel spaceObject)
 			{
-				return value;
-			}
-
-			value = SolarSystem.ArtificialBodyReferences.FirstOrDefault((ArtificialBody m) => m.Guid == guid) as SpaceObjectVessel;
-			if (value != null)
-			{
-				return value;
+				return spaceObject;
 			}
 
 			SpaceObjectVessel[] componentsInChildren = ShipExteriorRoot.GetComponentsInChildren<SpaceObjectVessel>();
@@ -559,11 +500,12 @@ namespace OpenHellion
 			{
 				if (spaceObjectVessel.Guid == guid)
 				{
+					Debug.LogWarning("Vessel not stored in space objects array, but exists in game: " + guid);
 					return spaceObjectVessel;
 				}
 			}
 
-			Debug.LogWarning("Could not find space object vessel in world with guid: " + guid);
+			Debug.Log("Could not find space object vessel in world with guid: " + guid);
 
 			return null;
 		}
@@ -638,226 +580,443 @@ namespace OpenHellion
 			SolarSystem.UpdatePositions();
 			SolarSystem.CenterPlanets();
 
+			DrainSpawnQueue();
+
 			RichPresenceManager.Update();
 		}
 
-		// Also spawns artificial bodies for some reason.
-		// Caution: Executed very often.
+		// Caution: Executed very often and must stay synchronous.
+		/// <summary>
+ 		/// 	Handles moving space objects, and queueing spawns for objects we don't know about yet.
+ 		/// 	Since planets are not space objects, they are moved elsewhere.
+		/// </summary>
 		private void MovementMessageListener(NetworkData data)
 		{
+			MovementMessage movementMessage = data as MovementMessage;
+
+			if (movementMessage == null)
+			{
+				return;
+			}
+
 			if (MyPlayer.Instance == null || !MyPlayer.Instance.PlayerReady)
 			{
 				return;
 			}
 
-			SpaceObjectVessel spaceObjectVessel = null;
-			float nearestVessel = 0f;
-			MovementMessage movementMessage = data as MovementMessage;
-			var artificialBodiesCopy = SolarSystem.ArtificialBodyReferences.ToList();
-			if (movementMessage.Transforms is { Count: > 0 })
+			try
 			{
-				foreach (ObjectTransform objectTransform in movementMessage.Transforms)
+				if (MyPlayer.Instance.Parent == null)
 				{
-					bool isArtificialBodyNew = false;
-					ArtificialBody artificialBody = SolarSystem.GetArtificialBody(objectTransform.GUID);
-					if (artificialBody != null)
-					{
-						artificialBodiesCopy.Remove(artificialBody);
-					}
+					return;
+				}
 
-					switch (artificialBody)
+				// A different anchor is a rebase.
+				bool parentChanged = movementMessage.ParentGuid != _lastAppliedParentGuid;
+				_lastAppliedParentGuid = movementMessage.ParentGuid;
+
+				bool anchorChanged = AnchorGuid != movementMessage.AnchorGuid;
+				if (anchorChanged)
+				{
+					AnchorGuid = movementMessage.AnchorGuid;
+					ReOrigin();
+				}
+
+				if (movementMessage.OriginWorldPosition != null)
+				{
+					OriginWorldPosition = movementMessage.OriginWorldPosition.ToVector3D();
+				}
+
+				MyPlayer.Instance.ProcessMovementMessage(
+					movementMessage.PlayerPosition?.ToVector3(),
+					movementMessage.PlayerRotation?.ToQuaternion(),
+					movementMessage.PlayerVelocity?.ToVector3(),
+					movementMessage.PlayerAnimationData);
+
+				if (movementMessage.ArtificialBodiesMovement != null)
+				{
+					foreach (MovementMessage.TransformInfo bodyTransform in movementMessage.ArtificialBodiesMovement)
 					{
-						case null when objectTransform.GUID == MyPlayer.Instance.Guid:
+						if (!TryGetSpaceObject(bodyTransform.Guid, out ArtificialBody artificialBody))
+						{
+							RequestSpawn(bodyTransform.Guid);
 							continue;
-						case null when objectTransform.Orbit != null || objectTransform.Realtime != null ||
-						               objectTransform.StabilizeToTargetGUID > 0:
-							artificialBody = ArtificialBody.CreateDummy(objectTransform);
-							isArtificialBodyNew = true;
-							break;
-					}
+						}
+						
+						// Stabilisation couples position and nothing else.
+						// Rotation needs to be added separately.
+						bool stabilised = bodyTransform.StabiliseToTargetGuid > 0;
 
-					if (artificialBody == null)
-					{
-						Debug.LogError("Could not create dummy artificial body.");
-						continue;
-					}
-
-					if (objectTransform.StabilizeToTargetGUID is > 0)
-					{
-						artificialBody.StabilizeToTarget(objectTransform.StabilizeToTargetGUID.Value,
-							objectTransform.StabilizeToTargetRelPosition.ToVector3D());
-					}
-					else if (objectTransform.Orbit != null)
-					{
-						CelestialBody celestialBody = artificialBody.Orbit.Parent.CelestialBody;
-						artificialBody.DisableStabilization();
-						if (artificialBody is Ship ship && ship.WarpStartEffectTask != null)
+						if (bodyTransform.Rotation == null || bodyTransform.Velocity == null || bodyTransform.AngularVelocity == null ||
+						    (stabilised ? bodyTransform.StabilisationOffset == null : bodyTransform.Position == null))
 						{
-							ship.WarpStartEffectTask.RunSynchronously();
+							Debug.LogWarning($"Movement entry for '{bodyTransform.Guid}' had a null field.");
+							continue;
 						}
 
-						artificialBody.Orbit.ParseNetworkData(this, objectTransform.Orbit);
-						artificialBody.UpdateOrbitPosition(SolarSystem.CurrentTime, resetTime: true);
-						UpdateMapObject(artificialBody, celestialBody);
-					}
-					else if (objectTransform.Realtime != null)
-					{
-						artificialBody.DisableStabilization();
-						artificialBody.Orbit.ParseNetworkData(this, objectTransform.Realtime);
-					}
-
-					bool flag2 = (artificialBody.Maneuver != null && objectTransform.Maneuver == null) ||
-					             (artificialBody.Maneuver == null && objectTransform.Maneuver != null);
-					if (artificialBody.Maneuver != null && objectTransform.Maneuver == null)
-					{
-						artificialBody.ManeuverExited = true;
-					}
-
-					artificialBody.Maneuver = objectTransform.Maneuver;
-					if (artificialBody.Maneuver != null)
-					{
-						artificialBody.Orbit.ParseNetworkData(this, objectTransform.Maneuver);
-					}
-
-					if (flag2 && MyPlayer.Instance.Parent is Ship &&
-					    (MyPlayer.Instance.Parent as Ship).RadarSystem != null)
-					{
-						(MyPlayer.Instance.Parent as Ship).RadarSystem.PassiveScanObject(artificialBody);
-						SolarSystem.ArtificialBodiesVisibilityModified();
-					}
-
-					if (objectTransform.Forward != null && objectTransform.Up != null)
-					{
-						artificialBody.SetTargetPositionAndRotation(null, objectTransform.Forward.ToVector3(),
-							objectTransform.Up.ToVector3(), isArtificialBodyNew || !artificialBody.IsInVisibilityRange,
-							movementMessage.SolarSystemTime);
-						artificialBody.AngularVelocity = objectTransform.AngularVelocity.ToVector3();
-						if (objectTransform.RotationVec != null)
+						if (stabilised)
 						{
-							artificialBody.RotationVec = objectTransform.RotationVec.ToVector3D();
+							// Places the body from its target, so the message's own position is not ours to use.
+							artificialBody.StabilizeToTarget(bodyTransform.StabiliseToTargetGuid,
+								bodyTransform.StabilisationOffset.ToVector3());
+							artificialBody.SetTargetPositionAndRotation(null,
+								bodyTransform.Rotation.ToQuaternion(), parentChanged || anchorChanged);
 						}
-					}
-
-					if (objectTransform.CharactersMovement != null)
-					{
-						foreach (CharacterMovementMessage item in objectTransform.CharactersMovement)
+						else
 						{
-							if (item == null)
-							{
-								continue;
-							}
-
-							if (item.GUID == MyPlayer.Instance.Guid)
-							{
-								MyPlayer.Instance.ProcessMovementMessage(item);
-								continue;
-							}
-
-							OtherPlayer player = GetPlayer(item.GUID);
-							if (player != null)
-							{
-								player.ProcessMovementMessage(item);
-							}
+							artificialBody.DisableStabilization();
+							artificialBody.SetTargetPositionAndRotation(bodyTransform.Position.ToVector3(),
+								bodyTransform.Rotation.ToQuaternion(), parentChanged || anchorChanged);
 						}
-					}
 
-					if (objectTransform.DynamicObjectsMovement != null)
-					{
-						foreach (DynamicObjectMovementMessage item2 in objectTransform.DynamicObjectsMovement)
+						artificialBody.SetVelocity(bodyTransform.Velocity.ToVector3(), bodyTransform.AngularVelocity.ToVector3());
+
+						// Drag any bodies stabilised to this one along with its updated position.
+						foreach (ArtificialBody stabilizedChild in artificialBody.StabilizedChildren)
 						{
-							if (item2 != null)
-							{
-								DynamicObject dynamicObject = GetDynamicObject(item2.GUID);
-								if (dynamicObject != null)
-								{
-									dynamicObject.ProcessDynamicObjectMovementMessage(item2);
-								}
-							}
+							stabilizedChild.UpdateStabilizedPosition();
 						}
-					}
-
-					if (objectTransform.CorpsesMovement != null)
-					{
-						foreach (CorpseMovementMessage item3 in objectTransform.CorpsesMovement)
-						{
-							if (item3 != null)
-							{
-								Corpse corpse = GetCorpse(item3.GUID);
-								if (corpse != null)
-								{
-									corpse.ProcessMoveCorpseObectMessage(item3);
-								}
-							}
-						}
-					}
-
-					float num2 =
-						(artificialBody.transform.position - MyPlayer.Instance.transform.position).sqrMagnitude -
-						(float)(artificialBody.Radius * artificialBody.Radius);
-					if (artificialBody is SpaceObjectVessel body && (spaceObjectVessel == null || nearestVessel > num2))
-					{
-						spaceObjectVessel = body;
-						nearestVessel = num2;
 					}
 				}
-			}
 
-			if (artificialBodiesCopy.Count > 0)
-			{
-				foreach (ArtificialBody body in artificialBodiesCopy)
+				if (movementMessage.DynamicObjectsMovement != null)
 				{
-					float bodyDistance = (body.transform.position - MyPlayer.Instance.transform.position).sqrMagnitude -
-					             (float)(body.Radius * body.Radius);
-					if (body is SpaceObjectVessel { IsDebrisFragment: false } vessel &&
-					    (spaceObjectVessel == null || (nearestVessel > bodyDistance && (spaceObjectVessel.FTLEngine == null ||
-					                                                  spaceObjectVessel.FTLEngine.Status !=
-					                                                  SystemStatus.Online ||
-					                                                  (spaceObjectVessel.Velocity -
-					                                                   MyPlayer.Instance.Parent.Velocity).SqrMagnitude <
-					                                                  900.0))))
+					foreach (MovementMessage.TransformInfo objectTransform in movementMessage.DynamicObjectsMovement)
 					{
-						spaceObjectVessel = vessel;
-						nearestVessel = bodyDistance;
+						DynamicObject dynamicObject = GetDynamicObject(objectTransform.Guid);
+						if (dynamicObject != null)
+						{
+							if (objectTransform.Position == null || objectTransform.Rotation == null ||
+							    objectTransform.Velocity == null || objectTransform.AngularVelocity == null)
+							{
+								Debug.LogWarning($"Movement entry for '{objectTransform.Guid}' had a null field.");
+								continue;
+							}
+
+							dynamicObject.ProcessMovementMessage(objectTransform.Position.ToVector3(), objectTransform.Rotation.ToQuaternion(),
+								objectTransform.Velocity.ToVector3(), objectTransform.AngularVelocity.ToVector3());
+						}
+						else
+						{
+							RequestSpawn(objectTransform.Guid);
+						}
 					}
 				}
-			}
 
-			MyPlayer.Instance.NearestVessel = spaceObjectVessel;
-			MyPlayer.Instance.NearestVesselSqDistance = nearestVessel;
+				if (movementMessage.CorpsesMovement != null)
+				{
+					foreach (MovementMessage.TransformInfo corpseTransform in movementMessage.CorpsesMovement)
+					{
+						Corpse corpse = GetCorpse(corpseTransform.Guid);
+						if (corpse != null)
+						{
+							if (corpseTransform.Position == null || corpseTransform.Rotation == null ||
+							    corpseTransform.Velocity == null || corpseTransform.AngularVelocity == null)
+							{
+								Debug.LogWarning($"Movement entry for '{corpseTransform.Guid}' had a null field.");
+								continue;
+							}
+
+							corpse.ProcessMovementMessage(corpseTransform.Position.ToVector3(), corpseTransform.Rotation.ToQuaternion(),
+								corpseTransform.Velocity.ToVector3(), corpseTransform.AngularVelocity.ToVector3());
+						}
+						else
+						{
+							RequestSpawn(corpseTransform.Guid);
+						}
+					}
+				}
+
+				if (movementMessage.OtherPlayersMovement != null)
+				{
+					foreach (MovementMessage.OtherPlayerInfo playerInfo in movementMessage.OtherPlayersMovement)
+					{
+						OtherPlayer otherPlayer = GetPlayer(playerInfo.Guid);
+						if (otherPlayer != null)
+						{
+							if (playerInfo.Position == null || playerInfo.Rotation == null)
+							{
+								Debug.LogWarning($"Movement entry for '{playerInfo.Guid}' had a null field.");
+								continue;
+							}
+
+							otherPlayer.ProcessMovementMessage(playerInfo.Position.ToVector3(), playerInfo.Rotation.ToQuaternion(), playerInfo.FreeLookX,
+								playerInfo.FreeLookY, playerInfo.MouseLook, playerInfo.RagdollData, playerInfo.AnimationData, playerInfo.JetpackDirection);
+						}
+						else
+						{
+							RequestSpawn(playerInfo.Guid);
+						}
+					}
+				}
+
+				if (movementMessage.VisibleObjects != null)
+				{
+					ReconcileView(movementMessage.VisibleObjects);
+				}
+			}
+			catch (NullReferenceException)
+			{
+				Debug.LogWarning("MovementMessage had a null field.");
+			}
 		}
 
-		private void UpdateMapObject(ArtificialBody ab, CelestialBody oldParent)
+		/// <summary>
+		/// 	Queue an object to be spawned.
+		/// </summary>
+		private void RequestSpawn(long guid)
 		{
-			if (ab is not SpaceObjectVessel vessel) return;
-
-			MapObject mapObject;
-			if (!Map.AllMapObjects.TryGetValue(vessel, out mapObject))
-			{
-				Map.InitialiseMapObject(vessel);
-				Map.AllMapObjects.TryGetValue(vessel, out mapObject);
-			}
-
-			if (mapObject == null)
+			if (_spawnInFlight.Contains(guid) || TryGetSpaceObject(guid, out SpaceObject _))
 			{
 				return;
 			}
 
-			if (oldParent != vessel.Orbit.Parent.CelestialBody)
+			if (_failedSpawnTimes.TryGetValue(guid, out float failedAt) &&
+			    Time.unscaledTime - failedAt < SpawnRetryCooldown)
 			{
-				if (Map.gameObject.activeInHierarchy)
-				{
-					Map.UpdateParent(mapObject.MainObject);
-				}
-
-				RichPresenceManager.UpdateStatus();
+				return;
 			}
 
-			if (MyPlayer.Instance.LockedToTrigger is SceneTriggerNavigationPanel ||
-			    MyPlayer.Instance.ShipControlMode == ShipControlMode.Navigation)
+			_pendingSpawn.Add(guid);
+		}
+
+		/// <summary>
+		/// 	Drains the spawn queue. Guids are moved to the in-flight set before awaiting, so subsequent
+		/// 	frames won't re-request them while a despawn response is pending.
+		/// </summary>
+		private void DrainSpawnQueue()
+		{
+			if (_pendingSpawn.Count == 0)
 			{
-				mapObject.SetOrbit();
+				return;
+			}
+
+			long[] batch = _pendingSpawn.ToArray();
+			_pendingSpawn.Clear();
+			foreach (long guid in batch)
+			{
+				_spawnInFlight.Add(guid);
+			}
+
+			PumpSpawnQueue(batch).Forget();
+		}
+
+		/// <summary>
+		/// 	Deletes object outside not in visibleObjects. Ignores the player's parent.
+		/// </summary>
+		private void ReconcileView(long[] visibleObjects)
+		{
+			var visible = new HashSet<long>(visibleObjects);
+
+			foreach (long guid in visibleObjects)
+			{
+				if (!TryGetSpaceObject(guid, out SpaceObject _))
+				{
+					RequestSpawn(guid);
+				}
+			}
+
+			List<SpaceObject> toRemove = null;
+			foreach (var (guid, spaceObject) in _spaceObjects)
+			{
+				if (visible.Contains(guid)) continue;
+				if (MyPlayer.Instance != null && spaceObject == MyPlayer.Instance.Parent) continue; // TODO: Is this really neccessary?
+
+				toRemove ??= new();
+				toRemove.Add(spaceObject);
+			}
+
+			if (toRemove == null) return;
+
+			foreach (SpaceObject spaceObject in toRemove)
+			{
+				if (spaceObject == null) continue;
+				DespawnObject(spaceObject);
 			}
 		}
+
+		/// <summary>
+		/// 	The only place where a spaceobject should be deleted.
+		/// </summary>
+		private void DespawnObject(SpaceObject obj)
+		{
+			if (obj == null)
+			{
+				return;
+			}
+
+			if (MyPlayer.Instance != null)
+			{
+				if (obj == MyPlayer.Instance.Parent ||
+				    (obj is SpaceObjectVessel vessel && MyPlayer.Instance.Parent is SpaceObjectVessel parentVessel &&
+				     vessel.MainVessel == parentVessel.MainVessel))
+				{
+					Debug.LogWarning($"Refused to despawn '{obj.Guid}': the player is inside this vessel assembly.");
+					return;
+				}
+			}
+
+			bool isPivot = obj.Type is SpaceObjectType.PlayerPivot
+				or SpaceObjectType.DynamicObjectPivot
+				or SpaceObjectType.CorpsePivot;
+
+			if (!isPivot)
+			{
+				obj.DestroyGeometry();
+			}
+
+			if (obj is DynamicObject dynamicObject && dynamicObject.Item?.AttachPoint != null)
+			{
+				dynamicObject.Item.AttachPoint.DetachItem(dynamicObject.Item);
+			}
+
+			if (MyPlayer.Instance?.CurrentActiveItem?.GUID == obj.Guid)
+			{
+				MyPlayer.Instance.Inventory.RemoveItemFromHands(resetStance: true);
+			}
+
+			_spaceObjects.TryRemove(obj.Guid, out _);
+
+			Destroy(obj.gameObject);
+		}
+
+		private async UniTaskVoid PumpSpawnQueue(long[] guids)
+		{
+			try
+			{
+				await MassSpawn(guids);
+			}
+			catch (Exception ex)
+			{
+				Debug.LogException(ex);
+			}
+			finally
+			{
+				foreach (long guid in guids)
+				{
+					_spawnInFlight.Remove(guid);
+
+					// If the object still isn't present, the server didn't return it. Back off before
+					// retrying so a guid we can't spawn isn't requested on every movement message.
+					if (!TryGetSpaceObject(guid, out SpaceObject _))
+					{
+						_failedSpawnTimes[guid] = Time.unscaledTime;
+					}
+					else
+					{
+						_failedSpawnTimes.Remove(guid);
+					}
+				}
+			}
+		}
+
+		// TODO maybe this can use SceneLoader.LoadScenesWithIDs (see old PlayerSpawnResponse for inspiration)?
+		// Order of spawning is very important here. Do not move unless you know what you are doing.
+		public static async UniTask MassSpawn(long[] guids, bool isMainObject = false)
+		{
+			ObjectsInfoRequest request = new()
+			{
+				Guids = guids,
+			};
+
+			if (await NetworkController.SendReceiveAsync(request, 10000) is not ObjectsInfoResponse response)
+			{
+				Debug.LogWarning("Attempted to spawn objects with guid but got no response.");
+				return;
+			}
+
+			if (response.ShipObjects != null)
+			{
+				foreach (ObjectsInfoResponse.ShipData shipData in response.ShipObjects)
+				{
+					try
+					{
+						await Ship.Create(shipData.Guid, shipData.Position.ToVector3(), shipData.Rotation.ToQuaternion(), shipData.VesselRegistration, shipData.VesselName,
+							shipData.Tag,shipData.SceneId, shipData.CollidersCenterOffset, shipData.IsDebrisFragment, shipData.RadarSignature, shipData.IsDistressSignalActive,
+							shipData.IsAlwaysVisible, shipData.DockingControlsDisabled, shipData.SecurityPanelsLocked, shipData.VesselObjects, shipData.DockedVessels, isMainObject);
+					}
+					catch (Exception ex)
+					{
+						Debug.LogError($"Failed to spawn ship '{shipData.Guid}': {ex}");
+					}
+				}
+			}
+
+			if (response.AsteroidObjects != null)
+			{
+				foreach (ObjectsInfoResponse.AsteroidData asteroidData in response.AsteroidObjects)
+				{
+					try
+					{
+						await Asteroid.Create(asteroidData.Guid, asteroidData.Position.ToVector3(), asteroidData.Rotation.ToQuaternion(), asteroidData.VesselRegistration,
+							asteroidData.VesselName, asteroidData.Tag, asteroidData.SceneId, asteroidData.IsDebrisFragment, asteroidData.IsAlwaysVisible, asteroidData.Radius,
+							asteroidData.MiningPoints, isMainObject);
+					}
+					catch (Exception ex)
+					{
+						Debug.LogError($"Failed to spawn asteroid '{asteroidData.Guid}': {ex}");
+					}
+				}
+			}
+
+			if (response.PivotObjects != null)
+			{
+				foreach (ObjectsInfoResponse.PivotData pivotData in response.PivotObjects)
+				{
+					try
+					{
+						Pivot.Create(pivotData.Guid, pivotData.PivotType, pivotData.Position.ToVector3(),
+							pivotData.Rotation.ToQuaternion(), isMainObject: isMainObject);
+					}
+					catch (Exception ex)
+					{
+						Debug.LogError($"Failed to spawn pivot '{pivotData.Guid}': {ex}");
+					}
+				}
+			}
+
+			if (response.Players != null)
+			{
+				foreach (ObjectsInfoResponse.PlayerData playerData in response.Players)
+				{
+					try
+					{
+						OtherPlayer.Create(playerData.Guid, playerData.Position.ToVector3(), playerData.Rotation.ToQuaternion(), playerData.ParentId, playerData.Gender,
+							playerData.HeadType, playerData.HairType, playerData.Name, playerData.PlayerId, playerData.SpawnPointId,
+							playerData.AnimationStatsMask, playerData.LockedToTriggerID, playerData.DynamicObjects);
+					}
+					catch (Exception ex)
+					{
+						Debug.LogError($"Failed to spawn player '{playerData.Guid}': {ex}");
+					}
+				}
+			}
+
+			if (response.CorpseObjects != null)
+			{
+				foreach (ObjectsInfoResponse.CorpseData corpseData in response.CorpseObjects)
+				{
+					try
+					{
+						Corpse.Create(corpseData.Guid, corpseData.Position.ToVector3(), corpseData.Rotation.ToQuaternion(),
+							corpseData.ParentGUID, corpseData.Gender, corpseData.DynamicObjects);
+					}
+					catch (Exception ex)
+					{
+						Debug.LogError($"Failed to spawn corpse '{corpseData.Guid}': {ex}");
+					}
+				}
+			}
+
+			if (response.DynamicObjects != null)
+			{
+				foreach (DynamicObjectDetails objectDetails in response.DynamicObjects)
+				{
+					DynamicObject.CreateDynamicObject(objectDetails);
+				}
+			}
+		}
+
 
 		public SpaceObject GetObject(long guid, SpaceObjectType objectType)
 		{
@@ -871,22 +1030,40 @@ namespace OpenHellion
 
 					return GetPlayer(guid);
 				case SpaceObjectType.DynamicObject:
-					return GetDynamicObject(guid);
+				{
+					DynamicObject simulated = GetDynamicObject(guid);
+					if (simulated != null)
+					{
+						return simulated;
+					}
+
+					// Carried objects are deliberately unindexed, so an item nested in another item's slot
+					// reaches its parent by walking the owners that are.
+					foreach (SpaceObject owner in _spaceObjects.Values.Append(MyPlayer.Instance))
+					{
+						if (owner == null) continue;
+
+						foreach (DynamicObject carried in owner.GetComponentsInChildren<DynamicObject>())
+						{
+							if (carried.Guid == guid)
+							{
+								return carried;
+							}
+						}
+					}
+
+					return null;
+				}
 				case SpaceObjectType.Corpse:
 					return GetCorpse(guid);
 				case SpaceObjectType.PlayerPivot:
 				case SpaceObjectType.DynamicObjectPivot:
 				case SpaceObjectType.CorpsePivot:
-				{
-					return SolarSystem.GetArtificialBody(guid) as Pivot;
-				}
 				case SpaceObjectType.Ship:
-				{
-					return SolarSystem.GetArtificialBody(guid) as Ship;
-				}
 				case SpaceObjectType.Asteroid:
 				{
-					return SolarSystem.GetArtificialBody(guid) as Asteroid;
+					TryGetSpaceObject(guid, out SpaceObject spaceObject);
+					return spaceObject;
 				}
 			}
 
@@ -988,33 +1165,34 @@ namespace OpenHellion
 
 			foreach (VesselDataUpdate item in updateVesselDataMessage.VesselsDataUpdate)
 			{
-				SpaceObjectVessel spaceObjectVessel = SolarSystem.GetArtificialBody(item.GUID) as SpaceObjectVessel;
-				if (spaceObjectVessel != null && spaceObjectVessel.VesselData is not null)
+				if (TryGetSpaceObject(item.Guid, out SpaceObjectVessel spaceObjectVessel))
 				{
 					if (item.VesselName is not null)
 					{
-						spaceObjectVessel.VesselData.VesselName = item.VesselName;
+						spaceObjectVessel.VesselName = item.VesselName;
 					}
 
 					if (item.VesselRegistration is not null)
 					{
-						spaceObjectVessel.VesselData.VesselRegistration = item.VesselRegistration;
+						spaceObjectVessel.VesselRegistration = item.VesselRegistration;
 					}
 
 					if (item.RadarSignature.HasValue)
 					{
-						spaceObjectVessel.VesselData.RadarSignature = item.RadarSignature.Value;
+						spaceObjectVessel.RadarSignature = item.RadarSignature.Value;
 					}
 
 					if (item.IsAlwaysVisible.HasValue)
 					{
-						spaceObjectVessel.VesselData.IsAlwaysVisible = item.IsAlwaysVisible.Value;
+						spaceObjectVessel.IsAlwaysVisible = item.IsAlwaysVisible.Value;
 					}
 
 					if (item.IsDistressSignalActive.HasValue)
 					{
-						spaceObjectVessel.VesselData.IsDistressSignalActive = item.IsDistressSignalActive.Value;
+						spaceObjectVessel.IsDistressSignalActive = item.IsDistressSignalActive.Value;
 					}
+
+					spaceObjectVessel.ExposureDamage = item.ExposureDamage;
 				}
 			}
 		}
@@ -1030,9 +1208,14 @@ namespace OpenHellion
 
 		public async UniTask<bool> OnLogin(LogInResponse logInResponse, VesselObjectID invitedToServerSpawnPointId = null)
 		{
-			SolarSystem.Set(GameObject.Find("/SolarSystemRoot/SunRoot").transform,
+			SolarSystem.Set(this, GameObject.Find("/SolarSystemRoot/SunRoot").transform,
 				GameObject.Find("/SolarSystemRoot/PlanetsRoot").transform, logInResponse.ServerTime);
 			SolarSystem.LoadDataFromResources();
+
+			_pendingSpawn.Clear();
+			_spawnInFlight.Clear();
+			_failedSpawnTimes.Clear();
+
 			await MyPlayer.SpawnMyPlayer(this, logInResponse);
 
 			foreach (DebrisFieldDetails debrisField in logInResponse.DebrisFields)
@@ -1067,6 +1250,7 @@ namespace OpenHellion
 			}
 			else
 			{
+				// TODO: Need to readd the select screen where we can choose spawn setup.
 				/*MainMenuGUI.SendSpawnRequest(new SpawnPointDetails
 				{
 					SpawnSetupType = SpawnSetupType.Start1,
@@ -1096,6 +1280,12 @@ namespace OpenHellion
 					return false;
 				}
 
+				AnchorGuid = spawnResponse.AnchorGuid;
+				if (spawnResponse.OriginWorldPosition != null)
+				{
+					OriginWorldPosition = spawnResponse.OriginWorldPosition.ToVector3D();
+				}
+
 				ActivatePlayerDelegate = new Action(() =>
 				{
 					ActivatePlayerDelegate = null;
@@ -1104,49 +1294,21 @@ namespace OpenHellion
 
 				Debug.Log("Started loading world.");
 				SolarSystemRoot.SetActive(true);
-				if (spawnResponse.HomeGUID.HasValue)
+				if (spawnResponse.HomeGuid.HasValue)
 				{
-					MyPlayer.Instance.HomeStationGUID = spawnResponse.HomeGUID.Value;
+					MyPlayer.Instance.HomeStationGUID = spawnResponse.HomeGuid.Value;
 				}
 
-				Globals.SceneLoader.LoadScenesWithIDs(spawnResponse.Scenes);
+				await MassSpawn(spawnResponse.AllNearbySpaceObjects, true);
 
-				if (spawnResponse.ParentType == SpaceObjectType.Ship)
+				if (TryGetSpaceObject(spawnResponse.ParentGuid, out SpaceObject parent))
 				{
-					Ship ship = Ship.Create(spawnResponse.MainVesselID, spawnResponse.VesselData, spawnResponse.ParentTransform, isMainObject: true);
-					ship.gameObject.SetActive(true);
-					MyPlayer.Instance.Parent = ship;
-					if (spawnResponse.DockedVessels is { Count: > 0 })
-					{
-						foreach (DockedVesselData dockedVessel in spawnResponse.DockedVessels)
-						{
-							Ship ship2 = Ship.Create(dockedVessel.GUID, dockedVessel.Data, spawnResponse.ParentTransform,
-								isMainObject: true);
-							ship2.gameObject.SetActive(true);
-							ship2.DockedToMainVessel = ship;
-						}
-					}
-
-					Debug.Log("Starting main scene load of type ship.");
-					await LoadMainSceneShip(spawnResponse, ship, spawnResponse.VesselObjects);
-				}
-				else if (spawnResponse.ParentType == SpaceObjectType.Asteroid)
-				{
-					Asteroid asteroid = Asteroid.Create(spawnResponse.ParentTransform, spawnResponse.VesselData, isMainObject: true);
-					asteroid.gameObject.SetActive(true);
-					MyPlayer.Instance.Parent = asteroid;
-					Debug.Log("Starting main scene load of type asteroid.");
-					await LoadMainSceneAstroid(spawnResponse, asteroid);
-				}
-				else if (spawnResponse.ParentType == SpaceObjectType.PlayerPivot)
-				{
-					Pivot parent = Pivot.Create(SpaceObjectType.PlayerPivot, spawnResponse.ParentTransform, isMainObject: true);
 					MyPlayer.Instance.Parent = parent;
 				}
 				else
 				{
 					ReturnToMainMenu();
-					Debug.LogErrorFormat("Unknown player parent {0}, with id {1}.", spawnResponse.ParentType, spawnResponse.ParentID);
+					Debug.LogErrorFormat("Player parent with id {0} was is not near enough the player to load.", spawnResponse.ParentGuid);
 					MainMenuGUI.CanChooseSpawn = true;
 					return false;
 				}
@@ -1173,44 +1335,6 @@ namespace OpenHellion
 					MyPlayer.Instance.Blueprints = spawnResponse.Blueprints;
 				}
 
-				if (spawnResponse.NavMapDetails != null)
-				{
-					_restoreMapDetails = () =>
-					{
-						Parallel.ForEach(spawnResponse.NavMapDetails.Unknown, (UnknownMapObjectDetails det) =>
-						{
-							SpaceObjectVessel spaceObjectVessel = null;
-							if (det.SpawnRuleID != 0)
-							{
-								spaceObjectVessel = SolarSystem.ArtificialBodyReferences.FirstOrDefault((ArtificialBody m) =>
-										m is SpaceObjectVessel && (m as SpaceObjectVessel).IsMainVessel &&
-										(m as SpaceObjectVessel).VesselData != null &&
-										(m as SpaceObjectVessel).VesselData.SpawnRuleID == det.SpawnRuleID) as
-									SpaceObjectVessel;
-							}
-
-							if (spaceObjectVessel == null)
-							{
-								spaceObjectVessel = GetVessel(det.GUID);
-							}
-
-							if (spaceObjectVessel != null)
-							{
-								spaceObjectVessel.RadarVisibilityType = RadarVisibilityType.Unknown;
-								spaceObjectVessel.LastKnownMapOrbit = new OrbitParameters();
-								spaceObjectVessel.LastKnownMapOrbit.ParseNetworkData(this, det.LastKnownOrbit);
-								if (spaceObjectVessel.VesselData != null && spaceObjectVessel.VesselData.SpawnRuleID != 0)
-								{
-									Map.UnknownVisibilityOrbits[spaceObjectVessel.VesselData.SpawnRuleID] =
-										spaceObjectVessel.LastKnownMapOrbit;
-								}
-							}
-						});
-
-						SolarSystem.ArtificialBodiesVisibilityModified();
-					};
-				}
-
 				return true;
 			}
 			catch (TimeoutException)
@@ -1219,81 +1343,6 @@ namespace OpenHellion
 				MainMenuGUI.CanChooseSpawn = true;
 				ReturnToMainMenu();
 				return false;
-			}
-		}
-
-		private async UniTask LoadMainSceneAstroid(PlayerSpawnResponse spawnResponse, Asteroid asteroid)
-		{
-			await asteroid.LoadAsync(spawnResponse.MiningPoints);
-		}
-
-		private async UniTask LoadMainSceneShip(PlayerSpawnResponse spawnResponse, Ship sh, VesselObjects shipObjects)
-		{
-			if (sh != null)
-			{
-				await sh.LoadAsync(isMainShip: true, shipObjects);
-				if (spawnResponse.DockedVessels is { Count: > 0 })
-				{
-					foreach (DockedVesselData dockedVessel in spawnResponse.DockedVessels)
-					{
-						Ship childShip = GetVessel(dockedVessel.GUID) as Ship;
-						await childShip.LoadAsync(isMainShip: true, dockedVessel.VesselObjects);
-						childShip.transform.parent = sh.ConnectedObjectsRoot.transform;
-					}
-				}
-			}
-
-			if (shipObjects.DockingPorts != null)
-			{
-				SceneDockingPort[] componentsInChildren =
-					sh.GeometryRoot.GetComponentsInChildren<SceneDockingPort>(includeInactive: true);
-				foreach (SceneDockingPort dp in componentsInChildren)
-				{
-					SceneDockingPortDetails sceneDockingPortDetails =
-						shipObjects.DockingPorts.Find((SceneDockingPortDetails m) => m.ID.InSceneID == dp.InSceneID);
-					if (sceneDockingPortDetails != null)
-					{
-						dp.SetDetails(sceneDockingPortDetails, isInitialize: true);
-					}
-				}
-			}
-
-			if (spawnResponse.DockedVessels is { Count: > 0 })
-			{
-				foreach (DockedVesselData dockedVessel in spawnResponse.DockedVessels)
-				{
-					if (dockedVessel.VesselObjects.DockingPorts == null)
-					{
-						continue;
-					}
-
-					Ship ship = GetVessel(dockedVessel.GUID) as Ship;
-					SceneDockingPort[] componentsInChildren2 =
-						ship.GeometryRoot.GetComponentsInChildren<SceneDockingPort>(includeInactive: true);
-					foreach (SceneDockingPort dport in componentsInChildren2)
-					{
-						SceneDockingPortDetails sceneDockingPortDetails2 =
-							dockedVessel.VesselObjects.DockingPorts.Find((SceneDockingPortDetails m) =>
-								m.ID.InSceneID == dport.InSceneID);
-						if (sceneDockingPortDetails2 != null)
-						{
-							dport.SetDetails(sceneDockingPortDetails2, isInitialize: true);
-						}
-					}
-				}
-			}
-
-			DynamicObject[] componentsInChildren3 = sh.TransferableObjectsRoot.GetComponentsInChildren<DynamicObject>();
-			foreach (DynamicObject dynamicObject in componentsInChildren3)
-			{
-				dynamicObject.ToggleEnabled(isEnabled: true, toggleColliders: true);
-				dynamicObject.CheckRoomTrigger(null);
-			}
-
-			Corpse[] componentsInChildren4 = sh.TransferableObjectsRoot.GetComponentsInChildren<Corpse>();
-			foreach (Corpse corpse in componentsInChildren4)
-			{
-				corpse.CheckRoomTrigger(null);
 			}
 		}
 
@@ -1307,6 +1356,35 @@ namespace OpenHellion
 			}
 
 			ReturnToMainMenu();
+		}
+
+		/// <summary>
+		/// 	Puts the new anchor at the client origin. Every other body, including the old anchor, takes
+		/// 	its position from the same message that caused this, already measured from the new anchor,
+		/// 	so nothing else has to be shifted.
+		/// </summary>
+		private void ReOrigin()
+		{
+			if (!TryGetSpaceObject(AnchorGuid, out ArtificialBody anchor))
+			{
+				Debug.LogError($"Rebased onto anchor {AnchorGuid}, which is not spawned.");
+				return;
+			}
+
+			anchor.transform.localPosition = Vector3.zero;
+			anchor.UpdateArtificialBodyPosition(updateChildren: true);
+
+			SolarSystem.CenterPlanets();
+			MyPlayer.Instance.UpdateCameraPositions();
+		}
+
+		/// <summary>
+		/// 	Converts a client-space (local) position into an absolute solar-system position using the
+		/// 	world transform of the client-space origin. See <see cref="OriginWorldPosition" />.
+		/// </summary>
+		public Vector3D LocalToWorldPosition(Vector3 localPosition)
+		{
+			return OriginWorldPosition + localPosition.ToVector3D();
 		}
 	}
 }

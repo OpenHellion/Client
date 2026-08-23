@@ -114,7 +114,7 @@ namespace ZeroGravity.LevelDesign
 
 			if (parentPort == null)
 			{
-				Debug.LogError("Scene docking port controller has no parent docking port " + base.name);
+				Debug.LogError("Scene docking port controller has no parent docking port " + name);
 			}
 			else
 			{
@@ -143,7 +143,7 @@ namespace ZeroGravity.LevelDesign
 			ToggleLock(!IsLocked, false);
 			if (interactWithOverlappingTriggers)
 			{
-				SceneTriggerHelper.InteractWithOverlappingTriggers(base.gameObject, this, player);
+				SceneTriggerHelper.InteractWithOverlappingTriggers(gameObject, this, player);
 			}
 
 			return true;

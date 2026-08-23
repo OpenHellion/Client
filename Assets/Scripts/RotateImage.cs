@@ -10,6 +10,6 @@ public class RotateImage : MonoBehaviour
 
 	private void Update()
 	{
-		base.transform.Rotate(new Vector3(0f, 0f, RotateSpeed));
+		transform.Rotate(new Vector3(0f, 0f, RotateSpeed));
 	}
 }

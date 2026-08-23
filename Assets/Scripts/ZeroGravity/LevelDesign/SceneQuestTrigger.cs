@@ -139,7 +139,7 @@ namespace ZeroGravity.LevelDesign
 
 			_lastActivationTime = Time.realtimeSinceStartup;
 			if (_quest.IsFinished || _questTrigger == null || _questTrigger.Status != QuestStatus.Active ||
-			    !_questTrigger.CheckLocation(ParentVessel))
+			    !_questTrigger.CheckLocation(_world, ParentVessel))
 			{
 				return;
 			}
@@ -170,13 +170,13 @@ namespace ZeroGravity.LevelDesign
 			if (quest != null)
 			{
 				if (this._quest == quest && _questTrigger.Status == QuestStatus.Active &&
-				    SceneHelper.CompareTags(ParentVessel.VesselData.Tag, SceneTagObject.TagsToString(Task.Tags)))
+				    SceneHelper.CompareTags(ParentVessel.Tag, SceneTagObject.TagsToString(Task.Tags)))
 				{
 					_world.InGameGUI.QuestIndicators.AddQuestIndicator(this);
 				}
 				else if ((_questTrigger.Type != QuestTriggerType.Activate ||
 				          _questTrigger.Status != QuestStatus.Active) &&
-				         SceneHelper.CompareTags(ParentVessel.VesselData.Tag, SceneTagObject.TagsToString(Task.Tags)))
+				         SceneHelper.CompareTags(ParentVessel.Tag, SceneTagObject.TagsToString(Task.Tags)))
 				{
 					_world.InGameGUI.QuestIndicators.StopQuestIndicator(this);
 				}
@@ -192,7 +192,7 @@ namespace ZeroGravity.LevelDesign
 			bool flag = true;
 			if (Task.Tags.Count > 0)
 			{
-				flag = SceneHelper.CompareTags(ParentVessel.VesselData.Tag, SceneTagObject.TagsToString(Task.Tags));
+				flag = SceneHelper.CompareTags(ParentVessel.Tag, SceneTagObject.TagsToString(Task.Tags));
 			}
 
 			if (_questTrigger.Type != QuestTriggerType.Activate || _questTrigger.Status != QuestStatus.Active || !flag)

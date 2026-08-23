@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using BulletSharp;
 using BulletSharp.Math;
 
-/* 
-A simple physics simulation that is not connected in any way to the Unity scene 
+/*
+A simple physics simulation that is not connected in any way to the Unity scene
 */
 public class SimpleOfflineSimulation : MonoBehaviour {
-  
+
     void Start () {
         //Create a World
         Debug.Log("Initialize physics");
@@ -52,7 +52,7 @@ public class SimpleOfflineSimulation : MonoBehaviour {
         World.RemoveRigidBody(fallRigidBody);
         fallRigidBody.Dispose();
 
-        UnityEngine.Debug.Log("ExitPhysics");
+		Debug.Log("ExitPhysics");
         if (World != null)
         {
             //remove/dispose constraints

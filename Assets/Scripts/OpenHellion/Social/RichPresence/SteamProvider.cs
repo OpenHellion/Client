@@ -17,11 +17,11 @@
 
 using UnityEngine;
 using Steamworks;
-using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using OpenHellion.IO;
 using OpenHellion.Social.Message;
 using static OpenHellion.Social.RichPresence.RichPresenceManager;
+using System;
 
 namespace OpenHellion.Social.RichPresence
 {
@@ -31,7 +31,7 @@ namespace OpenHellion.Social.RichPresence
 		private bool _currentStatsRequested;
 		private bool _userStatsReceived;
 		private bool _storeStats;
-		private readonly ConcurrentQueue<Task> _pendingTasks = new ConcurrentQueue<Task>();
+		private readonly ConcurrentQueue<Action> _pendingTasks = new ConcurrentQueue<Action>();
 
 		internal bool Initialise()
 		{
@@ -97,9 +97,9 @@ namespace OpenHellion.Social.RichPresence
 			}
 			else if (_userStatsReceived)
 			{
-				while (_pendingTasks.TryDequeue(out var result))
+				while (_pendingTasks.TryDequeue(out var result) && result != null)
 				{
-					result.RunSynchronously();
+					result();
 				}
 
 				if (_storeStats)
@@ -120,7 +120,12 @@ namespace OpenHellion.Social.RichPresence
 
 		internal void UpdateStatus(ActivityStatus status)
 		{
-			// TODO: Figue out a way to display rich presence info on steam.
+			string displayStatus = string.IsNullOrEmpty(status.Details)
+				? status.State
+				: $"{status.State} - {status.Details}";
+
+			SteamFriends.SetRichPresence("status", displayStatus);
+			SteamFriends.SetRichPresence("connect", status.JoinSecret ?? string.Empty);
 		}
 
 		internal bool GetAchievement(AchievementID id)
@@ -131,7 +136,7 @@ namespace OpenHellion.Social.RichPresence
 
 		internal void SetAchievement(AchievementID id)
 		{
-			_pendingTasks.Enqueue(new Task(delegate
+			_pendingTasks.Enqueue(new Action(delegate
 			{
 				SteamUserStats.SetAchievement(id.ToString());
 				_storeStats = true;

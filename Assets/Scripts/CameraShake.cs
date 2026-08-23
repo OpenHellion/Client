@@ -156,8 +156,8 @@ public class CameraShake : MonoBehaviour
 			             rotYMultiplier * currentMainMultiplier;
 			float rotZ = (Mathf.PerlinNoise(Time.time * speed + 3.14f, 0f) * damperedMag - damperedMag / 2f) *
 			             rotZMultiplier * currentMainMultiplier;
-			base.transform.localPosition = new Vector3(x, y, 0f);
-			base.transform.localRotation = Quaternion.Euler(new Vector3(rotX, rotY, rotZ));
+			transform.localPosition = new Vector3(x, y, 0f);
+			transform.localRotation = Quaternion.Euler(new Vector3(rotX, rotY, rotZ));
 			if (duration > 0f && elapsed > duration)
 			{
 				break;
@@ -166,8 +166,8 @@ public class CameraShake : MonoBehaviour
 			yield return new WaitForEndOfFrame();
 		}
 
-		base.transform.localPosition = Vector3.zero;
-		base.transform.localRotation = Quaternion.identity;
+		transform.localPosition = Vector3.zero;
+		transform.localRotation = Quaternion.identity;
 	}
 
 	public void ShkClick()
@@ -194,13 +194,13 @@ public class CameraShake : MonoBehaviour
 		while (time < duration)
 		{
 			float blend = Blend.Evaluate(time / duration);
-			base.transform.localPosition = new Vector3(
+			transform.localPosition = new Vector3(
 				(Mathf.PerlinNoise(time * frequency, 0f) - 0.5f) * amplitude * blend,
 				(Mathf.PerlinNoise(time * frequency, 1f) - 0.5f) * amplitude * blend,
 				(Mathf.PerlinNoise(time * frequency, 2f) - 0.5f) * amplitude * blend);
 			if (rotationMultiplier > 0f)
 			{
-				base.transform.localRotation = Quaternion.Euler(new Vector3(
+				transform.localRotation = Quaternion.Euler(new Vector3(
 					(Mathf.PerlinNoise(time * frequency, 3f) - 0.5f) * amplitude * rotationMultiplier * blend,
 					(Mathf.PerlinNoise(time * frequency, 4f) - 0.5f) * amplitude * rotationMultiplier * blend,
 					(Mathf.PerlinNoise(time * frequency, 5f) - 0.5f) * amplitude * rotationMultiplier * blend));
@@ -210,7 +210,7 @@ public class CameraShake : MonoBehaviour
 			yield return new WaitForEndOfFrame();
 		}
 
-		base.transform.localPosition = Vector3.zero;
-		base.transform.localRotation = Quaternion.identity;
+		transform.localPosition = Vector3.zero;
+		transform.localRotation = Quaternion.identity;
 	}
 }

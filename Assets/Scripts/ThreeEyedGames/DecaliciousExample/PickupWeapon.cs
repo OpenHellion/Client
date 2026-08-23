@@ -7,7 +7,7 @@ namespace ThreeEyedGames.DecaliciousExample
 		public override void Interact()
 		{
 			Camera.main.GetComponent<ShootDecal>().enabled = true;
-			Object.Destroy(base.gameObject);
+			Destroy(gameObject);
 		}
 	}
 }

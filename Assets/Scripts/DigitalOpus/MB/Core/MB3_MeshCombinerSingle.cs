@@ -2060,7 +2060,7 @@ namespace DigitalOpus.MB.Core
 			}
 			else
 			{
-				MB3_MeshCombiner.UpdateSkinnedMeshApproximateBoundsFromBonesStatic(bones,
+				UpdateSkinnedMeshApproximateBoundsFromBonesStatic(bones,
 					(SkinnedMeshRenderer)targetRenderer);
 			}
 		}
@@ -2101,7 +2101,7 @@ namespace DigitalOpus.MB.Core
 			}
 			else
 			{
-				MB3_MeshCombiner.UpdateSkinnedMeshApproximateBoundsFromBoundsStatic(objectsInCombinedMesh,
+				UpdateSkinnedMeshApproximateBoundsFromBoundsStatic(objectsInCombinedMesh,
 					(SkinnedMeshRenderer)targetRenderer);
 			}
 		}
@@ -3128,7 +3128,7 @@ namespace DigitalOpus.MB.Core
 		{
 			if (_resultSceneObject == null)
 			{
-				_resultSceneObject = new GameObject("CombinedMesh-" + base.name);
+				_resultSceneObject = new GameObject("CombinedMesh-" + name);
 			}
 
 			_targetRenderer = BuildSceneHierarch(this, _resultSceneObject, GetMesh(), createNewChild, gos);

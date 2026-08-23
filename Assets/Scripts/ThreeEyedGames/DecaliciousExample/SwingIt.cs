@@ -10,9 +10,9 @@ namespace ThreeEyedGames.DecaliciousExample
 
 		private void Update()
 		{
-			Vector3 localEulerAngles = base.transform.localEulerAngles;
+			Vector3 localEulerAngles = transform.localEulerAngles;
 			localEulerAngles.z = Mathf.Sin(Time.time * Speed) * MaxAngle;
-			base.transform.localEulerAngles = localEulerAngles;
+			transform.localEulerAngles = localEulerAngles;
 		}
 	}
 }

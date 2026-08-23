@@ -939,20 +939,13 @@ namespace ZeroGravity
 			return CalculateTrueAnomaly(this, _timeSincePeriapsis);
 		}
 
-		public void FillOrbitData(ref OrbitData data, SpaceObjectVessel targetVessel = null)
+		public void FillOrbitData(ref OrbitData data, long targetGuid = 0L, SpaceObjectType targetType = SpaceObjectType.None)
 		{
 			data.ParentGUID = _parent._celestialBodyObj.Guid;
-			if (targetVessel != null)
+			if (targetGuid != 0L)
 			{
-				data.GUID = targetVessel.Guid;
-				if (targetVessel is Ship)
-				{
-					data.ObjectType = SpaceObjectType.Ship;
-				}
-				else if (targetVessel is Asteroid)
-				{
-					data.ObjectType = SpaceObjectType.Asteroid;
-				}
+				data.GUID = targetGuid;
+				data.ObjectType = targetType;
 			}
 
 			data.Eccentricity = _eccentricity;
@@ -964,10 +957,10 @@ namespace ZeroGravity
 			data.SolarSystemPeriapsisTime = SolarSystemTimeAtPeriapsis;
 		}
 
-		public OrbitData GetOrbitData(SpaceObjectVessel vessel = null)
+		public OrbitData GetOrbitData(long targetGuid = 0L, SpaceObjectType targetType = SpaceObjectType.None)
 		{
 			OrbitData data = new OrbitData();
-			FillOrbitData(ref data, vessel);
+			FillOrbitData(ref data, targetGuid, targetType);
 			return data;
 		}
 
@@ -991,13 +984,6 @@ namespace ZeroGravity
 			{
 				ResetOrbit(currentTime);
 			}
-		}
-
-		public void ParseNetworkData(World world, RealtimeData data)
-		{
-			CheckParent(world, data.ParentGUID);
-			RelativePosition = data.Position.ToVector3D();
-			RelativeVelocity = data.Velocity.ToVector3D();
 		}
 
 		public void ParseNetworkData(World world, ManeuverData data)

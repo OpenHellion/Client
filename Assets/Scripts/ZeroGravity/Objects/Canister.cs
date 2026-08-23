@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using OpenHellion;
 using UnityEngine;
 using UnityEngine.UI;
@@ -69,12 +67,10 @@ namespace ZeroGravity.Objects
 			CargoCompartment.Capacity = canisterStats.Capacity;
 			CargoCompartment.Resources = canisterStats.Resources;
 			ResourceBarFiller.fillAmount = ResourcePercentage;
-			if (AttachPoint != null && MyPlayer.Instance.IsLockedToTrigger &&
-			    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel)
+			if (AttachPoint != null && MyPlayer.Instance != null &&
+			    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel cargoPanel)
 			{
-				SceneTriggerCargoPanel sceneTriggerCargoPanel =
-					MyPlayer.Instance.LockedToTrigger as SceneTriggerCargoPanel;
-				sceneTriggerCargoPanel.CargoPanel.RefreshAttachedItemResources();
+				cargoPanel.CargoPanel.RefreshAttachedItemResources();
 			}
 
 			UpdateResources();
@@ -159,14 +155,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			if (MyPlayer.Instance != null && MyPlayer.Instance.Inventory != null &&
-			    (Slot == MyPlayer.Instance.Inventory.HandsSlot || (DynamicObj.Parent is DynamicObject &&
-			                                                            (DynamicObj.Parent as DynamicObject).Item
-			                                                            .Slot ==
-			                                                            MyPlayer.Instance.Inventory.HandsSlot)))
-			{
-				World.InGameGUI.HelmetHud.HandsSlotUpdate();
-			}
+			World.InGameGUI.HelmetHud.HandsSlotUpdate();
 		}
 
 		public override bool PrimaryFunction()

@@ -252,7 +252,7 @@ namespace ZeroGravity.UI
 			SpaceObjectVessel mainVessel = vessel.MainVessel;
 			if (!checkDocked || !mainVessel.IsOutpostOrStation)
 			{
-				if (SpaceObjectSprites.TryGetValue(vessel.SceneID, out var value))
+				if (SpaceObjectSprites.TryGetValue(vessel.SceneId, out var value))
 				{
 					return value;
 				}

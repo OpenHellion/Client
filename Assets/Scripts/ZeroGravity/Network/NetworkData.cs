@@ -1,5 +1,6 @@
 using System;
 using OpenHellion.IO;
+using OpenHellion.Net.Message;
 using ProtoBuf;
 
 namespace ZeroGravity.Network
@@ -8,10 +9,6 @@ namespace ZeroGravity.Network
 	[ProtoInclude(100, typeof(LogInRequest))]
 	[ProtoInclude(101, typeof(LogOutRequest))]
 	[ProtoInclude(103, typeof(PlayerSpawnRequest))]
-	[ProtoInclude(104, typeof(PlayerRespawnRequest))]
-	[ProtoInclude(105, typeof(SpawnObjectsRequest))]
-	[ProtoInclude(106, typeof(SubscribeToObjectsRequest))]
-	[ProtoInclude(107, typeof(UnsubscribeFromObjectsRequest))]
 	[ProtoInclude(108, typeof(ManeuverCourseRequest))]
 	[ProtoInclude(109, typeof(DistressCallRequest))]
 	[ProtoInclude(110, typeof(SuicideRequest))]
@@ -23,8 +20,6 @@ namespace ZeroGravity.Network
 	[ProtoInclude(200, typeof(LogInResponse))]
 	[ProtoInclude(201, typeof(LogOutResponse))]
 	[ProtoInclude(203, typeof(PlayerSpawnResponse))]
-	[ProtoInclude(204, typeof(PlayerRespawnResponse))]
-	[ProtoInclude(205, typeof(SpawnObjectsResponse))]
 	[ProtoInclude(206, typeof(ManeuverCourseResponse))]
 	[ProtoInclude(209, typeof(PlayersOnServerResponse))]
 	[ProtoInclude(210, typeof(AvailableSpawnPointsResponse))]
@@ -33,24 +28,18 @@ namespace ZeroGravity.Network
 	[ProtoInclude(213, typeof(AuthorizedVesselsResponse))]
 	[ProtoInclude(300, typeof(CheckConnectionMessage))]
 	[ProtoInclude(301, typeof(EnvironmentReadyMessage))]
-	[ProtoInclude(302, typeof(CharacterMovementMessage))]
 	[ProtoInclude(303, typeof(DestroyObjectMessage))]
 	[ProtoInclude(304, typeof(PlayerStatsMessage))]
 	[ProtoInclude(305, typeof(PlayerShootingMessage))]
-	[ProtoInclude(307, typeof(DynamicObjectMovementMessage))]
-	[ProtoInclude(308, typeof(MovementMessage))]
 	[ProtoInclude(309, typeof(ShipStatsMessage))]
 	[ProtoInclude(311, typeof(KillPlayerMessage))]
-	[ProtoInclude(312, typeof(CorpseStatsMessage))]
 	[ProtoInclude(313, typeof(PlayerRoomMessage))]
-	[ProtoInclude(314, typeof(CorpseMovementMessage))]
 	[ProtoInclude(316, typeof(DynamicObjectStatsMessage))]
 	[ProtoInclude(317, typeof(TurretShootingMessage))]
 	[ProtoInclude(318, typeof(DestroyVesselMessage))]
 	[ProtoInclude(319, typeof(ResetServer))]
 	[ProtoInclude(320, typeof(TextChatMessage))]
 	[ProtoInclude(321, typeof(PlayerDrillingMessage))]
-	[ProtoInclude(322, typeof(InitializeSpaceObjectMessage))]
 	[ProtoInclude(324, typeof(DynamicObjectsInfoMessage))]
 	[ProtoInclude(325, typeof(TransferResourceMessage))]
 	[ProtoInclude(326, typeof(RefineResourceMessage))]
@@ -77,10 +66,19 @@ namespace ZeroGravity.Network
 	[ProtoInclude(350, typeof(SkipQuestMessage))]
 	[ProtoInclude(351, typeof(MiningPointStatsMessage))]
 	[ProtoInclude(352, typeof(UpdateBlueprintsMessage))]
-	[ProtoInclude(353, typeof(NavigationMapDetailsMessage))]
 	[ProtoInclude(354, typeof(UpdateVesselDataMessage))]
 	[ProtoInclude(406, typeof(DeleteCharacterRequest))]
 	[ProtoInclude(506, typeof(DeleteCharacterResponse))]
+	// OpenHellion messages below this line.
+	[ProtoInclude(1000, typeof(ObjectsInfoRequest))]
+	[ProtoInclude(1001, typeof(ObjectsInfoResponse))]
+	[ProtoInclude(1010, typeof(MovementMessage))]
+	[ProtoInclude(1011, typeof(MoveObjectRequest))]
+	[ProtoInclude(1012, typeof(CharacterAnimationMessage))]
+	[ProtoInclude(1013, typeof(ChangeParentMessage))]
+	[ProtoInclude(1020, typeof(MapDataRequest))]
+	[ProtoInclude(1021, typeof(MapDataResponse))]
+	[ProtoInclude(1022, typeof(ScanForObjectsRequest))]
 	public abstract class NetworkData
 	{
 		public enum MessageStatus : byte

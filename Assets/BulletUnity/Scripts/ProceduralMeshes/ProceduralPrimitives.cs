@@ -14,7 +14,7 @@ using BulletUnity;
 namespace BulletUnity
 {
     /// <summary>
-    /// Class to generate procedural Unity Meshes 
+    /// Class to generate procedural Unity Meshes
     /// </summary>
     public static class ProceduralPrimitives
     {
@@ -24,7 +24,7 @@ namespace BulletUnity
             Mesh mesh = new Mesh();
             mesh.name = "PPPlane";
 
-            #region Vertices		
+            #region Vertices
             Vector3[] vertices = new Vector3[resX * resZ];
             for (int z = 0; z < resZ; z++)
             {
@@ -45,7 +45,7 @@ namespace BulletUnity
                 normales[n] = Vector3.up;
             #endregion
 
-            #region UVs		
+            #region UVs
             Vector2[] uvs = new Vector2[vertices.Length];
             for (int v = 0; v < resZ; v++)
             {
@@ -111,19 +111,19 @@ namespace BulletUnity
             {
 	// Bottom
 	p0, p1, p2, p3,
- 
+
 	// Left
 	p7, p4, p0, p3,
- 
+
 	// Front
 	p4, p5, p1, p0,
- 
+
 	// Back
 	p6, p7, p3, p2,
- 
+
 	// Right
 	p5, p6, p2, p1,
- 
+
 	// Top
 	p7, p6, p5, p4
             };
@@ -141,19 +141,19 @@ namespace BulletUnity
             {
 	// Bottom
 	down, down, down, down,
- 
+
 	// Left
 	left, left, left, left,
- 
+
 	// Front
 	front, front, front, front,
- 
+
 	// Back
 	back, back, back, back,
- 
+
 	// Right
 	right, right, right, right,
- 
+
 	// Top
 	up, up, up, up
             };
@@ -169,19 +169,19 @@ namespace BulletUnity
             {
 	// Bottom
 	_11, _01, _00, _10,
- 
+
 	// Left
 	_11, _01, _00, _10,
- 
+
 	// Front
 	_11, _01, _00, _10,
- 
+
 	// Back
 	_11, _01, _00, _10,
- 
+
 	// Right
 	_11, _01, _00, _10,
- 
+
 	// Top
 	_11, _01, _00, _10,
             };
@@ -192,24 +192,24 @@ namespace BulletUnity
             {
 	// Bottom
 	3, 1, 0,
-    3, 2, 1,			
- 
+    3, 2, 1,
+
 	// Left
 	3 + 4 * 1, 1 + 4 * 1, 0 + 4 * 1,
     3 + 4 * 1, 2 + 4 * 1, 1 + 4 * 1,
- 
+
 	// Front
 	3 + 4 * 2, 1 + 4 * 2, 0 + 4 * 2,
     3 + 4 * 2, 2 + 4 * 2, 1 + 4 * 2,
- 
+
 	// Back
 	3 + 4 * 3, 1 + 4 * 3, 0 + 4 * 3,
     3 + 4 * 3, 2 + 4 * 3, 1 + 4 * 3,
- 
+
 	// Right
 	3 + 4 * 4, 1 + 4 * 4, 0 + 4 * 4,
     3 + 4 * 4, 2 + 4 * 4, 1 + 4 * 4,
- 
+
 	// Top
 	3 + 4 * 5, 1 + 4 * 5, 0 + 4 * 5,
     3 + 4 * 5, 2 + 4 * 5, 1 + 4 * 5,
@@ -356,10 +356,10 @@ namespace BulletUnity
             Quaternion q = Quaternion.identity;
             if (axis == 0)
             {
-                q = Quaternion.AngleAxis(90, UnityEngine.Vector3.forward);
+                q = Quaternion.AngleAxis(90, Vector3.forward);
             } else if (axis == 2)
             {
-                q = Quaternion.AngleAxis(90, UnityEngine.Vector3.right);
+                q = Quaternion.AngleAxis(90, Vector3.right);
             }
             if (axis == 0 || axis == 2)
             {
@@ -915,7 +915,7 @@ namespace BulletUnity
             Mesh mesh = new Mesh();
             mesh.name = "PPTorus";
 
-            #region Vertices		
+            #region Vertices
             Vector3[] vertices = new Vector3[(nbRadSeg + 1) * (nbSides + 1)];
             float _2pi = Mathf.PI * 2f;
             for (int seg = 0; seg <= nbRadSeg; seg++)
@@ -938,7 +938,7 @@ namespace BulletUnity
             }
             #endregion
 
-            #region Normales		
+            #region Normales
             Vector3[] normales = new Vector3[vertices.Length];
             for (int seg = 0; seg <= nbRadSeg; seg++)
             {
@@ -997,7 +997,7 @@ namespace BulletUnity
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="radius"></param>
         /// <param name="nbLong">number of longitude lines</param>
@@ -1033,7 +1033,7 @@ namespace BulletUnity
             vertices[vertices.Length - 1] = Vector3.up * -radius;
             #endregion
 
-            #region Normales		
+            #region Normales
             Vector3[] normales = new Vector3[vertices.Length];
             for (int n = 0; n < vertices.Length; n++)
                 normales[n] = vertices[n].normalized;
@@ -1102,7 +1102,7 @@ namespace BulletUnity
         //Note: Don't forget to include System.Collections.Generic. And there is no UV yet, not sure how to go about it actually.
         public Mesh CreateMeshIcoSphere()
         {
-           
+
             return IcoSphere.Create();
         }
 
@@ -1200,7 +1200,7 @@ namespace BulletUnity
                 faces.Add(new TriangleIndices(0, 7, 10));
                 faces.Add(new TriangleIndices(0, 10, 11));
 
-                // 5 adjacent faces 
+                // 5 adjacent faces
                 faces.Add(new TriangleIndices(1, 5, 9));
                 faces.Add(new TriangleIndices(5, 11, 4));
                 faces.Add(new TriangleIndices(11, 10, 2));
@@ -1214,7 +1214,7 @@ namespace BulletUnity
                 faces.Add(new TriangleIndices(3, 6, 8));
                 faces.Add(new TriangleIndices(3, 8, 9));
 
-                // 5 adjacent faces 
+                // 5 adjacent faces
                 faces.Add(new TriangleIndices(4, 9, 5));
                 faces.Add(new TriangleIndices(2, 4, 11));
                 faces.Add(new TriangleIndices(6, 2, 10));
@@ -1314,7 +1314,7 @@ namespace BulletUnity
 
                 // Accept new vertex!
                 newVerts.Add(vert);
-                if (mesh.uv.Length > 0)  //some meshes dont have 
+                if (mesh.uv.Length > 0)  //some meshes dont have
                     newUVs.Add(mesh.uv[k]);
 
                 skipToNext:;

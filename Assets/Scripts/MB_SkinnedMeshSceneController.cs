@@ -22,7 +22,7 @@ public class MB_SkinnedMeshSceneController : MonoBehaviour
 
 	private void Start()
 	{
-		GameObject gameObject = Object.Instantiate(workerPrefab);
+		GameObject gameObject = Instantiate(workerPrefab);
 		gameObject.transform.position = new Vector3(1.31f, 0.985f, -0.25f);
 		Animation component = gameObject.GetComponent<Animation>();
 		component.wrapMode = WrapMode.Loop;
@@ -40,7 +40,7 @@ public class MB_SkinnedMeshSceneController : MonoBehaviour
 			if (swordInstance == null)
 			{
 				Transform parent = SearchHierarchyForBone(targetCharacter.transform, "RightHandAttachPoint");
-				swordInstance = Object.Instantiate(swordPrefab);
+				swordInstance = Instantiate(swordPrefab);
 				swordInstance.transform.parent = parent;
 				swordInstance.transform.localPosition = Vector3.zero;
 				swordInstance.transform.localRotation = Quaternion.identity;
@@ -57,7 +57,7 @@ public class MB_SkinnedMeshSceneController : MonoBehaviour
 					{ swordInstance.GetComponentInChildren<MeshRenderer>().gameObject };
 				skinnedMeshBaker.AddDeleteGameObjects(null, deleteGOs, true);
 				skinnedMeshBaker.Apply();
-				Object.Destroy(swordInstance);
+				Destroy(swordInstance);
 				swordInstance = null;
 			}
 		}
@@ -67,7 +67,7 @@ public class MB_SkinnedMeshSceneController : MonoBehaviour
 			if (hatInstance == null)
 			{
 				Transform parent2 = SearchHierarchyForBone(targetCharacter.transform, "HeadAttachPoint");
-				hatInstance = Object.Instantiate(hatPrefab);
+				hatInstance = Instantiate(hatPrefab);
 				hatInstance.transform.parent = parent2;
 				hatInstance.transform.localPosition = Vector3.zero;
 				hatInstance.transform.localRotation = Quaternion.identity;
@@ -83,7 +83,7 @@ public class MB_SkinnedMeshSceneController : MonoBehaviour
 					{ hatInstance.GetComponentInChildren<MeshRenderer>().gameObject };
 				skinnedMeshBaker.AddDeleteGameObjects(null, deleteGOs2, true);
 				skinnedMeshBaker.Apply();
-				Object.Destroy(hatInstance);
+				Destroy(hatInstance);
 				hatInstance = null;
 			}
 		}
@@ -93,7 +93,7 @@ public class MB_SkinnedMeshSceneController : MonoBehaviour
 			if (glassesInstance == null)
 			{
 				Transform parent3 = SearchHierarchyForBone(targetCharacter.transform, "NoseAttachPoint");
-				glassesInstance = Object.Instantiate(glassesPrefab);
+				glassesInstance = Instantiate(glassesPrefab);
 				glassesInstance.transform.parent = parent3;
 				glassesInstance.transform.localPosition = Vector3.zero;
 				glassesInstance.transform.localRotation = Quaternion.identity;
@@ -110,7 +110,7 @@ public class MB_SkinnedMeshSceneController : MonoBehaviour
 					{ glassesInstance.GetComponentInChildren<MeshRenderer>().gameObject };
 				skinnedMeshBaker.AddDeleteGameObjects(null, deleteGOs3, true);
 				skinnedMeshBaker.Apply();
-				Object.Destroy(glassesInstance);
+				Destroy(glassesInstance);
 				glassesInstance = null;
 			}
 		}

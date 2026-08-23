@@ -12,6 +12,8 @@ namespace ZeroGravity.Network
 
 		public bool DockingStatus;
 
+		public bool? IsImmediate;
+
 		public float[] RelativePosition;
 
 		public float[] RelativeRotation;

@@ -24,9 +24,9 @@ namespace BulletUnity {
         //For kinematic rigid bodies it is called every simulation step
 		//[MonoPInvokeCallback(typeof(GetTransformDelegate))]
         public override void GetWorldTransform(out BM.Matrix worldTrans) {
-            BulletSharp.Math.Vector3 pos = transform.position.ToBullet();
-            BulletSharp.Math.Quaternion rot = transform.rotation.ToBullet();
-            BulletSharp.Math.Matrix.AffineTransformation(1f, ref rot, ref pos, out worldTrans);
+			BM.Vector3 pos = transform.position.ToBullet();
+			BM.Quaternion rot = transform.rotation.ToBullet();
+			BM.Matrix.AffineTransformation(1f, ref rot, ref pos, out worldTrans);
         }
 
         //Bullet calls this so I can copy bullet data to unity

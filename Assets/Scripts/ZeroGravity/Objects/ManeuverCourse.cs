@@ -34,7 +34,9 @@ namespace ZeroGravity.Objects
 
 		public OrbitParameters EndOrbit;
 
-		public SpaceObjectVessel TargetVessel;
+		public long TargetGuid;
+
+		public SpaceObjectType TargetType;
 
 		public LineRenderer ManeuverLine;
 
@@ -96,7 +98,7 @@ namespace ZeroGravity.Objects
 
 		private double ObjectScale => Map.Scale / 149597870700.0;
 
-		private Ship MyShip => Map.MyShip.MainObject as Ship;
+		private Ship MyShip => Map.ParentShip;
 
 		private bool IsPossibleAndFeasible => _isPossible && _isFeasible;
 
@@ -200,7 +202,7 @@ namespace ZeroGravity.Objects
 				DockingStructureError = false;
 			}
 
-			if (MyShip.SceneID == GameScenes.SceneId.AltCorp_Shuttle_SARA)
+			if (MyShip.SceneId == GameScenes.SceneId.AltCorp_Shuttle_SARA)
 			{
 				SceneDockingPort sceneDockingPort =
 					MyShip.DockingPorts.Values.FirstOrDefault((SceneDockingPort m) => m.DockingPortOrder == 1);

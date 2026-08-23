@@ -32,7 +32,7 @@ namespace ZeroGravity.LevelDesign
 				{
 					new AttachPointTransformData
 					{
-						AttachPoint = base.transform,
+						AttachPoint = transform,
 						ItemType = ItemType.AltairHandDrillBattery
 					}
 				};
