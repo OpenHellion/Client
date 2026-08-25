@@ -213,7 +213,6 @@ namespace OpenHellion
 			EventSystem.AddListener(typeof(DestroyObjectMessage), DestroyObjectMessageListener);
 			EventSystem.AddListener(typeof(MovementMessage), MovementMessageListener);
 			EventSystem.AddListener<PlayersOnServerResponse>(PlayersOnServerResponseListener);
-			EventSystem.AddListener(typeof(ConsoleMessage), ConsoleMessageListener);
 			EventSystem.AddListener(typeof(ShipCollisionMessage), ShipCollisionMessageListener);
 			EventSystem.AddListener(typeof(UpdateVesselDataMessage), UpdateVesselDataMessageListener);
 
@@ -545,27 +544,6 @@ namespace OpenHellion
 				{
 					(GetVessel(playersOnServerResponse.SecuritySystemID.VesselGUID) as Ship).SecuritySystem
 						.ParsePlayersOnServerResponse(playersOnServerResponse);
-				}
-			}
-			catch (Exception ex)
-			{
-				Debug.LogException(ex);
-			}
-		}
-
-		private void ConsoleMessageListener(NetworkData data)
-		{
-			try
-			{
-				ConsoleMessage consoleMessage = data as ConsoleMessage;
-				InGameGUI.Console.CreateTextElement(consoleMessage.Text, Colors.Orange);
-				if (consoleMessage.Text == "God mode: ON")
-				{
-					InGameGUI.Console.GodMode.isOn = true;
-				}
-				else if (consoleMessage.Text == "God mode: OFF")
-				{
-					InGameGUI.Console.GodMode.isOn = false;
 				}
 			}
 			catch (Exception ex)

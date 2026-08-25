@@ -14,6 +14,7 @@ using OpenHellion.Net;
 using OpenHellion.UI;
 using UnityEngine.InputSystem;
 using OpenHellion.IO;
+using Cysharp.Threading.Tasks;
 
 namespace ZeroGravity
 {
@@ -33,13 +34,15 @@ namespace ZeroGravity
 
 		public GameObject TextElement;
 
-		private int maxElements = 20;
+		private const int MaxElements = 200;
 
-		public List<Tuple<GameObject, bool>> Elements = new List<Tuple<GameObject, bool>>();
+		private readonly List<GameObject> _lines = new();
+
+		private readonly List<string> _history = new();
+
+		private int _historyIndex = -1;
 
 		public Toggle GodMode;
-
-		private Tuple<GameObject, bool> lastSelectedStackItem;
 
 		public GameObject SpawnOptionUI;
 
@@ -63,39 +66,31 @@ namespace ZeroGravity
 		{
 			if (CurrentScreen == 0)
 			{
-				if (Keyboard.current.enterKey.wasPressedThisFrame && Input.text != string.Empty)
+				if (Keyboard.current.enterKey.wasPressedThisFrame)
 				{
 					SubmitText();
 				}
-				else if (Keyboard.current.upArrowKey.wasPressedThisFrame && Elements.Count > 0)
+				else if (Keyboard.current.upArrowKey.wasPressedThisFrame && _history.Count > 0)
 				{
-					lastSelectedStackItem = Elements.FindLast((Tuple<GameObject, bool> m) =>
-						m.Item2 && (Elements.IndexOf(lastSelectedStackItem) > Elements.IndexOf(m) ||
-						            lastSelectedStackItem == null));
-					if (lastSelectedStackItem != null)
-					{
-						Input.text = lastSelectedStackItem.Item1.GetComponent<Text>().text;
-						Input.Select();
-						Input.ActivateInputField();
-					}
+					_historyIndex = _historyIndex < 0 ? _history.Count - 1 : Mathf.Max(_historyIndex - 1, 0);
+					Input.text = _history[_historyIndex];
+					Input.caretPosition = Input.text.Length;
+					Input.Select();
+					Input.ActivateInputField();
 				}
-				else if (Keyboard.current.downArrowKey.wasPressedThisFrame && Elements.Count > 0)
+				else if (Keyboard.current.downArrowKey.wasPressedThisFrame && _historyIndex >= 0)
 				{
-					lastSelectedStackItem = Elements.FindLast((Tuple<GameObject, bool> m) =>
-						m.Item2 && (Elements.IndexOf(lastSelectedStackItem) < Elements.IndexOf(m) ||
-						            lastSelectedStackItem == null));
-					if (lastSelectedStackItem != null)
+					_historyIndex++;
+					Input.text = _historyIndex >= _history.Count ? string.Empty : _history[_historyIndex];
+					if (_historyIndex >= _history.Count)
 					{
-						Input.text = lastSelectedStackItem.Item1.GetComponent<Text>().text;
-						Input.Select();
-						Input.ActivateInputField();
+						_historyIndex = -1;
 					}
-				}
-			}
 
-			if (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.f2Key.wasPressedThisFrame)
-			{
-				Close();
+					Input.caretPosition = Input.text.Length;
+					Input.Select();
+					Input.ActivateInputField();
+				}
 			}
 
 			if (NetworkingActive)
@@ -104,12 +99,12 @@ namespace ZeroGravity
 			}
 		}
 
-		public void CreateTextElement(string text, Color? color = null, bool userEntry = false)
+		public void CreateTextElement(string text, Color? color = null)
 		{
-			if (Elements.Count >= maxElements)
+			if (_lines.Count >= MaxElements)
 			{
-				Destroy(Elements[0].Item1);
-				Elements.RemoveAt(0);
+				Destroy(_lines[0]);
+				_lines.RemoveAt(0);
 			}
 
 			GameObject gameObject = Instantiate(TextElement, Scroll.content);
@@ -124,29 +119,79 @@ namespace ZeroGravity
 			gameObject.transform.Reset();
 			Scroll.normalizedPosition = new Vector2(0f, 0f);
 			Canvas.ForceUpdateCanvases();
-			Elements.Add(new Tuple<GameObject, bool>(gameObject, userEntry));
-			if (userEntry)
-			{
-				lastSelectedStackItem = null;
-			}
+			_lines.Add(gameObject);
 		}
 
 		public void SubmitText()
 		{
-			NetworkController.SendAndForget(new ConsoleMessage
+			string sendText = Input.text;
+			if (sendText.IsNullOrEmpty())
 			{
-				Text = Input.text
-			});
-			CreateTextElement(Input.text, null, userEntry: true);
+				return;
+			}
+
+			CreateTextElement(sendText);
+			_history.Add(sendText);
+			_historyIndex = -1;
 			Input.text = string.Empty;
 			Input.ActivateInputField();
 			Input.Select();
+			Send(sendText).Forget();
+		}
+
+		/// <summary>
+		/// 	Send a command to the server and print whatever it answers.
+		/// 	The server always answers, so silence here means the connection is gone.
+		/// </summary>
+		private async UniTaskVoid Send(string command)
+		{
+			ConsoleMessage response = null;
+			bool timedOut = false;
+			try
+			{
+				response = await NetworkController.SendReceiveAsync(new ConsoleMessage
+				{
+					Text = command
+				}, 30000) as ConsoleMessage;
+			}
+			catch (TimeoutException)
+			{
+				timedOut = true;
+			}
+
+			// If the world is exited before command arrives.
+			if (this == null)
+			{
+				return;
+			}
+
+			if (timedOut)
+			{
+				CreateTextElement("No response from server.", Colors.RedText);
+				return;
+			}
+
+			if (response == null || response.Text.IsNullOrEmpty())
+			{
+				return;
+			}
+
+			CreateTextElement(response.Text,
+				response.Status == NetworkData.MessageStatus.Failure ? Colors.RedText : Colors.Orange);
+
+			if (response.Text == "God mode: ON")
+			{
+				GodMode.SetIsOnWithoutNotify(true);
+			}
+			else if (response.Text == "God mode: OFF")
+			{
+				GodMode.SetIsOnWithoutNotify(false);
+			}
 		}
 
 		public void Open()
 		{
 			_inGameGUI.IsInputFieldIsActive = true;
-			SetScreen(0);
 			Globals.ToggleCursor(true);
 			MyPlayer.Instance.FpsController.ToggleMovement(false);
 			MyPlayer.Instance.FpsController.ToggleAttached(true);
@@ -155,16 +200,22 @@ namespace ZeroGravity
 				MyPlayer.Instance.FpsController.ResetVelocity();
 			}
 
-			lastSelectedStackItem = null;
-			Canvas.ForceUpdateCanvases();
+			_historyIndex = -1;
 			gameObject.SetActive(value: true);
-			Input.ActivateInputField();
+			SetScreen(0);
+			Canvas.ForceUpdateCanvases();
+			Scroll.normalizedPosition = new Vector2(0f, 0f);
 		}
 
 		public void Close()
 		{
 			_inGameGUI.IsInputFieldIsActive = false;
 			gameObject.SetActive(value: false);
+			if (MyPlayer.Instance == null)
+			{
+				return;
+			}
+
 			if (!MyPlayer.Instance.IsLockedToTrigger)
 			{
 				Globals.ToggleCursor(false);
@@ -194,35 +245,30 @@ namespace ZeroGravity
 
 		public void Spawn(string itemToSpawn)
 		{
-			NetworkController.SendAndForget(new ConsoleMessage
-			{
-				Text = "spawn " + itemToSpawn
-			});
+			Send("spawn " + itemToSpawn).Forget();
 		}
 
 		public void Action(string actionToDo)
 		{
-			NetworkController.SendAndForget(new ConsoleMessage
-			{
-				Text = actionToDo
-			});
+			Send(actionToDo).Forget();
 		}
 
 		public void ToggleGodmod()
 		{
-			string empty = !GodMode.isOn ? "0" : "1";
-			NetworkController.SendAndForget(new ConsoleMessage
-			{
-				Text = "god " + empty
-			});
+			Send(GodMode.isOn ? "god 1" : "god 0").Forget();
 		}
 
-		public void SetScreen(int option)
+		public void CheckIfGodAndUpdate()
+		{
+			Send("god").Forget();
+		}
+
+		public void SetScreen(int optionIndex)
 		{
 			NetworkingActive = false;
-			foreach (GameObject option2 in Options)
+			foreach (GameObject option in Options)
 			{
-				option2.Activate(value: false);
+				option.Activate(value: false);
 			}
 
 			foreach (GameObject screen in Screens)
@@ -230,10 +276,10 @@ namespace ZeroGravity
 				screen.Activate(value: false);
 			}
 
-			Screens[option].Activate(value: true);
-			Options[option].Activate(value: true);
-			CurrentScreen = option;
-			if (option == 0)
+			Screens[optionIndex].Activate(value: true);
+			Options[optionIndex].Activate(value: true);
+			CurrentScreen = optionIndex;
+			if (optionIndex == 0)
 			{
 				Input.ActivateInputField();
 				Input.Select();
@@ -241,7 +287,7 @@ namespace ZeroGravity
 				Scroll.normalizedPosition = new Vector2(0f, 0f);
 			}
 
-			if (option == 5)
+			if (optionIndex == 5)
 			{
 				NetworkingActive = true;
 			}

@@ -8,6 +8,7 @@ Spawn:
 [x] Create new flow for map spawning
 [x] Spawn corpse on server
 [ ] Fix map not being intitialised correctly
+[ ] Fix spawning with dynamicobjects not working on relogging
 
 Movement:
 [x] Made world use local space, derived from anchor
@@ -45,25 +46,38 @@ Short-term:
 [ ] Fix differences between GameTransport on client and server
 [ ] Test if new other character controller works.
 [ ] Fix spawn setup station falling into planet ejects player and crashes server on disconnect
+[ ] Crashing into a planet when on a pivot does not kill the player
 [ ] Not possible to drop items
 [ ] Make map support fuzzy objects
+[ ] Fix no external collision on AltCorp_Corridor45Turn (and probably others)
+
+Debugging/diagnostics:
+[x] Fix console (add errors and make player admin)
+[ ] Create a TestClient on the server
+[ ] Set up unity test framework
+[ ] Add tests to duplicate network data and similar
+[ ] Add test to ClassHasher (same on both client and server)
+[ ] Add test to ZeroGravity math
+[ ] Add test to static data integrity
+[ ] Implement TestShip spawn setup as testing spawn
+[ ] Make all MathHelper random use a testing seed
+[ ] Show game state info in console and log to file
+[ ] Automatic hash comparison of state on both client and server?
+[ ] Organise client code into assemblies
+[ ] Add assertions in code
 
 Later:
-[ ] Set up a proper test framework
-[ ] Organise client code into assemblies
 [ ] Find areas where risk of race conditions are high
 [ ] Fix planets on map having no texture
 [ ] Fix sounds playing based on selected target when EVAing.
 [ ] Fix alarm not running and sounds playing in ships where they should not
 [ ] Sound does not mute when in 0G
 [ ] Make ambience sound persist between main menu and world menu
-[ ] Fix server constantly being over tick time budget.
 [ ] Fix client CPU hog
 [ ] Merge similar network messages in same tick
 [ ] Rewrite EventSystem to fix weaknesses
 [ ] Remove GameStarter.FixCryoPodState
 [ ] Fix logging in on same session breaking scene loading
-[ ] Create custom testing-spawn for faster debugging.
 [ ] Fix slow interaction
 [ ] Fix audio continuing after exiting game
 [ ] Remove ImpactDetector.cs
@@ -87,4 +101,4 @@ Later:
 [ ] Finish StructureDataGenerator for all types of scene data
 [ ] Remove lineEdit.cs
 [ ] Remove FakeGuid on player
-[ ] Fix warping
+[ ] Fix warping menu

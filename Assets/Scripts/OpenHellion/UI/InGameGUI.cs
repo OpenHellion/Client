@@ -1,4 +1,4 @@
-﻿// InGameGUI.cs
+// InGameGUI.cs
 //
 // Copyright (C) 2025, OpenHellion contributors
 //
@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.Linq;
 using OpenHellion.IO;
 using Steamworks;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -212,6 +211,22 @@ namespace OpenHellion.UI
 				}
 			}
 
+			if (MyPlayer.Instance != null && !_world.IsChatOpened &&
+			    (Keyboard.current.f2Key.wasPressedThisFrame ||
+			     (ConsoleIsUp && Keyboard.current.escapeKey.wasPressedThisFrame)))
+			{
+				if (ConsoleIsUp)
+				{
+					Console.Close();
+				}
+				else if (!IsInputFieldIsActive)
+				{
+					Console.Open();
+				}
+
+				return;
+			}
+
 			if (Keyboard.current.escapeKey.wasPressedThisFrame)
 			{
 				if (IsConfirmBoxActive || ReportServerBox.gameObject.activeInHierarchy ||
@@ -296,18 +311,6 @@ namespace OpenHellion.UI
 				ToggleScreenShootMod();
 			}
 
-			if (Keyboard.current.f2Key.wasPressedThisFrame && !_world.IsChatOpened &&
-			    !IsInputFieldIsActive)
-			{
-				if (ConsoleIsUp)
-				{
-					Console.Close();
-				}
-				else
-				{
-					Console.Open();
-				}
-			}
 		}
 
 		/// <summary>

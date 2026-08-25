@@ -1437,7 +1437,8 @@ namespace ZeroGravity.Objects
 
 			// Open the in game menu when pressing escape.
 			if (Keyboard.current.escapeKey.wasPressedThisFrame && LockedToTrigger == null &&
-				!World.InGameGUI.IsGameMenuOpen && !World.InGameGUI.ScreenShootMod.activeInHierarchy)
+				!World.InGameGUI.IsGameMenuOpen && !World.InGameGUI.ConsoleIsUp &&
+				!World.InGameGUI.ScreenShootMod.activeInHierarchy)
 			{
 				if (World.InGameGUI.IsPlayerOverviewOpen)
 				{
@@ -2442,10 +2443,7 @@ namespace ZeroGravity.Objects
 			myPlayer._shipExteriorSunLight = World.ShipSunLightTransform.GetComponent<Light>();
 			myPlayer.rigidBody.isKinematic = true;
 			AkSoundEngine.SetRTPCValue(SoundManager.InGameVolume, 0f);
-			NetworkController.SendAndForget(new ConsoleMessage
-			{
-				Text = "god"
-			});
+			World.InGameGUI.Console.CheckIfGodAndUpdate();
 
 			Debug.Log("Successfully spawned player.");
 		}
