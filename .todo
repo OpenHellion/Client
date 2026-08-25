@@ -7,8 +7,8 @@ Spawn:
 [x] Figure out how to properly spawn pivots
 [x] Create new flow for map spawning
 [x] Spawn corpse on server
+[x] Fix spawning with dynamicobjects not working on relogging
 [ ] Fix map not being intitialised correctly
-[ ] Fix spawning with dynamicobjects not working on relogging
 
 Movement:
 [x] Made world use local space, derived from anchor
@@ -28,6 +28,7 @@ Movement:
 [ ] Fix snap when flying back into range of a vessel
 [ ] Fix items, corpses and other players sliding when the anchor changes
 [ ] Moving from 0g to 1g fast might cause you to go trough the wall and fall forever, crashing the game
+[ ] Landing and staying on asteroid is impossible (may be because object spins)
 
 Short-term:
 [x] Update to Unity 6.3
@@ -53,14 +54,14 @@ Short-term:
 
 Debugging/diagnostics:
 [x] Fix console (add errors and make player admin)
-[ ] Create a TestClient on the server
 [ ] Set up unity test framework
+[ ] Create a TestClient on the server
 [ ] Add tests to duplicate network data and similar
 [ ] Add test to ClassHasher (same on both client and server)
 [ ] Add test to ZeroGravity math
 [ ] Add test to static data integrity
 [ ] Implement TestShip spawn setup as testing spawn
-[ ] Make all MathHelper random use a testing seed
+[ ] Make all MathHelper.Random use a testing seed
 [ ] Show game state info in console and log to file
 [ ] Automatic hash comparison of state on both client and server?
 [ ] Organise client code into assemblies

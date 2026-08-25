@@ -493,7 +493,6 @@ namespace ZeroGravity.Objects
 
 		protected void Start()
 		{
-			InitializeInventory();
 			if (CurrentHelmet != null && (Parent is Pivot || Parent is Asteroid))
 			{
 				CurrentHelmet.HudUI.Radar.CanRadarWork = true;
@@ -514,15 +513,6 @@ namespace ZeroGravity.Objects
 			PostProcessLayer.Antialiasing antialiasingOption =
 				(PostProcessLayer.Antialiasing)Settings.SettingsData.VideoSettings.AntialiasingIndex;
 			FpsController.MainCamera.GetComponent<PostProcessLayer>().antialiasingMode = antialiasingOption;
-		}
-
-		private void InitializeInventory()
-		{
-			if (Inventory == null)
-			{
-				Inventory = new Inventory(this, animHelper);
-				_inventoryUI = World.InGameGUI.InventoryUI;
-			}
 		}
 
 		private void SpawnInventory(DynamicObjectDetails[] dynamicObjects)
@@ -2416,6 +2406,8 @@ namespace ZeroGravity.Objects
 			myPlayer.FpsController.AnimatorHelper = animatorHelper;
 			myPlayer.animHelper = animatorHelper;
 			myPlayer.FpsController.CameraController.animatorHelper = animatorHelper;
+			myPlayer.Inventory = new Inventory(myPlayer, animatorHelper);
+			myPlayer._inventoryUI = World.InGameGUI.InventoryUI;
 
 			myPlayer.HeadSkin = headObject.GetComponent<SkinnedMeshRenderer>();
 			myPlayer.FpsController.HeadCameraParent = genderItem.HeadCameraParent;
