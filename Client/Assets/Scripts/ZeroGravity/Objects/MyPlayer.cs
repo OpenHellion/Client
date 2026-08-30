@@ -306,6 +306,19 @@ namespace ZeroGravity.Objects
 				}
 
 				base.LockedToTrigger = value;
+
+				if (FpsController != null)
+				{
+					if (value is SceneTriggerShipControl)
+					{
+						FpsController.LockPlayerToPoint(locked: true, value.transform);
+					}
+					else
+					{
+						FpsController.LockPlayerToPoint(locked: false);
+						transform.SetParent(null, worldPositionStays: true);
+					}
+				}
 			}
 		}
 
@@ -2945,6 +2958,11 @@ namespace ZeroGravity.Objects
 
 		public void ToggleRagdoll(bool? enabled = null)
 		{
+			if (LockedToTrigger != null && (enabled ?? !_isRagdolled))
+			{
+				return;
+			}
+
 			if (enabled.HasValue)
 			{
 				_isRagdolled = enabled.Value;
