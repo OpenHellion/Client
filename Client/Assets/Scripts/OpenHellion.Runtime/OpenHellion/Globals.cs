@@ -23,13 +23,14 @@ using OpenHellion.Net;
 using OpenHellion.Social.Message;
 using OpenHellion.Social.RichPresence;
 using OpenHellion.UI;
-using UnityEditor;
 using UnityEngine;
 using ZeroGravity;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 using ZeroGravity.UI;
-using Debug = UnityEngine.Debug;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace OpenHellion
 {

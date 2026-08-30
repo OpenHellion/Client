@@ -67,7 +67,7 @@ namespace ZeroGravity.Math
 		{
 			if (!IsSquare())
 			{
-				throw new MException("The matrix is not square!");
+				throw new Exception("The matrix is not square!");
 			}
 
 			L = IdentityMatrix(rows, cols);
@@ -95,7 +95,7 @@ namespace ZeroGravity.Math
 
 				if (num == 0.0)
 				{
-					throw new MException("The matrix is singular!");
+					throw new Exception("The matrix is singular!");
 				}
 
 				num3 = pi[j];
@@ -135,12 +135,12 @@ namespace ZeroGravity.Math
 		{
 			if (rows != cols)
 			{
-				throw new MException("The matrix is not square!");
+				throw new Exception("The matrix is not square!");
 			}
 
 			if (rows != v.rows)
 			{
-				throw new MException("Wrong number of results in solution vector!");
+				throw new Exception("Wrong number of results in solution vector!");
 			}
 
 			if (L == null)
@@ -330,7 +330,7 @@ namespace ZeroGravity.Math
 			}
 			catch (FormatException)
 			{
-				throw new MException("Wrong input format!");
+				throw new Exception("Wrong input format!");
 			}
 		}
 
@@ -499,7 +499,7 @@ namespace ZeroGravity.Math
 		{
 			if (A.cols != B.rows)
 			{
-				throw new MException("Wrong dimension of matrix!");
+				throw new Exception("Wrong dimension of matrix!");
 			}
 
 			int num = System.Math.Max(System.Math.Max(A.rows, A.cols), System.Math.Max(B.rows, B.cols));
@@ -681,7 +681,7 @@ namespace ZeroGravity.Math
 		{
 			if (m1.cols != m2.rows)
 			{
-				throw new MException("Wrong dimensions of matrix!");
+				throw new Exception("Wrong dimensions of matrix!");
 			}
 
 			Matrix matrix = ZeroMatrix(m1.rows, m2.cols);
@@ -717,7 +717,7 @@ namespace ZeroGravity.Math
 		{
 			if (m1.rows != m2.rows || m1.cols != m2.cols)
 			{
-				throw new MException("Matrices must have the same dimensions!");
+				throw new Exception("Matrices must have the same dimensions!");
 			}
 
 			Matrix matrix = new Matrix(m1.rows, m1.cols);
