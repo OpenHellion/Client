@@ -62,7 +62,7 @@ namespace ZeroGravity.Math
 		public Vector3D EulerAngles
 		{
 			get { return Internal_ToEulerRad(this) * (180.0 / System.Math.PI); }
-			set { this = Internal_FromEulerRad(value * (System.Math.PI / 180.0)); }
+			set { this = FromEulerRad(value * (System.Math.PI / 180.0)); }
 		}
 
 		public QuaternionD(double x, double y, double z, double w)
@@ -241,12 +241,12 @@ namespace ZeroGravity.Math
 
 		public static QuaternionD Euler(double x, double y, double z)
 		{
-			return Internal_FromEulerRad(new Vector3D(x, y, z) * (System.Math.PI / 180.0));
+			return FromEulerRad(new Vector3D(x, y, z) * (System.Math.PI / 180.0));
 		}
 
 		public static QuaternionD Euler(Vector3D euler)
 		{
-			return Internal_FromEulerRad(euler * (System.Math.PI / 180.0));
+			return FromEulerRad(euler * (System.Math.PI / 180.0));
 		}
 
 		private static Vector3D Internal_ToEulerRad(QuaternionD rotation)
@@ -256,11 +256,24 @@ namespace ZeroGravity.Math
 			return value;
 		}
 
-		private static QuaternionD Internal_FromEulerRad(Vector3D euler)
+		// Expanded form of qY * qX * qZ.
+		private static QuaternionD FromEulerRad(Vector3D euler)
 		{
-			QuaternionD value;
-			INTERNAL_CALL_FromEulerRad(ref euler, out value);
-			return value;
+			double halfXAngle = euler.X * 0.5;
+			double halfYAngle = euler.Y * 0.5;
+			double halfZAngle = euler.Z * 0.5;
+			double cx = System.Math.Cos(halfXAngle);
+			double sx = System.Math.Sin(halfXAngle);
+			double cy = System.Math.Cos(halfYAngle);
+			double sy = System.Math.Sin(halfYAngle);
+			double cz = System.Math.Cos(halfZAngle);
+			double sz = System.Math.Sin(halfZAngle);
+			return new QuaternionD(
+				w: cx * cy * cz + sx * sy * sz,
+				x: sx * cy * cz + cx * sy * sz,
+				y: cx * sy * cz - sx * cy * sz,
+				z: cx * cy * sz - sx * sy * cz
+				);
 		}
 
 		private static void Internal_ToAxisAngleRad(QuaternionD q, out Vector3D axis, out double angle)
@@ -315,26 +328,6 @@ namespace ZeroGravity.Math
 				angle = 0.0;
 				axis = new Vector3D(1.0, 0.0, 0.0);
 			}
-		}
-
-		private static void INTERNAL_CALL_FromEulerRad(ref Vector3D euler, out QuaternionD value)
-		{
-			double num = euler.X * 0.5;
-			double num2 = euler.Y * 0.5;
-			double num3 = euler.Z * 0.5;
-			double w = System.Math.Cos(num);
-			double x = System.Math.Sin(num);
-			double w2 = System.Math.Cos(num2);
-			double y = System.Math.Sin(num2);
-			double w3 = System.Math.Cos(num3);
-			double z = System.Math.Sin(num3);
-			QuaternionD[] array = new QuaternionD[3]
-			{
-				new QuaternionD(x, 0.0, 0.0, w),
-				new QuaternionD(0.0, y, 0.0, w2),
-				new QuaternionD(0.0, 0.0, z, w3)
-			};
-			value = array[1] * array[0] * array[2];
 		}
 
 		private static void INTERNAL_CALL_ToEulerRad(ref QuaternionD rotation, out Vector3D value)
