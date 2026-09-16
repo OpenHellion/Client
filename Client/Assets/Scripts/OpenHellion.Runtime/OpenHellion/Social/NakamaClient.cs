@@ -111,7 +111,7 @@ namespace OpenHellion.Social
 			catch (TaskCanceledException)
 			{
 				Debug.LogError("Could not connect to Nakama server.");
-				OnNakamaError.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
+				OnNakamaError?.Invoke(Localization.NoNakamaConnection, NakamaConnectionTerminated);
 			}
 		}
 

@@ -54,7 +54,7 @@ Short-term:
 
 Debugging/diagnostics:
 [x] Fix console (add errors and make player admin)
-[ ] Set up unity test framework
+[x] Set up unity test framework
 [ ] Create a TestClient on the server
 [ ] Add tests to duplicate network data and similar
 [ ] Add test to ClassHasher (same on both client and server)

@@ -308,7 +308,7 @@ namespace ZeroGravity.Math
 			if (num > 1E-06)
 			{
 				angle = 2.0 * System.Math.Acos(q.W);
-				axis = new Vector3D(q.X, q.Y, q.Z) / num;
+				axis = new Vector3D(q.X, q.Y, q.Z) / System.Math.Sqrt(num);
 			}
 			else
 			{
@@ -334,7 +334,7 @@ namespace ZeroGravity.Math
 				new QuaternionD(0.0, y, 0.0, w2),
 				new QuaternionD(0.0, 0.0, z, w3)
 			};
-			value = array[2] * array[0] * array[1];
+			value = array[1] * array[0] * array[2];
 		}
 
 		private static void INTERNAL_CALL_ToEulerRad(ref QuaternionD rotation, out Vector3D value)
