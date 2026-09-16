@@ -346,8 +346,13 @@ namespace ZeroGravity.Objects
 			World.RemoveCorpse(Guid);
 		}
 
-		public void ProcessMovementMessage(Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity)
+		public void ProcessMovementMessage(long parentGuid, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity)
 		{
+			if (parentGuid != Parent.Guid)
+			{
+				return;
+			}
+
 			ToggleKinematic(value: true);
 			_movementReceivedTime = Time.time;
 			_movementTargetPosition = position;
@@ -444,14 +449,14 @@ namespace ZeroGravity.Objects
 			float num = Time.time - _movementReceivedTime;
 			if (_movementReceivedTime > 0f && num < 1f)
 			{
-				transform.position = Vector3.Lerp(transform.position, _movementTargetPosition,
+				transform.localPosition = Vector3.Lerp(transform.localPosition, _movementTargetPosition,
 					Mathf.Pow(num, 0.5f));
-				transform.rotation = Quaternion.Slerp(transform.rotation,
+				transform.localRotation = Quaternion.Slerp(transform.localRotation,
 					_movementTargetRotation, Mathf.Pow(num, 0.5f));
-				RigidBody.linearVelocity = Vector3.Lerp(RigidBody.linearVelocity, _movementTargetVelocity,
-					Mathf.Pow(num, 0.5f));
-				RigidBody.angularVelocity = Vector3.Lerp(RigidBody.angularVelocity, _movementTargetAngularVelocity,
-					Mathf.Pow(num, 0.5f));
+				RigidBody.linearVelocity = Vector3.Lerp(RigidBody.linearVelocity,
+					transform.parent.TransformDirection(_movementTargetVelocity), Mathf.Pow(num, 0.5f));
+				RigidBody.angularVelocity = Vector3.Lerp(RigidBody.angularVelocity,
+					transform.parent.TransformDirection(_movementTargetAngularVelocity), Mathf.Pow(num, 0.5f));
 			}
 		}
 

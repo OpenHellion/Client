@@ -51,9 +51,9 @@ namespace ZeroGravity.Objects
 			if (Time.time - movementReceivedTime <= 1f)
 			{
 				float t = Mathf.Pow(Time.time - movementReceivedTime, 0.5f);
-				transform.SetPositionAndRotation(
-					Vector3.Lerp(transform.position, movementTargetPosition, t),
-					Quaternion.Slerp(transform.rotation, movementTargetRotation, t));
+				transform.SetLocalPositionAndRotation(
+					Vector3.Lerp(transform.localPosition, movementTargetPosition, t),
+					Quaternion.Slerp(transform.localRotation, movementTargetRotation, t));
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace ZeroGravity.Objects
 		{
 			if (movementReceivedTime < 0f)
 			{
-				transform.position = position;
+				transform.localPosition = position;
 			}
 
 			movementReceivedTime = Time.time;
@@ -201,8 +201,6 @@ namespace ZeroGravity.Objects
 				otherPlayer.transform.SetLocalPositionAndRotation(position, rotation);
 			}
 
-			otherPlayer.SetTargetPositionAndRotation(otherPlayer.transform.localPosition,
-				otherPlayer.transform.localRotation, instant: true);
 			gameObject.SetActive(value: true);
 			otherPlayer.PlayerStatsMessageListener(new PlayerStatsMessage
 			{
@@ -372,11 +370,20 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public void ProcessMovementMessage(Vector3 position, Quaternion rotation, float freeLookX, float freeLookY,
+		public void ProcessMovementMessage(long parentGuid, Vector3 position, Quaternion rotation, float freeLookX, float freeLookY,
 			float mouseLook, Dictionary<byte, RagdollItemData> ragdollData, CharacterAnimationData animationData, sbyte[] jetpackDirection)
 		{
 			tpsController.animHelper.ParseData(animationData);
-			SetMovementData(position, rotation);
+			if (Parent.Guid != parentGuid && World.TryGetSpaceObject(parentGuid, out ArtificialBody newParent))
+			{
+				Parent = newParent;
+				movementReceivedTime = -1f;
+			}
+
+			if (Parent.Guid == parentGuid)
+			{
+				SetMovementData(position, rotation);
+			}
 			tpsController.TargetMouseLookUpPos = mouseLook;
 			tpsController.TargetFreeLookUpPos = freeLookX;
 			tpsController.TargetFreeLookRightPos = freeLookY;
@@ -629,20 +636,6 @@ namespace ZeroGravity.Objects
 		public override void ModifyPositionAndRotation(Vector3? position = null, Quaternion? rotation = null)
 		{
 			tpsController.ModifyPositionAndRotation(position, rotation);
-		}
-
-		public override void SetTargetPositionAndRotation(Vector3? position, Quaternion? rotation,
-			bool instant = false)
-		{
-			IsInVisibilityRange = true;
-			if (rotation.HasValue)
-			{
-				transform.SetPositionAndRotation(position.Value, rotation.Value);
-			}
-			else
-			{
-				transform.position = position.Value;
-			}
 		}
 
 		public override void DockedVesselParentChanged(SpaceObjectVessel vessel)

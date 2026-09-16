@@ -23,7 +23,7 @@ Movement:
 [x] Fix rebasing from EVA back to vessel adds significant velocity relative to vessel
 [x] Fix ship controls visibly doing nothing (then exiting ship pilot seat putting you sideways/upside down)
 [ ] Make ship controls smooth
-[ ] Fix ejection bug from ship when piloting by making position in MovementMessage parent-relative instead of anchor relative.
+[x] Fix ejection bug from ship when piloting by making position in MovementMessage parent-relative instead of anchor relative.
 [ ] Fix changing parent deals damage (~3 hp each)
 [ ] Fix snap when flying back into range of a vessel
 [ ] Fix items, corpses and other players sliding when the anchor changes

@@ -606,6 +606,7 @@ namespace OpenHellion
 				}
 
 				MyPlayer.Instance.ProcessMovementMessage(
+					movementMessage.ParentGuid,
 					movementMessage.PlayerPosition?.ToVector3(),
 					movementMessage.PlayerRotation?.ToQuaternion(),
 					movementMessage.PlayerVelocity?.ToVector3(),
@@ -671,7 +672,7 @@ namespace OpenHellion
 								continue;
 							}
 
-							dynamicObject.ProcessMovementMessage(objectTransform.Position.ToVector3(), objectTransform.Rotation.ToQuaternion(),
+							dynamicObject.ProcessMovementMessage(objectTransform.ParentGuid, objectTransform.Position.ToVector3(), objectTransform.Rotation.ToQuaternion(),
 								objectTransform.Velocity.ToVector3(), objectTransform.AngularVelocity.ToVector3());
 						}
 						else
@@ -695,7 +696,7 @@ namespace OpenHellion
 								continue;
 							}
 
-							corpse.ProcessMovementMessage(corpseTransform.Position.ToVector3(), corpseTransform.Rotation.ToQuaternion(),
+							corpse.ProcessMovementMessage(corpseTransform.ParentGuid, corpseTransform.Position.ToVector3(), corpseTransform.Rotation.ToQuaternion(),
 								corpseTransform.Velocity.ToVector3(), corpseTransform.AngularVelocity.ToVector3());
 						}
 						else
@@ -718,7 +719,7 @@ namespace OpenHellion
 								continue;
 							}
 
-							otherPlayer.ProcessMovementMessage(playerInfo.Position.ToVector3(), playerInfo.Rotation.ToQuaternion(), playerInfo.FreeLookX,
+							otherPlayer.ProcessMovementMessage(playerInfo.ParentGuid, playerInfo.Position.ToVector3(), playerInfo.Rotation.ToQuaternion(), playerInfo.FreeLookX,
 								playerInfo.FreeLookY, playerInfo.MouseLook, playerInfo.RagdollData, playerInfo.AnimationData, playerInfo.JetpackDirection);
 						}
 						else

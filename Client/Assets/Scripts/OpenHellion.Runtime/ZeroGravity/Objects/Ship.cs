@@ -1221,7 +1221,7 @@ namespace ZeroGravity.Objects
 		private async UniTask SpawnDockedVessel(DockedVesselData dockedVessel, bool optimise)
 		{
 			Ship childShip = InitialiseArtificialBody(dockedVessel.Guid, SpaceObjectType.Ship,
-				dockedVessel.Position.ToVector3(), dockedVessel.Rotation.ToQuaternion()) as Ship;
+				transform.localPosition, transform.localRotation) as Ship;
 			childShip.VesselRegistration = dockedVessel.VesselRegistration;
 			childShip.VesselName = dockedVessel.VesselName;
 			childShip.Tag = dockedVessel.Tag;

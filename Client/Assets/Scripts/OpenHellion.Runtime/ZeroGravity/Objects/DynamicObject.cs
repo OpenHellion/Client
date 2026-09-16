@@ -139,13 +139,13 @@ namespace ZeroGravity.Objects
 				float num = Time.realtimeSinceStartup - _movementReceivedTime;
 				if (num < 1f)
 				{
-					transform.SetPositionAndRotation(
-						Vector3.Lerp(transform.position, _movementTargetPosition, Mathf.Pow(num, 0.5f)),
-						Quaternion.Slerp(transform.rotation, _movementTargetRotation, Mathf.Pow(num, 0.5f)));
-					RigidBody.linearVelocity =
-						Vector3.Lerp(RigidBody.linearVelocity, _movementTargetVelocity, Mathf.Pow(num, 0.5f));
-					RigidBody.angularVelocity =
-						Vector3.Lerp(RigidBody.angularVelocity, _movementTargetAngularVelocity, Mathf.Pow(num, 0.5f));
+					transform.SetLocalPositionAndRotation(
+						Vector3.Lerp(transform.localPosition, _movementTargetPosition, Mathf.Pow(num, 0.5f)),
+						Quaternion.Slerp(transform.localRotation, _movementTargetRotation, Mathf.Pow(num, 0.5f)));
+					RigidBody.linearVelocity = Vector3.Lerp(RigidBody.linearVelocity,
+						transform.parent.TransformDirection(_movementTargetVelocity), Mathf.Pow(num, 0.5f));
+					RigidBody.angularVelocity = Vector3.Lerp(RigidBody.angularVelocity,
+						transform.parent.TransformDirection(_movementTargetAngularVelocity), Mathf.Pow(num, 0.5f));
 				}
 			}
 		}
@@ -190,9 +190,9 @@ namespace ZeroGravity.Objects
 
 		// The server is authoritative for any object not currently held in an inventory/attach slot.
 		// Receiving a position hands control back to it: drop local ownership and follow the stream.
-		public void ProcessMovementMessage(Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity)
+		public void ProcessMovementMessage(long parentGuid, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity)
 		{
-			if (!IsAttached)
+			if (!IsAttached && parentGuid == Parent.Guid)
 			{
 				Master = false;
 				ToggleKinematic(value: true);
@@ -251,6 +251,11 @@ namespace ZeroGravity.Objects
 			if (dosm.AttachData.ParentType == SpaceObjectType.DynamicObjectPivot)
 			{
 				ArtificialBody parent = GetParent<ArtificialBody>();
+				if (parent is SpaceObjectVessel parentVessel)
+				{
+					parent = parentVessel.MainVessel;
+				}
+
 				if (parent == null)
 				{
 					Debug.LogError("Dynamic object exited vessel but we don't know from where. " + Guid + Parent +
@@ -559,11 +564,12 @@ namespace ZeroGravity.Objects
 				}
 
 				dynamicObject.Parent = parent;
-				if (!dynamicObject.IsAttached)
+				if (!dynamicObject.IsAttached && parent is ArtificialBody)
 				{
+					dynamicObject.SetParentTransferableObjectsRoot();
 					dynamicObject.transform.SetLocalPositionAndRotation(details.LocalPosition.ToVector3(), details.LocalRotation.ToQuaternion());
-					dynamicObject.RigidBody.linearVelocity = details.Velocity.ToVector3();
-					dynamicObject.RigidBody.angularVelocity = details.AngularVelocity.ToVector3();
+					dynamicObject.RigidBody.linearVelocity = dynamicObject.transform.parent.TransformDirection(details.Velocity.ToVector3());
+					dynamicObject.RigidBody.angularVelocity = dynamicObject.transform.parent.TransformDirection(details.AngularVelocity.ToVector3());
 				}
 
 				dynamicObject.SetSimulated(parent is ArtificialBody);
@@ -634,9 +640,12 @@ namespace ZeroGravity.Objects
 		{
 			if (!IsAttached || forceExit)
 			{
-				ArtificialBody artificialBody = Parent is not SpaceObjectVessel
-					? GetParent<ArtificialBody>()
-					: (Parent as SpaceObjectVessel).MainVessel;
+				ArtificialBody artificialBody = GetParent<ArtificialBody>();
+				if (artificialBody is SpaceObjectVessel parentVessel)
+				{
+					artificialBody = parentVessel.MainVessel;
+				}
+
 				if (artificialBody == null)
 				{
 					Debug.LogErrorFormat("Cannot exit vessel, cannot find parents artificial body {0}, {1}", name, Guid);

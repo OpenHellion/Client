@@ -35,6 +35,9 @@ namespace OpenHellion.Net.Message
 		{
 			public long Guid;
 
+			// When > 0, the this transform will be relative to this object. Anchor when 0.
+			public long ParentGuid;
+
 			public float[] Position;
 
 			public float[] Rotation;
@@ -54,6 +57,8 @@ namespace OpenHellion.Net.Message
 		public struct OtherPlayerInfo
 		{
 			public long Guid;
+
+			public long ParentGuid;
 
 			public float[] Position;
 

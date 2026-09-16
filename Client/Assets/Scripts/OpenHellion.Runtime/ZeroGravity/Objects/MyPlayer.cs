@@ -745,9 +745,10 @@ namespace ZeroGravity.Objects
 				_sendMovementTime = Time.fixedTime;
 				_prevStickToVessel = FpsController.StickToVessel;
 
-				Vector3 reportedPosition = transform.position;
-				Quaternion reportedRotation = transform.rotation;
-				Vector3 reportedVelocity = rigidBody.linearVelocity;
+				Transform frame = Parent.TransferableObjectsRoot.transform;
+				Vector3 reportedPosition = frame.InverseTransformPoint(transform.position);
+				Quaternion reportedRotation = Quaternion.Inverse(frame.rotation) * transform.rotation;
+				Vector3 reportedVelocity = frame.InverseTransformDirection(rigidBody.linearVelocity);
 
 				bool moved = reportedPosition != _lastSentPosition
 					|| reportedRotation != _lastSentRotation
@@ -762,7 +763,7 @@ namespace ZeroGravity.Objects
 					MoveObjectRequest moveRequest = new MoveObjectRequest
 					{
 						Guid = Guid,
-						AnchorGuid = World.AnchorGuid,
+						ParentGuid = Parent.Guid,
 						Position = reportedPosition.ToArray(),
 						Rotation = reportedRotation.ToArray(),
 						Velocity = reportedVelocity.ToArray(),
@@ -2317,7 +2318,7 @@ namespace ZeroGravity.Objects
 
 		public bool ActivatePlayer(PlayerSpawnResponse spawnResponse)
 		{
-			transform.SetPositionAndRotation(spawnResponse.Position.ToVector3(), spawnResponse.Rotation.ToQuaternion());
+			transform.SetLocalPositionAndRotation(spawnResponse.Position.ToVector3(), spawnResponse.Rotation.ToQuaternion());
 
 			SceneSpawnPoint sceneSpawnPoint = null;
 			if (spawnResponse.SpawnPointId > 0)
@@ -2832,7 +2833,7 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public void ProcessMovementMessage(Vector3? position, Quaternion? rotation, Vector3? linearVelocity,
+		public void ProcessMovementMessage(long parentGuid, Vector3? position, Quaternion? rotation, Vector3? linearVelocity,
 			CharacterAnimationData? animationData)
 		{
 			if (animationData.HasValue)
@@ -2840,14 +2841,20 @@ namespace ZeroGravity.Objects
 				animHelper.ParseData(animationData.Value);
 			}
 
+			if (parentGuid != Parent.Guid)
+			{
+				return;
+			}
+
+			Transform frame = Parent.TransferableObjectsRoot.transform;
 			if (position.HasValue)
 			{
-				transform.position = position.Value;
+				transform.position = frame.TransformPoint(position.Value);
 			}
 
 			if (rotation.HasValue)
 			{
-				transform.rotation = rotation.Value;
+				transform.rotation = frame.rotation * rotation.Value;
 			}
 
 			if (rigidBody.isKinematic)
@@ -2867,7 +2874,7 @@ namespace ZeroGravity.Objects
 
 			if (linearVelocity.HasValue)
 			{
-				rigidBody.linearVelocity = linearVelocity.Value;
+				rigidBody.linearVelocity = frame.TransformDirection(linearVelocity.Value);
 			}
 		}
 

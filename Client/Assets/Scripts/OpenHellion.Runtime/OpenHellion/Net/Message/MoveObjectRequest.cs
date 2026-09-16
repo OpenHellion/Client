@@ -30,7 +30,7 @@ namespace OpenHellion.Net.Message
 	{
 		public long Guid;
 
-		public long AnchorGuid;
+		public long ParentGuid;
 
 		public float[] Position;
 
