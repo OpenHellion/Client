@@ -45,13 +45,9 @@ namespace OpenHellion
 
 		public static float DROP_MAX_TIME = 3f;
 
-		public static float VESSEL_ROTATION_LERP_VALUE = 0.9f;
 
-		public static bool VESSEL_ROTATION_LERP_UNCLAMPED = false;
 
-		public static float VESSEL_TRANSLATION_LERP_VALUE = 0.8f;
 
-		public static bool VESSEL_TRANSLATION_LERP_UNCLAMPED = false;
 
 		public List<DebrisField> DebrisFields = new List<DebrisField>();
 
@@ -79,6 +75,21 @@ namespace OpenHellion
 		public Vector3D OriginWorldPosition { get; private set; }
 
 		public long AnchorGuid { get; private set; }
+
+		/// <summary>
+		/// 	The vessel the local player is flying, which is predicted locally instead of being driven by
+		/// 	the movement stream. Zero when nobody here is piloting.
+		/// </summary>
+		public long PilotedVesselGuid;
+
+		/// <summary>
+		/// 	Displacement the pilot's thrust has added to the anchor since the last movement message, and
+		/// 	the velocity it accumulated to get there. The anchor is pinned at the origin, so this reaches
+		/// 	the screen as every other body sliding the opposite way.
+		/// </summary>
+		public Vector3 AnchorOffset;
+
+		public Vector3 AnchorThrustVelocity;
 
 		public RenderToCubeMap CubemapRenderer;
 
@@ -178,14 +189,6 @@ namespace OpenHellion
 			DROP_MIN_FORCE = Properties.GetProperty("drop_min_force", DROP_MIN_FORCE);
 			DROP_MAX_FORCE = Properties.GetProperty("drop_max_force", DROP_MAX_FORCE);
 			DROP_MAX_TIME = Properties.GetProperty("drop_max_time", DROP_MAX_TIME);
-			VESSEL_ROTATION_LERP_VALUE =
-				Properties.GetProperty("vessel_rotation_lerp_value", VESSEL_ROTATION_LERP_VALUE);
-			VESSEL_ROTATION_LERP_UNCLAMPED =
-				Properties.GetProperty("vessel_rotation_lerp_unclamped", VESSEL_ROTATION_LERP_UNCLAMPED);
-			VESSEL_TRANSLATION_LERP_VALUE =
-				Properties.GetProperty("vessel_translation_lerp_value", VESSEL_TRANSLATION_LERP_VALUE);
-			VESSEL_TRANSLATION_LERP_UNCLAMPED = Properties.GetProperty("vessel_translation_lerp_unclamped",
-				VESSEL_TRANSLATION_LERP_UNCLAMPED);
 
 			StaticData.LoadData();
 			Application.runInBackground = true;
@@ -212,6 +215,7 @@ namespace OpenHellion
 			EventSystem.AddListener(typeof(LogOutResponse), LogOutResponseListener);
 			EventSystem.AddListener(typeof(DestroyObjectMessage), DestroyObjectMessageListener);
 			EventSystem.AddListener(typeof(MovementMessage), MovementMessageListener);
+			EventSystem.AddListener(typeof(ShipThrustStateMessage), PilotStateMessageListener);
 			EventSystem.AddListener<PlayersOnServerResponse>(PlayersOnServerResponseListener);
 			EventSystem.AddListener(typeof(ShipCollisionMessage), ShipCollisionMessageListener);
 			EventSystem.AddListener(typeof(UpdateVesselDataMessage), UpdateVesselDataMessageListener);
@@ -317,6 +321,7 @@ namespace OpenHellion
 			EventSystem.RemoveListener(typeof(LogOutResponse), LogOutResponseListener);
 			EventSystem.RemoveListener(typeof(DestroyObjectMessage), DestroyObjectMessageListener);
 			EventSystem.RemoveListener(typeof(MovementMessage), MovementMessageListener);
+			EventSystem.RemoveListener(typeof(ShipThrustStateMessage), PilotStateMessageListener);
 			EventSystem.RemoveListener<PlayersOnServerResponse>(PlayersOnServerResponseListener);
 			EventSystem.RemoveListener(typeof(ShipCollisionMessage), ShipCollisionMessageListener);
 			EventSystem.RemoveListener(typeof(UpdateVesselDataMessage), UpdateVesselDataMessageListener);
@@ -563,6 +568,30 @@ namespace OpenHellion
 			RichPresenceManager.Update();
 		}
 
+		/// <summary>
+		/// 	Authoritative state of the vessel the local player is flying, arriving far more often than a
+		/// 	movement message. It corrects the prediction rather than replacing it.
+		/// </summary>
+		private void PilotStateMessageListener(NetworkData data)
+		{
+			if (data is not ShipThrustStateMessage message || MyPlayer.Instance == null ||
+				!MyPlayer.Instance.PlayerReady || !MyPlayer.Instance.IsDrivingShip ||
+				message.Rotation == null || message.AngularVelocity == null ||
+				!TryGetSpaceObject(message.VesselGuid, out ArtificialBody vessel))
+			{
+				return;
+			}
+
+			// Orientation is eased on so a correction never shows as a jump, but the rate is adopted
+			// outright because the server damps and stabilises in ways the prediction does not model.
+			// Translation is left alone: the reported velocity is orbital velocity in world space, while
+			// the client works in a frame that already moves with it, so the next movement message
+			// rebases it instead.
+			vessel.transform.localRotation = Quaternion.Slerp(vessel.transform.localRotation,
+				message.Rotation.ToQuaternion(), ArtificialBody.Blend(Time.fixedDeltaTime));
+			vessel.SetVelocity(vessel.Velocity, message.AngularVelocity.ToVector3());
+		}
+
 		// Caution: Executed very often and must stay synchronous.
 		/// <summary>
  		/// 	Handles moving space objects, and queueing spawns for objects we don't know about yet.
@@ -603,6 +632,11 @@ namespace OpenHellion
 				if (movementMessage.OriginWorldPosition != null)
 				{
 					OriginWorldPosition = movementMessage.OriginWorldPosition.ToVector3D();
+
+					// Every body is restated relative to the anchor as it was at this instant, so the
+					// deviation predicted up to here is now accounted for.
+					AnchorOffset = Vector3.zero;
+					AnchorThrustVelocity = Vector3.zero;
 				}
 
 				MyPlayer.Instance.ProcessMovementMessage(
@@ -621,7 +655,7 @@ namespace OpenHellion
 							RequestSpawn(bodyTransform.Guid);
 							continue;
 						}
-						
+
 						// Stabilisation couples position and nothing else.
 						// Rotation needs to be added separately.
 						bool stabilised = bodyTransform.StabiliseToTargetGuid > 0;

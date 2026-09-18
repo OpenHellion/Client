@@ -1094,8 +1094,11 @@ namespace ZeroGravity.Objects
 							Quaternion quaternion =
 								Quaternion.LookRotation(Parent.transform.forward, Parent.transform.up).Inverse() *
 								Quaternion.LookRotation(dockingPort.transform.forward, dockingPort.transform.up);
-							spaceObjectVessel.ChangeStats(_shipThrust * _shipThrustStrength,
-								quaternion * _shipRotation * _shipRotationStrength);
+							if (spaceObjectVessel is Ship dockingShip)
+							{
+								dockingShip.SetPilotInput(_shipThrust * _shipThrustStrength,
+									quaternion * _shipRotation * _shipRotationStrength);
+							}
 						}
 					}
 				}
@@ -1181,14 +1184,12 @@ namespace ZeroGravity.Objects
 							}
 						}
 
-						spaceObjectVessel.ChangeStats(RcsThrustModifier * _shipThrustStrength * _shipThrust);
 					}
 
-					// Apply changes.
-					if (_shipRotation.IsNotEpsilonZero())
+					if (spaceObjectVessel is Ship pilotedShip)
 					{
-						Vector3? rotation = _shipRotation * _shipRotationStrength;
-						spaceObjectVessel.ChangeStats(null, rotation);
+						pilotedShip.SetPilotInput(RcsThrustModifier * _shipThrustStrength * _shipThrust,
+							_shipRotation * _shipRotationStrength);
 					}
 				}
 			}

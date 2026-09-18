@@ -4,7 +4,11 @@ namespace ZeroGravity.Math
 {
 	public struct QuaternionD
 	{
-		private const double epsilon = 1E-06;
+		private const double DegreesToRadians = System.Math.PI / 180.0;
+
+		private const double RadiansToDegrees = 180.0 / System.Math.PI;
+
+		private const double DirectionEpsilon = 1E-06;
 
 		public double X;
 
@@ -18,51 +22,49 @@ namespace ZeroGravity.Math
 		{
 			get
 			{
-				switch (index)
+				return index switch
 				{
-					case 0:
-						return X;
-					case 1:
-						return Y;
-					case 2:
-						return Z;
-					case 3:
-						return W;
-					default:
-						throw new IndexOutOfRangeException("Invalid Quaternion index!");
-				}
+					0 => X,
+					1 => Y,
+					2 => Z,
+					3 => W,
+					_ => throw new IndexOutOfRangeException("Invalid Quaternion index!"),
+				};
 			}
 			set
 			{
 				switch (index)
 				{
-					case 0:
-						X = value;
-						break;
-					case 1:
-						Y = value;
-						break;
-					case 2:
-						Z = value;
-						break;
-					case 3:
-						W = value;
-						break;
-					default:
-						throw new IndexOutOfRangeException("Invalid Quaternion index!");
+				case 0:
+					X = value;
+					break;
+				case 1:
+					Y = value;
+					break;
+				case 2:
+					Z = value;
+					break;
+				case 3:
+					W = value;
+					break;
+				default:
+					throw new IndexOutOfRangeException("Invalid Quaternion index!");
 				}
 			}
 		}
 
-		public static QuaternionD Identity
-		{
-			get { return new QuaternionD(0.0, 0.0, 0.0, 1.0); }
-		}
+		public static QuaternionD Identity => new QuaternionD(0.0, 0.0, 0.0, 1.0);
 
 		public Vector3D EulerAngles
 		{
-			get { return Internal_ToEulerRad(this) * (180.0 / System.Math.PI); }
-			set { this = FromEulerRad(value * (System.Math.PI / 180.0)); }
+			get
+			{
+				return ToEulerRadians() * RadiansToDegrees;
+			}
+			set
+			{
+				this = FromEulerRadians(value * DegreesToRadians);
+			}
 		}
 
 		public QuaternionD(double x, double y, double z, double w)
@@ -75,31 +77,28 @@ namespace ZeroGravity.Math
 
 		public static QuaternionD operator *(QuaternionD lhs, QuaternionD rhs)
 		{
-			return new QuaternionD(lhs.W * rhs.X + lhs.X * rhs.W + lhs.Y * rhs.Z - lhs.Z * rhs.Y,
-				lhs.W * rhs.Y + lhs.Y * rhs.W + lhs.Z * rhs.X - lhs.X * rhs.Z,
-				lhs.W * rhs.Z + lhs.Z * rhs.W + lhs.X * rhs.Y - lhs.Y * rhs.X,
-				lhs.W * rhs.W - lhs.X * rhs.X - lhs.Y * rhs.Y - lhs.Z * rhs.Z);
+			return new QuaternionD(lhs.W * rhs.X + lhs.X * rhs.W + lhs.Y * rhs.Z - lhs.Z * rhs.Y, lhs.W * rhs.Y + lhs.Y * rhs.W + lhs.Z * rhs.X - lhs.X * rhs.Z, lhs.W * rhs.Z + lhs.Z * rhs.W + lhs.X * rhs.Y - lhs.Y * rhs.X, lhs.W * rhs.W - lhs.X * rhs.X - lhs.Y * rhs.Y - lhs.Z * rhs.Z);
 		}
 
 		public static Vector3D operator *(QuaternionD rotation, Vector3D point)
 		{
-			double num = rotation.X * 2.0;
-			double num2 = rotation.Y * 2.0;
-			double num3 = rotation.Z * 2.0;
-			double num4 = rotation.X * num;
-			double num5 = rotation.Y * num2;
-			double num6 = rotation.Z * num3;
-			double num7 = rotation.X * num2;
-			double num8 = rotation.X * num3;
-			double num9 = rotation.Y * num3;
-			double num10 = rotation.W * num;
-			double num11 = rotation.W * num2;
-			double num12 = rotation.W * num3;
-			Vector3D result = default(Vector3D);
-			result.X = (1.0 - (num5 + num6)) * point.X + (num7 - num12) * point.Y + (num8 + num11) * point.Z;
-			result.Y = (num7 + num12) * point.X + (1.0 - (num4 + num6)) * point.Y + (num9 - num10) * point.Z;
-			result.Z = (num8 - num11) * point.X + (num9 + num10) * point.Y + (1.0 - (num4 + num5)) * point.Z;
-			return result;
+			double doubleX = rotation.X * 2.0;
+			double doubleY = rotation.Y * 2.0;
+			double doubleZ = rotation.Z * 2.0;
+			double xx = rotation.X * doubleX;
+			double yy = rotation.Y * doubleY;
+			double zz = rotation.Z * doubleZ;
+			double xy = rotation.X * doubleY;
+			double xz = rotation.X * doubleZ;
+			double yz = rotation.Y * doubleZ;
+			double wx = rotation.W * doubleX;
+			double wy = rotation.W * doubleY;
+			double wz = rotation.W * doubleZ;
+			Vector3D rotated = default(Vector3D);
+			rotated.X = (1.0 - (yy + zz)) * point.X + (xy - wz) * point.Y + (xz + wy) * point.Z;
+			rotated.Y = (xy + wz) * point.X + (1.0 - (xx + zz)) * point.Y + (yz - wx) * point.Z;
+			rotated.Z = (xz - wy) * point.X + (yz + wx) * point.Y + (1.0 - (xx + yy)) * point.Z;
+			return rotated;
 		}
 
 		public static bool operator ==(QuaternionD lhs, QuaternionD rhs)
@@ -112,12 +111,22 @@ namespace ZeroGravity.Math
 			return Dot(lhs, rhs) <= 0.999998986721039;
 		}
 
-		public void Set(double new_x, double new_y, double new_z, double new_w)
+		public static QuaternionD operator -(QuaternionD lhs, QuaternionD rhs)
 		{
-			X = new_x;
-			Y = new_y;
-			Z = new_z;
-			W = new_w;
+			return new QuaternionD(lhs.X - rhs.X, lhs.Y - rhs.Y, lhs.Z - rhs.Z, lhs.W - rhs.W);
+		}
+
+		public static QuaternionD operator +(QuaternionD lhs, QuaternionD rhs)
+		{
+			return new QuaternionD(lhs.X + rhs.X, lhs.Y + rhs.Y, lhs.Z + rhs.Z, lhs.W + rhs.W);
+		}
+
+		public void Set(double x, double y, double z, double w)
+		{
+			X = x;
+			Y = y;
+			Z = z;
+			W = w;
 		}
 
 		public static double Dot(QuaternionD a, QuaternionD b)
@@ -125,25 +134,47 @@ namespace ZeroGravity.Math
 			return a.X * b.X + a.Y * b.Y + a.Z * b.Z + a.W * b.W;
 		}
 
+		public static double Angle(QuaternionD a, QuaternionD b)
+		{
+			return System.Math.Acos(System.Math.Min(System.Math.Abs(Dot(a, b)), 1.0)) * 2.0 * RadiansToDegrees;
+		}
+
+		/// <summary>
+		/// 	Rotation of the given angle in degrees about the given axis. A zero-length axis gives identity.
+		/// </summary>
 		public static QuaternionD AngleAxis(double angle, Vector3D axis)
 		{
 			axis.Normalize();
-			QuaternionD value;
-			INTERNAL_CALL_AngleAxis(angle, ref axis, out value);
-			return value;
+			if (axis.SqrMagnitude <= DirectionEpsilon)
+			{
+				return Identity;
+			}
+
+			double sinOfHalf = System.Math.Sin(angle * DegreesToRadians * 0.5);
+			double cosOfHalf = System.Math.Cos(angle * DegreesToRadians * 0.5);
+			return new QuaternionD(axis.X * sinOfHalf, axis.Y * sinOfHalf, axis.Z * sinOfHalf, cosOfHalf);
 		}
 
 		public void ToAngleAxis(out double angle, out Vector3D axis)
 		{
-			Internal_ToAxisAngleRad(this, out axis, out angle);
-			angle *= 180.0 / System.Math.PI;
+			double axisLengthSquared = X * X + Y * Y + Z * Z;
+			if (axisLengthSquared > DirectionEpsilon)
+			{
+				angle = 2.0 * System.Math.Acos(W);
+				axis = new Vector3D(X, Y, Z) / System.Math.Sqrt(axisLengthSquared);
+			}
+			else
+			{
+				angle = 0.0;
+				axis = new Vector3D(1.0, 0.0, 0.0);
+			}
+
+			angle *= RadiansToDegrees;
 		}
 
 		public static QuaternionD FromToRotation(Vector3D fromDirection, Vector3D toDirection)
 		{
-			QuaternionD value;
-			INTERNAL_CALL_FromToRotation(ref fromDirection, ref toDirection, out value);
-			return value;
+			return RotateTowards(LookRotation(fromDirection), LookRotation(toDirection), double.MaxValue);
 		}
 
 		public void SetFromToRotation(Vector3D fromDirection, Vector3D toDirection)
@@ -153,17 +184,57 @@ namespace ZeroGravity.Math
 
 		public static QuaternionD LookRotation(Vector3D forward, Vector3D upwards)
 		{
-			QuaternionD value;
-			INTERNAL_CALL_LookRotation(ref forward, ref upwards, out value);
-			return value;
+			forward = Vector3D.Normalize(forward);
+			Vector3D right = Vector3D.Normalize(Vector3D.Cross(upwards, forward));
+			upwards = Vector3D.Cross(forward, right);
+
+			// Convert the basis, read as a rotation matrix, to a quaternion. Which branch is taken depends
+			// on which diagonal term is largest, so that the square root never loses precision.
+			QuaternionD rotation = default(QuaternionD);
+			double trace = right.X + upwards.Y + forward.Z;
+			if (trace > 0.0)
+			{
+				double root = System.Math.Sqrt(trace + 1.0);
+				rotation.W = root * 0.5;
+				root = 0.5 / root;
+				rotation.X = (upwards.Z - forward.Y) * root;
+				rotation.Y = (forward.X - right.Z) * root;
+				rotation.Z = (right.Y - upwards.X) * root;
+			}
+			else if (right.X >= upwards.Y && right.X >= forward.Z)
+			{
+				double root = System.Math.Sqrt(1.0 + right.X - upwards.Y - forward.Z);
+				double halfInverseRoot = 0.5 / root;
+				rotation.X = 0.5 * root;
+				rotation.Y = (right.Y + upwards.X) * halfInverseRoot;
+				rotation.Z = (right.Z + forward.X) * halfInverseRoot;
+				rotation.W = (upwards.Z - forward.Y) * halfInverseRoot;
+			}
+			else if (upwards.Y > forward.Z)
+			{
+				double root = System.Math.Sqrt(1.0 + upwards.Y - right.X - forward.Z);
+				double halfInverseRoot = 0.5 / root;
+				rotation.X = (upwards.X + right.Y) * halfInverseRoot;
+				rotation.Y = 0.5 * root;
+				rotation.Z = (forward.Y + upwards.Z) * halfInverseRoot;
+				rotation.W = (forward.X - right.Z) * halfInverseRoot;
+			}
+			else
+			{
+				double root = System.Math.Sqrt(1.0 + forward.Z - right.X - upwards.Y);
+				double halfInverseRoot = 0.5 / root;
+				rotation.X = (forward.X + right.Z) * halfInverseRoot;
+				rotation.Y = (forward.Y + upwards.Z) * halfInverseRoot;
+				rotation.Z = 0.5 * root;
+				rotation.W = (right.Y - upwards.X) * halfInverseRoot;
+			}
+
+			return rotation;
 		}
 
 		public static QuaternionD LookRotation(Vector3D forward)
 		{
-			Vector3D up = Vector3D.Up;
-			QuaternionD value;
-			INTERNAL_CALL_LookRotation(ref forward, ref up, out value);
-			return value;
+			return LookRotation(forward, Vector3D.Up);
 		}
 
 		public void SetLookRotation(Vector3D view)
@@ -178,86 +249,123 @@ namespace ZeroGravity.Math
 
 		public static QuaternionD Slerp(QuaternionD a, QuaternionD b, double t)
 		{
-			QuaternionD value;
-			INTERNAL_CALL_Slerp(ref a, ref b, t, out value);
-			return value;
+			return SlerpUnclamped(a, b, MathHelper.Clamp(t, 0.0, 1.0));
 		}
 
 		public static QuaternionD SlerpUnclamped(QuaternionD a, QuaternionD b, double t)
 		{
-			QuaternionD value;
-			INTERNAL_CALL_SlerpUnclamped(ref a, ref b, t, out value);
-			return value;
+			double dot = a.X * b.X + a.Y * b.Y + a.Z * b.Z + a.W * b.W;
+
+			// A negative dot means the rotations are more than half a turn apart; flipping one of them
+			// takes the short way round instead of the long one.
+			bool flipped = false;
+			if (dot < 0.0)
+			{
+				flipped = true;
+				dot = 0.0 - dot;
+			}
+
+			double weightA;
+			double weightB;
+			if (dot > 0.999999)
+			{
+				// Too close to interpolate as an arc without dividing by a vanishing sine.
+				weightA = 1.0 - t;
+				weightB = flipped ? 0.0 - t : t;
+			}
+			else
+			{
+				double angle = System.Math.Acos(dot);
+				double inverseSine = 1.0 / System.Math.Sin(angle);
+				weightA = System.Math.Sin((1.0 - t) * angle) * inverseSine;
+				weightB = flipped ? (0.0 - System.Math.Sin(t * angle)) * inverseSine : System.Math.Sin(t * angle) * inverseSine;
+			}
+
+			QuaternionD result = default(QuaternionD);
+			result.X = weightA * a.X + weightB * b.X;
+			result.Y = weightA * a.Y + weightB * b.Y;
+			result.Z = weightA * a.Z + weightB * b.Z;
+			result.W = weightA * a.W + weightB * b.W;
+			return result;
 		}
 
 		public static QuaternionD Lerp(QuaternionD a, QuaternionD b, double t)
 		{
-			QuaternionD value;
-			INTERNAL_CALL_Lerp(ref a, ref b, t, out value);
-			return value;
+			return LerpUnclamped(a, b, MathHelper.Clamp(t, 0.0, 1.0));
 		}
 
 		public static QuaternionD LerpUnclamped(QuaternionD a, QuaternionD b, double t)
 		{
-			QuaternionD value;
-			INTERNAL_CALL_LerpUnclamped(ref a, ref b, t, out value);
-			return value;
+			double inverseT = 1.0 - t;
+			double dot = a.X * b.X + a.Y * b.Y + a.Z * b.Z + a.W * b.W;
+
+			QuaternionD result = default(QuaternionD);
+			if (dot >= 0.0)
+			{
+				result.X = inverseT * a.X + t * b.X;
+				result.Y = inverseT * a.Y + t * b.Y;
+				result.Z = inverseT * a.Z + t * b.Z;
+				result.W = inverseT * a.W + t * b.W;
+			}
+			else
+			{
+				// Blend towards the flipped rotation so the result takes the shorter way round.
+				result.X = inverseT * a.X - t * b.X;
+				result.Y = inverseT * a.Y - t * b.Y;
+				result.Z = inverseT * a.Z - t * b.Z;
+				result.W = inverseT * a.W - t * b.W;
+			}
+
+			double inverseLength = 1.0 / System.Math.Sqrt(result.X * result.X + result.Y * result.Y + result.Z * result.Z + result.W * result.W);
+			result.X *= inverseLength;
+			result.Y *= inverseLength;
+			result.Z *= inverseLength;
+			result.W *= inverseLength;
+			return result;
 		}
 
 		public static QuaternionD RotateTowards(QuaternionD from, QuaternionD to, double maxDegreesDelta)
 		{
-			double num = Angle(from, to);
-			if (num == 0.0)
+			double angle = Angle(from, to);
+			if (angle == 0.0)
 			{
 				return to;
 			}
 
-			double t = System.Math.Min(1.0, maxDegreesDelta / num);
-			return SlerpUnclamped(from, to, t);
+			return SlerpUnclamped(from, to, System.Math.Min(1.0, maxDegreesDelta / angle));
 		}
 
+		/// <summary>
+		/// 	Rotation that undoes this one. A zero-length rotation is returned unchanged.
+		/// </summary>
 		public static QuaternionD Inverse(QuaternionD rotation)
 		{
-			QuaternionD value;
-			INTERNAL_CALL_Inverse(ref rotation, out value);
-			return value;
-		}
+			double lengthSquared = rotation.X * rotation.X + rotation.Y * rotation.Y + rotation.Z * rotation.Z + rotation.W * rotation.W;
+			if (lengthSquared <= DirectionEpsilon)
+			{
+				return rotation;
+			}
 
-		public override string ToString()
-		{
-			return string.Format("({0:0.###}, {1:0.###}, {2:0.###}, {3:0.###})", X, Y, Z, W);
-		}
-
-		public string ToString(string format)
-		{
-			return string.Format("({0}, {1}, {2}, {3})", X.ToString(format), Y.ToString(format), Z.ToString(format),
-				W.ToString(format));
-		}
-
-		public static double Angle(QuaternionD a, QuaternionD b)
-		{
-			return System.Math.Acos(System.Math.Min(System.Math.Abs(Dot(a, b)), 1.0)) * 2.0 * (180.0 / System.Math.PI);
+			double inverseLengthSquared = 1.0 / lengthSquared;
+			return new QuaternionD(
+				(0.0 - rotation.X) * inverseLengthSquared,
+				(0.0 - rotation.Y) * inverseLengthSquared,
+				(0.0 - rotation.Z) * inverseLengthSquared,
+				rotation.W * inverseLengthSquared);
 		}
 
 		public static QuaternionD Euler(double x, double y, double z)
 		{
-			return FromEulerRad(new Vector3D(x, y, z) * (System.Math.PI / 180.0));
+			return FromEulerRadians(new Vector3D(x, y, z) * DegreesToRadians);
 		}
 
 		public static QuaternionD Euler(Vector3D euler)
 		{
-			return FromEulerRad(euler * (System.Math.PI / 180.0));
-		}
-
-		private static Vector3D Internal_ToEulerRad(QuaternionD rotation)
-		{
-			Vector3D value;
-			INTERNAL_CALL_ToEulerRad(ref rotation, out value);
-			return value;
+			return FromEulerRadians(euler * DegreesToRadians);
 		}
 
 		// Expanded form of qY * qX * qZ.
-		private static QuaternionD FromEulerRad(Vector3D euler)
+		private static QuaternionD FromEulerRadians(Vector3D euler)
 		{
 			double halfXAngle = euler.X * 0.5;
 			double halfYAngle = euler.Y * 0.5;
@@ -276,9 +384,46 @@ namespace ZeroGravity.Math
 				);
 		}
 
-		private static void Internal_ToAxisAngleRad(QuaternionD q, out Vector3D axis, out double angle)
+		/// <summary>
+		/// 	Inverse of <see cref="FromEulerRadians"/>, read back off the rotation matrix. Looking straight
+		/// 	up or down leaves the first and last angles interchangeable, so roll is pinned to zero there.
+		/// </summary>
+		private Vector3D ToEulerRadians()
 		{
-			INTERNAL_CALL_ToAxisAngleRad(ref q, out axis, out angle);
+			double m00 = 1.0 - (2.0 * Y * Y + 2.0 * Z * Z);
+			double m01 = 2.0 * Y * X - 2.0 * Z * W;
+			double m02 = 2.0 * Z * X + 2.0 * Y * W;
+			double m10 = 2.0 * Y * X + 2.0 * Z * W;
+			double m11 = 1.0 - (2.0 * X * X + 2.0 * Z * Z);
+			double m12 = 2.0 * Z * Y - 2.0 * X * W;
+			double m22 = 1.0 - (2.0 * X * X + 2.0 * Y * Y);
+
+			Vector3D euler = Vector3D.Zero;
+			double pitch = 0.0 - System.Math.Asin(m12);
+			if (pitch >= System.Math.PI / 2.0)
+			{
+				euler.Set(System.Math.PI / 2.0, System.Math.Atan2(m01, m00), 0.0);
+			}
+			else if (pitch <= -System.Math.PI / 2.0)
+			{
+				euler.Set(-System.Math.PI / 2.0, System.Math.Atan2(0.0 - m01, m00), 0.0);
+			}
+			else
+			{
+				euler.Set(pitch, System.Math.Atan2(m02, m22), System.Math.Atan2(m10, m11));
+			}
+
+			return euler;
+		}
+
+		public override string ToString()
+		{
+			return $"({X:0.###}, {Y:0.###}, {Z:0.###}, {W:0.###})";
+		}
+
+		public string ToString(string format)
+		{
+			return $"({X.ToString(format)}, {Y.ToString(format)}, {Z.ToString(format)}, {W.ToString(format)})";
 		}
 
 		public override int GetHashCode()
@@ -288,230 +433,12 @@ namespace ZeroGravity.Math
 
 		public override bool Equals(object other)
 		{
-			if (!(other is QuaternionD))
+			if (other is not QuaternionD quaternion)
 			{
 				return false;
 			}
 
-			QuaternionD quaternionD = (QuaternionD)other;
-			if (X.Equals(quaternionD.X) && Y.Equals(quaternionD.Y) && Z.Equals(quaternionD.Z))
-			{
-				return W.Equals(quaternionD.W);
-			}
-
-			return false;
-		}
-
-		private static void INTERNAL_CALL_AngleAxis(double angle, ref Vector3D axis, out QuaternionD value)
-		{
-			value = Identity;
-			if (axis.SqrMagnitude > 1E-06)
-			{
-				double num = System.Math.Sin(angle * (System.Math.PI / 180.0) * 0.5);
-				double new_w = System.Math.Cos(angle * (System.Math.PI / 180.0) * 0.5);
-				value.Set(axis.X * num, axis.Y * num, axis.Z * num, new_w);
-			}
-		}
-
-		private static void INTERNAL_CALL_ToAxisAngleRad(ref QuaternionD q, out Vector3D axis, out double angle)
-		{
-			axis = Vector3D.Zero;
-			angle = 0.0;
-			double num = q.X * q.X + q.Y * q.Y + q.Z * q.Z;
-			if (num > 1E-06)
-			{
-				angle = 2.0 * System.Math.Acos(q.W);
-				axis = new Vector3D(q.X, q.Y, q.Z) / System.Math.Sqrt(num);
-			}
-			else
-			{
-				angle = 0.0;
-				axis = new Vector3D(1.0, 0.0, 0.0);
-			}
-		}
-
-		private static void INTERNAL_CALL_ToEulerRad(ref QuaternionD rotation, out Vector3D value)
-		{
-			double[,] array = new double[3, 3]
-			{
-				{
-					1.0 - (2.0 * rotation.Y * rotation.Y + 2.0 * rotation.Z * rotation.Z),
-					2.0 * rotation.Y * rotation.X - 2.0 * rotation.Z * rotation.W,
-					2.0 * rotation.Z * rotation.X + 2.0 * rotation.Y * rotation.W
-				},
-				{
-					2.0 * rotation.Y * rotation.X + 2.0 * rotation.Z * rotation.W,
-					1.0 - (2.0 * rotation.X * rotation.X + 2.0 * rotation.Z * rotation.Z),
-					2.0 * rotation.Z * rotation.Y - 2.0 * rotation.X * rotation.W
-				},
-				{
-					2.0 * rotation.Z * rotation.X - 2.0 * rotation.Y * rotation.W,
-					2.0 * rotation.Z * rotation.Y + 2.0 * rotation.X * rotation.W,
-					1.0 - (2.0 * rotation.X * rotation.X + 2.0 * rotation.Y * rotation.Y)
-				}
-			};
-			value = Vector3D.Zero;
-			double num = 0.0 - System.Math.Asin(array[1, 2]);
-			if (num >= System.Math.PI / 2.0)
-			{
-				value.Set(System.Math.PI / 2.0, System.Math.Atan2(array[0, 1], array[0, 0]), 0.0);
-			}
-			else if (num <= -System.Math.PI / 2.0)
-			{
-				value.Set(-System.Math.PI / 2.0, System.Math.Atan2(0.0 - array[0, 1], array[0, 0]), 0.0);
-			}
-			else
-			{
-				value.Set(num, System.Math.Atan2(array[0, 2], array[2, 2]),
-					System.Math.Atan2(array[1, 0], array[1, 1]));
-			}
-		}
-
-		private static void INTERNAL_CALL_Inverse(ref QuaternionD rotation, out QuaternionD value)
-		{
-			value = rotation;
-			double num = rotation.X * rotation.X + rotation.Y * rotation.Y + rotation.Z * rotation.Z +
-			             rotation.W * rotation.W;
-			if (num > 1E-06)
-			{
-				double num2 = 1.0 / num;
-				value.X = (0.0 - rotation.X) * num2;
-				value.Y = (0.0 - rotation.Y) * num2;
-				value.Z = (0.0 - rotation.Z) * num2;
-				value.W = rotation.W * num2;
-			}
-		}
-
-		private static void INTERNAL_CALL_LookRotation(ref Vector3D forward, ref Vector3D up, out QuaternionD value)
-		{
-			forward = Vector3D.Normalize(forward);
-			Vector3D rhs = Vector3D.Normalize(Vector3D.Cross(up, forward));
-			up = Vector3D.Cross(forward, rhs);
-			double x = rhs.X;
-			double y = rhs.Y;
-			double z = rhs.Z;
-			double x2 = up.X;
-			double y2 = up.Y;
-			double z2 = up.Z;
-			double x3 = forward.X;
-			double y3 = forward.Y;
-			double z3 = forward.Z;
-			double num = x + y2 + z3;
-			if (num > 0.0)
-			{
-				double num2 = System.Math.Sqrt(num + 1.0);
-				value.W = num2 * 0.5;
-				num2 = 0.5 / num2;
-				value.X = (z2 - y3) * num2;
-				value.Y = (x3 - z) * num2;
-				value.Z = (y - x2) * num2;
-			}
-			else if (x >= y2 && x >= z3)
-			{
-				double num3 = System.Math.Sqrt(1.0 + x - y2 - z3);
-				double num4 = 0.5 / num3;
-				value.X = 0.5 * num3;
-				value.Y = (y + x2) * num4;
-				value.Z = (z + x3) * num4;
-				value.W = (z2 - y3) * num4;
-			}
-			else if (y2 > z3)
-			{
-				double num5 = System.Math.Sqrt(1.0 + y2 - x - z3);
-				double num6 = 0.5 / num5;
-				value.X = (x2 + y) * num6;
-				value.Y = 0.5 * num5;
-				value.Z = (y3 + z2) * num6;
-				value.W = (x3 - z) * num6;
-			}
-			else
-			{
-				double num7 = System.Math.Sqrt(1.0 + z3 - x - y2);
-				double num8 = 0.5 / num7;
-				value.X = (x3 + z) * num8;
-				value.Y = (y3 + z2) * num8;
-				value.Z = 0.5 * num7;
-				value.W = (y - x2) * num8;
-			}
-		}
-
-		private static void INTERNAL_CALL_FromToRotation(ref Vector3D fromDirection, ref Vector3D toDirection,
-			out QuaternionD value)
-		{
-			value = RotateTowards(LookRotation(fromDirection), LookRotation(toDirection), double.MaxValue);
-		}
-
-		private static void INTERNAL_CALL_Slerp(ref QuaternionD from, ref QuaternionD to, double t,
-			out QuaternionD value)
-		{
-			INTERNAL_CALL_SlerpUnclamped(ref from, ref to, MathHelper.Clamp(t, 0.0, 1.0), out value);
-		}
-
-		private static void INTERNAL_CALL_SlerpUnclamped(ref QuaternionD from, ref QuaternionD to, double t,
-			out QuaternionD value)
-		{
-			double num = from.X * to.X + from.Y * to.Y + from.Z * to.Z + from.W * to.W;
-			bool flag = false;
-			if (num < 0.0)
-			{
-				flag = true;
-				num = 0.0 - num;
-			}
-
-			double num2;
-			double num3;
-			if (num > 0.999999)
-			{
-				num2 = 1.0 - t;
-				num3 = ((!flag) ? t : (0.0 - t));
-			}
-			else
-			{
-				double num4 = System.Math.Acos(num);
-				double num5 = 1.0 / System.Math.Sin(num4);
-				num2 = System.Math.Sin((1.0 - t) * num4) * num5;
-				num3 = ((!flag) ? (System.Math.Sin(t * num4) * num5) : ((0.0 - System.Math.Sin(t * num4)) * num5));
-			}
-
-			value.X = num2 * from.X + num3 * to.X;
-			value.Y = num2 * from.Y + num3 * to.Y;
-			value.Z = num2 * from.Z + num3 * to.Z;
-			value.W = num2 * from.W + num3 * to.W;
-		}
-
-		private static void INTERNAL_CALL_Lerp(ref QuaternionD from, ref QuaternionD to, double t,
-			out QuaternionD value)
-		{
-			INTERNAL_CALL_LerpUnclamped(ref from, ref to, MathHelper.Clamp(t, 0.0, 1.0), out value);
-		}
-
-		private static void INTERNAL_CALL_LerpUnclamped(ref QuaternionD from, ref QuaternionD to, double t,
-			out QuaternionD value)
-		{
-			double num = 1.0 - t;
-			double num2 = from.X * to.X + from.Y * to.Y + from.Z * to.Z + from.W * to.W;
-			if (num2 >= 0.0)
-			{
-				value.X = num * from.X + t * to.X;
-				value.Y = num * from.Y + t * to.Y;
-				value.Z = num * from.Z + t * to.Z;
-				value.W = num * from.W + t * to.W;
-			}
-			else
-			{
-				value.X = num * from.X - t * to.X;
-				value.Y = num * from.Y - t * to.Y;
-				value.Z = num * from.Z - t * to.Z;
-				value.W = num * from.W - t * to.W;
-			}
-
-			double num3 = 1.0 /
-			              System.Math.Sqrt(
-				              value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W);
-			value.X *= num3;
-			value.Y *= num3;
-			value.Z *= num3;
-			value.W *= num3;
+			return X.Equals(quaternion.X) && Y.Equals(quaternion.Y) && Z.Equals(quaternion.Z) && W.Equals(quaternion.W);
 		}
 	}
 }

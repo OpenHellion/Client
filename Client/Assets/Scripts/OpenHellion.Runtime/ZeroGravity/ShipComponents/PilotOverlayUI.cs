@@ -637,7 +637,7 @@ namespace ZeroGravity.ShipComponents
 					? Quaternion.LookRotation(ParentShip.transform.forward, ParentShip.transform.up)
 					: (ParentShip.transform.rotation.Inverse() *
 					   ParentShip.TargetRotation.Value)).Inverse() *
-				Vector3.ProjectOnPlane(ParentShip.MainVessel.RotationVec, Vector3.forward);
+				Vector3.ProjectOnPlane(ParentShip.MainVessel.AngularVelocity, Vector3.forward);
 			_currentShipRotation = Vector3.Lerp(_currentShipRotation, targetShipRotation, Time.deltaTime * 4f);
 			Vector3 shipRotationCursor = MyPlayer.Instance.ShipRotationCursor;
 			if (shipRotationCursor.magnitude > 0.01f)

@@ -5,6 +5,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using OpenHellion;
 using OpenHellion.Net;
+using OpenHellion.Net.Message;
 using OpenHellion.Social.RichPresence;
 using OpenHellion.UI;
 using ThreeEyedGames;
@@ -40,6 +41,20 @@ namespace ZeroGravity.Objects
 		public Vector3 CurrRcsMoveThrust;
 
 		public Vector3 CurrRcsRotationThrust;
+
+		private Vector3 _inputThrust;
+
+		private Vector3 _inputRotation;
+
+		private Vector3? _inputAutoStabilise;
+
+		private uint _inputSequence;
+
+		private Vector3 _sentThrust;
+
+		private Vector3 _sentRotation;
+
+		private float _sentEngineThrustPercentage;
 
 		[FormerlySerializedAs("gatherAtmos")] public bool GatherAtmos;
 
@@ -91,18 +106,7 @@ namespace ZeroGravity.Objects
 
 		public float[] CollidersCenterOffset { get; private set; }
 
-		public bool IsThrusting
-		{
-			get
-			{
-				if (_shipStatsMsg != null && (_shipStatsMsg.Thrust != null || _shipStatsMsg.Rotation != null))
-				{
-					return true;
-				}
-
-				return false;
-			}
-		}
+		public bool IsThrusting => _inputThrust.IsNotEpsilonZero() || _inputRotation.IsNotEpsilonZero();
 
 		public static async UniTask<Ship> Create(long guid, Vector3 position, Quaternion rotation, string vesselRegistration, string vesselName, string tag, GameScenes.SceneId sceneId,
 			float[] collidersCenterOffset, bool isDebrisFragment, double radarSignature, bool isDistressSignalActive, bool isAlwaysVisible,
@@ -142,58 +146,67 @@ namespace ZeroGravity.Objects
 		protected override void FixedUpdate()
 		{
 			base.FixedUpdate();
-			if (AutoStabilize.IsNotEpsilonZero() && AngularVelocity != Vector3.zero)
+			if (AutoStabilize.IsNotEpsilonZero())
 			{
-				Vector3? autoStabilize = AutoStabilize;
-				ChangeStats(null, null, autoStabilize);
-			}
-			else if (AutoStabilize.IsNotEpsilonZero() && AngularVelocity == Vector3.zero)
-			{
-				Vector3? autoStabilize = Vector3.one;
-				ChangeStats(null, null, autoStabilize);
-				AutoStabilize = Vector3.zero;
+				_inputAutoStabilise = AngularVelocity != Vector3.zero ? AutoStabilize : Vector3.one;
+				if (AngularVelocity == Vector3.zero)
+				{
+					AutoStabilize = Vector3.zero;
+				}
 			}
 
-			if (MyPlayer.Instance.Parent == this && MyPlayer.Instance.IsDrivingShip && _shipStatsChanged &&
-				(_shipStatsMsg.Thrust != null || _shipStatsMsg.Rotation != null))
+			if (MyPlayer.Instance.Parent == this && MyPlayer.Instance.IsDrivingShip)
 			{
-				ShipStatsMessage shipStatsMessage = new ShipStatsMessage
-				{
-					Guid = Guid,
-					ThrustStats = new RcsThrustStats()
-				};
-				if (_shipStatsMsg.Thrust != null)
-				{
-					Vector3 thrust = _shipStatsMsg.Thrust.ToVector3();
-					if (!thrust.IsEpsilonEqual(Vector3.zero, 0.0001f))
-					{
-						if (thrust.sqrMagnitude > 1.0)
-						{
-							thrust = thrust.normalized;
-						}
+				Vector3 thrust = _inputThrust.sqrMagnitude > 1f ? _inputThrust.normalized : _inputThrust;
+				Vector3 rotation = _inputRotation.sqrMagnitude > 1f ? _inputRotation.normalized : _inputRotation;
 
-						thrust = RCS == null ? Vector3.zero : RCS.Acceleration * RCS.MaxOperationRate * Time.fixedDeltaTime * thrust;
-						shipStatsMessage.ThrustStats.MoveTrust = thrust.ToArray();
-					}
+				if (thrust.IsNotEpsilonZero() || rotation.IsNotEpsilonZero() ||
+					thrust != _sentThrust || rotation != _sentRotation ||
+					!Mathf.Approximately(EngineThrustPercentage, _sentEngineThrustPercentage) ||
+					_inputAutoStabilise.HasValue)
+				{
+					NetworkController.SendAndForget(new ShipThrustMessage
+					{
+						VesselGuid = Guid,
+						Sequence = ++_inputSequence,
+						Thrust = thrust.ToArray(),
+						Rotation = rotation.ToArray(),
+						EngineThrustPercentage = EngineThrustPercentage,
+						AutoStabilise = _inputAutoStabilise.HasValue ? _inputAutoStabilise.Value.ToArray() : null
+					});
+
+					_sentThrust = thrust;
+					_sentRotation = rotation;
+					_sentEngineThrustPercentage = EngineThrustPercentage;
 				}
 
-				if (_shipStatsMsg.Rotation != null)
+				World.PilotedVesselGuid = Guid;
+				if (RCS != null)
 				{
-					Vector3 shipRotation = _shipStatsMsg.Rotation.ToVector3();
-					if (!shipRotation.IsEpsilonEqual(Vector3.zero, 0.0001f))
-					{
-						if (shipRotation.sqrMagnitude > 1.0)
-						{
-							shipRotation = shipRotation.normalized;
-						}
+					double compoundMass = MainVessel.GetCompoundMass();
+					float massRatio = compoundMass > 0.0 ? (float)(Mass / compoundMass) : 1f;
+					float rate = RCS.MaxOperationRate * massRatio * Time.fixedDeltaTime;
 
-						shipRotation = RCS == null ? Vector3.zero : RCS.RotationAcceleration * RCS.MaxOperationRate * Time.fixedDeltaTime * shipRotation;
-						RotationVec += shipRotation;
-						shipStatsMessage.ThrustStats.RotationTrust = shipRotation.ToArray();
-					}
+					World.AnchorThrustVelocity += thrust * (RCS.Acceleration * rate);
+					SetVelocity(Velocity, AngularVelocity + rotation * (RCS.RotationAcceleration * Mathf.Deg2Rad * rate));
 				}
 
-				ShipStatsMessageListener(shipStatsMessage);
+				World.AnchorOffset += World.AnchorThrustVelocity * Time.fixedDeltaTime;
+
+				// The pilot knows their own thrust, so the thruster effects need no round trip.
+				CurrRcsMoveThrust = RCS == null ? Vector3.zero : RCS.Acceleration * RCS.MaxOperationRate * thrust;
+				CurrRcsRotationThrust = RCS == null ? Vector3.zero : RCS.RotationAcceleration * RCS.MaxOperationRate * rotation;
+				UpdateRcsThrusterEffects();
+
+				_inputAutoStabilise = null;
+			}
+			else if (World.PilotedVesselGuid == Guid)
+			{
+				// Leaving the seat stops the ship control messages, so the prediction has to be released here or
+				// this vessel would keep spinning on with nothing left to correct it.
+				World.PilotedVesselGuid = 0;
+				World.AnchorOffset = Vector3.zero;
+				World.AnchorThrustVelocity = Vector3.zero;
 			}
 
 			if (_shipStatsChanged)
@@ -218,42 +231,26 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		public Vector3 DampenRotationPrediction(float timeDelta, bool dampen, float stabilizationMultiplier = 1.0f)
+		/// <summary>
+		/// 	Update our ship's thrust and rotation to be sent to the server for re-simulation.
+		/// </summary>
+		public void SetPilotInput(Vector3 thrust, Vector3 rotation)
 		{
-			float num = (RCS == null ? 0f : RCS.RotationStabilization * RCS.MaxOperationRate) *
-						 stabilizationMultiplier * timeDelta;
-			Vector3 oldRotationVector = RotationVec;
-			if (dampen)
+			_inputThrust = thrust;
+			_inputRotation = rotation;
+		}
+
+		private void UpdateRcsThrusterEffects()
+		{
+			if (_rcsThrusters == null)
 			{
-				if (RotationVec.x > 0.0)
-				{
-					RotationVec.x = MathHelper.Clamp(RotationVec.x - num, 0.0f, RotationVec.x);
-				}
-				else
-				{
-					RotationVec.x = MathHelper.Clamp(RotationVec.x + num, RotationVec.x, 0.0f);
-				}
-
-				if (RotationVec.y > 0.0)
-				{
-					RotationVec.y = MathHelper.Clamp(RotationVec.y - num, 0.0f, RotationVec.y);
-				}
-				else
-				{
-					RotationVec.y = MathHelper.Clamp(RotationVec.y + num, RotationVec.y, 0.0f);
-				}
-
-				if (RotationVec.z > 0.0)
-				{
-					RotationVec.z = MathHelper.Clamp(RotationVec.z - num, 0.0f, RotationVec.z);
-				}
-				else
-				{
-					RotationVec.z = MathHelper.Clamp(RotationVec.z + num, RotationVec.z, 0.0f);
-				}
+				return;
 			}
 
-			return RotationVec - oldRotationVector;
+			bool active = CurrRcsMoveThrust.magnitude > 0f || CurrRcsRotationThrust.magnitude > 0f;
+			_rcsThrusters.SetMoveVector(active ? transform.rotation.Inverse() * CurrRcsMoveThrust : Vector3.zero);
+			_rcsThrusters.SetRotateVector(active ? CurrRcsRotationThrust : Vector3.zero);
+			_rcsThrusters.UpdateThrusters();
 		}
 
 		public void ConnectMessageListeners()
@@ -1031,33 +1028,6 @@ namespace ZeroGravity.Objects
 			if (shipStatsMessage.Guid != Guid)
 			{
 				return;
-			}
-
-			if (shipStatsMessage.ThrustStats != null)
-			{
-				CurrRcsMoveThrust = shipStatsMessage.ThrustStats.MoveTrust == null
-					? Vector3.zero
-					: shipStatsMessage.ThrustStats.MoveTrust.ToVector3();
-				CurrRcsRotationThrust = shipStatsMessage.ThrustStats.RotationTrust == null
-					? Vector3.zero
-					: shipStatsMessage.ThrustStats.RotationTrust.ToVector3();
-				bool flag = CurrRcsMoveThrust.magnitude > 0f || CurrRcsRotationThrust.magnitude > 0f;
-				Vector3 moveVector = transform.rotation.Inverse() * CurrRcsMoveThrust;
-				if (_rcsThrusters != null)
-				{
-					if (flag)
-					{
-						_rcsThrusters.SetMoveVector(moveVector);
-						_rcsThrusters.SetRotateVector(CurrRcsRotationThrust);
-						_rcsThrusters.UpdateThrusters();
-					}
-					else
-					{
-						_rcsThrusters.SetMoveVector(Vector3.zero);
-						_rcsThrusters.SetRotateVector(Vector3.zero);
-						_rcsThrusters.UpdateThrusters();
-					}
-				}
 			}
 
 			if (shipStatsMessage.VesselObjects != null)
@@ -2198,39 +2168,24 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 				}
 			};
 
-			if (thrust.HasValue && thrust.Value.IsNotEpsilonZero())
+			if (thrust.HasValue)
 			{
-				if (_shipStatsMsg.Thrust != null)
-				{
-					_shipStatsMsg.Thrust = (_shipStatsMsg.Thrust.ToVector3() + thrust.Value).ToArray();
-				}
-				else
-				{
-					_shipStatsMsg.Thrust = thrust.Value.ToArray();
-				}
-
-				_shipStatsChanged = true;
+				_inputThrust = thrust.Value;
 			}
 
-			if (rotation.HasValue && rotation.Value.IsNotEpsilonZero())
+			if (rotation.HasValue)
 			{
-				_shipStatsMsg.Rotation = _shipStatsMsg.Rotation != null
-					? (_shipStatsMsg.Rotation.ToVector3() + rotation.Value).ToArray()
-					: rotation.Value.ToArray();
-
-				_shipStatsChanged = true;
+				_inputRotation = rotation.Value;
 			}
 
 			if (autoStabilize.HasValue)
 			{
-				_shipStatsMsg.AutoStabilize = autoStabilize.Value.ToArray();
-				_shipStatsChanged = true;
+				_inputAutoStabilise = autoStabilize.Value;
 			}
 
 			if (engineThrustPercentage.HasValue)
 			{
-				_shipStatsMsg.EngineThrustPercentage = engineThrustPercentage.Value;
-				_shipStatsChanged = true;
+				EngineThrustPercentage = engineThrustPercentage.Value;
 			}
 
 			if (subSystem != null)

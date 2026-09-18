@@ -72,6 +72,8 @@ namespace ZeroGravity.Network
 	// OpenHellion messages below this line.
 	[ProtoInclude(1000, typeof(ObjectsInfoRequest))]
 	[ProtoInclude(1001, typeof(ObjectsInfoResponse))]
+	[ProtoInclude(1023, typeof(ShipThrustMessage))]
+	[ProtoInclude(1024, typeof(ShipThrustStateMessage))]
 	[ProtoInclude(1010, typeof(MovementMessage))]
 	[ProtoInclude(1011, typeof(MoveObjectRequest))]
 	[ProtoInclude(1012, typeof(CharacterAnimationMessage))]

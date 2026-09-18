@@ -6,7 +6,7 @@ namespace ZeroGravity.Math
 	[Serializable]
 	public struct Vector3D
 	{
-		private const double epsilon = 1E-06;
+		private const double DirectionEpsilon = 1E-06;
 
 		public double X;
 
@@ -14,92 +14,55 @@ namespace ZeroGravity.Math
 
 		public double Z;
 
-		public static Vector3D Back
-		{
-			get { return new Vector3D(0.0, 0.0, -1.0); }
-		}
+		public static Vector3D Back => new Vector3D(0.0, 0.0, -1.0);
 
-		public static Vector3D Down
-		{
-			get { return new Vector3D(0.0, -1.0, 0.0); }
-		}
+		public static Vector3D Down => new Vector3D(0.0, -1.0, 0.0);
 
-		public static Vector3D Forward
-		{
-			get { return new Vector3D(0.0, 0.0, 1.0); }
-		}
+		public static Vector3D Forward => new Vector3D(0.0, 0.0, 1.0);
 
-		public static Vector3D Left
-		{
-			get { return new Vector3D(-1.0, 0.0, 0.0); }
-		}
+		public static Vector3D Left => new Vector3D(-1.0, 0.0, 0.0);
 
-		public static Vector3D One
-		{
-			get { return new Vector3D(1.0, 1.0, 1.0); }
-		}
+		public static Vector3D One => new Vector3D(1.0, 1.0, 1.0);
 
-		public static Vector3D Right
-		{
-			get { return new Vector3D(1.0, 0.0, 0.0); }
-		}
+		public static Vector3D Right => new Vector3D(1.0, 0.0, 0.0);
 
-		public static Vector3D Up
-		{
-			get { return new Vector3D(0.0, 1.0, 0.0); }
-		}
+		public static Vector3D Up => new Vector3D(0.0, 1.0, 0.0);
 
-		public static Vector3D Zero
-		{
-			get { return new Vector3D(0.0, 0.0, 0.0); }
-		}
+		public static Vector3D Zero => new Vector3D(0.0, 0.0, 0.0);
 
-		public double Magnitude
-		{
-			get { return System.Math.Sqrt(X * X + Y * Y + Z * Z); }
-		}
+		public double Magnitude => System.Math.Sqrt(X * X + Y * Y + Z * Z);
 
-		public double SqrMagnitude
-		{
-			get { return X * X + Y * Y + Z * Z; }
-		}
+		public double SqrMagnitude => X * X + Y * Y + Z * Z;
 
-		public Vector3D Normalized
-		{
-			get { return Normalize(this); }
-		}
+		public Vector3D Normalized => Normalize(this);
 
 		public double this[int index]
 		{
 			get
 			{
-				switch (index)
+				return index switch
 				{
-					case 0:
-						return X;
-					case 1:
-						return Y;
-					case 2:
-						return Z;
-					default:
-						throw new IndexOutOfRangeException("Invalid Vector3 index!");
-				}
+					0 => X,
+					1 => Y,
+					2 => Z,
+					_ => throw new IndexOutOfRangeException("Invalid Vector3 index!"),
+				};
 			}
 			set
 			{
 				switch (index)
 				{
-					case 0:
-						X = value;
-						break;
-					case 1:
-						Y = value;
-						break;
-					case 2:
-						Z = value;
-						break;
-					default:
-						throw new IndexOutOfRangeException("Invalid Vector3 index!");
+				case 0:
+					X = value;
+					break;
+				case 1:
+					Y = value;
+					break;
+				case 2:
+					Z = value;
+					break;
+				default:
+					throw new IndexOutOfRangeException("Invalid Vector3 index!");
 				}
 			}
 		}
@@ -125,47 +88,81 @@ namespace ZeroGravity.Math
 			Z = other.z;
 		}
 
-		public static double Angle(Vector3D from, Vector3D to)
+		public static Vector3D operator +(Vector3D lhs, Vector3D rhs)
 		{
-			return System.Math.Acos(MathHelper.Clamp(Dot(from.Normalized, to.Normalized), -1.0, 1.0)) *
-			       (180.0 / System.Math.PI);
+			return new Vector3D(lhs.X + rhs.X, lhs.Y + rhs.Y, lhs.Z + rhs.Z);
 		}
 
-		public static Vector3D ClampMagnitude(Vector3D vector, double maxLength)
+		public static Vector3D operator -(Vector3D lhs, Vector3D rhs)
 		{
-			if (vector.SqrMagnitude > maxLength * maxLength)
+			return new Vector3D(lhs.X - rhs.X, lhs.Y - rhs.Y, lhs.Z - rhs.Z);
+		}
+
+		public static Vector3D operator -(Vector3D value)
+		{
+			return new Vector3D(0.0 - value.X, 0.0 - value.Y, 0.0 - value.Z);
+		}
+
+		public static Vector3D operator *(double scalar, Vector3D value)
+		{
+			return new Vector3D(value.X * scalar, value.Y * scalar, value.Z * scalar);
+		}
+
+		public static Vector3D operator *(Vector3D value, double scalar)
+		{
+			return new Vector3D(value.X * scalar, value.Y * scalar, value.Z * scalar);
+		}
+
+		public static Vector3D operator /(Vector3D value, double scalar)
+		{
+			return new Vector3D(value.X / scalar, value.Y / scalar, value.Z / scalar);
+		}
+
+		public static bool operator ==(Vector3D lhs, Vector3D rhs)
+		{
+			return (lhs - rhs).SqrMagnitude < 9.999999E-11;
+		}
+
+		public static bool operator !=(Vector3D lhs, Vector3D rhs)
+		{
+			return (lhs - rhs).SqrMagnitude >= 9.999999E-11;
+		}
+
+		public static double Angle(Vector3D from, Vector3D to)
+		{
+			return System.Math.Acos(MathHelper.Clamp(Dot(from.Normalized, to.Normalized), -1.0, 1.0)) * (180.0 / System.Math.PI);
+		}
+
+		public static Vector3D ClampMagnitude(Vector3D value, double maxLength)
+		{
+			if (value.SqrMagnitude > maxLength * maxLength)
 			{
-				return vector.Normalized * maxLength;
+				return value.Normalized * maxLength;
 			}
 
-			return vector;
+			return value;
 		}
 
 		public static Vector3D Cross(Vector3D lhs, Vector3D rhs)
 		{
-			return new Vector3D(lhs.Y * rhs.Z - lhs.Z * rhs.Y, lhs.Z * rhs.X - lhs.X * rhs.Z,
-				lhs.X * rhs.Y - lhs.Y * rhs.X);
+			return new Vector3D(lhs.Y * rhs.Z - lhs.Z * rhs.Y, lhs.Z * rhs.X - lhs.X * rhs.Z, lhs.X * rhs.Y - lhs.Y * rhs.X);
 		}
 
 		public static double Distance(Vector3D a, Vector3D b)
 		{
-			Vector3D vector3D = new Vector3D(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
-			return System.Math.Sqrt(vector3D.X * vector3D.X + vector3D.Y * vector3D.Y + vector3D.Z * vector3D.Z);
+			Vector3D delta = new Vector3D(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+			return System.Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y + delta.Z * delta.Z);
+		}
+
+		public static double DistanceSquared(Vector3D a, Vector3D b)
+		{
+			Vector3D delta = new Vector3D(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+			return delta.X * delta.X + delta.Y * delta.Y + delta.Z * delta.Z;
 		}
 
 		public static double Dot(Vector3D lhs, Vector3D rhs)
 		{
 			return lhs.X * rhs.X + lhs.Y * rhs.Y + lhs.Z * rhs.Z;
-		}
-
-		private static void Internal_OrthoNormalize2(ref Vector3D a, ref Vector3D b)
-		{
-			INTERNAL_CALL_Internal_OrthoNormalize2(ref a, ref b);
-		}
-
-		private static void Internal_OrthoNormalize3(ref Vector3D a, ref Vector3D b, ref Vector3D c)
-		{
-			INTERNAL_CALL_Internal_OrthoNormalize3(ref a, ref b, ref c);
 		}
 
 		public static Vector3D Lerp(Vector3D a, Vector3D b, double t)
@@ -181,32 +178,40 @@ namespace ZeroGravity.Math
 
 		public static Vector3D Max(Vector3D lhs, Vector3D rhs)
 		{
-			return new Vector3D(System.Math.Max(lhs.X, rhs.X), System.Math.Max(lhs.Y, rhs.Y),
-				System.Math.Max(lhs.Z, rhs.Z));
+			return new Vector3D(System.Math.Max(lhs.X, rhs.X), System.Math.Max(lhs.Y, rhs.Y), System.Math.Max(lhs.Z, rhs.Z));
 		}
 
 		public static Vector3D Min(Vector3D lhs, Vector3D rhs)
 		{
-			return new Vector3D(System.Math.Min(lhs.X, rhs.X), System.Math.Min(lhs.Y, rhs.Y),
-				System.Math.Min(lhs.Z, rhs.Z));
+			return new Vector3D(System.Math.Min(lhs.X, rhs.X), System.Math.Min(lhs.Y, rhs.Y), System.Math.Min(lhs.Z, rhs.Z));
+		}
+
+		/// <summary>
+		/// 	Returns a vector that is made from the absolute value of each of the components of the input vector (makes all values positive).
+		/// </summary>
+		/// <param name="value">Value to make absolute.</param>
+		/// <returns></returns>
+		public static Vector3D Abs(Vector3D value)
+		{
+			return new Vector3D(System.Math.Abs(value.X), System.Math.Abs(value.Y), System.Math.Abs(value.Z));
 		}
 
 		public static Vector3D MoveTowards(Vector3D current, Vector3D target, double maxDistanceDelta)
 		{
-			Vector3D vector3D = target - current;
-			double magnitude = vector3D.Magnitude;
-			if (magnitude <= maxDistanceDelta || magnitude == 0.0)
+			Vector3D delta = target - current;
+			double distance = delta.Magnitude;
+			if (distance <= maxDistanceDelta || distance == 0.0)
 			{
 				return target;
 			}
 
-			return current + vector3D / magnitude * maxDistanceDelta;
+			return current + delta / distance * maxDistanceDelta;
 		}
 
 		public static Vector3D Normalize(Vector3D value)
 		{
 			double magnitude = value.Magnitude;
-			if (magnitude > 1E-06)
+			if (magnitude > DirectionEpsilon)
 			{
 				return value / magnitude;
 			}
@@ -214,30 +219,48 @@ namespace ZeroGravity.Math
 			return Zero;
 		}
 
+		/// <summary>
+		/// 	Makes the two directions unit length and perpendicular, keeping <paramref name="normal"/> fixed.
+		/// </summary>
 		public static void OrthoNormalize(ref Vector3D normal, ref Vector3D tangent)
 		{
-			Internal_OrthoNormalize2(ref normal, ref tangent);
+			normal.Normalize();
+			double tangentAlongNormal = Dot(normal, tangent);
+			tangent -= tangentAlongNormal * normal;
+			tangent.Normalize();
 		}
 
+		/// <summary>
+		/// 	Makes the three directions a unit-length orthogonal basis, keeping <paramref name="normal"/>
+		/// 	fixed and moving <paramref name="tangent"/> as little as it can.
+		/// </summary>
 		public static void OrthoNormalize(ref Vector3D normal, ref Vector3D tangent, ref Vector3D binormal)
 		{
-			Internal_OrthoNormalize3(ref normal, ref tangent, ref binormal);
+			normal.Normalize();
+			double tangentAlongNormal = Dot(normal, tangent);
+			tangent -= tangentAlongNormal * normal;
+			tangent.Normalize();
+
+			double binormalAlongTangent = Dot(tangent, binormal);
+			double binormalAlongNormal = Dot(normal, binormal);
+			binormal -= binormalAlongNormal * normal + binormalAlongTangent * tangent;
+			binormal.Normalize();
 		}
 
-		public static Vector3D Project(Vector3D vector, Vector3D onNormal)
+		public static Vector3D Project(Vector3D value, Vector3D onNormal)
 		{
-			double num = Dot(onNormal, onNormal);
-			if (num < double.Epsilon)
+			double normalLengthSquared = Dot(onNormal, onNormal);
+			if (normalLengthSquared < double.Epsilon)
 			{
 				return Zero;
 			}
 
-			return onNormal * Dot(vector, onNormal) / num;
+			return onNormal * Dot(value, onNormal) / normalLengthSquared;
 		}
 
-		public static Vector3D ProjectOnPlane(Vector3D vector, Vector3D planeNormal)
+		public static Vector3D ProjectOnPlane(Vector3D value, Vector3D planeNormal)
 		{
-			return vector - Project(vector, planeNormal);
+			return value - Project(value, planeNormal);
 		}
 
 		public static Vector3D Reflect(Vector3D inDirection, Vector3D inNormal)
@@ -245,83 +268,50 @@ namespace ZeroGravity.Math
 			return -2.0 * Dot(inNormal, inDirection) * inNormal + inDirection;
 		}
 
-		public static Vector3D RotateTowards(Vector3D current, Vector3D target, double maxRadiansDelta,
-			double maxMagnitudeDelta)
+		public static Vector3D Scale(Vector3D lhs, Vector3D rhs)
 		{
-			Vector3D value;
-			INTERNAL_CALL_RotateTowards(ref current, ref target, maxRadiansDelta, maxMagnitudeDelta, out value);
-			return value;
+			return new Vector3D(lhs.X * rhs.X, lhs.Y * rhs.Y, lhs.Z * rhs.Z);
 		}
 
-		public static Vector3D Scale(Vector3D a, Vector3D b)
-		{
-			return new Vector3D(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
-		}
-
-		public static Vector3D Slerp(Vector3D a, Vector3D b, double t)
-		{
-			Vector3D value;
-			INTERNAL_CALL_Slerp(ref a, ref b, t, out value);
-			return value;
-		}
-
-		public static Vector3D SlerpUnclamped(Vector3D a, Vector3D b, double t)
-		{
-			Vector3D value;
-			INTERNAL_CALL_SlerpUnclamped(ref a, ref b, t, out value);
-			return value;
-		}
-
-		public static Vector3D SmoothDamp(Vector3D current, Vector3D target, ref Vector3D currentVelocity,
-			double smoothTime, double deltaTime)
+		public static Vector3D SmoothDamp(Vector3D current, Vector3D target, ref Vector3D currentVelocity, double smoothTime, double deltaTime)
 		{
 			return SmoothDamp(current, target, ref currentVelocity, smoothTime, double.PositiveInfinity, deltaTime);
 		}
 
-		public static Vector3D SmoothDamp(Vector3D current, Vector3D target, ref Vector3D currentVelocity,
-			double smoothTime, double maxSpeed, double deltaTime)
+		public static Vector3D SmoothDamp(Vector3D current, Vector3D target, ref Vector3D currentVelocity, double smoothTime, double maxSpeed, double deltaTime)
 		{
 			smoothTime = System.Math.Max(0.0001, smoothTime);
-			double num = 2.0 / smoothTime;
-			double num2 = num * deltaTime;
-			double num3 = 1.0 / (1.0 + num2 + 0.48 * num2 * num2 + 0.235 * num2 * num2 * num2);
-			Vector3D vector = current - target;
-			Vector3D vector3D = target;
-			double maxLength = maxSpeed * smoothTime;
-			vector = ClampMagnitude(vector, maxLength);
-			target = current - vector;
-			Vector3D vector3D2 = (currentVelocity + num * vector) * deltaTime;
-			currentVelocity = (currentVelocity - num * vector3D2) * num3;
-			Vector3D vector3D3 = target + (vector + vector3D2) * num3;
-			if (Dot(vector3D - current, vector3D3 - vector3D) > 0.0)
+			double frequency = 2.0 / smoothTime;
+			double step = frequency * deltaTime;
+
+			// Rational stand-in for exp(-step), cheaper than the real thing and close enough over a frame.
+			double decay = 1.0 / (1.0 + step + 0.48 * step * step + 0.235 * step * step * step);
+
+			Vector3D offset = current - target;
+			Vector3D originalTarget = target;
+
+			// Capping the offset is what bounds the speed, since the spring pulls in proportion to it.
+			offset = ClampMagnitude(offset, maxSpeed * smoothTime);
+			target = current - offset;
+
+			Vector3D displacementStep = (currentVelocity + frequency * offset) * deltaTime;
+			currentVelocity = (currentVelocity - frequency * displacementStep) * decay;
+			Vector3D result = target + (offset + displacementStep) * decay;
+
+			// Overshot the target: stop dead on it instead of springing past.
+			if (Dot(originalTarget - current, result - originalTarget) > 0.0)
 			{
-				vector3D3 = vector3D;
-				currentVelocity = (vector3D3 - vector3D) / deltaTime;
+				result = originalTarget;
+				currentVelocity = (result - originalTarget) / deltaTime;
 			}
 
-			return vector3D3;
-		}
-
-		public override bool Equals(object other)
-		{
-			if (!(other is Vector3D))
-			{
-				return false;
-			}
-
-			Vector3D vector3D = (Vector3D)other;
-			return X.Equals(vector3D.X) && Y.Equals(vector3D.Y) && Z.Equals(vector3D.Z);
-		}
-
-		public override int GetHashCode()
-		{
-			return X.GetHashCode() ^ (Y.GetHashCode() << 2) ^ (Z.GetHashCode() >> 2);
+			return result;
 		}
 
 		public void Normalize()
 		{
 			double magnitude = Magnitude;
-			if (magnitude > 1E-06)
+			if (magnitude > DirectionEpsilon)
 			{
 				this /= magnitude;
 			}
@@ -338,97 +328,36 @@ namespace ZeroGravity.Math
 			Z *= scale.Z;
 		}
 
-		public void Set(double new_x, double new_y, double new_z)
+		public void Set(double x, double y, double z)
 		{
-			X = new_x;
-			Y = new_y;
-			Z = new_z;
-		}
-
-		public string ToString(string format)
-		{
-			return string.Format("({0}, {1}, {2})", X.ToString(format), Y.ToString(format), Z.ToString(format));
+			X = x;
+			Y = y;
+			Z = z;
 		}
 
 		public override string ToString()
 		{
-			return string.Format("({0:0.###}, {1:0.###}, {2:0.###})", X, Y, Z);
+			return $"({X:0.###}, {Y:0.###}, {Z:0.###})";
 		}
 
-		public static Vector3D operator +(Vector3D a, Vector3D b)
+		public string ToString(string format)
 		{
-			return new Vector3D(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+			return $"({X.ToString(format)}, {Y.ToString(format)}, {Z.ToString(format)})";
 		}
 
-		public static Vector3D operator /(Vector3D a, double d)
+		public override int GetHashCode()
 		{
-			return new Vector3D(a.X / d, a.Y / d, a.Z / d);
+			return X.GetHashCode() ^ (Y.GetHashCode() << 2) ^ (Z.GetHashCode() >> 2);
 		}
 
-		public static bool operator ==(Vector3D lhs, Vector3D rhs)
+		public override bool Equals(object other)
 		{
-			return (lhs - rhs).SqrMagnitude < 9.999999E-11;
-		}
+			if (other is not Vector3D vector)
+			{
+				return false;
+			}
 
-		public static bool operator !=(Vector3D lhs, Vector3D rhs)
-		{
-			return (lhs - rhs).SqrMagnitude >= 9.999999E-11;
-		}
-
-		public static Vector3D operator *(double d, Vector3D a)
-		{
-			return new Vector3D(a.X * d, a.Y * d, a.Z * d);
-		}
-
-		public static Vector3D operator *(Vector3D a, double d)
-		{
-			return new Vector3D(a.X * d, a.Y * d, a.Z * d);
-		}
-
-		public static Vector3D operator -(Vector3D a, Vector3D b)
-		{
-			return new Vector3D(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
-		}
-
-		public static Vector3D operator -(Vector3D a)
-		{
-			return new Vector3D(0.0 - a.X, 0.0 - a.Y, 0.0 - a.Z);
-		}
-
-		private static void INTERNAL_CALL_Internal_OrthoNormalize2(ref Vector3D a, ref Vector3D b)
-		{
-			throw new Exception("INTERNAL_CALL_Internal_OrthoNormalize2 IS NOT IMPLEMENTED");
-		}
-
-		private static void INTERNAL_CALL_Internal_OrthoNormalize3(ref Vector3D a, ref Vector3D b, ref Vector3D c)
-		{
-			a.Normalize();
-			double num = Dot(a, b);
-			b -= num * a;
-			b.Normalize();
-			double num2 = Dot(b, c);
-			num = Dot(a, c);
-			c -= num * a + num2 * b;
-			c.Normalize();
-		}
-
-		private static void INTERNAL_CALL_RotateTowards(ref Vector3D current, ref Vector3D target,
-			double maxRadiansDelta, double maxMagnitudeDelta, out Vector3D value)
-		{
-			value = Zero;
-			throw new Exception("INTERNAL_CALL_RotateTowards IS NOT IMPLEMENTED");
-		}
-
-		private static void INTERNAL_CALL_Slerp(ref Vector3D a, ref Vector3D b, double t, out Vector3D value)
-		{
-			value = Zero;
-			throw new Exception("INTERNAL_CALL_Slerp IS NOT IMPLEMENTED");
-		}
-
-		private static void INTERNAL_CALL_SlerpUnclamped(ref Vector3D a, ref Vector3D b, double t, out Vector3D value)
-		{
-			value = Zero;
-			throw new Exception("INTERNAL_CALL_SlerpUnclamped IS NOT IMPLEMENTED");
+			return X.Equals(vector.X) && Y.Equals(vector.Y) && Z.Equals(vector.Z);
 		}
 	}
 }

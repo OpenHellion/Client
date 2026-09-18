@@ -7,17 +7,7 @@ namespace ZeroGravity.Network
 	{
 		public long Guid;
 
-		public float[] Thrust;
-
-		public float[] Rotation;
-
-		public float[] AutoStabilize;
-
-		public float? EngineThrustPercentage;
-
 		public VesselObjects VesselObjects;
-
-		public RcsThrustStats ThrustStats;
 
 		public float? Temperature;
 

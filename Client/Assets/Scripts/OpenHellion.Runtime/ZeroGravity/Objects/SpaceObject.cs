@@ -22,8 +22,6 @@ namespace ZeroGravity.Objects
 
 		public Vector3? TargetPosition;
 
-		public Vector3 RotationVec = Vector3.zero;
-
 		public long Guid { get; set; }
 
 		public virtual SpaceObjectType Type => SpaceObjectType.None;

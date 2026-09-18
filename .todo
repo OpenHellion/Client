@@ -22,13 +22,14 @@ Movement:
 [x] Fix sticking to vessel when in EVA makes you permanentely stuck
 [x] Fix rebasing from EVA back to vessel adds significant velocity relative to vessel
 [x] Fix ship controls visibly doing nothing (then exiting ship pilot seat putting you sideways/upside down)
-[ ] Make ship controls smooth
+[x] Make ship controls smooth
 [x] Fix ejection bug from ship when piloting by making position in MovementMessage parent-relative instead of anchor relative.
 [ ] Fix changing parent deals damage (~3 hp each)
 [ ] Fix snap when flying back into range of a vessel
 [ ] Fix items, corpses and other players sliding when the anchor changes
 [ ] Moving from 0g to 1g fast might cause you to go trough the wall and fall forever, crashing the game
 [ ] Landing and staying on asteroid is impossible (may be because object spins)
+[ ] Fix ship driving without power and engine (remove RCS?)
 
 Short-term:
 [x] Update to Unity 6.3
@@ -44,6 +45,7 @@ Short-term:
 [x] Send child dynamic objects (especially inventory of the player) as properties of its parent instead of as independent objects
 [x] Fix picking up suit in fresh start failing
 [x] Fix circular reference breaking ClassHasher
+[x] Fix vessel destruction crashing the server
 [ ] Fix differences between GameTransport on client and server
 [ ] Test if new other character controller works.
 [ ] Fix spawn setup station falling into planet ejects player and crashes server on disconnect
@@ -55,10 +57,10 @@ Short-term:
 Debugging/diagnostics:
 [x] Fix console (add errors and make player admin)
 [x] Set up unity test framework
+[x] Add test to ZeroGravity math
 [ ] Create a TestClient on the server
 [ ] Add tests to duplicate network data and similar
 [ ] Add test to ClassHasher (same on both client and server)
-[ ] Add test to ZeroGravity math
 [ ] Add test to static data integrity
 [ ] Implement TestShip spawn setup as testing spawn
 [ ] Make all MathHelper.Random use a testing seed

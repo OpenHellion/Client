@@ -352,6 +352,21 @@ namespace ZeroGravity
 			return Quaternion.Inverse(value);
 		}
 
+		/// <summary>
+		/// 	Composes an angular velocity in radians per second onto an orientation, about the body's own
+		/// 	axis rather than as Euler rates.
+		/// </summary>
+		public static Quaternion RotatedBy(this Quaternion rotation, Vector3 angularVelocity, float deltaTime)
+		{
+			float speed = angularVelocity.magnitude;
+			if (speed <= 1E-09f)
+			{
+				return rotation;
+			}
+
+			return rotation * Quaternion.AngleAxis(speed * Mathf.Rad2Deg * deltaTime, angularVelocity / speed);
+		}
+
 		public static QuaternionD Inverse(this QuaternionD value)
 		{
 			return QuaternionD.Inverse(value);

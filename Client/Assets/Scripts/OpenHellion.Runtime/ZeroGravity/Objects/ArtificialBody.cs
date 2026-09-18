@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using ZeroGravity.LevelDesign;
+using OpenHellion;
 using ZeroGravity.Network;
 
 namespace ZeroGravity.Objects
 {
 	public class ArtificialBody : SpaceObject
 	{
+		private const float CorrectionTime = 0.15f;
+
 		public ManeuverData Maneuver;
 
 		public bool ManeuverExited;
@@ -187,9 +190,6 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		/// <summary>
-		/// 	Eases towards the position the last movement message asked for.
-		/// </summary>
 		private bool SmoothPosition()
 		{
 			if (!TargetPosition.HasValue)
@@ -197,41 +197,46 @@ namespace ZeroGravity.Objects
 				return false;
 			}
 
-			// The anchor is pinned at the origin and a docked vessel is placed by whatever it is docked to.
-			// Neither may be driven from here, and any target they were still carrying is stale.
 			if (!ShouldSetLocalTransform)
 			{
 				TargetPosition = null;
 				return false;
 			}
 
-			Vector3 step = Velocity * Time.fixedDeltaTime;
+			float deltaTime = Time.fixedDeltaTime;
+			Vector3 step = Velocity * deltaTime;
 			TargetPosition += step;
 
-			transform.localPosition = OpenHellion.World.VESSEL_TRANSLATION_LERP_UNCLAMPED
-				? Vector3.LerpUnclamped(transform.localPosition + step, TargetPosition.Value,
-					OpenHellion.World.VESSEL_TRANSLATION_LERP_VALUE)
-				: Vector3.Lerp(transform.localPosition + step, TargetPosition.Value,
-					OpenHellion.World.VESSEL_TRANSLATION_LERP_VALUE);
+			Vector3 target = TargetPosition.Value - World.AnchorOffset;
+			transform.localPosition = Vector3.Lerp(transform.localPosition + step, target, Blend(deltaTime));
 
 			return true;
 		}
 
-		/// <summary>
-		/// 	Eases towards the rotation the last movement message asked for.
-		/// </summary>
 		private bool SmoothRotation()
 		{
+			float deltaTime = Time.fixedDeltaTime;
+
+			if (World.PilotedVesselGuid == Guid)
+			{
+				transform.localRotation = transform.localRotation.RotatedBy(AngularVelocity, deltaTime);
+				if (MyPlayer.Instance != null)
+				{
+					MyPlayer.Instance.UpdateCameraPositions();
+				}
+
+				return true;
+			}
+
 			if (!TargetRotation.HasValue)
 			{
 				return false;
 			}
 
-			Quaternion step = Quaternion.Euler(AngularVelocity * (Mathf.Rad2Deg * Time.fixedDeltaTime));
-			TargetRotation = step * TargetRotation.Value;
-
-			transform.localRotation = Quaternion.Slerp(step * transform.localRotation, TargetRotation.Value,
-				OpenHellion.World.VESSEL_ROTATION_LERP_VALUE);
+			TargetRotation = TargetRotation.Value.RotatedBy(AngularVelocity, deltaTime);
+			transform.localRotation = Quaternion.Slerp(
+				transform.localRotation.RotatedBy(AngularVelocity, deltaTime),
+				TargetRotation.Value, Blend(deltaTime));
 
 			if (!ShouldSetLocalTransform && MyPlayer.Instance != null)
 			{
@@ -240,6 +245,12 @@ namespace ZeroGravity.Objects
 
 			return true;
 		}
+
+		/// <summary>
+		/// 	Fraction of the remaining error to remove this step. Exponential, so the result does not
+		/// 	depend on the step rate the way a fixed lerp factor does.
+		/// </summary>
+		public static float Blend(float deltaTime) => 1f - Mathf.Exp(-deltaTime / CorrectionTime);
 
 		/// <summary>
 		/// 	Repositions this body to follow the body it is stabilised to, keeping a fixed local-space
