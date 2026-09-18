@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Water Blend
   m_Shader: {fileID: 4800000, guid: 5de9f1c628d6d374ab45e00bf67219f1, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 5
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -111,3 +114,4 @@ Material:
     - _node_2006: {r: 1, g: 1, b: 1, a: 1}
     - _node_6067: {r: 0, g: 0.5862067, b: 1, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

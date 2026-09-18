@@ -46,9 +46,9 @@ Short-term:
 [x] Fix picking up suit in fresh start failing
 [x] Fix circular reference breaking ClassHasher
 [x] Fix vessel destruction crashing the server
+[x] Fix spawn setup station falling into planet ejects player and crashes server on disconnect
 [ ] Fix differences between GameTransport on client and server
 [ ] Test if new other character controller works.
-[ ] Fix spawn setup station falling into planet ejects player and crashes server on disconnect
 [ ] Crashing into a planet when on a pivot does not kill the player
 [ ] Not possible to drop items
 [ ] Make map support fuzzy objects
@@ -58,6 +58,7 @@ Debugging/diagnostics:
 [x] Fix console (add errors and make player admin)
 [x] Set up unity test framework
 [x] Add test to ZeroGravity math
+[x] Organise client code into assemblies
 [ ] Create a TestClient on the server
 [ ] Add tests to duplicate network data and similar
 [ ] Add test to ClassHasher (same on both client and server)
@@ -66,7 +67,6 @@ Debugging/diagnostics:
 [ ] Make all MathHelper.Random use a testing seed
 [ ] Show game state info in console and log to file
 [ ] Automatic hash comparison of state on both client and server?
-[ ] Organise client code into assemblies
 [ ] Add assertions in code
 
 Later:

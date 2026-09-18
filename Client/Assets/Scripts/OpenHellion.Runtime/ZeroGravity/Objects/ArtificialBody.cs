@@ -99,8 +99,7 @@ namespace ZeroGravity.Objects
 				artificialBody.TransferableObjectsRoot.transform.Reset();
 			}
 
-			// The anchor sits at the origin and is exempt from positioning.
-			artificialBody.transform.parent = World.ShipExteriorRoot.transform;
+			artificialBody.transform.parent = World.SpaceObjectsRoot.transform;
 			artificialBody.transform.localPosition = Vector3.zero;
 			artificialBody.SetTargetPositionAndRotation(position, rotation, true);
 

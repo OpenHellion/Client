@@ -270,7 +270,7 @@ namespace ZeroGravity.Objects
 			{
 				DestructionEffects.transform.parent = GeometryPlaceholder.transform;
 				DestructionEffects.transform.Reset();
-				DestructionEffects.transform.parent = World.ShipExteriorRoot.transform;
+				DestructionEffects.transform.parent = World.SpaceObjectsRoot.transform;
 				DestructionEffects.gameObject.SetActive(value: true);
 				DestructionEffects.enabled = true;
 			}
@@ -429,7 +429,7 @@ namespace ZeroGravity.Objects
 			if (_warpStartEffect != null)
 			{
 				GameObject gameObject = Instantiate(_warpStartEffect.gameObject,
-					World.ShipExteriorRoot.transform);
+					World.SpaceObjectsRoot.transform);
 				gameObject.transform.position = _warpStartEffect.transform.position;
 				gameObject.transform.localScale = _warpStartEffect.transform.localScale;
 				gameObject.Activate(value: true);
@@ -441,7 +441,7 @@ namespace ZeroGravity.Objects
 			if (_warpEndEffect != null)
 			{
 				GameObject gameObject =
-					Instantiate(_warpEndEffect.gameObject, World.ShipExteriorRoot.transform);
+					Instantiate(_warpEndEffect.gameObject, World.SpaceObjectsRoot.transform);
 				gameObject.transform.position = _warpEndEffect.transform.position;
 				gameObject.transform.localScale = _warpEndEffect.transform.localScale;
 				gameObject.Activate(value: true);
@@ -1840,8 +1840,8 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 			Ship vessel2 = World.GetVessel(details.VesselOrbitOther.GUID.Value) as Ship;
 			vessel.RecreateDockedVesselsTree();
 			vessel2.RecreateDockedVesselsTree();
-			vessel.transform.SetParent(World.ShipExteriorRoot.transform);
-			vessel2.transform.SetParent(World.ShipExteriorRoot.transform);
+			vessel.transform.SetParent(World.SpaceObjectsRoot.transform);
+			vessel2.transform.SetParent(World.SpaceObjectsRoot.transform);
 			Vector3 vector2 = Vector3.zero;
 			Vector3 vector3 = Vector3.zero;
 			if (details.RelativePositionUpdate != null && details.RelativeRotationUpdate != null)

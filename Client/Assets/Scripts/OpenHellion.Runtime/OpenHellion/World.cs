@@ -56,7 +56,7 @@ namespace OpenHellion
 
 		public GameObject SolarSystemRoot;
 
-		public GameObject ShipExteriorRoot;
+		public GameObject SpaceObjectsRoot;
 
 		public Transform SunCameraRootTransform;
 
@@ -194,10 +194,6 @@ namespace OpenHellion
 			Application.runInBackground = true;
 			_openMainSceneStarted = false;
 			_solarSystem = GetComponent<SolarSystem>();
-
-			ShipExteriorRoot.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-			ShipExteriorRoot.transform.localScale = Vector3.one;
-
 			Texture[] emblems = Resources.LoadAll<Texture>("Emblems");
 			SceneVesselEmblem.Textures = emblems.ToDictionary(x => x.name, y => y);
 
@@ -392,7 +388,7 @@ namespace OpenHellion
 				}
 			}
 
-			OtherPlayer[] componentsInChildren2 = ShipExteriorRoot.GetComponentsInChildren<OtherPlayer>();
+			OtherPlayer[] componentsInChildren2 = SpaceObjectsRoot.GetComponentsInChildren<OtherPlayer>();
 			foreach (OtherPlayer otherPlayer2 in componentsInChildren2)
 			{
 				if (otherPlayer2.Guid == guid)
@@ -454,7 +450,7 @@ namespace OpenHellion
 				}
 			}
 
-			Corpse[] componentsInChildren2 = ShipExteriorRoot.GetComponentsInChildren<Corpse>();
+			Corpse[] componentsInChildren2 = SpaceObjectsRoot.GetComponentsInChildren<Corpse>();
 			foreach (Corpse corpse2 in componentsInChildren2)
 			{
 				if (corpse2.Guid == guid)
@@ -499,7 +495,7 @@ namespace OpenHellion
 				return spaceObject;
 			}
 
-			SpaceObjectVessel[] componentsInChildren = ShipExteriorRoot.GetComponentsInChildren<SpaceObjectVessel>();
+			SpaceObjectVessel[] componentsInChildren = SpaceObjectsRoot.GetComponentsInChildren<SpaceObjectVessel>();
 			foreach (SpaceObjectVessel spaceObjectVessel in componentsInChildren)
 			{
 				if (spaceObjectVessel.Guid == guid)

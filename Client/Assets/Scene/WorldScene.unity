@@ -17158,22 +17158,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!1 &1241
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3662}
-  m_Layer: 0
-  m_Name: ShipExteriorRotation
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 119
-  m_IsActive: 1
 --- !u!1 &1242
 GameObject:
   m_ObjectHideFlags: 0
@@ -29723,7 +29707,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3757}
   m_Layer: 0
-  m_Name: ShipExteriorRoot
+  m_Name: SpaceObjectsRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32273,7 +32257,7 @@ GameObject:
   - component: {fileID: 3781}
   - component: {fileID: 12254}
   m_Layer: 0
-  m_Name: ExteriorParticles
+  m_Name: SpaceParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50012,7 +49996,6 @@ Transform:
   - {fileID: 3899}
   - {fileID: 3772}
   - {fileID: 3757}
-  - {fileID: 3662}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
 --- !u!4 &3528
@@ -50543,21 +50526,6 @@ Transform:
   - {fileID: 3633}
   m_Father: {fileID: 3813}
   m_LocalEulerAnglesHint: {x: -16.237001, y: 9.959001, z: -46.128345}
---- !u!4 &3662
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1241}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3526}
-  m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
 --- !u!4 &3664
 Transform:
   m_ObjectHideFlags: 0
@@ -227677,7 +227645,7 @@ MonoBehaviour:
   RCS_THRUST_SENSITIVITY: 0.5
   RCS_ROTATION_SENSITIVITY: 5
   SolarSystemRoot: {fileID: 253}
-  ShipExteriorRoot: {fileID: 2092}
+  SpaceObjectsRoot: {fileID: 2092}
   SunCameraRootTransform: {fileID: 3494}
   SunCameraTransform: {fileID: 3711}
   PlanetsCameraRootTransform: {fileID: 3513}
@@ -227685,6 +227653,9 @@ MonoBehaviour:
   ShipSunLightTransform: {fileID: 3912}
   PlanetsRootTransform: {fileID: 3772}
   PlanetsSunLightTransform: {fileID: 3615}
+  PilotedVesselGuid: 0
+  AnchorOffset: {x: 0, y: 0, z: 0}
+  AnchorThrustVelocity: {x: 0, y: 0, z: 0}
   CubemapRenderer: {fileID: 12460}
   Map: {fileID: 10069}
   DebrisEffect: {fileID: 10950}
@@ -227694,62 +227665,6 @@ MonoBehaviour:
   ExposureRange: 0
   InWorldPanels: {fileID: 12957}
   InGameGUI: {fileID: 2049464999}
---- !u!1 &1742159212
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1742159214}
-  - component: {fileID: 1742159213}
-  m_Layer: 0
-  m_Name: BulletPhysicsWorld
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
---- !u!114 &1742159213
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1742159212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41f2902ecfd038540a5652633a7400c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _debugDrawMode: 1
-  _doDebugDraw: 0
-  m_worldType: 1
-  m_collisionType: 0
-  m_broadphaseType: 0
-  m_axis3SweepBroadphaseMin: {x: -1000, y: -1000, z: -1000}
-  m_axis3SweepBroadphaseMax: {x: 1000, y: 1000, z: 1000}
-  m_gravity: {x: 0, y: 0, z: 0}
-  m_fixedTimeStep: 0.016666668
-  m_maxSubsteps: 3
-  debugType: 3
-  timeStr: 0
---- !u!4 &1742159214
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1742159212}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1796008840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228101,7 +228016,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 3509}
-  - {fileID: 1742159214}
   - {fileID: 370254336}
   - {fileID: 3526}
   - {fileID: 3595}
