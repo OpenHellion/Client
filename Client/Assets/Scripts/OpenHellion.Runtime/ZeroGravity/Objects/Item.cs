@@ -516,7 +516,7 @@ namespace ZeroGravity.Objects
 				bool flag2 = attachToTrans != null;
 				if (DynamicObj.Parent is Pivot && DynamicObj.Parent != obj)
 				{
-					World.RemoveArtificialBody(DynamicObj.Parent.Guid, DynamicObj);
+					World.RemoveArtificialBody(DynamicObj.Parent as ArtificialBody, DynamicObj);
 					Destroy(DynamicObj.Parent.gameObject);
 				}
 
@@ -613,10 +613,6 @@ namespace ZeroGravity.Objects
 					Debug.LogException(ex);
 				}
 
-				if (DynamicObj.Parent is DynamicObject)
-				{
-				}
-
 				if (flag2)
 				{
 					transform.SetParent(attachToTrans);
@@ -679,7 +675,7 @@ namespace ZeroGravity.Objects
 						}
 						: null,
 					LocalPosition = !DynamicObj.IsAttached ? transform.localPosition.ToArray() : null,
-					LocalRotation = !DynamicObj.IsAttached ? transform.localPosition.ToArray() : null,
+					LocalRotation = !DynamicObj.IsAttached ? transform.localRotation.ToArray() : null,
 					Velocity = !sendVelocity.HasValue ? null : sendVelocity.Value.ToArray(),
 					Torque = !sendTorque.HasValue ? null : sendTorque.Value.ToArray(),
 					ThrowForce = !sendThrowForce.HasValue ? null : sendThrowForce.Value.ToArray()
@@ -695,8 +691,9 @@ namespace ZeroGravity.Objects
 			SpaceObject spaceObject = Slot is InventorySlot && InvSlot.Outfit != null
 				? InvSlot.Outfit.DynamicObj.Parent
 				: Slot is not ItemSlot ? DynamicObj.Parent : Slot.Parent;
-			return spaceObject.Type == data.ParentType && spaceObject.Guid == data.ParentGUID && Slot is ItemSlot &&
-			       (Slot as ItemSlot).ID == data.ItemSlotID && DynamicObj.IsAttached == data.IsAttached &&
+			return spaceObject.Type == data.ParentType && spaceObject.Guid == data.ParentGUID &&
+			       (Slot is ItemSlot itemSlot ? itemSlot.ID : 0) == data.ItemSlotID &&
+			       DynamicObj.IsAttached == data.IsAttached &&
 			       InvSlotID == data.InventorySlotID && ((AttachPoint == null && data.APDetails == null) ||
 			                                             (AttachPoint != null && data.APDetails != null &&
 			                                              AttachPoint.InSceneID == data.APDetails.InSceneID));
@@ -782,6 +779,8 @@ namespace ZeroGravity.Objects
 					inventorySlot.SetItem(this, sendMessage: false);
 					return;
 				}
+
+				Debug.LogError($"Item '{GUID}' was assigned to inventory slot {data.InventorySlotID} of '{spaceObject.Guid}', which has no such slot. It will fall through to a plain attach and end up nowhere.");
 			}
 
 			if (data.APDetails != null && spaceObject is SpaceObjectVessel)

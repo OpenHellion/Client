@@ -478,13 +478,20 @@ namespace OpenHellion
 		/// 	pivot dissolves, so the object it wrapped reclaims the guid slot they share.
 		/// </summary>
 		/// TODO: restoreContained has to exist as long as pivots use the same guid as the objects they contain.
-		public void RemoveArtificialBody(long guid, SpaceObject restoreContained = null)
+		public void RemoveArtificialBody(ArtificialBody body, SpaceObject restoreContained = null)
 		{
-			_spaceObjects.TryRemove(guid, out _);
+			// Check if the artificial body isn't a pivot.
+			if (body == null || !_spaceObjects.TryGetValue(body.Guid, out SpaceObject registered) ||
+			    !ReferenceEquals(registered, body))
+			{
+				return;
+			}
+
+			_spaceObjects.TryRemove(body.Guid, out _);
 
 			if (restoreContained != null)
 			{
-				_spaceObjects.TryAdd(guid, restoreContained);
+				_spaceObjects.TryAdd(body.Guid, restoreContained);
 			}
 		}
 
@@ -764,9 +771,9 @@ namespace OpenHellion
 					ReconcileView(movementMessage.VisibleObjects);
 				}
 			}
-			catch (NullReferenceException)
+			catch (NullReferenceException ex)
 			{
-				Debug.LogWarning("MovementMessage had a null field.");
+				Debug.LogWarning($"MovementMessage had a null field: {ex}");
 			}
 		}
 
@@ -909,6 +916,7 @@ namespace OpenHellion
 					// retrying so a guid we can't spawn isn't requested on every movement message.
 					if (!TryGetSpaceObject(guid, out SpaceObject _))
 					{
+						Debug.LogWarning($"Spawn of '{guid}' produced nothing, backing off before retrying.");
 						_failedSpawnTimes[guid] = Time.unscaledTime;
 					}
 					else
@@ -930,7 +938,7 @@ namespace OpenHellion
 
 			if (await NetworkController.SendReceiveAsync(request, 10000) is not ObjectsInfoResponse response)
 			{
-				Debug.LogWarning("Attempted to spawn objects with guid but got no response.");
+				Debug.LogWarning($"Attempted to spawn objects {string.Join(",", guids)} but got no response.");
 				return;
 			}
 

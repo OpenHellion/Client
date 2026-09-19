@@ -57,7 +57,7 @@ namespace ZeroGravity.Objects
 
 		private void OnDestroy()
 		{
-			World.RemoveArtificialBody(Guid);
+			World.RemoveArtificialBody(this);
 			SceneHelper.RemoveCubemapProbes(gameObject, World);
 			World.ActiveVessels.TryRemove(Guid, out _);
 		}

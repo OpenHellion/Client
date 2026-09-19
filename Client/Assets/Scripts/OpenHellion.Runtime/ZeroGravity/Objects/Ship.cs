@@ -2280,7 +2280,7 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 			EventSystem.RemoveListener(typeof(VesselRequestResponse), VesselRequestResponseListener);
 			EventSystem.RemoveListener(typeof(DestroyVesselMessage), DestroyVesselMessageListener);
 
-			World.RemoveArtificialBody(Guid);
+			World.RemoveArtificialBody(this);
 			SceneHelper.RemoveCubemapProbes(gameObject, World);
 			World.ActiveVessels.TryRemove(Guid, out _);
 		}

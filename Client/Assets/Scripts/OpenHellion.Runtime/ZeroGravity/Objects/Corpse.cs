@@ -381,7 +381,7 @@ namespace ZeroGravity.Objects
 			{
 				if (Parent is Pivot && Parent != vessel)
 				{
-					World.RemoveArtificialBody(Parent.Guid, this);
+					World.RemoveArtificialBody(Parent as ArtificialBody, this);
 					Destroy(Parent.gameObject);
 				}
 

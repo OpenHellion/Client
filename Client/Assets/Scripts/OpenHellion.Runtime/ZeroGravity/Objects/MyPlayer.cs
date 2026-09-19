@@ -2727,7 +2727,7 @@ namespace ZeroGravity.Objects
 			SpaceObjectVessel spaceObjectVessel2 = !vessel.IsDocked ? vessel : vessel.DockedToMainVessel;
 			if (Parent is Pivot)
 			{
-				World.RemoveArtificialBody(Parent.Guid);
+				World.RemoveArtificialBody(Parent as ArtificialBody);
 				Destroy(Parent.gameObject);
 				SceneQuestTrigger.OnTriggerInChildren(vessel.MainVessel.gameObject,
 					SceneQuestTriggerEvent.EnterStation);

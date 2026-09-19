@@ -161,6 +161,40 @@ namespace ZeroGravity.CharacterMovement
 				}
 				else
 				{
+					// Unity raises a trigger exit whenever a collider's physics representation changes - a
+					// re-parent, a collider toggle, an isKinematic flip - none of which mean the object moved.
+					// Measure the volumes directly and rebuild the bookkeeping the spurious exit emptied.
+					foreach (Collider candidate in Physics.OverlapSphere(_transferableObj.transform.position,
+						         0.1f, ~0, QueryTriggerInteraction.Collide))
+					{
+						SceneTriggerRoom room = GetRoomTrigger(candidate);
+						if (room == null)
+						{
+							continue;
+						}
+
+						if (!_roomTriggersDict.TryGetValue(room, out HashSet<Collider> roomColliders))
+						{
+							_roomTriggersDict[room] = roomColliders = new HashSet<Collider>();
+						}
+
+						roomColliders.Add(candidate);
+					}
+
+					sceneTriggerRoom = _roomTriggersDict.Keys.FirstOrDefault(room => room.ParentVessel is Ship)
+					                   ?? _roomTriggersDict.Keys.FirstOrDefault();
+					if (sceneTriggerRoom != null)
+					{
+						if (_transferableObj.CurrentRoomTrigger != sceneTriggerRoom)
+						{
+							SceneTriggerRoom previousRoomTrigger = _transferableObj.CurrentRoomTrigger;
+							_transferableObj.CurrentRoomTrigger = sceneTriggerRoom;
+							_transferableObj.RoomChanged(previousRoomTrigger);
+						}
+
+						return;
+					}
+
 					if (_transferableObj.CurrentRoomTrigger != null)
 					{
 						SceneTriggerRoom currentRoomTrigger2 = _transferableObj.CurrentRoomTrigger;

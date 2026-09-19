@@ -348,7 +348,7 @@ namespace ZeroGravity.Objects
 					return;
 				}
 
-				World.RemoveArtificialBody(Parent.Guid, this);
+				World.RemoveArtificialBody(Parent as ArtificialBody, this);
 				Destroy(Parent.gameObject);
 				Parent = World.GetVessel(dosm.AttachData.ParentGUID);
 				if (Item != null)
@@ -365,6 +365,10 @@ namespace ZeroGravity.Objects
 			else if (Item != null)
 			{
 				Item.ProcessAttachData(dosm.AttachData, prevParent);
+			}
+			else
+			{
+				Debug.LogWarning($"Attach data for '{Guid}' matched no branch, nothing was applied.");
 			}
 		}
 
@@ -528,7 +532,7 @@ namespace ZeroGravity.Objects
 		public static DynamicObject CreateDynamicObject(DynamicObjectDetails details, DynamicObjectData data,
 			SpaceObject parent)
 		{
-			DynamicObject dynamicObject = World.GetDynamicObject(details.GUID);
+			DynamicObject dynamicObject = World.GetObject(details.GUID, SpaceObjectType.DynamicObject) as DynamicObject;
 			bool reused = dynamicObject != null;
 			try
 			{
@@ -624,47 +628,64 @@ namespace ZeroGravity.Objects
 		{
 			if (!IsAttached)
 			{
-				if (Parent is Pivot && Parent != vessel)
+				bool parentChanged = Parent != vessel;
+				if (Parent is Pivot && parentChanged)
 				{
-					World.RemoveArtificialBody(Parent.Guid, this);
+					World.RemoveArtificialBody(Parent as ArtificialBody, this);
 					Destroy(Parent.gameObject);
 				}
 
 				Parent = vessel;
 				transform.parent = vessel.TransferableObjectsRoot.transform;
+
+				// The server only learns about vessel membership from us, the same way ExitVessel and
+				// DockedVesselParentChanged report it.
+				if (parentChanged)
+				{
+					SendStatsMessage(new DynamicObjectAttachData
+					{
+						InventorySlotID = -1111,
+						IsAttached = false,
+						ParentGUID = vessel.Guid,
+						ParentType = vessel.Type,
+						LocalPosition = transform.localPosition.ToArray(),
+						LocalRotation = transform.localRotation.ToArray()
+					});
+				}
 			}
 		}
 
 		/// <inheritdoc/>
 		public override void ExitVessel(bool forceExit)
 		{
-			if (!IsAttached || forceExit)
+			if (Parent is Pivot { Type: SpaceObjectType.DynamicObjectPivot } || (IsAttached && !forceExit))
 			{
-				ArtificialBody artificialBody = GetParent<ArtificialBody>();
-				if (artificialBody is SpaceObjectVessel parentVessel)
-				{
-					artificialBody = parentVessel.MainVessel;
-				}
-
-				if (artificialBody == null)
-				{
-					Debug.LogErrorFormat("Cannot exit vessel, cannot find parents artificial body {0}, {1}", name, Guid);
-					return;
-				}
-
-				Parent = Pivot.Create(SpaceObjectType.DynamicObjectPivot, Guid, artificialBody,
-					isMainObject: false);
-				SetParentTransferableObjectsRoot();
-				SendStatsMessage(new DynamicObjectAttachData
-				{
-					InventorySlotID = -1111,
-					IsAttached = false,
-					ParentGUID = Parent.Guid,
-					ParentType = Parent.Type,
-					LocalPosition = transform.localPosition.ToArray(),
-					LocalRotation = transform.localRotation.ToArray()
-				});
+				return;
 			}
+
+			ArtificialBody artificialBody = GetParent<ArtificialBody>();
+			if (artificialBody is SpaceObjectVessel parentVessel)
+			{
+				artificialBody = parentVessel.MainVessel;
+			}
+
+			if (artificialBody == null)
+			{
+				Debug.LogErrorFormat("Cannot exit vessel, cannot find parents artificial body {0}, {1}", name, Guid);
+				return;
+			}
+
+			Parent = Pivot.Create(SpaceObjectType.DynamicObjectPivot, Guid, artificialBody, isMainObject: false);
+			SetParentTransferableObjectsRoot();
+			SendStatsMessage(new DynamicObjectAttachData
+			{
+				InventorySlotID = -1111,
+				IsAttached = false,
+				ParentGUID = Parent.Guid,
+				ParentType = Parent.Type,
+				LocalPosition = transform.localPosition.ToArray(),
+				LocalRotation = transform.localRotation.ToArray()
+			});
 		}
 
 		public override void DockedVesselParentChanged(SpaceObjectVessel vessel)

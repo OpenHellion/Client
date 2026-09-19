@@ -47,12 +47,14 @@ Short-term:
 [x] Fix circular reference breaking ClassHasher
 [x] Fix vessel destruction crashing the server
 [x] Fix spawn setup station falling into planet ejects player and crashes server on disconnect
+[x] Fix dropped items disappearing
+[ ] Move collections of all space objects into SolarSystem.cs on the server and only allow access trough getters and setters
 [ ] Fix differences between GameTransport on client and server
-[ ] Test if new other character controller works.
+[ ] Fix bug where direction of gravity in crew quarters module shifts by 90 degrees on an error causing ragdoll
+[ ] Fix bug where direction of gravity in crew quarters module changes direction on entry at angle
+[ ] Test if new other character controller works
 [ ] Crashing into a planet when on a pivot does not kill the player
-[ ] Not possible to drop items
 [ ] Make map support fuzzy objects
-[ ] Fix no external collision on AltCorp_Corridor45Turn (and probably others)
 
 Debugging/diagnostics:
 [x] Fix console (add errors and make player admin)
@@ -77,6 +79,7 @@ Later:
 [ ] Sound does not mute when in 0G
 [ ] Make ambience sound persist between main menu and world menu
 [ ] Fix client CPU hog
+[ ] Make ShipStatsMessage send deltas
 [ ] Merge similar network messages in same tick
 [ ] Rewrite EventSystem to fix weaknesses
 [ ] Remove GameStarter.FixCryoPodState
@@ -105,3 +108,5 @@ Later:
 [ ] Remove lineEdit.cs
 [ ] Remove FakeGuid on player
 [ ] Fix warping menu
+[ ] Do a total overhaul of how space objects are stored, cached and accessed on the server.
+[ ] Fix no external collision on AltCorp_Corridor45Turn (and probably others)

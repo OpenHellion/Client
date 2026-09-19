@@ -113,7 +113,14 @@ namespace OpenHellion.Net
 		{
 			if (_networkDataListeners.TryGetValue(data.GetType(), out Action<NetworkData> listener))
 			{
-				listener(data);
+				try
+				{
+					listener(data);
+				}
+				catch (Exception ex)
+				{
+					Debug.LogError($"Listener for {data.GetType().Name} threw, the remaining listeners for this message were skipped: {ex}");
+				}
 			}
 			else
 			{
