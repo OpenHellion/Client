@@ -65,6 +65,12 @@ Short-term:
 [x] Fix vessel destruction crashing the server
 [x] Fix spawn setup station falling into planet ejects player and crashes server on disconnect
 [x] Fix dropped items disappearing
+[x] Readd server list menu, spawn and start point selection
+[x] Make it possible to favourite, sort and search for servers
+[x] Readd server passwords
+[x] Add an offline mode for connections without main server
+[x] Add automatic retry to initialising menu
+[x] Fix warping menu
 [ ] Move collections of all space objects into SolarSystem.cs on the server and only allow access trough getters and setters
 [ ] Fix differences between GameTransport on client and server
 [ ] Fix bug where direction of gravity in crew quarters module shifts by 90 degrees on an error causing ragdoll
@@ -74,7 +80,6 @@ Short-term:
 [ ] Fix docking panels are inaccessible
 [ ] Fix failing to interact with newly spawned vessels
 [ ] Fix switching to docking camera softlocking the game
-[ ] Make it possible to favourite, sort and search for servers
 
 Later:
 [ ] Find areas where risk of race conditions are high
@@ -103,8 +108,6 @@ Later:
 [ ] Readd sound effect to RepairPointParticleEffect.cs (serialised property removed in scene data)
 [ ] Search through all used scripts on monobehaviours and see if they have been deleted accidentaly
 [ ] Enable helmet shader
-[ ] Rewrite quest system to be data-oriented
-[ ] Add automatic retry to initialising menu
 [ ] See if auto sync transforms in physics settings can be turned off
 [ ] New space object hirearchy
 [ ] Inventory should not rely on dynamic objects
@@ -113,13 +116,11 @@ Later:
 [ ] Finish StructureDataGenerator for all types of scene data
 [ ] Remove lineEdit.cs
 [ ] Remove FakeGuid on player
-[ ] Fix warping menu
 [ ] Do a total overhaul of how space objects are stored, cached and accessed on the server
 [ ] Fix no external collision on AltCorp_Corridor45Turn (and probably others)
 [ ] Fix space particles moving when selecting new object
 [ ] Find other ways than hashing username to get a player id when in offline mode
 [ ] Fix server accepting unauthenticated character deletion
-[ ] Readd server passwords
 [ ] Update to use Discord Social SDK
 [ ] Add support for joining friends via Discord Social SDK
 [ ] Game transport has no encryption, so server passwords and player ids are sent insecure
