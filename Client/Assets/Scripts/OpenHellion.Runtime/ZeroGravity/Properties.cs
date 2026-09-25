@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Text;
-using UnityEngine;
 
 namespace ZeroGravity
 {
@@ -17,14 +15,18 @@ namespace ZeroGravity
 
 		private static void LoadProperties()
 		{
-			_propertiesChangedTime = File.GetLastWriteTime(_fileName);
 			_properties.Clear();
-			string[] file = File.ReadAllLines(_fileName);
-			foreach (string row in file)
+			if (!File.Exists(_fileName))
+			{
+				return;
+			}
+
+			foreach (string row in File.ReadAllLines(_fileName))
 			{
 				if (row.IsNullOrEmpty() || row.TrimStart().StartsWith("#")) continue;
 				string[] parts = row.Split("=".ToCharArray(), 2);
-				_properties.Add(parts[0].ToLower(), parts[1]);
+				if (parts.Length < 2) continue;
+				_properties[parts[0].Trim().ToLower()] = parts[1].Trim();
 			}
 		}
 
@@ -45,75 +47,6 @@ namespace ZeroGravity
 			catch
 			{
 				return defaultValue;
-			}
-		}
-
-		public static void SetProperty<T>(string propertyName, T propertyValue, string filePath = null)
-		{
-			filePath = Path.Combine((filePath == null) ? string.Empty : filePath, _fileName);
-			if (!File.Exists(filePath))
-			{
-				File.Create(filePath);
-			}
-
-			int num = 0;
-			Dictionary<string, string> dictionary = new Dictionary<string, string>();
-			try
-			{
-				bool flag = false;
-				string[] array = File.ReadAllLines(filePath);
-				foreach (string text in array)
-				{
-					if (text.TrimStart().StartsWith("#"))
-					{
-						dictionary.Add("#" + num++, text);
-						continue;
-					}
-
-					try
-					{
-						string[] array2 = text.Split("=".ToCharArray(), 2);
-						if (array2[0] == propertyName)
-						{
-							flag = true;
-							dictionary.Add(array2[0], propertyValue.ToString());
-						}
-						else
-						{
-							dictionary.Add(array2[0], array2[1]);
-						}
-					}
-					catch
-					{
-					}
-				}
-
-				if (!flag)
-				{
-					dictionary.Add(propertyName, propertyValue.ToString());
-				}
-
-				StringBuilder stringBuilder = new StringBuilder();
-				foreach (KeyValuePair<string, string> item in dictionary)
-				{
-					if (item.Key.StartsWith("#"))
-					{
-						stringBuilder.AppendLine(item.Value);
-					}
-					else
-					{
-						stringBuilder.AppendLine(item.Key + "=" + item.Value);
-					}
-				}
-
-				using (StreamWriter streamWriter = new StreamWriter(filePath))
-				{
-					streamWriter.WriteLine(stringBuilder.ToString());
-				}
-			}
-			catch (Exception ex)
-			{
-				Debug.LogException(ex);
 			}
 		}
 	}

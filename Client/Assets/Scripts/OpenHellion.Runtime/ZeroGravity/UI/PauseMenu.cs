@@ -39,8 +39,6 @@ namespace ZeroGravity.UI
 
 		[Title("Server info")] public GameObject ServerInfoScreen;
 
-		public GameObject ReportServerButton;
-
 		public GameObject ServerRestart;
 
 		public Text ServerRestartTime;
@@ -78,11 +76,7 @@ namespace ZeroGravity.UI
 
 			if (Keyboard.current.escapeKey.wasPressedThisFrame && !DisableGameMenu)
 			{
-				if (_world.InGameGUI.ReportServerBox.gameObject.activeInHierarchy)
-				{
-					_world.InGameGUI.ReportServerBox.DeactivateBox();
-				}
-				else if (GlossaryMenuUp)
+				if (GlossaryMenuUp)
 				{
 					GlosseryMenuButton();
 				}
@@ -105,7 +99,6 @@ namespace ZeroGravity.UI
 			{
 				ServerInfoScreen.SetActive(false);
 				InGameMenuScreen.SetActive(true);
-				ReportServerButton.SetActive(true);
 				LogoutMainMenu.text = Localization.Logout.ToUpper();
 			}
 		}

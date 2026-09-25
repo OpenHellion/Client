@@ -45,6 +45,8 @@ namespace OpenHellion
 
 		public static readonly uint CombinedHash = NetworkDataHash * SceneDataHash;
 
+		public static ServerConnectionInfo? LastConnectedServer;
+
 		[NonSerialized] public Action OnHellionQuit;
 
 		public float DefaultCameraFov = 75f;
@@ -144,10 +146,17 @@ namespace OpenHellion
 		/// <returns>Secret to join.</returns>
 		public static string GetInviteString(VesselObjectID spawnPointId)
 		{
+			if (LastConnectedServer is not { } server)
+			{
+				return null;
+			}
+
 			InviteMessage inviteMessage = new InviteMessage
 			{
 				Time = Time.time,
-				ServerId = MainMenuGUI.LastConnectedServer.Id,
+				IpAddress = server.IpAddress,
+				GamePort = server.GamePort,
+				StatusPort = server.StatusPort,
 				SpawnPointId = spawnPointId
 			};
 			return JsonSerialiser.Serialize(inviteMessage);

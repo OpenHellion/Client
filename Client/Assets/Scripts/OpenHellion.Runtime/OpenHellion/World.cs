@@ -17,7 +17,6 @@ using ZeroGravity.Network;
 using ZeroGravity.Objects;
 using ZeroGravity.ShipComponents;
 using Cysharp.Threading.Tasks;
-using System.Net.Sockets;
 using OpenHellion.Net.Message;
 using System.Collections.Concurrent;
 
@@ -1098,58 +1097,43 @@ namespace OpenHellion
 			trans.localPosition = new Vector3(x, y, trans.localPosition.z);
 		}
 
-		public void DeleteCharacterRequest(ServerData gs)
-		{
-			GlobalGUI.ShowConfirmMessageBox(Localization.DeleteCharacter, Localization.AreYouSureDeleteCharacter,
-				Localization.Yes, Localization.No, async delegate
-				{
-					DeleteCharacterRequest deleteCharacterRequest = new DeleteCharacterRequest
-					{
-						ServerId = gs.Id,
-						PlayerId = await NakamaClient.GetUserId()
-					};
-
-					await NetworkController.SendTcp(deleteCharacterRequest, gs.IpAddress, gs.StatusPort, false, true);
-				});
-		}
-
 		public async UniTaskVoid LatencyTestMessage()
 		{
 			_lastLatencyMessageTime = Time.realtimeSinceStartup;
 
-			try
-			{
-				int latency = await NetworkController.LatencyTest(MainMenuGUI.LastConnectedServer.IpAddress, MainMenuGUI.LastConnectedServer.StatusPort);
-				_latencyMs = latency;
+			ServerConnectionInfo server = Globals.LastConnectedServer.Value;
+			int latency = await NetworkController.LatencyTest(server.IpAddress, server.StatusPort);
 
-				if (MyPlayer.Instance.IsAlive)
+			// A status port that does not answer is not the same as losing the game connection, which the
+			// transport reports on its own, so an unanswered probe only means we have no reading.
+			if (latency >= 0)
+			{
+				_latencyMs = latency;
+			}
+
+			if (MyPlayer.Instance.IsAlive && latency >= 0)
+			{
+				if (LatencyMs > 120 && LatencyMs < 150)
 				{
-					if (LatencyMs > 120 && LatencyMs < 150)
-					{
-						InGameGUI.Latency.color = Colors.SlotGray;
-						InGameGUI.Latency.gameObject.Activate(value: true);
-					}
-					else if (LatencyMs >= 150)
-					{
-						InGameGUI.Latency.color = Colors.PowerRed;
-						InGameGUI.Latency.gameObject.Activate(value: true);
-					}
-					else
-					{
-						InGameGUI.Latency.gameObject.Activate(value: false);
-					}
+					InGameGUI.Latency.color = Colors.SlotGray;
+					InGameGUI.Latency.gameObject.Activate(value: true);
+				}
+				else if (LatencyMs >= 150)
+				{
+					InGameGUI.Latency.color = Colors.PowerRed;
+					InGameGUI.Latency.gameObject.Activate(value: true);
 				}
 				else
 				{
 					InGameGUI.Latency.gameObject.Activate(value: false);
 				}
-
-				Invoke(nameof(LatencyTestMessage), 1f);
 			}
-			catch (SocketException)
+			else
 			{
-				ReturnToMainMenu();
+				InGameGUI.Latency.gameObject.Activate(value: false);
 			}
+
+			Invoke(nameof(LatencyTestMessage), 1f);
 		}
 
 		public float GetVesselExposureDamage(double distance)
@@ -1223,7 +1207,8 @@ namespace OpenHellion
 			gameStarter.FindServerAndConnect(true).Forget();
 		}
 
-		public async UniTask<bool> OnLogin(LogInResponse logInResponse, VesselObjectID invitedToServerSpawnPointId = null)
+		public async UniTask<bool> OnLogin(LogInResponse logInResponse, SpawnPointDetails chosenSpawn = null,
+			VesselObjectID invitedToServerSpawnPointId = null)
 		{
 			SolarSystem.Set(this, GameObject.Find("/SolarSystemRoot/SunRoot").transform,
 				GameObject.Find("/SolarSystemRoot/PlanetsRoot").transform, logInResponse.ServerTime);
@@ -1265,23 +1250,20 @@ namespace OpenHellion
 				};
 				invitedToServerSpawnPointId = null;
 			}
-			else
+			else if (chosenSpawn is not null)
 			{
-				// TODO: Need to readd the select screen where we can choose spawn setup.
-				/*MainMenuGUI.SendSpawnRequest(new SpawnPointDetails
-				{
-					SpawnSetupType = SpawnSetupType.Start1,
-					IsPartOfCrew = false,
-					PlayersOnShip = new List<string>()
-				});*/
-
 				playerSpawnRequest = new PlayerSpawnRequest
 				{
-					SpawnSetupType = SpawnSetupType.Start1,
-					SpawnPointParentId = 0L
+					SpawnSetupType = chosenSpawn.SpawnSetupType,
+					SpawnPointParentId = chosenSpawn.SpawnPointParentID
 				};
-
-				//MainMenuGUI.ShowSpawnPointSelection(logInResponse.SpawnPointsList, logInResponse.CanContinue);
+			}
+			else
+			{
+				Debug.LogError("Logged in without a spawn point chosen.");
+				GlobalGUI.ShowErrorMessage(Localization.SpawnErrorTitle, Localization.SpawnErrorMessage);
+				ReturnToMainMenu();
+				return false;
 			}
 
 			try
@@ -1292,7 +1274,6 @@ namespace OpenHellion
 				{
 					GlobalGUI.ShowErrorMessage(Localization.SpawnErrorTitle, Localization.SpawnErrorMessage);
 					Debug.LogWarning("Spawn response returned with failure.");
-					MainMenuGUI.CanChooseSpawn = true;
 					ReturnToMainMenu();
 					return false;
 				}
@@ -1326,7 +1307,6 @@ namespace OpenHellion
 				{
 					ReturnToMainMenu();
 					Debug.LogErrorFormat("Player parent with id {0} was is not near enough the player to load.", spawnResponse.ParentGuid);
-					MainMenuGUI.CanChooseSpawn = true;
 					return false;
 				}
 
@@ -1357,7 +1337,6 @@ namespace OpenHellion
 			catch (TimeoutException)
 			{
 				Debug.Log("Connection timed out when logging in.");
-				MainMenuGUI.CanChooseSpawn = true;
 				ReturnToMainMenu();
 				return false;
 			}

@@ -486,8 +486,7 @@ namespace ZeroGravity.Objects
 			}
 			else
 			{
-				World.InGameGUI.TextChat.CreateMessageElement(textChatMessage.Name, textChatMessage.MessageText,
-					true);
+				World.InGameGUI.TextChat.CreateMessageElement(textChatMessage.Name, textChatMessage.MessageText);
 			}
 		}
 
@@ -2429,7 +2428,7 @@ namespace ZeroGravity.Objects
 			myPlayer.RefreshOutfitData();
 			myPlayer.Guid = res.GUID;
 			myPlayer.PlayerName = res.Data.Name;
-			myPlayer.PlayerId = await NakamaClient.GetUserId();
+			myPlayer.PlayerId = Profile.PlayerId;
 			myPlayer.SunCameraRoot = World.SunCameraRootTransform;
 			myPlayer._sunCamera = World.SunCameraTransform;
 			myPlayer.PlanetsCameraRoot = World.PlanetsCameraRootTransform;

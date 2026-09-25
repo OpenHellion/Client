@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Nakama;
@@ -277,10 +278,6 @@ namespace ZeroGravity.LevelDesign
 				};
 				ParentVessel.ChangeStats(null, null, null, null, null, null, null, null, null, null, null, null,
 					spawnPoint);
-
-				// Send invite.
-				// TODO: Invite using Nakama.
-				//_world.Nakama.Invite(player.PlayerId, _world.GetInviteString(new VesselObjectID(ParentVessel.GUID, InSceneID)));
 			}
 		}
 
@@ -298,8 +295,8 @@ namespace ZeroGravity.LevelDesign
 				List<PlayerInviteData> list = new List<PlayerInviteData>();
 
 				// Loop through each friend and add them to the list.
-				IApiFriend[] nakamaFriends = await NakamaClient.GetFriends();
-				foreach (IApiFriend friend in nakamaFriends)
+				IApiFriend[] nakamaFriends = Profile.OfflineMode ? null : await NakamaClient.GetFriends();
+				foreach (IApiFriend friend in nakamaFriends ?? Array.Empty<IApiFriend>())
 				{
 					// If friend is online.
 					if (friend.User.Online)
@@ -343,7 +340,7 @@ namespace ZeroGravity.LevelDesign
 			{
 				foreach (PlayerOnServerData item in data.PlayersOnServer)
 				{
-					if (item.PlayerId != await NakamaClient.GetUserId())
+					if (item.PlayerId != Profile.PlayerId)
 					{
 						list.Add(new PlayerInviteData
 						{

@@ -24,6 +24,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Cysharp.Threading.Tasks;
 using OpenHellion.Social;
+using OpenHellion.Social.RichPresence;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
@@ -44,6 +45,10 @@ namespace OpenHellion.UI
 		private VisualElement _preloadBottom;
 		private Label _preloadText;
 		private ProgressBar _preloadProgress;
+
+		private VisualElement _usernameScreen;
+		private TextField _usernameField;
+		private Button _confirmUsernameButton;
 
 		private VisualElement _authenticationScreen;
 		private TextField _authenticationEmail;
@@ -68,6 +73,7 @@ namespace OpenHellion.UI
 		private void Awake()
 		{
 			NakamaClient.OnRequireAuthentication += OpenAuthenticationScreen;
+			Profile.OnRequireUsername += OpenUsernameScreen;
 			_sceneLoader.OnStartPreload += OpenPreloading;
 			_sceneLoader.OnEndPreload += ClosePreloading;
 			_sceneLoader.OnPreloadUpdate += UpdateProgressBar;
@@ -79,6 +85,10 @@ namespace OpenHellion.UI
 			_preloadBottom = _preloadBackground.Q("Bottom");
 			_preloadText = _preloadBackground.Q("TipText") as Label;
 			_preloadProgress = _preloadBackground.Q("ProgressBar") as ProgressBar;
+
+			_usernameScreen = uiDocument.rootVisualElement.Q("UsernameScreen");
+			_usernameField = _usernameScreen.Q("Username") as TextField;
+			_confirmUsernameButton = _usernameScreen.Q("ConfirmUsernameButton") as Button;
 
 			_authenticationScreen = uiDocument.rootVisualElement.Q("SignInScreen");
 			_authenticationEmail = _authenticationScreen.Q("Email") as TextField;
@@ -96,6 +106,7 @@ namespace OpenHellion.UI
 			_createScreenButton = _createAccountScreen.Q("CreateAccount") as Button;
 
 			_preloadBottom.visible = false;
+			_usernameScreen.visible = false;
 			_authenticationScreen.visible = false;
 			_createAccountScreen.visible = false;
 
@@ -112,6 +123,9 @@ namespace OpenHellion.UI
 
 			Debug.Assert(_createScreenButton is not null);
 			_createScreenButton.clicked += UniTask.Action(CreateNewAccount);
+
+			Debug.Assert(_confirmUsernameButton is not null);
+			_confirmUsernameButton.clicked += ConfirmUsername;
 		}
 
 		private void OnDestroy()
@@ -121,6 +135,25 @@ namespace OpenHellion.UI
 			ClosePreloading();
 
 			NakamaClient.OnRequireAuthentication -= OpenAuthenticationScreen;
+			Profile.OnRequireUsername -= OpenUsernameScreen;
+		}
+
+		private void OpenUsernameScreen()
+		{
+			_usernameField.value = RichPresenceManager.GetUsername() ?? string.Empty;
+			_usernameScreen.visible = true;
+		}
+
+		private void ConfirmUsername()
+		{
+			string username = _usernameField.value?.Trim();
+			if (username.IsNullOrEmpty())
+			{
+				return;
+			}
+
+			Profile.Username = username;
+			_usernameScreen.visible = false;
 		}
 
 		private void OpenAuthenticationScreen()

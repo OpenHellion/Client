@@ -25,6 +25,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
+using System.Threading;
 using OpenHellion.IO;
 using OpenHellion.Social.RichPresence;
 using ZeroGravity.Network;
@@ -80,7 +81,7 @@ namespace OpenHellion.Net
 			}
 		}
 
-		public async static UniTask ConnectToGame(ServerData serverData, Action onDisconnected)
+		public async static UniTask ConnectToGame(string ipAddress, int port, Action onDisconnected)
 		{
 			_gameTransport?.DisconnectImmediateInternal();
 			_gameTransport = new GameTransport(() =>
@@ -89,7 +90,7 @@ namespace OpenHellion.Net
 				onDisconnected();
 			});
 
-			await _gameTransport.Connect(serverData.IpAddress, serverData.GamePort);
+			await _gameTransport.Connect(ipAddress, port);
 		}
 
 
@@ -140,51 +141,42 @@ namespace OpenHellion.Net
 		}
 
 		/// <summary>
-		/// 	Checks the latency between the client and server.
+		/// 	Round trip time to a server's status port, or -1 when it could not be reached.
 		/// </summary>
-		public static async UniTask<int> LatencyTest(string address, int port, bool logException = false)
+		public static async UniTask<int> LatencyTest(string address, int port)
 		{
-			TcpClient tcpClient = new TcpClient(address, port);
+			long start = System.Diagnostics.Stopwatch.GetTimestamp();
+			if (await SendTcp(new LatencyTestMessage(), address, port) is null)
+			{
+				return -1;
+			}
 
-			NetworkStream networkStream = tcpClient.GetStream();
-			networkStream.ReadTimeout = 1000;
-			networkStream.WriteTimeout = 1000;
-
-			byte[] rawData = await ProtoSerialiser.Pack(new LatencyTestMessage());
-			DateTime dateTime = DateTime.UtcNow.ToUniversalTime();
-
-			// Send data.
-			await networkStream.WriteAsync(rawData, 0, rawData.Length);
-			await networkStream.FlushAsync();
-
-			return (int)(DateTime.UtcNow - dateTime).TotalMilliseconds;
+			return (int)((System.Diagnostics.Stopwatch.GetTimestamp() - start) * 1000L / System.Diagnostics.Stopwatch.Frequency);
 		}
 
 		/// <summary>
-		/// 	Send a request directly to a TCP endpoint.<br />
-		/// 	Useful for status requests.
+		/// 	Send a request directly to a TCP endpoint and optionally wait for the reply.
+		/// 	Used for the status port, which is reachable without being connected to the game.
 		/// </summary>
 		public static async UniTask<NetworkData> SendTcp(NetworkData data, string address, int port,
-			bool getResponse = true, bool logException = false)
+			bool getResponse = true, bool logException = false, int timeoutMs = 4000)
 		{
+			using CancellationTokenSource timeout = new CancellationTokenSource(timeoutMs);
+
 			try
 			{
-				TcpClient tcpClient = new TcpClient(address, port);
+				using TcpClient tcpClient = new TcpClient();
+				await tcpClient.ConnectAsync(address, port).AsUniTask().AttachExternalCancellation(timeout.Token);
 
 				NetworkStream networkStream = tcpClient.GetStream();
-				networkStream.ReadTimeout = 1000;
-				networkStream.WriteTimeout = 1000;
+				byte[] rawData = await ProtoSerialiser.Pack(data, timeout.Token);
 
-				byte[] rawData = await ProtoSerialiser.Pack(data);
-
-				// Send data.
-				await networkStream.WriteAsync(rawData, 0, rawData.Length);
-				await networkStream.FlushAsync();
+				await networkStream.WriteAsync(rawData, 0, rawData.Length, timeout.Token);
+				await networkStream.FlushAsync(timeout.Token);
 
 				if (getResponse)
 				{
-					NetworkData result = await ProtoSerialiser.Unpack(networkStream, 10000);
-					return result;
+					return await ProtoSerialiser.Unpack(networkStream, 10000, timeout.Token);
 				}
 			}
 			catch (Exception ex)

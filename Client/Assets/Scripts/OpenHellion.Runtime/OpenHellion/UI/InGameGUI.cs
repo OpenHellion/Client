@@ -39,8 +39,6 @@ namespace OpenHellion.UI
 {
 	public class InGameGUI : MonoBehaviour
 	{
-		public ReportServerUI ReportServerBox;
-
 		[Title("Dead screen")] public GameObject DeadScreen;
 
 		public GameObject PressAnyKey;
@@ -229,8 +227,7 @@ namespace OpenHellion.UI
 
 			if (Keyboard.current.escapeKey.wasPressedThisFrame)
 			{
-				if (IsConfirmBoxActive || ReportServerBox.gameObject.activeInHierarchy ||
-				    _world.InWorldPanels.gameObject.activeInHierarchy)
+				if (IsConfirmBoxActive || _world.InWorldPanels.gameObject.activeInHierarchy)
 				{
 					return;
 				}
@@ -244,7 +241,7 @@ namespace OpenHellion.UI
 
 			if (Keyboard.current.enterKey.wasPressedThisFrame)
 			{
-				if (IsConfirmBoxActive || ReportServerBox.gameObject.activeInHierarchy)
+				if (IsConfirmBoxActive)
 				{
 					return;
 				}
@@ -440,11 +437,6 @@ namespace OpenHellion.UI
 		public void ToggleTextChatCanvas(bool val)
 		{
 			TextChatCanvas.SetActive(val);
-		}
-
-		public void ReportServerFromMenu()
-		{
-			ReportServerBox.ActivateBox();
 		}
 
 		public void ShowInteractionCanvasMessage(string text, float hideTime = 1f)

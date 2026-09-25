@@ -18,9 +18,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using System.Globalization;
 using System.Linq;
-using System.Net.WebSockets;
 using OpenHellion.Net;
 using OpenHellion.Social;
 using OpenHellion.Social.Message;
@@ -47,20 +45,29 @@ namespace OpenHellion
 	{
 		private InviteMessage _inviteMessage;
 
-		private string _nakamaId;
+		private ServerConnectionInfo? _server;
+
+		private CharacterData _character;
+
+		private SpawnPointDetails _spawn;
+
+		private string _password;
 
 		private World _world;
 
 		/// <summary>
-		///		Creates a GameStarter instance. If inviteId is provided the class automatically connects to it.
+		///		Creates a GameStarter instance.
 		/// </summary>
-		/// <param name="lastConnectedServer">Last server we were connected to.</param>
-		/// <param name="inviteMessage">The invite message we received.</param>
 		/// <returns>An instance of GameStarter.</returns>
-		public static GameStarter Create(InviteMessage inviteMessage = null)
+		public static GameStarter Create(ServerConnectionInfo? server = null, CharacterData character = null,
+			SpawnPointDetails spawn = null, string password = null, InviteMessage inviteMessage = null)
 		{
 			var gameObject = new GameObject();
 			var gameStarter = gameObject.AddComponent<GameStarter>();
+			gameStarter._server = server;
+			gameStarter._character = character;
+			gameStarter._spawn = spawn;
+			gameStarter._password = password;
 			gameStarter._inviteMessage = inviteMessage;
 
 			DontDestroyOnLoad(gameStarter);
@@ -68,67 +75,44 @@ namespace OpenHellion
 			return gameStarter;
 		}
 
-		private async UniTaskVoid Awake()
-		{
-			_nakamaId = await NakamaClient.GetUserId();
-		}
-
 		/// <summary>
-		/// 	Get server to connect to from the main server or invite, then start multiplayer game.
+		/// 	Work out which server to join, then start the game.
 		/// </summary>
 		public async UniTaskVoid FindServerAndConnect(bool reconnecting = false)
 		{
 			GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.ConnectingToMain);
 
-			// If signing in for the first time this session, get server we should connect to.
-			ServerData connectingServerData = MainMenuGUI.LastConnectedServer;
-			if (!reconnecting)
+			if (reconnecting)
 			{
-				// Create socket if we are connecting to the game for the first time this session.
-				if (MainMenuGUI.LastConnectedServer is null)
+				_server = Globals.LastConnectedServer;
+			}
+			else if (_inviteMessage is not null)
+			{
+				// An invite carries the address directly, so joining a friend never needs a main server.
+				_server = new ServerConnectionInfo
 				{
-					await NakamaClient.CreateSocket();
-				}
-
-				if (_inviteMessage is not null)
-				{
-					connectingServerData = await NakamaClient.GetMatchConnectionInfo(_inviteMessage.ServerId);
-				}
-				else
-				{
-					string[] result;
-					try
-					{
-						result = await NakamaClient.FindMatches(new FindMatchesRequest()
-						{
-							Version = Application.version,
-							Hash = Globals.CombinedHash,
-							Location = RegionInfo.CurrentRegion.EnglishName
-						});
-					}
-					catch (WebSocketException ex)
-					{
-						GlobalGUI.ShowMessageBox(Localization.ConnectionError, Localization.VersionError);
-						Debug.LogError("Encountered server error with message: " + ex.Message);
-						Destroy(gameObject);
-						return;
-					}
-
-
-					// TODO: Add selection menu or something.
-					connectingServerData = await NakamaClient.GetMatchConnectionInfo(result[0]);
-				}
+					IpAddress = _inviteMessage.IpAddress,
+					GamePort = _inviteMessage.GamePort,
+					StatusPort = _inviteMessage.StatusPort
+				};
 			}
 
-			// Connect to server!
-			MainMenuGUI.LastConnectedServer = connectingServerData;
-			await ConnectToServer(connectingServerData);
+			if (_server is not { } server)
+			{
+				GlobalGUI.ShowMessageBox(Localization.ConnectionError, Localization.NoServerConnection);
+				Debug.LogError("Asked to connect without a server to connect to.");
+				GlobalGUI.CloseLoadingScreen();
+				Destroy(gameObject);
+				return;
+			}
+
+			await ConnectToServer(server);
 		}
 
 		/// <summary>
 		/// 	Connect to a remote server.
 		/// </summary>
-		private async UniTask ConnectToServer(ServerData server)
+		private async UniTask ConnectToServer(ServerConnectionInfo server)
 		{
 			GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.ConnectingToGame);
 
@@ -139,16 +123,18 @@ namespace OpenHellion
 
 			try
 			{
-				await NetworkController.ConnectToGame(server, _world.OnDisconnectedFromServer);
+				await NetworkController.ConnectToGame(server.IpAddress, server.GamePort, _world.OnDisconnectedFromServer);
+				Globals.LastConnectedServer = server;
 
 				Debug.Log("Successfully established connection with server.");
 
 				LogInRequest logInRequest = new LogInRequest
 				{
-					ServerID = server.Id,
 					ClientHash = Globals.CombinedHash,
-					PlayerId = _nakamaId,
-					CharacterData = await NakamaClient.GetCharacterData()
+					IsOffline = Profile.OfflineMode,
+					PlayerId = Profile.PlayerId,
+					Password = _password,
+					CharacterData = _character ?? (Profile.OfflineMode ? null : await NakamaClient.GetCharacterData())
 				};
 
 				var response = await NetworkController.SendReceiveAsync(logInRequest, 10000) as LogInResponse;
@@ -159,15 +145,7 @@ namespace OpenHellion
 
 					GlobalGUI.ShowLoadingScreen(GlobalGUI.LoadingScreenType.LoadWorld);
 
-					bool wasLoginSuccessful = false;
-					if (_inviteMessage is not null)
-					{
-						wasLoginSuccessful = await _world.OnLogin(response, _inviteMessage.SpawnPointId);
-					}
-					else
-					{
-						wasLoginSuccessful = await _world.OnLogin(response);
-					}
+					bool wasLoginSuccessful = await _world.OnLogin(response, _spawn, _inviteMessage?.SpawnPointId);
 
 					if (wasLoginSuccessful)
 					{
@@ -196,7 +174,8 @@ namespace OpenHellion
 				else
 				{
 					Debug.LogWarning("Error in login data.");
-					GlobalGUI.ShowErrorMessage(Localization.ConnectionError, Localization.NoServerConnection);
+					GlobalGUI.ShowErrorMessage(Localization.ConnectionError,
+						_password is not null ? Localization.WrongServerPassword : Localization.NoServerConnection);
 				}
 			}
 			catch (SocketException)
@@ -214,6 +193,7 @@ namespace OpenHellion
 			}
 
 			GlobalGUI.CloseLoadingScreen();
+			MainMenuGUI.ReturnToServerList = true;
 			SceneManager.LoadScene(1);
 			Destroy(gameObject);
 		}

@@ -43,9 +43,13 @@ namespace OpenHellion
 
 		public static SceneLoadTypeValue SceneLoadType = SceneLoadTypeValue.PreloadWithCopy;
 
+		private const int MainServerAttempts = 3;
+
+		private const int MainServerRetryDelayMs = 2000;
+
 		private async UniTaskVoid Awake()
 		{
-			NakamaClient.OnNakamaError += HandleNakamaError;
+			Profile.Load();
 
 			// Only load simple scenes if we have little available memory, regardless of settings.
 			if (SystemInfo.systemMemorySize < 6000 || Application.isEditor)
@@ -68,7 +72,32 @@ namespace OpenHellion
 
 			ControlsRebinder.Initialize();
 
-			await NakamaClient.Initialise();
+			if (!Profile.OfflineMode)
+			{
+				NakamaClient.OnNakamaError += HandleNakamaError;
+				for (int attempt = 1; !await NakamaClient.Initialise(); attempt++)
+				{
+					if (attempt >= MainServerAttempts)
+					{
+						Debug.LogWarning("Could not reach the main server.");
+
+						// UniTask wizardry to close game if the message box ok is clicked.
+						UniTaskCompletionSource<bool> retry = new();
+						GlobalGUI.ShowConfirmMessageBox(Localization.ConnectionError, Localization.NoNakamaConnection,
+							Localization.Retry, Localization.Quit, () => retry.TrySetResult(true),
+							() => retry.TrySetResult(false));
+						if (!await retry.Task)
+						{
+							Application.Quit();
+							return;
+						}
+
+						attempt = 0;
+					}
+
+					await UniTask.Delay(MainServerRetryDelayMs * attempt);
+				}
+			}
 
 			RichPresenceManager.Initialise();
 			RichPresenceManager.UpdateStatus();
@@ -94,9 +123,31 @@ namespace OpenHellion
 			else
 			{
 				await Globals.SceneLoader.InitializeScenes();
-				await UniTask.WaitWhile(() => Globals.SceneLoader.IsPreloading || !NakamaClient.HasAuthenticated);
+				await ResolvePlayerIdentity();
+				await UniTask.WaitWhile(() => Globals.SceneLoader.IsPreloading || !Profile.HasIdentity);
 				await SceneManager.LoadSceneAsync(1, LoadSceneMode.Single);
 			}
+		}
+
+		// Fetch our identity from nakama if connected, derive from a local username if not.
+		private async UniTask ResolvePlayerIdentity()
+		{
+			if (!Profile.OfflineMode)
+			{
+				await UniTask.WaitWhile(() => !NakamaClient.HasAuthenticated);
+				Profile.Username = await NakamaClient.GetDisplayName();
+				Profile.PlayerId = await NakamaClient.GetUserId();
+				return;
+			}
+
+			if (!Profile.HasUsername)
+			{
+				Profile.OnRequireUsername?.Invoke();
+				await UniTask.WaitWhile(() => !Profile.HasUsername);
+			}
+
+			Profile.PlayerId = Profile.DeriveId(Profile.Username);
+			Profile.Save();
 		}
 
 		private void HandleNakamaError(string text, Action action)

@@ -8,6 +8,15 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="Popups" style="align-items: center; justify-content: center; width: 100%; height: 100%; display: flex; position: absolute;">
+        <ui:VisualElement name="UsernameScreen" style="width: 30%; height: 60%; background-color: rgba(2, 2, 2, 0.94); padding-left: 1%; padding-right: 1%; padding-top: 5px; padding-bottom: 30px; justify-content: flex-start; align-items: stretch; flex-direction: column; position: absolute;">
+            <ui:VisualElement name="HellionLogo" style="background-image: url(&apos;project://database/Assets/Generic/Texture2D/hellionLogo.png?fileID=2800000&amp;guid=20a95a8955fdbb54e939df9610b109b1&amp;type=3#hellionLogo&apos;); -unity-background-scale-mode: scale-to-fit; width: 100%; height: 25%;" />
+            <ui:Label text="CHOOSE A USERNAME" display-tooltip-when-elided="true" class="main-menu-header" style="margin-bottom: 6%;" />
+            <ui:Label name="UsernameHint" text="Other players see this name. Servers identify you by it, so keep it the same to keep your characters." display-tooltip-when-elided="true" style="white-space: normal; margin-bottom: 6%;" />
+            <ui:TextField picking-mode="Ignore" label="Username" name="Username" max-length="32" style="margin-bottom: 6%;" />
+            <ui:VisualElement focusable="true" style="justify-content: space-around; align-items: center; bottom: 5%; position: absolute; left: 0; right: 0; flex-direction: row;">
+                <ui:Button text="Continue" display-tooltip-when-elided="true" name="ConfirmUsernameButton" class="hellion-button" style="-unity-font: resource(&apos;Fonts/MainMenuRegular&apos;);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
         <ui:VisualElement name="SignInScreen" style="width: 30%; height: 60%; background-color: rgba(2, 2, 2, 0.94); padding-left: 1%; padding-right: 1%; padding-top: 5px; padding-bottom: 30px; justify-content: flex-start; align-items: stretch; flex-direction: column; position: absolute;">
             <ui:VisualElement name="HellionLogo" style="background-image: url(&apos;project://database/Assets/Generic/Texture2D/hellionLogo.png?fileID=2800000&amp;guid=20a95a8955fdbb54e939df9610b109b1&amp;type=3#hellionLogo&apos;); -unity-background-scale-mode: scale-to-fit; width: 100%; height: 25%;" />
             <ui:Label text="ENTER USER ACCOUNT CREDENTIALS" display-tooltip-when-elided="true" class="main-menu-header" style="margin-bottom: 6%;" />

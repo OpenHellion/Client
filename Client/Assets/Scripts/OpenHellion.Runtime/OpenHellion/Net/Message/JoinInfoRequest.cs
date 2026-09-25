@@ -1,6 +1,8 @@
-﻿// MatchInfo.cs
+// JoinInfoRequest.cs
 //
 // Copyright (C) 2026, OpenHellion contributors
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,27 +15,18 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program. If not, see <https://www.gnu.org/licenses/>.
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using System;
-using Newtonsoft.Json;
+using ProtoBuf;
+using ZeroGravity.Network;
 
-namespace OpenHellion.Social.Message
+namespace OpenHellion.Net.Message
 {
-	[Serializable]
-	[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
-	public class MatchInfo
+	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
+	public class JoinInfoRequest : NetworkData
 	{
-		[JsonProperty("id")]
-		public string Id;
+		public string PlayerId;
 
-		[JsonProperty("ip")]
-		public string Ip;
-
-		[JsonProperty("gamePort")]
-		public int GamePort;
-
-		[JsonProperty("statusPort")]
-		public int StatusPort;
+		public string Password;
 	}
 }

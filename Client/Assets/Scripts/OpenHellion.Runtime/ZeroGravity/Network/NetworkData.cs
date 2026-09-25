@@ -69,18 +69,22 @@ namespace ZeroGravity.Network
 	[ProtoInclude(354, typeof(UpdateVesselDataMessage))]
 	[ProtoInclude(406, typeof(DeleteCharacterRequest))]
 	[ProtoInclude(506, typeof(DeleteCharacterResponse))]
-	// OpenHellion messages below this line.
+	// OpenHellion messages below this line. (100x, spawn; 101x, movement; 102x, map; 103x, status messages)
 	[ProtoInclude(1000, typeof(ObjectsInfoRequest))]
 	[ProtoInclude(1001, typeof(ObjectsInfoResponse))]
-	[ProtoInclude(1023, typeof(ShipThrustMessage))]
-	[ProtoInclude(1024, typeof(ShipThrustStateMessage))]
 	[ProtoInclude(1010, typeof(MovementMessage))]
 	[ProtoInclude(1011, typeof(MoveObjectRequest))]
 	[ProtoInclude(1012, typeof(CharacterAnimationMessage))]
 	[ProtoInclude(1013, typeof(ChangeParentMessage))]
+	[ProtoInclude(1014, typeof(ShipThrustMessage))]
+	[ProtoInclude(1015, typeof(ShipThrustStateMessage))]
 	[ProtoInclude(1020, typeof(MapDataRequest))]
 	[ProtoInclude(1021, typeof(MapDataResponse))]
 	[ProtoInclude(1022, typeof(ScanForObjectsRequest))]
+	[ProtoInclude(1030, typeof(ServerStatusRequest))]
+	[ProtoInclude(1031, typeof(ServerStatusResponse))]
+	[ProtoInclude(1032, typeof(JoinInfoRequest))]
+	[ProtoInclude(1033, typeof(JoinInfoResponse))]
 	public abstract class NetworkData
 	{
 		public enum MessageStatus : byte

@@ -18,16 +18,6 @@ namespace ZeroGravity.UI
 {
 	public class Chat : MonoBehaviour
 	{
-		/// <summary>
-		///		The chat state we are currently reading.
-		/// </summary>
-		public enum ChatState
-		{
-			Global,
-			Party,
-			Local
-		}
-
 		public GameObject ChatInputBox;
 
 		public Transform ContentTrans;
@@ -49,8 +39,6 @@ namespace ZeroGravity.UI
 		public Color LocalColor = Colors.BlueScan;
 
 		public Color SystemColor = Colors.Orange;
-
-		private ChatState _chatState;
 
 		[FormerlySerializedAs("_worldState")] [SerializeField] private World _world;
 
@@ -159,10 +147,10 @@ namespace ZeroGravity.UI
 
 		private void ReceiveMessage(string username, string messageText)
 		{
-			CreateMessageElement(username, messageText, _chatState is ChatState.Local);
+			CreateMessageElement(username, messageText);
 		}
 
-		public void CreateMessageElement(string username, string messageText, bool local)
+		public void CreateMessageElement(string username, string messageText)
 		{
 			GameObject chatItem = Instantiate(ChatItemPref, transform.position, transform.rotation);
 			chatItem.transform.SetParent(ContentTrans);
@@ -174,7 +162,7 @@ namespace ZeroGravity.UI
 			chatItem.transform.Find("UsernameText").GetComponent<Text>().text = username;
 
 			Text textComponent = chatItem.transform.Find("BodyText").GetComponent<Text>();
-			textComponent.color = !local ? GlobalColor : LocalColor;
+			textComponent.color = LocalColor;
 			textComponent.text = messageText;
 
 			ChatMessage messageComponent = chatItem.GetComponent<ChatMessage>();
@@ -188,19 +176,12 @@ namespace ZeroGravity.UI
 
 		private void SendChatMessage(string messageText)
 		{
-			if (_chatState is ChatState.Local)
+			TextChatMessage textChatMessage = new TextChatMessage
 			{
-				TextChatMessage textChatMessage = new TextChatMessage
-				{
-					MessageText = messageText,
-					Local = true
-				};
-				NetworkController.SendAndForget(textChatMessage);
-			}
-			else
-			{
-				// TODO: See GitHub issue.
-			}
+				MessageText = messageText,
+				Local = true
+			};
+			NetworkController.SendAndForget(textChatMessage);
 		}
 
 		private IEnumerator ResetInputAndShowChat(bool show)
@@ -236,18 +217,16 @@ namespace ZeroGravity.UI
 			ScrollBarHandle.SetActive(show);
 			ChatInputBox.SetActive(show);
 			OverrideChatMessages(show);
-			ChatInput.textComponent.color = _chatState is ChatState.Global ? GlobalColor : LocalColor;
+			ChatInput.textComponent.color = LocalColor;
 			if (show)
 			{
 				FocusInput();
 				return;
 			}
 
-			await ParseMessageCommands();
-
 			if (ChatInput.text.Length > 0)
 			{
-				CreateMessageElement("me:", ChatInput.text, _chatState is ChatState.Local);
+				CreateMessageElement("me:", ChatInput.text);
 				string truncatedString = ChatInput.text;
 				if (truncatedString.Length > 250)
 				{
@@ -258,42 +237,6 @@ namespace ZeroGravity.UI
 			}
 
 			ChatInput.text = string.Empty;
-		}
-
-		// Parses message and modifies the state directly.
-		private async UniTask ParseMessageCommands()
-		{
-			if (ChatInput.text.Equals("/l", StringComparison.OrdinalIgnoreCase))
-			{
-				_chatState = ChatState.Local;
-				ChatInput.text = string.Empty;
-			}
-			else if (ChatInput.text.Equals("/g", StringComparison.OrdinalIgnoreCase))
-			{
-				if (await NakamaClient.JoinChatRoom(ChatState.Global))
-				{
-					_chatState = ChatState.Global;
-					ChatInput.text = string.Empty;
-				}
-				else
-				{
-					Debug.LogError("Setting chat mode to party failed.");
-				}
-			}
-			else if (ChatInput.text.Equals("/p", StringComparison.OrdinalIgnoreCase))
-			{
-				if (await NakamaClient.JoinChatRoom(ChatState.Party))
-				{
-					_chatState = ChatState.Party;
-					ChatInput.text = string.Empty;
-				}
-				else
-				{
-					Debug.LogError("Setting chat mode to party failed.");
-				}
-			}
-
-			// TODO: add the rest of the states.
 		}
 
 		public void CloseChat()

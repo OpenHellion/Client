@@ -8,7 +8,11 @@ Spawn:
 [x] Create new flow for map spawning
 [x] Spawn corpse on server
 [x] Fix spawning with dynamicobjects not working on relogging
-[ ] Fix map not being intitialised correctly
+[ ] Fix orbits in visible system always being at the origin of the map, which can be moved
+[ ] Fix old orbits not despawning
+[ ] Make map show quest vessels (subscibe objects and known vessels rewrite)
+[ ] Adding item to inventory doesn't update the client
+[ ] Fix empty dynamic objects at scene root
 
 Movement:
 [x] Made world use local space, derived from anchor
@@ -24,12 +28,25 @@ Movement:
 [x] Fix ship controls visibly doing nothing (then exiting ship pilot seat putting you sideways/upside down)
 [x] Make ship controls smooth
 [x] Fix ejection bug from ship when piloting by making position in MovementMessage parent-relative instead of anchor relative.
-[ ] Fix changing parent deals damage (~3 hp each)
-[ ] Fix snap when flying back into range of a vessel
-[ ] Fix items, corpses and other players sliding when the anchor changes
+[x] Fix snap when flying back into range of a vessel
+[ ] Fix changing parent deals damage (think it is fixed)
+[ ] Fix items, corpses and other players sliding when the anchor changes (fixed for items)
 [ ] Moving from 0g to 1g fast might cause you to go trough the wall and fall forever, crashing the game
 [ ] Landing and staying on asteroid is impossible (may be because object spins)
-[ ] Fix ship driving without power and engine (remove RCS?)
+[ ] Fix ship driving without power and engine
+
+Debugging/diagnostics:
+[x] Fix console (add errors and make player admin)
+[x] Set up unity test framework
+[x] Add test to ZeroGravity math
+[x] Organise client code into assemblies
+[ ] Create a TestClient on the server
+[ ] Add tests to duplicate network data and similar
+[ ] Add test to ClassHasher (same on both client and server)
+[ ] Add test to static data integrity
+[ ] Implement TestShip spawn setup as testing spawn
+[ ] Show game state info in console and log to file
+[ ] Add assertions in code
 
 Short-term:
 [x] Update to Unity 6.3
@@ -54,27 +71,16 @@ Short-term:
 [ ] Fix bug where direction of gravity in crew quarters module changes direction on entry at angle
 [ ] Test if new other character controller works
 [ ] Crashing into a planet when on a pivot does not kill the player
-[ ] Make map support fuzzy objects
-
-Debugging/diagnostics:
-[x] Fix console (add errors and make player admin)
-[x] Set up unity test framework
-[x] Add test to ZeroGravity math
-[x] Organise client code into assemblies
-[ ] Create a TestClient on the server
-[ ] Add tests to duplicate network data and similar
-[ ] Add test to ClassHasher (same on both client and server)
-[ ] Add test to static data integrity
-[ ] Implement TestShip spawn setup as testing spawn
-[ ] Make all MathHelper.Random use a testing seed
-[ ] Show game state info in console and log to file
-[ ] Automatic hash comparison of state on both client and server?
-[ ] Add assertions in code
+[ ] Fix docking panels are inaccessible
+[ ] Fix failing to interact with newly spawned vessels
+[ ] Fix switching to docking camera softlocking the game
+[ ] Make it possible to favourite, sort and search for servers
 
 Later:
 [ ] Find areas where risk of race conditions are high
 [ ] Fix planets on map having no texture
-[ ] Fix sounds playing based on selected target when EVAing.
+[ ] Make map support fuzzy objects
+[ ] Fix sounds playing based on selected target when EVAing
 [ ] Fix alarm not running and sounds playing in ships where they should not
 [ ] Sound does not mute when in 0G
 [ ] Make ambience sound persist between main menu and world menu
@@ -108,5 +114,13 @@ Later:
 [ ] Remove lineEdit.cs
 [ ] Remove FakeGuid on player
 [ ] Fix warping menu
-[ ] Do a total overhaul of how space objects are stored, cached and accessed on the server.
+[ ] Do a total overhaul of how space objects are stored, cached and accessed on the server
 [ ] Fix no external collision on AltCorp_Corridor45Turn (and probably others)
+[ ] Fix space particles moving when selecting new object
+[ ] Find other ways than hashing username to get a player id when in offline mode
+[ ] Fix server accepting unauthenticated character deletion
+[ ] Readd server passwords
+[ ] Update to use Discord Social SDK
+[ ] Add support for joining friends via Discord Social SDK
+[ ] Game transport has no encryption, so server passwords and player ids are sent insecure
+[ ] Deduce IsOffline from main server in cases where the server is connected to a main server (check if player id is same)

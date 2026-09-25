@@ -244,6 +244,16 @@ namespace OpenHellion.Social.RichPresence
 			}
 		}
 
+		public static List<ServerConnectionInfo> GetFriendServers()
+		{
+			if (HasSteam)
+			{
+				return _steam.GetFriendServers();
+			}
+
+			return new List<ServerConnectionInfo>();
+		}
+
 		/// <summary>
 		/// 	Get the avatar of a specified user as a texture.
 		/// </summary>

@@ -18,6 +18,8 @@
 using UnityEngine;
 using Steamworks;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using ZeroGravity;
 using OpenHellion.IO;
 using OpenHellion.Social.Message;
 using static OpenHellion.Social.RichPresence.RichPresenceManager;
@@ -114,7 +116,7 @@ namespace OpenHellion.Social.RichPresence
 		private void OnGameRichPresenceJoinRequested(GameRichPresenceJoinRequested_t param)
 		{
 			InviteMessage inviteMessage = JsonSerialiser.Deserialize<InviteMessage>(param.m_rgchConnect);
-			GameStarter gameStarter = GameStarter.Create(inviteMessage);
+			GameStarter gameStarter = GameStarter.Create(inviteMessage: inviteMessage);
 			gameStarter.FindServerAndConnect().Forget();
 		}
 
@@ -146,6 +148,54 @@ namespace OpenHellion.Social.RichPresence
 		internal string GetUsername()
 		{
 			return SteamFriends.GetFriendPersonaName(SteamUser.GetSteamID());
+		}
+
+		internal List<ServerConnectionInfo> GetFriendServers()
+		{
+			List<ServerConnectionInfo> servers = new();
+			uint appId = SteamUtils.GetAppID().m_AppId;
+			int count = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
+
+			for (int i = 0; i < count; i++)
+			{
+				CSteamID friend = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
+				if (!SteamFriends.GetFriendGamePlayed(friend, out FriendGameInfo_t game) ||
+				    game.m_gameID.AppID().m_AppId != appId)
+				{
+					continue;
+				}
+
+				string connect = SteamFriends.GetFriendRichPresence(friend, "connect");
+				if (connect.IsNullOrEmpty())
+				{
+					continue;
+				}
+
+				InviteMessage invite;
+				try
+				{
+					invite = JsonSerialiser.Deserialize<InviteMessage>(connect);
+				}
+				catch (Exception ex)
+				{
+					Debug.LogException(ex);
+					continue;
+				}
+
+				if (invite is null || invite.IpAddress.IsNullOrEmpty())
+				{
+					continue;
+				}
+
+				servers.Add(new ServerConnectionInfo
+				{
+					IpAddress = invite.IpAddress,
+					GamePort = invite.GamePort,
+					StatusPort = invite.StatusPort
+				});
+			}
+
+			return servers;
 		}
 
 		internal void InviteUser(ulong id, string secret)

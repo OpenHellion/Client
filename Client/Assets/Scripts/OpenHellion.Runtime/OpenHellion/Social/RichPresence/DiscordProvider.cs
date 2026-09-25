@@ -82,7 +82,7 @@ namespace OpenHellion.Social.RichPresence
 			try
 			{
 				InviteMessage inviteMessage = JsonSerialiser.Deserialize<InviteMessage>(secret);
-				GameStarter gameStarter = GameStarter.Create(inviteMessage);
+				GameStarter gameStarter = GameStarter.Create(inviteMessage: inviteMessage);
 				gameStarter.FindServerAndConnect().Forget();
 			}
 			catch (Exception ex)

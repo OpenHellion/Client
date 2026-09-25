@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenHellion.Net;
-using OpenHellion.Social;
 using OpenHellion.Social.RichPresence;
 using TMPro;
 using UnityEngine;
@@ -27,16 +26,18 @@ namespace OpenHellion.UI
 
 		public enum StartingPointOption
 		{
-			NewGame,
-			FreshStart,
-			Continue,
-			Invite,
-			Eva,
-			StrandedMiner,
-			Soe
+			NewGame = 2,
+			FreshStart = 3,
+			Continue = 4,
+			Invite = 5,
+			Eva = 7,
+			StrandedMiner = 8,
+			Soe = 9
 		}
 
 		[Title("Start screen")] public SplashScreen SplashScreen;
+
+		public ServerListGUI ServerList;
 
 		public GameObject MainMenu;
 
@@ -49,6 +50,9 @@ namespace OpenHellion.UI
 		[Title("Disconnect screen")] public GameObject DisconnectScreen;
 
 		public static bool WasDisconnectUncontrolled { private get; set; }
+
+		// Set by GameStarter when a connection attempt fails.
+		public static bool ReturnToServerList;
 
 		[Title("Character screen")]
 		public InputField CharacterInputField;
@@ -74,13 +78,13 @@ namespace OpenHellion.UI
 		[FormerlySerializedAs("SpawnPointHolder")]
 		public Transform SpawnPointsHolder;
 
-		public GameObject SaveGameOptionUI;
-
-		public static bool CanChooseSpawn = true;
+		public SpawnPointOptionUI SpawnPointOptionPrefab;
 
 		private Gender _currentGenderGUI;
 
-		public static ServerData LastConnectedServer;
+		private Action<CharacterData> _onCharacterCreated;
+
+		private Action<SpawnPointDetails> _onSpawnChosen;
 
 		private void Awake()
 		{
@@ -95,7 +99,7 @@ namespace OpenHellion.UI
 #endif
 		}
 
-		private async UniTaskVoid Start()
+		private void Start()
 		{
 			// Localize text in child objects.
 			if (Localization.MainMenuLocalisation?.Count > 0)
@@ -123,15 +127,13 @@ namespace OpenHellion.UI
 			VersionText.text = string.Format(Localization.ClientVersion, Application.version);
 			StartingPointData = Resources.LoadAll<StartingPointOptionData>("StartingPoints").ToList();
 
-			var data = await NakamaClient.GetCharacterData();
-			if (data == null)
-			{
-				SelectScreen(Screen.CreateCharacter);
-				CharacterInputField.text = await NakamaClient.GetDisplayName();
-				SwitchCurrentGender();
-			}
-
 			RichPresenceManager.UpdateStatus();
+
+			if (ReturnToServerList)
+			{
+				ReturnToServerList = false;
+				PlayButton();
+			}
 		}
 
 		private void Update()
@@ -252,7 +254,7 @@ namespace OpenHellion.UI
 		{
 			return new Action(delegate
 			{
-				SendSpawnRequest(new SpawnPointDetails
+				ChooseSpawn(new SpawnPointDetails
 				{
 					SpawnSetupType = tip,
 					IsPartOfCrew = false,
@@ -261,43 +263,50 @@ namespace OpenHellion.UI
 			});
 		}
 
-		[Obsolete]
-		public static void SendSpawnRequest(SpawnPointDetails details) // TODO this is left over from the spawn rewrite (remove)
+		public void ShowSpawnSelection(List<SpawnPointDetails> spawnPoints, bool canContinue,
+			Action<SpawnPointDetails> onChosen)
 		{
-			if (CanChooseSpawn)
-			{
-				CanChooseSpawn = false;
-				PlayerSpawnRequest playerSpawnRequest = new PlayerSpawnRequest
-				{
-					SpawnSetupType = details.SpawnSetupType,
-					SpawnPointParentId = details.SpawnPointParentID
-				};
-				//NetworkController.Send(playerSpawnRequest);
-			}
-		}
-
-		public void ShowSpawnPointSelection(List<SpawnPointDetails> spawnPoints, bool canContinue)
-		{
+			_onSpawnChosen = onChosen;
 			SelectScreen(Screen.StartingPoint);
-			if (spawnPoints == null)
-			{
-				spawnPoints = new List<SpawnPointDetails>();
-			}
-
-			ShowStartingPoints(spawnPoints, SendSpawnRequest, canContinue);
+			ShowStartingPoints(spawnPoints ?? new List<SpawnPointDetails>(), canContinue);
 		}
 
+		private void ChooseSpawn(SpawnPointDetails details)
+		{
+			// Every tile routes through here, so a second click cannot start a second spawn.
+			if (_onSpawnChosen is null)
+			{
+				return;
+			}
+
+			Action<SpawnPointDetails> onChosen = _onSpawnChosen;
+			_onSpawnChosen = null;
+			SelectScreen(Screen.None);
+			onChosen(details);
+		}
+
+		/// <summary>
+		/// 	Choose a new spawn point while already in the world, after dying.
+		/// </summary>
 		public async UniTaskVoid SendAvailableSpawnPointsRequest()
 		{
 			var response = await NetworkController.SendReceiveAsync(new AvailableSpawnPointsRequest()) as AvailableSpawnPointsResponse;
-			if (response.SpawnPoints != null)
+			if (response?.SpawnPoints is null)
 			{
-				ShowStartingPoints(response.SpawnPoints, SendSpawnRequest, canContinue: false);
+				return;
 			}
+
+			ShowSpawnSelection(response.SpawnPoints, canContinue: false, static delegate(SpawnPointDetails details)
+			{
+				NetworkController.SendAndForget(new PlayerSpawnRequest
+				{
+					SpawnSetupType = details.SpawnSetupType,
+					SpawnPointParentId = details.SpawnPointParentID
+				});
+			});
 		}
 
-		public void ShowStartingPoints(List<SpawnPointDetails> spawnPoints, Action<SpawnPointDetails> onSpawnClicked,
-			bool canContinue)
+		private void ShowStartingPoints(List<SpawnPointDetails> spawnPoints, bool canContinue)
 		{
 			FreshStartSpawnOptions.gameObject.Activate(value: false);
 			SpawnOptions.DestroyAll<StartingPointOptionUI>();
@@ -306,7 +315,7 @@ namespace OpenHellion.UI
 			SpawnPointsHolder.DestroyAll();
 			foreach (SpawnPointDetails spawnPoint in spawnPoints)
 			{
-				CreateInviteSpawnPoints(spawnPoint, onSpawnClicked);
+				CreateInviteSpawnPoints(spawnPoint);
 			}
 
 			// Show fresh start. canContinue determines if we're able to open the next menu with spawn points.
@@ -334,7 +343,7 @@ namespace OpenHellion.UI
 				PlayersOnShip = new List<string>()
 			};
 			continueOptionUI.GetComponent<Button>().onClick
-				.AddListener(delegate { onSpawnClicked(continueSpawnPoint); });
+				.AddListener(delegate { ChooseSpawn(continueSpawnPoint); });
 			continueOptionUI.GetComponent<Button>().interactable = canContinue;
 
 			// In single player mode add a custom starting point option, while in multiplayer add an invite starting point option.
@@ -349,20 +358,20 @@ namespace OpenHellion.UI
 			InstantiateFreshStartOptions();
 		}
 
-		private void CreateInviteSpawnPoints(SpawnPointDetails spawnPoint, Action<SpawnPointDetails> onSpawnClicked)
+		private void CreateInviteSpawnPoints(SpawnPointDetails spawnPoint)
 		{
-			GameObject spawnPointOptionUI = Instantiate(SaveGameOptionUI, SpawnPointsHolder);
-			string text = !spawnPoint.Name.IsNullOrEmpty()
+			string name = !spawnPoint.Name.IsNullOrEmpty()
 				? spawnPoint.Name
 				: spawnPoint.SpawnSetupType.ToLocalizedString();
-			spawnPointOptionUI.GetComponentInChildren<TextMeshProUGUI>().text = text +
-				(spawnPoint.PlayersOnShip == null || spawnPoint.PlayersOnShip.Count <= 0
-					? string.Empty
-					: ("\n" + string.Join(", ", spawnPoint.PlayersOnShip.ToArray())));
-			spawnPointOptionUI.GetComponent<Button>().onClick.AddListener(delegate
+			string crew = spawnPoint.PlayersOnShip is null || spawnPoint.PlayersOnShip.Count <= 0
+				? string.Empty
+				: string.Join(", ", spawnPoint.PlayersOnShip.ToArray());
+
+			SpawnPointOptionUI option = Instantiate(SpawnPointOptionPrefab, SpawnPointsHolder);
+			option.Initialise(name, crew, delegate
 			{
-				onSpawnClicked(spawnPoint);
 				SpawnPointScreen.SetActive(value: false);
+				ChooseSpawn(spawnPoint);
 			});
 		}
 
@@ -390,7 +399,6 @@ namespace OpenHellion.UI
 					CreateCharacterPanel.SetActive(false);
 					StartingPointScreen.SetActive(true);
 					GlobalGUI.CloseLoadingScreen();
-					CanChooseSpawn = true;
 					break;
 			}
 		}
@@ -401,8 +409,7 @@ namespace OpenHellion.UI
 		public void PlayButton()
 		{
 			SelectScreen(Screen.None);
-			GameStarter gameStarter = GameStarter.Create();
-			gameStarter.FindServerAndConnect().Forget();
+			ServerList.Open();
 		}
 
 		/// <summary>
@@ -421,19 +428,32 @@ namespace OpenHellion.UI
 			Application.Quit();
 		}
 
+		public void ShowCharacterCreation(string suggestedName, Action<CharacterData> onCreated)
+		{
+			_onCharacterCreated = onCreated;
+			CharacterInputField.text = suggestedName;
+			SwitchCurrentGender();
+			SelectScreen(Screen.CreateCharacter);
+		}
+
 		public void CreateCharacterButton()
 		{
-			var character = new CharacterData
+			if (CharacterInputField.text.IsNullOrEmpty())
+			{
+				return;
+			}
+
+			Action<CharacterData> onCreated = _onCharacterCreated;
+			_onCharacterCreated = null;
+			SelectScreen(Screen.None);
+
+			onCreated?.Invoke(new CharacterData
 			{
 				Name = CharacterInputField.text,
 				Gender = _currentGenderGUI,
 				HeadType = 1,
 				HairType = 1
-			};
-
-			NakamaClient.UpdateCharacterData(character).Forget();
-
-			SelectScreen(Screen.None);
+			});
 		}
 
 		public void SwitchCurrentGender()
@@ -462,8 +482,9 @@ namespace OpenHellion.UI
 			}
 			else
 			{
-				// Exit screen completely, and go back to creating a character.
-				SelectScreen(Screen.CreateCharacter);
+				// Backing out abandons the connection attempt, so drop the pending choice with it.
+				_onSpawnChosen = null;
+				SelectScreen(Screen.None);
 			}
 		}
 	}

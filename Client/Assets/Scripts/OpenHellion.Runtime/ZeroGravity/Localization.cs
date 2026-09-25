@@ -272,8 +272,6 @@ namespace ZeroGravity
 
 		public static string ChooseLanguage;
 
-		public static string ReportServer;
-
 		public static string PlayerSettings;
 
 		public static string GlobalSettings;
@@ -299,16 +297,6 @@ namespace ZeroGravity
 		public static string ChooseStartingPoint;
 
 		public static string Continue;
-
-		public static string LatencyProblems;
-
-		public static string Rubberbanding;
-
-		public static string ServerStuck;
-
-		public static string DisconnectedFromServer;
-
-		public static string Other;
 
 		public static string SendReport;
 
@@ -390,6 +378,16 @@ namespace ZeroGravity
 		public static string SystemError;
 
 		public static string Disabled;
+
+		public static string WrongMode;
+
+		public static string RemoveServer;
+
+		public static string AreYouSureRemoveServer;
+
+		public static string EnterServerPassword;
+
+		public static string WrongServerPassword;
 
 		public static string InvalidSystemSpesifications;
 
@@ -1819,6 +1817,8 @@ namespace ZeroGravity
 
 		public static string NoNakamaConnection;
 
+		public static string Retry;
+
 		public static string NoServerConnection;
 
 		public static string SessionExpired;
@@ -2385,10 +2385,7 @@ namespace ZeroGravity
 				{ "PressAnyKeyText", PressAnyKeyToContinue?.ToUpper() },
 				{ "KeyboardSettingsText", KeyboardSettings?.ToUpper() },
 				{ "ChooseLanguageText", ChooseLanguage?.ToUpper() },
-				{ "ReportServerText", ReportServer?.ToUpper() },
-				{ "OtherText", Other?.ToUpper() },
 				{ "SendReportText", SendReport?.ToUpper() },
-				{ "ReportText", ReportServer?.ToUpper() },
 				{ "PlayerSettingsText", PlayerSettings?.ToUpper() },
 				{ "GlobalSettingsText", GlobalSettings?.ToUpper() },
 				{ "UnavailableFromInGameMenuText", UnavailableFromInGameMenu?.ToUpper() },

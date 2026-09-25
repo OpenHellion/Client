@@ -98,9 +98,9 @@ namespace ZeroGravity.ShipComponents
 			if (getFriends)
 			{
 				List<AuthorizedPerson> list = new List<AuthorizedPerson>();
-
-				IApiFriend[] nakamaFriends = await NakamaClient.GetFriends();
-				foreach (IApiFriend friend in nakamaFriends)
+				// TODO: Don't directly access nakama here.
+				IApiFriend[] nakamaFriends = Profile.OfflineMode ? null : await NakamaClient.GetFriends();
+				foreach (IApiFriend friend in nakamaFriends ?? Array.Empty<IApiFriend>())
 				{
 					// If friend is online, and not already authorised.
 					if (friend.User.Online &&
