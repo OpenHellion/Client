@@ -5,8 +5,8 @@ using Nakama;
 using OpenHellion;
 using OpenHellion.Net;
 using OpenHellion.Social;
-using OpenHellion.Graphics;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
@@ -78,8 +78,9 @@ namespace ZeroGravity.LevelDesign
 
 			if (StatusMesh != null)
 			{
-				DefaultMaterial = StatusMesh.GetComponent<Decalicious>().Material;
-				StatusMesh.GetComponent<Decalicious>().Material = Instantiate(DefaultMaterial);
+				DecalProjector decal = StatusMesh.GetComponentInChildren<DecalProjector>();
+				DefaultMaterial = decal.material;
+				decal.material = Instantiate(DefaultMaterial);
 			}
 		}
 
@@ -119,21 +120,22 @@ namespace ZeroGravity.LevelDesign
 		{
 			if (StatusMesh != null)
 			{
+				Material material = StatusMesh.GetComponentInChildren<DecalProjector>().material;
 				if (State == SpawnPointState.Unlocked)
 				{
-					StatusMesh.GetComponent<Decalicious>().Material.SetColor("_EmissionColor", Colors.Green);
+					material.SetColor("_EmissionColor", Colors.Green);
 				}
 				else if (!InvitedPlayerName.IsNullOrEmpty())
 				{
-					StatusMesh.GetComponent<Decalicious>().Material.SetColor("_EmissionColor", Colors.Blue);
+					material.SetColor("_EmissionColor", Colors.Blue);
 				}
 				else if (State == SpawnPointState.Locked)
 				{
-					StatusMesh.GetComponent<Decalicious>().Material.SetColor("_EmissionColor", Colors.Red);
+					material.SetColor("_EmissionColor", Colors.Red);
 				}
 				else if (State == SpawnPointState.Authorized)
 				{
-					StatusMesh.GetComponent<Decalicious>().Material.SetColor("_EmissionColor", Colors.Yellow);
+					material.SetColor("_EmissionColor", Colors.Yellow);
 				}
 			}
 

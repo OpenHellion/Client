@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using OpenHellion.Graphics;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using OpenHellion;
 using ZeroGravity.Data;
 using ZeroGravity.LevelDesign;
@@ -9,7 +9,7 @@ using ZeroGravity.Objects;
 
 public class VesselArmorDecal : MonoBehaviour
 {
-	public List<Decalicious> Decals;
+	public List<DecalProjector> Decals;
 
 	public SpaceObjectVessel ParentVessel;
 
@@ -21,11 +21,10 @@ public class VesselArmorDecal : MonoBehaviour
 
 	private void Start()
 	{
-		Decalicious[] componentsInChildren = GetComponentsInChildren<Decalicious>();
-		foreach (Decalicious decalicious in componentsInChildren)
+		foreach (DecalProjector decal in GetComponentsInChildren<DecalProjector>())
 		{
-			decalicious.Material = Instantiate(decalicious.Material);
-			Decals.Add(decalicious);
+			decal.material = Instantiate(decal.material);
+			Decals.Add(decal);
 		}
 
 		ParentVessel = GetComponentInParent<GeometryRoot>().MainObject as SpaceObjectVessel;
@@ -51,10 +50,10 @@ public class VesselArmorDecal : MonoBehaviour
 			fade = _armorSlot.Item.Health / _armorSlot.Item.MaxHealth;
 		}
 
-		foreach (Decalicious decal in Decals)
+		foreach (DecalProjector decal in Decals)
 		{
-			decal.Fade = fade;
-			decal.Material.SetColor("_EmissionColor", value);
+			decal.fadeFactor = fade;
+			decal.material.SetColor("_EmissionColor", value);
 		}
 	}
 }

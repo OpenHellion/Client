@@ -1155,7 +1155,6 @@ GameObject:
   - component: {fileID: 4719542211213009}
   - component: {fileID: 20919082568856804}
   - component: {fileID: 124572056572262874}
-  - component: {fileID: 114628155969227986}
   - component: {fileID: 3196933960158170041}
   m_Layer: 5
   m_Name: Camera
@@ -1238,19 +1237,6 @@ Behaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1600311515762464}
   m_Enabled: 1
---- !u!114 &114628155969227986
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1600311515762464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d78b6f00c230894d89c360d2d67832c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  myCubeMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &3196933960158170041
 MonoBehaviour:
   m_ObjectHideFlags: 0

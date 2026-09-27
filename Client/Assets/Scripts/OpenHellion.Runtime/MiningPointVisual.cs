@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using OpenHellion.Graphics;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using ZeroGravity.Data;
 
 public class MiningPointVisual : MonoBehaviour
 {
-	public List<Decalicious> DecalList;
+	public List<DecalProjector> DecalList;
 
 	public List<MeshRenderer> Rock1List;
 
@@ -27,9 +27,9 @@ public class MiningPointVisual : MonoBehaviour
 			return;
 		}
 
-		foreach (Decalicious decal in DecalList)
+		foreach (DecalProjector decal in DecalList)
 		{
-			decal.Material = miningPointTypeObject.DecalMaterial;
+			decal.material = Instantiate(miningPointTypeObject.DecalMaterial);
 		}
 
 		foreach (MeshRenderer rock in Rock1List)

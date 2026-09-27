@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using OpenHellion.Graphics;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace ZeroGravity.LevelDesign
 {
@@ -13,8 +13,6 @@ namespace ZeroGravity.LevelDesign
 		public string EmblemId;
 
 		private Texture2D EmptyEmblem;
-
-		private Decalicious decal;
 
 		private Material matInstance;
 
@@ -31,50 +29,31 @@ namespace ZeroGravity.LevelDesign
 		public void SetEmblem(string emblemId, bool fromResources = false)
 		{
 			EmblemId = emblemId;
-			decal = GetComponent<Decalicious>();
-			matInstance = Instantiate(decal.Material);
-			decal.Material = matInstance;
-			if (decal != null && matInstance != null)
+			DecalProjector decal = GetComponentInChildren<DecalProjector>();
+			matInstance = Instantiate(decal.material);
+			decal.material = matInstance;
+			Texture value = null;
+			if (EmblemId == string.Empty)
 			{
-				Texture value = null;
-				if (EmblemId == string.Empty)
-				{
-					value = EmptyEmblem;
-				}
-				else if (fromResources)
-				{
-					value = Resources.Load("Emblems/" + emblemId) as Texture;
-				}
-				else
-				{
-					Textures.TryGetValue(emblemId, out value);
-				}
-
-				if (value == null)
-				{
-					value = EmptyEmblem;
-				}
-
-				matInstance.mainTexture = value;
-				if (matInstance.HasProperty("_SpecularTex"))
-				{
-					matInstance.SetTexture("_SpecularTex", value);
-				}
-
-				if (matInstance.HasProperty("_MaskTex"))
-				{
-				}
-
-				if (matInstance.HasProperty("_SmoothnessTex"))
-				{
-					matInstance.SetTexture("_SmoothnessTex", value);
-				}
-
-				if (matInstance.HasProperty("_SpecularMultiplier"))
-				{
-					matInstance.SetColor("_SpecularMultiplier", Color.white);
-				}
+				value = EmptyEmblem;
 			}
+			else if (fromResources)
+			{
+				value = Resources.Load("Emblems/" + emblemId) as Texture;
+			}
+			else
+			{
+				Textures.TryGetValue(emblemId, out value);
+			}
+
+			if (value == null)
+			{
+				value = EmptyEmblem;
+			}
+
+			matInstance.mainTexture = value;
+			matInstance.SetTexture("_SpecularMap", value);
+			matInstance.SetColor("_SpecularColor", Color.white);
 		}
 
 		private void OnDestroy()

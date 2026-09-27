@@ -8,8 +8,8 @@ using OpenHellion.Net;
 using OpenHellion.Net.Message;
 using OpenHellion.Social.RichPresence;
 using OpenHellion.UI;
-using OpenHellion.Graphics;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;
 using ZeroGravity.Effects;
@@ -2109,20 +2109,10 @@ Quaternion.Lerp(startingRotation, targetRot, Mathf.SmoothStep(0f, 1f, _lerpTimer
 				canvas.gameObject.Activate(magnitude < MyPlayer.Instance.HideCanvasDistance);
 			}
 
-			DeferredDecal[] componentsInChildren2 = GetComponentsInChildren<DeferredDecal>(includeInactive: true);
-			foreach (DeferredDecal deferredDecal in componentsInChildren2)
+			foreach (DecalProjector decal in GetComponentsInChildren<DecalProjector>(includeInactive: true))
 			{
-				float magnitude2 = (MyPlayer.Instance.transform.position - deferredDecal.transform.position)
-					.magnitude;
-				deferredDecal.enabled = magnitude2 < MyPlayer.Instance.HideCanvasDistance;
-			}
-
-			Decalicious[] componentsInChildren3 = GetComponentsInChildren<Decalicious>(includeInactive: true);
-			foreach (Decalicious decalicious in componentsInChildren3)
-			{
-				float magnitude3 = (MyPlayer.Instance.transform.position - decalicious.transform.position)
-					.magnitude;
-				decalicious.enabled = magnitude3 < MyPlayer.Instance.HideCanvasDistance;
+				float magnitude2 = (MyPlayer.Instance.transform.position - decal.transform.position).magnitude;
+				decal.enabled = magnitude2 < MyPlayer.Instance.HideCanvasDistance;
 			}
 		}
 

@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using OpenHellion.Graphics;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using ZeroGravity.Objects;
 
 namespace ZeroGravity.LevelDesign
@@ -12,11 +11,11 @@ namespace ZeroGravity.LevelDesign
 	{
 		[NonSerialized] public SpaceObjectVessel ParentVessel;
 
-		public List<Decalicious> Decals = new List<Decalicious>();
+		public List<DecalProjector> Decals = new List<DecalProjector>();
 
 		private void Awake()
 		{
-			Decals.AddRange(GetComponentsInChildren<Decalicious>().ToList().Where(_003CAwake_003Em__0));
+			Decals.AddRange(GetComponentsInChildren<DecalProjector>().Where((m) => !Decals.Contains(m)));
 		}
 
 		public void UpdateDecals()
@@ -31,17 +30,11 @@ namespace ZeroGravity.LevelDesign
 			}
 
 			float num = 1f - ParentVessel.Health / ParentVessel.MaxHealth;
-			foreach (Decalicious decal in Decals)
+			foreach (DecalProjector decal in Decals)
 			{
-				decal.Fade = num;
+				decal.fadeFactor = num;
 				decal.gameObject.Activate(num > float.Epsilon);
 			}
-		}
-
-		[CompilerGenerated]
-		private bool _003CAwake_003Em__0(Decalicious m)
-		{
-			return !Decals.Contains(m);
 		}
 	}
 }

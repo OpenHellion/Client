@@ -50,6 +50,7 @@ Debugging/diagnostics:
 
 Graphics:
 [] Recreate post processing using URP volumes
+[] Fix flickering decals by adding support for LimitTo (or find a better solution)
 
 Short-term:
 [x] Update to Unity 6.3

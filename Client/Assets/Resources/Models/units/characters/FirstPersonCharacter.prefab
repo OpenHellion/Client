@@ -5761,7 +5761,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4917029889081530}
   - component: {fileID: 20457876916212877}
-  - component: {fileID: 114968605693014785}
   - component: {fileID: 114937352832066361}
   - component: {fileID: 114137996365304760}
   - component: {fileID: 114022578700973608}
@@ -5848,19 +5847,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &114968605693014785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1241487161733373}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d78b6f00c230894d89c360d2d67832c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  myCubeMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &114937352832066361
 MonoBehaviour:
   m_ObjectHideFlags: 0

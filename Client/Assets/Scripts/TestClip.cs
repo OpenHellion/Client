@@ -1,19 +1,19 @@
-using OpenHellion.Graphics;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class TestClip : MonoBehaviour
 {
-	public Decalicious Decalicious;
+	public DecalProjector Decal;
 
 	[Range(0f, 1f)] public float Clip;
 
 	private void Awake()
 	{
-		Decalicious.Material = Instantiate(Decalicious.Material);
+		Decal.material = Instantiate(Decal.material);
 	}
 
 	private void Update()
 	{
-		Decalicious.Material.SetFloat("_MaskClip", Mathf.Clamp01(Clip));
+		Decal.material.SetFloat("_ClipThreshold", Mathf.Clamp01(Clip));
 	}
 }

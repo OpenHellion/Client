@@ -1,4 +1,3 @@
-using OpenHellion.Graphics;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -8,7 +7,7 @@ public class SceneTextLabel : MonoBehaviour
 
 	public int TextureHeight = 200;
 
-	private Component comp;
+	private MeshRenderer comp;
 
 	[SerializeField] public Material sourceMat;
 
@@ -18,16 +17,7 @@ public class SceneTextLabel : MonoBehaviour
 
 	private void Awake()
 	{
-		comp = GetComponent<DeferredDecal>();
-		if (comp == null)
-		{
-			comp = GetComponent<Decalicious>();
-		}
-
-		if (comp == null)
-		{
-			comp = GetComponent<MeshRenderer>();
-		}
+		comp = GetComponent<MeshRenderer>();
 
 		InstantiateMaterial();
 	}
@@ -64,18 +54,7 @@ public class SceneTextLabel : MonoBehaviour
 		if (matInstance == null && comp != null)
 		{
 			matInstance = Instantiate(sourceMat);
-			if (comp is MeshRenderer)
-			{
-				(comp as MeshRenderer).material = matInstance;
-			}
-			else if (comp is DeferredDecal)
-			{
-				(comp as DeferredDecal).material = matInstance;
-			}
-			else if (comp is Decalicious)
-			{
-				(comp as Decalicious).Material = matInstance;
-			}
+			comp.material = matInstance;
 		}
 	}
 }
