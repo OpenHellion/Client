@@ -8,7 +8,7 @@ using OpenHellion.Net;
 using OpenHellion.Net.Message;
 using OpenHellion.Social.RichPresence;
 using OpenHellion.UI;
-using ThreeEyedGames;
+using OpenHellion.Graphics;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;

@@ -8,25 +8,34 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: AltCorp_HallwayWindow_Window01_MAT
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHATEST_ON
   - _EMISSION
-  - _METALLICGLOSSMAP
+  - _METALLICSPECGLOSSMAP
   - _NORMALMAP
   m_InvalidKeywords:
   - _ALWAYSEMIT_ON
   - _MAT1USERUST_ON
+  - _METALLICGLOSSMAP
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2450
   stringTagMap:
     RenderType: TransparentCutout
-  disabledShaderPasses: []
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: 3c9668ebe9c671742b844884625a0917, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: 2ec9ae8d70681c646a5aa90456e754cf, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -67,6 +76,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -75,12 +88,33 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AddPrecomputedVelocity: 0
+    - _AlphaClip: 1
+    - _AlphaToMask: 1
     - _AlwaysEmit: 1
+    - _Blend: 0
+    - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
+    - _ClearCoatMask: 0
+    - _ClearCoatSmoothness: 0
     - _Color2Amount: 0
+    - _Cull: 2
     - _Cutoff: 0.148
+    - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DirtAmount: 0.644
     - _DirtColorVariationAdj: 0.466
@@ -91,9 +125,11 @@ Material:
     - _DmgOn: 0
     - _DmgRoughness: 0
     - _DstBlend: 0
+    - _DstBlendAlpha: 0
     - _EmissionAmount: 41.8
     - _EmissionControl: 0
     - _EmissionState: 0
+    - _EnvironmentReflections: 1
     - _FrostAmount: 0
     - _FrostColorVariationAdj: 0.693
     - _FrostMetalic: 0
@@ -167,21 +203,29 @@ Material:
     - _NoiseTile: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _QueueOffset: 0
+    - _ReceiveShadows: 1
     - _RustAmount: 0.02
     - _RustColorVariationAdj: 0.864
     - _RustMetaic: 0
+    - _Smoothness: 1
     - _SmoothnessTextureChannel: 0
     - _SoftDrtAmount: 1
     - _SpecualVariationAdj: 0.02
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _SrcBlendAlpha: 1
+    - _Surface: 0
     - _UVSec: 0
     - _WearAmount: 1
+    - _WorkflowMode: 1
+    - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     - __dirty: 0
     - _node_4205: 0
     - _node_4540: 0
     m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color1: {r: 1, g: 0, b: 0, a: 1}
     - _Color2: {r: 0, g: 0, b: 1, a: 1}
@@ -221,6 +265,21 @@ Material:
     - _Mat6DmgTint: {r: 0.77205884, g: 0.6812284, b: 0.6812284, a: 1}
     - _RustColor1: {r: 0.35294116, g: 0.19386701, b: 0.090830445, a: 1}
     - _RustColor2: {r: 0.18382353, g: 0.0405493, b: 0.0405493, a: 1}
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _ToxicColor: {r: 2, g: 1.034483, b: 0, a: 0}
     - _node_4748: {r: 1, g: 1, b: 0.04411763, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
+--- !u!114 &5958124231739887323
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Editor::UnityEditor.Rendering.Universal.AssetVersion
+  version: 10

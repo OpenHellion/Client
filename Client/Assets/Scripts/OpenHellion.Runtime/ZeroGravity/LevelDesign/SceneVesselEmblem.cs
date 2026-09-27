@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ThreeEyedGames;
+using OpenHellion.Graphics;
 using UnityEngine;
 
 namespace ZeroGravity.LevelDesign

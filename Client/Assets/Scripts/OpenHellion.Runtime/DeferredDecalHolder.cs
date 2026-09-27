@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using OpenHellion.Graphics;
 
+[Obsolete]
 public class DeferredDecalHolder
 {
 	private static DeferredDecalHolder myDecalHolder;

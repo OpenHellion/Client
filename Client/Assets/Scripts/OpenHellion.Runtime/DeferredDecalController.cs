@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering;
+using OpenHellion.Graphics;
 
+[Obsolete]
 [RequireComponent(typeof(Camera))]
 [ExecuteInEditMode]
 [ImageEffectAllowedInSceneView]
 public class DeferredDecalController : MonoBehaviour
 {
-	[SerializeField] [HideInInspector] private Mesh myCubeMesh;
+	[SerializeField] private Mesh myCubeMesh;
 
 	private CommandBuffer myCommandBuffer;
 

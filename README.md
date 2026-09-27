@@ -17,12 +17,8 @@ Prefer using tried-and-tested programming styles for large games, and generally 
 A rule of thumb when working with this project is to look at other code in the OpenHellion folder when in doubt.
 
 ## License
-All code written by members of the OpenHellion project and affiliates is licenced under GPL-3.0.
+See the readme in `OpenHellion` and `ZeroGravity` in `Client/Assets`.
 
-All media and assets by members of the OpenHellion project and affiliates, excluding code, is licensed under CC BY-SA 4.0.
-
-Content not produced by members of the OpenHellion project and affiliates belong to their respective authors. No copyright infringement intended.
-
-All script files without a licence header are property of their respective authors.
+All code without a licence header are property of their respective authors.
 
 Resources in the Assets/Plugins and Assets/Wwise folders are licensed under their own terms.

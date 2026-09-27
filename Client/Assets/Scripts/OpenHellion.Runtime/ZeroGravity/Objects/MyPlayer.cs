@@ -7,7 +7,6 @@ using OpenHellion;
 using OpenHellion.IO;
 using OpenHellion.Net;
 using OpenHellion.Net.Message;
-using OpenHellion.Social;
 using OpenHellion.Social.RichPresence;
 using UnityEngine;
 using UnityEngine.InputSystem;

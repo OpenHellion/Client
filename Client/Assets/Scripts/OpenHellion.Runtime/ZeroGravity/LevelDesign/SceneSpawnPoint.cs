@@ -5,7 +5,7 @@ using Nakama;
 using OpenHellion;
 using OpenHellion.Net;
 using OpenHellion.Social;
-using ThreeEyedGames;
+using OpenHellion.Graphics;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZeroGravity.Data;

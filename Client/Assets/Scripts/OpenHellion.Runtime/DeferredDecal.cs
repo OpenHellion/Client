@@ -1,5 +1,8 @@
 using UnityEngine;
+using OpenHellion.Graphics;
+using System;
 
+[Obsolete]
 [ExecuteInEditMode]
 public class DeferredDecal : Decal
 {

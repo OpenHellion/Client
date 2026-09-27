@@ -1,7 +1,5 @@
-using ThreeEyedGames;
-using TMPro;
+using OpenHellion.Graphics;
 using UnityEngine;
-using ZeroGravity;
 
 [ExecuteInEditMode]
 public class SceneTextLabel : MonoBehaviour

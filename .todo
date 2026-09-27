@@ -10,8 +10,7 @@ Spawn:
 [x] Fix spawning with dynamicobjects not working on relogging
 [ ] Fix orbits in visible system always being at the origin of the map, which can be moved
 [ ] Fix old orbits not despawning
-[ ] Make map show quest vessels (subscibe objects and known vessels rewrite)
-[ ] Adding item to inventory doesn't update the client
+[ ] Adding item to inventory using console doesn't update the client
 [ ] Fix empty dynamic objects at scene root
 
 Movement:
@@ -29,6 +28,7 @@ Movement:
 [x] Make ship controls smooth
 [x] Fix ejection bug from ship when piloting by making position in MovementMessage parent-relative instead of anchor relative.
 [x] Fix snap when flying back into range of a vessel
+[ ] Send faraway "known" vessels to client, but only on map and radar position (subscibe objects and known vessels rewrite)
 [ ] Fix changing parent deals damage (think it is fixed)
 [ ] Fix items, corpses and other players sliding when the anchor changes (fixed for items)
 [ ] Moving from 0g to 1g fast might cause you to go trough the wall and fall forever, crashing the game
@@ -47,6 +47,9 @@ Debugging/diagnostics:
 [ ] Implement TestShip spawn setup as testing spawn
 [ ] Show game state info in console and log to file
 [ ] Add assertions in code
+
+Graphics:
+[] Recreate post processing using URP volumes
 
 Short-term:
 [x] Update to Unity 6.3
