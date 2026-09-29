@@ -526,8 +526,6 @@ namespace ZeroGravity.ShipComponents
 			{
 				(SelectedObject as MapObjectCelestial).ShowGravityInfluence();
 			}
-
-			ShowAllChildObjects(SelectedObject);
 		}
 
 		public void UnselectMapObject(MapObject obj)
@@ -607,13 +605,8 @@ namespace ZeroGravity.ShipComponents
 		/// </summary>
 		public void ApplyMapData(MapDataResponse response)
 		{
-			if (response.Objects == null)
-			{
-				return;
-			}
-
 			HashSet<long> seen = new HashSet<long>();
-			foreach (MapDataResponse.MapDetailsData details in response.Objects)
+			foreach (MapDataResponse.MapDetailsData details in response.Objects ?? Array.Empty<MapDataResponse.MapDetailsData>())
 			{
 				seen.Add(details.Guid);
 				if (_mapItems.TryGetValue(details.Guid, out MapItemData item))
@@ -622,7 +615,6 @@ namespace ZeroGravity.ShipComponents
 					if (AllMapObjects.TryGetValue(item, out MapObject mapObject) && mapObject != null)
 					{
 						mapObject.SetOrbit();
-						UpdateParent(item);
 					}
 				}
 				else
@@ -674,7 +666,6 @@ namespace ZeroGravity.ShipComponents
 					m.Key.Guid == homeVessel.Guid || m.Key.Guid == homeVessel.MainVessel.Guid).Value;
 			}
 
-			ShowAllChildObjects(FocusObject);
 			SelectMapObject(FocusObject);
 			_oldFocusObject = SelectedObject;
 			if (FocusObject == MyShip && FocusObject.MainObject.ParentCelesitalBody != null)
@@ -706,11 +697,7 @@ namespace ZeroGravity.ShipComponents
 
 		public void InitialiseMapObject(IMapMainObject obj, CelestialBodyData cbd = null)
 		{
-			if (AllMapObjects.ContainsKey(obj))
-			{
-				UpdateObjectData(obj);
-			}
-			else if (obj is CelestialBody celestialBody)
+			if (obj is CelestialBody celestialBody)
 			{
 				GameObject celestialBodyObject = Instantiate(MapObjectCelestial, MapObjectsRoot);
 				celestialBodyObject.name = celestialBody.Name;
@@ -722,8 +709,6 @@ namespace ZeroGravity.ShipComponents
 					_sun = mapObjectCelestial;
 				}
 				mapObjectCelestial.UpdateVisibility();
-
-				UpdateCelestialParent(celestialBody);
 				AllMapObjects[celestialBody] = mapObjectCelestial;
 			}
 			else if (obj is MapItemData item)
@@ -745,8 +730,6 @@ namespace ZeroGravity.ShipComponents
 
 				mapObject.UpdateObject();
 				mapObject.UpdateVisibility();
-
-				UpdateParent(item);
 				AllMapObjects[item] = mapObject;
 			}
 			else if (obj is DebrisField debrisField)
@@ -756,8 +739,6 @@ namespace ZeroGravity.ShipComponents
 				MapObjectDebrisField mapObjectDebrisField = debrisFieldObject.GetComponent<MapObjectDebrisField>();
 				mapObjectDebrisField.OnCreate(_world, debrisField);
 				mapObjectDebrisField.UpdateVisibility();
-
-				UpdateParent(debrisField);
 				AllMapObjects[debrisField] = mapObjectDebrisField;
 			}
 		}
@@ -805,47 +786,6 @@ namespace ZeroGravity.ShipComponents
 			mapObjectFixedPosition.Name = Localization.WarpSignature.ToUpper();
 			mapObjectFixedPosition.Description = Localization.WarpSignatureDescription;
 			fixedPositionObject.Activate(value: true);
-		}
-
-		public void UpdateObjectData(IMapMainObject mapObject)
-		{
-			if (mapObject is CelestialBody)
-			{
-				UpdateCelestialParent(mapObject);
-				return;
-			}
-
-			if (mapObject is MapItemData item && AllMapObjects.TryGetValue(item, out var value) && value != null)
-			{
-				value.name = item.Name;
-			}
-
-			UpdateParent(mapObject);
-		}
-
-		public void UpdateCelestialParent(IMapMainObject obj)
-		{
-			if (obj.Guid != 1 && obj.Orbit.Parent.CelestialBody != null &&
-			    AllMapObjects.ContainsKey(obj.Orbit.Parent.CelestialBody) &&
-			    AllMapObjects.TryGetValue(obj, out var value) &&
-			    AllMapObjects.TryGetValue(obj.Orbit.Parent.CelestialBody, out var value2))
-			{
-				value.transform.SetParent((value2 as MapObjectCelestial).CelestialObjects.transform);
-				value.transform.localPosition = Vector3.zero;
-				value.Visual.localPosition = Vector3.zero;
-			}
-		}
-
-		public void UpdateParent(IMapMainObject obj)
-		{
-			if (obj.Orbit.Parent.CelestialBody != null && AllMapObjects.ContainsKey(obj.Orbit.Parent.CelestialBody) &&
-			    AllMapObjects.TryGetValue(obj, out var value) &&
-			    AllMapObjects.TryGetValue(obj.Orbit.Parent.CelestialBody, out var value2))
-			{
-				value.transform.SetParent((value2 as MapObjectCelestial).ChildObjects.transform);
-				value.transform.localPosition = Vector3.zero;
-				value.Visual.localPosition = Vector3.zero;
-			}
 		}
 
 		public void RemoveMapObject(IMapMainObject obj)
@@ -901,63 +841,6 @@ namespace ZeroGravity.ShipComponents
 			}
 
 			Focusing = false;
-		}
-
-		private void ShowAllChildObjects(MapObject obj)
-		{
-			if (obj == _sun)
-			{
-				(obj as MapObjectCelestial).ChildObjects.gameObject.SetActive(value: true);
-				MapObjectCelestial[] componentsInChildren = (obj as MapObjectCelestial).CelestialObjects
-					.GetComponentsInChildren<MapObjectCelestial>();
-				foreach (MapObjectCelestial mapObjectCelestial in componentsInChildren)
-				{
-					mapObjectCelestial.ChildObjects.gameObject.SetActive(value: false);
-				}
-			}
-			else
-			{
-				if (obj == null || obj.Orbit == null || obj.Orbit.Parent.CelestialBody == null)
-				{
-					return;
-				}
-
-				if (obj.Orbit.Parent.CelestialBody == _sun.MainObject)
-				{
-					ToggleAllChildObjects(obj, show: true);
-					return;
-				}
-
-				MapObject value = AllMapObjects.FirstOrDefault((KeyValuePair<IMapMainObject, MapObject> m) =>
-					m.Key == obj.Orbit.Parent.CelestialBody).Value;
-				if (value.Orbit.Parent != null && value.Orbit.Parent.CelestialBody == _sun.MainObject)
-				{
-					ToggleAllChildObjects(value, show: true);
-				}
-				else
-				{
-					ShowAllChildObjects(value);
-				}
-			}
-		}
-
-		private void ToggleAllChildObjects(MapObject obj, bool show)
-		{
-			if (obj is MapObjectCelestial)
-			{
-				MapObjectCelestial mapObjectCelestial = obj as MapObjectCelestial;
-				mapObjectCelestial.ChildObjects.gameObject.SetActive(show);
-				MapObjectCelestial[] componentsInChildren =
-					mapObjectCelestial.CelestialObjects.GetComponentsInChildren<MapObjectCelestial>();
-				foreach (MapObjectCelestial mapObjectCelestial2 in componentsInChildren)
-				{
-					mapObjectCelestial2.ChildObjects.gameObject.SetActive(show);
-				}
-			}
-			else
-			{
-				(_sun as MapObjectCelestial).ChildObjects.gameObject.SetActive(value: true);
-			}
 		}
 
 		private void RotateCamera()
@@ -1027,9 +910,6 @@ namespace ZeroGravity.ShipComponents
 
 				MapObjectCustomOrbit newCustomOrbit = customOrbitObject.GetComponent<MapObjectCustomOrbit>();
 				AllCustomOrbits.Add(newCustomOrbit);
-				newCustomOrbit.transform.SetParent((SelectedObject as MapObjectCelestial).ChildObjects.transform);
-				newCustomOrbit.transform.localPosition = Vector3.zero;
-				newCustomOrbit.Visual.localPosition = Vector3.zero;
 				newCustomOrbit.CreateOrbit(SelectedObject);
 				newCustomOrbit.CreateVisual();
 				SelectMapObject(newCustomOrbit);

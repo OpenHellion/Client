@@ -175,6 +175,11 @@ namespace ZeroGravity.ShipComponents
 				return;
 			}
 
+			if (Orbit?.Parent != null)
+			{
+				transform.position = ((Orbit.Parent.Position - Map.Focus) * ObjectScale).ToVector3();
+			}
+
 			UpdateObject();
 			UpdateOrbitColors();
 			UpdateOrbitPlane();

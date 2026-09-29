@@ -5,10 +5,6 @@ namespace ZeroGravity.ShipComponents
 {
 	public class MapObjectCelestial : MapObject
 	{
-		public Transform CelestialObjects;
-
-		public Transform ChildObjects;
-
 		public GameObject CelestialVisual;
 
 		public GameObject IconVisual;

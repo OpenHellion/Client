@@ -8,8 +8,8 @@ Spawn:
 [x] Create new flow for map spawning
 [x] Spawn corpse on server
 [x] Fix spawning with dynamicobjects not working on relogging
-[ ] Fix orbits in visible system always being at the origin of the map, which can be moved
-[ ] Fix old orbits not despawning
+[x] Fix orbits in visible system always being at the origin of the map, which can be moved
+[x] Fix old orbits not despawning
 [ ] Adding item to inventory using console doesn't update the client
 [ ] Fix empty dynamic objects at scene root
 
@@ -51,6 +51,7 @@ Debugging/diagnostics:
 Graphics:
 [] Recreate post processing using URP volumes
 [] Fix flickering decals by adding support for LimitTo (or find a better solution)
+[] Migrate HxVolumetricFog
 
 Short-term:
 [x] Update to Unity 6.3
