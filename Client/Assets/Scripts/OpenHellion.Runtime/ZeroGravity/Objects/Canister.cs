@@ -1,3 +1,4 @@
+using OpenHellion.Net.Message;
 using System.Collections.Generic;
 using System.Linq;
 using OpenHellion;
@@ -64,8 +65,8 @@ namespace ZeroGravity.Objects
 				_compartments = new List<ICargoCompartment> { CargoCompartment };
 			}
 
-			CargoCompartment.Capacity = canisterStats.Capacity;
-			CargoCompartment.Resources = canisterStats.Resources;
+			CargoCompartment.Capacity = canisterStats.Capacity ?? CargoCompartment.Capacity;
+			CargoCompartment.Resources = canisterStats.Resources ?? CargoCompartment.Resources;
 			ResourceBarFiller.fillAmount = ResourcePercentage;
 			if (AttachPoint != null && MyPlayer.Instance != null &&
 			    MyPlayer.Instance.LockedToTrigger is SceneTriggerCargoPanel cargoPanel)
@@ -192,12 +193,7 @@ namespace ZeroGravity.Objects
 
 				if (_shouldInjectResource)
 				{
-					DynamicObject dynamicObj = DynamicObj;
-					CanisterStats statsData = new CanisterStats
-					{
-						UseCanister = true
-					};
-					dynamicObj.SendStatsMessage(null, statsData);
+					World.SolarSystem.SendCommand(StateUpdateRequest.CommandType.UseCanister, GUID);
 					MyPlayer.Instance.animHelper.SetParameterTrigger(AnimatorHelper.Triggers.UseConsumable);
 				}
 				else if (Quantity <= 0f)

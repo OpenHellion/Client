@@ -8,10 +8,10 @@ namespace ZeroGravity.Network
 	{
 		public CargoResourceData Propellant;
 
-		public float PropellantCapacity;
+		public float? PropellantCapacity;
 
 		public CargoResourceData Oxygen;
 
-		public float OxygenCapacity;
+		public float? OxygenCapacity;
 	}
 }

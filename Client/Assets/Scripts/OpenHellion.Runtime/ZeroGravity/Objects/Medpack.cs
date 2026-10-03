@@ -1,3 +1,4 @@
+using OpenHellion.Net.Message;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 
@@ -25,12 +26,7 @@ namespace ZeroGravity.Objects
 
 		public void SendPackage()
 		{
-			DynamicObject dynamicObj = DynamicObj;
-			MedpackStats statsData = new MedpackStats
-			{
-				Use = true
-			};
-			dynamicObj.SendStatsMessage(null, statsData);
+			World.SolarSystem.SendCommand(StateUpdateRequest.CommandType.UseMedpack, GUID);
 		}
 
 		public override DynamicObjectAuxData GetAuxData()

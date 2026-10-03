@@ -39,8 +39,8 @@ namespace ZeroGravity.Objects
 		{
 			base.ProcesStatsData(dos);
 			BatteryStats batteryStats = dos as BatteryStats;
-			CurrentPower = batteryStats.CurrentPower;
-			MaxPower = batteryStats.MaxPower;
+			CurrentPower = batteryStats.CurrentPower ?? CurrentPower;
+			MaxPower = batteryStats.MaxPower ?? MaxPower;
 			UpdateUI();
 		}
 

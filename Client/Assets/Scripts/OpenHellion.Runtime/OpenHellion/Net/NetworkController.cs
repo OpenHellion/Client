@@ -72,7 +72,7 @@ namespace OpenHellion.Net
 
 		private void Update()
 		{
-			_gameTransport?.Pump();
+			_gameTransport?.Tick();
 
 			// Handle Steam P2P packets.
 			if (RichPresenceManager.HasSteam && !_getP2PPacketsThreadActive)

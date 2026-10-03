@@ -129,7 +129,7 @@ namespace OpenHellion.Net
 		/// <summary>
 		/// 	Dispatch everything received since the last tick on the main thread.
 		/// </summary>
-		internal void Pump()
+		internal void Tick()
 		{
 			while (_inboundQueue.TryDequeue(out (NetworkData Data, DateTime ReceivedUtc) received))
 			{
@@ -196,7 +196,10 @@ namespace OpenHellion.Net
 			if (!_isConnectionOpen) return;
 			try
 			{
-				data.ExpirationUtc = DateTime.UtcNow.AddMilliseconds(TIMEOUT_MS);
+				if (data.ExpirationUtc != DateTime.MaxValue)
+				{
+					data.ExpirationUtc = DateTime.UtcNow.AddMilliseconds(TIMEOUT_MS);
+				}
 				byte[] packedData = await ProtoSerialiser.Pack(data);
 				if (packedData != null)
 				{
@@ -220,7 +223,10 @@ namespace OpenHellion.Net
 
 			try
 			{
-				data.ExpirationUtc = DateTime.UtcNow.AddMilliseconds(TIMEOUT_MS);
+				if (data.ExpirationUtc != DateTime.MaxValue)
+				{
+					data.ExpirationUtc = DateTime.UtcNow.AddMilliseconds(TIMEOUT_MS);
+				}
 				byte[] packedData = await ProtoSerialiser.Pack(data);
 				if (packedData != null)
 				{

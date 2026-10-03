@@ -32,8 +32,6 @@ namespace ZeroGravity.Network
 
 		public float[] Rotation;
 
-		public DynamicObjectDetails[] DynamicObjects;
-
 		public long AnchorGuid;
 
 		public double[] OriginWorldPosition;

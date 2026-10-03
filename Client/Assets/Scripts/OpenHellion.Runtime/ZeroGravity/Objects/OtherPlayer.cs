@@ -248,7 +248,7 @@ namespace ZeroGravity.Objects
 		{
 			foreach (DynamicObjectDetails details in dynamicObjects ?? Array.Empty<DynamicObjectDetails>())
 			{
-				DynamicObject.CreateDynamicObject(details, this);
+				DynamicObject.CreateDynamicObject(details);
 			}
 		}
 

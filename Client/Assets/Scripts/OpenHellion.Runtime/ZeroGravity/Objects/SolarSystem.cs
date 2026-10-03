@@ -1,9 +1,15 @@
+using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using OpenHellion;
 using OpenHellion.IO;
+using OpenHellion.Net;
+using OpenHellion.Net.Message;
 using UnityEngine;
 using ZeroGravity.Data;
+using ZeroGravity.LevelDesign;
 using ZeroGravity.Math;
+using ZeroGravity.Network;
 using ZeroGravity.ShipComponents;
 
 namespace ZeroGravity.Objects
@@ -43,6 +49,66 @@ namespace ZeroGravity.Objects
 		private readonly List<CelestialBody> _celestialBodyReferences = new List<CelestialBody>();
 
 		public double CurrentTime => _currentTime;
+
+		private void Awake()
+		{
+			EventSystem.AddListener<StateUpdateMessage>(StateUpdateMessageListener);
+		}
+
+		private void OnDestroy()
+		{
+			EventSystem.RemoveListener<StateUpdateMessage>(StateUpdateMessageListener);
+		}
+
+		private void StateUpdateMessageListener(NetworkData data)
+		{
+			foreach (DynamicObjectInfo info in ((StateUpdateMessage)data).DynamicObjects ?? Array.Empty<DynamicObjectInfo>())
+			{
+				_world.GetDynamicObject(info.GUID)?.ApplyState(info.Stats, info.AttachData);
+			}
+		}
+
+		public void SendCommand(StateUpdateRequest.CommandType type, long subject, long target = 0, short slot = 0,
+			Vector3? position = null, Quaternion? rotation = null, Vector3? velocity = null, Vector3? torque = null,
+			Vector3? throwForce = null, bool value = false, int number = 0)
+		{
+			NetworkController.SendAsync(new StateUpdateRequest
+			{
+				Type = type,
+				Subject = subject,
+				Target = target,
+				Slot = slot,
+				Position = position?.ToArray(),
+				Rotation = rotation?.ToArray(),
+				Velocity = velocity?.ToArray(),
+				Torque = torque?.ToArray(),
+				ThrowForce = throwForce?.ToArray(),
+				Value = value,
+				Number = number,
+				ExpirationUtc = DateTime.MaxValue
+			}).Forget();
+		}
+
+		public void SendMoveCommand(DynamicObject item, SpaceObject newParent, IItemSlot slot, Vector3? localPosition = null,
+			Quaternion? localRotation = null, Vector3? impulse = null, Vector3? angularImpulse = null,
+			Vector3? velocity = null)
+		{
+			SendCommand(slot switch
+				{
+					InventorySlot => StateUpdateRequest.CommandType.MoveToInventory,
+					ItemSlot => StateUpdateRequest.CommandType.MoveToItemSlot,
+					BaseSceneAttachPoint => StateUpdateRequest.CommandType.MoveToAttachPoint,
+					_ => StateUpdateRequest.CommandType.Drop
+				},
+				item.Guid, newParent.Guid, slot switch
+				{
+					InventorySlot inventorySlot => inventorySlot.SlotID,
+					ItemSlot itemSlot => itemSlot.ID,
+					BaseSceneAttachPoint attachPoint => (short)attachPoint.InSceneID,
+					_ => (short)0
+				},
+				slot != null ? null : localPosition, slot != null ? null : localRotation, velocity, angularImpulse, impulse);
+		}
 
 		public void AddCelestialBody(CelestialBody body)
 		{

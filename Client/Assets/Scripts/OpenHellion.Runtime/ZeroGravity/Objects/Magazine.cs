@@ -27,41 +27,6 @@ namespace ZeroGravity.Objects
 			}
 		}
 
-		private static void SplitMagazines(Magazine fromMag, Magazine toMag)
-		{
-			int num = toMag.maxBulletCount - toMag.bulletCount;
-			if (toMag.bulletCount == 0)
-			{
-				num = fromMag.bulletCount / 2;
-			}
-			else if (fromMag.bulletCount < num)
-			{
-				num = fromMag.bulletCount;
-			}
-
-			toMag.bulletCount += num;
-			fromMag.bulletCount -= num;
-			DynamicObject dynamicObj = fromMag.DynamicObj;
-			MagazineStats statsData = new MagazineStats
-			{
-				BulletsFrom = fromMag.GUID,
-				BulletsTo = toMag.GUID
-			};
-			dynamicObj.SendStatsMessage(null, statsData);
-		}
-
-		public override bool ProcessSlotChange(Inventory inv, InventorySlot mySlot, InventorySlot nextSlot)
-		{
-			if (nextSlot != null && nextSlot.CanFitItem(this) && nextSlot.Item != null && nextSlot.Item.Type == Type)
-			{
-				Magazine toMag = nextSlot.Item as Magazine;
-				SplitMagazines(this, toMag);
-				return true;
-			}
-
-			return false;
-		}
-
 		public override void ProcesStatsData(DynamicObjectStats dos)
 		{
 			base.ProcesStatsData(dos);

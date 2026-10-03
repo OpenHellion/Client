@@ -21,7 +21,5 @@ namespace ZeroGravity.Network
 		public float[] Velocity;
 
 		public float[] AngularVelocity;
-
-		public DynamicObjectDetails[] ChildObjects;
 	}
 }

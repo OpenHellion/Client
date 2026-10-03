@@ -55,11 +55,12 @@ namespace ZeroGravity.Objects
 		{
 			base.ProcesStatsData(dos);
 			GenericItemStats genericItemStats = dos as GenericItemStats;
-			Look = genericItemStats.Look;
-			if (!(Look != string.Empty))
+			if (string.IsNullOrEmpty(genericItemStats.Look))
 			{
 				return;
 			}
+
+			Look = genericItemStats.Look;
 
 			string path = "Materials/GenericItem/" + SubType + "/" + Look;
 			Material material = Resources.Load<Material>(path);

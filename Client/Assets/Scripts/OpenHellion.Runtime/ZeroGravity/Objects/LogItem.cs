@@ -27,7 +27,12 @@ namespace ZeroGravity.Objects
 		{
 			base.ProcesStatsData(dos);
 			LogItemStats logItemStats = dos as LogItemStats;
-			LogID = logItemStats.LogID;
+			if (!logItemStats.LogID.HasValue)
+			{
+				return;
+			}
+
+			LogID = logItemStats.LogID.Value;
 			LogItemTypes logID = (LogItemTypes)LogID;
 			string path = "UI/TextsForLogs/" + logID;
 			MainLogText.text = (Resources.Load(path) as TextAsset).text.Replace("<br>", Environment.NewLine);

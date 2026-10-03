@@ -1,3 +1,4 @@
+using OpenHellion.Net.Message;
 using OpenHellion;
 using UnityEngine;
 using ZeroGravity.Data;
@@ -44,12 +45,7 @@ namespace ZeroGravity.Objects
 				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, null, true);
-			DynamicObject dynamicObj = DynamicObj;
-			GrenadeStats statsData = new GrenadeStats
-			{
-				IsActive = true
-			};
-			dynamicObj.SendStatsMessage(null, statsData);
+			World.SolarSystem.SendCommand(StateUpdateRequest.CommandType.SetGrenadeActive, GUID, value: true);
 			return false;
 		}
 
@@ -88,12 +84,7 @@ namespace ZeroGravity.Objects
 				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, null, false);
-			DynamicObject dynamicObj = DynamicObj;
-			GrenadeStats statsData = new GrenadeStats
-			{
-				IsActive = isActive
-			};
-			dynamicObj.SendStatsMessage(null, statsData);
+			World.SolarSystem.SendCommand(StateUpdateRequest.CommandType.SetGrenadeActive, GUID, value: isActive);
 			return false;
 		}
 

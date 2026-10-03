@@ -10,8 +10,22 @@ Spawn:
 [x] Fix spawning with dynamicobjects not working on relogging
 [x] Fix orbits in visible system always being at the origin of the map, which can be moved
 [x] Fix old orbits not despawning
+[x] Fix outfit sent twice on join
 [ ] Adding item to inventory using console doesn't update the client
 [ ] Fix empty dynamic objects at scene root
+
+WorldState rewrite:
+[x] Create a world state class to store basic data about dynamic objects (test the system)
+[x] Make syncronisation of changes in the state automatic (client never writes state but sends commands)
+[ ] Do a total overhaul of how space objects are stored, cached and accessed on the server (put them into state)
+[ ] Remove all stats and details messages and put into StatsUpdateMessage/StatsUpdateRequest.
+[ ] Serve state as parameter instead of as a variable
+[ ] Rewrite trigger executors to use state
+[ ] Split world into correct classes
+[ ] State assembly parse state commands and received state instead of going through old objects
+[ ] Gradually remove objects, so state is only source of truth for game data (server)
+[ ] Make saving simply writing and reading stored state on disk (server)
+[ ] Remove pivots
 
 Movement:
 [x] Made world use local space, derived from anchor
@@ -49,9 +63,11 @@ Debugging/diagnostics:
 [ ] Add assertions in code
 
 Graphics:
-[] Recreate post processing using URP volumes
-[] Fix flickering decals by adding support for LimitTo (or find a better solution)
-[] Migrate HxVolumetricFog
+[ ] Recreate post processing using URP volumes
+[ ] Fix flickering decals by adding support for LimitTo (or find a better solution)
+[ ] Migrate HxVolumetricFog
+[ ] Fix planets on map having no texture
+[ ] Enable helmet shader
 
 Short-term:
 [x] Update to Unity 6.3
@@ -88,7 +104,6 @@ Short-term:
 
 Later:
 [ ] Find areas where risk of race conditions are high
-[ ] Fix planets on map having no texture
 [ ] Make map support fuzzy objects
 [ ] Fix sounds playing based on selected target when EVAing
 [ ] Fix alarm not running and sounds playing in ships where they should not
@@ -100,11 +115,9 @@ Later:
 [ ] Rewrite EventSystem to fix weaknesses
 [ ] Remove GameStarter.FixCryoPodState
 [ ] Fix logging in on same session breaking scene loading
-[ ] Fix slow interaction
 [ ] Fix audio continuing after exiting game
 [ ] Remove ImpactDetector.cs
 [ ] Figure out what Effects/DefaultBloodEffects can be used for.
-[ ] Split world into correct classes
 [ ] Figure out what to do with spawn rules
 [ ] Automatically generate data files from scene state
 [ ] Saving scene generates new static data
@@ -112,16 +125,13 @@ Later:
 [ ] Fix settings menu (especially controls binding)
 [ ] Readd sound effect to RepairPointParticleEffect.cs (serialised property removed in scene data)
 [ ] Search through all used scripts on monobehaviours and see if they have been deleted accidentaly
-[ ] Enable helmet shader
 [ ] See if auto sync transforms in physics settings can be turned off
 [ ] New space object hirearchy
 [ ] Inventory should not rely on dynamic objects
-[ ] Remove pivots
 [ ] Remove VoiceCommTransmitter and linked files and add github issue about voice chat in the future
 [ ] Finish StructureDataGenerator for all types of scene data
 [ ] Remove lineEdit.cs
 [ ] Remove FakeGuid on player
-[ ] Do a total overhaul of how space objects are stored, cached and accessed on the server
 [ ] Fix no external collision on AltCorp_Corridor45Turn (and probably others)
 [ ] Fix space particles moving when selecting new object
 [ ] Find other ways than hashing username to get a player id when in offline mode

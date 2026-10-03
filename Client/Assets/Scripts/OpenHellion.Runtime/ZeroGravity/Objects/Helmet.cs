@@ -1,3 +1,4 @@
+using OpenHellion.Net.Message;
 using System;
 using UnityEngine;
 using ZeroGravity.Data;
@@ -214,12 +215,7 @@ namespace ZeroGravity.Objects
 
 			if (send)
 			{
-				DynamicObject dynamicObj = DynamicObj;
-				HelmetStats statsData = new HelmetStats
-				{
-					isVisorActive = !isActive.HasValue ? !IsVisorActive : isActive.Value
-				};
-				dynamicObj.SendStatsMessage(null, statsData);
+				World.SolarSystem.SendCommand(StateUpdateRequest.CommandType.SetHelmetVisor, GUID, value: !isActive.HasValue ? !IsVisorActive : isActive.Value);
 			}
 			else
 			{
@@ -277,12 +273,7 @@ namespace ZeroGravity.Objects
 		{
 			if (send)
 			{
-				DynamicObject dynamicObj = DynamicObj;
-				HelmetStats statsData = new HelmetStats
-				{
-					isLightActive = isActive.HasValue ? isActive.Value : Light != null && !LightOn
-				};
-				dynamicObj.SendStatsMessage(null, statsData);
+				World.SolarSystem.SendCommand(StateUpdateRequest.CommandType.SetHelmetLight, GUID, value: isActive.HasValue ? isActive.Value : Light != null && !LightOn);
 				return;
 			}
 

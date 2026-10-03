@@ -1,3 +1,4 @@
+using OpenHellion.Net.Message;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,12 +93,7 @@ namespace ZeroGravity.Objects
 			RepairEffect.Play();
 			if (sendStats)
 			{
-				DynamicObject dynamicObj = DynamicObj;
-				RepairToolStats statsData = new RepairToolStats
-				{
-					Active = true
-				};
-				dynamicObj.SendStatsMessage(null, statsData);
+				World.SolarSystem.SendCommand(StateUpdateRequest.CommandType.SetRepairToolActive, GUID, value: true);
 				if (RepairSoundEffect != null)
 				{
 					RepairSoundEffect.Play(0);
@@ -115,12 +111,7 @@ namespace ZeroGravity.Objects
 			RepairEffect.Stop();
 			if (sendStats)
 			{
-				DynamicObject dynamicObj = DynamicObj;
-				RepairToolStats statsData = new RepairToolStats
-				{
-					Active = false
-				};
-				dynamicObj.SendStatsMessage(null, statsData);
+				World.SolarSystem.SendCommand(StateUpdateRequest.CommandType.SetRepairToolActive, GUID);
 				if (RepairSoundEffect != null)
 				{
 					RepairSoundEffect.Play(1);

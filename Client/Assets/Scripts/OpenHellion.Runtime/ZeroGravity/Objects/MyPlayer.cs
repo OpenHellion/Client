@@ -513,14 +513,6 @@ namespace ZeroGravity.Objects
 			FpsController.MainCamera.GetComponent<PostProcessLayer>().antialiasingMode = antialiasingOption;
 		}
 
-		private void SpawnInventory(DynamicObjectDetails[] dynamicObjects)
-		{
-			foreach (DynamicObjectDetails details in dynamicObjects ?? Array.Empty<DynamicObjectDetails>())
-			{
-				DynamicObject.CreateDynamicObject(details, this);
-			}
-		}
-
 		public void ItemAddedToHands(Item item)
 		{
 			animHelper.SetParameter(null, null, null, null, null, null, null, null, true);
@@ -2357,8 +2349,6 @@ namespace ZeroGravity.Objects
 					NewStateID = sceneSpawnPoint.Executor.GetStateID(sceneSpawnPoint.ExecutorState)
 				}, isInstant: false, checkCurrentState: false);
 			}
-
-			SpawnInventory(spawnResponse.DynamicObjects);
 
 			return true;
 		}

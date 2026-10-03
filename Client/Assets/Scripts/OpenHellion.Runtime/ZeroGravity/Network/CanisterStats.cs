@@ -11,6 +11,6 @@ namespace ZeroGravity.Network
 
 		public bool? UseCanister;
 
-		public float Capacity;
+		public float? Capacity;
 	}
 }

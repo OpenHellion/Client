@@ -580,7 +580,6 @@ namespace ZeroGravity.Objects
 
 				SpaceObject parent = DynamicObj.Parent;
 				DynamicObj.Parent = obj;
-				DynamicObj.SetSimulated(obj is ArtificialBody); // TODO: This marks the type of dynamic object dirty. Has to exist because inventory still uses dynamic objects.
 				DynamicObj.ResetRoomTriggers();
 				DynamicObj.ToggleKinematic(flag2 || parent is OtherPlayer);
 				DynamicObj.ToggleActive(!hideObject);
@@ -662,24 +661,7 @@ namespace ZeroGravity.Objects
 
 			if (sendAttachMessage)
 			{
-				DynamicObj.SendStatsMessage(new DynamicObjectAttachData
-				{
-					IsAttached = DynamicObj.IsAttached,
-					ParentGUID = DynamicObj.Parent.Guid,
-					ParentType = DynamicObj.Parent.Type,
-					InventorySlotID = InvSlotID,
-					APDetails = !(AttachPoint == null)
-						? new AttachPointDetails
-						{
-							InSceneID = AttachPoint.InSceneID
-						}
-						: null,
-					LocalPosition = !DynamicObj.IsAttached ? transform.localPosition.ToArray() : null,
-					LocalRotation = !DynamicObj.IsAttached ? transform.localRotation.ToArray() : null,
-					Velocity = !sendVelocity.HasValue ? null : sendVelocity.Value.ToArray(),
-					Torque = !sendTorque.HasValue ? null : sendTorque.Value.ToArray(),
-					ThrowForce = !sendThrowForce.HasValue ? null : sendThrowForce.Value.ToArray()
-				});
+				World.SolarSystem.SendMoveCommand(DynamicObj, DynamicObj.Parent, Slot, transform.localPosition, transform.localRotation, sendThrowForce, sendTorque, sendVelocity);
 				sendVelocity = null;
 				sendTorque = null;
 				sendThrowForce = null;
@@ -1523,7 +1505,7 @@ namespace ZeroGravity.Objects
 
 			if (inventorySlot != null)
 			{
-				DynamicObj.SendAttachMessage(MyPlayer.Instance, inventorySlot);
+				World.SolarSystem.SendMoveCommand(DynamicObj, MyPlayer.Instance, inventorySlot);
 				if (inventorySlot.SlotGroup == InventorySlot.Group.Hands)
 				{
 					MyPlayer.Instance.ItemAddedToHands(this);
@@ -1554,7 +1536,7 @@ namespace ZeroGravity.Objects
 				? new Vector3(UnityEngine.Random.Range(-0.1f, 0.1f), UnityEngine.Random.Range(-0.1f, 0.1f),
 					UnityEngine.Random.Range(-0.1f, 0.1f))
 				: Vector3.zero;
-			DynamicObj.SendAttachMessage(MyPlayer.Instance.Parent, null, value, Quaternion.identity, vector, value2,
+			World.SolarSystem.SendMoveCommand(DynamicObj, MyPlayer.Instance.Parent, null, value, Quaternion.identity, vector, value2,
 				MyPlayer.Instance.rigidBody.linearVelocity);
 			if (DynamicObj.Parent is MyPlayer)
 			{
@@ -1605,7 +1587,7 @@ namespace ZeroGravity.Objects
 				}
 				else
 				{
-					swapItem.DynamicObj.SendAttachMessage(slot2.Parent, slot2);
+					World.SolarSystem.SendMoveCommand(swapItem.DynamicObj, slot2.Parent, slot2);
 				}
 			}
 			else if (swapItem != null && slot2 == null)
@@ -1620,7 +1602,7 @@ namespace ZeroGravity.Objects
 				}
 			}
 
-			DynamicObj.SendAttachMessage(slot.Parent, slot);
+			World.SolarSystem.SendMoveCommand(DynamicObj, slot.Parent, slot);
 		}
 
 		public virtual string GetInfo()

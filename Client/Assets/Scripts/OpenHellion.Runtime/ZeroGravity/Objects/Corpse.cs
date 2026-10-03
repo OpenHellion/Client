@@ -139,7 +139,7 @@ namespace ZeroGravity.Objects
 			if (corpse.Inventory.ItemInHands != null)
 			{
 				Vector3 value = corpse.transform.parent.InverseTransformPoint(corpse.transform.position);
-				corpse.Inventory.ItemInHands.DynamicObj.SendAttachMessage(MyPlayer.Instance.Parent, null, value,
+				World.SolarSystem.SendMoveCommand(corpse.Inventory.ItemInHands.DynamicObj, MyPlayer.Instance.Parent, null, value,
 					Quaternion.identity, Vector3.zero, Vector3.zero, MyPlayer.Instance.rigidBody.linearVelocity);
 			}
 
@@ -150,7 +150,7 @@ namespace ZeroGravity.Objects
 		{
 			foreach (DynamicObjectDetails details in dynamicObjects ?? Array.Empty<DynamicObjectDetails>())
 			{
-				DynamicObject.CreateDynamicObject(details, this);
+				DynamicObject.CreateDynamicObject(details);
 			}
 		}
 

@@ -5,6 +5,6 @@ namespace ZeroGravity.Network
 	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 	public class GlowStickStats : DynamicObjectStats
 	{
-		public bool IsOn;
+		public bool? IsOn;
 	}
 }

@@ -1,3 +1,4 @@
+using OpenHellion.Net.Message;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -377,12 +378,10 @@ namespace ZeroGravity.Objects
 
 		public void SetStatsForSending(int? currentMod = null)
 		{
-			DynamicObject dynamicObj = DynamicObj;
-			WeaponStats statsData = new WeaponStats
+			if (currentMod.HasValue)
 			{
-				CurrentMod = currentMod
-			};
-			dynamicObj.SendStatsMessage(null, statsData);
+				World.SolarSystem.SendCommand(StateUpdateRequest.CommandType.SetWeaponMod, GUID, number: currentMod.Value);
+			}
 		}
 
 		public override void ProcesStatsData(DynamicObjectStats dos)

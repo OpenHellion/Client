@@ -1,3 +1,4 @@
+using OpenHellion.Net.Message;
 using ZeroGravity.Data;
 using ZeroGravity.Network;
 
@@ -18,11 +19,7 @@ namespace ZeroGravity.Objects
 
 		public void SendPackage()
 		{
-			DisposableHackingToolStats statsData = new DisposableHackingToolStats
-			{
-				Use = true
-			};
-			DynamicObj.SendStatsMessage(null, statsData);
+			World.SolarSystem.SendCommand(StateUpdateRequest.CommandType.UseHackingTool, GUID);
 		}
 
 		public override DynamicObjectAuxData GetAuxData()

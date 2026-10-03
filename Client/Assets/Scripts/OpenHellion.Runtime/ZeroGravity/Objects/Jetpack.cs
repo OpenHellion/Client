@@ -354,18 +354,16 @@ namespace ZeroGravity.Objects
 				_Compartments = new List<ICargoCompartment> { OxygenCompartment, PropellantCompartment };
 			}
 
-			PropellantCompartment.Capacity = jetpackStats.PropellantCapacity;
-			PropellantCompartment.Resources = new List<CargoResourceData>();
+			PropellantCompartment.Capacity = jetpackStats.PropellantCapacity ?? PropellantCompartment.Capacity;
 			if (jetpackStats.Propellant != null)
 			{
-				PropellantCompartment.Resources.Add(jetpackStats.Propellant);
+				PropellantCompartment.Resources = new List<CargoResourceData> { jetpackStats.Propellant };
 			}
 
-			OxygenCompartment.Capacity = jetpackStats.OxygenCapacity;
-			OxygenCompartment.Resources = new List<CargoResourceData>();
+			OxygenCompartment.Capacity = jetpackStats.OxygenCapacity ?? OxygenCompartment.Capacity;
 			if (jetpackStats.Oxygen != null)
 			{
-				OxygenCompartment.Resources.Add(jetpackStats.Oxygen);
+				OxygenCompartment.Resources = new List<CargoResourceData> { jetpackStats.Oxygen };
 			}
 
 			if (AttachPoint != null && MyPlayer.Instance != null &&

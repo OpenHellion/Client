@@ -408,14 +408,24 @@ namespace OpenHellion
 			_spaceObjects.TryAdd(guid, obj);
 		}
 
-		public void RemoveDynamicObject(long guid)
+		public void RemoveDynamicObject(long guid, DynamicObject obj)
 		{
-			_spaceObjects.TryRemove(guid, out _);
+			// Safety check so pivot's arent accidentaly removed as they share guid.
+			if (_spaceObjects.TryGetValue(guid, out SpaceObject registered) && registered == obj)
+			{
+				_spaceObjects.TryRemove(guid, out _);
+			}
 		}
 
 		public DynamicObject GetDynamicObject(long guid)
 		{
-			return _spaceObjects.TryGetValue(guid, out var value) ? value as DynamicObject : null;
+			if (!_spaceObjects.TryGetValue(guid, out SpaceObject value))
+			{
+				return null;
+			}
+
+			// If it is a pivot, get the child.
+			return value as DynamicObject ?? (value as Pivot)?.GetComponentsInChildren<DynamicObject>().FirstOrDefault(m => m.Guid == guid);
 		}
 
 		public void AddCorpse(long guid, Corpse obj)
@@ -860,6 +870,11 @@ namespace OpenHellion
 				return;
 			}
 
+			if (obj is DynamicObject { Parent: Pivot holder } && holder.Guid == obj.Guid)
+			{
+				obj = holder;
+			}
+
 			if (MyPlayer.Instance != null)
 			{
 				if (obj == MyPlayer.Instance.Parent ||
@@ -880,14 +895,25 @@ namespace OpenHellion
 				obj.DestroyGeometry();
 			}
 
-			if (obj is DynamicObject dynamicObject && dynamicObject.Item?.AttachPoint != null)
+			if (obj is DynamicObject { Item: { } item })
 			{
-				dynamicObject.Item.AttachPoint.DetachItem(dynamicObject.Item);
-			}
+				item.AttachPoint?.DetachItem(item);
+				if (item.InvSlot is { } invSlot && invSlot.Item == item)
+				{
+					if (invSlot.SlotType == InventorySlot.Type.Hands && invSlot.Inventory != null)
+					{
+						invSlot.Inventory.RemoveItemFromHands(resetStance: true);
+					}
+					else
+					{
+						invSlot.SetItem(null);
+					}
+				}
 
-			if (MyPlayer.Instance?.CurrentActiveItem?.GUID == obj.Guid)
-			{
-				MyPlayer.Instance.Inventory.RemoveItemFromHands(resetStance: true);
+				if (item.DynamicObj.Parent is Player owner)
+				{
+					item.ChangeEquip(Item.EquipType.None, owner);
+				}
 			}
 
 			_spaceObjects.TryRemove(obj.Guid, out _);
@@ -928,7 +954,7 @@ namespace OpenHellion
 
 		// TODO maybe this can use SceneLoader.LoadScenesWithIDs (see old PlayerSpawnResponse for inspiration)?
 		// Order of spawning is very important here. Do not move unless you know what you are doing.
-		public static async UniTask MassSpawn(long[] guids, bool isMainObject = false)
+		public async UniTask MassSpawn(long[] guids, bool isMainObject = false)
 		{
 			ObjectsInfoRequest request = new()
 			{
@@ -1028,7 +1054,10 @@ namespace OpenHellion
 			{
 				foreach (DynamicObjectDetails objectDetails in response.DynamicObjects)
 				{
-					DynamicObject.CreateDynamicObject(objectDetails);
+					if (GetDynamicObject(objectDetails.GUID) == null)
+					{
+						DynamicObject.CreateDynamicObject(objectDetails);
+					}
 				}
 			}
 		}
@@ -1046,30 +1075,7 @@ namespace OpenHellion
 
 					return GetPlayer(guid);
 				case SpaceObjectType.DynamicObject:
-				{
-					DynamicObject simulated = GetDynamicObject(guid);
-					if (simulated != null)
-					{
-						return simulated;
-					}
-
-					// Carried objects are deliberately unindexed, so an item nested in another item's slot
-					// reaches its parent by walking the owners that are.
-					foreach (SpaceObject owner in _spaceObjects.Values.Append(MyPlayer.Instance))
-					{
-						if (owner == null) continue;
-
-						foreach (DynamicObject carried in owner.GetComponentsInChildren<DynamicObject>())
-						{
-							if (carried.Guid == guid)
-							{
-								return carried;
-							}
-						}
-					}
-
-					return null;
-				}
+					return GetDynamicObject(guid);
 				case SpaceObjectType.Corpse:
 					return GetCorpse(guid);
 				case SpaceObjectType.PlayerPivot:
